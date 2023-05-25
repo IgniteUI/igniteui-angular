@@ -8,16 +8,20 @@
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
-            $deps: ()
+            $deps: (
+                igx-overlay,
+            )
         );
 
         @extend %igx-drop-down !optional;
 
         @include e(list) {
+            @include sizable();
             @extend %igx-drop-down__list !optional;
         }
 
         @include e(list-scroll) {
+            @include sizable();
             @extend %igx-drop-down__list-scroll !optional;
         }
 

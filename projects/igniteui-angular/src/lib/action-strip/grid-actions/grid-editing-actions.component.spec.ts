@@ -1,21 +1,21 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent } from '../action-strip.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxIconModule } from '../../icon/public_api';
-import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { IgxActionStripModule } from '../action-strip.module';
+import { NgFor } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxGridComponent } from '../../grids/grid/public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
-import {
-    IgxHierarchicalGridComponent,
-    IgxHierarchicalGridModule
-} from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
-import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
+import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../action-strip.component';
+import { IgxColumnComponent } from '../../grids/public_api';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -24,22 +24,15 @@ describe('igxGridEditingActions #grid ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
+                IgxHierarchicalGridActionStripComponent,
+                IgxTreeGridEditActionsComponent,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
                 IgxActionStripEditMenuComponent,
-                IgxHierarchicalGridActionStripComponent,
-                IgxTreeGridEditActionsComponent,
                 IgxActionStripOneRowComponent,
                 IgxActionStripMenuOneRowComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxGridModule,
-                IgxHierarchicalGridModule,
-                IgxIconModule,
-                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -169,10 +162,10 @@ describe('igxGridEditingActions #grid ', () => {
 
             actionStrip.menu.open();
             fixture.detectChanges();
-                
+
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
-                
+
             expect(actionStrip.hidden).toBeFalse();
         });
     });
@@ -194,6 +187,44 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editingIcons.length).toBe(0);
             expect(pinningIcons.length).toBe(1);
             expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
+        });
+
+        it('should emit correct rowPinning arguments with pinning actions', () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            const row = grid.getRowByIndex(1);
+
+            actionStrip.show(grid.rowList.toArray()[1]);
+            fixture.detectChanges();
+            let pinningIcon = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`))[0];
+
+            pinningIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID : row.key,
+                insertAtIndex: 0,
+                isPinned: true,
+                row,
+                cancel: false
+            });
+
+            const row5 = grid.getRowByIndex(4);
+            actionStrip.show(grid.rowList.toArray()[4]);
+            fixture.detectChanges();
+            pinningIcon = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`))[0];
+
+            pinningIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID : row5.key,
+                insertAtIndex: 1,
+                isPinned: true,
+                row: row5,
+                cancel: false
+            });
         });
     });
 
@@ -218,11 +249,11 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-            
+
             const row = grid.getRowByIndex(0);
             row.pin();
             const rowElem = grid.pinnedRows[0];
-            
+
             actionStrip.show(row);
             fixture.detectChanges();
 
@@ -326,6 +357,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeleteArgs = {
                 rowID: row.key,
+                primaryKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 oldValue: null,
@@ -334,6 +366,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
+                primaryKey: row.key,
                 owner: treeGrid
             };
 
@@ -350,17 +383,19 @@ describe('igxGridEditingActions #grid ', () => {
 
 @Component({
     template: `
-<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`
+        <igx-action-strip #actionStrip>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -369,9 +404,9 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    private data: any[];
-    private dataOneRow: any[];
-    private columns: any[];
+    public data: any[];
+    public dataOneRow: any[];
+    public columns: any[];
 
     public ngOnInit() {
 
@@ -428,70 +463,78 @@ class IgxActionStripTestingComponent implements OnInit {
 
 @Component({
     template: `
-<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        <igx-grid-editing-actions></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`
+        <igx-action-strip #actionStrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 }
 
 @Component({
     template: `
-<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`
+        <igx-action-strip #actionStrip>
+            <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 }
 
 @Component({
     template: `
-<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        <igx-grid-editing-actions></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`
+        <igx-action-strip #actionStrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
 }
 
 @Component({
     template: `
-<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`
+        <igx-action-strip #actionStrip>
+            <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
 }

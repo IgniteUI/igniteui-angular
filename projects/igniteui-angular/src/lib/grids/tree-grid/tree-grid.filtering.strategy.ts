@@ -18,7 +18,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
         const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = this.isHierarchicalFilterField(fieldName) ?
@@ -71,7 +71,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.hierarchicalFilterFields && this.hierarchicalFilterFields.indexOf(field) !== -1;
     }
 
-    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+    public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
         if (!this.isHierarchicalFilterField(column.field)) {
             return super.getFilterItems(column, tree);
         }
@@ -122,13 +122,13 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         super();
     }
 
-    protected shouldFormatFilterValues(column: ColumnType): boolean {
+    protected override shouldFormatFilterValues(column: ColumnType): boolean {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
 
 export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
-    public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+    public override filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
         return this.filterImplementation(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }

@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -15,6 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -25,13 +26,13 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
                 ColumnEditablePropertyTestComponent,
                 SelectionWithTransactionsComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+            ]
         });
     }));
 
@@ -309,12 +310,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
         });
-    
+
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
             expect(document.activeElement.nodeName).toEqual('BODY')
-            
+
             // Enter cell edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -592,6 +593,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
@@ -615,6 +617,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell2.id,
                 rowID: cell2.row.key,
+                primaryKey: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
                 valid: true,
@@ -642,6 +645,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
@@ -666,6 +670,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             cellArgs = {
                 cellID: cell.cellID,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
@@ -695,6 +700,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 newValue: 'John Brown',
@@ -717,6 +723,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             initialRowData = {...cell.row.data};
             cellArgs = {
                 cellID: cell.cellID,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 newValue: 20,
@@ -750,6 +757,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 'John Brown',
@@ -776,6 +784,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 20,
@@ -815,6 +824,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: cellValue,
@@ -958,6 +968,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 oldValue: initialValue,
                 newValue,
@@ -989,6 +1000,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
@@ -1025,6 +1037,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             cellArgs = {
+                primaryKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
@@ -1051,6 +1064,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             updatedRowData = Object.assign({}, cell.row.data, { age: secondNewValue });
             cellArgs = {
                 cellID: cell.id,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
                 oldValue: 20,

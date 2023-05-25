@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { DisplayDensity } from 'igniteui-angular';
+import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-button-sample',
-    styleUrls: ['button.sample.css'],
+    styleUrls: ['button.sample.scss'],
     templateUrl: 'button.sample.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent]
 })
 export class ButtonSampleComponent implements OnInit {
     public density: DisplayDensity = 'comfortable';

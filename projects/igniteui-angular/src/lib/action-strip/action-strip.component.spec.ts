@@ -1,14 +1,11 @@
-import { IgxActionStripComponent } from './action-strip.component';
+import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxIconModule } from '../icon/public_api';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxActionStripModule } from './action-strip.module';
-import { IgxDropDownModule } from '../drop-down/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -20,19 +17,19 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    describe('Unit tests: ', () => {
-
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripComponent
-                ],
-                imports: [
-                    NoopAnimationsModule,
-                    IgxDropDownModule
-                ]
-            });
+    configureTestSuite(() => {
+        return TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxActionStripComponent,
+                IgxActionStripTestingComponent,
+                IgxActionStripMenuTestingComponent,
+                IgxActionStripCombinedMenuTestingComponent
+            ]
         });
+    });
+
+    describe('Unit tests: ', () => {
 
         it('should properly show and hide using API', () => {
             fixture = TestBed.createComponent(IgxActionStripComponent);
@@ -48,22 +45,10 @@ describe('igxActionStrip', () => {
             expect(actionStrip.hidden).toBeTruthy();
             fixture.debugElement.nativeElement.removeChild(el);
         });
+
     });
 
     describe('Initialization and rendering tests: ', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            })
-        });
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
@@ -107,23 +92,29 @@ describe('igxActionStrip', () => {
             const asQuery = fixture.debugElement.query(By.css('igx-action-strip'));
             expect(asQuery.nativeElement.style.display).toBe('none');
         });
+
+        it('should change displayDensity runtime correctly', () => {
+            // density with custom class applied
+            actionStripElement.nativeElement.classList.add('custom');
+            fixture.detectChanges();
+
+            expect(actionStripElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['custom', 'igx-action-strip']));
+
+            actionStrip.displayDensity = 'cosy';
+            fixture.detectChanges();
+            expect(actionStripElement.nativeElement.classList).toEqual(
+                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--cosy'])
+            );
+
+            actionStrip.displayDensity = 'compact';
+            fixture.detectChanges();
+            expect(actionStripElement.nativeElement.classList).toEqual(
+                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--compact'])
+            );
+        });
     });
 
     describe('render content as menu', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripMenuTestingComponent,
-                    IgxActionStripCombinedMenuTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            });
-        });
 
         it('should render tree-dot button which toggles the content as menu', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
@@ -186,17 +177,19 @@ describe('igxActionStrip', () => {
 
 @Component({
     template: `
-<div #parent style="position:relative; height: 200px; width: 400px;">
-    <div #inner style="position:relative; height: 100px; width: 200px;">
-        <p>
-            Lorem ipsum dolor sit
-        </p>
+    <div #parent style="position:relative; height: 200px; width: 400px;">
+        <div #inner style="position:relative; height: 100px; width: 200px;">
+            <p>
+                Lorem ipsum dolor sit
+            </p>
+        </div>
+        <igx-action-strip #actionStrip>
+            <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
+        </igx-action-strip>
     </div>
-    <igx-action-strip #actionStrip>
-        <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
-    </igx-action-strip>
-</div>
-`
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -232,7 +225,9 @@ class IgxActionStripTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -253,7 +248,9 @@ class IgxActionStripMenuTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })

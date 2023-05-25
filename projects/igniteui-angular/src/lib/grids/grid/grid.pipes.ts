@@ -14,7 +14,10 @@ import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy'
 /**
  * @hidden
  */
-@Pipe({ name: 'gridSort' })
+@Pipe({
+    name: 'gridSort',
+    standalone: true
+})
 export class IgxGridSortingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -37,7 +40,10 @@ export class IgxGridSortingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridGroupBy' })
+@Pipe({
+    name: 'gridGroupBy',
+    standalone: true
+})
 export class IgxGridGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -74,13 +80,16 @@ export class IgxGridGroupingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridPaging' })
+@Pipe({
+    name: 'gridPaging',
+    standalone: true
+})
 export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: IGroupByResult, page = 0, perPage = 15, _id: string, _: number): IGroupByResult {
-        if (!this.grid.paginator || this.grid.pagingMode !== GridPagingMode.Local) {
+    public transform(collection: IGroupByResult, enabled: boolean, page = 0, perPage = 15, _: number): IGroupByResult {
+        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
         const state = {
@@ -94,8 +103,8 @@ export class IgxGridPagingPipe implements PipeTransform {
             data: DataUtil.page(cloneArray(collection.data), state, total),
             metadata: DataUtil.page(cloneArray(collection.metadata), state, total)
         };
-        if (this.grid.paginator && this.grid.paginator.page !== state.index) {
-            this.grid.paginator.page = state.index;
+        if (this.grid.page !== state.index) {
+            this.grid.page = state.index;
         }
         this.grid.pagingState = state;
         return result;
@@ -105,7 +114,10 @@ export class IgxGridPagingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridFiltering' })
+@Pipe({
+    name: 'gridFiltering',
+    standalone: true
+})
 export class IgxGridFilteringPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }

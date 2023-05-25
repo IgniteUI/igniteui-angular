@@ -8,9 +8,6 @@ import { Optional } from '@angular/core';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    /** @inheritDoc */
-    public settings: PositionSettings;
-
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -30,8 +27,19 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    /** @inheritDoc */
-    public position(contentElement: HTMLElement,
+    /**
+     * Position the element based on the PositionStrategy implementing this interface.
+     *
+     * @param contentElement The HTML element to be positioned
+     * @param size Size of the element
+     * @param document reference to the Document object
+     * @param initialCall should be true if this is the initial call to the method
+     * @param target attaching target for the component to show
+     * ```typescript
+     * settings.positionStrategy.position(content, size, document, true);
+     * ```
+     */
+    public override position(contentElement: HTMLElement,
                     size: Size,
                     document?: Document,
                     initialCall?: boolean,
@@ -166,15 +174,13 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const inputElementStyles = window.getComputedStyle(target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
         const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
+        const numericInputPaddingTop = parseFloat(inputElementStyles.paddingTop);
+        const numericInputPaddingBottom = parseFloat(inputElementStyles.paddingBottom);
         const numericItemFontSize = parseFloat(itemElementStyles.fontSize);
-        const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
+        const inputTextToInputTop = ((selectFit.targetRect.bottom - numericInputPaddingBottom)
+            - (selectFit.targetRect.top + numericInputPaddingTop) - numericInputFontSize) / 2;
         const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
-         // Adjust for input top padding
-        const negateInputPaddings = (
-                parseFloat(inputElementStyles.paddingTop) -
-                parseFloat(inputElementStyles.paddingBottom)
-            ) / 2;
-        styles.itemTextToInputTextDiff = Math.round(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
+        styles.itemTextToInputTextDiff = Math.round(itemTextToItemTop - inputTextToInputTop - numericInputPaddingTop);
 
         const numericLeftPadding = parseFloat(itemElementStyles.paddingLeft);
         const numericTextIndent = parseFloat(itemElementStyles.textIndent);

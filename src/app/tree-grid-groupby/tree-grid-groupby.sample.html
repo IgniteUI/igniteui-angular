@@ -2,13 +2,13 @@
     <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
         <igx-switch *ngIf="groupArea" [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
-        <button (click)="print()" >Show Expressions</button>
+        <button igxButton="raised" (click)="print()" >Show Expressions</button>
     </div>
 
     <igx-tree-grid #grid1
         [moving]="true"
         [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:grid1:employeeAggregations"
-        selectionType='multi'
+        selectionType="multi"
         [childDataKey]="childDataKey"
         [rowSelection]="selectionMode"
         [displayDensity]="density"

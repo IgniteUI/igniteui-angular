@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { IgxIconService } from 'igniteui-angular';
+
 import { Router } from '@angular/router';
+import { IgxIconService, IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/public_api';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     selector: 'app-icon-sample',
-    styleUrls: ['./icon.sample.css'],
-    templateUrl: 'icon.sample.html'
+    styleUrls: ['./icon.sample.scss'],
+    templateUrl: 'icon.sample.html',
+    standalone: true,
+    imports: [IgxIconComponent, IgxButtonDirective]
 })
 export class IconSampleComponent implements OnInit {
-    constructor(public router: Router, private _iconService: IgxIconService) {}
+    constructor(private _iconService: IgxIconService, public router: Router) {}
 
     public ngOnInit(): void {
         // register custom svg icons

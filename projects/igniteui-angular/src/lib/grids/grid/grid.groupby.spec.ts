@@ -1,24 +1,29 @@
 ﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { formatNumber } from '@angular/common'
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGridModule, IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DataParent } from '../../test-utils/sample-test-data.spec';
+import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
+import { IgxGrouping } from '../public_api';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -31,17 +36,18 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 DefaultGridComponent,
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
                 GroupByEmptyColumnFieldComponent,
-                MultiColumnHeadersWithGroupingComponent,
                 GridGroupByRowCustomSelectorsComponent,
-                GridGroupByCaseSensitiveComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+                GridGroupByCaseSensitiveComponent,
+                GridGroupByTestDateTimeDataComponent,
+                MultiColumnHeadersWithGroupingComponent
+            ]
         });
     }));
 
@@ -180,6 +186,145 @@ describe('IgxGrid - GroupBy #grid', () => {
             [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
     }));
 
+    it('should only account for year, month and day when grouping by \'date\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'DateField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+
+        const targetTestVal = new Date(2012, 1, 12);
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getTime() === targetTestVal.getTime());
+        expect(groupRows[index].groupRow.records.length).toEqual(2);
+
+        // compare the date values in the target group which are two identical dates with different time values
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+
+        // the time portions of the two records differ, so the Dates are not equal even though they are in the same group
+        expect(rec1Date.getTime()).not.toEqual(rec2Date.getTime());
+        // the date portions are the same, so they are in the same group, as the column type is `date`
+        expect(rec1Date.getDate()).toEqual(rec2Date.getDate());
+        expect(rec1Date.getMonth()).toEqual(rec2Date.getMonth());
+        expect(rec1Date.getFullYear()).toEqual(rec2Date.getFullYear());
+    }));
+
+    it('should only account for hours, minutes, seconds and ms when grouping by \'time\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'TimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+
+        const targetTestVal = new Date(new Date().setHours(3, 20, 0, 1));
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getHours() === targetTestVal.getHours()
+            && new Date(gr.groupRow.value).getMinutes() === targetTestVal.getMinutes()
+            && new Date(gr.groupRow.value).getSeconds() === targetTestVal.getSeconds()
+            && new Date(gr.groupRow.value).getMilliseconds() === targetTestVal.getMilliseconds());
+
+        expect(groupRows[index].groupRow.records.length).toEqual(3);
+
+        // compare the date values in the target group which are three different dates with same time values
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const record3 = groupRows[index].groupRow.records[2];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+        const rec3Date = new Date(record3[field]);
+
+        // the date portions of the following records differ, so the Dates are not equal even though they are in the same group
+        expect(rec1Date.getTime()).not.toEqual(rec2Date.getTime());
+        // the below are equal by date as well
+        expect(rec2Date.getTime()).toEqual(rec3Date.getTime());
+        // the time portions of the not equal dates are the same, so they are in the same group, as the column type is `time`
+        expect(rec1Date.getHours()).toEqual(rec2Date.getHours());
+        expect(rec1Date.getMinutes()).toEqual(rec2Date.getMinutes());
+        expect(rec1Date.getSeconds()).toEqual(rec2Date.getSeconds());
+        expect(rec1Date.getMilliseconds()).toEqual(rec2Date.getMilliseconds());
+    }));
+
+    it('should account for all date values when grouping by \'dateTime\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'DateTimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // there are two identical DateTime values, so 4 groups out of 5 data records
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+
+        const targetTestVal = new Date(new Date('2003-03-17').setHours(3, 20, 0, 1));
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getTime() === targetTestVal.getTime());
+        expect(groupRows[index].groupRow.records.length).toEqual(2);
+
+        // compare the date values in the target group which are two identical dates - date and time portions
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+
+        expect(rec1Date.getTime()).toEqual(rec2Date.getTime());
+    }));
+
+    it('should display time value in the group by row when grouped by a \'time\' column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'TimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        expect(expectedValue1).toEqual(actualValue1);
+    }));
+
+    it('should display time value in the group by row when grouped by a \'dateTime\' column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'DateTimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent;
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        expect(expectedValue1).toEqual(actualValue1);
+    }));
+
     it('should allow grouping by multiple columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -263,7 +408,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     }));
@@ -326,6 +471,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
         expect(groupRow.expanded).toBe(false);
+
+        grid.clearGrouping();
+        tick();
+        grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Desc });
+        fix.detectChanges();
+        grid.toggleGroup(grid.groupsRowList.first.groupRow);
+        tick();
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toEqual(false);
     }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
@@ -390,8 +544,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
 
-        let groupRows = grid.groupsRowList.toArray();
-        let dataRows = grid.dataRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(5);
@@ -436,7 +590,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should trigger an onGroupingDone event when a column is grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is grouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -453,7 +607,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an onGroupingDone event when a column is ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is ungrouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -476,7 +630,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
     }));
 
-    it('should trigger an onGroupingDone event when multiple columns are grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are grouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -500,7 +654,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an onGroupingDone event when multiple columns are ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are ungrouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -526,7 +680,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[2].field).toEqual('Downloads');
     }));
 
-    it(`should trigger an onGroupingDone event when the user pushes a new array of grouping expressions, which results in
+    it(`should trigger an groupingDone event when the user pushes a new array of grouping expressions, which results in
     both grouping and ungrouping at the same time.`, fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -648,7 +802,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         grid.groupBy({
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
-        }); 
+        });
         fix.detectChanges();
         spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
@@ -1376,7 +1530,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
-    it('the group row selector state should be indeterminated if some of the records in the group but not all are selected',
+    it('the group row selector state should be undetermined if some of the records in the group but not all are selected',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1948,6 +2102,33 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
     }));
 
+    // GroupBy Row Formatting
+    it('should properly apply formatters, both custom and default ones for the default row value template', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        tick();
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        let cellText = grid.groupsRowList.first.nativeElement.querySelector(".igx-group-label__text").innerText;
+        expect(cellText).toEqual(formatNumber(1000, grid.locale));
+        // apply custom formatter
+        grid.getColumnByName('Downloads').formatter = (value, _row) => `\$${value}`;
+        grid.groupingExpressions = [];
+        tick();
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        cellText = grid.groupsRowList.first.nativeElement.querySelector(".igx-group-label__text").innerText;
+        expect(cellText).toEqual('$1000');
+    }));
+
     // GroupBy + Resizing
     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -2191,7 +2372,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2232,7 +2413,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2244,7 +2425,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
-        fix.componentInstance.instance.paginate(0);
+        fix.componentInstance.instance.paginator.paginate(0);
         tick();
         fix.detectChanges();
 
@@ -2454,7 +2635,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -3485,7 +3666,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
         grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
@@ -3539,13 +3719,15 @@ describe('IgxGrid - GroupBy #grid', () => {
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)">
             <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class DefaultGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3574,7 +3756,7 @@ export class DefaultGridComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 }
@@ -3583,7 +3765,7 @@ const formatUnboundValueFunction = (rowData: any | undefined): string | undefine
 
 
 class MySortingStrategy extends IgxGrouping {
-    protected getFieldValue(
+    protected override getFieldValue(
         obj: any,
         key: string,
         isDate = false,
@@ -3605,19 +3787,21 @@ class MySortingStrategy extends IgxGrouping {
             [data]="data"
             [sortStrategy]="sortStrategy"
             [groupStrategy]="groupStrategy">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" width="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" width="200" [groupable]="true" [hasSummary]="false"
                 dataType="number"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'UnboundField'" [header]="'Unbound Value'" [width]="200" [dataType]="'string'"
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'UnboundField'" [header]="'Unbound Value'" width="200" [dataType]="'string'"
                 [sortable]="true" [groupable]="true" [formatter]="formatUnboundValue">
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3640,11 +3824,11 @@ export class GroupableGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="data">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Is it Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ID'" [header]="'ID'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Is it Released'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRow let-groupRow>
                 <span>
                     Grouping by "{{groupRow.column.header}}".
@@ -3670,7 +3854,9 @@ export class GroupableGridComponent extends DataParent {
                     CUSTOM GROUP BY
                 </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3679,7 +3865,7 @@ export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild('template', {read: TemplateRef })
+    @ViewChild('template', { read: TemplateRef })
     public customGroupBy: TemplateRef<any>;
 }
 
@@ -3689,10 +3875,12 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width + 'px'">
                 </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3730,7 +3918,9 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
                 </ng-template>
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3747,13 +3937,13 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             [width]='width'
             [height]='height'
             [data]="data">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="number"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRowSelector let-context>
                 <igx-checkbox (click)="onGroupByRowClick($event, context)" hidden='true'></igx-checkbox>
                 <p>Selected rows in the group: {{context.selectedCount}};<p>
@@ -3761,7 +3951,9 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
                 <p>Group Row instance: {{context.groupRow}};<p>
             </ng-template>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
     @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })
@@ -3781,11 +3973,13 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="string"></igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3815,4 +4009,30 @@ export class GridGroupByCaseSensitiveComponent {
             ContactTitle: 'Order Administrator'
         }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid
+            #grid
+            [width]='width'
+            [height]='height'
+            [data]="datesData">
+            <igx-column [field]="'ProductID'" [width]="'200px'" [groupable]="true" dataType="number"></igx-column>
+            <igx-column [field]="'ProductName'" [width]="'200px'" [groupable]="true" dataType="string"></igx-column>
+            <igx-column [field]="'DateField'" [width]="'200px'" [groupable]="true" dataType="date"></igx-column>
+            <igx-column [field]="'TimeField'" [width]="'200px'" [groupable]="true" dataType="time"></igx-column>
+            <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class GridGroupByTestDateTimeDataComponent {
+    @ViewChild("grid", { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public width = '800px';
+    public height = null;
+    public datesData = SampleTestData.generateTestDateTimeData();
 }

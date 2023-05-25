@@ -25,6 +25,7 @@
     );
 
     $tree-node-expander-size: rem(20px);
+
     $tree-node-height: (
         comfortable: rem(40px),
         cosy: rem(32px),
@@ -80,6 +81,8 @@
     }
 
     %grid-excel-menu {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -120,15 +123,18 @@
         }
 
         igx-chips-area  {
-            padding: rem(16px) rem(16px) 0 rem(16px);
-            gap: rem(8px);
+            padding-inline-start: pad-block(rem(4px), rem(8px), rem(16px));
+            padding-inline-end: pad-block(rem(4px), rem(8px), rem(16px));
+            padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
+            padding-block-end: 0;
+            gap: sizable(rem(4px), rem(4px), rem(8px));
         }
     }
 
     %grid-excel-menu__header {
         display: flex;
         align-items: center;
-        padding: rem(16px);
+        padding: pad(rem(4px), rem(8px), rem(16px));
         color: color($color: 'gray', $variant: 700);
     }
 
@@ -176,7 +182,8 @@
     %grid-excel-sort,
     %grid-excel-move {
         display: block;
-        padding: rem(8px) rem(16px);
+        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
 
         header {
             color: color($color: 'gray', $variant: 700);
@@ -203,7 +210,8 @@
     }
 
     %grid-excel-actions {
-        padding: rem(8px) rem(16px);
+        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+        padding-inline: pad-inline(rem(4px), rem(16px), rem(16px));
     }
 
     %grid-excel-actions--selected {
@@ -242,7 +250,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: rem(8px) rem(16px);
+        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         cursor: pointer;
         color: color($color: 'gray', $variant: 700);
         outline-style: none;
@@ -275,13 +284,13 @@
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;
-        padding: rem(16px);
-        gap: rem(16px);
+        padding: pad(rem(4px), rem(8px), rem(16px));
+        gap: pad(rem(4px), rem(8px), rem(16px));
 
         igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-inline: -#{rem(16px)};
+            margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
             border: 0;
 
             @if $bootstrap-theme {
@@ -296,7 +305,8 @@
         %igx-excel-filter__tree {
             background: color($color: 'surface');
             overflow-y: auto;
-            margin: 0 rem(-16px);
+            margin-inline: calc(pad-inline(rem(-4px), rem(-8px), rem(-16px)) * -1);
+            margin-block: 0;
             flex: 1;
 
             @if $bootstrap-theme {
@@ -315,13 +325,18 @@
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
-                height: map.get($tree-node-height, 'comfortable');
-                min-height: map.get($tree-node-height, 'comfortable');
+                height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
+                min-height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
             }
 
             .igx-tree-node__toggle-button {
                 min-width: rem(20px);
-                margin-inline-start: map.get($tree-node-indent, 'comfortable');
+                margin-inline-start: pad-inline(map.get($tree-node-indent, 'compact'), map.get($tree-node-indent, 'cosy'), map.get($tree-node-indent, 'comfortable'));
+                margin-inline-end: pad-inline(rem(4px), rem(8px));
+            }
+
+            .igx-tree {
+                overflow-y: hidden;
             }
         }
 
@@ -335,7 +350,7 @@
         %igx-excel-filter__tree-alike-item {
             display: flex;
             align-items: center;
-            height: map.get($tree-node-height, 'comfortable');
+            height: sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'));
             background: color($color: 'surface');
 
             &:hover,
@@ -344,85 +359,28 @@
             }
 
             > igx-checkbox {
-                margin-inline-start: map.get($checkbox-indent, 'comfortable');
+                margin-inline-start: pad-inline(map.get($checkbox-indent, 'compact'), map.get($checkbox-indent, 'cosy'), map.get($checkbox-indent, 'comfortable'));
             }
         }
     }
 
     %grid-excel-menu--cosy {
-        igx-chips-area {
-            padding: rem(8px) rem(8px) 0 rem(8px);
-        }
+        --component-size: var(--ig-size, var(--ig-size-medium));
 
         %grid-excel-menu__header {
             justify-content: space-between;
-            padding: rem(8px);
-        }
-
-        %grid-excel-sort {
-            padding: rem(8px);
-        }
-
-        %grid-excel-move {
-            padding: rem(8px);
-        }
-
-        %grid-excel-actions {
-            padding: rem(8px);
-        }
-
-        %grid-excel-actions__action {
-            padding: rem(8px);
-        }
-
-        %grid-excel-main {
-            padding: rem(8px);
-            gap: rem(8px);
-        }
-
-        igx-list {
-            margin-inline-start: -#{rem(8px)};
-            margin-inline-end: -#{rem(8px)};
-        }
-
-        %igx-excel-filter__tree {
-            margin: 0 rem(-8px);
-
-            > igx-checkbox,
-            .igx-tree-node__wrapper {
-                height: map.get($tree-node-height, 'cosy');
-                min-height: map.get($tree-node-height, 'cosy');
-            }
-
-            .igx-tree-node__toggle-button {
-                margin-inline-start: map.get($tree-node-indent, 'cosy');
-            }
-        }
-
-        %igx-excel-filter__tree-alike-item {
-            height: map.get($tree-node-height, 'cosy');
-
-            > igx-checkbox {
-                margin-inline-start: map.get($checkbox-indent, 'cosy');
-            }
         }
     }
 
     %grid-excel-menu--compact {
-        igx-chips-area {
-            padding: rem(4px) rem(4px) 0 rem(4px);
-            gap: rem(4px);
-        }
+        --component-size: var(--ig-size, var(--ig-size-small));
 
         %grid-excel-menu__header {
             justify-content: space-between;
-            padding: rem(4px);
         }
 
         %grid-excel-sort,
         %grid-excel-move {
-            padding: rem(4px);
-
             @extend %grid-excel-action--compact;
 
             igx-buttongroup {
@@ -432,46 +390,6 @@
 
         %grid-excel-move {
             margin-bottom: 0;
-        }
-
-        %grid-excel-actions {
-            padding: rem(4px);
-        }
-
-        %grid-excel-actions__action {
-            padding: rem(4px);
-        }
-
-        %grid-excel-main {
-            padding: rem(4px);
-            gap: rem(4px);
-        }
-
-        igx-list {
-            margin-inline-start: -#{rem(4px)};
-            margin-inline-end: -#{rem(4px)};
-        }
-
-        %igx-excel-filter__tree {
-            margin: 0 rem(-4px);
-
-            igx-checkbox,
-            .igx-tree-node__wrapper {
-                height: map.get($tree-node-height, 'compact');
-                min-height: map.get($tree-node-height, 'compact');
-            }
-
-            .igx-tree-node__toggle-button {
-                margin: 0 map.get($tree-node-indent, 'compact');
-            }
-        }
-
-        %igx-excel-filter__tree-alike-item {
-            height: map.get($tree-node-height, 'compact');
-
-            > igx-checkbox {
-                margin-inline-start: map.get($checkbox-indent, 'compact');
-            }
         }
     }
 
@@ -483,39 +401,41 @@
         border-radius: border-radius(rem(4px));
     }
 
-    %grid-excel-menu__secondary--cosy {
-        %grid-excel-menu__header {
-            padding: rem(8px);
+    %grid-excel-menu__condition {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        padding-block: 0;
+
+        igx-select {
+            flex-grow: 1;
+            flex-basis: 40%;
+            margin: rem(16px) 0;
+
+            ~ igx-input-group,
+            ~ igx-date-picker {
+                margin-inline-start: rem(16px);
+            }
         }
 
-        %grid-excel-menu__condition {
-            padding: 0 rem(8px);
+        igx-buttongroup {
+            min-width: 30%;
         }
 
-        %grid-excel-menu__add-filter {
-            margin: 0 rem(8px) rem(8px);
-        }
-
-        %grid-excel-menu__footer {
-            padding: rem(8px);
+        [igxButton='icon'] {
+            margin-inline-start: rem(16px);
         }
     }
 
-    %grid-excel-menu__secondary--compact {
-        %grid-excel-menu__header {
-            padding: rem(4px);
-        }
+    %grid-excel-menu__add-filter {
+        margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
+        margin-block-start: 0;
 
-        %grid-excel-menu__condition {
-            padding: 0 rem(4px);
-        }
-
-        %grid-excel-menu__add-filter {
-            margin: 0 rem(4px) rem(4px);
-        }
-
-        %grid-excel-menu__footer {
-            padding: rem(8px) rem(4px);
+        igx-icon {
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
@@ -542,42 +462,6 @@
         %grid-excel-filter__apply,
         %grid-excel-filter__cancel {
             flex-grow: 0;
-        }
-    }
-
-    %grid-excel-menu__condition {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 0 rem(16px);
-
-        igx-select {
-            flex-grow: 1;
-            flex-basis: 40%;
-            margin: rem(16px) 0;
-
-            ~ igx-input-group,
-            ~ igx-date-picker {
-                margin-inline-start: rem(16px);
-            }
-        }
-
-        igx-buttongroup {
-            min-width: 30%;
-        }
-
-        [igxButton='icon'] {
-            margin-inline-start: rem(16px);
-        }
-    }
-
-    %grid-excel-menu__add-filter {
-        margin: 0 rem(16px) rem(16px);
-
-        igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 

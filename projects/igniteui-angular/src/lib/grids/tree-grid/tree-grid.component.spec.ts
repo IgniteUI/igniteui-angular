@@ -1,8 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
@@ -27,17 +26,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridNoDataComponent,
                 IgxTreeGridWithNoForeignKeyComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -291,6 +287,50 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.componentInstance.data = null;
             expect(() => fix.detectChanges()).not.toThrow();
+        });
+    });
+
+    describe('Displaying empty grid message', () => {
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
+            grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
+        }));
+
+        it('should display empty grid message when there is no data', () => {
+            const data: any[] = grid.data;
+            grid.data = [];
+            fix.detectChanges();
+            let emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeTruthy();
+            expect(emptyGridMessage.nativeElement.innerText).toBe('Grid has no data.');
+
+            grid.data = data;
+            fix.detectChanges();
+            emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeFalsy();
+        });
+
+        it('should display empty grid message when last row is deleted', () => {
+            grid.data = [];
+            grid.addRow({
+                ID: 0,
+                Name: 'John Winchester',
+                HireDate: new Date(2008, 3, 20),
+                Age: 55,
+                OnPTO: false,
+                Employees: []
+            });
+
+            fix.detectChanges();
+            let emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeFalsy();
+
+            grid.deleteRowById(0);
+            fix.detectChanges();
+            emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeTruthy();
+            expect(emptyGridMessage.nativeElement.innerText).toBe('Grid has no data.');
         });
     });
 

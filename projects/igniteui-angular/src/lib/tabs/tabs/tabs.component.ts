@@ -5,6 +5,9 @@ import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
+import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 
 export const IgxTabsAlignment = mkenum({
     start: 'start',
@@ -58,7 +61,9 @@ let NEXT_TAB_ID = 0;
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
-    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
+    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
+    standalone: true,
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
@@ -69,7 +74,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     @Input()
     public get tabAlignment(): string | IgxTabsAlignment {
         return this._tabAlignment;
-    };
+    }
 
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;
@@ -115,7 +120,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public offset = 0;
 
     /** @hidden */
-    protected componentName = 'igx-tabs';
+    protected override componentName = 'igx-tabs';
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
@@ -124,13 +129,13 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
-        public dir: IgxDirectionality) {
+        dir: IgxDirectionality) {
         super(animationService, cdr, dir);
     }
 
 
     /** @hidden @internal */
-    public ngAfterViewInit(): void {
+    public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
         this.ngZone.runOutsideAngular(() => {
@@ -144,7 +149,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     /** @hidden @internal */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.ngZone.runOutsideAngular(() => {
@@ -181,7 +186,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     /** @hidden */
-    protected scrollTabHeaderIntoView() {
+    protected override scrollTabHeaderIntoView() {
         if (this.selectedIndex >= 0) {
             const tabItems = this.items.toArray();
             const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
@@ -212,7 +217,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     /** @hidden */
-    protected onItemChanges() {
+    protected override onItemChanges() {
         super.onItemChanges();
 
         Promise.resolve().then(() => {

@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
+import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -14,10 +14,9 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
-import { IPinningConfig } from './grid.common';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -101,7 +100,8 @@ interface Feature {
 }
 
 @Directive({
-    selector: '[igxGridState]'
+    selector: '[igxGridState]',
+    standalone: true
 })
 export class IgxGridStateDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
@@ -206,13 +206,11 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
-                const groupFactory = context.resolver.resolveComponentFactory(IgxColumnGroupComponent);
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
                     if (hasColumnGroup) {
-                        const ref1 = groupFactory.create(context.viewRef.injector);
+                        const ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                         Object.assign(ref1.instance, colState);
                         ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
@@ -223,7 +221,7 @@ export class IgxGridStateDirective {
                         ref1.changeDetectorRef.detectChanges();
                         newColumns.push(ref1.instance);
                     } else {
-                        const ref = factory.create(context.viewRef.injector);
+                        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
@@ -274,11 +272,11 @@ export class IgxGridStateDirective {
                 if (!context.currGrid.paginator) {
                     return;
                 }
-                if (context.currGrid.paginator.perPage !== state.recordsPerPage) {
-                    context.currGrid.paginator.perPage = state.recordsPerPage;
+                if (context.currGrid.perPage !== state.recordsPerPage) {
+                    context.currGrid.perPage = state.recordsPerPage;
                     context.currGrid.cdr.detectChanges();
                 }
-                context.currGrid.paginator.page = state.index;
+                context.currGrid.page = state.index;
             }
         },
         moving: {
@@ -467,8 +465,7 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        private resolver: ComponentFactoryResolver,
-        private viewRef: ViewContainerRef) { }
+        private viewRef: ViewContainerRef, private envInjector: EnvironmentInjector,  private injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
@@ -599,7 +596,7 @@ export class IgxGridStateDirective {
      * This method restores the IgxPivotDateDimension with its default functions and resource strings.
      */
     private restoreDateDimension(dim: IgxPivotDateDimension) {
-        const dateDim = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+        const dateDim = new IgxPivotDateDimension((dim as any)._baseDimension, (dim as any)._options);
         // restore functions and resource strings
         dim.resourceStrings = dateDim.resourceStrings;
         dim.memberFunction = dateDim.memberFunction;
@@ -616,7 +613,7 @@ export class IgxGridStateDirective {
      * Returns if this is a IgxPivotDateDimension.
      */
     private isDateDimension(dim: IPivotDimension) {
-        return (dim as any).inBaseDimension;
+        return (dim as any)._baseDimension;
     }
 
     /**
@@ -674,7 +671,7 @@ export class IgxGridStateDirective {
                     expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
 
-                let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
+                const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
                                 this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
 
                 if (condition) {
@@ -725,12 +722,3 @@ export class IgxGridStateDirective {
         return feature;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxGridStateDirective],
-    exports: [IgxGridStateDirective]
-})
-export class IgxGridStateModule { }

@@ -1,11 +1,10 @@
 import { useAnimation } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     Component,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     OnInit,
     Output
 } from '@angular/core';
@@ -36,7 +35,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-snackbar',
-    templateUrl: 'snackbar.component.html'
+    templateUrl: 'snackbar.component.html',
+    standalone: true,
+    imports: [NgIf]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {
@@ -54,7 +55,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-snackbar-${NEXT_ID++}`;
+    public override id = `igx-snackbar-${NEXT_ID++}`;
 
     /**
      * The default css class applied to the component.
@@ -154,7 +155,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * this.snackbar.open();
      * ```
      */
-    public open(message?: string) {
+    public override open(message?: string) {
         if (message !== undefined) {
             this.textMessage = message;
         }
@@ -172,7 +173,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * this.snackbar.toggle();
      * ```
      */
-     public toggle() {
+     public override toggle() {
         if (this.collapsed || this.isClosing) {
             this.open();
         } else {
@@ -190,25 +191,16 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     /**
      * @hidden
      */
-    public ngOnInit() {
-        this.opened.pipe(takeUntil(this.d$)).subscribe(() => {
+    public override ngOnInit() {
+        this.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.animationStarted.emit(openedEventArgs);
         });
 
-        this.closed.pipe(takeUntil(this.d$)).subscribe(() => {
+        this.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.animationDone.emit(closedEventArgs);
         });
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxSnackbarComponent],
-    exports: [IgxSnackbarComponent],
-    imports: [CommonModule]
-})
-export class IgxSnackbarModule { }

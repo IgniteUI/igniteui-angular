@@ -1,11 +1,24 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GridPagingMode, IgxGridComponent } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+
 import { Observable } from 'rxjs';
+
+import { RemoteService } from '../shared/remote.service';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { FormsModule } from '@angular/forms';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { GridPagingMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
-    templateUrl: 'grid-remote-paging.sample.html'
+    templateUrl: 'grid-remote-paging.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -17,7 +30,7 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     public paging = true;
     public data: Observable<any[]>;
     public selectOptions = [5, 10, 15, 25, 50];
-    public areAllRowsSelected: boolean = false;
+    public areAllRowsSelected = false;
 
     private _perPage = 15;
     private _dataLengthSubscriber;

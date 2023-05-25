@@ -1,25 +1,23 @@
-import {
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    Host,
-    HostBinding,
-    Inject,
-    Input,
-    Optional,
-    Output,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/density';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxSelectItemComponent } from '../select/select-item.component';
+import { IgxLabelDirective } from '../directives/label/label.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxSelectComponent } from '../select/select.component';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { NgIf, NgFor } from '@angular/common';
 
-@Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
-export class IgxPaginatorTemplateDirective {
+@Directive({
+    selector: '[igxPaginatorContent],igx-paginator-content',
+    standalone: true
+})
+export class IgxPaginatorContentDirective {
     /**
      * @internal
      * @hidden
@@ -30,6 +28,8 @@ export class IgxPaginatorTemplateDirective {
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
+    standalone: true,
+    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)]
 })
 export class IgxPaginatorComponent extends DisplayDensityBase {
 
@@ -37,8 +37,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @ContentChild(IgxPaginatorTemplateDirective)
-    public customContent: IgxPaginatorTemplateDirective;
+    @ContentChild(IgxPaginatorContentDirective)
+    public customContent: IgxPaginatorContentDirective;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
@@ -111,22 +111,18 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
-    /**
-     * Sets the class of the IgxPaginatorComponent based
-     * on the provided displayDensity.
-     */
     @HostBinding('class.igx-paginator--cosy')
-    public get classCosy(): boolean {
+    private get classCosy(): boolean {
         return this.displayDensity === DisplayDensity.cosy;
     }
 
     @HostBinding('class.igx-paginator--compact')
-    public get classCompact(): boolean {
+    private get classCompact(): boolean {
         return this.displayDensity === DisplayDensity.compact;
     }
 
     @HostBinding('class.igx-paginator')
-    public get classComfortable(): boolean {
+    private get classComfortable(): boolean {
         return this.displayDensity === DisplayDensity.comfortable;
     }
 
@@ -309,9 +305,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @hidden
      */
     public get paginatorSelectDisplayDensity(): DisplayDensity {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
         return DisplayDensity.compact;
     }
     /**
@@ -365,6 +358,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 @Component({
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
+    standalone: true,
+    imports: [IgxSelectComponent, FormsModule, IgxLabelDirective, NgFor, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
     /**
@@ -381,6 +376,8 @@ export class IgxPageSizeSelectorComponent {
 @Component({
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxPageNavigationComponent {
     /**

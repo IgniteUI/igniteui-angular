@@ -1,22 +1,16 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
-import { IgxAccordionComponent } from './accordion.component';
+import { IGX_ACCORDION_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-    declarations: [
-        IgxAccordionComponent
-    ],
     imports: [
-        IgxExpansionPanelModule,
-        CommonModule,
+        ...IGX_ACCORDION_DIRECTIVES
     ],
     exports: [
-        IgxAccordionComponent,
-        IgxExpansionPanelModule
+        ...IGX_ACCORDION_DIRECTIVES
     ]
 })
 export class IgxAccordionModule {

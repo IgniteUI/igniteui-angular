@@ -144,6 +144,46 @@ export const cloneValue = (value: any): any => {
 };
 
 /**
+ * Creates deep clone of provided value.
+ * Supports primitive values, dates and objects.
+ * If passed value is array returns shallow copy of the array.
+ * For Objects property values and references are cached and reused.
+ * This allows for circular references to same objects.
+ *
+ * @param value value to clone
+ * @param cache map of cached values already parsed
+ * @returns Deep copy of provided value
+ * @hidden
+ */
+export const cloneValueCached = (value: any, cache: Map<any, any>): any => {
+    if (isDate(value)) {
+        return new Date(value.getTime());
+    }
+    if (Array.isArray(value)) {
+        return [...value];
+    }
+
+    if (value instanceof Map || value instanceof Set) {
+        return value;
+    }
+
+    if (isObject(value)) {
+        if (cache.has(value)) {
+            return cache.get(value);
+        }
+
+        const result = {};
+        cache.set(value, result);
+
+        for (const key of Object.keys(value)) {
+            result[key] = cloneValueCached(value[key], cache);
+        }
+        return result;
+    }
+    return value;
+};
+
+/**
  * Parse provided input to Date.
  *
  * @param value input to parse
@@ -347,7 +387,7 @@ export class PlatformUtil {
         return [
             this.KEYMAP.HOME, this.KEYMAP.END, this.KEYMAP.SPACE,
             this.KEYMAP.ARROW_DOWN, this.KEYMAP.ARROW_LEFT, this.KEYMAP.ARROW_RIGHT, this.KEYMAP.ARROW_UP
-        ].includes(key);
+        ].includes(key as any);
     }
 }
 

@@ -2,7 +2,8 @@ import { Directive, HostBinding, Input, TemplateRef } from '@angular/core';
 
 @Directive({
     selector: '[igxDrawerItem]',
-    exportAs: 'igxDrawerItem'
+    exportAs: 'igxDrawerItem',
+    standalone: true
 })
 export class IgxNavDrawerItemDirective {
 
@@ -47,7 +48,8 @@ export class IgxNavDrawerItemDirective {
 }
 
 @Directive({
-    selector: '[igxDrawer]'
+    selector: '[igxDrawer]',
+    standalone: true
 })
 export class IgxNavDrawerTemplateDirective {
 
@@ -56,7 +58,8 @@ export class IgxNavDrawerTemplateDirective {
 }
 
 @Directive({
-    selector: '[igxDrawerMini]'
+    selector: '[igxDrawerMini]',
+    standalone: true
 })
 export class IgxNavDrawerMiniTemplateDirective {
 

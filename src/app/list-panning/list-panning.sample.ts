@@ -1,11 +1,22 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IgxToastComponent } from 'igniteui-angular';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxToastComponent as IgxToastComponent_1 } from '../../../projects/igniteui-angular/src/lib/toast/toast.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { NgFor } from '@angular/common';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective } from '../../../projects/igniteui-angular/src/lib/list/list.common';
+import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
 
 @Component({
     selector: 'app-list-panning-sample',
-    styleUrls: ['list-panning.sample.css'],
+    styleUrls: ['list-panning.sample.scss'],
     templateUrl: 'list-panning.sample.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [IgxListComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective, IgxToastComponent_1, IgxButtonDirective]
 })
 export class ListPanningSampleComponent {
     @ViewChild('toast', { static: true })

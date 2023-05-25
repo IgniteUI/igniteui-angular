@@ -14,15 +14,17 @@ import {
     NgZone,
     Inject,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
     IterableDiffers,
     ViewContainerRef,
     Optional,
     LOCALE_ID,
     ApplicationRef,
-    NgModuleRef,
-    Injector
+    Injector,
+    EnvironmentInjector,
+    CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
+import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -52,13 +54,33 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
+import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
+import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 
 let NEXT_ID = 0;
 
@@ -94,7 +116,47 @@ let NEXT_ID = 0;
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
-    ]
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgFor,
+        NgClass,
+        NgStyle,
+        NgTemplateOutlet,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxTreeGridRowComponent,
+        IgxSummaryRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxRowEditTabStopDirective,
+        IgxIconComponent,
+        IgxGridColumnResizerComponent,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxTreeGridHierarchizingPipe,
+        IgxTreeGridFlatteningPipe,
+        IgxTreeGridSortingPipe,
+        IgxTreeGridFilteringPipe,
+        IgxTreeGridPagingPipe,
+        IgxTreeGridTransactionPipe,
+        IgxTreeGridSummaryPipe,
+        IgxTreeGridNormalizeRecordsPipe,
+        IgxTreeGridAddRowPipe
+    ],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
@@ -191,13 +253,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public treeGroupArea: IgxTreeGridGroupByAreaComponent;
 
     /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
-    public dragIndicatorIconBase: TemplateRef<any>;
-
-    /**
      * @hidden @internal
      */
     @ViewChild('record_template', { read: TemplateRef, static: true })
@@ -274,12 +329,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public loadingRows = new Set<any>();
 
-    protected _filterStrategy = new TreeGridFilteringStrategy();
-    protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+    protected override _filterStrategy = new TreeGridFilteringStrategy();
+    protected override _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     private _data;
-    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
-    private _filteredData = null;
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -297,6 +351,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -304,38 +361,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    /**
-     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
-    }
-
-    /**
      * Get transactions service for the grid.
      *
      * @experimental @hidden
      */
-    public get transactions() {
+    public override get transactions() {
         if (this._diTransactions && !this.batchEditing) {
             return this._diTransactions;
         }
@@ -377,11 +407,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get rowLoadingIndicatorTemplate(): TemplateRef<any> {
+    public get rowLoadingIndicatorTemplate(): TemplateRef<void> {
         return this._rowLoadingIndicatorTemplate;
     }
 
-    public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
+    public set rowLoadingIndicatorTemplate(value: TemplateRef<void>) {
         this._rowLoadingIndicatorTemplate = value;
         this.notifyChanges();
     }
@@ -392,61 +422,40 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // }
 
     constructor(
-        protected validationService: IgxGridValidationService,
-        public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        validationService: IgxGridValidationService,
+        selectionService: IgxGridSelectionService,
+        colResizingService: IgxColumnResizingService,
+        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
         // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        protected transactionFactory: IgxHierarchicalTransactionFactory,
+        transactionFactory: IgxHierarchicalTransactionFactory,
         _elementRef: ElementRef<HTMLElement>,
         _zone: NgZone,
-        @Inject(DOCUMENT) public document: any,
-        public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
-        protected differs: IterableDiffers,
-        protected viewRef: ViewContainerRef,
+        @Inject(DOCUMENT) document: any,
+        cdr: ChangeDetectorRef,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
-        public navigation: IgxGridNavigationService,
-        public filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        envInjector: EnvironmentInjector,
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
-        protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
+        platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
-            filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
-    }
-
-    /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, column.field);
-        }
+        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
+            _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation, filteringService,
+            overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
     /**
      * @hidden
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
 
         this.rowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
@@ -513,14 +522,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
     }
 
-    public ngDoCheck() {
-        super.ngDoCheck();
-    }
-
     /**
      * @hidden
      */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         super.ngAfterViewInit();
         // TODO: pipesExectured event
         // run after change detection in super triggers pipes for records structure
@@ -535,14 +540,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         if (this.rowLoadingTemplate) {
             this._rowLoadingIndicatorTemplate = this.rowLoadingTemplate.template;
         }
         super.ngAfterContentInit();
     }
 
-    public getDefaultExpandState(record: ITreeGridRecord) {
+    public override getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
 
@@ -554,7 +559,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    public expandAll() {
+    public override expandAll() {
         this._expansionDepth = Infinity;
         this.expansionStates = new Map<any, boolean>();
     }
@@ -568,7 +573,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    public collapseAll() {
+    public override collapseAll() {
         this._expansionDepth = 0;
         this.expansionStates = new Map<any, boolean>();
     }
@@ -576,7 +581,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public refreshGridState(args?: IRowDataEventArgs) {
+    public override refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
@@ -604,11 +609,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     // TODO: remove evt emission
-    public addRow(data: any, parentRowID?: any) {
+    public override addRow(data: any, parentRowID?: any) {
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data: data, owner: this });
+        this.rowAddedNotifier.next({ data: data, owner: this, primaryKey: data[this.primaryKey] });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -632,7 +637,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
      * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
      */
-    public beginAddRowByIndex(index: number, asChild?: boolean): void {
+    public override beginAddRowByIndex(index: number, asChild?: boolean): void {
         if (index === null || index < 0) {
             return this.beginAddRowById(null, asChild);
         }
@@ -658,7 +663,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
-    public getInitialPinnedIndex(rec) {
+    public override getInitialPinnedIndex(rec) {
         const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
     }
@@ -667,14 +672,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
-    public isRecordPinned(rec) {
+    public override isRecordPinned(rec) {
         return this.getInitialPinnedIndex(rec.data) !== -1;
     }
 
     /**
-     * @inheritDoc
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false): any[] {
+    public override getSelectedData(formatters = false, headers = false): any[] {
         let source = [];
 
         const process = (record) => {
@@ -693,7 +703,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    public getEmptyRecordObjectFor(inTreeRow: RowType) {
+    public override getEmptyRecordObjectFor(inTreeRow: RowType) {
         const treeRowRec = inTreeRow?.treeRow || null;
         const row = { ...treeRowRec };
         const data = treeRowRec?.data || {};
@@ -701,7 +711,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = treeRowRec.data[key];
+                row.data[key] = treeRowRec.data[this.crudService.addRowParent?.asChild ? this.primaryKey : key];
             } else {
                 row.data[key] = undefined;
             }
@@ -719,12 +729,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any): any {
+    public override deleteRowById(rowId: any): any {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
         const args = {
             rowID: rowId,
+            primaryKey: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
             oldValue: null,
@@ -737,7 +748,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            this.rowDeleted.emit({ data: record, owner: this });
+            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this, primaryKey: record[this.primaryKey] };
+            this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
     }
@@ -846,12 +858,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-    public pinRow(rowID: any, index?: number): boolean {
+    public override pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
     }
 
-    public unpinRow(rowID: any): boolean {
+    public override unpinRow(rowID: any): boolean {
         const row = this.getRowByKey(rowID);
         return super.unpinRow(rowID, row);
     }
@@ -875,7 +887,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /** @hidden */
-    public getUnpinnedIndexById(id) {
+    public override getUnpinnedIndexById(id) {
         return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
     }
 
@@ -901,23 +913,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return row;
     }
 
-    /**
-     * Returns if the `IgxTreeGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
-    public get hasGroupableColumns(): boolean {
-        return this.columns.some((col) => col.groupable && !col.columnGroup);
-    }
-
-    protected generateDataFields(data: any[]): string[] {
+    protected override generateDataFields(data: any[]): string[] {
         return super.generateDataFields(data).filter(field => field !== this.childDataKey);
     }
 
-    protected transactionStatusUpdate(event: StateUpdateEvent) {
+    protected override transactionStatusUpdate(event: StateUpdateEvent) {
         let actions = [];
         if (event.origin === TransactionEventOrigin.REDO) {
             actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
@@ -941,7 +941,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         }
         super.transactionStatusUpdate(event);
-    };
+    }
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
@@ -950,7 +950,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    protected getDataBasedBodyHeight(): number {
+    protected override getDataBasedBodyHeight(): number {
         return !this.flatData || (this.flatData.length < this._defaultTargetRecordNumber) ?
             0 : this.defaultTargetBodyHeight;
     }
@@ -958,7 +958,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    protected scrollTo(row: any | number, column: any | number): void {
+    protected override scrollTo(row: any | number, column: any | number): void {
         let delayScrolling = false;
         let record: ITreeGridRecord;
 
@@ -970,11 +970,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
             if (this.paginator) {
                 const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
-                const page = Math.floor(rowIndex / this.paginator.perPage);
+                const page = Math.floor(rowIndex / this.perPage);
 
-                if (this.paginator.page !== page) {
+                if (this.page !== page) {
                     delayScrolling = true;
-                    this.paginator.page = page;
+                    this.page = page;
                 }
             }
         }
@@ -992,14 +992,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.scrollToHorizontally(column);
     }
 
-    protected writeToData(rowIndex: number, value: any) {
+    protected override writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
     }
 
     /**
      * @hidden
      */
-    protected initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null) {
+    protected override initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
@@ -1012,7 +1012,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    protected getGroupAreaHeight(): number {
+    protected override getGroupAreaHeight(): number {
         return this.treeGroupArea ? this.getComputedHeight(this.treeGroupArea.nativeElement) : 0;
     }
 
@@ -1028,7 +1028,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // deselect them as well, hence using 'records' map instead of getRowByKey() method which will
         // return only row components (i.e. records in view).
         const rowToDeselect = this.records.get(recordID);
-        this.selectionService.deselectRow(recordID);
+        this.selectionService.deselectRowsWithNoEvent([recordID]);
         this.gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));

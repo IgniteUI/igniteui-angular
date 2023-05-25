@@ -1,8 +1,9 @@
-import { Directive, ElementRef, HostListener, Input, NgModule } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
     exportAs: 'igxTextSelection',
-    selector: '[igxTextSelection]'
+    selector: '[igxTextSelection]',
+    standalone: true
 })
 export class IgxTextSelectionDirective {
     private selectionState = true;
@@ -108,7 +109,9 @@ export class IgxTextSelectionDirective {
 
     public trigger() {
         if (this.selected && this.nativeElement.value.length) {
-                this.nativeElement.select();
+            // delay the select call to avoid race conditions in case the directive is applied
+            // to an element with its own focus handler
+            requestAnimationFrame(() => this.nativeElement.select());
         }
     }
 }
@@ -116,8 +119,4 @@ export class IgxTextSelectionDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxTextSelectionDirective],
-    exports: [IgxTextSelectionDirective]
-})
-export class IgxTextSelectionModule { }
+

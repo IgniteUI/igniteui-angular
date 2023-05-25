@@ -1,14 +1,37 @@
-import { AfterViewInit,
-        Component,
-        ElementRef,
-        QueryList,
-        Renderer2,
-        ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    QueryList,
+    Renderer2,
+    ViewChildren
+} from '@angular/core';
+import { NgFor } from '@angular/common';
+import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavItemComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-bottomnav-sample',
-    styleUrls: ['bottomnav.sample.css'],
-    templateUrl: 'bottomnav.sample.html'
+    styleUrls: ['bottomnav.sample.scss'],
+    templateUrl: 'bottomnav.sample.html',
+    standalone: true,
+    imports: [
+        NgFor,
+        IgxBottomNavComponent,
+        IgxBottomNavItemComponent,
+        IgxBottomNavHeaderComponent,
+        IgxIconComponent,
+        IgxBottomNavHeaderIconDirective,
+        IgxBottomNavHeaderLabelDirective,
+        IgxBottomNavContentComponent,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxRippleDirective,
+        IgxAvatarComponent,
+        IgxListThumbnailDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxListActionDirective
+    ]
 })
 export class BottomNavSampleComponent implements AfterViewInit {
     @ViewChildren('tabbarEl')
@@ -79,7 +102,8 @@ export class BottomNavSampleComponent implements AfterViewInit {
 
 @Component({
     selector: 'app-custom-content',
-    templateUrl: 'template.html'
+    templateUrl: 'template.html',
+    standalone: true
 })
 
 export class CustomContentComponent {

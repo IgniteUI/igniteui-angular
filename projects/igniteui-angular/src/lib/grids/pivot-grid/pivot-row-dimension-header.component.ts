@@ -4,6 +4,9 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
+import { SortingIndexPipe } from '../headers/pipes';
+import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 /**
  * @hidden
@@ -11,25 +14,27 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header',
-    templateUrl: '../headers/grid-header.component.html'
+    templateUrl: '../headers/grid-header.component.html',
+    standalone: true,
+    imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public colResizingService: IgxPivotColumnResizingService,
-        public cdr: ChangeDetectorRef,
+        @Inject(IGX_GRID_BASE) grid: GridType,
+        public override colResizingService: IgxPivotColumnResizingService,
+        cdr: ChangeDetectorRef,
         public refInstance: ElementRef<HTMLElement>
     ) {
         super(grid, colResizingService, cdr, refInstance);
     }
 
     @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
+    public override onClick(event: MouseEvent) {
         event.preventDefault();
     }
 
-    public get selectable(): boolean {
+    public override get selectable(): boolean {
         return false;
     }
 }

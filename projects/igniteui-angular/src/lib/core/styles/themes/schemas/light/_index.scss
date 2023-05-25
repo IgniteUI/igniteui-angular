@@ -19,6 +19,7 @@
 @use './chip' as *;
 @use './column-actions' as *;
 @use './combo' as *;
+@use './select' as *;
 @use './dialog' as *;
 @use './data-chart' as *;
 @use './doughnut-chart' as *;
@@ -87,6 +88,7 @@
 /// @property {Map} igx-chip [$light-chip]
 /// @property {Map} igx-column-actions [$light-column-actions]
 /// @property {Map} igx-combo [$light-combo]
+/// @property {Map} igx-select [$light-select]
 /// @property {Map} igx-dialog [$light-dialog]
 /// @property {Map} igx-date-range-picker [$light-date-range-picker ]
 /// @property {Map} igx-divider [$light-divider]
@@ -150,6 +152,7 @@ $light-schema: (
     igx-chip: $light-chip,
     igx-column-actions: $light-column-actions,
     igx-combo: $light-combo,
+    igx-select: $light-select,
     igx-dialog: $light-dialog,
     igx-date-range: $light-date-range-picker,
     igx-divider: $light-divider,
@@ -195,6 +198,10 @@ $light-schema: (
     igx-tooltip: $light-tooltip,
     igx-tree: $light-tree,
     igx-watermark: $light-watermark,
+    _meta: (
+        theme: 'material',
+        variant: 'light',
+    ),
 );
 
 /// An alias of $light-schema.
@@ -221,6 +228,7 @@ $light-fluent-schema: (
     igx-chip: $fluent-chip,
     igx-column-actions: $fluent-column-actions,
     igx-combo: $fluent-combo,
+    igx-select: $fluent-select,
     igx-dialog: $fluent-dialog,
     data-chart: $fluent-data-chart,
     doughnut-chart: $fluent-doughnut-chart,
@@ -269,6 +277,10 @@ $light-fluent-schema: (
     igx-tooltip: $fluent-tooltip,
     igx-tree: $fluent-tree,
     igx-watermark: $fluent-watermark,
+    _meta: (
+        theme: 'fluent',
+        variant: 'light',
+    ),
 );
 
 /// Used to create bootstrap component themes.
@@ -290,6 +302,7 @@ $light-bootstrap-schema: (
     igx-chip: $bootstrap-chip,
     igx-column-actions: $bootstrap-column-actions,
     igx-combo: $bootstrap-combo,
+    igx-select: $bootstrap-select,
     igx-dialog: $bootstrap-dialog,
     data-chart: $bootstrap-data-chart,
     doughnut-chart: $bootstrap-doughnut-chart,
@@ -338,6 +351,10 @@ $light-bootstrap-schema: (
     igx-tooltip: $bootstrap-tooltip,
     igx-tree: $bootstrap-tree,
     igx-watermark: $bootstrap-watermark,
+    _meta: (
+        theme: 'bootstrap',
+        variant: 'light',
+    ),
 );
 
 /// Used to create indigo component themes.
@@ -359,6 +376,7 @@ $light-indigo-schema: (
     igx-chip: $indigo-chip,
     igx-column-actions: $bootstrap-column-actions,
     igx-combo: $indigo-combo,
+    igx-select: $indigo-select,
     igx-dialog: $indigo-dialog,
     data-chart: $indigo-data-chart,
     doughnut-chart: $indigo-doughnut-chart,
@@ -407,5 +425,9 @@ $light-indigo-schema: (
     igx-tooltip: $indigo-tooltip,
     igx-tree: $indigo-tree,
     igx-watermark: $indigo-watermark,
+    _meta: (
+        theme: 'indigo-design',
+        variant: 'light',
+    ),
 );
 

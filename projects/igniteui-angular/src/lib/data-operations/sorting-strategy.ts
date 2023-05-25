@@ -1,3 +1,4 @@
+import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
@@ -7,8 +8,8 @@ export enum SortingDirection {
     Desc = 2
 }
 
-export interface ISortingExpression extends IBaseEventArgs {
-    fieldName: string;
+export interface ISortingExpression<T = any> extends IBaseEventArgs {
+    fieldName: KeyOfOrString<T> & string;
     dir: SortingDirection;
     ignoreCase?: boolean;
     strategy?: ISortingStrategy;
@@ -86,5 +87,42 @@ export class DefaultSortingStrategy implements ISortingStrategy {
 
     protected arraySort(data: any[], compareFn?: (arg0: any, arg1: any) => number): any[] {
         return data.sort(compareFn);
+    }
+}
+
+export class GroupMemberCountSortingStrategy implements ISortingStrategy {
+    protected static _instance: GroupMemberCountSortingStrategy = null;
+
+    protected constructor() { }
+
+    public static instance(): GroupMemberCountSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+
+    public sort(data: any[], fieldName: string, dir: SortingDirection) {
+        const groupedArray = this.groupBy(data, fieldName);
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+
+        const cmpFunc = (a, b) => {
+            return this.compareObjects(a, b, groupedArray, fieldName, reverse);
+        };
+
+        return data
+            .sort((a, b) => a[fieldName].localeCompare(b[fieldName]))
+            .sort(cmpFunc);
+    }
+
+    public groupBy(data, key) {
+        return data.reduce((acc, curr) => {
+            (acc[curr[key]] = acc[curr[key]] || []).push(curr);
+            return acc;
+        }, {})
+    }
+
+    protected compareObjects(obj1: any, obj2: any, data: any[], fieldName: string, reverse: number) {
+        const firstItemValuesLength = data[obj1[fieldName]].length;
+        const secondItemValuesLength = data[obj2[fieldName]].length;
+
+        return reverse * (firstItemValuesLength - secondItemValuesLength);
     }
 }

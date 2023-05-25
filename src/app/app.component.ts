@@ -6,7 +6,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
     @HostBinding('attr.id')
@@ -317,6 +317,11 @@ export class AppComponent implements OnInit {
             link: '/gridValidation',
             icon: 'view_column',
             name: 'Grid Validation'
+        },
+        {
+            link: '/gridValidationTest',
+            icon: 'view_column',
+            name: 'Grid Validation Test'
         },
         {
             link: '/gridLocalization',

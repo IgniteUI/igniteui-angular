@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import {
@@ -16,8 +15,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxColumnComponent } from '../tree-grid/public_api';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -28,16 +27,13 @@ describe('IgxGrid - Column Moving #grid', () => {
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                FormsModule,
+                NoopAnimationsModule,
                 MovableColumnsComponent,
                 MovableTemplatedColumnsComponent,
                 MovableColumnsLargeComponent,
                 MultiColumnHeadersComponent
-            ],
-            imports: [
-                FormsModule,
-                NoopAnimationsModule,
-                IgxGridModule
             ]
         });
     }));
@@ -1011,7 +1007,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             // step 2 - navigate to page 2 and verify correct column order
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fixture.detectChanges();
 
             columnsList = grid.columns;
@@ -1039,7 +1035,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             // step 2 - navigate to page 2 and verify correct column order
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fixture.detectChanges();
 
             const columnsList = grid.columns;

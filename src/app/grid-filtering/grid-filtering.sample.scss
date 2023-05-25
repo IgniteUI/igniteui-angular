@@ -1,0 +1,32 @@
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 32px
+}
+
+.sample-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.density-chooser {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+igx-buttongroup {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.references {
+    font-size: .75em;
+}
+
+.references > p {
+    margin: 0;
+    letter-spacing: initial;
+    line-height: initial;
+    font-size: 1em;
+}

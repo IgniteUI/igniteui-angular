@@ -215,6 +215,15 @@ export class SampleTestData {
         { ID: 5, HireDate: new Date(2020, 4, 17).toISOString() },
     ]);
 
+    /* Data fields: Name: string, BirthDate: date, LastLogin: dateTime, MeetingTime: time, AttendanceRate: percent; 5 items. */
+    public static personMeetingData = () => ([
+        { Name: 'Casey Houston', BirthDate: new Date(1990, 2, 14), LastLogin: new Date(2023, 3, 28).setHours(13, 12, 36), MeetingTime: new Date(2023, 6, 7).setHours(10, 30, 1), AttendanceRate: 0.78 },
+        { Name: 'Gilberto Todd', BirthDate: new Date(1985, 4, 17), LastLogin: new Date(2023, 3, 14).setHours(14, 25, 23), MeetingTime: new Date(2023, 6, 7).setHours(9, 35, 31), AttendanceRate: 0.46 },
+        { Name: 'Tanya Bennett', BirthDate: new Date(1987, 6, 19), LastLogin: new Date(2023, 2, 23).setHours(19, 7, 13), MeetingTime: new Date(2023, 6, 7).setHours(13, 10, 36), AttendanceRate: 0.289 },
+        { Name: 'Jack Simon', BirthDate: new Date(1995, 8, 23), LastLogin: new Date(2023, 1, 27).setHours(17, 17, 41), MeetingTime: new Date(2023, 6, 7).setHours(14, 50, 47), AttendanceRate: 1 },
+        { Name: 'Celia Martinez', BirthDate: new Date(1994, 10, 27), LastLogin: new Date(2023, 2, 14).setHours(1, 31, 49), MeetingTime: new Date(2023, 6, 7).setHours(7, 0, 17), AttendanceRate: 0.384}
+    ]);
+
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
     public static personJobData = () => ([
         { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President' },
@@ -2498,6 +2507,46 @@ export class SampleTestData {
         }
         return prods;
     }
+
+    public static generateTestDateTimeData = () => {
+        return [
+            {
+                ProductID: 1,
+                ProductName: 'Product1',
+                DateField: new Date('2012-02-12'),
+                TimeField: new Date(new Date('2012-02-12').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 5)),
+            },
+            {
+                ProductID: 2,
+                ProductName: 'Product2',
+                DateField: new Date('2012-02-13'),
+                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20)),
+            },
+            {
+                ProductID: 3,
+                ProductName: 'Product3',
+                DateField: new Date('2012-02-12').setHours(1, 55),
+                TimeField: new Date(new Date('2012-02-12').setHours(4, 4)),
+                DateTimeField: new Date(new Date('2006-03-17').setHours(1, 55)),
+            },
+            {
+                ProductID: 4,
+                ProductName: 'Product4',
+                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+            },
+            {
+                ProductID: 5,
+                ProductName: 'Product5',
+                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+            }
+        ];
+    };
 
     /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {

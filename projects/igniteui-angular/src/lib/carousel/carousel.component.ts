@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -15,7 +15,6 @@ import {
     IterableChangeRecord,
     IterableDiffer,
     IterableDiffers,
-    NgModule,
     OnDestroy,
     Output,
     QueryList,
@@ -28,12 +27,13 @@ import { takeUntil } from 'rxjs/operators';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-import { IgxIconModule } from '../icon/public_api';
+
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
+import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
 
@@ -45,7 +45,7 @@ export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientatio
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
-    public overrides = {
+    public override overrides = {
         pan: { direction: Hammer.DIRECTION_HORIZONTAL }
     };
 }
@@ -83,7 +83,9 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     :host {
         display: block;
         outline-style: none;
-    }`]
+    }`],
+    standalone: true,
+    imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
@@ -230,7 +232,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    @Input() public override animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -315,56 +317,56 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * An event that is emitted after a slide transition has happened.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
-     * <igx-carousel (onSlideChanged)="onSlideChanged($event)"></igx-carousel>
+     * <igx-carousel (slideChanged)="slideChanged($event)"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
+    @Output() public slideChanged = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
-     * <igx-carousel (onSlideAdded)="onSlideAdded($event)"></igx-carousel>
+     * <igx-carousel (slideAdded)="slideAdded($event)"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
+    @Output() public slideAdded = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
-     * <igx-carousel (onSlideRemoved)="onSlideRemoved($event)"></igx-carousel>
+     * <igx-carousel (slideRemoved)="slideRemoved($event)"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
+    @Output() public slideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after the carousel has been paused.
      * Provides a reference to the `IgxCarouselComponent` as an event argument.
      * ```html
-     * <igx-carousel (onCarouselPaused)="onCarouselPaused($event)"></igx-carousel>
+     * <igx-carousel (carouselPaused)="carouselPaused($event)"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
+    @Output() public carouselPaused = new EventEmitter<IgxCarouselComponent>();
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between `slides`.
      * Provides a reference to the `IgxCarouselComponent` as an event argument.
      * ```html
-     * <igx-carousel (onCarouselPlaying)="onCarouselPlaying($event)"></igx-carousel>
+     * <igx-carousel (carouselPlaying)="carouselPlaying($event)"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
+    @Output() public carouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
     private defaultIndicator: TemplateRef<any>;
@@ -380,8 +382,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @internal
      */
     public stoppedByInteraction: boolean;
-    protected currentItem: IgxSlideComponent;
-    protected previousItem: IgxSlideComponent;
+    protected override currentItem: IgxSlideComponent;
+    protected override previousItem: IgxSlideComponent;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
@@ -803,7 +805,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public play() {
         if (!this.playing) {
             this.playing = true;
-            this.onCarouselPlaying.emit(this);
+            this.carouselPlaying.emit(this);
             this.restartInterval();
             this.stoppedByInteraction = false;
         }
@@ -822,7 +824,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public stop() {
         if (this.pause) {
             this.playing = false;
-            this.onCarouselPaused.emit(this);
+            this.carouselPaused.emit(this);
             this.resetInterval();
         }
     }
@@ -951,7 +953,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             } else {
                 this.currentItem = slide;
             }
-            this.onSlideChanged.emit({ carousel: this, slide });
+            this.slideChanged.emit({ carousel: this, slide });
             this.restartInterval();
         }
     }
@@ -974,7 +976,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
                 slide.total = this.total;
-                this.onSlideAdded.emit({ carousel: this, slide });
+                this.slideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
                     this.currentItem = slide;
                 }
@@ -983,7 +985,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
-                this.onSlideRemoved.emit({ carousel: this, slide });
+                this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
                     this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
@@ -1025,27 +1027,4 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 export interface ISlideEventArgs extends IBaseEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
-    ],
-    exports: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
-    ],
-    imports: [CommonModule, IgxIconModule]
-})
-export class IgxCarouselModule {
 }

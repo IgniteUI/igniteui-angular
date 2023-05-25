@@ -47,9 +47,7 @@ export interface IFieldPipeArgs {
     weekStart?: WEEKDAYS | number;
 }
 
-export interface IColumnPipeArgs extends IFieldPipeArgs {
-    
-}
+export type IColumnPipeArgs = IFieldPipeArgs
 
 export interface ISortingOptions {
     mode: 'single' | 'multiple';

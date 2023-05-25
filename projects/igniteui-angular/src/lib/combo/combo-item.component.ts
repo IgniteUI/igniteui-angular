@@ -10,11 +10,15 @@ import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-do
 import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
 import { rem } from '../core/utils';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { NgIf } from '@angular/common';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-item',
-    templateUrl: 'combo-item.component.html'
+    templateUrl: 'combo-item.component.html',
+    standalone: true,
+    imports: [NgIf, IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
@@ -34,7 +38,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     @HostBinding('attr.aria-label')
     @Input()
-    public get ariaLabel(): string {
+    public override get ariaLabel(): string {
         const valueKey = this.comboAPI.valueKey;
         return (valueKey !== null && this.value != null) ? this.value[valueKey] : this.value;
     }
@@ -46,7 +50,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     /**
      * @hidden
      */
-    public get itemID() {
+    public override get itemID() {
         const valueKey = this.comboAPI.valueKey;
         return valueKey !== null ? this.value[valueKey] : this.value;
     }
@@ -68,9 +72,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     constructor(
         protected comboAPI: IgxComboAPIService,
-        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
-        protected elementRef: ElementRef,
-        @Inject(IgxSelectionAPIService) protected selection: IgxSelectionAPIService
+        @Inject(IGX_DROPDOWN_BASE) dropDown: IDropDownBase,
+        elementRef: ElementRef,
+        @Inject(IgxSelectionAPIService) selection: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef, null, selection);
     }
@@ -78,11 +82,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     /**
      * @hidden
      */
-    public get selected(): boolean {
+    public override get selected(): boolean {
         return this.comboAPI.is_item_selected(this.itemID);
     }
 
-    public set selected(value: boolean) {
+    public override set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -101,10 +105,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         return rect.y >= parentDiv.y;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public clicked(event): void {
+    public override clicked(event): void {
         this.comboAPI.disableTransitions = false;
         if (!this.isSelectable) {
             return;

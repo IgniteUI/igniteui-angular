@@ -1,4 +1,4 @@
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -10,7 +10,6 @@ import {
 
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
-import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -41,17 +40,14 @@ describe('IgxGrid - Row Adding #grid', () => {
     };
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxAddRowComponent,
-                ColumnLayoutTestComponent,
-                DefaultGridMasterDetailComponent,
-                IgxGridRowEditingTransactionComponent,
-                IgxGridRowEditingDefinedColumnsComponent
-            ],
             imports: [
                 NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxGridModule]
+                IgxAddRowComponent,
+                IgxGridRowEditingTransactionComponent,
+                IgxGridRowEditingDefinedColumnsComponent,
+                ColumnLayoutTestComponent,
+                DefaultGridMasterDetailComponent
+            ]
         });
     }));
 
@@ -672,7 +668,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataLength = grid.data.length;
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fixture.detectChanges();
 
             const row = grid.rowList.first;
@@ -689,7 +685,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataLength = grid.data.length;
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fixture.detectChanges();
 
             const row = grid.rowList.first;
@@ -1116,7 +1112,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            let cellElem = grid.gridAPI.get_cell_by_index(10, 'ProductName');
+            const cellElem = grid.gridAPI.get_cell_by_index(10, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fixture.detectChanges();
 

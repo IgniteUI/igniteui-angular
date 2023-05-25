@@ -1,7 +1,6 @@
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { CellType, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
@@ -15,15 +14,14 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
-import { IgxTreeGridRow } from '../grid/public_api';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { CellType, IgxTreeGridRow } from '../public_api';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -36,7 +34,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridStringTreeColumnComponent,
@@ -48,7 +47,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridRowEditingHierarchicalDSTransactionComponent
             ],
-            imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule],
             providers: [
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]
@@ -593,6 +591,30 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
+
+        it('should select the text when the first cell (tree grid cell) enters edit mode', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.expandAll();
+            fix.detectChanges();
+
+            // move the 'string' column 'Name' to first position, so its cells are the tree grid cells
+            const colName = grid.getColumnByName('Name');
+            const colHireDate = grid.getColumnByName('HireDate');
+            grid.moveColumn(colName, colHireDate, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+            tick(100);
+
+            const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
+            cell.setEditMode(true);
+            fix.detectChanges();
+            tick(100);
+
+            expect(cell.editMode).toBe(true);
+            expect(document.activeElement.nodeName).toEqual('INPUT')
+            expect((document.activeElement as HTMLInputElement).value).toBe('John Winchester');
+            expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
+            expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(15);
+        }));
     });
 
     describe('Batch Editing', () => {
@@ -1585,7 +1607,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should apply sorting to both pinned and unpinned rows', () => {
             treeGrid.pinRow(147);
-            treeGrid.pinRow(711);;
+            treeGrid.pinRow(711);
 
             expect(treeGrid.getRowByIndex(0).key).toBe(147);
             expect(treeGrid.getRowByIndex(1).key).toBe(711);
@@ -1650,7 +1672,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             [147, 147, 475, 957, 317, 711, 998].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
 
-            treeGrid.paginate(1);
+            treeGrid.paginator.paginate(1);
             fix.detectChanges();
 
             rows = treeGrid.rowList.toArray();

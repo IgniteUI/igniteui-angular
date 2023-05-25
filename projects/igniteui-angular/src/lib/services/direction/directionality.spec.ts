@@ -12,10 +12,8 @@ describe('IgxDirectionality', () => {
     describe('DI', () => {
         beforeAll(waitForAsync(() =>
             TestBed.configureTestingModule({
-                declarations: [
-                    InjectsIgxDirectionalityComponent
-                ],
-            }).compileComponents()
+    imports: [InjectsIgxDirectionalityComponent]
+}).compileComponents()
         ));
 
         it('should inject the document through the injectionToken properly', () => {
@@ -83,7 +81,8 @@ describe('IgxDirectionality', () => {
     selector: 'igx-div-element',
     template: `
         <div>element</div>
-    `
+    `,
+    standalone: true
 })
 class InjectsIgxDirectionalityComponent {
     constructor(public dir: IgxDirectionality) { }

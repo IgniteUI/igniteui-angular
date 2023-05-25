@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
@@ -20,7 +19,8 @@ import {
     ColumnsAddedOnInitComponent,
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
-    GridCurrencySummariesComponent
+    GridCurrencySummariesComponent,
+    GridUserMeetingDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -28,7 +28,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,13 +39,11 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxHierarchicalGridModule,
-         IgxHierarchicalGridComponent,
-} from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, IgxPivotGridModule } from '../../grids/pivot-grid/public_api';
+import { IgxPivotGridComponent } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -55,7 +53,8 @@ describe('Excel Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -75,9 +74,9 @@ describe('Excel Exporter', () => {
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
-                GridCurrencySummariesComponent
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
+                GridCurrencySummariesComponent,
+                GridUserMeetingDataComponent
+            ]
         }).compileComponents();
     }));
 
@@ -747,6 +746,31 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
+
+        it('Should escape special chars in headers', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            grid.columnList.get(1).header = '&';
+            grid.columnList.get(2).header = '<>';
+            grid.columnList.get(3).header = '"';
+            grid.columnList.get(4).header = '\'';
+
+
+            await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
+        });
+
+        it('Should export date, dateTime, time and percent columns correctly', async () => {
+            const fix = TestBed.createComponent(GridUserMeetingDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGriWithDateData);
+        });
     });
 
     describe('', () => {
@@ -1216,6 +1240,15 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
         });
+
+        it('should export grouped grid with only multi column headers', async () => {
+            grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            grid.columnList.get(0).hidden = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersWithGroupedData, false);
+        });
     });
 
 
@@ -1384,7 +1417,7 @@ describe('Excel Exporter', () => {
         return opts;
     };
 
-    const exportAndVerify = async (component, exportOptions, expectedData, exportTable: boolean = true) => {
+    const exportAndVerify = async (component, exportOptions, expectedData, exportTable = true) => {
         const isHGrid = component instanceof IgxHierarchicalGridComponent;
         const shouldNotExportTable = isHGrid || !exportTable;
 

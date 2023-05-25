@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
-    IgxCardModule,
     IgxCardComponent,
     IgxCardType,
     IgxCardThumbnailDirective,
@@ -10,14 +9,17 @@ import {
     IgxCardHeaderSubtitleDirective,
     IgxCardActionsComponent,
     IgxCardMediaDirective,
+    IgxCardHeaderComponent,
+    IgxCardContentDirective,
 } from './card.component';
 
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxIconComponent } from '../icon/icon.component';
 
 describe('Card', () => {
     configureTestSuite();
+    // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';
 
     const classes = {
@@ -52,11 +54,11 @@ describe('Card', () => {
             get reverse() {
                 return `${this.base}--reverse`;
             },
-            get icons() {
-                return `${this.base}__icons`;
+            get end() {
+                return `${this.base}__end`;
             },
-            get buttons() {
-                return `${this.base}__buttons`;
+            get start() {
+                return `${this.base}__start`;
             }
         },
         media: `${baseClass}__media`
@@ -64,17 +66,12 @@ describe('Card', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
                 CardWithHeaderComponent,
                 VerticalCardComponent,
                 HorizontalCardComponent
-            ],
-            imports: [
-                IgxCardModule,
-                IgxIconModule,
-                IgxButtonModule
             ]
         }).compileComponents();
     }));
@@ -124,7 +121,9 @@ describe('Card', () => {
         const header = fixture.debugElement.query(By.css('igx-card-header')).nativeElement;
 
         expect(header).toBeDefined();
-        expect(header.getAttribute('role')).toEqual('header');
+        // K.D. March 20th, 2023 #12792 Card header should have no role
+        // expect(header.getAttribute('role')).toEqual('header');
+        expect(header.getAttribute('role')).toBeNull();
 
         expect(header).toHaveClass(classes.header.base);
         expect(header).not.toHaveClass(classes.header.vertical);
@@ -228,8 +227,8 @@ describe('Card', () => {
 
         const actionsElement = fixture.debugElement.query(By.css('igx-card-actions'));
 
-        const buttons = actionsElement.query(By.css(`.${classes.actions.buttons}`)).nativeElement;
-        const icons = actionsElement.query(By.css(`.${classes.actions.icons}`)).nativeElement;
+        const buttons = actionsElement.query(By.css(`.${classes.actions.start}`)).nativeElement;
+        const icons = actionsElement.query(By.css(`.${classes.actions.end}`)).nativeElement;
 
         const buttonsOrder = window.getComputedStyle(buttons).getPropertyValue('order');
         const iconsOrder = window.getComputedStyle(icons).getPropertyValue('order');
@@ -245,8 +244,8 @@ describe('Card', () => {
         const actionsInstance = fixture.componentInstance.actions;
         const actionsElement = fixture.debugElement.query(By.css('igx-card-actions'));
 
-        const buttons = actionsElement.query(By.css(`.${classes.actions.buttons}`)).nativeElement;
-        const icons = actionsElement.query(By.css(`.${classes.actions.icons}`)).nativeElement;
+        const buttons = actionsElement.query(By.css(`.${classes.actions.start}`)).nativeElement;
+        const icons = actionsElement.query(By.css(`.${classes.actions.end}`)).nativeElement;
 
         actionsInstance.reverse = true;
         fixture.detectChanges();
@@ -260,12 +259,16 @@ describe('Card', () => {
 });
 
 @Component({
-    template: `<igx-card></igx-card>`
+    template: `<igx-card></igx-card>`,
+    standalone: true,
+    imports: [IgxCardComponent]
 })
 class InitCardComponent { }
 
 @Component({
-    template: `<igx-card type="outlined"></igx-card>`
+    template: `<igx-card type="outlined"></igx-card>`,
+    standalone: true,
+    imports: [IgxCardComponent]
 })
 class InitOutlinedCardComponent {
     @ViewChild(IgxCardComponent, { static: true })
@@ -275,7 +278,9 @@ class InitOutlinedCardComponent {
 @Component({
     template: `<igx-card>
         <igx-card-header></igx-card-header>
-    <igx-card>`
+    <igx-card>`,
+    standalone: true,
+    imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
 
@@ -294,26 +299,42 @@ class CardWithHeaderComponent { }
         <igx-card-content>Test Content</igx-card-content>
 
         <igx-card-actions>
-            <button igxButton>Test</button>
-            <button igxButton="icon">
+            <button igxButton igxStart>Test</button>
+            <button igxButton="icon" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
-    <igx-card>`
+    <igx-card>`,
+    standalone: true,
+    imports: [
+        IgxCardComponent,
+        IgxCardMediaDirective,
+        IgxCardHeaderComponent,
+        IgxCardThumbnailDirective,
+        IgxCardHeaderTitleDirective,
+        IgxCardHeaderSubtitleDirective,
+        IgxCardContentDirective,
+        IgxCardActionsComponent,
+        IgxButtonDirective,
+        IgxIconComponent
+    ]
 })
 class VerticalCardComponent {
     @ViewChild(IgxCardMediaDirective, { static: true }) public media: IgxCardMediaDirective;
 }
 
 @Component({
-    template: `<igx-card [horizontal]="true">
+    template: `
+    <igx-card [horizontal]="true">
         <igx-card-actions>
-            <button igxButton>Test</button>
-            <button igxButton="icon">
+            <button igxButton igxStart>Test</button>
+            <button igxButton="icon" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
-    </igx-card>`
+    </igx-card>`,
+    standalone: true,
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent]
 })
 class HorizontalCardComponent {
     @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;

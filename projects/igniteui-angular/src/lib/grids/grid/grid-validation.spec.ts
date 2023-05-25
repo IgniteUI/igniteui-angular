@@ -1,14 +1,14 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
+import { IgxInputDirective } from '../../directives/input/input.directive';
+import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
-    ForbiddenValidatorDirective,
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
@@ -16,21 +16,20 @@ import {
 } from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
+import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './grid.module';
 
 describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
                 IgxGridCustomEditorsComponent,
-                IgxTreeGridValidationTestComponent,
-                ForbiddenValidatorDirective
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule, ReactiveFormsModule]
+                IgxTreeGridValidationTestComponent
+            ]
         });
     }));
 
@@ -247,7 +246,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -259,7 +258,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
         });
 
         it('should return invalid transaction using the transaction service API', () => {
@@ -285,6 +284,31 @@ describe('IgxGrid - Validation #grid', () => {
             GridFunctions.verifyCellValid(cell, true);
             invalidRecords = grid.validation.getInvalid();
             expect(invalidRecords.length).toEqual(0);
+        });
+
+        it('should update formControl state when grid data is updated.', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const originalDataCopy = JSON.parse(JSON.stringify(grid.data));
+
+            grid.data = JSON.parse(JSON.stringify(grid.data));
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.data = originalDataCopy;
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            expect(cell.editValue).toBe(originalDataCopy[1].ProductName);
         });
     });
 
@@ -335,7 +359,7 @@ describe('IgxGrid - Validation #grid', () => {
             col.inlineEditorTemplate = template;
             fixture.detectChanges();
 
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             const input = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(input, 'bob');
@@ -354,7 +378,7 @@ describe('IgxGrid - Validation #grid', () => {
             col.inlineEditorTemplate = template;
             fixture.detectChanges();
 
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             const input = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(input, 'bob');
@@ -374,7 +398,7 @@ describe('IgxGrid - Validation #grid', () => {
             grid.validationTrigger = 'blur';
             fixture.detectChanges();
 
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             const input = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(input, 'bob');
@@ -405,9 +429,9 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should update validity when setting new value through grid API', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
-            grid.updateCell('IG', 2,'ProductName');
+            grid.updateCell('IG', 2, 'ProductName');
             grid.validation.markAsTouched(2);
             fixture.detectChanges();
 
@@ -450,7 +474,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should update validation status when using undo/redo api', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -484,7 +508,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should not invalidate cleared number cell', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 3);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 3);
 
             // Set cell to null, which should invalidate
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
@@ -527,7 +551,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should not show errors when the row is deleted', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            const cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -571,7 +595,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should allow setting built-in validators via template-driven and mark cell invalid', () => {
             const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
-            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+            const cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -588,7 +612,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should allow setting custom validators via template-driven and mark cell invalid', () => {
             const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
-            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+            const cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -605,7 +629,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should update validation status when using undo/redo/delete api', () => {
             const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
-            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+            const cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;

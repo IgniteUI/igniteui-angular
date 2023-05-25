@@ -1,18 +1,18 @@
-import { CommonModule } from '@angular/common';
 import {
     Directive, ElementRef, EventEmitter, HostListener,
     Output, PipeTransform, Renderer2,
-    Input, NgModule, OnInit, AfterViewChecked,
+    Input, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MaskParsingService, MaskOptions } from './mask-parsing.service';
+import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
 
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
     selector: '[igxMask]',
-    exportAs: 'igxMask'
+    exportAs: 'igxMask',
+    standalone: true
 })
 export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueAccessor {
     /**
@@ -212,27 +212,27 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         // After the compositionend event Chromium triggers input events of type 'deleteContentBackward' and
         // we need to adjust the start and end indexes to include mask literals
         if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE) {
-                const isInputComplete = this._compositionStartIndex === 0 && this._end === this.mask.length;
-                let numberOfMaskLiterals = 0;
-                const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
-                for (const index of literalPos) {
-                    if (index >= this._compositionStartIndex && index <= this._end) {
-                        numberOfMaskLiterals++;
-                    }
+            const isInputComplete = this._compositionStartIndex === 0 && this._end === this.mask.length;
+            let numberOfMaskLiterals = 0;
+            const literalPos = parseMask(this.maskOptions.format).literals.keys();
+            for (const index of literalPos) {
+                if (index >= this._compositionStartIndex && index <= this._end) {
+                    numberOfMaskLiterals++;
                 }
-                this.inputValue = isInputComplete ?
+            }
+            this.inputValue = isInputComplete ?
                 this.inputValue.substring(0, this.selectionEnd - numberOfMaskLiterals) + this.inputValue.substring(this.selectionEnd)
                 : this._compositionValue?.substring(0, this._compositionStartIndex) || this.inputValue;
 
-                if (this._compositionValue) {
-                    this._start = this.selectionStart;
-                    this._end = this.selectionEnd;
-                    this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
-                    this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
-                    this.nativeElement.selectionEnd = this._end;
-                    this._start = this.selectionStart;
-                    this._end = this.selectionEnd;
-                }
+            if (this._compositionValue) {
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+                this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
+                this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+                this.nativeElement.selectionEnd = this._end;
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+            }
         }
 
         if (this._hasDropAction) {
@@ -377,7 +377,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     protected setPlaceholder(value: string): void {
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || placeholder === this.mask) {
-            this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', parseMask(value ?? '').mask || this.defaultMask);
         }
     }
 
@@ -394,7 +394,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
-        };
+        }
 
         this.setSelectionRange(replacedData.end);
 
@@ -424,9 +424,4 @@ export interface IMaskEventArgs extends IBaseEventArgs {
 }
 
 /** @hidden */
-@NgModule({
-    declarations: [IgxMaskDirective],
-    exports: [IgxMaskDirective],
-    imports: [CommonModule]
-})
-export class IgxMaskModule { }
+

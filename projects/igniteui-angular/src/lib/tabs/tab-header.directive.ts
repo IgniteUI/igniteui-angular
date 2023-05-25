@@ -48,5 +48,5 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     /** @hidden */
     public get nativeElement() {
         return this.elementRef.nativeElement;
-    };
+    }
 }

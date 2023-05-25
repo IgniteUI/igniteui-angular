@@ -1,8 +1,11 @@
-<section style="height: 800px" class="sample-content">
+<section class="sample-content">
+    <div class="density-chooser">
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    </div>
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
         <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
     </ng-template>
-    <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
+    <igx-grid [displayDensity]="density" [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
         <igx-grid-toolbar [displayDensity]="grid.displayDensity">
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -61,8 +64,8 @@
             <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="PostalCode"></igx-column>
         </igx-column-group>
     </igx-grid>
-    <span igxButton (click)="log()">Pin first group</span>
-    <span igxButton (click)="pinGroup()">Toggle visibleWhenCollapsed - Person Details</span>
-    <span igxButton (click)="hideGroup()">Toggle expand - Address Information</span>
-    <span igxButton (click)="toggleCollapsible()">Toggle collapsible - General Information</span>
+    <button igxButton="raised" (click)="log()">Pin first group</button>
+    <button igxButton="raised" (click)="pinGroup()">Toggle visibleWhenCollapsed - Person Details</button>
+    <button igxButton="raised" (click)="hideGroup()">Toggle expand - Address Information</button>
+    <button igxButton="raised" (click)="toggleCollapsible()">Toggle collapsible - General Information</button>
 </section>

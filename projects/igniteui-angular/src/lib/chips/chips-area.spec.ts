@@ -1,15 +1,13 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxChipsModule } from './chips.module';
-import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
-import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxPrefixDirective } from './public_api';
+import { NgFor } from '@angular/common';
 
 @Component({
     template: `
@@ -20,7 +18,9 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -50,7 +50,9 @@ class TestChipComponent {
                 <span #label [class]="'igx-chip__text'">third chip</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [IgxChipsAreaComponent, IgxChipComponent]
 })
 class TestChipSelectComponent extends TestChipComponent {
 }
@@ -64,7 +66,9 @@ class TestChipSelectComponent extends TestChipComponent {
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -101,8 +105,7 @@ describe('IgxChipsArea ', () => {
     configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
     const CHIP_SELECT_ICON = 'igx-chip__select';
-    const CHIP_SELECT_ICON_HIDDEN = 'igx-chip__select--hidden';
-    const TEST_CHIP_AREA_CLASS = 'igx-chip-area customClass';
+    const CHIP_AREA_CLASS = 'igx-chip-area';
 
     let fix;
     let chipArea: IgxChipsAreaComponent;
@@ -110,12 +113,11 @@ describe('IgxChipsArea ', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 TestChipComponent,
                 TestChipReorderComponent,
                 TestChipSelectComponent
-            ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
+            ]
         }).compileComponents();
     }));
 
@@ -127,7 +129,7 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should add chips when adding data items ', () => {
-            expect(chipAreaElement.nativeElement.className).toEqual(TEST_CHIP_AREA_CLASS);
+            expect(chipAreaElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['customClass', CHIP_AREA_CLASS]));
             expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
@@ -322,22 +324,14 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            const selectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
-            const unselectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[1];
-            selectedChip.selected = true;
+            const igxChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
+            const igxChipItem = igxChip.nativeElement.children[0]; // Return igx-chip__item
+
+            igxChip.selected = true;
             fix.detectChanges();
 
-            const selectedChipIconContainer = selectedChip.nativeElement.children[0].children[0];
-            const unselectedChipIconContainer = unselectedChip.nativeElement.children[0].children[0];
-            expect(selectedChip.selected).toBe(true);
-            expect(selectedChipIconContainer.children.length).toEqual(1);
-            expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-            // expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
-            expect(selectedChip.nativeElement.children[0].children[0].className).toEqual(CHIP_SELECT_ICON);
-            expect(selectedChip.nativeElement.children[0].children[0].className).not.toEqual(CHIP_SELECT_ICON_HIDDEN);
-            expect(unselectedChipIconContainer.children.length).toEqual(1);
-            expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-            expect(unselectedChip.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
+            expect(igxChip.selected).toBe(true);
+            expect(igxChipItem).toHaveClass(`igx-chip__item--selected`);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {

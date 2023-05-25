@@ -13,6 +13,10 @@ import {
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { GridType } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
 
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
@@ -38,7 +42,9 @@ export interface IgxExporterEvent {
  */
 @Component({
     selector: 'igx-grid-toolbar-exporter',
-    templateUrl: './grid-toolbar-exporter.component.html'
+    templateUrl: './grid-toolbar-exporter.component.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, NgIf, IgxToggleDirective, IgxExcelTextDirective, NgTemplateOutlet, IgxCSVTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
 
@@ -93,7 +99,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     public isExporting = false;
 
     constructor(
-        @Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken,
+        @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
         private excelExporter: IgxExcelExporterService,
         private csvExporter: IgxCsvExporterService,
     ) {

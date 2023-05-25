@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostBinding, Input, NgModule } from '@angular/core';
-import { IgxIconModule } from '../icon/public_api';
+import { NgIf } from '@angular/common';
+import { Component, HostBinding, Input } from '@angular/core';
+
 import { mkenum } from '../core/utils';
+import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
 
@@ -40,7 +41,9 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  */
 @Component({
     selector: 'igx-badge',
-    templateUrl: 'badge.component.html'
+    templateUrl: 'badge.component.html',
+    standalone: true,
+    imports: [NgIf, IgxIconComponent]
 })
 export class IgxBadgeComponent {
 
@@ -134,6 +137,24 @@ export class IgxBadgeComponent {
     public cssClass = 'igx-badge';
 
     /**
+     * Sets a square shape to the badge, if `shape` is set to `square`.
+     * By default the shape of the badge is rounded.
+     *
+     * @example
+     * ```html
+     * <igx-badge shape="square"></igx-badge>
+     * ```
+     */
+    @Input()
+    public shape: 'rounded' | 'square' = 'rounded';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-badge--square')
+    public get _squareShape(): boolean {
+        return this.shape === 'square';
+    }
+
+    /**
      * Sets/gets the aria-label attribute value.
      *
      * @example
@@ -184,13 +205,3 @@ export class IgxBadgeComponent {
         return this.type === IgxBadgeType.ERROR;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxBadgeComponent],
-    exports: [IgxBadgeComponent],
-    imports: [CommonModule, IgxIconModule]
-})
-export class IgxBadgeModule { }

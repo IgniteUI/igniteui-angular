@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     Directive,
@@ -6,12 +5,11 @@ import {
     Optional,
     Inject,
     Input,
-    NgModule,
     OnInit,
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { IgxButtonModule } from '../directives/button/button.directive';
+
 import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
@@ -22,7 +20,8 @@ let NEXT_ID = 0;
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-media'
+    selector: 'igx-card-media',
+    standalone: true
 })
 export class IgxCardMediaDirective {
     /** @hidden @internal */
@@ -69,7 +68,8 @@ export class IgxCardMediaDirective {
  */
 @Component({
     selector: 'igx-card-header',
-    templateUrl: 'card-header.component.html'
+    templateUrl: 'card-header.component.html',
+    standalone: true
 })
 export class IgxCardHeaderComponent {
     /** @hidden @internal */
@@ -88,18 +88,6 @@ export class IgxCardHeaderComponent {
     @HostBinding('class.igx-card-header--vertical')
     @Input()
     public vertical = false;
-
-    /**
-     * An @Input property that sets the value of the `role` attribute of the card header.
-     * By default the value is set to `header`.
-     *
-     * @example
-     * ```html
-     * <igx-card-header role="header"></igx-card-header>
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'header';
 }
 
 /**
@@ -107,7 +95,8 @@ export class IgxCardHeaderComponent {
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
-    selector: '[igxCardThumbnail]'
+    selector: '[igxCardThumbnail]',
+    standalone: true
 })
 export class IgxCardThumbnailDirective { }
 
@@ -116,7 +105,8 @@ export class IgxCardThumbnailDirective { }
  * Use it to tag text nodes.
  */
 @Directive({
-    selector: '[igxCardHeaderTitle]'
+    selector: '[igxCardHeaderTitle]',
+    standalone: true
 })
 export class IgxCardHeaderTitleDirective {
     /** @hidden @internal */
@@ -129,7 +119,8 @@ export class IgxCardHeaderTitleDirective {
  * Use it to tag text nodes.
  */
 @Directive({
-    selector: '[igxCardHeaderSubtitle]'
+    selector: '[igxCardHeaderSubtitle]',
+    standalone: true
 })
 export class IgxCardHeaderSubtitleDirective {
     /** @hidden @internal */
@@ -141,7 +132,8 @@ export class IgxCardHeaderSubtitleDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-content'
+    selector: 'igx-card-content',
+    standalone: true
 })
 export class IgxCardContentDirective {
     /** @hidden @internal */
@@ -154,7 +146,8 @@ export class IgxCardContentDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-footer'
+    selector: 'igx-card-footer',
+    standalone: true
 })
 export class IgxCardFooterDirective {
     /**
@@ -209,7 +202,8 @@ export type IgxCardType = (typeof IgxCardType)[keyof typeof IgxCardType];
 
 @Component({
     selector: 'igx-card',
-    templateUrl: 'card.component.html'
+    templateUrl: 'card.component.html',
+    standalone: true
 })
 export class IgxCardComponent {
     /**
@@ -290,16 +284,15 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 @Component({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-actions',
-    templateUrl: 'card-actions.component.html'
+    templateUrl: 'card-actions.component.html',
+    standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
     /**
      * An @Input property that sets the layout style of the actions.
-     * By default icons and icon buttons, as well as regular buttons
-     * are split into two containers, which are then positioned on both ends
-     * of the card-actions area.
-     * You can justify the elements in those groups so they are positioned equally
-     * from one another taking up all the space available along the card actions axis.
+     * You can justify the elements slotted in the igx-card-action container
+     * so that they are positioned equally from one another taking up all the
+     * space available along the card actions axis.
      *
      * @example
      * ```html
@@ -328,12 +321,9 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 
     /**
-     * An @Input property that sets order of the buttons the actions area.
-     * By default all icons/icon buttons are placed at the end of the action
-     * area. Any regular buttons(flat, raised) will appear before the icons/icon buttons
-     * placed in the actions area.
-     * If you want to reverse their positions so that icons appear first, use the `reverse`
-     * attribute.
+     * @deprecated in version 15.1.0.
+     *
+     * An @Input property that reverses the order of the buttons in the actions area.
      *
      * @example
      * ```html
@@ -367,36 +357,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public ngOnInit() {
         if (!this.isVerticalSet && this.card.horizontal) {
             this.vertical = true;
-        };
+        }
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxCardComponent,
-        IgxCardHeaderComponent,
-        IgxCardMediaDirective,
-        IgxCardContentDirective,
-        IgxCardActionsComponent,
-        IgxCardFooterDirective,
-        IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubtitleDirective,
-        IgxCardThumbnailDirective,
-    ],
-    exports: [
-        IgxCardComponent,
-        IgxCardHeaderComponent,
-        IgxCardMediaDirective,
-        IgxCardContentDirective,
-        IgxCardActionsComponent,
-        IgxCardFooterDirective,
-        IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubtitleDirective,
-        IgxCardThumbnailDirective,
-    ],
-    imports: [CommonModule, IgxButtonModule]
-})
-export class IgxCardModule { }

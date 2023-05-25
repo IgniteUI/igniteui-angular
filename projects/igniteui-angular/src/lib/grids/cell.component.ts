@@ -18,25 +18,39 @@
     QueryList,
     AfterViewInit
 } from '@angular/core';
-import { formatPercent } from '@angular/common';
+import { formatPercent, NgIf, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { first, takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
-import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
+import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
-import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
-import { first, takeUntil, takeWhile } from 'rxjs/operators';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from './common/pipes';
+import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
+import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
+import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxChipComponent } from '../chips/chip.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -55,7 +69,36 @@ import { Subject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
-    providers: [HammerGesturesManager]
+    providers: [HammerGesturesManager],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        NgTemplateOutlet,
+        DecimalPipe,
+        PercentPipe,
+        CurrencyPipe,
+        DatePipe,
+        ReactiveFormsModule,
+        IgxChipComponent,
+        IgxTextHighlightDirective,
+        IgxIconComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxFocusDirective,
+        IgxTextSelectionDirective,
+        IgxCheckboxComponent,
+        IgxDatePickerComponent,
+        IgxTimePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxTooltipTargetDirective,
+        IgxTooltipDirective,
+        IgxGridCellImageAltPipe,
+        IgxStringReplacePipe,
+        IgxColumnFormatterPipe
+    ]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
     private _destroy$ = new Subject<void>();
@@ -210,24 +253,25 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *
      * @memberof IgxGridCellComponent
      */
-    public get context(): any {
-        const ctx = {
+    public get context(): IgxCellTemplateContext {
+        const getCellType = () => this.getCellType(true);
+        const ctx: IgxCellTemplateContext = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
+            get cell() {
+                /* Turns the `cell` property from the template context object into lazy-evaluated one.
+                 * Otherwise on each detection cycle the cell template is recreating N cell instances where
+                 * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+                 */
+                return getCellType();
+            }
         };
         if (this.editMode) {
-            ctx['formControl'] = this.formControl;
+            ctx.formControl = this.formControl;
         }
         if (this.isInvalid) {
-            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+            ctx.defaultErrorTemplate = this.defaultErrorTemplate;
         }
-        /* Turns the `cell` property from the template context object into lazy-evaluated one.
-         * Otherwise on each detection cycle the cell template is recreating N cell instances where
-         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
-         */
-        Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType(true)
-        });
         return ctx;
     }
 
@@ -742,7 +786,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
-    private _cellSelection = GridSelectionMode.multiple;
+    private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
     constructor(
@@ -972,6 +1016,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.grid.crudService.updateCell(true, event);
             }
             return;
+        } else {
+            this.selectionService.primaryButton = true;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
@@ -1029,11 +1075,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        const shouldEmitSelection = !this.selectionService.isActiveNode(node);
+        let shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
             const currentActive = this.selectionService.activeElement;
-            this.selectionService.activeElement = node;
+            if (this.cellSelectionMode === GridSelectionMode.single && (event as any)?.ctrlKey && this.selected) {
+                this.selectionService.activeElement = null;
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.activeElement = node;
+            }
             const cancel = this._updateCRUDStatus(event);
             if (cancel) {
                 this.selectionService.activeElement = currentActive;
@@ -1065,8 +1116,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
-            this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
-            this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            if (this.selectionService.isInMap(this.selectionService.activeElement) && (event as any)?.ctrlKey && !(event as any)?.shiftKey) {
+                this.selectionService.remove(this.selectionService.activeElement);
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
+                this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            }
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));

@@ -1,15 +1,30 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { IChangeRadioEventArgs } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IChangeRadioEventArgs, IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-sample',
-    styleUrls: ['input.sample.css'],
-    templateUrl: 'input.sample.html'
+    styleUrls: ['input.sample.scss'],
+    templateUrl: 'input.sample.html',
+    standalone: true,
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, NgFor, IgxRadioComponent, IgxListComponent, IgxListItemComponent, IgxIconComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListActionDirective, IgxSwitchComponent, IgxAvatarComponent, IgxCheckboxComponent, ReactiveFormsModule, IgxButtonDirective]
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
+    public placeholderDate = new Date();
     public selected = 'option1';
     public airplaneMode = false;
 

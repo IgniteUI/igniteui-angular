@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
     AfterViewChecked, ChangeDetectorRef, Component,
     ContentChild,
@@ -6,28 +6,27 @@ import {
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    NgModule, OnDestroy, Optional, QueryList
+    OnDestroy, Optional, QueryList
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
     DisplayDensity, DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
-} from '../core/displayDensity';
+} from '../core/density';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { mkenum, PlatformUtil } from '../core/utils';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
     IgxInputDirective,
     IgxInputState
 } from '../directives/input/input.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
-import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
-import { IgxIconModule } from '../icon/public_api';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
-
+import { IgxIconComponent } from '../icon/icon.component';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -45,6 +44,8 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
 export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
     /**
@@ -121,6 +122,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
     protected hints: QueryList<IgxHintDirective>;
 
+    @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
+    protected _prefixes: QueryList<IgxPrefixDirective>;
+
+    @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
+    protected _suffixes: QueryList<IgxSuffixDirective>;
+
     /** @hidden */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
     protected input: IgxInputDirective;
@@ -166,6 +173,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @HostBinding('class.igx-input-group--compact')
     public get isDisplayDensityCompact() {
         return this.displayDensity === DisplayDensity.compact;
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--textarea-group')
+    public get textAreaClass(): boolean {
+        return this.input.isTextArea;
     }
 
     /**
@@ -282,6 +295,28 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     public get hasHints() {
         return this.hints.length > 0;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--prefixed')
+    public get hasPrefixes() {
+        return this._prefixes.length > 0 || this.isFileType;
+    }
+
+    /** @hidden @internal */
+    public set prefixes(items: QueryList<IgxPrefixDirective>) {
+        this._prefixes = items;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--suffixed')
+    public get hasSuffixes() {
+        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    public set suffixes(items: QueryList<IgxPrefixDirective>) {
+        this._suffixes = items;
     }
 
     /**
@@ -458,26 +493,3 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         this._subscription.unsubscribe();
     }
 }
-
-/** @hidden */
-@NgModule({
-    declarations: [
-        IgxInputGroupComponent,
-        IgxHintDirective,
-        IgxInputDirective,
-        IgxLabelDirective,
-    ],
-    exports: [
-        IgxInputGroupComponent,
-        IgxHintDirective,
-        IgxInputDirective,
-        IgxLabelDirective,
-        IgxPrefixModule,
-        IgxSuffixModule,
-        IgxButtonModule,
-        IgxIconModule
-    ],
-    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule, IgxButtonModule, IgxIconModule],
-})
-
-export class IgxInputGroupModule {}

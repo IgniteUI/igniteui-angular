@@ -2,17 +2,6 @@
 import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxDateSummaryOperand,
-    IgxGridModule,
-    IgxNumberSummaryOperand,
-    IgxSummaryOperand,
-    IgxSummaryResult,
-    IgxGroupByRow,
-    IgxSummaryRow,
-    IgxGridRow,
-    IColumnPipeArgs
-} from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -32,6 +21,7 @@ import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -44,15 +34,15 @@ describe('IgxGrid - Summaries #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
+                CustomSummariesComponent,
                 ProductsComponent,
                 SummaryColumnComponent,
-                CustomSummariesComponent,
                 FilteringComponent,
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            ]
         });
     }));
 
@@ -60,11 +50,11 @@ describe('IgxGrid - Summaries #grid', () => {
         describe('in grid with no summaries defined: ', () => {
             let fixture: ComponentFixture<ProductsComponent>;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(ProductsComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
-            }));
+            });
 
             it('should not have summary if no summary is active ', () => {
                 expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeNull();
@@ -150,11 +140,11 @@ describe('IgxGrid - Summaries #grid', () => {
             let fixture: ComponentFixture<CustomSummariesComponent>;
             let grid: IgxGridComponent;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(CustomSummariesComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid1;
-            }));
+            });
 
             it('should properly render custom summaries', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
@@ -599,11 +589,11 @@ describe('IgxGrid - Summaries #grid', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            }));
+            });
 
             it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
@@ -856,16 +846,14 @@ describe('IgxGrid - Summaries #grid', () => {
     describe('Keyboard Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             grid.width = '800px';
             grid.height = '800px';
             fix.detectChanges();
-            tick(100);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -2284,6 +2272,57 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
         });
 
+        it('CRUD: Adding grouped item via UI should update group summary accordingly', () => {
+            grid.rowEditable = true;
+            fix.detectChanges();
+            const newRow = {
+                ID: 777,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19,
+                OnPTO: true
+            };
+            const rows = grid.rowList.toArray();
+            rows[1].beginAddRow();
+
+            const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
+            const endEvent = new AnimationEvent('animationend');
+            animationElem.dispatchEvent(endEvent);
+
+            fix.detectChanges();
+
+            let addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeTrue();
+
+            let cell = grid.getCellByColumn(2, 'ParentID');
+            cell.update(newRow.ParentID);
+            cell = grid.getCellByColumn(2, 'Name');
+            cell.update(newRow.Name);
+            cell = grid.getCellByColumn(2, 'HireDate');
+            cell.update(newRow.HireDate);
+            cell = grid.getCellByColumn(2, 'Age');
+            cell.update(newRow.Age);
+            cell = grid.getCellByColumn(2, 'OnPTO');
+            cell.update(newRow.OnPTO);
+
+            fix.detectChanges();
+            grid.endEdit(true);
+
+            fix.detectChanges();
+
+            addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeFalse();
+
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '17', '17', '51', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
+        });
+
         it('CRUD: Add not grouped item', () => {
             const newRow = {
                 ID: 777,
@@ -2516,7 +2555,7 @@ class DealsSummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
                 return obj;
@@ -2531,7 +2570,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
                 return obj;
@@ -2546,7 +2585,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
                 return obj;
@@ -2566,7 +2605,7 @@ class InStockSummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries: any[], allData = [], field?): IgxSummaryResult[] {
+    public override operate(summaries: any[], allData = [], field?): IgxSummaryResult[] {
         const result = super.operate(summaries);
         if (field && field === 'UnitsInStock') {
             result.push({
@@ -2584,7 +2623,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
+    public override operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
         const result = super.operate(data);
         if (fieldName === 'UnitsInStock') {
             result.push({
@@ -2625,7 +2664,9 @@ class AllDataAvgSummary extends IgxSummaryOperand {
             [summaries]="earliest">
         </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 
 export class CustomSummariesComponent {

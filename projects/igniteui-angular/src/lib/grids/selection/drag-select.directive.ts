@@ -19,7 +19,10 @@ enum DragScrollDirection {
  *
  * @hidden @internal
  */
-@Directive({ selector: '[igxGridDragSelect]' })
+@Directive({
+    selector: '[igxGridDragSelect]',
+    standalone: true
+})
 export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
 
     @Output()

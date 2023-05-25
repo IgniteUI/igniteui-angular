@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -20,11 +19,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
         }).compileComponents();
     }));
 
@@ -257,7 +252,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
-            treeGrid.perPage = 3;
+            treeGrid.paginator.perPage = 3;
             fix.detectChanges();
             tick(16);
 
@@ -268,7 +263,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
 
-            treeGrid.page = 1;
+            treeGrid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -279,7 +274,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
 
-            treeGrid.page = 2;
+            treeGrid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
 

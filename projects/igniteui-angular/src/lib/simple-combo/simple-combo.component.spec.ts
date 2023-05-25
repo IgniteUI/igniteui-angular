@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -6,17 +7,17 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboState } from '../combo/combo.common';
 import { RemoteDataService } from '../combo/combo.component.spec';
-import { IComboSelectionChangingEventArgs } from '../combo/public_api';
-import { DisplayDensity } from '../core/displayDensity';
+import { IComboSelectionChangingEventArgs, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from '../combo/public_api';
+import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxIconComponent, IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputState } from '../input-group/public_api';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconService } from '../icon/icon.service';
+import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxSimpleComboComponent, IgxSimpleComboModule, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -113,7 +114,7 @@ describe('IgxSimpleCombo', () => {
             combo.dropdown = dropdown;
             const defaultSettings = (combo as any)._overlaySettings;
             combo.toggle();
-            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings || {});
             const newSettings = {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: new AbsoluteScrollStrategy()
@@ -221,7 +222,7 @@ describe('IgxSimpleCombo', () => {
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             spyOn(combo.selectionChanging, 'emit');
 
-            let oldSelection;
+            let oldSelection = undefined;
             let newSelection = [combo.data[1]];
 
             combo.select(combo.data[1]);
@@ -432,16 +433,12 @@ describe('IgxSimpleCombo', () => {
     describe('Initialization and rendering tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxSimpleComboEmptyComponent
-                ],
-                imports: [
-                    IgxSimpleComboModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule,
-                    ReactiveFormsModule,
-                    FormsModule
                 ]
             }).compileComponents();
         }));
@@ -643,18 +640,14 @@ describe('IgxSimpleCombo', () => {
     describe('Binding tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
                     ComboModelBindingComponent
-                ],
-                imports: [
-                    IgxSimpleComboModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule,
-                    ReactiveFormsModule,
-                    FormsModule
                 ]
             }).compileComponents();
         }));
@@ -808,18 +801,13 @@ describe('IgxSimpleCombo', () => {
         let dropdown: IgxComboDropDownComponent;
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxSimpleComboIconTemplatesComponent
-                ],
-                imports: [
-                    IgxSimpleComboModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule,
-                    IgxIconModule,
-                    ReactiveFormsModule,
-                    FormsModule
                 ]
             }).compileComponents();
         }));
@@ -855,6 +843,24 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             tick();
             expect(combo.close).toHaveBeenCalledTimes(2);
+        }));
+
+        it('should not close the dropdown on ArrowUp key if the active item is the first one in the list', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
         }));
 
         it('should select an item from the dropdown list with the Space key without closing it', () => {
@@ -1021,11 +1027,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
-            expect(document.activeElement).toHaveClass('igx-combo__content');
-
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
             expect(input.nativeElement.value).toEqual('Wisconsin');
+        });
+
+        it('should navigate to next filtered item on ArrowDown', () => {
+            combo.allowCustomValues = true;
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            // filtered data -> Wisconsin, Connecticut
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(input.nativeElement.value).toEqual('Connecticut');
         });
 
         it('should clear selection when all text in input is removed by Backspace and Delete', () => {
@@ -1051,6 +1070,19 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
+        });
+
+        it('should display all list items when clearing the input by Space', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(1);
+
+            UIInteractions.simulateTyping(' ', input, 0, 9);
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(0);
+            expect(combo.filteredData.length).toEqual(combo.data.length);
         });
 
         it('should close the dropdown (if opened) when tabbing outside of the input', () => {
@@ -1119,6 +1151,37 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.value).toEqual('');
             expect(combo.selection.length).toEqual(0);
+        });
+
+        it('should open the combo when input is focused', () => {
+            spyOn(combo, 'open').and.callThrough();
+            spyOn(combo, 'close').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.close).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
         });
 
         it('should empty any invalid item values', () => {
@@ -1325,20 +1388,91 @@ describe('IgxSimpleCombo', () => {
             clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
         });
+
+        it('should open the combo to the top when there is no space to open to the bottom', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxBottomPositionSimpleComboComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            const newSettings = {
+                positionStrategy: new AutoPositionStrategy(),
+                scrollStrategy: new AbsoluteScrollStrategy()
+            };
+            combo.overlaySettings = newSettings;
+            fixture.detectChanges();
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toBe(1);
+            expect(combo.selection[0]).toEqual('Connecticut');
+            fixture.detectChanges();
+
+            combo.dropdown.close();
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(true);
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
+
+            combo.dropdown.close();
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(true);
+        }));
+
+        it('should not open when clearing the selection from the clear icon when the combo is collapsed', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            combo.handleClear(new MouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(true);
+        }));
+
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            fixture.detectChanges();
+
+            dropdown.toggle();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('Ohio ', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(combo.value).toBe('Ohio ');
+        }));
     });
 
     describe('Display density', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    IgxSimpleComboSampleComponent
-                ],
                 imports: [
-                    IgxSimpleComboModule,
                     NoopAnimationsModule,
-                    IgxToggleModule,
                     ReactiveFormsModule,
-                    FormsModule
+                    FormsModule,
+                    IgxSimpleComboSampleComponent
                 ]
             }).compileComponents();
         }));
@@ -1393,15 +1527,11 @@ describe('IgxSimpleCombo', () => {
             let inputGroupRequired: DebugElement;
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxSimpleComboInTemplatedFormComponent
-                    ],
                     imports: [
-                        IgxSimpleComboModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
                         ReactiveFormsModule,
-                        FormsModule
+                        FormsModule,
+                        IgxSimpleComboInTemplatedFormComponent
                     ]
                 }).compileComponents();
             }));
@@ -1606,15 +1736,11 @@ describe('IgxSimpleCombo', () => {
         describe('Reactive form tests: ', () => {
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxSimpleComboInReactiveFormComponent
-                    ],
                     imports: [
-                        IgxSimpleComboModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
                         ReactiveFormsModule,
-                        FormsModule
+                        FormsModule,
+                        IgxSimpleComboInReactiveFormComponent
                     ]
                 }).compileComponents();
             }));
@@ -1787,16 +1913,12 @@ describe('IgxSimpleCombo', () => {
     describe('Selection tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
                     IgxComboRemoteDataComponent,
                     IgxSimpleComboBindingDataAfterInitComponent
-                ],
-                imports: [
-                    IgxSimpleComboModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule,
-                    ReactiveFormsModule,
-                    FormsModule
                 ]
             }).compileComponents();
         }));
@@ -1833,7 +1955,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.valueKey).toBeDefined();
             expect(combo.selection.length).toEqual(0);
 
-            let selectedItem = combo.data[1];
+            const selectedItem = combo.data[1];
             combo.toggle();
             combo.select(combo.data[1][combo.valueKey]);
 
@@ -1852,29 +1974,53 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.selection).toEqual([selectedItem[combo.valueKey]]);
         }));
+        it('should set combo.value to empty string when bound to remote data and selected item\'s data is not present', (async () => {
+            expect(combo.valueKey).toBeDefined();
+            expect(combo.valueKey).toEqual('id');
+            expect(combo.selection.length).toEqual(0);
+
+            // current combo data - id: 0 - 9
+            // select item that is not present in the data source yet
+            combo.select(15);
+
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('');
+
+            combo.toggle();
+
+            // scroll to selected item
+            combo.virtualScrollContainer.scrollTo(15);
+            await wait();
+            fixture.detectChanges();
+
+            const selectedItem = combo.data[combo.data.length - 1];
+            expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
+        }));
     });
 });
 
 @Component({
     template: `
-<igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
-[valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
-[allowCustomValues]="allowCustomValues">
-<ng-template igxComboItem let-display let-key="valueKey">
-<div class="state-card--simple">
-<span class="small-red-circle"></span>
-<div class="display-value--main">State: {{display[key]}}</div>
-<div class="display-value--sub">Region: {{display.region}}</div>
-</div>
-</ng-template>
-<ng-template igxComboHeader>
-<div class="header-class">This is a header</div>
-</ng-template>
-<ng-template igxComboFooter>
-<div class="footer-class">This is a footer</div>
-</ng-template>
-</igx-simple-combo>
-`
+    <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
+    [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
+    [allowCustomValues]="allowCustomValues">
+        <ng-template igxComboItem let-display let-key="valueKey">
+        <div class="state-card--simple">
+        <span class="small-red-circle"></span>
+        <div class="display-value--main">State: {{display[key]}}</div>
+        <div class="display-value--sub">Region: {{display.region}}</div>
+        </div>
+        </ng-template>
+        <ng-template igxComboHeader>
+        <div class="header-class">This is a header</div>
+        </ng-template>
+        <ng-template igxComboFooter>
+        <div class="footer-class">This is a footer</div>
+        </ng-template>
+    </igx-simple-combo>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxSimpleComboSampleComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1891,7 +2037,7 @@ class IgxSimpleComboSampleComponent {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
@@ -1923,7 +2069,9 @@ class IgxSimpleComboSampleComponent {
 }
 
 @Component({
-    template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`
+    template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboEmptyComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1936,7 +2084,9 @@ export class IgxSimpleComboEmptyComponent {
 @Component({
     template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
-                </igx-simple-combo>`
+                </igx-simple-combo>`,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, IgxIconComponent, IgxComboToggleIconDirective, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1945,12 +2095,14 @@ export class IgxSimpleComboIconTemplatesComponent {
     public data: any[] =  [
         { name: 'Sofia', id: '1' },
         { name: 'London', id: '2' },
-    ];;
+    ];
     public name!: string;
 }
 
 @Component({
-    template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`
+    template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
     @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
@@ -1973,7 +2125,9 @@ export class ComboModelBindingComponent implements OnInit {
 >
 </igx-simple-combo>
 </div>
-`
+`,
+    standalone: true,
+    imports: [IgxSimpleComboComponent]
 })
 class IgxComboInContainerTestComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2007,7 +2161,9 @@ class IgxComboInContainerTestComponent {
     [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
     [ariaLabelledBy]="'mockID'">
     </igx-simple-combo>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2045,8 +2201,10 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
             [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-simple-combo>
-</form>
-`
+    </form>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
     @ViewChild('testCombo', { read: IgxSimpleComboComponent, static: true })
@@ -2094,7 +2252,9 @@ class IgxSimpleComboInTemplatedFormComponent {
             displayKey="field" valueKey="value" [data]="comboData">
         </igx-simple-combo>
     </form>
-`
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboInReactiveFormComponent {
     @ViewChild('reactiveCombo', { read: IgxSimpleComboComponent, static: true })
@@ -2120,11 +2280,14 @@ export class IgxSimpleComboInReactiveFormComponent {
 
 @Component({
     template: `
-        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
     public items: any[];
-    public selectedItem: number = 1;
+    public selectedItem = 1;
 
     constructor(private cdr: ChangeDetectorRef) { }
 
@@ -2134,5 +2297,52 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
             { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
             this.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: `
+    <div style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
+        <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'"
+        style="margin-bottom: 60px;">
+        </igx-simple-combo>
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent]
+})
+export class IgxBottomPositionSimpleComboComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+    public items: any[] = [];
+
+    constructor() {
+        const division = {
+            'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
+            'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
+            'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 01': ['Illinois', 'Indiana'],
+            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
+            'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia'],
+            'South Atlantic 03': ['District of Columbia', 'West Virginia'],
+            'East South Central 01': ['Alabama', 'Kentucky'],
+            'East South Central 02': ['Mississippi', 'Tennessee'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Pacific 01': ['Alaska', 'California'],
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+        };
+        const keys = Object.keys(division);
+        for (const key of keys) {
+            division[key].map((e) => {
+                this.items.push({
+                    field: e,
+                    region: key.substring(0, key.length - 3)
+                });
+            });
+        }
     }
 }

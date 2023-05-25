@@ -1,12 +1,10 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridRowSelectionComponent,
@@ -14,34 +12,31 @@ import {
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
     let rowIsland2;
+    const gridData = SampleTestData.generateHGridData(5, 3);
 
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxHierarchicalGridModule,
-                IgxIconModule,
-                IgxGridSelectionModule]
+            ]
         }).compileComponents();
     }))
 
@@ -634,14 +629,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith({
-                added: ['00'],
+                added: [gridData[0].childData[0]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['00'],
+                newSelection: [gridData[0].childData[0]],
                 oldSelection: [],
                 removed: [],
                 owner: childGrid,
-                allRowsSelected: false
+                allRowsSelected: false,
             });
 
             // Click on checkbox on second row
@@ -652,12 +647,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(childSpy).toHaveBeenCalledWith({
-                added: ['01'],
+                added: [gridData[0].childData[1]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['01'],
-                oldSelection: ['00'],
-                removed: ['00'],
+                newSelection: [gridData[0].childData[1]],
+                oldSelection: [gridData[0].childData[0]],
+                removed: [gridData[0].childData[0]],
                 owner: childGrid,
                 allRowsSelected: false
             });
@@ -671,13 +666,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(1);
             expect(parentSpy).toHaveBeenCalledWith({
-                added: ['1'],
+                added: [gridData[1]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['1'],
+                newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: hierarchicalGrid
             });
 
             // Click on a header checkbox in parent grid
@@ -688,13 +684,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledWith({
-                added: ['0', '2', '3', '4'],
+                added: [gridData[0], gridData[2], gridData[3], gridData[4]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['1', '0', '2', '3', '4'],
-                oldSelection: ['1'],
+                newSelection: [gridData[1], gridData[0], gridData[2], gridData[3], gridData[4]],
+                oldSelection: [gridData[1]],
                 removed: [],
-                allRowsSelected: true
+                allRowsSelected: true,
+                owner: hierarchicalGrid
             });
         });
         it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {
@@ -1519,7 +1516,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Should have correct indices on all pages', fakeAsync(() => {
             // root grid
-            hGrid.nextPage();
+            hGrid.paginator.nextPage();
             tick(100);
             fix.detectChanges();
             expect(hGrid.gridAPI.get_row_by_index(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');

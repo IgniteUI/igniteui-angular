@@ -1,38 +1,16 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxAvatarModule } from '../avatar/avatar.component';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxChipComponent } from './chip.component';
-import { IgxChipsAreaComponent } from './chips-area.component';
-import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxPrefixModule, IgxPrefixDirective} from '../directives/prefix/prefix.directive';
-import { IgxSuffixModule, IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IGX_CHIPS_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-  declarations: [
-    IgxChipsAreaComponent,
-    IgxChipComponent
-  ],
-  exports: [
-    IgxChipsAreaComponent,
-    IgxChipComponent,
-    IgxPrefixDirective,
-    IgxSuffixDirective
-  ],
-  imports: [
-    CommonModule,
-    IgxRippleModule,
-    IgxIconModule,
-    IgxButtonModule,
-    IgxAvatarModule,
-    IgxDragDropModule,
-    IgxPrefixModule,
-    IgxSuffixModule
-  ]
+    exports: [
+        ...IGX_CHIPS_DIRECTIVES
+    ],
+    imports: [
+        ...IGX_CHIPS_DIRECTIVES
+    ]
 })
 export class IgxChipsModule { }

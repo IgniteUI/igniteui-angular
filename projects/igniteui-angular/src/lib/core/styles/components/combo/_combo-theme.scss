@@ -13,6 +13,17 @@
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
+/// @param {Color} $toggle-button-background [null] - The combo toggle button background color.
+/// @param {Color} $toggle-button-background-focus [null] - The combo toggle button background color when the combo is focused in material box variant.
+/// @param {Color} $toggle-button-background-disabled [null] - The combo toggle button background color when the combo is disabled.
+/// @param {Color} $toggle-button-foreground [null] - The combo toggle button foreground color.
+/// @param {Color} $toggle-button-foreground-focus [null] - The combo toggle button foreground color when the combo is focused.
+/// @param {Color} $toggle-button-foreground-disabled [null] - The combo toggle button foreground color when the combo is disabled.
+/// @param {Color} $toggle-button-foreground-filled [null] - The combo toggle button foreground color when the combo is filled.
+/// @param {Color} $clear-button-background [null] - The combo clear button background color.
+/// @param {Color} $clear-button-background-focus [null] - The combo clear button background color when the combo is focused.
+/// @param {Color} $clear-button-foreground [null] - The combo clear button foreground color.
+/// @param {Color} $clear-button-foreground-focus [null] - The combo clear button foreground color when the combo is focused.
 /// @requires $light-schema
 /// @example scss Change the combo empty list background
 ///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
@@ -22,9 +33,22 @@
     $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
-    $empty-list-background: null
+    $empty-list-background: null,
+    $toggle-button-background: null,
+    $toggle-button-background-focus: null,
+    $toggle-button-background-disabled: null,
+    $toggle-button-foreground: null,
+    $toggle-button-foreground-focus: null,
+    $toggle-button-foreground-disabled: null,
+    $clear-button-background: null,
+    $clear-button-background-focus: null,
+    $clear-button-foreground: null,
+    $clear-button-foreground-focus: null,
+    $toggle-button-foreground-filled: null,
 ) {
     $name: 'igx-combo';
+    $selector: 'igx-combo, igx-simple-combo';
+
     $combo-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -37,15 +61,29 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
-        empty-list-background: $empty-list-background
+        empty-list-background: $empty-list-background,
+        toggle-button-background: $toggle-button-background,
+        toggle-button-background-focus: $toggle-button-background-focus,
+        toggle-button-background-disabled: $toggle-button-background-disabled,
+        toggle-button-foreground: $toggle-button-foreground,
+        toggle-button-foreground-focus: $toggle-button-foreground-focus,
+        toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
+        toggle-button-foreground-filled: $toggle-button-foreground-filled,
+        clear-button-background: $clear-button-background,
+        clear-button-background-focus: $clear-button-background-focus,
+        clear-button-foreground: $clear-button-foreground,
+        clear-button-foreground-focus: $clear-button-foreground-focus,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin combo($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, variant);
 
     %igx-combo {
         position: relative;
@@ -66,10 +104,44 @@
     }
 
     %igx-combo__search {
-        padding: rem(8px) rem(16px);
+        padding-inline: pad-inline(rem(16px));
+        padding-block: pad-block(rem(8px));
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
+
+        .igx-input-group__bundle {
+            padding-block-start: 0;
+            height: auto;
+        }
+
+        igx-input-group {
+            --ig-size: var(--ig-size-small);
+        }
+    }
+
+    %igx-combo__case-icon,
+    %igx-combo__case-icon--active {
+        .igx-icon {
+            width: rem(16px);
+            height: rem(16px);
+            font-size: rem(16px);
+        }
+    }
+
+    // The wrapping element here is needed
+    // in order to override the !important rule of .igx-icon--inactive.
+    %igx-combo__case-icon {
+        .igx-icon {
+            // Important is needed since the .igx-icon--inactive has !important
+            color: color($color: 'gray', $variant: 600) !important;
+        }
+    }
+
+    %igx-combo__case-icon--active {
+        .igx-icon {
+            color: color($color: 'primary')
+        }
     }
 
     %igx-combo__content {
@@ -88,7 +160,14 @@
         align-items: center;
         position: relative;
         padding: rem(16px);
+        gap: rem(16px);
         background: var-get($theme, 'empty-list-background');
+    }
+
+    %igx-combo__add-item {
+        height: auto !important;
+        background: var-get($theme, 'empty-list-background') !important;
+        justify-content: center !important;
     }
 
     %igx-combo__empty {
@@ -101,20 +180,69 @@
         font-size: rem(13px);
     }
 
-    // TODO: make this part better
-    %igx-combo__add-item {
-        &%igx-drop-down__item {
-            width: auto !important;
-            padding: 0 !important;
-
-            &:hover {
-                background: transparent!important;
+    @if $variant == 'bootstrap' {
+        .igx-input-group--disabled {
+            %igx-combo__toggle-button {
+                border-inline-start-width: rem(1px);
+                border-inline-start-style: solid;
+                border-inline-start-color: inherit;
             }
         }
 
-        &%igx-drop-down__item--focused {
-            &:focus {
-                background: transparent!important;
+        igx-suffix:not(.igx-combo__clear-button) + %igx-combo__toggle-button {
+            border-inline-start-width: rem(1px);
+            border-inline-start-style: solid;
+            border-inline-start-color: inherit;
+        }
+
+        .igx-input-group__bundle::after {
+            height: rem(1px) !important;
+        }
+    }
+
+    .igx-input-group {
+        %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background');
+            color: var-get($theme, 'toggle-button-foreground');
+        }
+
+        %igx-combo__clear-button {
+            background: var-get($theme, 'clear-button-background');
+            color: var-get($theme, 'clear-button-foreground');
+
+            @if $variant == 'bootstrap' {
+                border-inline-end: rem(1px) solid var(--border-color);
+            }
+        }
+    }
+
+    .igx-input-group.igx-input-group--filled {
+        %igx-combo__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-filled');
+        }
+    }
+
+    @if $variant == 'material' {
+        .igx-input-group--box.igx-input-group--focused %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    } @else {
+        .igx-input-group.igx-input-group--focused %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
+    .igx-input-group--disabled {
+        %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background-disabled');
+            color: var-get($theme, 'toggle-button-foreground-disabled');
+        }
+
+        %igx-combo__clear-button {
+            @if $variant == 'bootstrap' {
+                border-inline-end: 0;
             }
         }
     }

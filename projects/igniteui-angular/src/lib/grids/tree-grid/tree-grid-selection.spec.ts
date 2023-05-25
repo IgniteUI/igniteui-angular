@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxGridCell, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
@@ -22,8 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxGridSelectionModule } from '../selection/selection.module';
-import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
+import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
@@ -31,6 +29,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -45,7 +44,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
@@ -55,8 +55,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCascadingSelectionComponent,
                 IgxTreeGridCascadingSelectionTransactionComponent,
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
+            ]
         }).compileComponents();
     }));
 
@@ -903,9 +902,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should persist selection after scrolling', async () => {
-            treeGrid.paging = false;
-            fix.detectChanges();
-
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             UIInteractions.simulateClickAndSelectEvent(treeGridCell);
@@ -1054,6 +1050,34 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
+        it('Should be able to select/deselect row when primaryKey is not set', () => {
+            treeGrid.primaryKey = undefined;
+            fix.detectChanges();
+
+            expect(treeGrid.primaryKey).not.toBeDefined();
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+
+            treeGrid.selectRows([treeGrid.getRowByIndex(1).data, treeGrid.getRowByIndex(2).data, treeGrid.getRowByIndex(3).data], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
         it('Should select/deselect parent row by selecting/deselecting all its children', () => {
@@ -1607,12 +1631,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [711, 998],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(711), treeGrid.getRowData(998)],
                 added: [],
-                removed: [317, 299],
+                removed: [treeGrid.getRowData(317), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: true
+                cancel: true,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1691,12 +1716,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(847, true);
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [847, 663],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                removed: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1716,7 +1742,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it('After changing the newSelection arguments of onSelectedRowChange, the arguments SHOULD be correct.', () => {
             treeGrid.rowSelectionChanging.subscribe((e: IRowSelectionEventArgs) => {
-                e.newSelection = [847, 663];
+                e.newSelection = [treeGrid.getRowData(847), treeGrid.getRowData(663)];
             });
             spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
 
@@ -1726,12 +1752,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(19, true);
 
             const selectionArgs: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [19],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(19)],
+                removed: [treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(selectionArgs);

@@ -16,14 +16,16 @@
         &:hover {
             @include e(ripple) {
                 @extend %cbx-ripple--hover !optional;
-                @extend %cbx-ripple--hover-unchecked !optional;
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--fluent !optional;
             }
         }
 
         &:active {
             @include e(ripple) {
                 @extend %cbx-ripple--hover !optional;
-                @extend %cbx-ripple--hover-unchecked !optional;
                 @extend %cbx-ripple--pressed !optional;
             }
         }
@@ -58,22 +60,83 @@
             @extend %cbx-ripple !optional;
         }
 
+        @include m(invalid) {
+            @include e(composite) {
+                @extend %cbx-composite--invalid !optional;
+            }
+
+            @include e(label) {
+                @extend %cbx-label--invalid !optional;
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %cbx-ripple--hover !optional;
+                    @extend %cbx-ripple--hover-invalid !optional;
+                }
+
+                @include e(composite) {
+                    @extend %cbx-composite--invalid--fluent !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--invalid--fluent !optional;
+                }
+            }
+
+            &:active {
+                @include e(ripple) {
+                    @extend %cbx-ripple--hover-invalid !optional;
+                }
+            }
+        }
+
+        @include mx(invalid, checked) {
+            @include e(composite) {
+                @extend %cbx-composite--x--invalid !optional;
+            }
+
+            &:hover {
+                @include e(composite) {
+                    @extend %cbx-composite--x--invalid--fluent !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--x--fluent !optional;
+                }
+            }
+        }
+
         @include m(focused) {
-            @extend  %igx-checkbox--focused !optional;
+            @extend %igx-checkbox--focused !optional;
 
             @include e(ripple) {
                 @extend %cbx-ripple--focused !optional;
             }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %cbx-ripple--focused !optional;
+                }
+            }
         }
 
         @include mx(focused, checked) {
-            @extend  %igx-checkbox--focused-checked !optional;
+            @extend %igx-checkbox--focused-checked !optional;
+        }
+
+        @include mx(focused, invalid) {
+            @extend %igx-checkbox--focused-invalid !optional;
+
+            @include e(ripple) {
+                @extend %cbx-ripple--focused-invalid !optional;
+            }
         }
 
         @include m(indeterminate) {
             @extend %igx-checkbox--indeterminate !optional;
 
-            @include  e(composite) {
+            @include e(composite) {
                 @extend %cbx-composite--x !optional;
             }
 
@@ -86,6 +149,10 @@
                     @extend %cbx-ripple--hover !optional;
                     @extend %cbx-ripple--hover-checked !optional;
                 }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--in--fluent !optional;
+                }
             }
 
             &:active {
@@ -95,6 +162,14 @@
                     @extend %cbx-ripple--pressed !optional;
                 }
             }
+        }
+
+        @include mx(invalid, indeterminate) {
+            @extend %igx-checkbox--indeterminate--invalid !optional;
+        }
+
+        @include mx(focused, indeterminate) {
+            @extend %igx-checkbox--focused-checked !optional;
         }
 
         @include m(checked) {
@@ -110,6 +185,14 @@
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;
                     @extend %cbx-ripple--hover-checked !optional;
+                }
+
+                @include e(composite) {
+                    @extend %cbx-composite--x--fluent !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--x--fluent !optional;
                 }
             }
 

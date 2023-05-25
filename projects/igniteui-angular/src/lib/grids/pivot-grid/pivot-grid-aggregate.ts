@@ -59,7 +59,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotAggregate
      */
-    public static aggregators() {
+    public static override aggregators() {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({
@@ -149,7 +149,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotAggregate
      */
-    public static aggregators() {
+    public static override aggregators() {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({
@@ -200,7 +200,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      *
      * @memberof IgxPivotAggregate
      */
-    public static aggregators() {
+    public static override aggregators() {
         let result: IPivotAggregator[] = [];
         result = result.concat(super.aggregators());
         result.push({

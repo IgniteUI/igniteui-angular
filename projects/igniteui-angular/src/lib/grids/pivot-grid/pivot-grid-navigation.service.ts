@@ -5,7 +5,7 @@ import { HEADER_KEYS } from '../../core/utils';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
-    public grid: IgxPivotGridComponent;
+    public override grid: IgxPivotGridComponent;
 
     public isRowHeaderActive: boolean;
 
@@ -17,7 +17,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         this.isRowHeaderActive = false;
     }
 
-    public handleNavigation(event: KeyboardEvent) {
+    public override handleNavigation(event: KeyboardEvent) {
         if (this.isRowHeaderActive) {
             const key = event.key.toLowerCase();
             const ctrl = event.ctrlKey;
@@ -67,7 +67,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         }
     }
 
-    public focusTbody(event) {
+    public override focusTbody(event) {
         if (!this.activeNode || this.activeNode.row === null || this.activeNode.row === undefined) {
             this.activeNode = this.lastActiveNode;
         } else {

@@ -191,45 +191,33 @@
     $variant: map.get($theme, variant);
 
     $item-height: (
-        comfortable: rem(40px),
-        cosy: rem(32px),
-        compact: rem(28px)
+        comfortable: #{rem(40px)},
+        cosy: #{rem(32px)},
+        compact: #{rem(28px)}
     );
 
-    $item-padding-comfortable: 0 rem(24px);
-    $item-padding-cosy: 0 rem(20px);
-    $item-padding-compact: 0 rem(16px);
-
-    $prefix-margin-comfortable: rem(20px);
-    $prefix-margin-cosy: rem(16px);
-    $prefix-margin-compact: rem(12px);
-
-    $suffix-margin-comfortable: rem(8px);
-    $suffix-margin-cosy: rem(6px);
-    $suffix-margin-compact: rem(4px);
-
-    $item-padding: (
-        comfortable: $item-padding-comfortable,
-        cosy: $item-padding-cosy,
-        compact: $item-padding-compact
+    $item-padding-inline: (
+        comfortable: rem(24px),
+        cosy: rem(20px),
+        compact: rem(16px)
     );
 
     $prefix-margin: (
-        comfortable: $prefix-margin-comfortable,
-        cosy: $prefix-margin-cosy,
-        compact: $prefix-margin-compact
+        comfortable: rem(20px),
+        cosy: rem(16px),
+        compact: rem(12px)
     );
 
     $suffix-margin: (
-        comfortable: $suffix-margin-comfortable,
-        cosy: $suffix-margin-cosy,
-        compact: $suffix-margin-compact
+        comfortable: rem(8px),
+        cosy: rem(6px),
+        compact: rem(4px)
     );
 
-    $header-item-padding: (
-        comfortable: 0 rem(16px),
-        cosy: 0 rem(12px),
-        compact: 0 rem(8px)
+    $header-item-padding-inline: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
     );
 
     %igx-drop-down {
@@ -250,21 +238,31 @@
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         position: relative;
+    }
 
-        igx-input-group {
-            margin-top: -16px !important;
-        }
+    %igx-drop-down__content {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+
+    %igx-drop-down__inner {
+        display: block;
+        @include ellipsis();
+        margin-inline-end: auto;
     }
 
     %igx-drop-down__header,
     %igx-drop-down__item {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         justify-content: flex-start;
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: map.get($item-height, 'comfortable');
         position: relative;
+        height: map.get($item-height, 'comfortable');
 
         igx-prefix,
         [igxPrefix] {
@@ -287,7 +285,8 @@
     %igx-drop-down__item {
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
-        padding: map.get($item-padding, 'comfortable');
+        padding-inline: map.get($item-padding-inline, 'comfortable');
+        padding-block: 0;
         border-radius: var-get($theme, 'item-border-radius');
 
         &:focus {
@@ -303,21 +302,15 @@
         }
     }
 
-    %igx-drop-down__content {
-        display: flex;
-        width: 100%;
-        align-items: center;
-    }
-
-    %igx-drop-down__inner {
-        display: block;
-        @include ellipsis();
-        margin-inline-end: auto;
-    }
-
     %igx-drop-down__item--cosy {
+        padding-inline: map.get($item-padding-inline, 'cosy')
+    }
+
+    %igx-drop-down__item--cosy,
+    %igx-drop-down__header--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+
         height: map.get($item-height, 'cosy');
-        padding: map.get($item-padding, 'cosy');
 
         igx-prefix,
         [igxPrefix] {
@@ -331,8 +324,14 @@
     }
 
     %igx-drop-down__item--compact {
+        padding-inline: map.get($item-padding-inline, 'compact');
+    }
+
+    %igx-drop-down__item--compact,
+    %igx-drop-down__header--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
+
         height: map.get($item-height, 'compact');
-        padding: map.get($item-padding, 'compact');
 
         igx-prefix,
         [igxPrefix] {
@@ -381,37 +380,16 @@
     %igx-drop-down__header {
         color: var-get($theme, 'header-text-color');
         pointer-events: none;
-        padding: map.get($header-item-padding, 'comfortable');
+        padding-inline: map.get($header-item-padding-inline, 'comfortable');
+        padding-block: 0;
     }
 
     %igx-drop-down__header--cosy {
-        height: map.get($item-height, 'cosy');
-        padding: map.get($header-item-padding, 'cosy');
-
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--cosy;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--cosy;
-        }
+        padding-inline: map.get($header-item-padding-inline, 'cosy');
     }
 
     %igx-drop-down__header--compact {
-        height: map.get($item-height, 'compact');
-        padding: map.get($header-item-padding, 'compact');
-
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--compact;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--compact;
-        }
+        padding-inline: map.get($header-item-padding-inline, 'compact');
     }
 
     %igx-drop-down__group {
@@ -419,10 +397,6 @@
 
         label {
             @extend %igx-drop-down__header !optional;
-        }
-
-        %igx-drop-down__item {
-            text-indent: map.get($item-padding, 'comfortable');
         }
     }
 

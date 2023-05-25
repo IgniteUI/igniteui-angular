@@ -1,6 +1,6 @@
 <div class="hgrid-sample">
     <h4 class="sample-title">Sample One</h4>
-    <button (click)="log()">Layout</button>
+    <button igxButton="raised" (click)="log()">Layout</button>
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"
             style="display: block; width: 500px"></igx-buttongroup>
@@ -29,8 +29,6 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-grid-footer>Footer</igx-grid-footer>
-        <igx-paginator>
-        </igx-paginator>
         <igx-column width="150px" [filterable]="false">
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="imx-icons"

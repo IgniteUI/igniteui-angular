@@ -1,4 +1,4 @@
-﻿import {
+import {
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -11,21 +11,25 @@
     Renderer2,
     TemplateRef,
     Inject,
-    Optional
+    Optional,
+    OnDestroy
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
-import {
-    IgxDragDirective,
-    IDragBaseEventArgs,
-    IDragStartEventArgs,
-    IDropBaseEventArgs,
-    IDropDroppedEventArgs
-} from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs } from '../core/utils';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
+import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { fromEvent } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+
+export const IgxChipTypeVariant = mkenum({
+    PRIMARY: 'primary',
+    INFO: 'info',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    DANGER: 'danger'
+});
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -71,15 +75,32 @@ let CHIP_ID = 0;
  * @example
  * ```html
  * <igx-chip class="chipStyle" [id]="901" [draggable]="true" [removable]="true" (remove)="chipRemoved($event)">
- *    <igx-avatar class="chip-avatar-resized" igxPrefix [roundShape]="true"></igx-avatar>
+ *    <igx-avatar class="chip-avatar-resized" igxPrefix></igx-avatar>
  * </igx-chip>
  * ```
  */
 @Component({
     selector: 'igx-chip',
-    templateUrl: 'chip.component.html'
+    templateUrl: 'chip.component.html',
+    standalone: true,
+    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent extends DisplayDensityBase {
+export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
+
+    /**
+     * Sets/gets the variant of the chip.
+     *
+     * @remarks
+     * Allowed values are `primary`, `info`, `success`, `warning`, `danger`.
+     * Providing an invalid value won't change the chip.
+     *
+     * @example
+     * ```html
+     * <igx-chip [variant]="success"></igx-chip>
+     * ```
+     */
+    @Input()
+    public variant: string | typeof IgxChipTypeVariant;
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -236,6 +257,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip [id]="chip.id" [disabled]="true"></igx-chip>
      * ```
      */
+    @HostBinding('class.igx-chip--disabled')
     @Input()
     public disabled = false;
 
@@ -464,24 +486,42 @@ export class IgxChipComponent extends DisplayDensityBase {
     @Output()
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-chip')];
+    @HostBinding('class.igx-chip')
+    protected defaultClass = 'igx-chip';
 
-        // Add the base class first for each density
-        if (!classes.includes('igx-chip')) {
-            classes.unshift('igx-chip');
-        }
+    @HostBinding('class.igx-chip--primary')
+    protected get isPrimary() {
+        return this.variant === IgxChipTypeVariant.PRIMARY;
+    }
 
-        classes.push(this.disabled ? 'igx-chip--disabled' : '');
+    @HostBinding('class.igx-chip--info')
+    protected get isInfo() {
+        return this.variant === IgxChipTypeVariant.INFO;
+    }
 
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ').toString().trim();
+    @HostBinding('class.igx-chip--success')
+    protected get isSuccess() {
+        return this.variant === IgxChipTypeVariant.SUCCESS;
+    }
+
+    @HostBinding('class.igx-chip--warning')
+    protected get isWarning() {
+        return this.variant === IgxChipTypeVariant.WARNING;
+    }
+
+    @HostBinding('class.igx-chip--danger')
+    protected get isDanger() {
+        return this.variant === IgxChipTypeVariant.DANGER;
+    }
+
+    @HostBinding('class.igx-chip--cosy')
+    protected get isCosy() {
+        return this.displayDensity === 'cosy';
+    }
+
+    @HostBinding('class.igx-chip--compact')
+    protected get isCompact() {
+        return this.displayDensity === 'compact';
     }
 
     /**
@@ -511,13 +551,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @ViewChild('selectContainer', { read: ElementRef, static: true })
-    public selectContainer: ElementRef;
-
-    /**
-     * @hidden
-     * @internal
-     */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
@@ -533,7 +566,9 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public get removeButtonTemplate() {
-        return this.removeIcon || this.defaultRemoveIcon;
+        if(!this.disabled) {
+            return this.removeIcon || this.defaultRemoveIcon;
+        }
     }
 
     /**
@@ -562,6 +597,12 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public hideBaseElement = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject();
 
     protected _tabIndex = null;
     protected _selected = false;
@@ -597,7 +638,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     public onSelectTransitionDone(event) {
-        if (!!event.target.tagName) {
+        if (event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.selectedChanged.emit({
                 owner: this,
@@ -844,10 +885,6 @@ export class IgxChipComponent extends DisplayDensityBase {
             cancel: false
         };
 
-        fromEvent(this.selectContainer.nativeElement, 'transitionend')
-            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
-            .subscribe(event => this.onSelectTransitionDone(event));
-
         if (newValue && !this._selected) {
             onSelectArgs.selected = true;
             this.selectedChanging.emit(onSelectArgs);
@@ -856,6 +893,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
                 this.selectedChange.emit(this._selected);
+                this.selectedChanged.emit({
+                    owner: this,
+                    originalEvent: srcEvent
+                });
             }
         } else if (!newValue && this._selected) {
             this.selectedChanging.emit(onSelectArgs);
@@ -864,7 +905,16 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
                 this.selectedChange.emit(this._selected);
+                this.selectedChanged.emit({
+                    owner: this,
+                    originalEvent: srcEvent
+                });
             }
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

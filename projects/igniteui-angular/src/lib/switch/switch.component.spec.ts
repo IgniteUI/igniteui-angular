@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -13,16 +12,17 @@ describe('IgxSwitch', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 InitSwitchComponent,
                 SwitchSimpleComponent,
                 SwitchRequiredComponent,
                 SwitchExternalLabelComponent,
                 SwitchInvisibleLabelComponent,
+                SwitchFormComponent,
                 SwitchFormGroupComponent,
                 IgxSwitchComponent
-            ],
-            imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 
@@ -32,15 +32,15 @@ describe('IgxSwitch', () => {
 
         const switchComp = fixture.componentInstance.switch;
         const domSwitch = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
-        const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
+        const nativeCheckbox = switchComp.nativeCheckbox.nativeElement;
         const nativeLabel = switchComp.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-switch__label')).nativeElement;
 
-        expect(domSwitch.id).toBe('igx-switch-0');
+        expect(domSwitch.id).toContain('igx-switch-');
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual('igx-switch-0-input');
+        expect(nativeCheckbox.id).toContain('igx-switch-');
         expect(nativeCheckbox.getAttribute('aria-label')).toEqual(null);
-        expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-switch-0-label');
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-switch-');
 
         expect(nativeLabel).toBeTruthy();
         // No longer have a for attribute to not propagate clicks to the native checkbox
@@ -48,7 +48,12 @@ describe('IgxSwitch', () => {
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-switch__label');
-        expect(placeholderLabel.getAttribute('id')).toEqual('igx-switch-0-label');
+        expect(placeholderLabel.getAttribute('id')).toContain('igx-switch-');
+
+        switchComp.id = 'customSwitch';
+        fixture.detectChanges();
+        expect(switchComp.id).toBe('customSwitch');
+        expect(domSwitch.id).toBe('customSwitch');
 
         // When aria-label is present, aria-labeledby shouldn't be
         switchComp.ariaLabel = 'New Label';
@@ -141,6 +146,7 @@ describe('IgxSwitch', () => {
         expect(nativeCheckbox.required).toBeTruthy();
 
         switchInstance.required = false;
+        nativeCheckbox.required = false;
         fixture.detectChanges();
 
         expect(switchInstance.required).toBe(false);
@@ -203,6 +209,88 @@ describe('IgxSwitch', () => {
         expect(testInstance.clickCounter).toEqual(2);
     });
 
+    it('Should update style when required switch\'s value is set.', () => {
+        const fixture = TestBed.createComponent(SwitchRequiredComponent);
+        fixture.detectChanges();
+
+        const switchInstance = fixture.componentInstance.switch;
+        const domSwitch = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
+
+        expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(false);
+        expect(switchInstance.invalid).toBe(false);
+        expect(switchInstance.checked).toBe(false);
+        expect(switchInstance.required).toBe(true);
+
+        dispatchCbEvent('keyup', domSwitch, fixture);
+        expect(domSwitch.classList.contains('igx-switch--focused')).toBe(true);
+        dispatchCbEvent('blur', domSwitch, fixture);
+
+        expect(switchInstance.invalid).toBe(true);
+        expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(true);
+
+        dispatchCbEvent('keyup', domSwitch, fixture);
+        expect(domSwitch.classList.contains('igx-switch--focused')).toBe(true);
+        dispatchCbEvent('click', domSwitch, fixture);
+
+        expect(domSwitch.classList.contains('igx-switch--checked')).toBe(true);
+        expect(switchInstance.checked).toBe(true);
+        expect(switchInstance.invalid).toBe(false);
+        expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(false);
+
+        dispatchCbEvent('click', domSwitch, fixture);
+        dispatchCbEvent('keyup', domSwitch, fixture);
+        expect(domSwitch.classList.contains('igx-switch--focused')).toBe(true);
+        dispatchCbEvent('blur', domSwitch, fixture);
+
+        expect(switchInstance.checked).toBe(false);
+        expect(switchInstance.invalid).toBe(true);
+        expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(true);
+    });
+
+    it('Should work properly with ngModel', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SwitchFormComponent);
+        fixture.detectChanges();
+        tick();
+
+        const switchEl = fixture.componentInstance.switch;
+        expect(switchEl.invalid).toEqual(false);
+
+        switchEl.onBlur();
+        expect(switchEl.invalid).toEqual(true);
+
+        fixture.componentInstance.ngForm.resetForm();
+        tick();
+        expect(switchEl.invalid).toEqual(false);
+    }));
+
+    it('Should work properly with reactive forms validation.', () => {
+        const fixture = TestBed.createComponent(SwitchFormGroupComponent);
+        fixture.detectChanges();
+
+        const switchEl = fixture.componentInstance.switch;
+        const switchNative = fixture.debugElement.query(By.directive(IgxSwitchComponent)).nativeElement;
+        expect(switchEl.required).toBe(true);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
+        expect(switchEl.nativeElement.getAttribute('aria-required')).toEqual('true');
+        expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
+
+        dispatchCbEvent('keyup', switchNative, fixture);
+        expect(switchEl.focused).toBe(true);
+        dispatchCbEvent('blur', switchNative, fixture);
+
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(true);
+        expect(switchEl.invalid).toBe(true);
+        expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        switchEl.checked = true;
+        fixture.detectChanges();
+
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(SwitchSimpleComponent);
@@ -216,14 +304,21 @@ describe('IgxSwitch', () => {
     });
 });
 
-@Component({ template: `<igx-switch #switch>Init</igx-switch>` })
+@Component({
+    template: `<igx-switch #switch>Init</igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
+})
 class InitSwitchComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 }
 
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`})
+[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
+    standalone: true,
+    imports: [FormsModule, IgxSwitchComponent]
+})
 class SwitchSimpleComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     public changeEventCalled = false;
@@ -238,7 +333,9 @@ class SwitchSimpleComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch required>Required</igx-switch>`
+    template: `<igx-switch #switch required>Required</igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -246,7 +343,9 @@ class SwitchRequiredComponent {
 
 @Component({
     template: `<p id="my-label">{{label}}</p>
-    <igx-switch #switch aria-labelledby="my-label"></igx-switch>`
+    <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -254,7 +353,9 @@ class SwitchExternalLabelComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch [aria-label]="label"></igx-switch>`
+    template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -262,12 +363,36 @@ class SwitchInvisibleLabelComponent {
 }
 
 @Component({
-    template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`
+    template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
+    standalone: true,
+    imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 
-    public myForm = this.fb.group({ switch: [] });
+    public myForm = this.fb.group({ switch: ['', Validators.required] });
 
     constructor(private fb: UntypedFormBuilder) {}
 }
+
+@Component({
+    template: `
+    <form #form="ngForm">
+        <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
+    </form>
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxSwitchComponent]
+})
+class SwitchFormComponent {
+    @ViewChild('switch', { read: IgxSwitchComponent, static: true })
+    public switch: IgxSwitchComponent;
+    @ViewChild(NgForm, { static: true })
+    public ngForm: NgForm;
+    public subscribed: string;
+}
+
+const dispatchCbEvent = (eventName, switchNativeElement, fixture) => {
+    switchNativeElement.dispatchEvent(new Event(eventName));
+    fixture.detectChanges();
+};

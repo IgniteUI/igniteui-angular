@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -12,6 +11,7 @@ describe('Avatar', () => {
 
     const classes = {
         round: `${baseClass}--rounded`,
+        circle: `${baseClass}--circle`,
         small: `${baseClass}--small`,
         medium: `${baseClass}--medium`,
         large: `${baseClass}--large`,
@@ -22,16 +22,14 @@ describe('Avatar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
                 IgxAvatarComponent,
                 InitIconAvatarComponent,
                 InitImageAvatarComponent
-            ],
-            imports: [IgxIconModule]
-        })
-            .compileComponents();
+            ]
+        }).compileComponents();
     }));
 
     it('Initializes avatar with auto-incremented id', () => {
@@ -57,13 +55,25 @@ describe('Avatar', () => {
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.roundShape).toBeTruthy();
-        expect(hostEl.classList).toContain(classes.round);
+        expect(instance.shape).toEqual('circle');
+        expect(hostEl.classList).toContain(classes.circle);
+        expect(hostEl.classList).not.toContain(classes.round);
 
-        instance.roundShape = false;
+        instance.shape = "square";
 
         fixture.detectChanges();
         expect(instance.roundShape).toBeFalsy();
+        expect(instance.shape).toEqual('square');
         expect(hostEl.classList).not.toContain(classes.round);
+        expect(hostEl.classList).not.toContain(classes.circle);
+
+        instance.shape = "rounded";
+
+        fixture.detectChanges();
+        expect(instance.roundShape).toBeFalsy();
+        expect(instance.shape).toEqual('rounded');
+        expect(hostEl.classList).toContain(classes.round);
+        expect(hostEl.classList).not.toContain(classes.circle);
     });
 
     it('Can change its size', () => {
@@ -101,6 +111,7 @@ describe('Avatar', () => {
         expect(instance.initials).toBeUndefined();
         expect(instance.src).toBeUndefined();
         expect(instance.icon).toBeUndefined();
+        expect(instance.shape).toEqual('square');
 
         expect(hostEl.textContent).toEqual('TEST');
     });
@@ -176,20 +187,25 @@ describe('Avatar', () => {
 });
 
 @Component({
-    template: `<igx-avatar>TEST</igx-avatar>`
+    template: `<igx-avatar>TEST</igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 }
 
 @Component({
-    template: `<igx-avatar
+    template: `
+    <igx-avatar
         [initials]="initials"
         [bgColor]="bgColor"
         [color]="color"
         size="small"
-        [roundShape]="roundShape">
-    </igx-avatar>`
+        [roundShape]="true">
+    </igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class AvatarWithAttribsComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
@@ -197,18 +213,21 @@ class AvatarWithAttribsComponent {
     public initials = 'ZK';
     public color = 'orange';
     public bgColor = 'royalblue';
-    public roundShape = 'true';
 }
 
 @Component({
-    template: `<igx-avatar icon="person"></igx-avatar>`
+    template: `<igx-avatar icon="person"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitIconAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 }
 
 @Component({
-    template: `<igx-avatar [src]="source"></igx-avatar>`
+    template: `<igx-avatar [src]="source"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitImageAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;

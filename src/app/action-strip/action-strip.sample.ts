@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DisplayDensity, IDataCloneStrategy } from 'igniteui-angular';
+import { NgIf, NgFor } from '@angular/common';
+import { DisplayDensity, IDataCloneStrategy, IGridEditEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxActionStripMenuItemDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxIconComponent } from 'igniteui-angular';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -44,12 +45,27 @@ class User {
 @Component({
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
-    templateUrl: `action-strip.sample.html`
+    templateUrl: `action-strip.sample.html`,
+    standalone: true,
+    imports: [
+        NgIf,
+        NgFor,
+        IgxButtonGroupComponent,
+        IgxButtonDirective,
+        IgxActionStripComponent,
+        IgxIconComponent,
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxGridPinningActionsComponent,
+        IgxCellTemplateDirective,
+        IgxGridEditingActionsComponent,
+        IgxActionStripMenuItemDirective
+    ]
 })
 export class ActionStripSampleComponent implements OnInit {
     public result: string;
     public isVisible = false;
-    public customItem = true;
+    public customItem = false;
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;
@@ -89,6 +105,22 @@ export class ActionStripSampleComponent implements OnInit {
 
     public setDensity(density: DisplayDensity) {
         this.displayDensity = density;
+    }
+
+    public rowAdd(event: IGridEditEventArgs) {
+        console.log("RowAdd is: " + event.primaryKey);
+    }
+
+    public rowAdded(event: IRowDataEventArgs) {
+        console.log("RowAdded is: " + event.primaryKey);
+    }
+
+    public rowDelete(event: IGridEditEventArgs) {
+        console.log("Row Delete is: " + event.primaryKey);
+    }
+
+    public rowDeleted(event: IRowDataEventArgs) {
+        console.log("Row deleted is: " + event.primaryKey);
     }
 
     public ngOnInit(): void {

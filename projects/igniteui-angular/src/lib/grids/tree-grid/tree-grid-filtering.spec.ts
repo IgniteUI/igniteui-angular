@@ -1,7 +1,7 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -23,14 +23,12 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridFilteringComponent,
                 IgxTreeGridFilteringRowEditingComponent,
                 IgxTreeGridFilteringESFTemplatesComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
+            ]
         }).compileComponents();
     }));
 
@@ -630,7 +628,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
-            let checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
             expect(!checkboxes[1].checked && !checkboxes[2].checked && !checkboxes[3].checked && checkboxes[4].indeterminate).toBe(true);
         }));
 
@@ -689,14 +687,68 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             fix.detectChanges();
             tick();
 
-            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
-            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent, 'igx-tree-grid');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent, 'igx-tree-grid');
 
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '77', fix);
             fix.detectChanges();
             tick();
 
             const emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+        }));
+
+        it('Should display message when there is no data', fakeAsync(() => {
+            const data = tGrid.data;
+            tGrid.data = [];
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+
+            tGrid.data = data;
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+        }));
+
+        it('Should display message when the last row is deleted', fakeAsync(() => {
+            tGrid.data = [];
+            tGrid.primaryKey = 'ID';
+            const row = {
+                ID: 0,
+                Name: 'John Winchester',
+                HireDate: new Date(2008, 3, 20),
+                Age: 55,
+                OnPTO: false,
+                Employees: []
+            };
+            tGrid.addRow(row);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+            tGrid.deleteRowById(0);
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
         }));
     });
@@ -766,7 +818,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
-            let checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
             expect(!checkboxes[1].checked && !checkboxes[2].checked && !checkboxes[3].checked && checkboxes[4].indeterminate).toBe(true);
         }));
 
@@ -936,7 +988,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     });
     class CustomTreeGridFilterStrategy  extends FilteringStrategy {
 
-        public filter(data: [], expressionsTree): any[] {
+        public override filter(data: [], expressionsTree): any[] {
                 const result = [];
                 if (!expressionsTree || !expressionsTree.filteringOperands ||
                     expressionsTree.filteringOperands.length === 0 || !data.length) {

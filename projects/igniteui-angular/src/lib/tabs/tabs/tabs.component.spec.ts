@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -15,25 +15,11 @@ import {
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
     TemplatedTabsTestComponent
 } from '../../test-utils/tabs-components.spec';
-import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
-import {
-    RoutingView1Component,
-    RoutingView2Component,
-    RoutingView3Component,
-    RoutingView4Component,
-    RoutingView5Component,
-    RoutingViewComponentsModule
-} from '../../test-utils/routing-view-components.spec';
-import { IgxButtonModule } from '../../directives/button/button.directive';
-import { IgxDropDownModule } from '../../drop-down/public_api';
-import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
-import { IgxIconModule } from '../../icon/public_api';
-import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
-import { PlatformUtil } from '../../core/utils';
+import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -59,13 +45,29 @@ describe('IgxTabs', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
-                TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
-                TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent, TabsContactsComponent, AddingSelectedTabComponent, TabsRtlComponent],
-            imports: [IgxTabsModule, BrowserAnimationsModule, IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
-                RoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
-            providers: [RoutingTestGuard, PlatformUtil]
+            declarations: [],
+            imports: [
+                NoopAnimationsModule,
+                RouterTestingModule.withRoutes(testRoutes),
+                TabsTestHtmlAttributesComponent,
+                TabsTestComponent,
+                TabsTest2Component,
+                TemplatedTabsTestComponent,
+                TabsRoutingDisabledTestComponent,
+                TabsTestSelectedTabComponent,
+                TabsTestCustomStylesComponent,
+                TabsTestBug4420Component,
+                TabsRoutingTestComponent,
+                TabsTabsOnlyModeTest1Component,
+                TabsTabsOnlyModeTest2Component,
+                TabsDisabledTestComponent,
+                TabsRoutingGuardTestComponent,
+                TabsWithPrefixSuffixTestComponent,
+                TabsContactsComponent,
+                AddingSelectedTabComponent,
+                TabsRtlComponent
+            ],
+            providers: [RoutingTestGuard]
         }).compileComponents();
     }));
 

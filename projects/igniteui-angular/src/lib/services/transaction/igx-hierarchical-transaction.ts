@@ -7,7 +7,7 @@ import { HierarchicalTransactionService } from './hierarchical-transaction';
 export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction, S extends HierarchicalState>
     extends IgxTransactionService<T, S> implements HierarchicalTransactionService<T, S> {
 
-    public getAggregatedChanges(mergeChanges: boolean): T[] {
+    public override getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : this.cloneStrategy.clone(state.value);
@@ -17,7 +17,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         return result;
     }
 
-    public commit(data: any[], primaryKeyOrId?: any, childDataKey?: any, id?: any): void {
+    public override commit(data: any[], primaryKeyOrId?: any, childDataKey?: any, id?: any): void {
         if (childDataKey !== undefined) {
             let transactions = this.getAggregatedChanges(true);
             if (id !== undefined) {
@@ -30,7 +30,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         }
     }
 
-    protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
+    protected override updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         super.updateState(states, transaction, recordRef);
 
         //  if transaction has no path, e.g. flat data source, get out

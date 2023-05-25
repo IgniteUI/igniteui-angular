@@ -1,13 +1,50 @@
 import { Component, PipeTransform, Pipe, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { worldInfo, attractions } from './data';
-import { IgxDialogComponent } from 'igniteui-angular';
+import { IgxAutocompleteDirective, IgxButtonDirective, IgxDialogComponent, IgxDropDownComponent, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSwitchComponent } from 'igniteui-angular';
 
 const ATTRACTIONS_CUSTOM_WIDTH = '300px';
+
+@Pipe({
+    name: 'contains',
+    standalone: true
+})
+export class AutocompletePipeContains implements PipeTransform {
+    public transform = (items: any[], term = '') => filterContains(items, term);
+}
+
+@Pipe({
+    name: 'groupContains',
+    standalone: true
+})
+export class AutocompleteGroupPipeContains implements PipeTransform {
+    public transform = (continents: any[], term = '') => filterGroupContains(continents, term);
+}
 @Component({
     selector: 'app-autocomplete-sample',
-    styleUrls: ['autocomplete.sample.css'],
-    templateUrl: `autocomplete.sample.html`
+    styleUrls: ['autocomplete.sample.scss'],
+    templateUrl: `autocomplete.sample.html`,
+    standalone: true,
+    imports: [
+        NgFor,
+        FormsModule,
+        ReactiveFormsModule,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxAutocompleteDirective,
+        IgxDropDownComponent,
+        IgxDropDownGroupComponent,
+        IgxDropDownItemComponent,
+        IgxDialogComponent,
+        IgxButtonDirective,
+        IgxSwitchComponent,
+        AutocompletePipeContains,
+        AutocompleteGroupPipeContains
+    ]
 })
 export class AutocompleteSampleComponent {
     @ViewChild('alert', { read: IgxDialogComponent, static: true })
@@ -42,16 +79,6 @@ export class AutocompleteSampleComponent {
     public changeDefaultWidth(event: any) {
         this.attractionsWidth = event.checked ? ATTRACTIONS_CUSTOM_WIDTH : '';
     }
-}
-
-@Pipe({ name: 'contains' })
-export class AutocompletePipeContains implements PipeTransform {
-    public transform = (items: any[], term = '') => filterContains(items, term);
-}
-
-@Pipe({ name: 'groupContains' })
-export class AutocompleteGroupPipeContains implements PipeTransform {
-    public transform = (continents: any[], term = '') => filterGroupContains(continents, term);
 }
 
 const filterContains = (items: any[], term: string, exactMatch = false): any[] => items.filter((item) => {

@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
-    IgxCarouselModule,
     ISlideEventArgs,
     CarouselIndicatorsOrientation
 } from './carousel.component';
@@ -12,6 +11,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { HorizontalAnimationType } from './carousel-base';
+import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
+import { NgFor, NgIf } from '@angular/common';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -20,16 +21,15 @@ describe('Carousel', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 CarouselTestComponent,
                 CarouselTemplateSetInMarkupTestComponent,
                 CarouselTemplateSetInTypescriptTestComponent,
                 CarouselAnimationsComponent,
                 CarouselDynamicSlidesComponent
-            ],
-            imports: [IgxCarouselModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+            ]
+        }).compileComponents();
     }));
 
     describe('Base Tests: ', () => {
@@ -159,15 +159,15 @@ describe('Carousel', () => {
         });
 
         it('emit events', () => {
-            spyOn(carousel.onSlideChanged, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
             carousel.next();
             fixture.detectChanges();
             let args: ISlideEventArgs = {
                 carousel,
                 slide: carousel.get(carousel.current)
             };
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(args);
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledWith(args);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(1);
 
             carousel.prev();
             args = {
@@ -175,8 +175,8 @@ describe('Carousel', () => {
                 slide: carousel.get(carousel.current)
             };
             fixture.detectChanges();
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(args);
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledWith(args);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(2);
 
             carousel.select(carousel.get(2));
             args = {
@@ -184,36 +184,36 @@ describe('Carousel', () => {
                 slide: carousel.get(2)
             };
             fixture.detectChanges();
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(args);
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(3);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledWith(args);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
-            spyOn(carousel.onSlideAdded, 'emit');
+            spyOn(carousel.slideAdded, 'emit');
             carousel.add(carousel.get(carousel.current));
             fixture.detectChanges();
             args = {
                 carousel,
                 slide: carousel.get(carousel.current)
             };
-            expect(carousel.onSlideAdded.emit).toHaveBeenCalledWith(args);
+            expect(carousel.slideAdded.emit).toHaveBeenCalledWith(args);
 
-            spyOn(carousel.onSlideRemoved, 'emit');
+            spyOn(carousel.slideRemoved, 'emit');
             args = {
                 carousel,
                 slide: carousel.get(carousel.current)
             };
             carousel.remove(carousel.get(carousel.current));
             fixture.detectChanges();
-            expect(carousel.onSlideRemoved.emit).toHaveBeenCalledWith(args);
+            expect(carousel.slideRemoved.emit).toHaveBeenCalledWith(args);
 
-            spyOn(carousel.onCarouselPaused, 'emit');
+            spyOn(carousel.carouselPaused, 'emit');
             carousel.stop();
             fixture.detectChanges();
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(carousel);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledWith(carousel);
 
-            spyOn(carousel.onCarouselPlaying, 'emit');
+            spyOn(carousel.carouselPlaying, 'emit');
             carousel.play();
             fixture.detectChanges();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledWith(carousel);
         });
 
         it('click handlers', () => {
@@ -232,7 +232,7 @@ describe('Carousel', () => {
         });
 
         it('keyboard navigation test', () => {
-            spyOn(carousel.onSlideChanged, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
@@ -267,11 +267,11 @@ describe('Carousel', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(8);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(8);
         });
 
         it('changing slides with navigation buttons', () => {
-            spyOn(carousel.onSlideChanged, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
 
             const prevNav = HelperTestFunctions.getPreviousButton(fixture);
@@ -307,11 +307,11 @@ describe('Carousel', () => {
 
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(6);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(6);
         });
 
         it('changing slides with indicators buttons', () => {
-            spyOn(carousel.onSlideChanged, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
 
             const indicators = HelperTestFunctions.getIndicators(fixture);
@@ -327,7 +327,7 @@ describe('Carousel', () => {
 
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(2);
         });
 
         it('navigation changes visibility of arrows', () => {
@@ -393,7 +393,7 @@ describe('Carousel', () => {
             carousel.select(carousel.get(1));
             fixture.detectChanges();
 
-            spyOn(carousel.onSlideChanged, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
@@ -411,14 +411,14 @@ describe('Carousel', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(0);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(0);
             carousel.keyboardSupport = true;
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
-            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(1);
         });
 
         it('should stop/play on mouse enter/leave ', () => {
@@ -426,8 +426,8 @@ describe('Carousel', () => {
             carousel.play();
             fixture.detectChanges();
 
-            spyOn(carousel.onCarouselPaused, 'emit');
-            spyOn(carousel.onCarouselPlaying, 'emit');
+            spyOn(carousel.carouselPaused, 'emit');
+            spyOn(carousel.carouselPlaying, 'emit');
 
             expect(carousel.isPlaying).toBeTruthy();
 
@@ -435,22 +435,22 @@ describe('Carousel', () => {
             fixture.detectChanges();
 
             expect(carousel.isPlaying).toBeFalsy();
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.unhoverElement(carousel.nativeElement, true);
             fixture.detectChanges();
 
             expect(carousel.isPlaying).toBeTruthy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
 
             // When the carousel is stopped mouseleave does not start playing
             carousel.stop();
             fixture.detectChanges();
 
             expect(carousel.isPlaying).toBeFalsy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.hoverElement(carousel.nativeElement, true);
             fixture.detectChanges();
@@ -460,7 +460,7 @@ describe('Carousel', () => {
             UIInteractions.unhoverElement(carousel.nativeElement, true);
             fixture.detectChanges();
             expect(carousel.isPlaying).toBeFalsy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledTimes(1);
         });
 
 
@@ -659,7 +659,7 @@ describe('Carousel', () => {
 
         it('should add slides to the carousel when collection is changed', fakeAsync(() => {
             tick();
-            spyOn(carousel.onSlideAdded, 'emit');
+            spyOn(carousel.slideAdded, 'emit');
 
             // add a slide
             slides.push({ text: 'Slide 5' });
@@ -676,12 +676,12 @@ describe('Carousel', () => {
             HelperTestFunctions.verifyActiveSlide(carousel, 5);
             expect(carousel.total).toEqual(6);
 
-            expect(carousel.onSlideAdded.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.slideAdded.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('should remove slides in the carousel', fakeAsync(() => {
             tick();
-            spyOn(carousel.onSlideRemoved, 'emit');
+            spyOn(carousel.slideRemoved, 'emit');
 
             // remove a slide
             slides.pop();
@@ -699,7 +699,7 @@ describe('Carousel', () => {
             expect(carousel.total).toEqual(2);
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
-            expect(carousel.onSlideRemoved.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.slideRemoved.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('should not render navigation buttons and indicators when carousel does not have slides', fakeAsync(() => {
@@ -738,8 +738,8 @@ describe('Carousel', () => {
             carousel.play();
             fixture.detectChanges();
 
-            spyOn(carousel.onCarouselPaused, 'emit');
-            spyOn(carousel.onCarouselPlaying, 'emit');
+            spyOn(carousel.carouselPaused, 'emit');
+            spyOn(carousel.carouselPlaying, 'emit');
 
             expect(carousel.isPlaying).toBeTruthy();
 
@@ -873,7 +873,7 @@ class HelperTestFunctions {
         return prev.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
     }
 
-    public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
+    public static getIndicatorsContainer(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom): HTMLElement {
         const carouselNative = fixture.nativeElement;
         if (position === CarouselIndicatorsOrientation.bottom) {
             return carouselNative.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
@@ -882,17 +882,17 @@ class HelperTestFunctions {
         }
     }
 
-    public static getIndicatorsLabel(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsLabel(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelector(HelperTestFunctions.INDICATORS_LABEL_CLASS);
     }
 
-    public static getIndicators(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicators(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_CLASS);
     }
 
-    public static getIndicatorsDots(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsDots(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_DOT_CLASS);
     }
@@ -939,7 +939,9 @@ class HelperTestFunctions {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -957,7 +959,9 @@ class CarouselTestComponent {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -984,7 +988,9 @@ class CarouselAnimationsComponent {
                 <span>prev</span>
             </ng-template>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective]
 })
 class CarouselTemplateSetInMarkupTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1015,7 +1021,9 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselComponent, IgxSlideComponent, NgIf]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1032,11 +1040,13 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+            <igx-slide *ngFor="let slide of slides" [active]="slide.active">
                <igx-slide><h3>{{slide.text}}</h3></igx-slide>
             </igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselComponent, IgxSlideComponent, NgFor]
 })
 class CarouselDynamicSlidesComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;

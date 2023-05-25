@@ -34,7 +34,7 @@ const STYLES = {
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
 const TYPEDOC_THEME = {
-    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'src')),
+    SRC: slash(path.join(__dirname, 'node_modules', 'ig-typedoc-theme', 'dist')),
     OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
 };
 
@@ -188,8 +188,6 @@ function typedocBuildExportFn(cb) {
         TYPEDOC.PROJECT_PATH,
         "--generate-json",
         TYPEDOC.EXPORT_JSON_PATH,
-        "--tags",
-        "--params",
         "--tsconfig",
         path.join(__dirname, "tsconfig.typedoc.json")],
         { stdio: 'inherit', shell: true });

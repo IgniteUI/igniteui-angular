@@ -1,5 +1,5 @@
 <div class="grid__wrapper">
-    <h3>Grid Export</h3>
+    <h4 class="sample-title">Grid Export</h4>
 
     <igx-grid #grid igxPreventDocumentScroll [data]="gridData" [autoGenerate]="false" height="700px" width="100%" (toolbarExporting)="configureExport($event)">
         <igx-grid-toolbar>
@@ -34,12 +34,9 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
-        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'" [groupable]='true'>
-            <ng-template igxCell let-cell="cell" let-val>
-                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
-                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
-            </ng-template>
-        </igx-column>
+        <igx-column #col field="PercentInStock" [dataType]="'percent'"></igx-column>
+        <igx-column #col field="ProductionDate" [dataType]="'dateTime'"></igx-column>
+        <igx-column #col field="PackagedAt" [dataType]="'time'"></igx-column>
         <igx-column #col field="OrderDate" [dataType]="'date'" [hasSummary]="true">
             <ng-template igxCell let-cell="cell" let-val let-row>
                 {{ val | date: 'MMM d, yyyy' }}
@@ -49,9 +46,15 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
+        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'" [groupable]='true'>
+            <ng-template igxCell let-cell="cell" let-val>
+                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
+                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+            </ng-template>
+        </igx-column>
     </igx-grid>
 
-    <h3>Tree Grid Export</h3>
+    <h4 class="sample-title">Tree Grid Export</h4>
 
     <igx-tree-grid igxPreventDocumentScroll #tGrid [data]="tGridData" [autoGenerate]="false" height="700px" width="100%"
     primaryKey="ID" foreignKey="ParentID" (toolbarExporting)="configureExport($event)">
@@ -97,7 +100,7 @@
         </igx-column>
     </igx-tree-grid>
 
-    <h3>Hierarchical Grid Export</h3>
+    <h4 class="sample-title">Hierarchical Grid Export</h4>
 
     <igx-hierarchical-grid #hGrid igxPreventDocumentScroll class="hgrid" [data]="hGridData" [autoGenerate]="false"
     [height]="'700px'" [width]="'100%'" [rowHeight]="'65px'" (toolbarExporting)="configureExport($event)">

@@ -1,4 +1,5 @@
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     ChangeDetectorRef,
@@ -21,9 +22,11 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { noop, Subject } from 'rxjs';
+import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -34,32 +37,38 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/d
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxOverlayService } from '../services/overlay/overlay';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectToggleIcon]'
+    selector: '[igxSelectToggleIcon]',
+    standalone: true
 })
 export class IgxSelectToggleIconDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectHeader]'
+    selector: '[igxSelectHeader]',
+    standalone: true
 })
 export class IgxSelectHeaderDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectFooter]'
+    selector: '[igxSelectFooter]',
+    standalone: true
 })
 export class IgxSelectFooterDirective {
 }
@@ -85,15 +94,18 @@ export class IgxSelectFooterDirective {
     templateUrl: './select.component.html',
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
-        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }],
+        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }
+    ],
     styles: [`
         :host {
             display: block;
         }
-    `]
+    `],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
-    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
+    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
@@ -103,7 +115,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
-    public children: QueryList<IgxSelectItemComponent>;
+    public override children: QueryList<IgxSelectItemComponent>;
+
+    @ContentChildren(IgxPrefixDirective, { descendants: true })
+    protected prefixes: QueryList<IgxPrefixDirective>;
+
+    @ContentChildren(IgxSuffixDirective, { descendants: true })
+    protected suffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
@@ -134,7 +152,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
-    public maxHeight = '256px';
+    public override maxHeight = '256px';
 
     /**
      * Emitted before the dropdown is opened
@@ -144,7 +162,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Output()
-    public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
+    public override opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -154,7 +172,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Output()
-    public opened = new EventEmitter<IBaseEventArgs>();
+    public override opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
@@ -164,7 +182,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Output()
-    public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
+    public override closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -174,7 +192,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Output()
-    public closed = new EventEmitter<IBaseEventArgs>();
+    public override closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -246,18 +264,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
 
     /** @hidden @internal */
-    public width: string;
+    public override width: string;
 
     /** @hidden @internal do not use the drop-down container class */
-    public cssClass = false;
+    public override cssClass = false;
 
     /** @hidden @internal */
-    public allowItemsFocus = false;
+    public override allowItemsFocus = false;
 
     /** @hidden @internal */
-    public height: string;
-
-    protected destroy$ = new Subject<boolean>();
+    public override height: string;
 
     private ngControl: NgControl = null;
     private _overlayDefaults: OverlaySettings;
@@ -315,7 +331,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public get selectedItem(): IgxSelectItemComponent {
+    public override get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
     }
 
@@ -323,11 +339,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _onTouchedCallback: () => void = noop;
 
     constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
+        elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
         super(elementRef, cdr, selection, _displayDensityOptions);
@@ -362,7 +378,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
+    public override selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
         const oldSelection = this.selectedItem ?? <IgxDropDownItemBaseDirective>{};
 
         if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
@@ -374,7 +390,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             return;
         }
 
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
         this.selectionChanging.emit(args);
 
         if (args.cancel) {
@@ -404,7 +420,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * this.select.open();
      * ```
      */
-    public open(overlaySettings?: OverlaySettings) {
+    public override open(overlaySettings?: OverlaySettings) {
         if (this.disabled || this.items.length === 0) {
             return;
         }
@@ -460,7 +476,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public onToggleContentAppended(event: ToggleViewEventArgs) {
+    public override onToggleContentAppended(event: ToggleViewEventArgs) {
         const info = this.overlayService.getOverlayById(event.id);
         if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
             return;
@@ -505,14 +521,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /**
      * @hidden @internal
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
+        super.ngOnInit();
     }
 
     /**
      * @hidden @internal
      */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
@@ -520,10 +539,21 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this.cdr.detectChanges();
     }
 
+    /** @hidden @internal */
+    public ngAfterContentChecked() {
+        if (this.inputGroup && this.prefixes?.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if (this.inputGroup && this.suffixes?.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
+        }
+    }
+
     /**
      * @hidden @internal
      */
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
         this.selection.clear(this.id);
@@ -553,7 +583,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
 
-    protected navigate(direction: Navigate, currentIndex?: number) {
+    protected override navigate(direction: Navigate, currentIndex?: number) {
         if (this.collapsed && this.selectedItem) {
             this.navigateItem(this.selectedItem.itemIndex);
         }

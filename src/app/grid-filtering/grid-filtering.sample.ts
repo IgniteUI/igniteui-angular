@@ -1,14 +1,44 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
-    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode,
-    FormattedValuesFilteringStrategy,
-    DisplayDensity} from 'igniteui-angular';
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { IgxExcelStyleSearchComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-search.component';
+import { IgxExcelStyleConditionalFilterComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-conditional-filter.component';
+import { IgxExcelStyleClearFiltersComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-clear-filters.component';
+import { IgxExcelStyleSelectingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-selecting.component';
+import { IgxExcelStyleHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-hiding.component';
+import { IgxExcelStylePinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-pinning.component';
+import { IgxExcelStyleMovingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-moving.component';
+import { IgxExcelStyleSortingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-sorting.component';
+import { IgxExcelStyleHeaderComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-header.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-filtering.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxExcelStyleHeaderIconDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
+import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
+import { FilteringExpressionsTree } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
+import { FormattedValuesFilteringStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-strategy';
+import { FilterMode, GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { FilteringLogic } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expression.interface';
+import { IgxStringFilteringOperand } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-condition';
 
 @Component({
     providers: [],
     selector: 'app-grid-filtering-sample',
-    styleUrls: ['grid-filtering.sample.css'],
-    templateUrl: 'grid-filtering.sample.html'
+    styleUrls: ['grid-filtering.sample.scss'],
+    templateUrl: 'grid-filtering.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgIf, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective, IgxExcelStyleHeaderIconDirective, IgxIconComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent]
 })
 export class GridFilteringComponent implements OnInit {
     @ViewChild('grid1', { static: true })

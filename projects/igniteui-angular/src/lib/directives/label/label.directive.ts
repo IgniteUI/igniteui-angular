@@ -3,7 +3,8 @@ import { Directive, HostBinding, Input } from '@angular/core';
 let NEXT_ID = 0;
 
 @Directive({
-    selector: '[igxLabel]'
+    selector: '[igxLabel]',
+    standalone: true
 })
 export class IgxLabelDirective {
     @HostBinding('class.igx-input-group__label')

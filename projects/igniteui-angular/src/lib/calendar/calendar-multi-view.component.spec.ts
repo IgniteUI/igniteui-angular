@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxCalendarComponent, IgxCalendarModule } from './public_api';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/public_api';
+import { IgxCalendarComponent } from './public_api';
+import { IgxDatePickerComponent } from '../date-picker/public_api';
 import { DateRangeType } from '../core/dates';
-import { HelperTestFunctions } from './calendar-helper-utils';
+import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 
 describe('Multi-View Calendar - ', () => {
     let fixture; let calendar;
@@ -15,8 +15,12 @@ describe('Multi-View Calendar - ', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
-            imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
+            imports: [
+                NoopAnimationsModule,
+                MultiViewCalendarSampleComponent,
+                MultiViewDatePickerSampleComponent,
+                MultiViewNgModelSampleComponent
+            ]
         }).compileComponents();
     }));
 
@@ -1317,6 +1321,9 @@ describe('Multi-View Calendar - ', () => {
             overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
+
+            // clean up test
+            tick(350);
         }));
 
         it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
@@ -1349,15 +1356,19 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(0);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(0);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(0);
-        }));
 
+            // clean up test
+            tick(350);
+        }));
     });
 });
 
 @Component({
     template: `
         <igx-calendar [monthsViewNumber]="monthViews"></igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -1367,7 +1378,9 @@ export class MultiViewCalendarSampleComponent {
 @Component({
     template: `
         <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
@@ -1378,7 +1391,9 @@ export class MultiViewDatePickerSampleComponent {
 @Component({
     template: `
         <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;

@@ -19,10 +19,6 @@
             @extend %igx-badge-value !optional;
         }
 
-        @include m(default) {
-            @extend %igx-badge--default !optional;
-        }
-
         @include m(info) {
             @extend %igx-badge--info !optional;
         }
@@ -37,6 +33,10 @@
 
         @include m(error) {
             @extend %igx-badge--error !optional;
+        }
+
+        @include m(square) {
+            @extend %igx-badge--square !optional;
         }
 
         @include m(hidden) {

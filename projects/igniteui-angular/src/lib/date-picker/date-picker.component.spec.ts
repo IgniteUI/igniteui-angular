@@ -3,16 +3,12 @@ import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveForm
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+    IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from '../calendar/public_api';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IFormattingViews, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
+import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
-import { IgxDatePickerModule } from './date-picker.module';
 import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
@@ -21,12 +17,12 @@ import { Component, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } 
 import { By } from '@angular/platform-browser';
 import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { registerLocaleData } from "@angular/common";
+import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
@@ -44,20 +40,16 @@ describe('IgxDatePicker', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
+                    NoopAnimationsModule,
                     IgxDatePickerTestKbrdComponent,
                     IgxDatePickerTestComponent,
                     IgxDatePickerNgModelComponent,
                     IgxDatePickerWithProjectionsComponent,
                     IgxDatePickerInFormComponent,
                     IgxDatePickerReactiveFormComponent
-                ],
-                imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-                    NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
-                    IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-                    IgxCalendarContainerModule]
-            })
-                .compileComponents();
+                ]
+            }).compileComponents();
         }));
 
         describe('Rendering', () => {
@@ -114,13 +106,14 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 datePicker.close();
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.closing.emit).toHaveBeenCalled();
                 expect(datePicker.closed.emit).not.toHaveBeenCalled();
 
                 closingSub.unsubscribe();
+                (datePicker as any)._overlayService.detachAll();
             }));
         });
 
@@ -176,6 +169,9 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+
+                // wait datepicker to get destroyed and test to cleanup
+                tick(350);
             }));
 
             it('should close the calendar with ESC', fakeAsync(() => {
@@ -455,7 +451,7 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
-        const mockModuleRef = {} as any;
+        const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
         const elementRef = {
@@ -625,10 +621,11 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
+            (datePicker as any).viewContainerRef = viewsContainerRef;
             // TODO: TEMP workaround for afterViewInit call in unit tests:
             datePicker.clearComponents = new QueryList<any>();
             datePicker.toggleComponents = new QueryList<any>();
@@ -686,12 +683,12 @@ describe('IgxDatePicker', () => {
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.disabledDates = mockDisabledDates;
                 expect(datePicker.disabledDates).toEqual(mockDisabledDates);
-                spyOn(datePicker.onDensityChanged, 'emit').and.callThrough();
+                spyOn(datePicker.densityChanged, 'emit').and.callThrough();
                 datePicker.displayDensity = DisplayDensity.cosy;
                 expect(datePicker.displayDensity).toEqual(DisplayDensity.cosy);
                 // if no base token is provided, _displayDensity is undefined
                 // first emit of below event will always be w/ oldDensity === undefined
-                expect(datePicker.onDensityChanged.emit)
+                expect(datePicker.densityChanged.emit)
                     .toHaveBeenCalledWith({
                         oldDensity: undefined,
                         newDensity: DisplayDensity.cosy
@@ -886,19 +883,19 @@ describe('IgxDatePicker', () => {
                 const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
                 isDropdownSpy.and.returnValue(false);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDialogSettings, mockModuleRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDialogSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDropdownSettings, mockModuleRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 const mockOutlet = {} as any;
                 datePicker.outlet = mockOutlet;
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
@@ -910,8 +907,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, mockSettings),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(false);
@@ -923,8 +920,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDialogSettings, mockSettings),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
@@ -937,8 +934,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { modal: true }),
-                    mockModuleRef
                 );
             });
 
@@ -1290,8 +1287,10 @@ describe('IgxDatePicker', () => {
 });
 @Component({
     template: `
-        <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
-        </igx-date-picker>`
+    <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
+    </igx-date-picker>`,
+    standalone: true,
+    imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1304,7 +1303,9 @@ export class IgxDatePickerTestComponent {
 @Component({
     template: `
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
-        </igx-date-picker>`
+        </igx-date-picker>`,
+    standalone: true,
+    imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1320,7 +1321,9 @@ export class IgxDatePickerNgModelComponent {
         <igx-date-picker [value]="date" mode="dropdown" inputFormat="dd/MM/yyyy">
             <label igxLabel>Select a Date</label>
         </igx-date-picker>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1330,15 +1333,16 @@ export class IgxDatePickerTestKbrdComponent {
 
 @Component({
     template: `
-        <igx-date-picker [mode]="mode">
-            <label igxLabel>Label</label>
-            <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
-            <igx-prefix>Prefix</igx-prefix>
-            <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
-            <igx-suffix>Suffix</igx-suffix>
-            <igx-hint>Hint</igx-hint>
-        </igx-date-picker>
-`
+    <igx-date-picker [mode]="mode">
+        <label igxLabel>Label</label>
+        <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+        <igx-prefix>Prefix</igx-prefix>
+        <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+        <igx-suffix>Suffix</igx-suffix>
+        <igx-hint>Hint</igx-hint>
+    </igx-date-picker>`,
+    standalone: true,
+    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxDatePickerWithProjectionsComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1354,7 +1358,9 @@ export class IgxDatePickerWithProjectionsComponent {
     <form #form="ngForm">
         <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
     </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
     @ViewChild('form')
@@ -1368,14 +1374,16 @@ export class IgxDatePickerInFormComponent {
 
 @Component({
     template: `
-   <form [formGroup]="form">
-    <div class="date-picker-wrapper">
-        <igx-date-picker formControlName="date" [value]="date">
-            <label igxLabel>Date </label>
-        </igx-date-picker>
-    </div>
-</form>
-    `
+    <form [formGroup]="form">
+        <div class="date-picker-wrapper">
+            <igx-date-picker formControlName="date" [value]="date">
+                <label igxLabel>Date </label>
+            </igx-date-picker>
+        </div>
+    </form>
+    `,
+    standalone: true,
+    imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {
     @ViewChild(IgxDatePickerComponent)

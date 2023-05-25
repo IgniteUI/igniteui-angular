@@ -24,7 +24,7 @@ export class LocalService {
         });
     }
 
-    public getFinancialData(count: number = 10) {
+    public getFinancialData(count = 10) {
         this._records.next(FinancialData.generateData(count));
     }
 

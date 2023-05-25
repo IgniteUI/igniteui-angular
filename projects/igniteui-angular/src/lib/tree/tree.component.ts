@@ -1,25 +1,20 @@
-import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject
+    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { growVerIn, growVerOut } from '../animations/grow';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
-import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule } from '../input-group/public_api';
-import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import {
     IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
-import { IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './tree-node/tree-node.component';
+import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 
@@ -28,7 +23,8 @@ import { IgxTreeService } from './tree.service';
  * Used for templating the select marker of the tree
  */
 @Directive({
-    selector: '[igxTreeSelectMarker]'
+    selector: '[igxTreeSelectMarker]',
+    standalone: true
 })
 export class IgxTreeSelectMarkerDirective {
 }
@@ -38,7 +34,8 @@ export class IgxTreeSelectMarkerDirective {
  * Used for templating the expand indicator of the tree
  */
 @Directive({
-    selector: '[igxTreeExpandIndicator]'
+    selector: '[igxTreeExpandIndicator]',
+    standalone: true
 })
 export class IgxTreeExpandIndicatorDirective {
 }
@@ -52,10 +49,10 @@ export class IgxTreeExpandIndicatorDirective {
  * @igxGroup Grids & Lists
  *
  * @remark
- * The Angular Tree Component allows users to represent hierarchical data in a tree-view structure, 
- * maintaining parent-child relationships, as well as to define static tree-view structure without a corresponding data model. 
- * Its primary purpose is to allow end-users to visualize and navigate within hierarchical data structures. 
- * The Ignite UI for Angular Tree Component also provides load on demand capabilities, item activation, 
+ * The Angular Tree Component allows users to represent hierarchical data in a tree-view structure,
+ * maintaining parent-child relationships, as well as to define static tree-view structure without a corresponding data model.
+ * Its primary purpose is to allow end-users to visualize and navigate within hierarchical data structures.
+ * The Ignite UI for Angular Tree Component also provides load on demand capabilities, item activation,
  * bi-state and cascading selection of items through built-in checkboxes, built-in keyboard navigation and more.
  *
  * @example
@@ -80,7 +77,8 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeSelectionService,
         IgxTreeNavigationService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
-    ]
+    ],
+    standalone: true
 })
 export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
@@ -405,7 +403,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     }
 
     /** @hidden @internal */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);
@@ -414,7 +412,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
             this.expandToNode(this.navService.activeNode);
             this.scrollNodeIntoView(node?.header?.nativeElement);
         });
-        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
             });
@@ -505,40 +503,4 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
 
     private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>) => node.data === data;
 
-}
-
-/**
- * @hidden
- *
- * NgModule defining the components and directives needed for `igx-tree`
- */
-@NgModule({
-    declarations: [
-        IgxTreeSelectMarkerDirective,
-        IgxTreeExpandIndicatorDirective,
-        IgxTreeNodeLinkDirective,
-        IgxTreeComponent,
-        IgxTreeNodeComponent
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxCheckboxModule,
-        IgxProgressBarModule
-    ],
-    exports: [
-        IgxTreeSelectMarkerDirective,
-        IgxTreeExpandIndicatorDirective,
-        IgxTreeNodeLinkDirective,
-        IgxTreeComponent,
-        IgxTreeNodeComponent,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxCheckboxModule,
-        IgxExpansionPanelModule
-    ]
-})
-export class IgxTreeModule {
 }

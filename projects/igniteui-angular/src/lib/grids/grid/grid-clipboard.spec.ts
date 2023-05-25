@@ -1,9 +1,7 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxGridModule, IgxGridComponent
-} from './public_api';
+import { IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
@@ -14,14 +12,11 @@ import { IgxInputDirective } from '../../input-group/public_api';
 
 describe('IgxGrid - Clipboard #grid', () => {
 
-    let fix;
+    let fix: ComponentFixture<IgxGridClipboardComponent>;
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridClipboardComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridClipboardComponent, NoopAnimationsModule]
         });
     }));
 
@@ -93,12 +88,12 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data when paging is enabled', () => {
-        grid.paging = true;
+        fix.componentInstance.paging = true;
         fix.detectChanges();
         grid.paginator.perPage = 5;
         fix.detectChanges();
 
-        grid.page = 1;
+        grid.paginator.page = 1;
         fix.detectChanges();
         const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.copyHeaders = false;

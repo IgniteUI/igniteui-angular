@@ -1,4 +1,13 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
+import { IgxSnackbarComponent } from '../../../projects/igniteui-angular/src/lib/snackbar/snackbar.component';
+import { IgxTextSelectionDirective } from '../../../projects/igniteui-angular/src/lib/directives/text-selection/text-selection.directive';
+import { IgxMaskDirective } from '../../../projects/igniteui-angular/src/lib/directives/mask/mask.directive';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 
 interface IPerson {
   name: string;
@@ -9,8 +18,10 @@ interface IPerson {
 
 @Component({
     selector: 'app-mask-sample',
-    styleUrls: ['mask.sample.css'],
-    templateUrl: './mask.sample.html'
+    styleUrls: ['mask.sample.scss'],
+    templateUrl: './mask.sample.html',
+    standalone: true,
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent, IgxHintDirective]
 })
 export class MaskSampleComponent {
     public person: IPerson;
@@ -46,7 +57,7 @@ export class MaskSampleComponent {
     }
 
     public isSSNValid(ssn) {
-        const ssnPattern = /^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/;
+        const ssnPattern = /^[0-9]{3}-?[0-9]{2}-?[0-9]{4}$/;
         return (ssn.match(ssnPattern));
     }
 
@@ -57,7 +68,10 @@ export class MaskSampleComponent {
     }
 }
 
-@Pipe({ name: 'displayFormat' })
+@Pipe({
+    name: 'displayFormat',
+    standalone: true
+})
 export class DisplayFormatPipe implements PipeTransform {
     public transform(value: any): string {
         let val = value;
@@ -82,7 +96,10 @@ export class DisplayFormatPipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'inputFormat' })
+@Pipe({
+    name: 'inputFormat',
+    standalone: true
+})
 export class InputFormatPipe implements PipeTransform {
     public transform(value: any): string {
         let val = value;

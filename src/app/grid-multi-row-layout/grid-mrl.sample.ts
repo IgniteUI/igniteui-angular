@@ -1,9 +1,25 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
+import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxColumnLayoutComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-layout.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
+import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     selector: 'app-grid-mrl-sample',
-    templateUrl: 'grid-mrl.sample.html'
+    templateUrl: 'grid-mrl.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

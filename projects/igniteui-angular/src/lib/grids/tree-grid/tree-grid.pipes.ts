@@ -13,7 +13,10 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 /**
  * @hidden
  */
-@Pipe({ name: 'treeGridHierarchizing' })
+@Pipe({
+    name: 'treeGridHierarchizing',
+    standalone: true
+})
 export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -24,6 +27,9 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const flatData: any[] = [];
 
         if (!collection || !collection.length) {
+            this.grid.flatData = collection;
+            this.grid.records = treeGridRecordsMap;
+            this.grid.rootRecords = collection;
             return collection;
         }
 
@@ -124,7 +130,10 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'treeGridFlattening' })
+@Pipe({
+    name: 'treeGridFlattening',
+    standalone: true
+})
 export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -173,7 +182,10 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 }
 
 /** @hidden */
-@Pipe({ name: 'treeGridSorting' })
+@Pipe({
+    name: 'treeGridSorting',
+    standalone: true
+})
 export class IgxTreeGridSortingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -212,13 +224,16 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
 }
 
 /** @hidden */
-@Pipe({ name: 'treeGridPaging' })
+@Pipe({
+    name: 'treeGridPaging',
+    standalone: true
+})
 export class IgxTreeGridPagingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, _: number): ITreeGridRecord[] {
-        if (!this.grid.paginator || this.grid.pagingMode !== GridPagingMode.Local) {
+    public transform(collection: ITreeGridRecord[], enabled: boolean, page = 0, perPage = 15, _: number): ITreeGridRecord[] {
+        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -232,13 +247,16 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state, len);
         this.grid.pagingState = state;
-        this.grid.paginator.page = state.index;
+        this.grid.page = state.index;
 
         return result;
     }
 }
 /** @hidden */
-@Pipe({ name: 'treeGridTransaction' })
+@Pipe({
+    name: 'treeGridTransaction',
+    standalone: true
+})
 export class IgxTreeGridTransactionPipe implements PipeTransform {
 
 
@@ -282,7 +300,10 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
 /**
  * This pipe maps the original record to ITreeGridRecord format used in TreeGrid.
  */
-@Pipe({ name: 'treeGridNormalizeRecord' })
+@Pipe({
+    name: 'treeGridNormalizeRecord',
+    standalone: true
+})
 export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -302,7 +323,10 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'treeGridAddRow' })
+@Pipe({
+    name: 'treeGridAddRow',
+    standalone: true
+})
 export class IgxTreeGridAddRowPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -318,7 +342,7 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
             const parentRowIndex = copy.findIndex(record => record.rowID === this.grid.crudService.addRowParent.rowID);
             copy.splice(parentRowIndex + 1, 0, rec);
         } else {
-            copy.splice(this.grid.crudService.row.index, 0, rec);            
+            copy.splice(this.grid.crudService.row.index, 0, rec);
         }
         this.grid.records.set(rec.key, rec);
         return copy;
