@@ -15,7 +15,7 @@ import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/a
 import { NgIf } from '@angular/common';
 import { IgxStepComponent } from '../../../projects/igniteui-angular/src/lib/stepper/step/step.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective } from '../../../projects/igniteui-angular/src/lib/stepper/stepper.directive';
+import { IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective } from '../../../projects/igniteui-angular/src/lib/stepper/stepper.directive';
 import { IgxStepperComponent as IgxStepperComponent_1 } from '../../../projects/igniteui-angular/src/lib/stepper/stepper.component';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
@@ -29,7 +29,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent_1, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
+    imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent_1, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
 export class IgxStepperSampleComponent {
     @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;
