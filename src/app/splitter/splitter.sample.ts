@@ -1,11 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RemoteService } from '../shared/remote.service';
-import { IgxGridComponent, SplitterType } from 'igniteui-angular';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxSplitterPaneComponent } from '../../../projects/igniteui-angular/src/lib/splitter/splitter-pane/splitter-pane.component';
-import { IgxSplitterComponent } from '../../../projects/igniteui-angular/src/lib/splitter/splitter.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxColumnComponent, IgxGridComponent, IgxSplitterComponent, IgxSplitterPaneComponent, IgxSwitchComponent, SplitterType } from 'igniteui-angular';
 
 
 @Component({
@@ -13,7 +8,7 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
     styleUrls: ['splitter.sample.scss'],
     templateUrl: 'splitter.sample.html',
     standalone: true,
-    imports: [IgxSwitchComponent, IgxSplitterComponent, IgxSplitterPaneComponent, IgxGridComponent_1, IgxColumnComponent]
+    imports: [IgxSwitchComponent, IgxSplitterComponent, IgxSplitterPaneComponent, IgxGridComponent, IgxColumnComponent]
 })
 export class SplitterSampleComponent implements AfterViewInit {
     @ViewChild('grid1', { static: true })

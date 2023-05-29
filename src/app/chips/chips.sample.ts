@@ -1,5 +1,4 @@
 import { Component, ViewChild, ChangeDetectorRef, ElementRef, Inject, OnInit } from '@angular/core';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions, IButtonGroupEventArgs, ButtonGroupAlignment } from 'igniteui-angular';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -17,7 +16,12 @@ import {
     IgxSelectItemComponent,
     IgxSuffixDirective,
     IgxSwitchComponent,
-    IgxCircularProgressBarComponent
+    IgxCircularProgressBarComponent,
+    DisplayDensity,
+    ButtonGroupAlignment,
+    IDisplayDensityOptions,
+    DisplayDensityToken,
+    IButtonGroupEventArgs
 } from 'igniteui-angular';
 
 interface Selection {

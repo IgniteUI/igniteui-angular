@@ -319,11 +319,6 @@ export class AppComponent implements OnInit {
             name: 'Grid Validation'
         },
         {
-            link: '/gridValidationTest',
-            icon: 'view_column',
-            name: 'Grid Validation Test'
-        },
-        {
             link: '/gridLocalization',
             icon: 'view_column',
             name: 'Grid Localization'

@@ -1,18 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
-
 import { RemoteService } from '../shared/remote.service';
-import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { FormsModule } from '@angular/forms';
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { GridPagingMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',

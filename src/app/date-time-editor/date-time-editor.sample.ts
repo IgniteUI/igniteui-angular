@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
-import { IgxDateTimeEditorEventArgs } from 'igniteui-angular';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
 import { FormsModule } from '@angular/forms';
-import { IgxDateTimeEditorDirective } from '../../../projects/igniteui-angular/src/lib/directives/date-time-editor/date-time-editor.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxDateTimeEditorEventArgs, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-time-editor',

@@ -6,13 +6,7 @@ import { Observable } from 'rxjs';
 import { RemoteService } from '../shared/remote.service';
 import { data } from '../shared/data';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
-import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxDateSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
-import { IFilteringExpressionsTree } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
-import { FilteringStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-strategy';
+import { FilteringStrategy, IFilteringExpressionsTree, IgxColumnComponent, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryOperand, IgxSummaryResult, IgxTreeGridComponent } from 'igniteui-angular';
 
 const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
 
