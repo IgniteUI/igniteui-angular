@@ -12,7 +12,7 @@ import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
         ColumnsAddedOnInitComponent, 
-        EmptyGridComponent} from '../../test-utils/grid-samples.spec';
+        EmptyGridComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
