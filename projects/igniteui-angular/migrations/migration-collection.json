@@ -152,9 +152,9 @@
             "factory": "./update-16_0_0"
         },
         "migration-31": {
-            "version": "16.0.4",
-            "description": "Updates Ignite UI for Angular from v16.0.0 to v16.0.4",
-            "factory": "./update-16_0_4"
+            "version": "16.1.0",
+            "description": "Updates Ignite UI for Angular from v16.0.0 to v16.1.0",
+            "factory": "./update-16_1_0"
         }
     }
 }

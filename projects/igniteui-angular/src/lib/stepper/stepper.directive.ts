@@ -3,7 +3,6 @@ import { IgxStep, IGX_STEP_COMPONENT } from './stepper.common';
 import { IgxStepperService } from './stepper.service';
 
 /**
- * @hidden
  * Allows a custom element to be added as an active step indicator.
  *
  * @igxModule IgxStepperModule
@@ -25,7 +24,6 @@ import { IgxStepperService } from './stepper.service';
 export class IgxStepActiveIndicatorDirective { }
 
 /**
- * @hidden
  * Allows a custom element to be added as a complete step indicator.
  *
  * @igxModule IgxStepperModule
@@ -47,7 +45,6 @@ export class IgxStepActiveIndicatorDirective { }
 export class IgxStepCompletedIndicatorDirective { }
 
 /**
- * @hidden
  * Allows a custom element to be added as an invalid step indicator.
  *
  * @igxModule IgxStepperModule
@@ -69,7 +66,6 @@ export class IgxStepCompletedIndicatorDirective { }
 export class IgxStepInvalidIndicatorDirective { }
 
 /**
- * @hidden
  * Allows a custom element to be added as a step indicator.
  *
  * @igxModule IgxStepperModule
@@ -91,7 +87,6 @@ export class IgxStepInvalidIndicatorDirective { }
 export class IgxStepIndicatorDirective { }
 
 /**
- * @hidden
  * Allows a custom element to be added as a step title.
  *
  * @igxModule IgxStepperModule
@@ -116,7 +111,6 @@ export class IgxStepTitleDirective {
 }
 
 /**
- * @hidden
  * Allows a custom element to be added as a step subtitle.
  *
  * @igxModule IgxStepperModule
@@ -141,7 +135,6 @@ export class IgxStepSubtitleDirective {
 }
 
 /**
- * @hidden
  * Allows a custom element to be added as a step content.
  *
  * @igxModule IgxStepperModule
