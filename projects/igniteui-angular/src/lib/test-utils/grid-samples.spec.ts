@@ -2565,7 +2565,7 @@ export class GridWithEmptyColumnsComponent {
 @Component({
     template: `
     <igx-grid #grid1 [data]="" [width]="'100%'" [height]="'700px'">
-    </igx-grid>`,
+    </igx-grid>`
 })
 export class EmptyGridComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
