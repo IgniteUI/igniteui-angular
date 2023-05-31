@@ -70,18 +70,45 @@ export class IgxComboGroupingPipe implements PipeTransform {
     }
 }
 
-function defaultFilterFunction (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] {
+function defaultFilterFunction<T>(collection: T[], searchValue: string, filteringOptions: IComboFilteringOptions): T[] {
     if (!searchValue) {
         return collection;
     }
-    const searchTerm = filteringOptions.caseSensitive ? searchValue : searchValue.toLowerCase();
-    if (filteringOptions.filteringKey != null) {
-        return collection.filter(e => filteringOptions.caseSensitive ?
-            e[filteringOptions.filteringKey]?.includes(searchTerm) :
-            e[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm));
-    } else {
-        return collection.filter(e => filteringOptions.caseSensitive ?
-            e?.includes(searchTerm) :
-            e?.toString().toLowerCase().includes(searchTerm));
+
+    const { caseSensitive, filteringKey } = filteringOptions;
+    const term = caseSensitive ? searchValue : searchValue.toLowerCase();
+
+    return collection.filter(item => {
+        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        return (caseSensitive ? str : str.toLowerCase()).includes(term);
+    });
+}
+
+function normalizeString(str: string, caseSensitive = false): string {
+    return (caseSensitive ? str : str.toLocaleLowerCase())
+        .normalize('NFKD')
+        .replace(/\p{M}/gu, '');
+}
+
+/**
+ * Combo filter function which does not distinguish between accented letters and their base letters.
+ * For example, when filtering for "resume", this function will match both "resume" and "résumé".
+ *
+ * @example
+ * ```html
+ * <igx-combo [filterFunction]="comboIgnoreDiacriticFilterFunction"></igx-combo>
+ * ```
+ */
+export function comboIgnoreDiacriticFilterFunction<T>(collection: T[], searchValue: string, filteringOptions: IComboFilteringOptions): T[] {
+    if (!searchValue) {
+        return collection;
     }
+
+    const { caseSensitive, filteringKey } = filteringOptions;
+    const term = normalizeString(searchValue, caseSensitive);
+
+    return collection.filter(item => {
+        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        return normalizeString(str, caseSensitive).includes(term);
+    });
 }
