@@ -2309,6 +2309,17 @@ export class GridWithEmptyColumnsComponent {
     public data = SampleTestData.personJobDataFull();
 }
 
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="" [width]="'100%'" [height]="'700px'">
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent]
+})
+export class EmptyGridComponent {
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+}
+
 /** Issue 9872 */
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType),
