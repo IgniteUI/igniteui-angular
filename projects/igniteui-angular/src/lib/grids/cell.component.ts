@@ -128,6 +128,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /* blazorSuppress */
     /**
      * Gets the default error template.
+     * @hidden @internal
      */
     @ViewChild('defaultError', { read: TemplateRef, static: true })
     public defaultErrorTemplate: TemplateRef<any>;
