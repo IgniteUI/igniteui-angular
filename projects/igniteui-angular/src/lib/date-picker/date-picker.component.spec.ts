@@ -474,8 +474,6 @@ describe('IgxDatePicker', () => {
                 const today = new Date().getDate().toString();
                 expect(document.activeElement.textContent.trim()).toEqual(today);
                 expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
-
-                flush();
             }));
 
             it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
