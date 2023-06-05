@@ -2,8 +2,8 @@
 @use 'sass:meta';
 @use 'sass:list';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -12,7 +12,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $track-color [null] - The main track color.
 /// @param {Color} $fill-color-default [null] - The track default fill color.
 /// @param {Color} $fill-color-danger [null] - The track danger fill color.
@@ -22,7 +22,7 @@
 /// @param {Color} $stripes-color [null] - The track stripes color.
 /// @param {Color} $text-color [null] - The track value text color.
 /// @param {Number} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: progress-linear-theme(
 ///     $stripes-color: orange
@@ -30,7 +30,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-progress-linear-theme);
 @function progress-linear-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $track-color: null,
     $fill-color-default: null,
@@ -43,13 +43,7 @@
     $track-border-radius: null,
 ) {
     $name: 'igx-linear-bar';
-    $linear-bar-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $linear-bar-schema: map.get($schema, $name);
-    } @else {
-        $linear-bar-schema: $schema;
-    }
+    $linear-bar-schema: map.get($light-material-schema, 'linear-bar');
 
     $theme: digest-schema($linear-bar-schema);
 
@@ -365,14 +359,13 @@
     }
 }
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
 /// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
 /// @param {Color} $text-color [null] - The value text color.
 ///
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: igx-progress-circular-theme(
@@ -381,7 +374,7 @@
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function progress-circular-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $base-circle-color: null,
     $progress-circle-color: null,
@@ -389,14 +382,7 @@
     $text-color: null
 ) {
     $name: 'igx-circular-bar';
-    $circular-bar-schema: ();
-
-
-    @if map.has-key($schema, $name) {
-        $circular-bar-schema: map.get($schema, $name);
-    } @else {
-        $circular-bar-schema: $schema;
-    }
+    $circular-bar-schema: map.get($light-material-schema, 'circular-bar');
 
     $theme: digest-schema($circular-bar-schema);
 

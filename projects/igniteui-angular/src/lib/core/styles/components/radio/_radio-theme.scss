@@ -1,10 +1,10 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
@@ -27,8 +27,7 @@
 /// @param {Color} $error-color [null] - The label, border and dot color in invalid state.
 /// @param {Color} $error-color-hover [null] - The label, border and dot color in invalid state on hover.
 ///
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
@@ -36,7 +35,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-radio-theme);
 @function radio-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $label-color: null,
     $empty-color: null,
@@ -51,13 +50,7 @@
     $error-color-hover: null,
 ) {
     $name: 'igx-radio';
-    $radio-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $radio-schema: map.get($schema, $name);
-    } @else {
-        $radio-schema: $schema;
-    }
+    $radio-schema: map.get($light-material-schema, 'radio');
 
     $theme: digest-schema($radio-schema);
 
@@ -152,7 +145,7 @@
     $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: ripple-theme(
-        $schema: $light-schema,
+        $schema: $light-material-schema,
         $color: var-get($theme, 'fill-color')
     );
 

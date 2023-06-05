@@ -1,10 +1,10 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
 /// @param {Color} $track-on-hover-color [null] - The color of the track when the switch is on and hovered.
@@ -43,14 +43,14 @@
 /// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
 /// @param {Color} $error-color [null] - The border and fill colors in invalid state.
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-switch-theme);
 @function switch-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $thumb-on-color: null,
     $track-on-color: null,
@@ -88,13 +88,7 @@
     $error-color-hover: null,
 ) {
     $name: 'igx-switch';
-    $switch-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $switch-schema: map.get($schema, $name);
-    } @else {
-        $switch-schema: $schema;
-    }
+    $switch-schema: map.get($light-material-schema, 'switch');
 
     $theme: digest-schema($switch-schema);
 
@@ -248,7 +242,7 @@
     $input-transition: all .2s $ease-in-out-quad;
 
     $ripple-theme: ripple-theme(
-        $schema: $light-schema,
+        $schema: $light-material-schema,
         $color: var-get($theme, 'thumb-on-color')
     );
 

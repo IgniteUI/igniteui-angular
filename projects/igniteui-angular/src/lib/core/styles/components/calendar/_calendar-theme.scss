@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -19,7 +19,7 @@
 /// - year/month hover/selected colors
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
 ///
@@ -83,7 +83,7 @@
 /// @param {Color} $week-number-color [null] - The text color of the week number column.
 /// @param {Color} $week-number-background [null] - The background color of the week number column.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the header and content background colors
 ///   $my-calendar-theme: calendar-theme(
@@ -93,7 +93,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-calendar-theme);
 @function calendar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $content-background: null,
     $content-text-color: null,
@@ -159,13 +159,7 @@
 ) {
     $name: 'igx-calendar';
     $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
-    $calendar-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $calendar-schema: map.get($schema, $name);
-    } @else {
-        $calendar-schema: $schema;
-    }
+    $calendar-schema: map.get($light-material-schema, 'calendar');
 
     $theme: digest-schema($calendar-schema);
     $variant: map.get($theme, variant);

@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -9,20 +9,14 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 @function pivot-data-selector-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null
 ) {
     $name: 'igx-pivot-data-selector';
     $selector: '.igx-pivot-data-selector';
-    $pivot-data-selector-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $pivot-data-selector-schema: map.get($schema, $name);
-    } @else {
-        $pivot-data-selector-schema: $schema;
-    }
+    $pivot-data-selector-schema: map.get($light-material-schema, 'pivot-data-selector');
 
     $theme: digest-schema($pivot-data-selector-schema);
 

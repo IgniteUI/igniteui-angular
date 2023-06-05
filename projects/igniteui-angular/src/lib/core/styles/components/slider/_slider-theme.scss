@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -11,7 +11,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
 /// @param {Number} $track-step-size [null] - The size of the track steps.
@@ -30,13 +30,13 @@
 /// @param {Color} $disabled-fill-track-color [null] - The base background color of the fill track when is disabled.
 /// @param {Color} $tick-label-color [null] - The color of the tick label.
 /// @param {Color} $tick-color [null] - The background-color of the tick.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Set custom track and thumb on colors
 ///   $my-slider-theme: slider-theme($thumb-color: black, $track-color: yellow);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-slider-theme);
 @function slider-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $track-color: null,
     $track-step-color: null,
@@ -60,13 +60,7 @@
     $tick-color: null,
 ) {
     $name: 'igx-slider';
-    $slider-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $slider-schema: map.get($schema, $name);
-    } @else {
-        $slider-schema: $schema;
-    }
+    $slider-schema: map.get($light-material-schema, 'slider');
 
     $theme: digest-schema($slider-schema);
 

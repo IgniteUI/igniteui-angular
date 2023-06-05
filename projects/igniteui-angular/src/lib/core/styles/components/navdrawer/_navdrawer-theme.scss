@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -11,7 +11,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navigation drawer background color.
@@ -28,7 +28,7 @@
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
 /// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for the navdrawer item.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: navdrawer-theme(
 ///     $background: #2d313a,
@@ -38,7 +38,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($navdrawer-theme);
 @function navdrawer-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $border-radius: null,
@@ -61,13 +61,7 @@
     $shadow: null
 ) {
     $name: 'igx-nav-drawer';
-    $navdrawer-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $navdrawer-schema: map.get($schema, $name);
-    } @else {
-        $navdrawer-schema: $schema;
-    }
+    $navdrawer-schema: map.get($light-material-schema, 'nav-drawer');
 
     $theme: digest-schema($navdrawer-schema);
 

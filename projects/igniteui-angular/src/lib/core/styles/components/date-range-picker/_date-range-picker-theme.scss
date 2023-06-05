@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -8,20 +8,14 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {color} $label-color [null] - The color for date range separator label.
 @function date-range-picker-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $label-color: null
 ) {
     $name: 'igx-date-range';
-    $date-range-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $date-range-schema: map.get($schema, $name);
-    } @else {
-        $date-range-schema: $schema;
-    }
+    $date-range-schema: map.get($light-material-schema, 'date-range');
 
     $theme: digest-schema($date-range-schema);
 

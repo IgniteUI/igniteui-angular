@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -11,7 +11,7 @@
 ////
 
 /// Dialog Theme
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The dialog background color.
 /// @param {Color} $title-color [null] - The dialog title text color.
@@ -19,13 +19,13 @@
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 /// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
 /// @param {Color} $border-color [null] - The border color used for dialog component.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the background color
 ///   $my-dialog-theme: dialog-theme($background: black);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-dialog-theme);
 @function dialog-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $border-radius: null,
@@ -39,13 +39,7 @@
     $name: 'igx-dialog';
     $selector: '.igx-dialog';
 
-    $dialog-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $dialog-schema: map.get($schema, $name);
-    } @else {
-        $dialog-schema: $schema;
-    }
+    $dialog-schema: map.get($light-material-schema, 'dialog');
 
     $theme: digest-schema($dialog-schema);
 

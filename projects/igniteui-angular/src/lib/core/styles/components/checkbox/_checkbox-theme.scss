@@ -1,10 +1,10 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use '../ripple/ripple-component' as *;
 @use '../ripple/ripple-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -14,7 +14,7 @@
 ////
 
 /// Checkbox Theme
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
@@ -31,14 +31,14 @@
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
 /// Set to light when the surrounding area is dark.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-checkbox-theme);
 @function checkbox-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $border-radius: null,
     $label-color: null,
@@ -56,13 +56,7 @@
     $error-color-hover: null,
 ) {
     $name: 'igx-checkbox';
-    $checkbox-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $checkbox-schema: map.get($schema, $name);
-    } @else {
-        $checkbox-schema: $schema;
-    }
+    $checkbox-schema: map.get($light-material-schema, 'checkbox');
 
     $theme: digest-schema($checkbox-schema);
 
@@ -119,10 +113,10 @@
     ), $variant);
 
     $border-width: map.get((
-        material: 2px,
-        fluent: 1px,
-        bootstrap: 1px,
-        indigo-design: 2px,
+        material: rem(2px),
+        fluent: rem(1px),
+        bootstrap: rem(1px),
+        indigo-design: rem(2px),
     ), $variant);
 
     $ripple-display: map.get((
@@ -155,7 +149,7 @@
     $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: ripple-theme(
-        $schema: $light-schema,
+        $schema: $light-material-schema,
         $color: var-get($theme, 'fill-color')
     );
 
@@ -195,7 +189,7 @@
         width: $size;
         height: $size;
         min-width: $size;
-        border-width: rem($border-width);
+        border-width: $border-width;
         border-style: solid;
         border-color: var-get($theme, 'empty-color');
         border-radius: var-get($theme, 'border-radius');

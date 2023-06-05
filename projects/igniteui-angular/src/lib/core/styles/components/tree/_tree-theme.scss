@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -10,7 +10,7 @@
 ////
 
 /// Returns a map containing all style properties related to the theming of the tree component.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} background [null] - The background color used for the tree node.
 /// @param {Color} foreground [null] - The color used for the tree node content.
 /// @param {Color} background-selected [null] - The background color used for the selected tree node.
@@ -23,15 +23,14 @@
 /// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the tree background
 ///   $my-tree-theme: tree-theme($background: magenta);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-tree-theme);
 @function tree-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null,
     $background-selected: null,
     $background-active: null,
@@ -46,13 +45,7 @@
     $border-color: null,
 ) {
     $name: 'igx-tree';
-    $tree-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $tree-schema: map.get($schema, $name);
-    } @else {
-        $tree-schema: $schema;
-    }
+    $tree-schema: map.get($light-material-schema, 'tree');
 
     $theme: digest-schema($tree-schema);
 

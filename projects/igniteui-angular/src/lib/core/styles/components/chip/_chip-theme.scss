@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:color';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -12,7 +12,7 @@
 ////
 
 /// Chip Theme
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {String} $border-radius [null] - The chip border-radius.
 ///
@@ -50,14 +50,14 @@
 /// @param {color} $remove-icon-color [null] - The remove icon color for the chip.
 /// @param {color} $remove-icon-color-focus [null] - The remove icon color on focus for the chip.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background color
 ///   $my-chip-theme: igx-chip-theme($background: black);
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-chip-theme);
 @function chip-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
     $border-radius: null,
 
@@ -98,13 +98,7 @@
 ) {
     $name: 'igx-chip';
     $selector: 'igx-chip, .igx-chip__ghost, .igx-chip__ghost--compact, .igx-chip__ghost--cosy';
-    $chip-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $chip-schema: map.get($schema, $name);
-    } @else {
-        $chip-schema: $schema;
-    }
+    $chip-schema: map.get($light-material-schema, 'chip');
 
     $theme: digest-schema($chip-schema);
 

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -12,7 +12,7 @@
 /// If only background color is specified,
 /// the text-color will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $text-color [null] - The text-color used for the toast.
@@ -20,17 +20,14 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for the toast component.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
 ///
-///
-/// @requires $light-schema
-///
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Set a custom background color
 ///   $my-toast-theme: toast-theme($background: green);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-toast-theme);
 @function toast-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $border-radius: null,
     $background: null,
@@ -38,13 +35,7 @@
     $shadow: null,
 ) {
     $name: 'igx-toast';
-    $toast-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $toast-schema: map.get($schema, $name);
-    } @else {
-        $toast-schema: $schema;
-    }
+    $toast-schema: map.get($light-material-schema, 'toast');
 
     $theme: digest-schema($toast-schema);
 

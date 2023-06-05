@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -11,7 +11,7 @@
 ////
 
 /// Expansion panel Theme
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $header-background [null] - The panel header background color.
 /// @param {Color} $header-focus-background [null] - The panel header focus background color.
 /// @param {Color} $header-title-color [null] - The panel header title text color.
@@ -22,13 +22,13 @@
 /// @param {Color} $disabled-color [null] - The panel body disabled text color.
 /// @param {Number} $expanded-margin [null] - The expansion panel margin in expanded state when positioned inside accordion.
 /// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the header background color
 ///   $my-expansion-panel-theme: expansion-panel-theme($header-background: black);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-expansion-panel-theme);
 @function expansion-panel-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $border-radius: null,
     $header-background: null,
@@ -42,13 +42,7 @@
     $expanded-margin: null
 ) {
     $name: 'igx-expansion-panel';
-    $expansion-panel-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $expansion-panel-schema: map.get($schema, $name);
-    } @else {
-        $expansion-panel-schema: $schema;
-    }
+    $expansion-panel-schema: map.get($light-material-schema, 'expansion-panel');
 
     $theme: digest-schema($expansion-panel-schema);
 

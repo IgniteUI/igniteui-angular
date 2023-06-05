@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -11,30 +11,24 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-avatar-theme);
 @function avatar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null,
     $color: null,
     $border-radius: null,
 ) {
     $name: 'igx-avatar';
-    $avatar-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $avatar-schema: map.get($schema, $name);
-    } @else {
-        $avatar-schema: $schema;
-    }
+    $avatar-schema: map.get($light-material-schema, 'avatar');
 
     $theme: digest-schema($avatar-schema);
 

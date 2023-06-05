@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
 ////
@@ -11,7 +11,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
@@ -28,8 +28,7 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
 ///
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: carousel-theme(
@@ -39,7 +38,7 @@
 ///   // Pass the carousel theme to the css-vars() mixin
 ///   @include css-vars($my-carousel-theme);
 @function carousel-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $border-radius: null,
@@ -60,13 +59,7 @@
     $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
-    $carousel-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $carousel-schema: map.get($schema, $name);
-    } @else {
-        $carousel-schema: $schema;
-    }
+    $carousel-schema: map.get($light-material-schema, 'carousel');
 
     $theme: digest-schema($carousel-schema);
 

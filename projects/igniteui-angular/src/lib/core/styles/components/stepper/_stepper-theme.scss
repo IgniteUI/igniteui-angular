@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -9,7 +9,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $step-background [null] - The background of the step header.
 /// @param {Color} $step-hover-background [null] - The background of the step header on hover.
@@ -78,13 +78,13 @@
 /// @param {Color} $border-radius-indicator [null] - The border-radius of the step indicator.
 /// @param {Color} $border-radius-step-header [null] - The border-radius of the step header.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Set custom stepper colors
 ///   $my-stepper-theme: stepper-theme($step-hover-background: red);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-stepper-theme);
 @function stepper-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $step-background: null,
     $step-hover-background: null,
@@ -174,13 +174,7 @@
 ) {
     $name: 'igx-stepper';
     $selector: 'igx-stepper';
-    $stepper-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $stepper-schema: map.get($schema, $name);
-    } @else {
-        $stepper-schema: $schema;
-    }
+    $stepper-schema: map.get($light-material-schema, 'stepper');
 
     $theme: digest-schema($stepper-schema);
 

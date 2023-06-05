@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -13,21 +13,21 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
 /// @param {Color} $active-item-color [null] - The text-color used for the active color.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the bar.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-bottom-nav-theme);
 @function bottom-nav-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $background: null,
@@ -36,13 +36,7 @@
     $shadow: null
 ) {
     $name: 'igx-bottom-nav';
-    $bottom-nav-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $bottom-nav-schema: map.get($schema, $name);
-    } @else {
-        $bottom-nav-schema: $schema;
-    }
+    $bottom-nav-schema: map.get($light-material-schema, 'bottom-nav');
 
     $theme: digest-schema($bottom-nav-schema);
 

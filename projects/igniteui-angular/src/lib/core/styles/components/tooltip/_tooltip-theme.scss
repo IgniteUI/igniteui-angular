@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -10,23 +10,21 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the tooltip directive.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The background color of the tooltip.
 /// @param {Color} $text-color [null] - The text color of the tooltip.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the tooltip component.
 ///
-/// @requires $light-schema
-///
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-checkbox-theme);
 @function tooltip-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $border-radius: null,
     $background: null,
@@ -35,13 +33,7 @@
     $name: 'igx-tooltip';
     $selector: '.igx-tooltip--desktop, .igx-tooptip--mobile';
 
-    $tooltip-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $tooltip-schema: map.get($schema, $name);
-    } @else {
-        $tooltip-schema: $schema;
-    }
+    $tooltip-schema: map.get($light-material-schema, 'tooltip');
 
     $theme: digest-schema($tooltip-schema);
 

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
 
 ////
 /// @group themes
@@ -9,7 +9,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
@@ -24,13 +24,13 @@
 /// @param {Color} $clear-button-background-focus [null] - The combo clear button background color when the combo is focused.
 /// @param {Color} $clear-button-foreground [null] - The combo clear button foreground color.
 /// @param {Color} $clear-button-foreground-focus [null] - The combo clear button foreground color when the combo is focused.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the combo empty list background
 ///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-combo-theme);
 @function combo-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
     $empty-list-background: null,
@@ -49,13 +49,7 @@
     $name: 'igx-combo';
     $selector: 'igx-combo, igx-simple-combo';
 
-    $combo-schema: ();
-
-    @if map.has-key($schema, $name) {
-        $combo-schema: map.get($schema, $name);
-    } @else {
-        $combo-schema: $schema;
-    }
+    $combo-schema: map.get($light-material-schema, 'combo');
 
     $theme: digest-schema($combo-schema);
 
