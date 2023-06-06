@@ -388,17 +388,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid']));
 
             hierarchicalGrid.displayDensity = DisplayDensity.cosy;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
 
             hierarchicalGrid.displayDensity = DisplayDensity.compact;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
         });
 
@@ -1751,7 +1752,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
 }
 
@@ -1900,7 +1901,7 @@ public toggleChildRI = true;
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchicalGridToggleRIComponent {
-    public toggleRI = false;
+    public override toggleRI = false;
     public toggleColumns = false;
 }
 
@@ -2060,4 +2061,3 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
-

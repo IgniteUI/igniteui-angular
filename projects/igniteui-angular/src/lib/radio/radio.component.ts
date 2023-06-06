@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { EditorProvider } from '../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
@@ -47,6 +47,11 @@ let nextId = 0;
  */
 @Component({
     selector: 'igx-radio',
+    providers: [{
+        provide: EDITOR_PROVIDER, 
+        useExisting: IgxRadioComponent, 
+        multi: true
+    }],
     templateUrl: 'radio.component.html'
 })
 export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, EditorProvider, OnDestroy {
@@ -266,7 +271,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
 
     /** @hidden @internal */
-    private blurRadio = new EventEmitter();
+    public blurRadio = new EventEmitter();
 
     /**
      * Returns the class of the radio component.
@@ -466,7 +471,6 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     public select() {
         if(!this.checked) {
             this.checked = true;
-            this.invalid = false;
             this.change.emit({ value: this.value, radio: this });
             this._onChangeCallback(this.value);
         }
@@ -561,11 +565,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         if (this.ngControl) {
             if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                 // the control is not disabled and is touched or dirty
-                if (this.checked) {
-                    this._invalid = this.ngControl.invalid;
-                } else {
-                    this._invalid = this.required ? true : false;
-                }
+                this._invalid = this.ngControl.invalid;
             } else {
                 //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
                 //  with the radio or when form/control is reset

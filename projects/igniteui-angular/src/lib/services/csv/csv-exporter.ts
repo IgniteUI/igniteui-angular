@@ -45,7 +45,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      *
      * @memberof IgxCsvExporterService
      */
-    public exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
+    public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     private _stringData: string;
 
@@ -75,7 +75,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     }
 
     private exportFile(data: string, fileName: string, fileType: string): void {
-        const blob = new Blob(['\ufeff', data], { type: fileType });
+        const blob = new Blob([data ? '\ufeff' : '', data], { type: fileType });
         ExportUtilities.saveBlobToFile(blob, fileName);
     }
 }

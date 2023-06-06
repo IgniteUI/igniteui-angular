@@ -806,6 +806,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
 
         this.clearSelection();
+        this.commitOperandEdit();
     }
 
     /**
@@ -822,6 +823,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
 
         this.clearSelection();
+        this.commitOperandEdit();
     }
 
     /**
@@ -829,6 +831,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public selectFilteringLogic(event: IButtonGroupEventArgs) {
         this.contextualGroup.operator = event.index as FilteringLogic;
+        this.commitOperandEdit();
     }
 
     /**
@@ -1161,8 +1164,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         parent.children.splice(index, 0, groupItem);
 
         for (const expr of this.selectedExpressions) {
-            this.deleteItem(expr);
             groupItem.children.push(expr);
+            this.deleteItem(expr);
             expr.parent = groupItem;
         }
 

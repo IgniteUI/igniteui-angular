@@ -195,6 +195,44 @@ describe('igxGridEditingActions #grid ', () => {
             expect(pinningIcons.length).toBe(1);
             expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
         });
+
+        it('should emit correct rowPinning arguments with pinning actions', () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            const row = grid.getRowByIndex(1);
+
+            actionStrip.show(grid.rowList.toArray()[1]);
+            fixture.detectChanges();
+            let pinningIcon = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`))[0];
+
+            pinningIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID : row.key,
+                insertAtIndex: 0,
+                isPinned: true,
+                row,
+                cancel: false
+            });
+
+            const row5 = grid.getRowByIndex(4);
+            actionStrip.show(grid.rowList.toArray()[4]);
+            fixture.detectChanges();
+            pinningIcon = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`))[0];
+
+            pinningIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID : row5.key,
+                insertAtIndex: 1,
+                isPinned: true,
+                row: row5,
+                cancel: false
+            });
+        });
     });
 
     describe('auto show/hide', () => {
@@ -326,6 +364,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeleteArgs = {
                 rowID: row.key,
+                primaryKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 oldValue: null,
@@ -334,6 +373,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
+                primaryKey: row.key,
                 owner: treeGrid
             };
 

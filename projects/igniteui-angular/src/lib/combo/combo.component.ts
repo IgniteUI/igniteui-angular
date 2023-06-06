@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, AfterContentChecked
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -34,7 +34,10 @@ import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import {
+    IgxInputGroupType,
+    IGX_INPUT_GROUP_TYPE
+} from '../input-group/public_api';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -108,7 +111,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider, AfterContentChecked {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
@@ -190,16 +193,24 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
+        elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        selectionService: IgxSelectionAPIService,
+        comboAPI: IgxComboAPIService,
+        _iconService: IgxIconService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
+        @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
+    }
+
+    @HostListener('keydown.ArrowDown', ['$event'])
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    public onArrowDown(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.open();
     }
 
     /** @hidden @internal */

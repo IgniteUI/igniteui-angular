@@ -382,10 +382,13 @@
         white-space: nowrap;
         flex-direction: column;
         width: 100%;
+        flex: none;
     }
 
     %igx-stepper__body {
-        position: relative
+        position: relative;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     %stepper-display,
@@ -930,6 +933,8 @@
         }
 
         %igx-stepper__step-content {
+            flex-grow: 1;
+
             &:focus {
                 outline: none;
             }
@@ -941,6 +946,10 @@
 
         %igx-stepper__step-content-wrapper {
             text-align: center;
+        }
+
+        %igx-stepper__body-content {
+            display: flex;
         }
     }
     // HORIZONTAL MODE END

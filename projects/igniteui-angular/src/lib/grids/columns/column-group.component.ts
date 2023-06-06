@@ -6,9 +6,7 @@ import {
     Input,
     forwardRef,
     QueryList,
-    TemplateRef,
-    Output,
-    EventEmitter
+    TemplateRef
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 
@@ -26,7 +24,7 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
-    public children = new QueryList<IgxColumnComponent>();
+    public override children = new QueryList<IgxColumnComponent>();
 
     /**
      * Set if the column group is collapsible.
@@ -38,7 +36,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public set collapsible(value: boolean) {
+    public override set collapsible(value: boolean) {
         this._collapsible = value;
         this.collapsibleChange.emit(this._collapsible);
         if (this.children && !this.hidden) {
@@ -49,7 +47,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             }
         }
     }
-    public get collapsible() {
+    public override get collapsible() {
         return this._collapsible && this.checkCollapsibleState();
     }
 
@@ -65,7 +63,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public set expanded(value: boolean) {
+    public override set expanded(value: boolean) {
         this._expanded = value;
         this.expandedChange.emit(this._expanded);
         if (!this.collapsible) {
@@ -75,7 +73,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this.setExpandCollapseState();
         }
     }
-    public get expanded() {
+    public override get expanded() {
         return this._expanded;
     }
 
@@ -88,7 +86,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public get summaries(): any {
+    public override get summaries(): any {
         return this._summaries;
     }
     /**
@@ -99,7 +97,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set summaries(classRef: any) { }
+    public override set summaries(classRef: any) { }
     /**
      * Sets/gets whether the column group is `searchable`.
      * Default value is `true`.
@@ -113,7 +111,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public searchable = true;
+    public override searchable = true;
     /**
      * Gets the column group `filters`.
      * ```typescript
@@ -123,7 +121,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public get filters(): any {
+    public override get filters(): any {
         return this._filters;
     }
     /**
@@ -134,7 +132,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set filters(classRef: any) { }
+    public override set filters(classRef: any) { }
 
     /**
      * Returns if the column group is selectable
@@ -144,27 +142,25 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get selectable(): boolean {
+    public override get selectable(): boolean {
         return this.children && this.children.some(child => child.selectable);
     }
 
-    public set selectable(value: boolean) {}
+    /**
+     * @hidden
+     */
+    public override set selectable(value: boolean) {}
 
     /**
-     * Returns a reference to the body template.
-     * ```typescript
-     * let bodyTemplate = this.columnGroup.bodyTemplate;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden
      */
-    public get bodyTemplate(): TemplateRef<any> {
+    public override get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
     /**
      * @hidden
      */
-    public set bodyTemplate(template: TemplateRef<any>) { }
+    public override set bodyTemplate(template: TemplateRef<any>) { }
 
     /**
      * Allows you to define a custom template for expand/collapse indicator
@@ -172,23 +168,18 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
+    public override collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     /**
-     * Returns a reference to the inline editor template.
-     * ```typescript
-     * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden
      */
-    public get inlineEditorTemplate(): TemplateRef<any> {
+    public override get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
     /**
      * @hidden
      */
-    public set inlineEditorTemplate(template: TemplateRef<any>) { }
+    public override set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
      * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
      * ```typescript
@@ -197,7 +188,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get cells(): CellType[] {
+    public override get cells(): CellType[] {
         return [];
     }
     /**
@@ -209,7 +200,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public get hidden() {
+    public override get hidden() {
         return this.allChildren.every(c => c.hidden);
     }
     /**
@@ -225,7 +216,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set hidden(value: boolean) {
+    public override set hidden(value: boolean) {
         this._hidden = value;
         this.hiddenChange.emit(this._hidden);
         if (this._hidden || !this.collapsible) {
@@ -248,7 +239,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get selected(): boolean {
+    public override get selected(): boolean {
         const selectableChildren = this.allChildren.filter(c => !c.columnGroup && c.selectable && !c.hidden);
         return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
@@ -261,7 +252,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set selected(value: boolean) {
+    public override set selected(value: boolean) {
         if (this.selectable) {
             this.children.forEach(c => {
                 c.selected = value;
@@ -272,13 +263,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * @hidden
      */
-    @Output()
-    public hiddenChange = new EventEmitter<boolean>();
-
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         /*
             @ContentChildren with descendants still returns the `parent`
             component in the query list.
@@ -318,7 +303,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get allChildren(): IgxColumnComponent[] {
+    public override get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }
     /**
@@ -329,7 +314,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get columnGroup() {
+    public override get columnGroup() {
         return true;
     }
     /**
@@ -340,7 +325,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnComponent
      */
-    public get columnLayout() {
+    public override get columnLayout() {
         return false;
     }
     /**
@@ -351,7 +336,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get width() {
+    public override get width() {
         const width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
@@ -361,19 +346,19 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
-    public set width(val) { }
+    public override set width(val) { }
 
     /**
      * @hidden
      */
-    public get applySelectableClass(): boolean {
+    public override get applySelectableClass(): boolean {
         return this._applySelectableClass;
     }
 
     /**
      * @hidden
      */
-    public set applySelectableClass(value: boolean) {
+    public override set applySelectableClass(value: boolean) {
         if (this.selectable) {
             this._applySelectableClass = value;
             this.children.forEach(c => {
@@ -386,7 +371,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @hidden
      * Calculates the number of visible columns, based on indexes of first and last visible columns.
      */
-    public calcChildren(): number {
+    public override calcChildren(): number {
         const visibleChildren = this.allChildren.filter(c => c.visibleIndex > -1);
         const fi = visibleChildren[0].visibleIndex;
         const li = visibleChildren[visibleChildren.length - 1].visibleIndex;

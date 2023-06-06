@@ -1,22 +1,25 @@
 import {
     Component,
-    Directive,
     EventEmitter,
-    forwardRef,
     HostBinding,
     Input,
     NgModule,
     Output,
-    Provider,
     ViewChild,
     ElementRef,
-    HostListener
+    HostListener,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Renderer2,
+    Self,
+    Optional
 } from '@angular/core';
-import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
-import { EditorProvider } from '../core/edit-provider';
-import { noop } from 'rxjs';
+import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
+import { noop, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export const SwitchLabelPosition = mkenum({
     BEFORE: 'before',
@@ -54,13 +57,24 @@ let nextId = 0;
  * ```
  */
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitchComponent, multi: true }],
+    providers: [{
+        provide: EDITOR_PROVIDER,
+        useExisting: IgxSwitchComponent,
+        multi: true 
+    }],
     selector: 'igx-switch',
     templateUrl: 'switch.component.html'
 })
-export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
+export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider, AfterViewInit {
     private static ngAcceptInputType_required: boolean | '';
     private static ngAcceptInputType_disabled: boolean | '';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject<boolean>();
+
     /**
      * Returns a reference to the native checkbox element.
      *
@@ -69,7 +83,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * let checkboxElement =  this.switch.nativeCheckbox;
      * ```
      */
-    @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
+    @ViewChild('checkbox', { static: true })
+    public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      *
@@ -80,6 +95,17 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     @ViewChild('label', { static: true })
     public nativeLabel: ElementRef;
+    /**
+     * Returns reference to the `nativeElement` of the igx-switch.
+     *
+     * @example
+     * ```typescript
+     * let nativeElement = this.switch.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this.nativeCheckbox.nativeElement;
+    }
     /**
      * Returns reference to the label placeholder element.
      *
@@ -168,13 +194,13 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch required></igx-switch>
      * ```
      */
-     @Input()
-     public get required(): boolean {
-         return this._required;
-     }
-     public set required(value: boolean) {
-         this._required = (value as any === '') || value;
-     }
+    @Input()
+    public get required(): boolean {
+        return this._required || this.nativeElement.hasAttribute('required');
+    }
+    public set required(value: boolean) {
+        this._required = (value as any === '') || value;
+    }
     /**
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
@@ -191,7 +217,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      *
      * @example
      * ```html
-     * <igx-switch aria-label="Label1"></igx-switch>
+     * <igx-switch aria-label = "Label1"></igx-switch>
      * ```
      */
     @Input('aria-label')
@@ -250,6 +276,26 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this._disabled = (value as any === '') || value;
     }
     /**
+     * Sets/gets whether the switch component is invalid.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-switch invalid></igx-switch>
+     * ```
+     * ```typescript
+     * let isInvalid = this.switch.invalid;
+     * ```
+     */
+    @HostBinding('class.igx-switch--invalid')
+    @Input()
+    public get invalid(): boolean {
+        return this._invalid || false;
+    }
+    public set invalid(value: boolean) {
+        this._invalid = !!value;
+    }
+    /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
      *
@@ -284,12 +330,42 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
+    private _invalid = false;
+    /**
+     * @hidden
+     * @internal
+     */
     private _onTouchedCallback: () => void = noop;
     /**
      * @hidden
      * @internal
      */
     private _onChangeCallback: (_: any) => void = noop;
+
+    constructor(
+        private cdr: ChangeDetectorRef,
+        protected renderer: Renderer2,
+        @Optional() @Self() public ngControl: NgControl,
+    ) {
+        if (this.ngControl !== null) {
+            this.ngControl.valueAccessor = this;
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+    */
+    public ngAfterViewInit() {
+        if (this.ngControl) {
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.updateValidityState.bind(this));
+
+            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                this._required = this.ngControl?.control?.hasValidator(Validators.required);
+                this.cdr.detectChanges();
+            }
+        }
+    }
     /**
      * @hidden
      * @internal
@@ -312,6 +388,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this.nativeCheckbox.nativeElement.focus();
 
         this.checked = !this.checked;
+        this.updateValidityState();
         // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
         // bound on change would have to perform self checks for weather the value has changed because
         // of the initial set on initialization
@@ -328,9 +405,11 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
+    @HostListener('blur')
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
+        this.updateValidityState();
     }
     /**
      * @hidden
@@ -374,34 +453,54 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public registerOnTouched(fn: () => void) {
         this._onTouchedCallback = fn;
     }
-
-    /** @hidden @internal */
+    /**
+     * @hidden
+     * @internal
+     */
     public setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }
+    /**
+     * @hidden
+     * @internal
+     */
+    protected updateValidityState() {
+        if (this.ngControl) {
+            if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
+                // the control is not disabled and is touched or dirty
+                this._invalid = this.ngControl.invalid;
+            } else {
+                //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
+                //  with the switch or when the form/control is reset
+                this._invalid = false;
+            }
+        } else {
+            this.checkNativeValidity();
+        }
+    }
+
+    /**
+     * A function to assign a native validity property of a swicth.
+     * This should be used when there's no ngControl
+     *
+     * @hidden
+     * @internal
+     */
+    private checkNativeValidity() {
+        if (!this.disabled && this._required && !this.checked) {
+            this._invalid = true;
+        } else {
+            this._invalid = false;
+        }
+    }
 }
-
-export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
-    provide: NG_VALIDATORS,
-    useExisting: forwardRef(() => IgxSwitchRequiredDirective),
-    multi: true
-};
-
-/* eslint-disable  @angular-eslint/directive-selector */
-@Directive({
-    selector: `igx-switch[required][formControlName],
-    igx-switch[required][formControl],
-    igx-switch[required][ngModel]`,
-    providers: [IGX_SWITCH_REQUIRED_VALIDATOR]
-})
-export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
 
 /**
  * @hidden
  */
 @NgModule({
-    declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
-    exports: [IgxSwitchComponent, IgxSwitchRequiredDirective],
+    declarations: [IgxSwitchComponent],
+    exports: [IgxSwitchComponent],
     imports: [IgxRippleModule]
 })
 export class IgxSwitchModule { }

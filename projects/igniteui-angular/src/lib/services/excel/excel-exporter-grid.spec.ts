@@ -20,7 +20,8 @@ import {
     ColumnsAddedOnInitComponent,
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
-    GridCurrencySummariesComponent
+    GridCurrencySummariesComponent,
+    GridUserMeetingDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -75,7 +76,8 @@ describe('Excel Exporter', () => {
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
-                GridCurrencySummariesComponent
+                GridCurrencySummariesComponent,
+                GridUserMeetingDataComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -747,6 +749,31 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
+
+        it('Should escape special chars in headers', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            grid.columnList.get(1).header = '&';
+            grid.columnList.get(2).header = '<>';
+            grid.columnList.get(3).header = '"';
+            grid.columnList.get(4).header = '\'';
+
+
+            await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
+        });
+
+        it('Should export date, dateTime, time and percent columns correctly', async () => {
+            const fix = TestBed.createComponent(GridUserMeetingDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGriWithDateData);
+        });
     });
 
     describe('', () => {
@@ -1215,6 +1242,15 @@ describe('Excel Exporter', () => {
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
+        });
+
+        it('should export grouped grid with only multi column headers', async () => {
+            grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            grid.columnList.get(0).hidden = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersWithGroupedData, false);
         });
     });
 

@@ -63,7 +63,11 @@ export class IgxSorting implements IGridSortingStrategy {
             }
             const hierarchy = getHierarchy(groupRow);
             const expandState: IGroupByExpandState = expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+                isHierarchyMatch(
+                    s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }],
+                    hierarchy,
+                    expressions
+                ));
             const expanded = expandState ? expandState.expanded : state.defaultExpanded;
             let recursiveResult;
             result.push(groupRow);
@@ -211,7 +215,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
 export class IgxDataRecordSorting extends IgxSorting {
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected override getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
         return super.getFieldValue(obj.data, key, isDate, isTime);
     }
 }

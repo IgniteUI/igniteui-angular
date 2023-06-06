@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -21,6 +21,7 @@ describe('IgxCheckbox', () => {
                 CheckboxExternalLabelComponent,
                 CheckboxInvisibleLabelComponent,
                 CheckboxDisabledTransitionsComponent,
+                CheckboxFormComponent,
                 CheckboxFormGroupComponent,
                 IgxCheckboxComponent
             ],
@@ -275,6 +276,7 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.required).toBeTruthy();
 
         checkboxInstance.required = false;
+        nativeCheckbox.required = false;
         fixture.detectChanges();
 
         expect(checkboxInstance.required).toBe(false);
@@ -314,6 +316,88 @@ describe('IgxCheckbox', () => {
         expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
+    });
+
+    it('Should update style when required checkbox\'s value is set.', () => {
+        const fixture = TestBed.createComponent(CheckboxRequiredComponent);
+        fixture.detectChanges();
+
+        const checkboxInstance = fixture.componentInstance.cb;
+        const domCheckbox = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
+
+        expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(false);
+        expect(checkboxInstance.invalid).toBe(false);
+        expect(checkboxInstance.checked).toBe(false);
+        expect(checkboxInstance.required).toBe(true);
+
+        dispatchCbEvent('keyup', domCheckbox, fixture);
+        expect(domCheckbox.classList.contains('igx-checkbox--focused')).toBe(true);
+        dispatchCbEvent('blur', domCheckbox, fixture);
+
+        expect(checkboxInstance.invalid).toBe(true);
+        expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(true);
+
+        dispatchCbEvent('keyup', domCheckbox, fixture);
+        expect(domCheckbox.classList.contains('igx-checkbox--focused')).toBe(true);
+        dispatchCbEvent('click', domCheckbox, fixture);
+
+        expect(domCheckbox.classList.contains('igx-checkbox--checked')).toBe(true);
+        expect(checkboxInstance.checked).toBe(true);
+        expect(checkboxInstance.invalid).toBe(false);
+        expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(false);
+
+        dispatchCbEvent('click', domCheckbox, fixture);
+        dispatchCbEvent('keyup', domCheckbox, fixture);
+        expect(domCheckbox.classList.contains('igx-checkbox--focused')).toBe(true);
+        dispatchCbEvent('blur', domCheckbox, fixture);
+
+        expect(checkboxInstance.checked).toBe(false);
+        expect(checkboxInstance.invalid).toBe(true);
+        expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(true);
+    });
+
+    it('Should work properly with ngModel', fakeAsync(() => {
+        const fixture = TestBed.createComponent(CheckboxFormComponent);
+        fixture.detectChanges();
+        tick();
+
+        const checkbox = fixture.componentInstance.checkbox;
+        expect(checkbox.invalid).toEqual(false);
+
+        checkbox.onBlur();
+        expect(checkbox.invalid).toEqual(true);
+
+        fixture.componentInstance.ngForm.resetForm();
+        tick();
+        expect(checkbox.invalid).toEqual(false);
+    }));
+
+    it('Should work properly with reactive forms validation.', () => {
+        const fixture = TestBed.createComponent(CheckboxFormGroupComponent);
+        fixture.detectChanges();
+
+        const checkbox = fixture.componentInstance.cb;
+        const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
+        expect(checkbox.required).toBe(true);
+        expect(checkbox.invalid).toBe(false);
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(false);
+        expect(checkbox.nativeElement.getAttribute('aria-required')).toEqual('true');
+        expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
+
+        dispatchCbEvent('keyup', cbxEl, fixture);
+        expect(checkbox.focused).toBe(true);
+        dispatchCbEvent('blur', cbxEl, fixture);
+
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(true);
+        expect(checkbox.invalid).toBe(true);
+        expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        checkbox.checked = true;
+        fixture.detectChanges();
+
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(false);
+        expect(checkbox.invalid).toBe(false);
+        expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
     describe('EditorProvider', () => {
@@ -410,7 +494,26 @@ class CheckboxDisabledTransitionsComponent {
 class CheckboxFormGroupComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
-    public myForm = this.fb.group({ checkbox: [null] });
+    public myForm = this.fb.group({ checkbox: ['', Validators.required] });
 
     constructor(private fb: UntypedFormBuilder) {}
 }
+@Component({
+    template: `
+    <form #form="ngForm">
+        <igx-checkbox #checkbox [(ngModel)]="subscribed" name="checkbox" required>Checkbox</igx-checkbox>
+    </form>
+`
+})
+class CheckboxFormComponent {
+    @ViewChild('checkbox', { read: IgxCheckboxComponent, static: true })
+    public checkbox: IgxCheckboxComponent;
+    @ViewChild(NgForm, { static: true })
+    public ngForm: NgForm;
+    public subscribed: string;
+}
+
+const dispatchCbEvent = (eventName, cbNativeElement, fixture) => {
+    cbNativeElement.dispatchEvent(new Event(eventName));
+    fixture.detectChanges();
+};

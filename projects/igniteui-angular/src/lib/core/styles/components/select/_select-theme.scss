@@ -1,0 +1,114 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @requires $light-schema
+/// @param {Color} $toggle-button-background [null] - The select toggle button background color.
+/// @param {Color} $toggle-button-background-focus [null] - The select toggle button background color when the select is focused.
+/// @param {Color} $toggle-button-background-disabled [null] - The select toggle button background color when the select is disabled.
+/// @param {Color} $toggle-button-foreground [null] - The select toggle button foreground color.
+/// @param {Color} $toggle-button-foreground-focus [null] - The select toggle button foreground color when the select is focused.
+/// @param {Color} $toggle-button-foreground-disabled [null] - The select toggle button foreground color when the select is disabled.
+/// @param {Color} $toggle-button-foreground-filled [null] - The select toggle button foreground color when the select is filled.
+/// @example scss Change the select empty list background
+///   $my-select-theme: igx-select-theme($empty-list-background);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-select-theme);
+@function select-theme(
+    $schema: $light-schema,
+    $toggle-button-background: null,
+    $toggle-button-background-focus: null,
+    $toggle-button-background-disabled: null,
+    $toggle-button-foreground: null,
+    $toggle-button-foreground-focus: null,
+    $toggle-button-foreground-disabled: null,
+    $toggle-button-foreground-filled: null,
+) {
+    $name: 'igx-select';
+    $selector: 'igx-select';
+
+    $select-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $select-schema: map.get($schema, $name);
+    } @else {
+        $select-schema: $schema;
+    }
+
+    $theme: digest-schema($select-schema);
+
+    @return extend($theme, (
+        name: $name,
+        selector: $selector,
+        toggle-button-background: $toggle-button-background,
+        toggle-button-background-focus: $toggle-button-background-focus,
+        toggle-button-background-disabled: $toggle-button-background-disabled,
+        toggle-button-foreground: $toggle-button-foreground,
+        toggle-button-foreground-focus: $toggle-button-foreground-focus,
+        toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
+        toggle-button-foreground-filled: $toggle-button-foreground-filled,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+@mixin select($theme) {
+    @include css-vars($theme);
+    $variant: map.get($theme, variant);
+
+    %igx-select {
+        position: relative;
+        display: block;
+    }
+
+    .igx-input-group--filled {
+        %igx-select__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-filled');
+        }
+    }
+
+    @if $variant == 'bootstrap' {
+        .igx-input-group--disabled {
+            %igx-select__toggle-button {
+                border-inline-start-width: rem(1px);
+                border-inline-start-style: solid;
+                border-inline-start-color: inherit;
+            }
+        }
+
+        igx-suffix + %igx-select__toggle-button {
+            border-inline-start-width: rem(1px);
+            border-inline-start-style: solid;
+            border-inline-start-color: inherit;
+        }
+    }
+
+    .igx-input-group {
+        %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background');
+            color: var-get($theme, 'toggle-button-foreground');
+        }
+    }
+
+    @if $variant == 'material' {
+        .igx-input-group--focused %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
+
+    .igx-input-group--disabled {
+        %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background-disabled');
+            color: var-get($theme, 'toggle-button-foreground-disabled');
+        }
+    }
+}

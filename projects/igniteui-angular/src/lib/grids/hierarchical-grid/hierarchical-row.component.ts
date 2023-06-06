@@ -24,7 +24,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     public expander: ElementRef<HTMLElement>;
 
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
+    protected override _cells: QueryList<IgxHierarchicalGridCellComponent>;
 
     /**
      * @hidden
@@ -57,8 +57,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         };
     }
 
-    public get viewIndex(): number {
-        return this.index + (this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0);
+    public override get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
     }
 
     /**
@@ -67,7 +67,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    public get expanded() {
+    public override get expanded() {
         return this.grid.gridAPI.get_row_expansion_state(this.data);
     }
 
@@ -79,7 +79,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         return this.expanded && !this.pinned;
     }
 
-    public get hasChildren() {
+    public override get hasChildren() {
         return !!this.grid.childLayoutKeys.length;
     }
 

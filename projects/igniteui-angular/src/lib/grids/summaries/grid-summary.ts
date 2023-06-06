@@ -171,7 +171,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+    public override operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
         result.push({
             key: 'min',
@@ -259,7 +259,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+    public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
         result.push({
             key: 'earliest',
@@ -312,7 +312,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
     /**
      * @memberof IgxTimeSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+    public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
         result.push({
             key: 'earliest',

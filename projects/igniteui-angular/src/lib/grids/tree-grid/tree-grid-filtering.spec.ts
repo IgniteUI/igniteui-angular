@@ -699,6 +699,60 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             const emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
         }));
+
+        it('Should display message when there is no data', fakeAsync(() => {
+            let data = tGrid.data;
+            tGrid.data = [];
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+
+            tGrid.data = data;
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+        }));
+
+        it('Should display message when the last row is deleted', fakeAsync(() => {
+            tGrid.data = [];
+            tGrid.primaryKey = 'ID';
+            const row = {
+                ID: 0,
+                Name: 'John Winchester',
+                HireDate: new Date(2008, 3, 20),
+                Age: 55,
+                OnPTO: false,
+                Employees: []
+            };
+            tGrid.addRow(row);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+            tGrid.deleteRowById(0);
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+        }));
     });
 
     describe('Tree grid ESF templates', () => {
@@ -936,7 +990,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     });
     class CustomTreeGridFilterStrategy  extends FilteringStrategy {
 
-        public filter(data: [], expressionsTree): any[] {
+        public override filter(data: [], expressionsTree): any[] {
                 const result = [];
                 if (!expressionsTree || !expressionsTree.filteringOperands ||
                     expressionsTree.filteringOperands.length === 0 || !data.length) {

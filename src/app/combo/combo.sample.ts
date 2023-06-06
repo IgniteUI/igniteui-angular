@@ -41,6 +41,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('remoteCombo')
     public remoteCombo: IgxComboComponent;
 
+    @ViewChild('densityCombo')
+    public densityCombo: IgxComboComponent;
+
     @ViewChild('remoteSimpleCombo')
     public remoteSimpleCombo: IgxSimpleComboComponent;
 
@@ -51,7 +54,10 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
 
     @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
-    private simpleCombo;
+    private simpleCombo: IgxSimpleComboComponent;
+
+    @ViewChild('simpleComboOpenOnClear')
+    public simpleComboOpenOnClear: IgxSimpleComboComponent;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -245,11 +251,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public setDensity(density: DisplayDensity) {
-        this.igxCombo.displayDensity = density;
-    }
-
-    public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
-        console.log(event);
+        this.densityCombo.displayDensity = density;
     }
 
     public changeFiltering(e: IChangeSwitchEventArgs) {
@@ -327,8 +329,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.searchText = '';
     }
 
-    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs) {
-        this.hasSelection = !!evt?.newSelection.length;
+    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs | ISimpleComboSelectionChangingEventArgs) {
+        if ('added' in evt) {
+            this.hasSelection = !!evt?.newSelection.length;
+            return;
+        }
+
+        if (!evt.newSelection) {
+            this.simpleComboOpenOnClear.open();
+        }
     }
 
     public onSimpleComboDataLoading() {

@@ -286,6 +286,59 @@ describe('IgxGrid - Validation #grid', () => {
             invalidRecords = grid.validation.getInvalid();
             expect(invalidRecords.length).toEqual(0);
         });
+
+        it('should update formControl state when grid data is updated.', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const originalDataCopy = JSON.parse(JSON.stringify(grid.data));
+
+            grid.data = JSON.parse(JSON.stringify(grid.data));
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.data = originalDataCopy;
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            expect(cell.editValue).toBe(originalDataCopy[1].ProductName);
+        });
+
+        it('should create formControl for dynamically added columns\' cells', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            expect(grid.columns.length).toBe(4);
+
+            // edit the row prior to adding new column, so that the formGroup of the row is created
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 3);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+
+            fixture.detectChanges();
+            cell.update(100);
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            // add new column
+            fixture.componentInstance.columns.push({ field: 'NewColumn', dataType: 'string' });
+            fixture.detectChanges();
+            expect(grid.columns.length).toBe(5);
+
+            // edit the new field's cell of the previously edited row
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
+            // will throw if form control was not created
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+        });
     });
 
     describe('Custom Validation - ', () => {

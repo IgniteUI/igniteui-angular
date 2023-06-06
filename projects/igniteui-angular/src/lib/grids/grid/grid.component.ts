@@ -26,7 +26,6 @@ import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTe
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
-import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
@@ -149,7 +148,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    public dropAreaTemplate: TemplateRef<any>;
+    public dropAreaTemplate: TemplateRef<void>;
 
     /**
      * @hidden @internal
@@ -191,12 +190,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public set detailTemplate(template: TemplateRef<IgxGridMasterDetailContext>) {
         this._detailTemplate = template;
     }
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild(IgxGridGroupByAreaComponent)
-    public groupArea: IgxGridGroupByAreaComponent;
 
     /**
      * @hidden @internal
@@ -249,6 +242,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -257,7 +251,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -325,6 +321,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -336,23 +336,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
             this.recalculateAutoSizes();
         }
-    }
-
-    /**
-     * Gets/Sets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
@@ -378,7 +361,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
 
@@ -619,7 +601,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public get hasDetails() {
+    public override get hasDetails() {
         return !!this.detailTemplate;
     }
 
@@ -641,7 +623,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isDetailRecord(record) {
+    public override isDetailRecord(record) {
         return record && record.detailsData !== undefined;
     }
 
@@ -752,7 +734,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const expandedGroup = this.grid.isExpandedGroup(this.groupRow);
      * ```
      */
-    public isExpandedGroup(group: IGroupByRecord): boolean {
+    public override isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
         return state ? state.expanded : this.groupsExpanded;
     }
@@ -820,7 +802,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isGroupByRecord(record: any): boolean {
+    public override isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record && record?.records && record.records?.length &&
          record.expression && record.expression?.fieldName;
@@ -889,7 +871,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isColumnGrouped(fieldName: string): boolean {
+    public override isColumnGrouped(fieldName: string): boolean {
         return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
     }
 
@@ -971,7 +953,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         super.ngAfterContentInit();
         if (this.allowFiltering && this.hasColumnLayouts) {
             this.filterMode = FilterMode.excelStyleFilter;
@@ -994,7 +976,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         super.ngAfterViewInit();
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
@@ -1025,7 +1007,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
         this.groupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
@@ -1038,7 +1020,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngDoCheck(): void {
+    public override ngDoCheck(): void {
         if (this.groupingDiffer && this._columns && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
             if (changes && this._columns.length > 0) {
@@ -1065,9 +1047,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @inheritDoc
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false): any[] {
+    public override getSelectedData(formatters = false, headers = false): any[] {
         if (this.groupingExpressions.length || this.hasDetails) {
             const source = [];
 
@@ -1109,8 +1096,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
 
-        if (this.gridAPI.grid.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
-            row.index = index + this.paginator.perPage * this.paginator.page;
+        if (this.pagingMode === 1 && this.page !== 0) {
+            row.index = index + this.perPage * this.page;
         }
         return row;
     }
@@ -1143,7 +1130,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page : index = this.dataRowList.first.index + index;
+            this.pagingMode === 1 && this.page !== 0 ? index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);
         });
     }
@@ -1184,8 +1171,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            if (this.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
-                row.index = rowIndex + this.paginator.perPage * this.paginator.page;
+            if (this.pagingMode === 1 && this.page !== 0) {
+                row.index = rowIndex + this.perPage * this.page;
             }
             return new IgxGridCell(this, row.index, columnField);
         }
@@ -1211,12 +1198,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
-    public pinRow(rowID: any, index?: number): boolean {
+    public override pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
     }
 
-    public unpinRow(rowID: any): boolean {
+    public override unpinRow(rowID: any): boolean {
         const row = this.getRowByKey(rowID);
         return super.unpinRow(rowID, row);
     }
@@ -1248,23 +1235,23 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    protected get defaultTargetBodyHeight(): number {
+    protected override get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.perPage) : allItems);
     }
 
     /**
      * @hidden @internal
      */
-    protected getGroupAreaHeight(): number {
+    protected override getGroupAreaHeight(): number {
         return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**
      * @hidden @internal
      */
-    protected scrollTo(row: any | number, column: any | number): void {
+    protected override scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof (row) !== 'number') {
             const rowIndex = this.groupingResult.indexOf(row);

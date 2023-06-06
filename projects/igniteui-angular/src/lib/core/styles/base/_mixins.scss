@@ -15,31 +15,65 @@
 
 /// Registers a component to the list of known components.
 /// @access private
-/// @param {String} $name - The component name to register.
+/// @param {String} $name - The component name.
+/// @param {List} $deps - A list of all components the component depends on.
 @mixin register-component($name, $deps: ()) {
     $component: map.get($components, $name);
+    $deps: if($component, map.get($component, 'deps'), $deps);
+    $usedBy: if($component, map.get($component, 'usedBy'), ());
 
-    @if $component == null {
-        $components: map.merge($components, (
-            #{$name}: (
-                usedBy: ()
-            ),
-        )) !global;
-    }
+    $components: map.merge($components, (
+        #{$name}: (
+            deps: $deps,
+            usedBy: $usedBy
+        )
+    )) !global;
+}
 
+/// Adds dependecies to a component's internal usedBy list.
+/// @access private
+/// @param {String} $component - The component name.
+/// @param {List} $deps - The dependecies to be added to the component's usedBy list.
+@mixin add-deps($component, $deps) {
     @each $dep in $deps {
-        @include register-component($dep);
+        $c: map.get($components, $dep);
+        $d: ();
+        $u: ();
 
-        @if map.has-key($components, $dep) {
-            $component: map.get($components, $dep);
-            $usedBy: map.get($component, 'usedBy');
+        @if $c != null {
+            $cu: map.get($c, 'usedBy');
 
-            $components: map.merge($components, (
-                #{$dep}: map.merge($component, (
-                    usedBy: list.append($usedBy, $name, $separator: comma)
-                ))
-            )) !global;
+            $d: map.get($c, 'deps');
+
+            @if not list.index($cu, $component) {
+                $u: list.append($cu, $component, comma);
+            } @else {
+                $u: $cu;
+            }
+        } @else {
+            $u: list.append($u, $component, comma);
         }
+
+        $components: map.merge($components, (
+            #{$dep}: (
+                deps: $d,
+                usedBy: $u
+            )
+        )) !global;
+
+        @include add-deps($component, $d);
+    }
+}
+
+/// Modifies the global components register by updating the usedBy list for each component.
+/// @access private
+/// @param {Map} $components - A map of all registered components.
+@mixin dependecy-tree($components) {
+    @each $c in $components {
+        $component: list.nth($c, 1);
+        $deps: map.get($components, $component, 'deps');
+
+        @include add-deps($component, $deps);
     }
 }
 

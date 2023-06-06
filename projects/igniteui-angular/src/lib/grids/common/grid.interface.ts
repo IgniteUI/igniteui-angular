@@ -6,7 +6,7 @@ import {
     IGridEditDoneEventArgs, IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -49,7 +49,7 @@ export interface IPathSegment {
 
 export interface IGridDataBindable {
     data: any[] | null;
-    filteredData: any[];
+    get filteredData(): any[];
 }
 
 export interface CellType {
@@ -284,6 +284,8 @@ export interface GridServiceType {
     sort(expression: ISortingExpression): void;
     sort_multiple(expressions: ISortingExpression[]): void;
     clear_sort(fieldName: string): void;
+
+    get_pin_row_event_args(rowID: any, index?: number, row?: RowType , pinned?: boolean): IPinRowEventArgs;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
@@ -563,7 +565,7 @@ export interface GridType extends IGridDataBindable {
     groupingExpressions?: IGroupingExpression[];
     groupingExpressionsChange?: EventEmitter<IGroupingExpression[]>;
     groupsExpanded?: boolean;
-    groupsRecords?: IGroupByRecord[];
+    readonly groupsRecords?: IGroupByRecord[];
     groupingFlatResult?: any[];
     groupingResult?: any[];
     groupingMetadata?: any[];
@@ -778,32 +780,37 @@ export interface IgxCellTemplateContext {
     cell: CellType
 }
 
+export interface IgxRowSelectorTemplateDetails {
+    index: number;
+    /** @deprecated Use `key` */
+    rowID: any;
+    key: any;
+    selected: boolean;
+    select?: () => void;
+    deselect?: () => void;
+}
+
 export interface IgxRowSelectorTemplateContext {
-    $implicit: {
-        index: number,
-        rowID: any,
-        key: any,
-        selected: boolean,
-        select?: () => void,
-        deselect?: () => void
-    }
+    $implicit: IgxRowSelectorTemplateDetails;
 }
 
+export interface IgxGroupByRowSelectorTemplateDetails {
+    selectedCount: number;
+    totalCount: number;
+    groupRow: IGroupByRecord;
+}
 export interface IgxGroupByRowSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number,
-        totalCount: number,
-        groupRow: IGroupByRecord
-    }
+    $implicit: IgxGroupByRowSelectorTemplateDetails;
 }
 
+export interface IgxHeadSelectorTemplateDetails {
+    selectedCount: number;
+    totalCount: number;
+    selectAll?: () => void;
+    deselectAll?: () => void;
+}
 export interface IgxHeadSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
+    $implicit: IgxHeadSelectorTemplateDetails;
 }
 
 export interface IgxSummaryTemplateContext {

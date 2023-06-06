@@ -14,7 +14,6 @@
 ////
 
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
 /// @param {Color} $track-on-hover-color [null] - The color of the track when the switch is on and hovered.
@@ -29,7 +28,6 @@
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
-///
 /// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
 /// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
@@ -41,10 +39,12 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
-///
+/// @param {Color} $label-invalid-color [null] - The color of the switch label in invalid state.
+/// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
+/// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
+/// @param {Color} $error-color [null] - The border and fill colors in invalid state.
+/// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
 /// @requires $light-schema
-///
-///
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
@@ -67,6 +67,7 @@
 
     $label-color: null,
     $label-disabled-color: null,
+    $label-invalid-color: null,
 
     $resting-shadow: null,
     $hover-shadow: null,
@@ -82,7 +83,11 @@
     $border-on-hover-color: null,
     $focus-outline-color: null,
     $focus-outline-color-focused: null,
-    $focus-fill-color: null
+    $focus-fill-color: null,
+    $track-error-color: null,
+    $thumb-on-error-color: null,
+    $error-color: null,
+    $error-color-hover: null,
 ) {
     $name: 'igx-switch';
     $switch-schema: ();
@@ -139,6 +144,7 @@
 
         label-color: $label-color,
         label-disabled-color: $label-disabled-color,
+        label-invalid-color: $label-invalid-color,
 
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
@@ -154,7 +160,11 @@
         border-on-hover-color: $border-on-hover-color,
         focus-outline-color: $focus-outline-color,
         focus-outline-color-focused: $focus-outline-color-focused,
-        focus-fill-color: $focus-fill-color
+        focus-fill-color: $focus-fill-color,
+        track-error-color: $track-error-color,
+        thumb-on-error-color: $thumb-on-error-color,
+        error-color: $error-color,
+        error-color-hover: $error-color-hover,
     ));
 }
 
@@ -165,6 +175,7 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
+    $type: map.get($theme, type);
     $variant: map.get($theme, variant);
 
     $switch-width: map.get((
@@ -232,7 +243,7 @@
 
     $switch-thumb-height: $switch-thumb-width;
 
-    $ripple-size: rem(48px);
+    $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
     $label-margin: rem(8px);
@@ -276,23 +287,39 @@
         @if $variant == 'indigo-design' {
             border: rem(2px) solid var-get($theme, 'border-color');
         }
+    }
 
-        @if $variant != 'bootstrap' {
-            &:hover,
-            &:focus {
-                border-color: var-get($theme, 'border-hover-color');
-            }
+    %switch-composite--hover {
+        @if $variant == 'material' or  $variant == 'fluent' {
+            border-color: var-get($theme, 'border-hover-color');
         }
 
         @if $variant == 'fluent' {
-            &:hover {
-                %switch-composite-thumb {
-                    background: var-get($theme, 'border-hover-color');
-                }
+            %switch-composite-thumb {
+                background: var-get($theme, 'border-hover-color');
+            }
 
-                %switch-composite-thumb--x {
-                    background: var-get($theme, 'thumb-on-color');
-                }
+            %switch-composite-thumb--x {
+                background: var-get($theme, 'thumb-on-color');
+            }
+        }
+    }
+
+    %switch-composite--invalid {
+        border-color: var-get($theme, 'error-color');
+
+        @if $variant == 'material' {
+            border-color: var-get($theme, 'track-error-color');
+            background: var-get($theme, 'track-error-color');
+        }
+    }
+
+    %switch-composite--invalid--hover {
+        @if $variant == 'fluent' {
+            border-color: var-get($theme, 'error-color-hover');
+
+            %switch-composite-thumb {
+                background: var-get($theme, 'error-color-hover');
             }
         }
     }
@@ -300,15 +327,18 @@
     %switch-composite--x {
         background: var-get($theme, 'track-on-color');
         border-color: var-get($theme, 'border-on-color');
+    }
 
-        &:hover,
-        &:focus {
+    %switch-composite--x--hover {
+        @if $variant != 'bootstrap' {
             border-color: var-get($theme, 'border-on-hover-color');
         }
 
         @if $variant == 'fluent' {
-            &:hover {
-                background: var-get($theme, 'track-on-hover-color');
+            background: var-get($theme, 'track-on-hover-color');
+
+            %switch-composite-thumb {
+                background: var-get($theme, 'thumb-on-color');
             }
         }
     }
@@ -348,6 +378,14 @@
         [dir='rtl'] & {
             transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         }
+    }
+
+    %switch-composite-thumb--invalid {
+        background: var-get($theme, 'error-color');
+    }
+
+    %switch-composite-thumb--x--invalid {
+        background: var-get($theme, 'thumb-on-error-color');
     }
 
     %switch-composite-thumb--disabled {
@@ -392,7 +430,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
             }
 
             %switch-composite-thumb {
@@ -404,6 +442,25 @@
             %switch-composite {
                 border-radius: var-get($theme, 'border-radius-thumb');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
+            }
+        }
+    }
+
+    %igx-switch--focused--invalid {
+        @if $variant == 'bootstrap' {
+            %switch-composite {
+                border-color: var-get($theme, 'error-color');
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
+            }
+
+            %switch-composite-thumb {
+                background: var-get($theme, 'error-color');
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            %switch-composite {
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
             }
         }
     }
@@ -448,10 +505,18 @@
         background: var-get($theme, 'track-off-color');
         transition: background .2s $ease-out-quad;
         opacity: .12;
+
+        @if $type == 'dark' {
+            opacity: .24;
+        }
     }
 
     %switch-ripple--focused-checked {
         background: var-get($theme, 'thumb-on-color');
+    }
+
+    %switch-ripple--focused-invalid {
+        background: var-get($theme, 'error-color-hover');
     }
 
     %switch-label {
@@ -482,6 +547,10 @@
         margin-inline-end: $label-margin;
     }
 
+    %switch-label--invalid {
+        color: var-get($theme, 'label-invalid-color');
+    }
+
     %switch-label--disabled {
         color: var-get($theme, 'label-disabled-color');
     }
@@ -492,6 +561,10 @@
             content: '';
             opacity: .06;
             inset: 0;
+
+            @if $type == 'dark' {
+                opacity: .12;
+            }
         }
     }
 
@@ -507,14 +580,30 @@
         }
     }
 
+    %switch-ripple--hover-invalid {
+        &::after {
+            background: var-get($theme, 'error-color-hover');
+        }
+    }
+
+    %switch-ripple--hover-checked-invalid {
+        &::after {
+            background: var-get($theme, 'thumb-on-color');
+        }
+    }
+
     %switch-ripple--pressed {
         &::after {
             opacity: .12;
+
+            @if $type == 'dark' {
+                opacity: .24;
+            }
         }
     }
 }
 
-/// Adds typography styles for the igx-checkbox component.
+/// Adds typography styles for the igx-switch component.
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.

@@ -71,7 +71,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     private onClosedCallback: () => any = this._defaultClosedCallback;
     private onOpenedCallback: () => any = this._defaultOpenedCallback;
 
-    constructor(@Inject(IgxAngularAnimationService)protected animationService: AnimationService) {
+    constructor(@Inject(IgxAngularAnimationService) protected animationService: AnimationService) {
     }
 
     /** @hidden @internal */
@@ -83,6 +83,8 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     public playCloseAnimation(targetElement: ElementRef, onDone?: () => void): void {
         this.startPlayer(ANIMATION_TYPE.CLOSE, targetElement, onDone || this._defaultClosedCallback);
     }
+
+    /** @hidden @internal */
     public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();

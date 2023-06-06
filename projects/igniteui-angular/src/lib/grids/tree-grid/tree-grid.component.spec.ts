@@ -292,6 +292,57 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.componentInstance.data = null;
             expect(() => fix.detectChanges()).not.toThrow();
         });
+
+        it('should not throw error when data is null and row is pinned', () => {
+            fix = TestBed.createComponent(IgxTreeGridNoDataComponent);
+            grid = fix.componentInstance.treeGrid;
+            grid.pinRow(4);
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+    });
+
+    describe('Displaying empty grid message', () => {
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
+            grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
+        }));
+
+        it('should display empty grid message when there is no data', () => {
+            const data: any[] = grid.data;
+            grid.data = [];
+            fix.detectChanges();
+            let emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeTruthy();
+            expect(emptyGridMessage.nativeElement.innerText).toBe('Grid has no data.');
+
+            grid.data = data;
+            fix.detectChanges();
+            emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeFalsy();
+        });
+
+        it('should display empty grid message when last row is deleted', () => {
+            grid.data = [];
+            grid.addRow({
+                ID: 0,
+                Name: 'John Winchester',
+                HireDate: new Date(2008, 3, 20),
+                Age: 55,
+                OnPTO: false,
+                Employees: []
+            });
+
+            fix.detectChanges();
+            let emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeFalsy();
+
+            grid.deleteRowById(0);
+            fix.detectChanges();
+            emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(emptyGridMessage).toBeTruthy();
+            expect(emptyGridMessage.nativeElement.innerText).toBe('Grid has no data.');
+        });
     });
 
 });

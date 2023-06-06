@@ -9,22 +9,59 @@
 
 /// Generates a dark checkbox schema.
 /// @type {Map}
+/// @prop {Map} tick-color [color: ('gray', 900)] - The checked mark color.
 /// @requires $light-checkbox
-$dark-checkbox: $light-checkbox;
+$dark-checkbox: extend($light-checkbox, (
+    type: 'dark',
+
+    tick-color: (
+        color: ('gray', 900)
+    ),
+));
 
 /// Generates a dark fluent checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
+/// @prop {Map} tick-color [color: ('gray', 50)] - The checked mark color.
+/// @prop {Map} tick-color-hover [color: ('gray', 400)] - The checked mark color on hover when the control in unchecked.
+/// @prop {Map} fill-color [color: ('primary', 300)] - The checked border and fill colors.
+/// @prop {Map} fill-color-hover [color: ('primary', 100)] - The checked border and fill colors on hover.
+/// @prop {Map} error-color-hover [color: ('error', 200)] - The border and fill colors in invalid state on hover.
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color-label [color: ('gray', 500)] - The disabled label color.
 /// @requires $fluent-checkbox
 $dark-fluent-checkbox: extend($fluent-checkbox, (
     tick-color: (
-        color: ('gray', 900)
+        color: ('gray', 50)
+    ),
+
+    tick-color-hover: (
+        color: ('gray', 400)
+    ),
+
+    fill-color: (
+        color: ('primary', 300)
+    ),
+
+    fill-color-hover: (
+        color: ('primary', 100)
+    ),
+
+    error-color-hover: (
+        color: ('error', 200)
+    ),
+
+    disabled-color: (
+        color: ('gray', 400),
+    ),
+
+    disabled-color-label: (
+        color: ('gray', 500),
     )
 ));
 
 /// Generates a dark bootstrap checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
+/// @prop {Map} tick-color [color: ('gray', 900)] - The checked mark color.
 /// @requires $bootstrap-checkbox
 $dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
     tick-color: (
@@ -34,10 +71,10 @@ $dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
 
 /// Generates a dark indigo checkbox schema.
 /// @type {Map}
-/// @prop {Color} fill-color [color: ('gray', 900)] - The checked border and fill colors.
-/// @prop {Color} empty-color [color: ('gray', 700)] - The unchecked border color.
-/// @prop {Color} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
-/// @prop {Color} disabled-color-label [color: ('gray', 400)] - The disabled label color.
+/// @prop {Map} fill-color [color: ('gray', 900)] - The checked border and fill colors.
+/// @prop {Map} empty-color [color: ('gray', 700)] - The unchecked border color.
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color-label [color: ('gray', 400)] - The disabled label color.
 /// @requires $indigo-checkbox
 $dark-indigo-checkbox: extend($indigo-checkbox, (
     fill-color: (
