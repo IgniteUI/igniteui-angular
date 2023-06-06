@@ -36,25 +36,17 @@ export class CharSeparatedValueData {
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keys);
+        this._headerRecord = this.processHeaderRecord(keys, this._data.length);
         this._dataRecords = this.processDataRecords(this._data, keys);
 
         return this._headerRecord + this._dataRecords;
     }
 
     public prepareDataAsync(done: (result: string) => void) {
-        if (!this._data || this._data.length === 0) {
-            done('');
-        }
-
         const columns = this.columns?.filter(c => !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
         const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
-
-        if (keys.length === 0) {
-            done('');
-        }
 
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._escapeCharacters.push(this._delimiter);
@@ -63,10 +55,14 @@ export class CharSeparatedValueData {
                         columns.map(c => c.header ?? c.field) :
                         keys;
 
-        this._headerRecord = this.processHeaderRecord(headers);
-        this.processDataRecordsAsync(this._data, keys, (dr) => {
-            done(this._headerRecord + dr);
-        });
+        this._headerRecord = this.processHeaderRecord(headers, this._data.length);
+        if (keys.length === 0 || ((!this._data || this._data.length === 0) && keys.length === 0)) {
+            done('');
+        } else {
+            this.processDataRecordsAsync(this._data, keys, (dr) => {
+                done(this._headerRecord + dr);
+            });
+        }
     }
 
     private processField(value, escapeChars): string {
@@ -77,13 +73,15 @@ export class CharSeparatedValueData {
         return safeValue + this._delimiter;
     }
 
-    private processHeaderRecord(keys): string {
+    private processHeaderRecord(keys, dataLength): string {
         let recordData = '';
         for (const keyName of keys) {
             recordData += this.processField(keyName, this._escapeCharacters);
         }
 
-        return recordData.slice(0, -this._delimiterLength) + this._eor;
+        const result = recordData.slice(0, -this._delimiterLength);
+
+        return dataLength > 0 ? result + this._eor : result;
     }
 
     private processRecord(record, keys): string {
