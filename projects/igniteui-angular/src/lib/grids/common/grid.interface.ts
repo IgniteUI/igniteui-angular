@@ -467,8 +467,6 @@ export interface GridType extends IGridDataBindable {
 
     rowEditTabs: any;
     lastSearchInfo: ISearchInfo;
-    page: number;
-    perPage: number;
     /** @hidden @internal */
     dragRowID: any;
     rowDragging: boolean;
