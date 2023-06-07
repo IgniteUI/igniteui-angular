@@ -741,11 +741,11 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 // go to last page that doesn't contain this view
-                grid.page = grid.pagingState.metadata.countPages - 1;
+                grid.paginator.page = grid.pagingState.metadata.countPages - 1;
                 fix.detectChanges();
 
                 // go back to first page
-                grid.page = 0;
+                grid.paginator.page = 0;
                 fix.detectChanges();
 
                 // check checkbox state

@@ -122,7 +122,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * @internal
      */
     public override get viewIndex(): number {
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + this.grid.paginator.page * this.grid.paginator.perPage;
     }
 
     /**

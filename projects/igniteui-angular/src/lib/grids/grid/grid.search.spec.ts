@@ -867,7 +867,7 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
             activeHighlight = getActiveHighlight();
             expect(activeHighlight).toBeNull();
-            expect(grid.page).toBe(0);
+            expect(grid.paginator.page).toBe(0);
 
             grid.paginator.page = 1;
             fix.detectChanges();
@@ -1035,14 +1035,14 @@ describe('IgxGrid - search API #grid', () => {
             const activeSpan = getActiveSpan();
             expect(spans.length).toBe(2);
             expect(activeSpan).toBeNull();
-            expect(grid.page).toBe(0);
+            expect(grid.paginator.page).toBe(0);
 
             grid.paginator.page = 1;
             fix.detectChanges();
             spans = getSpans();
             verifyActiveSpan(0);
             expect(spans.length).toBe(3);
-            expect(grid.page).toBe(1);
+            expect(grid.paginator.page).toBe(1);
         });
 
         it('Should be able to properly handle navigating through collapsed rows', () => {

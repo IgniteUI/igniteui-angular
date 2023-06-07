@@ -375,8 +375,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
         const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;
         grid.refreshSearch();
-        if (dataAfterDelete.length % grid.perPage === 0 && dataAfterDelete.length / grid.perPage - 1 < grid.page && grid.page !== 0) {
-            grid.page--;
+        if (dataAfterDelete.length % grid.paginator.perPage === 0 && dataAfterDelete.length / grid.paginator.perPage - 1 < grid.paginator.page && grid.paginator.page !== 0) {
+            grid.paginator.page--;
         }
 
         return record;

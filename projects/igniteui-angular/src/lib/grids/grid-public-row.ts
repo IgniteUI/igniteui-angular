@@ -19,7 +19,7 @@ abstract class BaseRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + this.grid.paginator.page * this.grid.paginator.perPage;
     }
 
     /**
@@ -352,7 +352,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public override get viewIndex(): number {
-        if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
+        if (this.grid.hasSummarizedColumns && this.grid.paginator.page > 0) {
             if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                 const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
                 // firstRowIndex is based on data result after all pipes triggered, excluding summary pipe
@@ -363,7 +363,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
                 return firstRowIndex + precedingSummaryRows + this.index;
             }
         }
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + this.grid.paginator.page * this.grid.paginator.perPage;
     }
 
     /**
@@ -575,7 +575,7 @@ export class IgxGroupByRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
-        if (this.grid.page) {
+        if (this.grid.paginator.page) {
             const precedingDetailRows = [];
             const precedingGroupRows = [];
             const firstRow = this.grid.dataView[0];
@@ -722,9 +722,9 @@ export class IgxSummaryRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
-        if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
+        if (this.grid.hasSummarizedColumns && this.grid.paginator.page > 0) {
             if (this.gridType === GridInstanceType.Grid) {
-                if (this.grid.page) {
+                if (this.grid.paginator.page) {
                     const precedingDetailRows = [];
                     const precedingGroupRows = [];
                     const firstRow = this.grid.dataView[0];
@@ -775,7 +775,7 @@ export class IgxSummaryRow implements RowType {
             }
         }
 
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + this.grid.paginator.page * this.grid.paginator.perPage;
     }
 
     /**

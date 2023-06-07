@@ -1907,7 +1907,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Filtering, Paging: selected range should not change when perform filtering', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -1965,7 +1965,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Paging: selected range should be cleared when perPage items are changed', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -1981,7 +1981,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 5);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            grid.perPage = 7;
+            grid.paginator.perPage = 7;
             fix.detectChanges();
             tick(16);
 

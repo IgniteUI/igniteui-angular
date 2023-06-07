@@ -238,7 +238,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if ((this.grid as any).groupingExpressions.length) {
             return this.grid.filteredSortedData.indexOf(this.data);
         }
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + this.grid.paginator.page * this.grid.paginator.perPage;
     }
 
     /**

@@ -2180,7 +2180,7 @@ describe('IgxGrid - Summaries #grid', () => {
         it('Paging: should render correct summaries when paging is enable and position is buttom', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 3;
+            grid.paginator.perPage = 3;
             fix.detectChanges();
             tick(16);
 
@@ -2188,7 +2188,7 @@ describe('IgxGrid - Summaries #grid', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
 
-            grid.page = 1;
+            grid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -2196,13 +2196,13 @@ describe('IgxGrid - Summaries #grid', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID19(fix, 2);
 
-            grid.page = 2;
+            grid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
             verifySummariesForParentID147(fix, 3);
             verifyBaseSummaries(fix);
 
-            grid.page = 0;
+            grid.paginator.page = 0;
             fix.detectChanges();
             tick(16);
 
@@ -2218,12 +2218,12 @@ describe('IgxGrid - Summaries #grid', () => {
         it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 3;
+            grid.paginator.perPage = 3;
             grid.summaryPosition = 'top';
             fix.detectChanges();
             tick(16);
 
-            grid.page = 1;
+            grid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -2232,7 +2232,7 @@ describe('IgxGrid - Summaries #grid', () => {
             verifySummariesForParentID19(fix, 1);
             verifySummariesForParentID147(fix, 4);
 
-            grid.page = 2;
+            grid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
 

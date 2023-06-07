@@ -2176,7 +2176,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 4;
+            grid.paginator.perPage = 4;
             grid.columnList.forEach(c => c.hasSummary = true);
             fix.detectChanges();
 
@@ -2190,7 +2190,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fourthRow.index).toBe(3);
             expect(fourthRow.viewIndex).toBe(3);
 
-            grid.page = 1;
+            grid.paginator.page = 1;
             grid.cdr.detectChanges();
             fix.detectChanges();
 
@@ -2227,7 +2227,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowByIndex(fix.componentInstance.pageSize) instanceof IgxGridRow).toBe(false);
 
             // Change page and check getRowByIndex
-            grid.page = 1;
+            grid.paginator.page = 1;
             fix.detectChanges();
             tick();
 
@@ -2238,7 +2238,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(firstRow.viewIndex).toBe(5);
 
             // Change page and check getRowByIndex
-            grid.page = 2;
+            grid.paginator.page = 2;
             fix.detectChanges();
             tick();
 

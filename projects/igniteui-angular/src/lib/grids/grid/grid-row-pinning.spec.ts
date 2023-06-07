@@ -701,7 +701,7 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(0).pin();
 
             expect(grid.rowList.length).toEqual(6);
-            expect(grid.perPage).toEqual(5);
+            expect(grid.paginator.perPage).toEqual(5);
             expect(paginator.perPage).toEqual(5);
             expect(paginator.totalRecords).toEqual(12);
             expect(paginator.totalPages).toEqual(3);
@@ -710,7 +710,7 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(2).pin();
 
             expect(grid.rowList.length).toEqual(7);
-            expect(grid.perPage).toEqual(5);
+            expect(grid.paginator.perPage).toEqual(5);
             expect(paginator.perPage).toEqual(5);
             expect(paginator.totalRecords).toEqual(12);
             expect(paginator.totalPages).toEqual(3);

@@ -211,7 +211,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const filteringTree = this.grid.filteringExpressionsTree;
         this.grid.crudService.endEdit(false);
-        this.grid.page = 0;
+        this.grid.paginator.page = 0;
 
         filteringTree.filteringOperands = [];
         for (const column of this.grid.columns) {
@@ -303,7 +303,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         this.grid.crudService.endEdit(false);
-        this.grid.page = 0;
+        this.grid.paginator.page = 0;
         this.grid.filteringExpressionsTree = newFilteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -504,7 +504,7 @@ export class IgxFilteringService implements OnDestroy {
         ignoreCase: boolean) {
         const filteringTree = this.grid.filteringExpressionsTree;
         this.grid.crudService.endEdit(false);
-        this.grid.page = 0;
+        this.grid.paginator.page = 0;
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
