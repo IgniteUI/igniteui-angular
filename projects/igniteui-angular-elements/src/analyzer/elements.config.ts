@@ -334,6 +334,7 @@ export var registerConfig = [
       "summaryRowHeight",
       "page",
       "perPage",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
@@ -464,6 +465,7 @@ export var registerConfig = [
       "summaryRowHeight",
       "page",
       "perPage",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
@@ -613,6 +615,7 @@ export var registerConfig = [
       "summaryRowHeight",
       "page",
       "perPage",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
@@ -714,6 +717,7 @@ export var registerConfig = [
       "headSelectorTemplate",
       "rowSelectorTemplate",
     ],
+    numericProps: ["rowHeight"],
     boolProps: [
       "showPivotConfigurationUI",
       "superCompactMode",
@@ -914,6 +918,7 @@ export var registerConfig = [
       "summaryRowHeight",
       "page",
       "perPage",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
