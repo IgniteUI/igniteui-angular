@@ -272,11 +272,11 @@ export class IgxGridStateDirective {
                 if (!context.currGrid.paginator) {
                     return;
                 }
-                if (context.currGrid.perPage !== state.recordsPerPage) {
-                    context.currGrid.perPage = state.recordsPerPage;
+                if (context.currGrid.paginator.perPage !== state.recordsPerPage) {
+                    context.currGrid.paginator.perPage = state.recordsPerPage;
                     context.currGrid.cdr.detectChanges();
                 }
-                context.currGrid.page = state.index;
+                context.currGrid.paginator.page = state.index;
             }
         },
         moving: {
