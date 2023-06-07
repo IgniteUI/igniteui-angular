@@ -461,8 +461,8 @@ export interface GridType extends IGridDataBindable {
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
-
     pagingMode: GridPagingMode;
+    /** @hidden */
     pagingState: any;
 
     rowEditTabs: any;
