@@ -19,7 +19,7 @@
 
 /// Default noop handler for theme map transforms
 /// @access private
-@function theme-noop($arg) { @return $arg; };
+@function theme-noop($arg) { @return $arg; }
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
@@ -67,7 +67,7 @@
     $roundness: 1,
     $elevation: true,
     $elevations: elevations.$material-elevations,
-    $theme-handler: meta.get-function("theme-noop"),
+    $theme-handler: meta.get-function('theme-noop'),
 ) {
     // Stores all excluded component styles
     $excluded: ();
