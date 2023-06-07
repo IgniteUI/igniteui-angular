@@ -47,7 +47,9 @@ export interface IFieldPipeArgs {
     weekStart?: WEEKDAYS | number;
 }
 
-export type IColumnPipeArgs = IFieldPipeArgs
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IColumnPipeArgs extends IFieldPipeArgs {}
+// export type IColumnPipeArgs = IFieldPipeArgs
 
 export interface ISortingOptions {
     mode: 'single' | 'multiple';
