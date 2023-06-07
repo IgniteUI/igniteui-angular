@@ -3462,13 +3462,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
-     */
-    public set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
-    }
-
-    /**
-     * @hidden
      * @internal
      */
     public hideOverlays() {
