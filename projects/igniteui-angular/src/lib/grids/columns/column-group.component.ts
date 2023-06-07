@@ -152,15 +152,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this.children && this.children.some(child => child.selectable);
     }
 
+    /**
+     * @hidden
+     */
     public override set selectable(value: boolean) {}
 
     /**
-     * Returns a reference to the body template.
-     * ```typescript
-     * let bodyTemplate = this.columnGroup.bodyTemplate;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden
      */
     public override get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
@@ -179,12 +177,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     /**
-     * Returns a reference to the inline editor template.
-     * ```typescript
-     * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden
      */
     public override get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
