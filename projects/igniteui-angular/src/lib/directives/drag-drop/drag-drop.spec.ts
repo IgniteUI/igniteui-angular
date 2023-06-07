@@ -486,6 +486,44 @@ describe('General igxDrag/igxDrop', () => {
         await wait();
     });
 
+    it(`should take first child when creating ghost from template that has display content`, async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghostOffsetX = 0;
+        firstDrag.ghostOffsetY = 0;
+        firstDrag.ghostTemplate = fix.componentInstance.ghostTemplateContents;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        // + 10 margin to the final ghost position
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
+        expect(firstDrag.ghostElement.innerText).toEqual('Drag Template Content');
+        expect(firstDrag.ghostElement.id).toEqual('contentsTemplate');
+        expect(firstDrag.ghostElement.style.display).toEqual('block');
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    });
+
     it('should correctly move igxDrag element when ghost is disabled and trigger dragStart/dragMove/dragEnd events.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
@@ -1903,6 +1941,11 @@ const generalStyles = [`
             <ng-template #ghostTemplate>
                 <div class="ghostElement">Drag Template</div>
             </ng-template>
+            <ng-template #ghostTemplateContents>
+                <div id="contentsTemplate" class="ghostElement" style="display: contents">
+                    Drag Template Content
+                </div>
+            </ng-template>
         </div>
         <br/>
         <h3>Drop area:</h3>
@@ -1923,6 +1966,9 @@ class TestDragDropComponent {
 
     @ViewChild('ghostTemplate', { read: TemplateRef, static: true })
     public ghostTemplate: TemplateRef<any>;
+
+    @ViewChild('ghostTemplateContents', { read: TemplateRef, static: true })
+    public ghostTemplateContents: TemplateRef<any>;
 
     constructor(public renderer: Renderer2) { }
 }
