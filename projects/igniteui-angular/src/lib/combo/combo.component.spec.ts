@@ -27,7 +27,7 @@ import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
-import { IgxComboFilteringPipe, comboIgnoreDiacriticFilterFunction } from './combo.pipes';
+import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -2407,7 +2407,7 @@ describe('igxCombo', () => {
             });
 
             it('should support filtering strings containing diacritic characters', fakeAsync(() => {
-                combo.filterFunction = comboIgnoreDiacriticFilterFunction;
+                combo.filterFunction = comboIgnoreDiacriticsFilter;
                 combo.displayKey = null;
                 combo.valueKey = null;
                 combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: undefined };

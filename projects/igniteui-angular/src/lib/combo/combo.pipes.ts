@@ -99,7 +99,7 @@ function normalizeString(str: string, caseSensitive = false): string {
  * <igx-combo [filterFunction]="comboIgnoreDiacriticFilterFunction"></igx-combo>
  * ```
  */
-export function comboIgnoreDiacriticFilterFunction<T>(collection: T[], searchValue: string, filteringOptions: IComboFilteringOptions): T[] {
+export function comboIgnoreDiacriticsFilter<T>(collection: T[], searchValue: string, filteringOptions: IComboFilteringOptions): T[] {
     if (!searchValue) {
         return collection;
     }
