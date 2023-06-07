@@ -302,6 +302,7 @@ export var registerConfig = [
       "totalItemCount",
       "snackbarDisplayTime",
       "summaryRowHeight",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
@@ -520,6 +521,7 @@ export var registerConfig = [
       "totalItemCount",
       "snackbarDisplayTime",
       "summaryRowHeight",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
@@ -647,6 +649,7 @@ export var registerConfig = [
       "headSelectorTemplate",
       "rowSelectorTemplate",
     ],
+    numericProps: ["rowHeight"],
     boolProps: [
       "showPivotConfigurationUI",
       "superCompactMode",
@@ -760,7 +763,12 @@ export var registerConfig = [
       "rowSelectorTemplate",
       "dragIndicatorIconTemplate",
     ],
-    numericProps: ["snackbarDisplayTime", "summaryRowHeight", "totalRecords"],
+    numericProps: [
+      "snackbarDisplayTime",
+      "summaryRowHeight",
+      "rowHeight",
+      "totalRecords",
+    ],
     boolProps: [
       "expandChildren",
       "showExpandAll",
@@ -887,6 +895,7 @@ export var registerConfig = [
       "expansionDepth",
       "snackbarDisplayTime",
       "summaryRowHeight",
+      "rowHeight",
       "totalRecords",
     ],
     boolProps: [
