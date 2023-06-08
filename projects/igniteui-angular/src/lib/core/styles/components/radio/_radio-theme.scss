@@ -4,7 +4,7 @@
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
+@use '../../themes/schemas' as *;
 
 ////
 /// @group themes
@@ -456,7 +456,7 @@
                 &::before {
                     background: var-get($theme, 'fill-color');
                 }
-        
+
                 &::after {
                     border: $border-width $border-style var-get($theme, 'fill-color');
                 }
@@ -484,7 +484,7 @@
                 &::after {
                     border: $border-width $border-style var-get($theme, 'error-color');
                 }
-        
+
                 &::before {
                     background: var-get($theme, 'error-color');
                 }
@@ -497,7 +497,7 @@
             &::after {
                 border: $border-width $border-style var-get($theme, 'error-color');
             }
-    
+
             &::before {
                 background: var-get($theme, 'error-color');
                 border-color: var-get($theme, 'error-color');
@@ -515,7 +515,7 @@
                 &::after {
                     border: $border-width $border-style var-get($theme, 'error-color-hover');
                 }
-        
+
                 &::before {
                     background: var-get($theme, 'error-color-hover');
                 }
