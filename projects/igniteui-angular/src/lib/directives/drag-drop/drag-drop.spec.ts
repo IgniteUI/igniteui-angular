@@ -14,7 +14,8 @@ import {
     IgxDragHandleDirective,
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
-import { IgxIconModule } from '../../icon/public_api';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgFor } from '@angular/common';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -1834,14 +1835,7 @@ describe('Nested igxDrag elements', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestDragDropNestedComponent,
-            ],
-            imports: [
-                FormsModule,
-                IgxIconModule,
-                IgxDragDropModule
-            ]
+            imports: [TestDragDropNestedComponent]
         })
         .compileComponents();
     }));
@@ -2085,7 +2079,9 @@ class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent 
                 </div>
             </div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [NgFor, IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
 })
 class TestDragDropNestedComponent extends TestDragDropComponent {
     public categoriesNotes = [
