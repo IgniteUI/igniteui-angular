@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxTickLabelTemplateDirective } from '../../../projects/igniteui-angular/src/lib/slider/slider.common';
 import { FormsModule } from '@angular/forms';
-import { IgxSliderComponent } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
+import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation, IgxButtonDirective, IgxSliderComponent, IgxTickLabelTemplateDirective } from 'igniteui-angular';
 
 class Task {
     public title: string;

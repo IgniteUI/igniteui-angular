@@ -2,16 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
-import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { DisplayDensity, GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -19,7 +10,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
     styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
+    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {

@@ -1,14 +1,8 @@
 /* eslint-disable max-len */
 import { Component, ViewChild, OnInit, Inject, TemplateRef } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions, IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
 
-import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
-import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
-import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridStateDirective } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
@@ -21,8 +15,10 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 export class GridMasterDetailSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
+
     public expState = [];
     public columns: Array<any>;
+
     @ViewChild('detailTemplate', {read: TemplateRef, static: true })
     public detailTemplate: TemplateRef<any>;
 
