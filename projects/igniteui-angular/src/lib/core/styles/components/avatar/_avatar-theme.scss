@@ -58,7 +58,7 @@
         background: $background,
         color: $color,
         border-radius: $border-radius,
-        size: $size
+        size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
