@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
 ////
@@ -59,9 +59,16 @@
     $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
-    $carousel-schema: map.get($light-material-schema, 'carousel');
+    $carousel-schema: ();
+
+    @if map.has-key($schema, 'carousel') {
+        $carousel-schema: map.get($schema, 'carousel');
+    } @else {
+        $carousel-schema: $schema;
+    }
 
     $theme: digest-schema($carousel-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
@@ -105,6 +112,9 @@
         indicator-border-color: $indicator-border-color,
         indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -120,7 +130,7 @@
     $carousel-indicator-margin: 0 rem(5px);
     $indicator-border-style: rem(2px) solid;
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {

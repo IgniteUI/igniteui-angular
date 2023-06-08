@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -49,9 +49,16 @@
     $name: 'igx-combo';
     $selector: 'igx-combo, igx-simple-combo';
 
-    $combo-schema: map.get($light-material-schema, 'combo');
+    $combo-schema: ();
+
+    @if map.has-key($schema, 'combo') {
+        $combo-schema: map.get($schema, 'combo');
+    } @else {
+        $combo-schema: $schema;
+    }
 
     $theme: digest-schema($combo-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
@@ -70,6 +77,9 @@
         clear-button-background-focus: $clear-button-background-focus,
         clear-button-foreground: $clear-button-foreground,
         clear-button-foreground-focus: $clear-button-foreground-focus,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -77,7 +87,7 @@
 @mixin combo($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-combo {
         position: relative;

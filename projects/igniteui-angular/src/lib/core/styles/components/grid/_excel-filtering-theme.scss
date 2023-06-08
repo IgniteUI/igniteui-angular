@@ -1,9 +1,9 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas/dark' as *;
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
 @use '../tree/tree-theme' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -15,7 +15,7 @@
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $tree-node-indent: (

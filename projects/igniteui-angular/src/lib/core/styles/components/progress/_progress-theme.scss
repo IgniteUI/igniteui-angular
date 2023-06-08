@@ -3,7 +3,7 @@
 @use 'sass:list';
 @use '../../base' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -43,9 +43,16 @@
     $track-border-radius: null,
 ) {
     $name: 'igx-linear-bar';
-    $linear-bar-schema: map.get($light-material-schema, 'linear-bar');
+    $linear-bar-schema: ();
+
+    @if map.has-key($schema, 'linear-bar') {
+        $linear-bar-schema: map.get($schema, 'linear-bar');
+    } @else {
+        $linear-bar-schema: $schema;
+    }
 
     $theme: digest-schema($linear-bar-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
@@ -58,6 +65,9 @@
         stripes-color: $stripes-color,
         text-color: $text-color,
         track-border-radius: $track-border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -88,7 +98,7 @@
 @mixin progress-linear($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $bar-height: map.get((
         material: rem(4px),
@@ -382,9 +392,16 @@
     $text-color: null
 ) {
     $name: 'igx-circular-bar';
-    $circular-bar-schema: map.get($light-material-schema, 'circular-bar');
+    $circular-bar-schema: ();
+
+    @if map.has-key($schema, 'circular-bar') {
+        $circular-bar-schema: map.get($schema, 'circular-bar');
+    } @else {
+        $circular-bar-schema: $schema;
+    }
 
     $theme: digest-schema($circular-bar-schema);
+    $meta: map.get($theme, '_meta');
 
     $progress-circle-color-start: map.get($theme, 'progress-circle-color');
     $progress-circle-color-end: map.get($theme, 'progress-circle-color');
@@ -404,7 +421,10 @@
         base-circle-color: $base-circle-color,
         progress-circle-color-start: $progress-circle-color-start,
         progress-circle-color-end: $progress-circle-color-end,
-        text-color: $text-color
+        text-color: $text-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -415,7 +435,7 @@
 
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $stroke-width: map.get((
         material: rem(4px),

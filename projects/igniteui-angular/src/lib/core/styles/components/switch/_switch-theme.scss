@@ -4,7 +4,7 @@
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -88,9 +88,16 @@
     $error-color-hover: null,
 ) {
     $name: 'igx-switch';
-    $switch-schema: map.get($light-material-schema, 'switch');
+    $switch-schema: ();
+
+    @if map.has-key($schema, 'switch') {
+        $switch-schema: map.get($schema, 'switch');
+    } @else {
+        $switch-schema: $schema;
+    }
 
     $theme: digest-schema($switch-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
@@ -156,6 +163,10 @@
         track-error-color: $track-error-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
+        )),
     ));
 }
 
@@ -166,8 +177,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $type: map.get($theme, type);
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $switch-width: map.get((
         material: 36px,
@@ -493,7 +504,7 @@
         transition: background .2s $ease-out-quad;
         opacity: .12;
 
-        @if $type == 'dark' {
+        @if $theme-variant == 'dark' {
             opacity: .24;
         }
     }
@@ -549,7 +560,7 @@
             opacity: .06;
             inset: 0;
 
-            @if $type == 'dark' {
+            @if $theme-variant == 'dark' {
                 opacity: .12;
             }
         }
@@ -577,7 +588,7 @@
         &::after {
             opacity: .12;
 
-            @if $type == 'dark' {
+            @if $theme-variant == 'dark' {
                 opacity: .24;
             }
         }

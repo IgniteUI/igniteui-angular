@@ -1,5 +1,5 @@
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'sass:map';
 
 ////
@@ -43,7 +43,13 @@
     $shadow: null,
 ) {
     $name: 'igx-badge';
-    $badge-schema: map.get($light-material-schema, 'badge');
+    $badge-schema: ();
+
+    @if map.has-key($schema, 'badge') {
+        $badge-schema: map.get($schema, 'badge');
+    } @else {
+        $badge-schema: $schema;
+    }
 
     $theme: digest-schema($badge-schema);
 

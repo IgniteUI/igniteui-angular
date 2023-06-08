@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -16,7 +16,13 @@
 ) {
     $name: 'igx-pivot-data-selector';
     $selector: '.igx-pivot-data-selector';
-    $pivot-data-selector-schema: map.get($light-material-schema, 'pivot-data-selector');
+    $pivot-data-selector-schema: ();
+
+    @if map.has-key($schema, 'pivot-data-selector') {
+        $pivot-data-selector-schema: map.get($schema, 'pivot-data-selector');
+    } @else {
+        $pivot-data-selector-schema: $schema;
+    }
 
     $theme: digest-schema($pivot-data-selector-schema);
 

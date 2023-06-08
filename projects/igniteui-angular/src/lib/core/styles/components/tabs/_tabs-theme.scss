@@ -3,7 +3,7 @@
 @use '../../base' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -69,12 +69,16 @@
     $border-color--hover: null,
 ) {
     $name: 'igx-tabs';
-    $tabs-schema: map.get($light-material-schema, 'tabs');
+    $tabs-schema: ();
+
+    @if map.has-key($schema, 'tabs') {
+        $tabs-schema: map.get($schema, 'tabs');
+    } @else {
+        $tabs-schema: $schema;
+    }
 
     $theme: digest-schema($tabs-schema);
-
-    $variant: map.get($theme, variant);
-    $bootstrap-theme: $variant == 'boostrap';
+    $meta: map.get($theme, '_meta');
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -187,6 +191,9 @@
         button-ripple-color: $button-ripple-color,
         border-color: $border-color,
         border-radius: $border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -196,7 +203,7 @@
 @mixin tabs($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';

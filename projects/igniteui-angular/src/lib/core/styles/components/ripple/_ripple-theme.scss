@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -23,7 +23,13 @@
     $name: 'igx-ripple';
     $selector: '[igxRipple]';
 
-    $ripple-schema: map.get($light-material-schema, 'ripple');
+    $ripple-schema: ();
+
+    @if map.has-key($schema, 'ripple') {
+        $ripple-schema: map.get($schema, 'ripple');
+    } @else {
+        $ripple-schema: $schema;
+    }
 
     $theme: digest-schema($ripple-schema);
 

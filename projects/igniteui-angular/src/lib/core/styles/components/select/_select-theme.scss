@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -35,9 +35,16 @@
     $name: 'igx-select';
     $selector: 'igx-select';
 
-    $select-schema: map.get($light-material-schema, 'select');
+    $select-schema: ();
+
+    @if map.has-key($schema, 'select') {
+        $select-schema: map.get($schema, 'select');
+    } @else {
+        $select-schema: $schema;
+    }
 
     $theme: digest-schema($select-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
@@ -49,13 +56,16 @@
         toggle-button-foreground-focus: $toggle-button-foreground-focus,
         toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
         toggle-button-foreground-filled: $toggle-button-foreground-filled,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin select($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-select {
         position: relative;

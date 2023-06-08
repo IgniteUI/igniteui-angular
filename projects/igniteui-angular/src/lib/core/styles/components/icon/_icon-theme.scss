@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -26,7 +26,13 @@
     $disabled-color: null
 ) {
     $name: 'igx-icon';
-    $icon-schema: map.get($light-material-schema, 'icon');
+    $icon-schema: ();
+
+    @if map.has-key($schema, 'icon') {
+        $icon-schema: map.get($schema, 'icon');
+    } @else {
+        $icon-schema: $schema;
+    }
 
     $theme: digest-schema($icon-schema);
 

@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -45,9 +45,16 @@
     $hover-shadow: null,
 ) {
     $name: 'igx-card';
-    $card-schema: map.get($light-material-schema, 'card');
+    $card-schema: ();
+
+    @if map.has-key($schema, 'card') {
+        $card-schema: map.get($schema, 'card');
+    } @else {
+        $card-schema: $schema;
+    }
 
     $theme: digest-schema($card-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -96,16 +103,18 @@
         actions-text-color: $actions-text-color,
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// Card Component
 /// @param {Map} $theme - The theme used to style the component.
 @mixin card($theme) {
-    $variant: map.get($theme, 'variant');
-    $not-material-theme: $variant != 'material';
-
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
+    $not-material-theme: $variant != 'material';
 
     $card-heading-padding: rem(16px, 16px);
     $card-content-padding: rem(14px);

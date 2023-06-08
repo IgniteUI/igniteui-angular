@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -30,7 +30,13 @@
     $background-color: null
 ) {
     $name: 'igx-column-actions';
-    $column-actions-schema: map.get($light-material-schema, 'column-actions');
+    $column-actions-schema: ();
+
+    @if map.has-key($schema, 'column-actions') {
+        $column-actions-schema: map.get($schema, 'column-actions');
+    } @else {
+        $column-actions-schema: $schema;
+    }
 
     $theme: digest-schema($column-actions-schema);
 

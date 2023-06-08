@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -60,9 +60,16 @@
     $tick-color: null,
 ) {
     $name: 'igx-slider';
-    $slider-schema: map.get($light-material-schema, 'slider');
+    $slider-schema: ();
+
+    @if map.has-key($schema, 'slider') {
+        $slider-schema: map.get($schema, 'slider');
+    } @else {
+        $slider-schema: $schema;
+    }
 
     $theme: digest-schema($slider-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
@@ -88,6 +95,9 @@
         disabled-fill-track-color: $disabled-fill-track-color,
         tick-label-color: $tick-label-color,
         tick-color: $tick-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -95,7 +105,7 @@
 @mixin slider($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $slider-height: rem(48px);
     $ripple-size: rem(40px);

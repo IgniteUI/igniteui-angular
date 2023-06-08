@@ -5,7 +5,7 @@
 @use '../../base' as *;
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -210,7 +210,13 @@
 ) {
     $name: 'igx-grid';
     $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
-    $grid-schema: map.get($light-material-schema, 'grid');
+    $grid-schema: ();
+
+    @if map.has-key($schema, 'grid') {
+        $grid-schema: map.get($schema, 'grid');
+    } @else {
+        $grid-schema: $schema;
+    }
 
     $theme: digest-schema($grid-schema);
     $meta: map.get($theme, '_meta');
@@ -547,6 +553,7 @@
         cell-selected-within-text-color: $cell-selected-within-text-color,
 
         _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
@@ -568,7 +575,7 @@
 
     @include scale-in-ver-center();
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';

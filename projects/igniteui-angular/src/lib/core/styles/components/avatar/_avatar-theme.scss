@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -28,9 +28,16 @@
     $border-radius: null,
 ) {
     $name: 'igx-avatar';
-    $avatar-schema: map.get($light-material-schema, 'avatar');
+    $avatar-schema: ();
+
+    @if map.has-key($schema, 'avatar') {
+        $avatar-schema: map.get($schema, 'avatar');
+    } @else {
+        $avatar-schema: $schema;
+    }
 
     $theme: digest-schema($avatar-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($color) and $background {
         $color: text-contrast($background);
@@ -45,6 +52,9 @@
         background: $background,
         color: $color,
         border-radius: $border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -52,7 +62,7 @@
 @mixin avatar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $box-shadow: map.get((

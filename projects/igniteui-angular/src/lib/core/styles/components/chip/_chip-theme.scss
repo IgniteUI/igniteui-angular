@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:color';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -98,9 +98,16 @@
 ) {
     $name: 'igx-chip';
     $selector: 'igx-chip, .igx-chip__ghost, .igx-chip__ghost--compact, .igx-chip__ghost--cosy';
-    $chip-schema: map.get($light-material-schema, 'chip');
+    $chip-schema: ();
+
+    @if map.has-key($schema, 'chip') {
+        $chip-schema: map.get($schema, 'chip');
+    } @else {
+        $chip-schema: $schema;
+    }
 
     $theme: digest-schema($chip-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -238,6 +245,9 @@
         remove-icon-color-focus: $remove-icon-color-focus,
         focus-selected-outline-color: $focus-selected-outline-color,
         focus-outline-color: $focus-outline-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -247,7 +257,7 @@
     $transition: all 120ms $in-out-quad;
     $chip-max-width: 32ch;
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $chip-height: (
         comfortable: rem(32px),

@@ -4,7 +4,7 @@
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -50,9 +50,16 @@
     $error-color-hover: null,
 ) {
     $name: 'igx-radio';
-    $radio-schema: map.get($light-material-schema, 'radio');
+    $radio-schema: ();
+
+    @if map.has-key($schema, 'radio') {
+        $radio-schema: map.get($schema, 'radio');
+    } @else {
+        $radio-schema: $schema;
+    }
 
     $theme: digest-schema($radio-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
@@ -67,6 +74,10 @@
         focus-outline-color: $focus-outline-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
+        )),
     ));
 }
 
@@ -76,8 +87,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $type: map.get($theme, type);
-    $variant: map.get($theme, variant);
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $material-theme: $variant == 'material';
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -517,7 +528,7 @@
         transition: background .2s $ease-out-quad;
         opacity: .06;
 
-        @if $type == 'dark' {
+        @if $theme-variant == 'dark' {
             opacity: .12;
         }
     }
@@ -535,7 +546,7 @@
         transition: background .2s $ease-out-quad;
         opacity: .12;
 
-        @if $type == 'dark' {
+        @if $theme-variant == 'dark' {
             opacity: .24;
         }
     }
@@ -551,7 +562,7 @@
     %radio-ripple--pressed {
         opacity: .12;
 
-        @if $type == 'dark' {
+        @if $theme-variant == 'dark' {
             opacity: .24;
         }
     }

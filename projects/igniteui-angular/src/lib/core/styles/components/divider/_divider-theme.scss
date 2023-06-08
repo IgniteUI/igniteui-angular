@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -21,7 +21,13 @@
     $color: null
 ) {
     $name: 'igx-divider';
-    $divider-schema: map.get($light-material-schema, 'divider');
+    $divider-schema: ();
+
+    @if map.has-key($schema, 'divider') {
+        $divider-schema: map.get($schema, 'divider');
+    } @else {
+        $divider-schema: $schema;
+    }
 
     $theme: digest-schema($divider-schema);
 

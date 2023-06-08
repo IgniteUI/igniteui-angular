@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -36,9 +36,16 @@
     $disable-shadow: false
 ) {
     $name: 'igx-navbar';
-    $navbar-schema: map.get($light-material-schema, 'navbar');
+    $navbar-schema: ();
+
+    @if map.has-key($schema, 'navbar') {
+        $navbar-schema: map.get($schema, 'navbar');
+    } @else {
+        $navbar-schema: $schema;
+    }
 
     $theme: digest-schema($navbar-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -67,14 +74,17 @@
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
-        shadow: $shadow
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
-    $variant: map.get($theme, 'variant');
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);

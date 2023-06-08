@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -35,9 +35,16 @@
     $shadow: null,
 ) {
     $name: 'igx-toast';
-    $toast-schema: map.get($light-material-schema, 'toast');
+    $toast-schema: ();
+
+    @if map.has-key($schema, 'toast') {
+        $toast-schema: map.get($schema, 'toast');
+    } @else {
+        $toast-schema: $schema;
+    }
 
     $theme: digest-schema($toast-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
@@ -57,16 +64,18 @@
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
-        shadow: $shadow
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// Toast Component
 /// @param {Map} $theme - The theme used to style the component.
 @mixin toast($theme) {
-    $variant: map.get($theme, variant);
-
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $width: rem(52px);
     $margin: rem(42px) auto;

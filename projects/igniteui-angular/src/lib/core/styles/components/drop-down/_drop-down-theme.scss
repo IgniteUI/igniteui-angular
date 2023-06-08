@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -73,10 +73,16 @@
 ) {
     $name: 'igx-drop-down';
     $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
+    $drop-down-schema: ();
 
-    $drop-down-schema: map.get($light-material-schema, 'drop-down');
+    @if map.has-key($schema, 'drop-down') {
+        $drop-down-schema: map.get($schema, 'drop-down');
+    } @else {
+        $drop-down-schema: $schema;
+    }
 
     $theme: digest-schema($drop-down-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -175,14 +181,17 @@
         disabled-item-text-color: $disabled-item-text-color,
         shadow: $shadow,
         border-color: $border-color,
-        border-width: $border-width
+        border-width: $border-width,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin drop-down($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $item-height: (
         comfortable: #{rem(40px)},

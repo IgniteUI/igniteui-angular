@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -45,9 +45,16 @@
     $border-color: null,
 ) {
     $name: 'igx-tree';
-    $tree-schema: map.get($light-material-schema, 'tree');
+    $tree-schema: ();
+
+    @if map.has-key($schema, 'tree') {
+        $tree-schema: map.get($schema, 'tree');
+    } @else {
+        $tree-schema: $schema;
+    }
 
     $theme: digest-schema($tree-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($foreground) and $background {
         $foreground: text-contrast($background);
@@ -79,6 +86,9 @@
         foreground-disabled: $foreground-disabled,
         drop-area-color: $drop-area-color,
         border-color: $border-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -86,7 +96,7 @@
 @mixin tree($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $indigo-theme: $variant == 'indigo-design';
 
     $node-indent: (

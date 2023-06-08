@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -74,10 +74,16 @@
 ) {
     $name: 'igx-button-group';
     $selector: 'igx-buttongroup';
+    $button-group-schema: ();
 
-    $button-group-schema: map.get($light-material-schema, 'button-group');
+    @if map.has-key($schema, 'button-group') {
+        $button-group-schema: map.get($schema, 'button-group');
+    } @else {
+        $button-group-schema: $schema;
+    }
 
     $theme: digest-schema($button-group-schema);
+    $meta: map.get($theme, '_meta');
 
     $border: rem(1px) solid map.get($theme, 'item-selected-border-color');
 
@@ -150,6 +156,9 @@
         shadow: $shadow,
         idle-shadow-color: $idle-shadow-color,
         selected-shadow-color: $selected-shadow-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -162,7 +171,7 @@
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $in-out-quad;
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 

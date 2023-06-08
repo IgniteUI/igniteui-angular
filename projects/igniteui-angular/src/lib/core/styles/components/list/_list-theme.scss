@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:color';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -73,9 +73,16 @@
     $border-width: null,
 ) {
     $name: 'igx-list';
-    $list-schema: map.get($light-material-schema, 'list');
+    $list-schema: ();
+
+    @if map.has-key($schema, 'list') {
+        $list-schema: map.get($schema, 'list');
+    } @else {
+        $list-schema: $schema;
+    }
 
     $theme: digest-schema($list-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -230,6 +237,9 @@
         item-thumbnail-color-active: $item-thumbnail-color-active,
         border-color: $border-color,
         border-width: $border-width,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -237,7 +247,7 @@
 @mixin list($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $list-item-padding-inline: (

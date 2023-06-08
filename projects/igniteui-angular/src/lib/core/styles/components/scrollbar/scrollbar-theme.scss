@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -26,7 +26,13 @@
 ) {
     $name: 'ig-scrollbar';
     $selector: '.ig-scrollbar';
-    $scrollbar-schema: map.get($light-material-schema, 'scrollbar');
+    $scrollbar-schema: ();
+
+    @if map.has-key($schema, 'scrollbar') {
+        $scrollbar-schema: map.get($schema, 'scrollbar');
+    } @else {
+        $scrollbar-schema: $schema;
+    }
 
     $theme: digest-schema($scrollbar-schema);
 

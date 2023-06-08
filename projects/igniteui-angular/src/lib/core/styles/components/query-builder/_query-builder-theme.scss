@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 /// @group themes
 /// @access public
@@ -31,9 +31,16 @@
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
-    $query-builder-schema: map.get($light-material-schema, 'query-builder');
+    $query-builder-schema: ();
+
+    @if map.has-key($schema, 'query-builder') {
+        $query-builder-schema: map.get($schema, 'query-builder');
+    } @else {
+        $query-builder-schema: $schema;
+    }
 
     $theme: digest-schema($query-builder-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($header-foreground) and $header-background {
         $header-foreground: text-contrast($header-background);
@@ -50,6 +57,9 @@
         background-and--focus: $background-and--focus,
         background-or: $background-or,
         background-or--focus: $background-or--focus,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -62,7 +72,9 @@
 
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin query-builder($theme) {
-    $variant: map.get($theme, variant);
+    @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
@@ -73,8 +85,6 @@
     $horizontal-space-cosy: rem(12px);
     $horizontal-space-compact: rem(8px);
     $icon-size: rem(18px);
-
-    @include css-vars($theme);
 
     %advanced-filter {
         width: auto;

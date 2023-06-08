@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -31,7 +31,13 @@
     $border-color: null,
 ) {
     $name: 'igx-watermark';
-    $watermark-schema: map.get($light-material-schema, 'watermark');
+    $watermark-schema: ();
+
+    @if map.has-key($schema, 'watermark') {
+        $watermark-schema: map.get($schema, 'watermark');
+    } @else {
+        $watermark-schema: $schema;
+    }
 
     $theme: digest-schema($watermark-schema);
 

@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -174,9 +174,16 @@
 ) {
     $name: 'igx-stepper';
     $selector: 'igx-stepper';
-    $stepper-schema: map.get($light-material-schema, 'stepper');
+    $stepper-schema: ();
+
+    @if map.has-key($schema, 'stepper') {
+        $stepper-schema: map.get($schema, 'stepper');
+    } @else {
+        $stepper-schema: $schema;
+    }
 
     $theme: digest-schema($stepper-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($indicator-background) and $step-background {
         $indicator-background: text-contrast($step-background);
@@ -306,6 +313,9 @@
         // Border-radius
         border-radius-indicator: $border-radius-indicator,
         border-radius-step-header: $border-radius-step-header,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -313,7 +323,7 @@
 @mixin stepper($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $indicator-size: map.get((
         material: rem(24px),

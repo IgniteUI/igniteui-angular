@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
 ////
@@ -35,9 +35,16 @@
     $shadow: null
 ) {
     $name: 'igx-snackbar';
-    $snackbar-schema: map.get($light-material-schema, 'snackbar');
+    $snackbar-schema: ();
+
+    @if map.has-key($schema, 'snackbar') {
+        $snackbar-schema: map.get($schema, 'snackbar');
+    } @else {
+        $snackbar-schema: $schema;
+    }
 
     $theme: digest-schema($snackbar-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -62,7 +69,10 @@
         background: $background,
         text-color: $text-color,
         button-color: $button-color,
-        shadow: $shadow
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -71,7 +81,7 @@
     @include css-vars($theme);
     @include fade-in();
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);

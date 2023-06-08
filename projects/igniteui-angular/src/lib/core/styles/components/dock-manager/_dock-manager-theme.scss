@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -55,7 +55,13 @@
     $rest...
 ) {
     $name: 'igc-dockmanager';
-    $dock-manager-schema: map.get($light-material-schema, 'dockmanager');
+    $dock-manager-schema: ();
+
+    @if map.has-key($schema, 'dockmanager') {
+        $dock-manager-schema: map.get($schema, 'dockmanager');
+    } @else {
+        $dock-manager-schema: $schema;
+    }
 
     $theme: digest-schema($dock-manager-schema);
 

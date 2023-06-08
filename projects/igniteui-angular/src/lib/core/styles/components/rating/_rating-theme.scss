@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -30,7 +30,13 @@
 ) {
 
     $name: 'igc-rating';
-    $rating-schema: map.get($light-material-schema, 'rating');
+    $rating-schema: ();
+
+    @if map.has-key($schema, 'rating') {
+        $rating-schema: map.get($schema, 'rating');
+    } @else {
+        $rating-schema: $schema;
+    }
 
     $theme: digest-schema($rating-schema);
 

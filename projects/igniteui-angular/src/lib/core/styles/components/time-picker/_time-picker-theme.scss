@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -58,10 +58,16 @@
 ) {
     $name: 'igx-time-picker';
     $selector: '.igx-time-picker';
+    $time-picker-schema: ();
 
-    $time-picker-schema: map.get($light-material-schema, 'time-picker');
+    @if map.has-key($schema, 'time-picker') {
+        $time-picker-schema: map.get($schema, 'time-picker');
+    } @else {
+        $time-picker-schema: $schema;
+    }
 
     $theme: digest-schema($time-picker-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -128,6 +134,9 @@
         dropdown-shadow: $dropdown-shadow,
         border-radius: $border-radius,
         active-item-border-radius: $active-item-border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -135,7 +144,7 @@
 @mixin time-picker($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $vertical-header-width: rem(168px);

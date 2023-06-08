@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -61,9 +61,16 @@
     $shadow: null
 ) {
     $name: 'igx-nav-drawer';
-    $navdrawer-schema: map.get($light-material-schema, 'nav-drawer');
+    $navdrawer-schema: ();
+
+    @if map.has-key($schema, 'nav-drawer') {
+        $navdrawer-schema: map.get($schema, 'nav-drawer');
+    } @else {
+        $navdrawer-schema: $schema;
+    }
 
     $theme: digest-schema($navdrawer-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -130,6 +137,9 @@
         item-active-icon-color:$item-active-icon-color,
         item-hover-icon-color: $item-hover-icon-color,
         shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -144,7 +154,7 @@
     $drawer-item-max-h: rem(48px);
     $drawer-item-min-w: rem(32px);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %navdrawer-display {
         transition: flex-basis;

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -34,9 +34,16 @@
     $size: null
 ) {
     $name: 'igx-splitter';
-    $splitter-schema: map.get($light-material-schema, 'splitter');
+    $splitter-schema: ();
+
+    @if map.has-key($schema, 'splitter') {
+        $splitter-schema: map.get($schema, 'splitter');
+    } @else {
+        $splitter-schema: $schema;
+    }
 
     $theme: digest-schema($splitter-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);
@@ -57,7 +64,10 @@
         expander-color: $expander-color,
         border-radius: $border-radius,
         focus-color: $focus-color,
-        size: $size
+        size: $size,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -69,7 +79,7 @@
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, .24);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {

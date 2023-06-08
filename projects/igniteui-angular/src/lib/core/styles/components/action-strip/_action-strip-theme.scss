@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -32,9 +32,16 @@
     $actions-border-radius: null,
 ) {
     $name: 'igx-action-strip';
-    $action-strip-schema: map.get($light-material-schema, 'action-strip');
+    $action-strip-schema: ();
+
+    @if map.has-key($schema, 'action-strip') {
+        $action-strip-schema: map.get($schema, 'action-strip');
+    } @else {
+        $action-strip-schema: $schema;
+    }
 
     $theme: digest-schema($action-strip-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
@@ -51,6 +58,9 @@
         icon-color: $icon-color,
         delete-action: $delete-action,
         actions-border-radius: $actions-border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -64,7 +74,7 @@
         compact: rem(12px)
     );
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-action-strip-display {
         display: flex;

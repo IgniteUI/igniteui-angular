@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
@@ -36,7 +36,13 @@
     $shadow: null
 ) {
     $name: 'igx-bottom-nav';
-    $bottom-nav-schema: map.get($light-material-schema, 'bottom-nav');
+    $bottom-nav-schema: ();
+
+    @if map.has-key($schema, 'bottom-nav') {
+        $bottom-nav-schema: map.get($schema, 'bottom-nav');
+    } @else {
+        $bottom-nav-schema: $schema;
+    }
 
     $theme: digest-schema($bottom-nav-schema);
 

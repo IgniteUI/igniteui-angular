@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -29,10 +29,15 @@
     $border-color: null
 ) {
     $name: 'igx-paginator';
-    $grid-paginator-schema: map.get($light-material-schema, 'paginator');
+    $grid-paginator-schema: ();
+
+    @if map.has-key($schema, 'paginator') {
+        $grid-paginator-schema: map.get($schema, 'paginator');
+    } @else {
+        $grid-paginator-schema: $schema;
+    }
 
     $theme: digest-schema($grid-paginator-schema);
-
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);

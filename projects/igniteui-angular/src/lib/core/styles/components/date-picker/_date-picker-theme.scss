@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -12,7 +13,7 @@
 @mixin date-picker($theme) {
     @include css-vars($theme, '.igx-date-picker');
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
