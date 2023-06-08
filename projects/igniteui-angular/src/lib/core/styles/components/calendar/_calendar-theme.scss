@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:math';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light' as *;
 
 ////
 /// @group themes
@@ -159,10 +159,17 @@
 ) {
     $name: 'igx-calendar';
     $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
-    $calendar-schema: map.get($light-material-schema, 'calendar');
+    $calendar-schema: ();
+
+    @if map.has-key($schema, 'calendar') {
+        $calendar-schema: map.get($schema, 'calendar');
+    } @else {
+        $calendar-schema: $schema;
+    }
 
     $theme: digest-schema($calendar-schema);
-    $variant: map.get($theme, variant);
+    $meta: map.get($theme, '_meta');
+    $variant: map.get($schema, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -391,6 +398,9 @@
 
         week-number-color: $week-number-color,
         week-number-background: $week-number-background,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -402,7 +412,7 @@
     $cal-header-date-margin: 0;
     $cal-header-padding: rem(16px);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
