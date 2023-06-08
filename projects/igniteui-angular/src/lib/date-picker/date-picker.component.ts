@@ -995,15 +995,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private setCalendarViewDate() {
         const { minValue, maxValue } = this.getMinMaxDates();
-        this._dateValue = this.dateValue || new Date();
-        if (minValue && DateTimeUtil.lessThanMinValue(this.dateValue, minValue)) {
+        const dateValue = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue : new Date();
+        if (minValue && DateTimeUtil.lessThanMinValue(dateValue, minValue)) {
             this._calendar.viewDate = this._targetViewDate = minValue;
             return;
         }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(this.dateValue, maxValue)) {
+        if (maxValue && DateTimeUtil.greaterThanMaxValue(dateValue, maxValue)) {
             this._calendar.viewDate = this._targetViewDate = maxValue;
             return;
         }
-        this._calendar.viewDate = this._targetViewDate = this.dateValue;
+        this._calendar.viewDate = this._targetViewDate = dateValue;
     }
 }

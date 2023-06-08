@@ -68,8 +68,8 @@ export class IgxGridValidationTestBaseComponent {
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [resizable]="true" [dataType]="c.dataType">
-            <ng-template igxCellValidationError let-cell='cell'>
-                <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
+            <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
+                <div *ngIf="cell.validation.errors?.['forbiddenName'] else defaultErrorTemplate">
                     This name is forbidden.
                 </div>
             </ng-template>
@@ -118,8 +118,8 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
-            <ng-template igxCellValidationError let-cell='cell'>
-                <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
+            <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
+                <div *ngIf="cell.validation.errors?.['forbiddenName'] else defaultErrorTemplate">
                     This name is forbidden.
                 </div>
             </ng-template>

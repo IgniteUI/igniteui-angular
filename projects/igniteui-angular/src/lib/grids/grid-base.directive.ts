@@ -2025,12 +2025,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public get rowHeight() {
+    public get rowHeight(): number {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
-    public set rowHeight(value) {
-        this._rowHeight = parseInt(value, 10);
+    public set rowHeight(value: number | string) {
+        if (typeof value !== 'number') {
+            value = parseInt(value, 10);
+        }
+        this._rowHeight = value;
     }
 
     /**
@@ -2350,10 +2353,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     public get sortingOptions() {
         return this._sortingOptions;
     }
@@ -3059,7 +3058,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private rowListDiffer;
     private _height: string | null = '100%';
     private _width: string | null = '100%';
-    private _rowHeight;
+    private _rowHeight: number | undefined;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
     // Caches
@@ -3372,13 +3371,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get virtualizationState() {
         return this.verticalScrollContainer.state;
-    }
-
-    /**
-     * @hidden
-     */
-    public set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
     }
 
     /**
