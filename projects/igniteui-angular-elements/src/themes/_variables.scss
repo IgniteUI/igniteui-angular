@@ -30,3 +30,11 @@ $unused-themes: (
     igx-tabs,
     igx-toast
 );
+
+$allowed: (
+    igx-grid,
+    igx-paginator,
+    igx-action-strip,
+    igx-grid-toolbar,
+    igx-pivot-data-selector
+);
