@@ -1223,10 +1223,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     protected onStatusChanged = () => {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (!this.collapsed || this.inputGroup.isFocused) {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
+        if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
+            if (this.hasValidators) {
+                if (!this.collapsed || this.inputGroup.isFocused) {
+                    this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
+                } else {
+                    this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
+                }
             } else {
                 this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
             }
@@ -1236,6 +1239,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         this.manageRequiredAsterisk();
     };
+
+    private get isTouchedOrDirty(): boolean {
+        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+    }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
