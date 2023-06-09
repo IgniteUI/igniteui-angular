@@ -375,14 +375,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                     const error = this.ngControl.control.validator({} as AbstractControl);
                     this.inputGroup.isRequired = error && error.required;
                     if (this.focused) {
-                        this._valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
+                        this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
                     } else {
-                        this._valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+                        this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
                     }
                 } else {
                     // If validator is dynamically cleared, reset label's required class(asterisk) and IgxInputState #10010
                     this.inputGroup.isRequired = false;
-                    this._valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+                    this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
                 }
             } else {
                 this._valid = IgxInputState.INITIAL;
