@@ -650,23 +650,34 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     protected onStatusChanged = () => {
         if (this.inputGroup) {
-            this.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
-                ? this.getInputState(this.inputGroup.isFocused)
-                : IgxInputState.INITIAL;
+            this.setValidityState(this.inputDirective, this.inputGroup.isFocused);
         } else if (this.hasProjectedInputs) {
             this.projectedInputs
-                .forEach(i => {
-                    i.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
-                        ? this.getInputState(i.isFocused)
-                        : IgxInputState.INITIAL;;
+                .forEach((i) => {
+                    this.setValidityState(i.inputDirective, i.isFocused);
                 });
         }
         this.setRequiredToInputs();
     };
 
+    private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
+        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
+            if (this.hasValidators) {
+                inputDirective.valid = this.getInputState(isFocused);
+            } else {
+                inputDirective.valid = this._ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+            }
+        } else {
+            inputDirective.valid = IgxInputState.INITIAL;
+        }
+    }
+
     private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control.touched || this._ngControl.control.dirty)
-            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+        return (this._ngControl.control.touched || this._ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private handleSelection(selectionData: Date[]): void {
