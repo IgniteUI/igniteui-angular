@@ -140,8 +140,6 @@
     }
 
     $theme: digest-schema($input-group-schema);
-    $meta: map.get($theme, '_meta');
-
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map.get($input-group-schema, 'search-disabled-elevation');
@@ -271,19 +269,18 @@
         input-suffix-background--filled: $input-suffix-background--filled,
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
+        variant: map.get($schema, '_meta', 'theme'),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin input-group($theme) {
+    // The --variant CSS produced by css-vars is needed also
+    // when dynamically switching between the input `type` attribute.
     @include css-vars($theme);
 
+    $variant: map.get($theme, 'variant');
     $transition-timing: .25s $out-cubic;
-
-    $variant: map.get($theme, '_meta', 'variant');
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo-design';
     $fluent-theme: $variant == 'fluent';
