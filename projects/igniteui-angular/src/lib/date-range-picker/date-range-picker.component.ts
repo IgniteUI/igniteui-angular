@@ -660,10 +660,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
         if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators) {
-                inputDirective.valid = this.getInputState(isFocused);
+            if (this.hasValidators && isFocused) {
+                inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                inputDirective.valid = this._ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+                inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             inputDirective.valid = IgxInputState.INITIAL;
@@ -782,14 +782,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             start.inputDirective.disabled = this.disabled;
             end.inputDirective.disabled = this.disabled;
             return;
-        }
-    }
-
-    private getInputState(focused: boolean): IgxInputState {
-        if (focused) {
-            return this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-        } else {
-            return this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
         }
     }
 
