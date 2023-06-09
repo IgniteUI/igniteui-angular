@@ -1,9 +1,11 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
+import { NgTemplateOutlet, NgIf, NgFor } from '@angular/common';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators, FormsModule } from '@angular/forms';
+
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IRecordValidationState, IGridValidationStatusEventArgs, RowType, GridColumnDataType, IGridFormGroupCreatedEventArgs } from 'igniteui-angular';
-import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
+import { GridColumnDataType, IGX_GRID_DIRECTIVES, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RowType, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxSwitchComponent } from 'igniteui-angular';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -14,8 +16,9 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 
 @Directive({
     selector: '[appForbiddenName]',
-    providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
-  })
+    providers: [{ provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true }],
+    standalone: true
+})
   export class ForbiddenValidatorDirective extends Validators {
     @Input('appForbiddenName')
     public forbiddenName = '';
@@ -31,6 +34,22 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: 'app-grid-row-edit',
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
+    standalone: true,
+    imports: [
+        NgFor,
+        NgIf,
+        NgTemplateOutlet,
+        FormsModule,
+        ForbiddenValidatorDirective,
+        IGX_GRID_DIRECTIVES,
+        IgxTreeGridComponent,
+        IgxHierarchicalGridComponent,
+        IgxRowIslandComponent,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
+        IgxSwitchComponent,
+    ]
 })
 export class GridValidationSampleComponent {
     public rowEditWithTransactions = true;
@@ -122,10 +141,10 @@ public hColumns2 = [
 ];
 
 
-    @ViewChild('gridTransactions', {read:  IgxGridComponent })
+    @ViewChild('gridTransactions', { read:  IgxGridComponent })
     public gridWithTransaction: IgxGridComponent;
 
-    @ViewChild('gridNoTransactions', {read:  IgxGridComponent })
+    @ViewChild('gridNoTransactions', { read:  IgxGridComponent })
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {

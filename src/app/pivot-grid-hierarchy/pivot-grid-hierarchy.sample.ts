@@ -1,12 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
     providers: [],
     selector: 'app-pivot-grid-hierarchy-sample',
     styleUrls: ['pivot-grid-hierarchy.sample.scss'],
-    templateUrl: 'pivot-grid-hierarchy.sample.html'
+    templateUrl: 'pivot-grid-hierarchy.sample.html',
+    standalone: true,
+    imports: [IgxComboComponent, FormsModule, IgxPivotGridComponent]
 })
 
 export class PivotGridHierarchySampleComponent {

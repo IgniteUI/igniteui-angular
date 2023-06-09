@@ -27,7 +27,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 /* omitModule */
-@Directive({ selector: '[igxRowBaseComponent]' })
+@Directive({
+    selector: '[igxRowBaseComponent]',
+    standalone: true
+})
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden

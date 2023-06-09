@@ -2,20 +2,22 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IgxExpansionPanelModule } from './expansion-panel.module';
-import { IgxGridComponent, IgxGridModule } from '../grids/grid/public_api';
-import { IgxListModule } from '../list/public_api';
-import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
+import { IgxGridComponent } from '../grids/grid/public_api';
+import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
+import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
+import { IgxListComponent } from '../list/list.component';
+import { IgxListItemComponent } from '../list/list-item.component';
+import { NgIf } from '@angular/common';
+import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_PANEL_HEADER_TITLE = 'igx-expansion-panel__header-title';
+const CSS_CLASS_PANEL_HEADER_DESCRIPTION = 'igx-expansion-panel__header-description';
 const CSS_CLASS_PANEL_TITLE_WRAPPER = 'igx-expansion-panel__title-wrapper';
 const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
 const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
@@ -35,20 +37,13 @@ describe('igxExpansionPanel', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
                 IgxExpansionPanelSampleComponent,
-                IgxExpansionPanelImageComponent
-            ],
-            imports: [
-                IgxExpansionPanelModule,
-                NoopAnimationsModule,
-                IgxToggleModule,
-                IgxRippleModule,
-                IgxButtonModule,
-                IgxListModule,
-                IgxGridModule
+                IgxExpansionPanelImageComponent,
+                IgxExpansionPanelTooltipComponent
             ]
         }).compileComponents();
     }));
@@ -307,8 +302,8 @@ describe('igxExpansionPanel', () => {
             panelContainer: any,
             panelHeader: HTMLElement,
             button: HTMLElement,
-            timesCollapsed: number = 0,
-            timesExpanded: number = 0) => {
+            timesCollapsed = 0,
+            timesExpanded = 0) => {
             expect(panel.collapsed).toEqual(collapsed);
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);
@@ -1258,6 +1253,35 @@ describe('igxExpansionPanel', () => {
             expect(image.tagName).toEqual('IMG');
             expect (textWrapper.textContent.trim()).toEqual(fixture.componentInstance.text);
         }));
+        it('Should display tooltip with the title and description text content', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelTooltipComponent> = TestBed.createComponent(IgxExpansionPanelTooltipComponent);
+            fixture.detectChanges();
+
+            const headerTitle = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_TITLE);
+            const headerDescription = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_DESCRIPTION);
+
+            const headerTitleTooltip = headerTitle.getAttribute('title');
+            const headerDescriptionTooltip = headerDescription.getAttribute('title');
+
+            expect(headerTitleTooltip).toEqual(headerTitle.textContent.trim());
+            expect(headerDescriptionTooltip).toEqual(headerDescription.textContent.trim());
+        });
+        it('Should display tooltip with the attr.title text content', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelTooltipComponent> = TestBed.createComponent(IgxExpansionPanelTooltipComponent);
+
+            fixture.componentInstance.titleTooltip = 'Custom Title Tooltip';
+            fixture.componentInstance.descriptionTooltip = 'Custom Description Tooltip';
+            fixture.detectChanges();
+
+            const headerTitle = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_TITLE);
+            const headerDescription = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_DESCRIPTION);
+
+            const headerTitleTooltip = headerTitle.getAttribute('title');
+            const headerDescriptionTooltip = headerDescription.getAttribute('title');
+
+            expect(headerTitleTooltip).toEqual('Custom Title Tooltip');
+            expect(headerDescriptionTooltip).toEqual('Custom Description Tooltip');
+        });
     });
 });
 
@@ -1265,16 +1289,17 @@ describe('igxExpansionPanel', () => {
 @Component({
     template: `
     <igx-expansion-panel #expansionPanel>
-<igx-expansion-panel-header headerHeight="50px">
-                <igx-expansion-panel-title>Product orders</igx-expansion-panel-title>
-                <igx-expansion-panel-description>Product orders details</igx-expansion-panel-description>
-            </igx-expansion-panel-header>
-            <igx-expansion-panel-body>
-<igx-grid #grid1 [data] = "data" [autoGenerate]="true" [width]="width" [height]="height">
-        </igx-grid>
-       </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+        <igx-expansion-panel-header headerHeight="50px">
+            <igx-expansion-panel-title>Product orders</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Product orders details</igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <igx-grid #grid1 [data] = "data" [autoGenerate]="true" [width]="width" [height]="height"></igx-grid>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelGridComponent {
 
@@ -1321,7 +1346,9 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel-body>
         </igx-expansion-panel>
     </div>
-`
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelListComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1333,21 +1360,23 @@ export class IgxExpansionPanelListComponent {
 
 @Component({
     template: `
-<igx-expansion-panel
-    (contentCollapsed)="handleCollapsed()"
-    (contentExpanded)="handleExpanded()">
-    <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
-        <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
-        <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
-        <igx-expansion-panel-icon *ngIf="customIcon">
-            <span class="custom-test-icon">TEST_ICON</span>
-        </igx-expansion-panel-icon>
-    </igx-expansion-panel-header>
-    <igx-expansion-panel-body *ngIf="showBody">
-    Example body
-    </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+    <igx-expansion-panel
+        (contentCollapsed)="handleCollapsed()"
+        (contentExpanded)="handleExpanded()">
+        <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
+            <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+            <igx-expansion-panel-icon *ngIf="customIcon">
+                <span class="custom-test-icon">TEST_ICON</span>
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body *ngIf="showBody">
+        Example body
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, NgIf]
 })
 export class IgxExpansionPanelSampleComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
@@ -1372,19 +1401,21 @@ export class IgxExpansionPanelSampleComponent {
 
 @Component({
     template: `
-<igx-expansion-panel #panel>
-    <igx-expansion-panel-header headerHeight="50px">
-        <igx-expansion-panel-title >Frogs</igx-expansion-panel-title>
-        <igx-expansion-panel-description>Frog description</igx-expansion-panel-description>
-    </igx-expansion-panel-header>
-    <igx-expansion-panel-body >
-    <p class = "sample-wrapper" style = "padding: 5px">
-    <img style="float: left; margin: 5px;" src="{{imagePath}}" width="250px" height="150px">
-    {{text}}
-    </p>
-    </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+    <igx-expansion-panel #panel>
+        <igx-expansion-panel-header headerHeight="50px">
+            <igx-expansion-panel-title >Frogs</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Frog description</igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body >
+        <p class = "sample-wrapper" style = "padding: 5px">
+        <img style="float: left; margin: 5px;" src="{{imagePath}}" width="250px" height="150px">
+        {{text}}
+        </p>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelImageComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1395,5 +1426,29 @@ export class IgxExpansionPanelImageComponent {
     public imagePath = 'http://milewalk.com/wp-content/uploads/2016/01/My-2-Morning-Tricks-to-Eating-the-Frog.jpg';
     // eslint-disable-next-line max-len
     public text = 'A frog is any member of a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order Anura. The oldest fossil \"proto-frog\" appeared in the early Triassic of Madagascar, but molecular clock dating suggests their origins may extend further back to the Permian, 265 million years ago. Frogs are widely distributed, ranging from the tropics to subarctic regions, but the greatest concentration of species diversity is in tropical rainforests. There are approximately 4,800 recorded species, accounting for over 85% of extant amphibian species. They are also one of the five most diverse vertebrate orders. The body plan of an adult frog is generally characterized by a stout body, protruding eyes, cleft tongue, limbs folded underneath, and the absence of a tail. Besides living in fresh water and on dry land, the adults of some species are adapted for living underground or in trees. The skins of frogs are glandular, with secretions ranging from distasteful to toxic. Warty species of frog tend to be called toads but the distinction between frogs and toads is based on informal naming conventions concentrating on the warts rather than taxonomy or evolutionary history.';
+}
+
+@Component({
+    template: `
+    <igx-expansion-panel>
+        <igx-expansion-panel-header>
+            <igx-expansion-panel-title [title]="titleTooltip">
+                Example Title
+            </igx-expansion-panel-title>
+            <igx-expansion-panel-description [title]="descriptionTooltip">
+                Example Description
+            </igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            Example Body
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
+})
+export class IgxExpansionPanelTooltipComponent {
+    public titleTooltip = '';
+    public descriptionTooltip = '';
 }
 

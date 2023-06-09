@@ -10,7 +10,6 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',
@@ -26,7 +25,6 @@ describe(`Update to ${version}`, () => {
         version: 1
     };
     const configJsonLib = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',

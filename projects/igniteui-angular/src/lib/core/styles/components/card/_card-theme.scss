@@ -113,8 +113,7 @@
 
     @include css-vars($theme);
 
-    $card-heading-padding: rem(16px);
-    $card-heading-compact-padding: rem(16px, 16px);
+    $card-heading-padding: rem(16px, 16px);
     $card-content-padding: rem(14px);
     $card-actions-padding: rem(8px);
 
@@ -182,10 +181,6 @@
             margin-inline-end: 0;
             margin-bottom: rem(16px);
         }
-    }
-
-    %igx-card-header--compact {
-        padding: $card-heading-compact-padding;
     }
 
     %igx-card-header-thumbnail {
@@ -275,7 +270,7 @@
         }
     }
 
-    %igx-card-actions__icons {
+    %igx-card-actions__end {
         display: flex;
         align-items: center;
         order: 1;
@@ -287,7 +282,7 @@
         }
     }
 
-    %igx-card-actions__buttons {
+    %igx-card-actions__start {
         display: flex;
         align-items: center;
         order: 0;
@@ -297,8 +292,8 @@
         }
     }
 
-    %igx-card-actions__buttons--justify,
-    %igx-card-actions__icons--justify {
+    %igx-card-actions__start--justify,
+    %igx-card-actions__end--justify {
         justify-content: space-around;
         flex-grow: 1;
 
@@ -307,8 +302,8 @@
         }
     }
 
-    %igx-card-actions__icons--vertical,
-    %igx-card-actions__buttons--vertical {
+    %igx-card-actions__end--vertical,
+    %igx-card-actions__start--vertical {
         flex-direction: column;
 
         [igxButton] ~ [igxButton] {
@@ -317,27 +312,27 @@
         }
     }
 
-    %igx-card-actions__icons--vertical {
+    %igx-card-actions__end--vertical {
         margin-top: auto;
         margin-inline-start: 0;
     }
 
-    %igx-card-actions__icons--reverse {
+    %igx-card-actions__end--reverse {
         order: 0;
         margin-inline-start: 0;
     }
 
-    %igx-card-actions__buttons--reverse {
+    %igx-card-actions__start--reverse {
         order: 1;
         margin-inline-start: auto;
     }
 
-    %igx-card-actions__icons--vertical-reverse {
+    %igx-card-actions__end--vertical-reverse {
         margin: 0;
         margin-bottom: auto;
     }
 
-    %igx-card-actions__buttons--vertical-reverse {
+    %igx-card-actions__start--vertical-reverse {
         margin: 0;
         margin-top: auto;
     }

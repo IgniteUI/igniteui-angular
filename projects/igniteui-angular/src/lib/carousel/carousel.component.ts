@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -15,7 +15,6 @@ import {
     IterableChangeRecord,
     IterableDiffer,
     IterableDiffers,
-    NgModule,
     OnDestroy,
     Output,
     QueryList,
@@ -28,12 +27,13 @@ import { takeUntil } from 'rxjs/operators';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-import { IgxIconModule } from '../icon/public_api';
+
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
+import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
 
@@ -45,7 +45,7 @@ export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientatio
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
-    public overrides = {
+    public override overrides = {
         pan: { direction: Hammer.DIRECTION_HORIZONTAL }
     };
 }
@@ -83,7 +83,9 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     :host {
         display: block;
         outline-style: none;
-    }`]
+    }`],
+    standalone: true,
+    imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
@@ -230,7 +232,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    @Input() public override animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -380,8 +382,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @internal
      */
     public stoppedByInteraction: boolean;
-    protected currentItem: IgxSlideComponent;
-    protected previousItem: IgxSlideComponent;
+    protected override currentItem: IgxSlideComponent;
+    protected override previousItem: IgxSlideComponent;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
@@ -1025,27 +1027,4 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 export interface ISlideEventArgs extends IBaseEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
-    ],
-    exports: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
-    ],
-    imports: [CommonModule, IgxIconModule]
-})
-export class IgxCarouselModule {
 }

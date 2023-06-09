@@ -1,12 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GridPagingMode, IgxGridComponent } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+import { RemoteService } from '../shared/remote.service';
+import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
-    styleUrls: ['grid-remote-paging.sample.scss'],
-    templateUrl: 'grid-remote-paging.sample.html'
+    templateUrl: 'grid-remote-paging.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -18,7 +22,7 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     public paging = true;
     public data: Observable<any[]>;
     public selectOptions = [5, 10, 15, 25, 50];
-    public areAllRowsSelected: boolean = false;
+    public areAllRowsSelected = false;
 
     private _perPage = 15;
     private _dataLengthSubscriber;

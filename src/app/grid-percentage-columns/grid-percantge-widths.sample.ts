@@ -1,11 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IColumnPipeArgs, IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { NgFor, NgIf, CurrencyPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { data, dataWithoutPK } from '../shared/data';
+import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+
  @Component({
     providers: [],
     selector: 'app-grid-percantge-widths.sample',
-    styleUrls: ['grid-percantge-widths.sample.scss'],
-    templateUrl: 'grid-percantge-widths.sample.html'
+    templateUrl: 'grid-percantge-widths.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSelectComponent, NgFor, IgxSelectItemComponent, IgxButtonDirective, NgIf, CurrencyPipe, DatePipe]
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

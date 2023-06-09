@@ -16,7 +16,8 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
  */
 @Component({
     selector: 'igx-splitter-pane',
-    templateUrl: './splitter-pane.component.html'
+    templateUrl: './splitter-pane.component.html',
+    standalone: true
 })
 export class IgxSplitterPaneComponent {
     private _minSize: string;
@@ -42,7 +43,7 @@ export class IgxSplitterPaneComponent {
     @Input()
     public get minSize(): string {
         return this._minSize;
-    };
+    }
     public set minSize(value: string) {
         this._minSize = value;
         if (this.owner) {
@@ -63,7 +64,7 @@ export class IgxSplitterPaneComponent {
     @Input()
     public get maxSize(): string {
         return this._maxSize;
-    };
+    }
     public set maxSize(value: string) {
         this._maxSize = value;
         if (this.owner) {

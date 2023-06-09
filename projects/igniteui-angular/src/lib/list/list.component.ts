@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ContentChild,
@@ -8,7 +8,6 @@ import {
     forwardRef,
     HostBinding,
     Input,
-    NgModule,
     Output,
     QueryList,
     TemplateRef,
@@ -17,7 +16,7 @@ import {
     Inject, Directive
 } from '@angular/core';
 
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+
 
 import { IgxListItemComponent } from './list-item.component';
 import {
@@ -68,7 +67,8 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListThumbnail]'
+    selector: '[igxListThumbnail]',
+    standalone: true
 })
 export class IgxListThumbnailDirective {}
 
@@ -78,7 +78,8 @@ export class IgxListThumbnailDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListAction]'
+    selector: '[igxListAction]',
+    standalone: true
 })
 export class IgxListActionDirective {}
 
@@ -88,7 +89,8 @@ export class IgxListActionDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLine]'
+    selector: '[igxListLine]',
+    standalone: true
 })
 export class IgxListLineDirective {}
 
@@ -98,7 +100,8 @@ export class IgxListLineDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLineTitle]'
+    selector: '[igxListLineTitle]',
+    standalone: true
 })
 export class IgxListLineTitleDirective {
     @HostBinding('class.igx-list__item-line-title')
@@ -111,7 +114,8 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLineSubTitle]'
+    selector: '[igxListLineSubTitle]',
+    standalone: true
 })
 export class IgxListLineSubTitleDirective {
     @HostBinding('class.igx-list__item-line-subtitle')
@@ -147,7 +151,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
-    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }]
+    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**
@@ -159,7 +165,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
-    public children: QueryList<IgxListItemComponent>;
+    public override children: QueryList<IgxListItemComponent>;
 
     /**
      * Sets/gets the empty list template.
@@ -223,7 +229,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
-    public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
+    public override listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
      * Sets/gets the template for right panning a list item.
@@ -244,7 +250,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
-    public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    public override listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
      * Provides a threshold after which the item's panning will be completed automatically.
@@ -258,7 +264,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Input()
-    public panEndTriggeringThreshold = 0.5;
+    public override panEndTriggeringThreshold = 0.5;
 
     /**
      * Sets/gets the `id` of the list.
@@ -293,7 +299,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Input()
-    public allowLeftPanning = false;
+    public override allowLeftPanning = false;
 
     /**
      * Sets/gets whether the right panning of an item is allowed.
@@ -310,7 +316,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Input()
-    public allowRightPanning = false;
+    public override allowRightPanning = false;
 
     /**
      * Sets/gets whether the list is currently loading data.
@@ -342,7 +348,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public leftPan = new EventEmitter<IListItemPanningEventArgs>();
+    public override leftPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a right pan gesture is executed on a list item.
@@ -356,7 +362,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public rightPan = new EventEmitter<IListItemPanningEventArgs>();
+    public override rightPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a pan gesture is started.
@@ -370,7 +376,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public startPan = new EventEmitter<IListItemPanningEventArgs>();
+    public override startPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a pan gesture is completed or canceled.
@@ -384,7 +390,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public endPan = new EventEmitter<IListItemPanningEventArgs>();
+    public override endPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a pan item is returned to its original position.
@@ -398,7 +404,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
      @Output()
-     public resetPan = new EventEmitter<IgxListComponent>();
+     public override resetPan = new EventEmitter<IgxListComponent>();
 
     /**
      *
@@ -413,7 +419,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public panStateChange = new EventEmitter<IPanStateChangeEventArgs>();
+    public override panStateChange = new EventEmitter<IPanStateChangeEventArgs>();
 
     /**
      * Event emitted when a list item is clicked.
@@ -427,7 +433,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Output()
-    public itemClicked = new EventEmitter<IListItemClickEventArgs>();
+    public override itemClicked = new EventEmitter<IListItemClickEventArgs>();
 
     /**
      * @hidden
@@ -462,7 +468,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     constructor(public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
     }
 
@@ -609,38 +615,4 @@ export class IgxListComponent extends IgxListBaseDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxListBaseDirective,
-        IgxListComponent,
-        IgxListItemComponent,
-        IgxListThumbnailDirective,
-        IgxListActionDirective,
-        IgxListLineDirective,
-        IgxListLineTitleDirective,
-        IgxListLineSubTitleDirective,
-        IgxDataLoadingTemplateDirective,
-        IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective,
-        IgxListItemRightPanningTemplateDirective
-    ],
-    exports: [
-        IgxListComponent,
-        IgxListItemComponent,
-        IgxListThumbnailDirective,
-        IgxListActionDirective,
-        IgxListLineDirective,
-        IgxListLineTitleDirective,
-        IgxListLineSubTitleDirective,
-        IgxDataLoadingTemplateDirective,
-        IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective,
-        IgxListItemRightPanningTemplateDirective
-    ],
-    imports: [
-        CommonModule,
-        IgxRippleModule
-    ]
-})
-export class IgxListModule {
-}
+

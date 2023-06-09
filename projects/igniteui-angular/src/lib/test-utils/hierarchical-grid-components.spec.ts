@@ -1,13 +1,23 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
+import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
-import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
-import { IgxActionStripComponent } from '../action-strip/public_api';
+import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
+import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
+import { IgxGridToolbarDirective } from '../grids/toolbar/common';
+import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
 
 @Component({
     template: `
@@ -41,7 +51,19 @@ import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxColumnGroupComponent,
+        IgxRowIslandComponent,
+        IgxPaginatorComponent,
+        IgxGridToolbarComponent,
+        IgxIconComponent,
+        IgxCellHeaderTemplateDirective,
+        NgIf
+    ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -62,7 +84,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.data = SampleTestData.generateHGridData(40, 3);
     }
 
-    public pinColumn(column: IgxColumnComponent) {
+    public pinColumn(column: ColumnType) {
         if (column.pinned) {
             column.unpin();
         } else {
@@ -104,7 +126,18 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    providers: [IgxHierarchicalTransactionServiceFactory]
+    providers: [IgxHierarchicalTransactionServiceFactory],
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxColumnGroupComponent,
+        IgxRowIslandComponent,
+        IgxPaginatorComponent,
+        IgxGridToolbarComponent,
+        IgxIconComponent,
+        NgIf
+    ]
 })
 export class IgxHierarchicalGridWithTransactionProviderComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -152,7 +185,9 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -183,7 +218,9 @@ export class IgxHierarchicalGridRowSelectionComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -216,6 +253,8 @@ export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -231,7 +270,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [data]="data" [cellSelection]="false" [height]="'600px'"
+    <igx-hierarchical-grid [data]="data" [cellSelection]="'none'" [height]="'600px'"
         [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
         [rowSelection]="'multiple'">
         <igx-column field="ChildLevels"></igx-column>
@@ -264,7 +303,18 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
             <igx-checkbox [readonly]="true" (click)="handleRowSelectorClick(rowContext)" [checked]="rowContext.selected">
             </igx-checkbox>
         </ng-template>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxRowIslandComponent,
+        IgxCheckboxComponent,
+        IgxPaginatorComponent,
+        IgxPaginatorDirective,
+        IgxRowSelectorDirective,
+        IgxHeadSelectorDirective
+    ]
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
@@ -310,11 +360,13 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
-        <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
+            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child2 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 
@@ -331,10 +383,18 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-action-strip #actionStrip2>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
-                <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+                <igx-grid-editing-actions [asMenuItems]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
+        IgxRowIslandComponent
+    ]
 })
 export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('actionStrip1', { read: IgxActionStripComponent, static: true })
@@ -362,13 +422,15 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
         </igx-row-island>
     </igx-hierarchical-grid>
     <igx-advanced-filtering-dialog [grid]="grid1">
-    </igx-advanced-filtering-dialog>`
+    </igx-advanced-filtering-dialog>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
     // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     // public hgrid: IgxHierarchicalGridComponent;
 
-    public data = SampleTestData.generateHGridData(5, 3);
+    public override data = SampleTestData.generateHGridData(5, 3);
 }
 
 @Component({
@@ -385,12 +447,12 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
             <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
             <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
-        <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
+            <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
                 <igx-column field="Number" header="No."></igx-column>
                 <igx-column field="Title"></igx-column>
                 <igx-column field="Released" dataType="date"></igx-column>
                 <igx-column field="Genre"></igx-column>
-        </igx-row-island>
+            </igx-row-island>
         </igx-row-island>
 
         <igx-row-island [key]="'Tours'" [autoGenerate]="false">
@@ -405,7 +467,9 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
         </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -459,7 +523,9 @@ export class IgxHierarchicalGridExportComponent {
             </igx-column-group>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -493,7 +559,9 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
             </igx-column-group>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -502,28 +570,30 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid igxPreventDocumentScroll  class="hgrid" [data]="data" [autoGenerate]="false"
+    <igx-hierarchical-grid igxPreventDocumentScroll class="hgrid" [data]="data" [autoGenerate]="false"
         [height]="'1500px'" [width]="'100%'" #hierarchicalGrid>
 
-        <igx-column field="Artist" [hasSummary]='true'></igx-column>
-        <igx-column field="Debut" [hasSummary]='true' [formatter]="formatter"></igx-column>
-        <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
-        <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]='true' [summaries]="mySummary" dataType="number"></igx-column>
+        <igx-column field="Artist" [hasSummary]="true"></igx-column>
+        <igx-column field="Debut" [hasSummary]="true"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]="true" [summaries]="mySummary" dataType="number"></igx-column>
 
         <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false">
-                <igx-column field="Album"></igx-column>
-                <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
-                <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
-                <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
             <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
-                    <igx-column field="Number" header="No."></igx-column>
-                    <igx-column field="Title" [hasSummary]='true' [summaries]="myChildSummary"></igx-column>
-                    <igx-column field="Released" dataType="date"></igx-column>
-                    <igx-column field="Genre"></igx-column>
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title" [hasSummary]="true" [summaries]="myChildSummary"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSummariesExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;

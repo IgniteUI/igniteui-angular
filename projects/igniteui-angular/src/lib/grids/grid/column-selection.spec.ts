@@ -1,6 +1,5 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../test-utils/grid-samples.spec';
@@ -34,11 +33,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ProductsComponent,
-                ColumnSelectionGroupTestComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            imports: [ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule]
         });
     }));
 
@@ -947,8 +942,8 @@ describe('IgxGrid - Column Selection #grid', () => {
     });
 
     describe('Integration tests: ', () => {
-        let colProductID;
-        let colProductName;
+        let colProductID: IgxColumnComponent;
+        let colProductName: IgxColumnComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
@@ -1106,8 +1101,9 @@ describe('IgxGrid - Column Selection #grid', () => {
         it('Paging: Verify column stays selected when change page', fakeAsync(() => {
             colProductName.selected = true;
             colProductID.selected = true;
-            grid.paging = true;
-            grid.perPage = 3;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
+            fix.componentInstance.paginator.perPage = 3;
             fix.detectChanges();
             tick(30);
 
@@ -1115,7 +1111,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
             expect(grid.getSelectedColumnsData()).toEqual(selectedData());
 
-            grid.paginate(1);
+            fix.componentInstance.paginator.paginate(1);
             fix.detectChanges();
             tick(16);
 

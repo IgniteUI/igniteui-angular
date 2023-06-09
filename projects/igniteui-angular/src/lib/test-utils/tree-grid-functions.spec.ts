@@ -402,7 +402,7 @@ export class TreeGridFunctions {
     }
 
     public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent,
-                                             cell: IgxGridCellComponent | CellType, selected: boolean = true) {
+                                             cell: IgxGridCellComponent | CellType, selected = true) {
         expect(cell).toBeDefined();
         if (cell) {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
@@ -434,7 +434,7 @@ export class TreeGridFunctions {
         }
     }
 
-    public static moveCellUpDown(fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown: boolean = true) {
+    public static moveCellUpDown(fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown = true) {
         const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, columnName);
         const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
         const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
@@ -450,7 +450,7 @@ export class TreeGridFunctions {
     }
 
     public static moveCellLeftRight(fix, treeGrid: IgxTreeGridComponent, rowIndex: number,
-        firstColumnName: string, nextColumnName: string, moveRight: boolean = true) {
+        firstColumnName: string, nextColumnName: string, moveRight = true) {
         const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, firstColumnName);
         const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
         const gridContent = GridFunctions.getGridContent(fix);

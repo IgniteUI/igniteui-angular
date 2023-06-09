@@ -1,9 +1,21 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
-    CellType
+    CellType,
+    IgxPaginatorComponent,
+    IgxGridDetailTemplateDirective,
+    IgxColumnComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarHidingComponent,
+    IgxButtonDirective,
+    IgxIconComponent,
+    IgxRowIslandComponent
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -11,9 +23,8 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-cell-api-sample',
     styleUrls: ['grid-cell-api.sample.scss'],
     templateUrl: 'grid-cell-api.sample.html',
-    // providers: [
-    //     { provide: IgxGridTransaction, useClass: IgxTransactionService }
-    // ],
+    standalone: true,
+    imports: [FormsModule, IgxGridComponent, IgxPaginatorComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxButtonDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 
 export class GridCellAPISampleComponent implements OnInit {
@@ -165,28 +176,25 @@ export class GridCellAPISampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    public updateCell(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public updateCell(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: string, field: string,
         logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(parseInt(rIndex, 10), field);
         cell.update('New Value');
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
-    public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+    public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: string, field: string, logger: HTMLElement) {
+        const cell = grid.getCellByColumn(parseInt(rIndex, 10), field);
         cell.selected = !cell.selected;
         this.selectedCell = cell;
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
-    public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: string, field: string,
         logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(parseInt(rIndex, 10), field);
         cell.editMode = !cell.editMode;
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -222,10 +230,10 @@ export class GridCellAPISampleComponent implements OnInit {
         });
     }
 
-    public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
+    public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: string,
+        field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(parseInt(rIndex, 10), field);
         let state: string;
         let states: string[];
 
@@ -265,10 +273,10 @@ export class GridCellAPISampleComponent implements OnInit {
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
 
-    public logStateByKey(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, key: any,
+    public logStateByKey(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: string,
     field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const cell = grid.getCellByKey(key, field);
+        const cell = grid.getCellByColumn(parseInt(rIndex, 10), field);
         let state: string;
         let states: string[];
 
@@ -309,11 +317,10 @@ export class GridCellAPISampleComponent implements OnInit {
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
 
-    public logStateByColumn(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public logStateByColumn(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rowIndex: string,
     field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumn(indxs[0], field);
+        const cell = grid.getCellByColumn(parseInt(rowIndex, 10), field);
         let state: string;
         let states: string[];
 

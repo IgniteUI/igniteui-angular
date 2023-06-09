@@ -1,9 +1,8 @@
-﻿import { NgForOfContext } from '@angular/common';
+﻿import { AsyncPipe, NgClass, NgFor, NgForOfContext, NgIf } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     Directive,
     Injectable,
     IterableDiffers,
@@ -19,7 +18,7 @@ import {
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
+import { IForOfState, IgxForOfDirective } from './for_of.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -45,11 +44,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    EmptyVirtualComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [EmptyVirtualComponent]
             }).compileComponents();
         }));
 
@@ -67,11 +62,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    HorizontalVirtualComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [HorizontalVirtualComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -203,12 +194,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VerticalVirtualNoDataComponent,
-                    VerticalVirtualComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -361,12 +347,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VerticalVirtualNoDataComponent,
-                    VerticalVirtualComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -405,11 +386,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VirtualComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [VirtualComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -985,11 +962,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VirtualVariableSizeComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [VirtualVariableSizeComponent]
             }).compileComponents();
         }));
 
@@ -1031,11 +1004,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    RemoteVirtualizationComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [RemoteVirtualizationComponent]
             }).compileComponents();
         }));
 
@@ -1073,11 +1042,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    RemoteVirtCountComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [RemoteVirtCountComponent]
             }).compileComponents();
         }));
 
@@ -1115,11 +1080,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    NoWidthAndHeightComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [NoWidthAndHeightComponent]
             }).compileComponents();
         }));
 
@@ -1139,11 +1100,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    LocalVariablesComponent
-                ],
-                imports: [IgxForOfModule]
+                imports: [LocalVariablesComponent]
             }).compileComponents();
         }));
 
@@ -1174,11 +1131,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VerticalVirtualDestroyComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [VerticalVirtualDestroyComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -1225,10 +1178,7 @@ describe('IgxForOf directive -', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    VerticalVirtualCreateComponent
-                ],
-                imports: [IgxForOfModule],
+                imports: [VerticalVirtualCreateComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
@@ -1328,7 +1278,10 @@ class DataGenerator {
 }
 
 /** igxFor for testing */
-@Directive({ selector: '[igxForTest]' })
+@Directive({
+    selector: '[igxForTest]',
+    standalone: true
+})
 export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     public scrStepArray = [];
     public scrTopArray = [];
@@ -1336,14 +1289,13 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public viewContainer: ViewContainerRef,
         public template: TemplateRef<NgForOfContext<T>>,
         public differs: IterableDiffers,
-        public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
         public zone: NgZone,
         protected syncService: IgxForOfScrollSyncService,
         platformUtil: PlatformUtil) {
         super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
     }
-    public onScroll(evt) {
+    public override onScroll(evt) {
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         this.scrTopArray.push(evt.target.scrollTop);
@@ -1387,7 +1339,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         <span #container>
             <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class EmptyVirtualComponent {
 
@@ -1414,7 +1368,9 @@ export class EmptyVirtualComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualComponent {
     @ViewChild('container', { read: ViewContainerRef, static: true })
@@ -1485,19 +1441,21 @@ export class VirtualComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VerticalVirtualComponent extends VirtualComponent {
-    public width = '450px';
-    public height = '300px';
-    public cols = [
+    public override width = '450px';
+    public override height = '300px';
+    public override cols = [
         { field: '1', width: '150px' },
         { field: '2', width: '70px' },
         { field: '3', width: '50px' },
         { field: '4', width: '80px' },
         { field: '5', width: '100px' }
     ];
-    public data = [];
+    public override data = [];
     public itemSize = '50px';
 }
 
@@ -1517,7 +1475,9 @@ export class VerticalVirtualComponent extends VirtualComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
     public exists = true;
@@ -1553,7 +1513,9 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
     @ViewChild('scrollContainer2', { read: IgxForOfDirective, static: false })
@@ -1582,19 +1544,21 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
                 </div>
             </div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective, NgFor]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
-    public width = '800px';
-    public height = '400px';
-    public cols = [];
-    public data = [];
+    public override width = '800px';
+    public override height = '400px';
+    public override cols = [];
+    public override data = [];
 }
 
 /** Only vertically virtualized component */
 @Component({
     template: `
-        <div #container [style.width]='width' [style.height]='height'>
+        <div #container [style.height]='height'>
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
             [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
@@ -1604,7 +1568,9 @@ export class HorizontalVirtualComponent extends VirtualComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualVariableSizeComponent {
     @ViewChild('container', { static: true })
@@ -1638,7 +1604,9 @@ export class VirtualVariableSizeComponent {
                 </div>
             </ng-template>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {
 }
@@ -1686,7 +1654,7 @@ export class LocalService {
 /** Vertically virtualized component with remote virtualization */
 @Component({
     template: `
-        <div #container [style.width]='width' [style.height]='height'>
+        <div #container [style.height]='height'>
             <ng-template #scrollContainer let-rowData [igxForOf]="data | async" igxForTest
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
@@ -1698,7 +1666,9 @@ export class LocalService {
             </ng-template>
         </div>
     `,
-    providers: [LocalService]
+    providers: [LocalService],
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
@@ -1730,7 +1700,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
 
 @Component({
     template: `
-        <div #container [style.width]='width' [style.height]='height'>
+        <div #container [style.height]='height'>
             <ng-template #scrollContainer let-rowData [igxForOf]="data | async" igxForTest
                 [igxForTotalItemCount]="count | async"
                 [igxForContainerSize]='height'
@@ -1742,7 +1712,9 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
             </ng-template>
         </div>
     `,
-    providers: [LocalService]
+    providers: [LocalService],
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
@@ -1796,7 +1768,9 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
     }`, `.forOfElement {
         flex: 0 0 60px;
         border-right: 1px solid #888;
-    }`]
+    }`],
+    standalone: true,
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 
 export class NoWidthAndHeightComponent {
@@ -1821,7 +1795,6 @@ export class NoWidthAndHeightComponent {
         <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
             [igxForScrollOrientation]="'vertical'"
             [igxForContainerSize]='"500px"'
-            [igxForItemSize]='itemSize'
             let-rowIndex="index"
             let-odd="odd"
             let-even="even"
@@ -1834,13 +1807,14 @@ export class NoWidthAndHeightComponent {
                     last: last,
                     even: even,
                     odd: odd
-                }"
-                [style.height]='itemSize'>
+                }">
                     {{rowIndex}} : {{item.text}}
             </div>
         </ng-template>
     </div>
     `,
+    standalone: true,
+    imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
     public data = [];

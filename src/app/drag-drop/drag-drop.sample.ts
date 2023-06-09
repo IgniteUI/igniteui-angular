@@ -1,21 +1,15 @@
 import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import {
-    OverlaySettings,
-    GlobalPositionStrategy,
-    NoOpScrollStrategy,
-    IgxToggleDirective,
-    IgxDragDirective,
-    IgxInsertDropStrategy,
-    IDragBaseEventArgs,
-    IgxDragLocation,
-    DragDirection,
-    IDropDroppedEventArgs
-} from 'igniteui-angular';
+import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+
+import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
+import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.scss']
+    styleUrls: ['drag-drop.sample.scss'],
+    standalone: true,
+    imports: [IgxDragDirective, NgIf, IgxIconComponent, IgxDragIgnoreDirective, NgClass, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective, IgxDragHandleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective, NgFor, IgxDropDirective, NgStyle, ShadowGridSampleComponent]
 })
 export class DragDropSampleComponent {
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })

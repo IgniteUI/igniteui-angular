@@ -13,11 +13,11 @@ import { PivotUtil } from './pivot-util';
 export class IgxPivotFilteringService extends IgxFilteringService {
     private filtersESFId;
 
-    public clearFilter(field: string): void {
+    public override clearFilter(field: string): void {
         this.clear_filter(field);
     }
 
-    public clear_filter(fieldName: string) {
+    public override clear_filter(fieldName: string) {
         super.clear_filter(fieldName);
         const grid = this.grid as IgxPivotGridComponent;
         const allDimensions = grid.allDimensions;
@@ -30,11 +30,11 @@ export class IgxPivotFilteringService extends IgxFilteringService {
             (grid as any).setupColumns();
         }
     }
-    protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected override filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         super.filter_internal(fieldName, term, conditionOrExpressionsTree, ignoreCase);
-        const grid = this.grid;
-        const config = (grid as IgxPivotGridComponent).pivotConfiguration;
+        const grid = this.grid as IgxPivotGridComponent;
+        const config = grid.pivotConfiguration;
         const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName);

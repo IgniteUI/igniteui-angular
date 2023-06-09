@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { data, dataWithoutPK } from '../shared/data';
+import { FormsModule } from '@angular/forms';
+import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
 
-import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity} from 'igniteui-angular';
+import { data, dataWithoutPK } from '../shared/data';
 
 @Component({
     selector: 'app-grid-cellediting',
-    styleUrls: ['grid-cellEditing.component.scss'],
-    templateUrl: 'grid-cellEditing.component.html'
+    templateUrl: 'grid-cellEditing.component.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
@@ -222,7 +223,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
                 const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;

@@ -4,7 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import { strToU8 } from 'fflate';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -151,12 +151,12 @@ export class WorksheetFile implements IExcelFile {
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
                 this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
-                const allowedColumns = owner.columns.filter(c => c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader);
+                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader && c.headerType !== ExportHeaderType.MultiRowHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
                         .filter(c => (c.level < i &&
-                            c.headerType !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
+                            c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
                     hasUserSetIndex ?
@@ -260,7 +260,7 @@ export class WorksheetFile implements IExcelFile {
                             recordHeaders = worksheetData.rootKeys;
                         } else {
                             recordHeaders = worksheetData.owner.columns
-                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.MultiRowHeader && c.headerType !== HeaderType.RowHeader && !c.skip)
+                                .filter(c => c.headerType === ExportHeaderType.ColumnHeader && !c.skip)
                                 .sort((a, b) => a.startIndex-b.startIndex)
                                 .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
                                 .map(c => c.field);
@@ -270,7 +270,7 @@ export class WorksheetFile implements IExcelFile {
 
                         if (record.type === ExportRecordType.HeaderRecord) {
                             const recordOwner = worksheetData.owners.get(record.owner);
-                            const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === HeaderType.MultiColumnHeader);
+                            const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === ExportHeaderType.MultiColumnHeader);
 
                             if (hasMultiColumnHeaders) {
                                 this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
@@ -301,7 +301,7 @@ export class WorksheetFile implements IExcelFile {
 
             const headersForLevel = owner.columns
                 .filter(c => (c.level < j &&
-                    c.headerType !== HeaderType.MultiColumnHeader || c.level === j) && c.columnSpan > 0 && !c.skip)
+                    c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === j) && c.columnSpan > 0 && !c.skip)
                 .sort((a, b) => a.startIndex - b.startIndex)
                 .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -320,7 +320,7 @@ export class WorksheetFile implements IExcelFile {
                         this.mergeCellsCounter++;
                         this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
-                        if (currentCol.headerType === HeaderType.ColumnHeader) {
+                        if (currentCol.headerType === ExportHeaderType.ColumnHeader) {
                             columnCoordinate = ExcelStrings.getExcelColumn(startValue) +
                                 (this.rowIndex + owner.maxLevel - currentCol.level);
                         } else {
@@ -394,7 +394,7 @@ export class WorksheetFile implements IExcelFile {
 
         this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
 
-        let cellValue = worksheetData.isSpecialData ?
+        const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
             fullRow.data[key];
 
@@ -417,7 +417,6 @@ export class WorksheetFile implements IExcelFile {
 
         const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
         const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
-        const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
 
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
@@ -437,7 +436,12 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
+            const isTime = targetCol?.dataType === 'time';
+            const isDateTime = targetCol?.dataType === 'dateTime';
+            const isPercentage = targetCol?.dataType === 'percent';
+            const isColumnCurrencyType = targetCol?.dataType === 'currency';
+
+            const format = isPercentage ? ` s="12"` : isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {
@@ -512,7 +516,7 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate: boolean = false) {
+    private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate = false) {
         for (const a of map.values()) {
             const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
             a.endCoordinate = `${colName}${useLastValidEndCoordinate ? this.lastValidRow : this.rowIndex}`;
@@ -633,7 +637,7 @@ export class WorksheetFile implements IExcelFile {
                     this.mergeCellsCounter++;
                     this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
-                    if (currentCol.headerType === HeaderType.ColumnHeader) {
+                    if (currentCol.headerType === ExportHeaderType.ColumnHeader) {
                         const col = isVertical
                             ? maxLevel
                             : startValue + (owner.maxRowLevel ?? 0);

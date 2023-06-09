@@ -1,64 +1,16 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective
-} from './grid.directives';
-import { IgxGridComponent } from './grid.component';
-import {
-    IgxGridPagingPipe,
-    IgxGridGroupingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe
-} from './grid.pipes';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridRowComponent } from './grid-row.component';
-import { IgxGridCommonModule } from '../grid-common.module';
-import { IgxGridSummaryPipe } from './grid.summary.pipe';
-import { IgxGridDetailsPipe } from './grid.details.pipe';
-import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
-import { IgxTooltipModule } from '../../directives/tooltip';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { IGX_GRID_DIRECTIVES } from './public_api';
+
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-  declarations: [
-    IgxGridComponent,
-    IgxGridRowComponent,
-    IgxGridGroupByRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridGroupingPipe,
-    IgxGridPagingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridSummaryPipe,
-    IgxGridDetailsPipe,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByAreaComponent,
+  imports: [
+    ...IGX_GRID_DIRECTIVES
   ],
   exports: [
-    IgxGridComponent,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByRowComponent,
-    IgxGridRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridGroupingPipe,
-    IgxGridPagingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridSummaryPipe,
-    IgxGridDetailsPipe,
-    IgxGridGroupByAreaComponent,
-    IgxGridCommonModule
-  ],
-  imports: [
-    IgxGridCommonModule,
-    IgxTooltipModule,
-    ReactiveFormsModule
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    ...IGX_GRID_DIRECTIVES
+  ]
 })
 export class IgxGridModule {}

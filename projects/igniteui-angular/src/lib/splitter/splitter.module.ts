@@ -1,22 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
-import { IgxSplitterComponent, IgxSplitBarComponent } from './splitter.component';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
+import { IGX_SPLITTER_DIRECTIVES } from './public_api';
 
+/**
+ * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
+ */
 @NgModule({
     imports: [
-        CommonModule, IgxIconModule, IgxDragDropModule
-    ],
-    declarations: [
-        IgxSplitterComponent,
-        IgxSplitterPaneComponent,
-        IgxSplitBarComponent
+        ...IGX_SPLITTER_DIRECTIVES
     ],
     exports: [
-        IgxSplitterComponent,
-        IgxSplitterPaneComponent
+        ...IGX_SPLITTER_DIRECTIVES
     ]
 })
 export class IgxSplitterModule { }

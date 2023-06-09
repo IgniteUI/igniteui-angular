@@ -24,6 +24,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import { NgIf } from '@angular/common';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -33,17 +34,16 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { fromEvent, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
+import {
+    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
+    isDateInRanges, IFormattingViews, IFormattingOptions
+} from '../calendar/public_api';
+import {
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
+} from '../input-group/public_api';
+import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
-import {
-    IFormattingOptions,
-    IFormattingViews,
-    IgxCalendarComponent,
-    IgxCalendarHeaderTemplateDirective,
-    IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges
-} from '../calendar/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
@@ -57,14 +57,6 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  IgxInputDirective,
-  IgxInputGroupComponent,
-  IgxInputGroupType,
-  IgxInputState,
-  IgxLabelDirective,
-  IGX_INPUT_GROUP_TYPE
-} from '../input-group/public_api';
-import {
   AbsoluteScrollStrategy,
   AutoPositionStrategy,
   IgxOverlayService,
@@ -73,6 +65,8 @@ import {
   OverlaySettings
 } from '../services/public_api';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 
 let NEXT_ID = 0;
 
@@ -95,7 +89,18 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
-    styles: [':host { display: block; }']
+    styles: [':host { display: block; }'],
+    standalone: true,
+    imports: [
+        NgIf,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxTextSelectionDirective,
+        IgxSuffixDirective
+    ]
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
@@ -228,7 +233,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
+    public override outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Gets/Sets the value of `id` attribute.
@@ -410,9 +415,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ViewChild(IgxDateTimeEditorDirective, { static: true })
     private dateTimeEditor: IgxDateTimeEditorDirective;
 
-    @ViewChild(IgxInputGroupComponent)
-    protected inputGroup: IgxInputGroupComponent;
-
     @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
@@ -502,15 +504,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(public element: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) protected _localeId: string,
+    constructor(element: ElementRef<HTMLElement>,
+        @Inject(LOCALE_ID) _localeId: string,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
@@ -749,14 +751,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#endregion
 
     /** @hidden @internal */
-    public ngOnInit(): void {
+    public override ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
+        super.ngOnInit();
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         super.ngAfterViewInit();
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
@@ -795,7 +798,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     /** @hidden @internal */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
         super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();

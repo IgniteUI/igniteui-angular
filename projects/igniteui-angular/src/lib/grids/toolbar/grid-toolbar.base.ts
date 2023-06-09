@@ -109,6 +109,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
 
     constructor(@Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken) { }
 
+    /** @hidden @internal **/
     public ngOnDestroy() {
         this.$destroy.next();
         this.$destroy.complete();

@@ -1,16 +1,15 @@
 import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
-import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
+import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { editor } from '@igniteui/material-icons-extended';
 import { Subject } from 'rxjs';
-import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
+import { editor } from '@igniteui/material-icons-extended';
+import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
-import { IgxChipsModule } from '../chips/chips.module';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { PlatformUtil } from '../core/utils';
@@ -19,21 +18,25 @@ import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteri
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
-import { IgxDatePickerModule } from '../date-picker/date-picker.module';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDateTimeEditorModule } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
+
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType } from '../grids/common/grid.interface';
-import { IActiveNode } from '../grids/grid-navigation.service';
-import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxIconService } from '../icon/icon.service';
 import { IgxSelectComponent } from '../select/select.component';
-import { IgxSelectModule } from '../select/select.module';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
+import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
+import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxSelectItemComponent } from '../select/select-item.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -42,7 +45,10 @@ const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
 const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss tt';
 const DEFAULT_TIME_FORMAT = 'hh:mm:ss tt';
 
-@Pipe({ name: 'fieldFormatter' })
+@Pipe({
+    name: 'fieldFormatter',
+    standalone: true
+})
 export class IgxFieldFormatterPipe implements PipeTransform {
 
     public transform(value: any, formatter: (v: any, data: any, fieldData?: any) => any, rowData: any, fieldData?: any) {
@@ -52,6 +58,8 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionItem {
     public parent: ExpressionGroupItem;
@@ -63,6 +71,8 @@ class ExpressionItem {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionGroupItem extends ExpressionItem {
     public operator: FilteringLogic;
@@ -76,6 +86,8 @@ class ExpressionGroupItem extends ExpressionItem {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionOperandItem extends ExpressionItem {
     public expression: IFilteringExpression;
@@ -103,6 +115,8 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
+    standalone: true,
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe]
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
     /**
@@ -114,285 +128,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-    @ViewChild('fieldSelect', { read: IgxSelectComponent })
-    public fieldSelect: IgxSelectComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('conditionSelect', { read: IgxSelectComponent })
-    public conditionSelect: IgxSelectComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('searchValueInput', { read: ElementRef })
-    public searchValueInput: ElementRef;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('picker')
-    public picker: IgxDatePickerComponent | IgxTimePickerComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('addRootAndGroupButton', { read: ElementRef })
-    public addRootAndGroupButton: ElementRef;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('addConditionButton', { read: ElementRef })
-    public addConditionButton: ElementRef;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxQueryBuilderHeaderComponent)
-    public headerContent: IgxQueryBuilderHeaderComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('editingInputsContainer', { read: ElementRef })
-    public set editingInputsContainer(value: ElementRef) {
-        if ((value && !this._editingInputsContainer) ||
-            (value && this._editingInputsContainer && this._editingInputsContainer.nativeElement !== value.nativeElement)) {
-            requestAnimationFrame(() => {
-                this.scrollElementIntoView(value.nativeElement);
-            });
-        }
-
-        this._editingInputsContainer = value;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get editingInputsContainer(): ElementRef {
-        return this._editingInputsContainer;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('addModeContainer', { read: ElementRef })
-    public set addModeContainer(value: ElementRef) {
-        if ((value && !this._addModeContainer) ||
-            (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
-            requestAnimationFrame(() => {
-                this.scrollElementIntoView(value.nativeElement);
-            });
-        }
-
-        this._addModeContainer = value;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get addModeContainer(): ElementRef {
-        return this._addModeContainer;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
-    public set currentGroupButtonsContainer(value: ElementRef) {
-        if ((value && !this._currentGroupButtonsContainer) ||
-            (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
-            requestAnimationFrame(() => {
-                this.scrollElementIntoView(value.nativeElement);
-            });
-        }
-
-        this._currentGroupButtonsContainer = value;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get currentGroupButtonsContainer(): ElementRef {
-        return this._currentGroupButtonsContainer;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild(IgxToggleDirective)
-    public contextMenuToggle: IgxToggleDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChildren(IgxChipComponent)
-    public chips: QueryList<IgxChipComponent>;
-
-    /**
-     * @hidden @internal
-     */
     @HostBinding('style.display')
     public display = 'block';
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('expressionsContainer')
-    protected expressionsContainer: ElementRef;
-
-    /**
-     * @hidden @internal
-     */
-     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-     protected overlayOutlet: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
-    public rootGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public selectedExpressions: ExpressionOperandItem[] = [];
-
-    /**
-     * @hidden @internal
-     */
-    public selectedGroups: ExpressionGroupItem[] = [];
-
-    /**
-     * @hidden @internal
-     */
-    public currentGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public editedExpression: ExpressionOperandItem;
-
-    /**
-     * @hidden @internal
-     */
-    public addModeExpression: ExpressionOperandItem;
-
-    /**
-     * @hidden @internal
-     */
-    public contextualGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public filteringLogics;
-
-    /**
-     * @hidden @internal
-     */
-    public selectedCondition: string;
-
-    /**
-     * @hidden @internal
-     */
-    public searchValue: any;
-
-    /**
-     * @hidden @internal
-     */
-    public lastActiveNode = {} as IActiveNode;
-
-    /**
-     * @hidden @internal
-     */
-     public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
-     * @hidden @internal
-     */
-    public fieldSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
-    /**
-     * @hidden @internal
-     */
-    public conditionSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
-    private destroy$ = new Subject<any>();
-    private _selectedField: FieldType;
-    private _clickTimer;
-    private _dblClickDelay = 200;
-    private _preventChipClick = false;
-    private _editingInputsContainer: ElementRef;
-    private _addModeContainer: ElementRef;
-    private _currentGroupButtonsContainer: ElementRef;
-    private _fields: FieldType[];
-    private _expressionTree: IExpressionTree;
-    private _locale;
-    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
-
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalStartPoint: VerticalAlignment.Top
-    };
-
-    constructor(public cdr: ChangeDetectorRef,
-        protected iconService: IgxIconService,
-        protected platform: PlatformUtil,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
-        this.locale = this.locale || this._localeId;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public ngAfterViewInit(): void {
-        this.overlaySettings.outlet = this.overlayOutlet;
-        this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set selectedField(value: FieldType) {
-        const oldValue = this._selectedField;
-
-        if (this._selectedField !== value) {
-            this._selectedField = value;
-            if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
-                this.selectedCondition = null;
-                this.searchValue = null;
-                this.cdr.detectChanges();
-            }
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get selectedField(): FieldType {
-        return this._selectedField;
-    }
 
     /**
     * Returns the fields.
@@ -484,18 +221,232 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     @Output()
     public expressionTreeChange = new EventEmitter();
 
+    @ViewChild('fieldSelect', { read: IgxSelectComponent })
+    private fieldSelect: IgxSelectComponent;
+
+    @ViewChild('conditionSelect', { read: IgxSelectComponent })
+    private conditionSelect: IgxSelectComponent;
+
+    @ViewChild('searchValueInput', { read: ElementRef })
+    private searchValueInput: ElementRef;
+
+    @ViewChild('picker')
+    private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+
+    @ViewChild('addRootAndGroupButton', { read: ElementRef })
+    private addRootAndGroupButton: ElementRef;
+
+    @ViewChild('addConditionButton', { read: ElementRef })
+    private addConditionButton: ElementRef;
+
     /**
      * @hidden @internal
      */
-    public overlaySettings: OverlaySettings = {
+    @ContentChild(IgxQueryBuilderHeaderComponent)
+    public headerContent: IgxQueryBuilderHeaderComponent;
+
+    @ViewChild('editingInputsContainer', { read: ElementRef })
+    protected set editingInputsContainer(value: ElementRef) {
+        if ((value && !this._editingInputsContainer) ||
+            (value && this._editingInputsContainer && this._editingInputsContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._editingInputsContainer = value;
+    }
+
+    /** @hidden */
+    protected get editingInputsContainer(): ElementRef {
+        return this._editingInputsContainer;
+    }
+
+    @ViewChild('addModeContainer', { read: ElementRef })
+    protected set addModeContainer(value: ElementRef) {
+        if ((value && !this._addModeContainer) ||
+            (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._addModeContainer = value;
+    }
+
+    /** @hidden */
+    protected get addModeContainer(): ElementRef {
+        return this._addModeContainer;
+    }
+
+    @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
+    protected set currentGroupButtonsContainer(value: ElementRef) {
+        if ((value && !this._currentGroupButtonsContainer) ||
+            (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._currentGroupButtonsContainer = value;
+    }
+
+    /** @hidden */
+    protected get currentGroupButtonsContainer(): ElementRef {
+        return this._currentGroupButtonsContainer;
+    }
+
+    @ViewChild(IgxToggleDirective)
+    private contextMenuToggle: IgxToggleDirective;
+
+    @ViewChildren(IgxChipComponent)
+    private chips: QueryList<IgxChipComponent>;
+
+    @ViewChild('expressionsContainer')
+    private expressionsContainer: ElementRef;
+
+    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    private overlayOutlet: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden @internal
+     */
+    public rootGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public selectedExpressions: ExpressionOperandItem[] = [];
+
+    /**
+     * @hidden @internal
+     */
+    public currentGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public contextualGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public filteringLogics;
+
+    /**
+     * @hidden @internal
+     */
+    public selectedCondition: string;
+
+    /**
+     * @hidden @internal
+     */
+    public searchValue: any;
+
+    /**
+     * @hidden @internal
+     */
+    public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+     * @hidden @internal
+     */
+    public fieldSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false
+    };
+
+    /**
+     * @hidden @internal
+     */
+    public conditionSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false
+    };
+
+    private destroy$ = new Subject<any>();
+    private _selectedField: FieldType;
+    private _clickTimer;
+    private _dblClickDelay = 200;
+    private _preventChipClick = false;
+    private _editingInputsContainer: ElementRef;
+    private _addModeContainer: ElementRef;
+    private _currentGroupButtonsContainer: ElementRef;
+    private _addModeExpression: ExpressionOperandItem;
+    private _editedExpression: ExpressionOperandItem;
+    private _selectedGroups: ExpressionGroupItem[] = [];
+    private _fields: FieldType[];
+    private _expressionTree: IExpressionTree;
+    private _locale;
+    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+
+    private _positionSettings = {
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalStartPoint: VerticalAlignment.Top
+    };
+
+    private _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new CloseScrollStrategy()
     };
 
+    constructor(public cdr: ChangeDetectorRef,
+        protected iconService: IgxIconService,
+        protected platform: PlatformUtil,
+        @Inject(LOCALE_ID) protected _localeId: string,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
+        this.locale = this.locale || this._localeId;
+    }
+
     /**
      * @hidden @internal
+     */
+    public ngAfterViewInit(): void {
+        this._overlaySettings.outlet = this.overlayOutlet;
+        this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public set selectedField(value: FieldType) {
+        const oldValue = this._selectedField;
+
+        if (this._selectedField !== value) {
+            this._selectedField = value;
+            if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
+                this.selectedCondition = null;
+                this.searchValue = null;
+                this.cdr.detectChanges();
+            }
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedField(): FieldType {
+        return this._selectedField;
+    }
+
+    /**
+     * @hidden @internal
+     *
+     * used by the grid
      */
     public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
         this.pickerOutlet = outlet;
@@ -503,6 +454,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
+     *
+     * used by the grid
      */
     public get isContextMenuVisible(): boolean {
         return !this.contextMenuToggle.collapsed;
@@ -512,7 +465,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public get hasEditedExpression(): boolean {
-        return this.editedExpression !== undefined && this.editedExpression !== null;
+        return this._editedExpression !== undefined && this._editedExpression !== null;
     }
 
     /**
@@ -563,17 +516,17 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public commitOperandEdit() {
-        if (this.editedExpression) {
-            this.editedExpression.expression.fieldName = this.selectedField.field;
-            this.editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
-            this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
-            this.editedExpression.fieldLabel = this.selectedField.label
+        if (this._editedExpression) {
+            this._editedExpression.expression.fieldName = this.selectedField.field;
+            this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
+            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
                     ? this.selectedField.header
                     : this.selectedField.field;
-            this.editedExpression.inEditMode = false;
-            this.editedExpression = null;
+            this._editedExpression.inEditMode = false;
+            this._editedExpression = null;
         }
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
@@ -584,9 +537,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public cancelOperandAdd() {
-        if (this.addModeExpression) {
-            this.addModeExpression.inAddMode = false;
-            this.addModeExpression = null;
+        if (this._addModeExpression) {
+            this._addModeExpression.inAddMode = false;
+            this._addModeExpression = null;
         }
     }
 
@@ -594,14 +547,14 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public cancelOperandEdit() {
-        if (this.editedExpression) {
-            this.editedExpression.inEditMode = false;
+        if (this._editedExpression) {
+            this._editedExpression.inEditMode = false;
 
-            if (!this.editedExpression.expression.fieldName) {
-                this.deleteItem(this.editedExpression);
+            if (!this._editedExpression.expression.fieldName) {
+                this.deleteItem(this._editedExpression);
             }
 
-            this.editedExpression = null;
+            this._editedExpression = null;
         }
     }
 
@@ -615,9 +568,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
+     *
+     * used by the grid
      */
     public exitOperandEdit() {
-        if (!this.editedExpression) {
+        if (!this._editedExpression) {
             return;
         }
 
@@ -671,8 +626,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.exitOperandEdit();
         this.cancelOperandAdd();
 
-        if (this.editedExpression) {
-            this.editedExpression.inEditMode = false;
+        if (this._editedExpression) {
+            this._editedExpression.inEditMode = false;
         }
 
         expressionItem.hovered = false;
@@ -684,7 +639,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.searchValue = expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
-        this.editedExpression = expressionItem;
+        this._editedExpression = expressionItem;
 
         this.cdr.detectChanges();
 
@@ -709,10 +664,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public clearSelection() {
-        for (const group of this.selectedGroups) {
+        for (const group of this._selectedGroups) {
             group.selected = false;
         }
-        this.selectedGroups = [];
+        this._selectedGroups = [];
 
         for (const expr of this.selectedExpressions) {
             expr.selected = false;
@@ -729,12 +684,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.clearSelection();
         this.exitOperandEdit();
 
-        if (this.addModeExpression) {
-            this.addModeExpression.inAddMode = false;
+        if (this._addModeExpression) {
+            this._addModeExpression.inAddMode = false;
         }
 
         expressionItem.inAddMode = true;
-        this.addModeExpression = expressionItem;
+        this._addModeExpression = expressionItem;
         if (expressionItem.selected) {
             this.toggleExpression(expressionItem);
         }
@@ -909,6 +864,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
+     *
+     * used by the grid
      */
     public setAddButtonFocus() {
         if (this.addRootAndGroupButton) {
@@ -937,7 +894,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             this.contextualGroup = contextualGroup;
             this.calculateContextMenuTarget();
             if (this.contextMenuToggle.collapsed) {
-                this.contextMenuToggle.open(this.overlaySettings);
+                this.contextMenuToggle.open(this._overlaySettings);
             } else {
                 this.contextMenuToggle.reposition();
             }
@@ -1059,10 +1016,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         return groupItem;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+    private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
         if (!groupItem) {
             return null;
         }
@@ -1105,7 +1059,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     private findSingleSelectedGroup(): ExpressionGroupItem {
-        for (const group of this.selectedGroups) {
+        for (const group of this._selectedGroups) {
             const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
 
             if (containsAllSelectedExpressions) {
@@ -1164,8 +1118,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         parent.children.splice(index, 0, groupItem);
 
         for (const expr of this.selectedExpressions) {
-            this.deleteItem(expr);
             groupItem.children.push(expr);
+            this.deleteItem(expr);
             expr.parent = groupItem;
         }
 
@@ -1188,10 +1142,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             groupItem.selected = selected;
 
             if (groupItem.selected) {
-                this.selectedGroups.push(groupItem);
+                this._selectedGroups.push(groupItem);
             } else {
-                const index = this.selectedGroups.indexOf(groupItem);
-                this.selectedGroups.splice(index, 1);
+                const index = this._selectedGroups.indexOf(groupItem);
+                this._selectedGroups.splice(index, 1);
             }
         }
 
@@ -1212,8 +1166,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         if (parent) {
             if (parent.selected) {
                 parent.selected = false;
-                const index = this.selectedGroups.indexOf(parent);
-                this.selectedGroups.splice(index, 1);
+                const index = this._selectedGroups.indexOf(parent);
+                this._selectedGroups.splice(index, 1);
             }
             this.deselectParentRecursive(parent);
         }
@@ -1230,7 +1184,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             Math.max(r, c.nativeElement.getBoundingClientRect().right), 0);
         maxRight = Math.max(maxRight, containerRect.left);
         maxRight = Math.min(maxRight, containerRect.right);
-        this.overlaySettings.target = new Point(maxRight, minTop);
+        this._overlaySettings.target = new Point(maxRight, minTop);
     }
 
     private scrollElementIntoView(target: HTMLElement) {
@@ -1258,28 +1212,4 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxFieldFormatterPipe],
-    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxButtonGroupModule,
-        IgxDatePickerModule,
-        IgxDateTimeEditorModule,
-        IgxInputGroupModule,
-        IgxTimePickerModule,
-        IgxChipsModule,
-        IgxDragDropModule,
-        IgxIconModule,
-        IgxSelectModule,
-        IgxToggleModule
-    ]
-})
-export class IgxQueryBuilderModule { }
 

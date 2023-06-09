@@ -1,4 +1,4 @@
-import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationReferenceMetadata } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
     ApplicationRef,
@@ -159,7 +159,6 @@ export class IgxOverlayService implements OnDestroy {
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
-        private builder: AnimationBuilder,
         @Inject(DOCUMENT) private document: any,
         private _zone: NgZone,
         protected platformUtil: PlatformUtil,

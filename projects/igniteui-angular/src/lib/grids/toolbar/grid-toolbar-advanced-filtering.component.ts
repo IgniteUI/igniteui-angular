@@ -1,6 +1,10 @@
 import { Component, Inject, Input } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { OverlaySettings } from '../../services/overlay/utilities';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgClass, NgIf } from '@angular/common';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-advanced-filtering */
@@ -22,7 +26,9 @@ import { OverlaySettings } from '../../services/overlay/utilities';
  */
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',
-    templateUrl: './grid-toolbar-advanced-filtering.component.html'
+    templateUrl: './grid-toolbar-advanced-filtering.component.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, NgClass, IgxIconComponent, NgIf]
 })
 export class IgxGridToolbarAdvancedFilteringComponent {
 

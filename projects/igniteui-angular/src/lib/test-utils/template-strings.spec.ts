@@ -105,6 +105,14 @@ export class ColumnDefinitions {
         <igx-column field="ID"></igx-column>
     `;
 
+    public static simpleDatePercentColumns = `
+        <igx-column field="Name" dataType="string"></igx-column>
+        <igx-column field="BirthDate" dataType="date"></igx-column>
+        <igx-column field="LastLogin" dataType="dateTime"></igx-column>
+        <igx-column field="MeetingTime" dataType="time"></igx-column>
+        <igx-column field="AttendanceRate" dataType="percent"></igx-column>
+    `;
+
     public static nameAgeEditable = `
         <igx-column field="FirstName" [editable]="true"></igx-column>
         <igx-column field="LastName"></igx-column>

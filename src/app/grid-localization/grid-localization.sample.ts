@@ -2,7 +2,9 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import localeBG from '@angular/common/locales/bg';
 import localeEN from '@angular/common/locales/en';
 import localeDE from '@angular/common/locales/de';
@@ -16,16 +18,18 @@ import localeHant from '@angular/common/locales/zh-Hant';
 import localeHI from '@angular/common/locales/hi';
 import { DATA } from '../shared/financialData';
 
-import { IgxGridComponent, IResourceStrings, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
 import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
+import { IResourceStrings, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
-    templateUrl: 'grid-localization.sample.html'
+    templateUrl: 'grid-localization.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 
 export class GridLocalizationSampleComponent implements OnInit, OnDestroy {

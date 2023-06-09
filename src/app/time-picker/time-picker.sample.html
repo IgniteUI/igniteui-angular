@@ -50,7 +50,7 @@
         <p class="sample-description">Time picker with custom action button</p>
         <div class="preview">
             <igx-time-picker #picker [(ngModel)]="date1" [inputFormat]="'hh:mm tt'">
-                <ng-template igxTimePickerActions>
+                <ng-template igxPickerActions>
                     <div class="action-buttons">
                         <button igxButton="flat" (click)="selectCurrentTime(picker)">Current Time</button>
                     </div>

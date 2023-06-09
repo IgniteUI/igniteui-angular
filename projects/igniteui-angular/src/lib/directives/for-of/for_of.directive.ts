@@ -1,5 +1,5 @@
 ﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
-import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
+import { DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -11,7 +11,6 @@ import {
     IterableChanges,
     IterableDiffer,
     IterableDiffers,
-    NgModule,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -28,7 +27,7 @@ import {
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
-import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
@@ -80,7 +79,8 @@ export class IgxForOfContext<T> {
 
 @Directive({
     selector: '[igxFor][igxForOf]',
-    providers: [IgxForOfScrollSyncService]
+    providers: [IgxForOfScrollSyncService],
+    standalone: true
 })
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
@@ -976,7 +976,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(container.length - 1);
-    
+
                 this.updateTemplateContext(embView.context, i);
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
@@ -997,7 +997,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * from the view container.
      * Often, called while handling a scroll event.
      */
-    protected updateTemplateContext(context: any, index: number = 0): void {
+    protected updateTemplateContext(context: any, index = 0): void {
         context.$implicit = this.igxForOf[index];
         context.index = this.getContextIndex(this.igxForOf[index]);
         context.count = this.igxForOf.length;
@@ -1476,12 +1476,17 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
 }
 
 @Directive({
-    selector: '[igxGridFor][igxGridForOf]'
+    selector: '[igxGridFor][igxGridForOf]',
+    standalone: true
 })
 export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input()
     public set igxGridForOf(value) {
         this.igxForOf = value;
+    }
+
+    public get igxGridForOf() {
+        return this.igxForOf;
     }
 
     @Input()
@@ -1490,15 +1495,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     @Input()
     public igxGridForOfVariableSizes = true;
 
-    public get igxGridForOf() {
-        return this.igxForOf;
-    }
-
     /**
      * @hidden
      * @internal
      */
-    public get sizesCache(): number[] {
+    public override get sizesCache(): number[] {
         if (this.igxForScrollOrientation === 'horizontal') {
             if (this.igxGridForOfUniqueSizeCache || this.syncService.isMaster(this)) {
                 return this._sizesCache;
@@ -1512,7 +1513,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @hidden
      * @internal
      */
-    public set sizesCache(value: number[]) {
+    public override set sizesCache(value: number[]) {
         this._sizesCache = value;
     }
 
@@ -1520,7 +1521,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return this.igxForSizePropName || 'height';
     }
 
-    public recalcUpdateSizes() {
+    public override recalcUpdateSizes() {
         if (this.igxGridForOfVariableSizes && this.igxForScrollOrientation === 'vertical') {
             super.recalcUpdateSizes();
         }
@@ -1541,18 +1542,18 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         _zone: NgZone,
         _platformUtil: PlatformUtil,
         @Inject(DOCUMENT) _document: any,
-        protected syncScrollService: IgxForOfScrollSyncService,
+        syncScrollService: IgxForOfScrollSyncService,
         protected syncService: IgxForOfSyncService) {
         super(_viewContainer, _template, _differs, cdr, _zone, syncScrollService, _platformUtil, _document);
     }
 
-    public ngOnInit() {
+    public override ngOnInit() {
         this.syncService.setMaster(this);
         super.ngOnInit();
         this.removeScrollEventListeners();
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
+    public override ngOnChanges(changes: SimpleChanges) {
         const forOf = 'igxGridForOf';
         this.syncService.setMaster(this);
         if (forOf in changes) {
@@ -1592,7 +1593,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.syncService.setMaster(this, true);
     }
 
-    public ngDoCheck() {
+    public override ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
@@ -1624,7 +1625,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
-    public onScroll(event) {
+    public override onScroll(event) {
         if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
             return;
         }
@@ -1641,7 +1642,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.cdr.markForCheck();
     }
 
-    public onHScroll(scrollAmount) {
+    public override onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
         const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
         if (!this.scrollComponent || !parseInt(firstScrollChild.style.width, 10)) {
@@ -1674,7 +1675,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return size;
     }
 
-    protected initSizesCache(items: any[]): number {
+    protected override initSizesCache(items: any[]): number {
         if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
@@ -1697,7 +1698,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return totalSize;
     }
 
-    protected _updateSizeCache(changes: IterableChanges<T> = null) {
+    protected override _updateSizeCache(changes: IterableChanges<T> = null) {
         if (this.igxForScrollOrientation === 'horizontal') {
             const oldSize = this.sizesCache[this.sizesCache.length - 1];
             const newSize = this.initSizesCache(this.igxForOf);
@@ -1772,7 +1773,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return newHeight;
     }
 
-    protected addLastElem() {
+    protected override addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
         if (!this.isRemote && !this.igxForOf) {
             return;
@@ -1817,7 +1818,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
         }
     }
-    protected _applyChanges() {
+    protected override _applyChanges() {
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
@@ -1827,7 +1828,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     /**
      * @hidden
      */
-    protected _calcMaxChunkSize(): number {
+    protected override _calcMaxChunkSize(): number {
         if (this.igxForScrollOrientation === 'horizontal') {
             if (this.syncService.isMaster(this)) {
                 return super._calcMaxChunkSize();
@@ -1838,23 +1839,4 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
 
     }
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxForOfDirective,
-        IgxGridForOfDirective,
-        DisplayContainerComponent,
-        VirtualHelperComponent,
-        HVirtualHelperComponent,
-        VirtualHelperBaseDirective
-    ],
-    exports: [IgxForOfDirective, IgxGridForOfDirective],
-    imports: [IgxScrollInertiaModule, CommonModule]
-})
-
-export class IgxForOfModule {
 }

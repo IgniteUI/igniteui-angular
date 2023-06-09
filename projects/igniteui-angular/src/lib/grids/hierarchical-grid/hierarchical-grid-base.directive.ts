@@ -1,28 +1,27 @@
 import {
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
+    createComponent,
     Directive,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     Inject,
     Injector,
     Input,
     IterableDiffers,
     LOCALE_ID,
-    NgModuleRef,
     NgZone,
     Optional,
     Output,
-    TemplateRef,
-    ViewChild,
+    reflectComponentType,
     ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -91,15 +90,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * @hidden
-     * @internal
      */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
-    public dragIndicatorIconBase: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    public get maxLevelHeaderDepth() {
+    public override get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -112,25 +104,25 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    public get outlet() {
+    public override get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-    public set outlet(val: any) {
+    public override set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
     /** @hidden @internal */
     public batchEditingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public get batchEditing(): boolean {
+    public override get batchEditing(): boolean {
         return this._batchEditing;
     }
 
-    public set batchEditing(val: boolean) {
+    public override set batchEditing(val: boolean) {
         if (val !== this._batchEditing) {
             delete this._transactions;
             this.switchTransactionService(val);
@@ -150,28 +142,27 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     constructor(
         validationService: IgxGridValidationService,
-        public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
-        protected transactionFactory: IgxFlatTransactionFactory,
+        selectionService: IgxGridSelectionService,
+        colResizingService: IgxColumnResizingService,
+        @Inject(IGX_GRID_SERVICE_BASE) public override gridAPI: IgxHierarchicalGridAPIService,
+        transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
-        @Inject(DOCUMENT) public document,
+        @Inject(DOCUMENT) document,
         cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
+        envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
-        protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
+        platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
         super(
             validationService,
             selectionService,
@@ -182,19 +173,19 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             zone,
             document,
             cdr,
-            resolver,
             differs,
             viewRef,
             appRef,
-            moduleRef,
             injector,
+            envInjector,
             navigation,
             filteringService,
             overlayService,
             summaryService,
             _displayDensityOptions,
             localeId,
-            platform);
+            platform,
+            _diTransactions);
     }
 
     /**
@@ -212,8 +203,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.updateColumns(result);
         this.initPinning();
 
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
+        const mirror = reflectComponentType(IgxColumnComponent);
+        const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columns.forEach(column => {
                 if (column[output.propName]) {
@@ -237,10 +228,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
-        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
+        const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         ref.changeDetectorRef.detectChanges();
-        factoryGroup.inputs.forEach((input) => {
+        const mirror = reflectComponentType(IgxColumnGroupComponent);
+        mirror.inputs.forEach((input) => {
             const propName = input.propName;
             ref.instance[propName] = col[propName];
         });
@@ -258,9 +249,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
-        factoryColumn.inputs.forEach((input) => {
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+        const mirror = reflectComponentType(IgxColumnComponent);
+        mirror.inputs.forEach((input) => {
             const propName = input.propName;
             if (!(col[propName] instanceof IgxSummaryOperand)) {
                 ref.instance[propName] = col[propName];

@@ -1,14 +1,17 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, IPinningConfig, RowPinningPosition, RowType } from 'igniteui-angular';
+import { NgFor, JsonPipe } from '@angular/common';
+
 import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxHintDirective, IgxInputDirective, IgxInputGroupComponent, IgxTreeGridComponent, IPinningConfig, RowPinningPosition, RowType } from 'igniteui-angular';
 
 @Component({
     providers: [],
     selector: 'app-grid-cell-styling.sample',
     styleUrls: ['grid-cell-styling.sample.scss'],
     templateUrl: 'grid-cell-styling.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxHintDirective, IgxGridComponent, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, JsonPipe]
 })
-
 export class GridCellStylingSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;

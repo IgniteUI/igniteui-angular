@@ -1,5 +1,25 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {DisplayDensity, IgxDialogComponent, IgxFilterOptions, IgxListComponent} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+    DisplayDensity,
+    IGX_INPUT_GROUP_DIRECTIVES,
+    IGX_LIST_DIRECTIVES,
+    IgxAvatarComponent,
+    IgxBadgeComponent,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxCardComponent,
+    IgxCheckboxComponent,
+    IgxDialogComponent,
+    IgxFilterDirective,
+    IgxFilterOptions,
+    IgxFilterPipe,
+    IgxIconComponent,
+    IgxListComponent,
+    IgxRippleDirective,
+    IgxSwitchComponent
+} from 'igniteui-angular';
 
 interface Employee {
     imageURL: string;
@@ -12,7 +32,26 @@ interface Employee {
     selector: 'app-list-sample',
     styleUrls: ['list.sample.scss'],
     templateUrl: 'list.sample.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        NgFor,
+        FormsModule,
+        IgxButtonGroupComponent,
+        IgxBadgeComponent,
+        IgxCardComponent,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxCheckboxComponent,
+        IgxAvatarComponent,
+        IgxSwitchComponent,
+        IgxFilterDirective,
+        IgxButtonDirective,
+        IgxDialogComponent,
+        IgxFilterPipe,
+        IGX_LIST_DIRECTIVES,
+        IGX_INPUT_GROUP_DIRECTIVES
+    ]
 })
 export class ListSampleComponent implements OnInit {
     @ViewChild('fruitList', { static: true })
@@ -177,7 +216,7 @@ export class ListSampleComponent implements OnInit {
         return fruitsFilterOpts;
     }
 
-    public filteringHandler = function(args) {
+    public filteringHandler = (args) => {
         args.cancel = !this.checkbox.checked;
     };
 

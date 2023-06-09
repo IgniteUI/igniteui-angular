@@ -9,11 +9,14 @@ import { ColumnType } from '../common/grid.interface';
 // import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 
 
-@Directive({ selector: '[igxColumnMovingDrop]' })
+@Directive({
+    selector: '[igxColumnMovingDrop]',
+    standalone: true
+})
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrop')
-    public set data(val: ColumnType | IgxForOfDirective<any>) {
+    public override set data(val: ColumnType | IgxForOfDirective<any>) {
         if (val instanceof IgxGridForOfDirective) {
             this._displayContainer = val;
         } else {
@@ -58,12 +61,13 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         super(ref, renderer, _);
     }
 
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
         this._dragLeave.next(true);
         this._dragLeave.complete();
+        super.ngOnDestroy();
     }
 
-    public onDragOver(event) {
+    public override onDragOver(event) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -96,7 +100,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    public onDragEnter(event) {
+    public override onDragEnter(event) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -134,7 +138,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    public onDragLeave(event) {
+    public override onDragLeave(event) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -151,7 +155,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    public onDragDrop(event) {
+    public override onDragDrop(event) {
         event.preventDefault();
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {

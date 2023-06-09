@@ -24,6 +24,18 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { DropPosition } from '../moving/moving.service';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxGridTopLevelColumns } from '../common/pipes';
+import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
+import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
+import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
+import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
+import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
+import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 /**
  *
@@ -36,7 +48,9 @@ import { PivotUtil } from './pivot-util';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-header-row',
-    templateUrl: './pivot-header-row.component.html'
+    templateUrl: './pivot-header-row.component.html',
+    standalone: true,
+    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective, NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
     public aggregateList: IPivotAggregator[] = [];
@@ -97,14 +111,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
     public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
 
-    public get headerForOf() {
+    public override get headerForOf() {
         return this.headerContainers.last;
     }
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef,
+        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
+        ref: ElementRef<HTMLElement>,
+        cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
     ) {
         super(ref, cdr);
@@ -245,7 +259,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();
-        for (let chip of this.notificationChips) {
+        for (const chip of this.notificationChips) {
             const parent = chip.nativeElement.parentElement;
             if (area.chipsList.toArray().indexOf(chip) === -1 &&
                 parent.children.length > 0 &&
@@ -261,7 +275,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDragEnd() {
-        for (let chip of this.notificationChips) {
+        for (const chip of this.notificationChips) {
             chip.nativeElement.hidden = true;
         }
     }
@@ -341,7 +355,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public onFilteringIconClick(event, dimension) {
         event.stopPropagation();
         event.preventDefault();
-        let dim = dimension;
+        const dim = dimension;
         const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
@@ -359,7 +373,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
      * @hidden @internal
      */
     public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
-        let dim = dimension || this.filterDropdownDimensions.values().next().value;
+        const dim = dimension || this.filterDropdownDimensions.values().next().value;
         const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         if (shouldReattach) {
             this.dropdownChips.chipsList.forEach(chip => {

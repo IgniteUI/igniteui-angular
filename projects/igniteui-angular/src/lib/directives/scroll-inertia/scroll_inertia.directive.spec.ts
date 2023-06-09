@@ -7,7 +7,7 @@ import {
     ElementRef
 } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_inertia.directive';
+import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -18,11 +18,10 @@ describe('Scroll Inertia Directive - Rendering', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
-            ],
-            imports: [IgxScrollInertiaModule]
+            ]
         }).compileComponents().then(() => {
             fix = TestBed.createComponent(ScrollInertiaComponent);
             fix.detectChanges();
@@ -302,28 +301,31 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 });
 
-    /** igxScroll inertia for testing */
-@Directive({ selector: '[igxTestScrollInertia]' })
+/** igxScroll inertia for testing */
+@Directive({
+    selector: '[igxTestScrollInertia]',
+    standalone: true
+})
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
     constructor(element: ElementRef, _zone: NgZone) {
         super(element, _zone);
     }
-    public onWheel(evt) {
+    public override onWheel(evt) {
         super.onWheel(evt);
     }
 
-    public onTouchStart(evt) {
+    public override onTouchStart(evt) {
         return super.onTouchStart(evt);
     }
-    public onTouchEnd(evt) {
+    public override onTouchEnd(evt) {
         super.onTouchEnd(evt);
     }
-    public onTouchMove(evt) {
+    public override onTouchMove(evt) {
        return super.onTouchMove(evt);
     }
 
-    public _inertiaInit(speedX, speedY) {
+    public override _inertiaInit(speedX, speedY) {
         super._inertiaInit(speedX, speedY);
     }
 }
@@ -337,7 +339,9 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         <div #scrBar [style.height]='height' style='overflow: auto; width: 50px; float:right;'>
             <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {
     @ViewChild('container', { static: true }) public container: ElementRef;

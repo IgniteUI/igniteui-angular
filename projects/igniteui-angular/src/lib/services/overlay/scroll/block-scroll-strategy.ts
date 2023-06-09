@@ -14,7 +14,10 @@ export class BlockScrollStrategy extends ScrollStrategy {
         super();
     }
 
-    /** @inheritDoc */
+    /**
+     * Initializes the strategy. Should be called once
+     *
+     */
     public initialize(document: Document) {
         if (this._initialized) {
             return;
@@ -24,12 +27,22 @@ export class BlockScrollStrategy extends ScrollStrategy {
         this._initialized = true;
     }
 
-    /** @inheritDoc */
+    /**
+     * Attaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.attach();
+     * ```
+     */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
     }
 
-    /** @inheritDoc */
+    /**
+     * Detaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
+     */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
         this._sourceElement = null;

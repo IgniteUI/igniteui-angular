@@ -2,16 +2,19 @@ import {
     Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
+import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '../../../directives/drag-drop/drag-drop.directive';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
-import { DisplayDensity } from '../../../core/displayDensity';
+import { DisplayDensity } from '../../../core/density';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { CurrentResourceStrings } from '../../../core/i18n/resources';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
+import { NgIf, NgClass } from '@angular/common';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -26,7 +29,9 @@ import { IFilteringExpressionsTree } from '../../../data-operations/filtering-ex
  */
 @Component({
     selector: 'igx-advanced-filtering-dialog',
-    templateUrl: './advanced-filtering-dialog.component.html'
+    templateUrl: './advanced-filtering-dialog.component.html',
+    standalone: true,
+    imports: [NgIf, IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     /**

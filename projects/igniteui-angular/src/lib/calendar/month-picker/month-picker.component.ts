@@ -6,14 +6,17 @@ import {
     Input,
     ElementRef
 } from '@angular/core';
+import { NgIf, NgStyle } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
+
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
-import { IgxMonthPickerBaseDirective, IgxCalendarView } from '../month-picker-base';
+import { IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
-import { ScrollMonth } from '../calendar-base';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxCalendarView, ScrollMonth } from '../calendar';
 
 let NEXT_ID = 0;
 @Component({
@@ -48,7 +51,9 @@ let NEXT_ID = 0;
         ])
     ],
     selector: 'igx-month-picker',
-    templateUrl: 'month-picker.component.html'
+    templateUrl: 'month-picker.component.html',
+    standalone: true,
+    imports: [NgIf, NgStyle, IgxIconComponent, IgxMonthsViewComponent, IgxYearsViewComponent]
 })
 export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
@@ -169,7 +174,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event: KeyboardEvent) {
+    public override activeViewDecadeKB(event: KeyboardEvent) {
         super.activeViewDecadeKB(event);
 
         if (event.key === this.platform.KEYMAP.ARROW_RIGHT) {
@@ -190,7 +195,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecade() {
+    public override activeViewDecade() {
         super.activeViewDecade();
 
         requestAnimationFrame(() => {
@@ -241,7 +246,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      *  this.monthPicker.selectDate(new Date(`2018-06-12`));
      * ```
      */
-    public selectDate(value: Date) {
+    public override selectDate(value: Date) {
         if (!value) {
             return new Date();
         }
@@ -252,7 +257,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public writeValue(value: Date) {
+    public override writeValue(value: Date) {
         if (value) {
             this.viewDate = this.selectedDates = value;
         }

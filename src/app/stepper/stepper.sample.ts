@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { HorizontalAnimationType } from 'projects/igniteui-angular/src/lib/carousel/carousel-base';
-import {
-    IgxStepperTitlePosition, IgxStepperOrientation, IgxStepType, VerticalAnimationType
-} from 'projects/igniteui-angular/src/lib/stepper/stepper.common';
-import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/stepper.component';
+import { NgIf } from '@angular/common';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective, IgxStepperComponent, HorizontalAnimationType, VerticalAnimationType, IgxStepType, IgxStepperTitlePosition, IgxStepperOrientation } from 'igniteui-angular';
+
 
 @Component({
     templateUrl: 'stepper.sample.html',
-    styleUrls: ['stepper.sample.scss']
+    styleUrls: ['stepper.sample.scss'],
+    standalone: true,
+    imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
 export class IgxStepperSampleComponent {
     @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;

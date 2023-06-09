@@ -12,19 +12,27 @@ import {
 import { IgxRowDirective } from '../row.directive';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { GridType } from '../common/grid.interface';
+import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxRowDragDirective } from '../row-drag.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
-    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }],
+    standalone: true,
+    imports: [NgTemplateOutlet, IgxIconComponent, NgIf, IgxRowDragDirective, NgClass, IgxGridForOfDirective, IgxHierarchicalGridCellComponent, NgStyle, IgxCheckboxComponent, NgFor, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef<HTMLElement>;
 
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
+    protected override _cells: QueryList<IgxHierarchicalGridCellComponent>;
 
     /**
      * @hidden
@@ -57,7 +65,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         };
     }
 
-    public get viewIndex(): number {
+    public override get viewIndex(): number {
         return this.index + this.grid.page * this.grid.perPage;
     }
 
@@ -67,7 +75,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    public get expanded() {
+    public override get expanded() {
         return this.grid.gridAPI.get_row_expansion_state(this.data);
     }
 
@@ -79,7 +87,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         return this.expanded && !this.pinned;
     }
 
-    public get hasChildren() {
+    public override get hasChildren() {
         return !!this.grid.childLayoutKeys.length;
     }
 

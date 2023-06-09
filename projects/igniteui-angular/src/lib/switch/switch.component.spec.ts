@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -13,7 +12,8 @@ describe('IgxSwitch', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 InitSwitchComponent,
                 SwitchSimpleComponent,
                 SwitchRequiredComponent,
@@ -22,8 +22,7 @@ describe('IgxSwitch', () => {
                 SwitchFormComponent,
                 SwitchFormGroupComponent,
                 IgxSwitchComponent
-            ],
-            imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 
@@ -269,18 +268,27 @@ describe('IgxSwitch', () => {
         fixture.detectChanges();
 
         const switchEl = fixture.componentInstance.switch;
-        switchEl.checked = false;
+        const switchNative = fixture.debugElement.query(By.directive(IgxSwitchComponent)).nativeElement;
         expect(switchEl.required).toBe(true);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
         expect(switchEl.nativeElement.getAttribute('aria-required')).toEqual('true');
         expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
 
-        fixture.debugElement.componentInstance.markAsTouched();
-        fixture.detectChanges();
+        dispatchCbEvent('keyup', switchNative, fixture);
+        expect(switchEl.focused).toBe(true);
+        dispatchCbEvent('blur', switchNative, fixture);
 
-        const invalidSwitch = fixture.debugElement.nativeElement.querySelectorAll(`.igx-switch--invalid`);
-        expect(invalidSwitch.length).toBe(1);
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(true);
         expect(switchEl.invalid).toBe(true);
         expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        switchEl.checked = true;
+        fixture.detectChanges();
+
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
     describe('EditorProvider', () => {
@@ -296,14 +304,21 @@ describe('IgxSwitch', () => {
     });
 });
 
-@Component({ template: `<igx-switch #switch>Init</igx-switch>` })
+@Component({
+    template: `<igx-switch #switch>Init</igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
+})
 class InitSwitchComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 }
 
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`})
+[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
+    standalone: true,
+    imports: [FormsModule, IgxSwitchComponent]
+})
 class SwitchSimpleComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     public changeEventCalled = false;
@@ -318,7 +333,9 @@ class SwitchSimpleComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch required>Required</igx-switch>`
+    template: `<igx-switch #switch required>Required</igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -326,7 +343,9 @@ class SwitchRequiredComponent {
 
 @Component({
     template: `<p id="my-label">{{label}}</p>
-    <igx-switch #switch aria-labelledby="my-label"></igx-switch>`
+    <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -334,7 +353,9 @@ class SwitchExternalLabelComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch [aria-label]="label"></igx-switch>`
+    template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -342,7 +363,9 @@ class SwitchInvisibleLabelComponent {
 }
 
 @Component({
-    template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`
+    template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
+    standalone: true,
+    imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -350,17 +373,6 @@ class SwitchFormGroupComponent {
     public myForm = this.fb.group({ switch: ['', Validators.required] });
 
     constructor(private fb: UntypedFormBuilder) {}
-
-    public markAsTouched() {
-        if (!this.myForm.valid) {
-            for (const key in this.myForm.controls) {
-                if (this.myForm.controls[key]) {
-                    this.myForm.controls[key].markAsTouched();
-                    this.myForm.controls[key].updateValueAndValidity();
-                }
-            }
-        }
-    }
 }
 
 @Component({
@@ -368,7 +380,9 @@ class SwitchFormGroupComponent {
     <form #form="ngForm">
         <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
     </form>
-`
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchFormComponent {
     @ViewChild('switch', { read: IgxSwitchComponent, static: true })

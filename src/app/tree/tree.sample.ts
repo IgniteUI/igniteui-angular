@@ -1,9 +1,11 @@
 import { useAnimation } from '@angular/animations';
+import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     DisplayDensity, growVerIn, growVerOut,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
-    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode
+    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
@@ -31,7 +33,9 @@ interface CompanyData {
 @Component({
     selector: 'app-tree-sample',
     templateUrl: 'tree.sample.html',
-    styleUrls: ['tree.sample.scss']
+    styleUrls: ['tree.sample.scss'],
+    standalone: true,
+    imports: [IgxLayoutDirective, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxLabelDirective, FormsModule, IgxSwitchComponent, IgxButtonGroupComponent, IgxTreeComponent, IgxTreeNodeComponent, NgFor, IgxTreeNodeLinkDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
 })
 export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { static: true })

@@ -10,9 +10,13 @@ import { IgxIconService } from '../../icon/icon.service';
 /* jsonAPIManageCollectionInMarkup */
 /* blazorIndirectRender */
 @Directive({
-    selector: '[igxGridActionsBase]'
+    selector: '[igxGridActionsBase]',
+    standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
+    /* contentChildren */
+    /* blazorInclude */
+    /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
 
@@ -28,6 +32,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     @Input()
     public asMenuItems = false;
 
+    /** @hidden @internal **/
     public strip: IgxActionStripComponent;
 
     /**

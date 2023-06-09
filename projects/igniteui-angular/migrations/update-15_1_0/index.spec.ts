@@ -10,7 +10,6 @@ describe(`Update to ${version}`, () => {
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',
@@ -68,6 +67,56 @@ describe(`Update to ${version}`, () => {
                     </ng-template>
                 </igx-slide>
             </igx-carousel>`);
+    });
+
+    it('should replace on-prefixed typescript outputs in carousel', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { IgxCarouselComponent } from 'igniteui-angular';
+
+        @Component({
+            selector: 'appPrefix-component',
+            template: '<ng-content></ng-content>'
+        })
+        export class TestComponent {
+            @ViewChild(IgxCarouselComponent)
+            public carousel: IgxCarouselComponent;
+
+            contructor() {
+                this.carousel.onSlideChanged.subscribe((e) => {});
+                this.carousel.onSlideAdded.subscribe((e) => {});
+                this.carousel.onSlideRemoved.subscribe((e) => {});
+                this.carousel.onCarouselPaused.subscribe((e) => {});
+                this.carousel.onCarouselPlaying.subscribe((e) => {});
+            }
+        }
+        `);
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { IgxCarouselComponent } from 'igniteui-angular';
+
+        @Component({
+            selector: 'appPrefix-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            @ViewChild(IgxCarouselComponent)
+            public carousel: IgxCarouselComponent;
+
+            contructor() {
+                this.carousel.slideChanged.subscribe((e) => {});
+                this.carousel.slideAdded.subscribe((e) => {});
+                this.carousel.slideRemoved.subscribe((e) => {});
+                this.carousel.carouselPaused.subscribe((e) => {});
+                this.carousel.carouselPlaying.subscribe((e) => {});
+            }
+        }
+        `;
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(expectedContent);
     });
 
     it('should replace on-prefixed outputs for displayDensity and onGroupingDone to groupingDone', async () => {
@@ -139,15 +188,73 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should append igxStart and igxEnd directives to the child elements of the igx-card-actions', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-card-actions>
+            <span igxButton>Span</span>
+            <button igxButton>Button</button>
+            <button igxButton="icon">
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+    });
+
+    it('shouldn\'t append igxStart and igxEnd directives to the child elements of the igx-card-actions if already applied', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+    });
+
     it('should rename the $size property to the $scrollbar-size', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
             `$custom-scrollbar: scrollbar-theme($size: 10px);`
         );
 
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-scrollbar: scrollbar-theme($scrollbar-size: 10px);`
@@ -160,9 +267,7 @@ describe(`Update to ${version}`, () => {
             `$custom-input: input-group-theme($label-floated-background: transparent, $label-floated-disabled-background: transparent);`
         );
 
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-input: input-group-theme();`

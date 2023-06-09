@@ -2,7 +2,6 @@ import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
@@ -18,11 +17,14 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { getLocaleCurrencySymbol } from '@angular/common';
+import { getLocaleCurrencySymbol, NgFor } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridColumnDataType } from '../../data-operations/data-util';
+import { IgxColumnComponent } from '../public_api';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -31,22 +33,22 @@ describe('IgxGrid - Column properties #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnsFromIterableComponent,
-                TemplatedColumnsComponent,
-                TemplatedInputColumnsComponent,
-                TemplatedContextInputColumnsComponent,
+            imports: [
                 ColumnCellFormatterComponent,
-                ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent,
                 DynamicColumnsComponent,
                 GridAddColumnComponent,
                 IgxGridCurrencyColumnComponent,
                 IgxGridPercentColumnComponent,
                 IgxGridDateTimeColumnComponent,
+                NoopAnimationsModule,
+                ColumnsFromIterableComponent,
+                TemplatedColumnsComponent,
+                TemplatedInputColumnsComponent,
+                TemplatedContextInputColumnsComponent,
+                ColumnHaederClassesComponent,
                 ResizableColumnsComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            ]
         });
     }));
 
@@ -1153,7 +1155,7 @@ describe('IgxGrid - Column properties #grid', () => {
     describe('Data type image column tests', () => {
         let fix: ComponentFixture<IgxGridComponent>;
         let grid: IgxGridComponent;
-        let dataWithImages = [{
+        const dataWithImages = [{
             avatar: 'assets/images/avatar/1.jpg',
             phone: '770-504-2217',
             text: 'Terrance Orta',
@@ -1201,7 +1203,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
 
         it('should initialize correctly with autoGenerate and image data', () => {
-            let column = grid.getColumnByName('avatar');
+            const column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
             expect(column.sortable).toBeFalse();
             expect(column.groupable).toBeFalse();
@@ -1209,7 +1211,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(column.editable).toBeFalse();
             expect(column.hasSummary).toBeFalse();
 
-            let cell = column._cells[0];
+            const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
             expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('assets/images/avatar/1.jpg');
             expect(cell.nativeElement.firstElementChild.getAttribute('alt')).toBe('1');
@@ -1402,7 +1404,9 @@ describe('IgxGrid - Column properties #grid', () => {
 });
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnsFromIterableComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1423,11 +1427,13 @@ interface IColumnConfig {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
-    `
+        `
     <ng-template #customTemplate let-value>
     <button igxButton="raised">{{value}}</button>
     </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1455,7 +1461,9 @@ export class ResizableColumnsComponent {
 
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
-        </ng-template>`
+        </ng-template>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1497,7 +1505,9 @@ export class TemplatedColumnsComponent {
         <ng-template #summary igxSummary let-summaryResults>
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1522,7 +1532,9 @@ export class TemplatedInputColumnsComponent {
                 </ng-template>
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1545,7 +1557,9 @@ export class TemplatedContextInputColumnsComponent {
             <igx-column field="Number7" dataType="number" width="100px"></igx-column>
         </igx-grid>
     `,
-    styles: [`.headerAlignSyle {text-align: right !important;}`]
+    styles: [`.headerAlignSyle {text-align: right !important;}`],
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

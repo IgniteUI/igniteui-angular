@@ -54,10 +54,10 @@ export class IgxHierarchicalTransactionFactory extends IgxFlatTransactionFactory
      * @param type The type of the transaction
      * @returns a new instance of HierarchialTransaction<HierarchialTransaction, HierarchialState>
      */
-    public create(type: TRANSACTION_TYPE): HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
+    public override create(type: TRANSACTION_TYPE): HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
         switch (type) {
             case (TRANSACTION_TYPE.Base):
-                return new IgxHierarchicalTransactionService();;
+                return new IgxHierarchicalTransactionService();
             default:
                 return new IgxBaseTransactionService();
         }

@@ -1,18 +1,31 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {
-    IgxDropDownComponent,
-    ConnectedPositioningStrategy,
-    OverlaySettings,
-    NoOpScrollStrategy,
-    IgxOverlayOutletDirective
-} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
 import { foods } from './foods';
+import { ConnectedPositioningStrategy, IgxButtonDirective, IgxButtonGroupComponent, IgxDropDownComponent, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxInputDirective, IgxInputGroupComponent, IgxOverlayOutletDirective, IgxRippleDirective, IgxToggleActionDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
+
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
-    styleUrls: ['drop-down.sample.scss']
+    styleUrls: ['drop-down.sample.scss'],
+    standalone: true,
+    imports: [
+        NgFor,
+        IgxButtonGroupComponent,
+        IgxButtonDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxToggleActionDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxToggleDirective,
+        IgxDropDownGroupComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxRippleDirective,
+        IgxOverlayOutletDirective
+    ]
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
