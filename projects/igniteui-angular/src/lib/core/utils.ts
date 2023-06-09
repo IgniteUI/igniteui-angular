@@ -48,14 +48,14 @@ export const getResizeObserver = () => window.ResizeObserver;
 /**
  * @hidden
  */
-export const cloneArray = (array: any[], deep?: boolean, omit?: Set<string>) => {
+export const cloneArray = (array: any[], deep?: boolean) => {
     const arr = [];
     if (!array) {
         return arr;
     }
     let i = array.length;
     while (i--) {
-        arr[i] = deep ? cloneValue(array[i], omit) : array[i];
+        arr[i] = deep ? cloneValue(array[i]) : array[i];
     }
     return arr;
 };
@@ -117,11 +117,10 @@ export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2,
  * If passed value is array returns shallow copy of the array.
  *
  * @param value value to clone
- * @param omit an optional set of keys to omit from the clone operation
  * @returns Deep copy of provided value
  * @hidden
  */
-export const cloneValue = (value: any, omit?: Set<string>): any => {
+export const cloneValue = (value: any): any => {
     if (isDate(value)) {
         return new Date(value.getTime());
     }
@@ -135,11 +134,8 @@ export const cloneValue = (value: any, omit?: Set<string>): any => {
 
     if (isObject(value)) {
         const result = {};
-        
+
         for (const key of Object.keys(value)) {
-            if (omit && omit.has(key)) {
-                continue;
-            }
             result[key] = cloneValue(value[key]);
         }
         return result;
