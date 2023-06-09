@@ -796,12 +796,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private updateValidity() {
         // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
         if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators) {
-                if (this.inputGroup.isFocused) {
-                    this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-                }
+            if (this.hasValidators && this.inputGroup.isFocused) {
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }

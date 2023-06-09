@@ -1066,12 +1066,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     protected onStatusChanged() {
         if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators) {
-                if (this._inputGroup.isFocused) {
-                    this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-                }
+            if (this.hasValidators && this._inputGroup.isFocused) {
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }

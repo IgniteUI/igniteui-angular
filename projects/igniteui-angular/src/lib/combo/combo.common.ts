@@ -1224,14 +1224,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected onStatusChanged = () => {
         if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
-            if (this.hasValidators) {
-                if (!this.collapsed || this.inputGroup.isFocused) {
-                    this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
-                } else {
-                    this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
-                }
+            if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
             } else {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526

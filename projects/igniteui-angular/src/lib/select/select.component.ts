@@ -540,15 +540,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected onStatusChanged() {
         this.manageRequiredAsterisk();
         if (this.ngControl && !this.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators) {
-                if (this.inputGroup.isFocused) {
-                    this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
-                } else {
-                    this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
-                }
+            if (this.hasValidators && this.inputGroup.isFocused) {
+                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+                this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             this.input.valid = IgxInputState.INITIAL;
