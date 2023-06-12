@@ -1,0 +1,5 @@
+@use 'igniteui-theming/sass/themes/schemas' as schemas;
+@forward 'igniteui-theming/sass/themes/schemas';
+
+$light-schema: schemas.$light-material-schema;
+$dark-schema: schemas.$dark-material-schema;

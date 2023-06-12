@@ -9,7 +9,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
@@ -19,7 +19,7 @@
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
 ///     $background-color: black
@@ -27,7 +27,7 @@
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-toolbar-theme);
 @function grid-toolbar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $background-color: null,
@@ -44,14 +44,14 @@
     $selector: 'igx-grid-toolbar, igc-grid-toolbar, .igx-grid-toolbar__dd-list';
     $grid-toolbar-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $grid-toolbar-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'grid-toolbar') {
+        $grid-toolbar-schema: map.get($schema, 'grid-toolbar');
     } @else {
         $grid-toolbar-schema: $schema;
     }
 
     $theme: digest-schema($grid-toolbar-schema);
-
+    $meta: map.get($theme, '_meta');
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -88,7 +88,10 @@
         item-hover-background: $item-hover-background,
         item-hover-text-color: $item-hover-text-color,
         item-focus-background: $item-focus-background,
-        item-focus-text-color: $item-focus-text-color
+        item-focus-text-color: $item-focus-text-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -96,7 +99,7 @@
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     // Caption
