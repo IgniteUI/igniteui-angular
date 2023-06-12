@@ -9,7 +9,7 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the watermark directive.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $base-color [null] - The base color for all elements of the watermark.
 /// @param {Color} $image-color [null] - The color used for the stamp image.
 /// @param {Number} $image-opacity [null] - The opacity of the stamp image.
@@ -22,9 +22,9 @@
 ///   $my-watermark-theme: watermark-theme($link-background: magenta);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-watermark-theme);
-/// @requires $light-schema
+/// @requires $light-material-schema
 @function watermark-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $base-color: null,
     $image-color: null,
     $image-opacity: null,
@@ -36,8 +36,8 @@
     $name: 'igx-watermark';
     $watermark-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $watermark-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'watermark') {
+        $watermark-schema: map.get($schema, 'watermark');
     } @else {
         $watermark-schema: $schema;
     }
