@@ -303,6 +303,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
 
     /* mustSetInCodePlatforms: WebComponents;Blazor */
+    /* @tsTwoWayProperty (true, "PivotConfigurationChange", "Detail.PivotConfiguration", false) */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
      *
