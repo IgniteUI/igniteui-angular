@@ -1,10 +1,10 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use '../../themes/schemas' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
 /// @param {Color} $track-on-hover-color [null] - The color of the track when the switch is on and hovered.
@@ -44,14 +44,14 @@
 /// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
 /// @param {Color} $error-color [null] - The border and fill colors in invalid state.
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-switch-theme);
 @function switch-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $thumb-on-color: null,
     $track-on-color: null,
@@ -92,13 +92,14 @@
     $name: 'igx-switch';
     $switch-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $switch-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'switch') {
+        $switch-schema: map.get($schema, 'switch');
     } @else {
         $switch-schema: $schema;
     }
 
     $theme: digest-schema($switch-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
@@ -165,6 +166,10 @@
         thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
+        )),
     ));
 }
 
@@ -175,8 +180,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $type: map.get($theme, type);
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $switch-width: map.get((
         material: 36px,
@@ -251,7 +256,7 @@
     $input-transition: all .2s $ease-in-out-quad;
 
     $ripple-theme: ripple-theme(
-        $schema: $light-schema,
+        $schema: $light-material-schema,
         $color: var-get($theme, 'thumb-on-color')
     );
 
@@ -506,7 +511,7 @@
         transition: background .2s $ease-out-quad;
         opacity: .12;
 
-        @if $type == 'dark' {
+        @if $theme-variant == 'dark' {
             opacity: .24;
         }
     }
@@ -562,7 +567,7 @@
             opacity: .06;
             inset: 0;
 
-            @if $type == 'dark' {
+            @if $theme-variant == 'dark' {
                 opacity: .12;
             }
         }
@@ -596,7 +601,7 @@
         &::after {
             opacity: .12;
 
-            @if $type == 'dark' {
+            @if $theme-variant == 'dark' {
                 opacity: .24;
             }
         }
