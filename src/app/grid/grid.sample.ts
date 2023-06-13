@@ -1,30 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
-import { IgxSnackbarComponent } from '../../../projects/igniteui-angular/src/lib/snackbar/snackbar.component';
-import { IgxToastComponent } from '../../../projects/igniteui-angular/src/lib/toast/toast.component';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxColumnHidingDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-hiding.directive';
-import { IgxColumnActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-actions.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxStringFilteringOperand } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-condition';
-import { CsvFileTypes, IgxBaseExporter, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService, IgxExporterOptionsBase, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
-import { DefaultSortingStrategy, SortingDirection } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
-import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporter, IgxCheckboxComponent, IgxColumnComponent, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService, IgxExporterOptionsBase, IgxGridComponent, IgxSnackbarComponent, IgxStringFilteringOperand, IgxSwitchComponent, IgxToastComponent, IGX_CARD_DIRECTIVES, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, SortingDirection, VerticalAlignment } from 'igniteui-angular';
 
 
 @Component({
@@ -32,7 +13,19 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
     styleUrls: ['grid.sample.scss'],
     templateUrl: 'grid.sample.html',
     standalone: true,
-    imports: [IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxCardActionsComponent, IgxButtonDirective, IgxRippleDirective, IgxColumnActionsComponent, IgxColumnHidingDirective, NgFor, IgxSwitchComponent, IgxGridComponent, IgxColumnComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxToastComponent, IgxSnackbarComponent, AsyncPipe]
+    imports: [
+        FormsModule,
+        NgFor,
+        NgIf,
+        AsyncPipe,
+        IGX_GRID_DIRECTIVES,
+        IGX_CARD_DIRECTIVES,
+        IGX_INPUT_GROUP_DIRECTIVES,
+        IgxCheckboxComponent,
+        IgxSwitchComponent,
+        IgxToastComponent,
+        IgxSnackbarComponent
+    ]
 })
 export class GridSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
@@ -60,6 +53,8 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     public exportFormat = 'XLSX';
     public customFilter = CustomStringFilter.instance();
     public selectionMode;
+    public gridPaging = true;
+    public perPage = 10;
 
     constructor(private localService: LocalService,
                 private remoteService: RemoteService,
@@ -144,21 +139,10 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
 
     public onPagination(event) {
         const total = this.grid2.data.length;
-        const state = this.grid2.pagingState;
-        if ((state.recordsPerPage * event) >= total) {
+        if ((this.perPage * event) >= total) {
             return;
         }
         this.grid2.paginator.paginate(event);
-    }
-
-    public onPerPage(event) {
-        const total = this.grid2.data.length;
-        const state = this.grid2.pagingState;
-        if ((state.index * event) >= total) {
-            return;
-        }
-        this.grid2.perPage = event;
-        state.paging.recordsPerPage = event;
     }
 
     public selectCell(event) {

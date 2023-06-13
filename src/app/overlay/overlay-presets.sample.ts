@@ -1,19 +1,19 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
     IgxDropDownComponent,
     OverlaySettings,
     IgxDragDirective,
-    IgxOverlayService
+    IgxOverlayService,
+    IgxRadioComponent,
+    IgxButtonDirective,
+    IgxRippleDirective,
+    IgxDropDownItemComponent,
+    RelativePositionStrategy,
+    AbsolutePosition,
+    RelativePosition
 } from 'igniteui-angular';
-import { RelativePositionStrategy, AbsolutePosition, RelativePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
-import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxDragDirective as IgxDragDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { FormsModule } from '@angular/forms';
-import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
-import { NgFor } from '@angular/common';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -21,7 +21,7 @@ import { NgFor } from '@angular/common';
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
     standalone: true,
-    imports: [NgFor, IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective_1, IgxDropDownComponent_1, IgxDropDownItemComponent]
+    imports: [NgFor, IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlayPresetsSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

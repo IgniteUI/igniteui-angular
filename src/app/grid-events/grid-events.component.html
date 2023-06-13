@@ -33,7 +33,6 @@
                 (sortingDone)="sortingDone($event)"
                 (filtering)="onFiltering($event)"
                 (filteringDone)="filteringDone($event)"
-                (pagingDone)="pagingDone($event)"
                 (columnPin)="columnPin($event)"
                 (columnPinned)="columnPinned($event)"
                 (columnVisibilityChanging)="columnVisibilityChanging($event)"
@@ -61,7 +60,7 @@
                 </igx-column>
                 <igx-column field="Discontinued" header="UnitsInStock" width="130px" [dataType]="'boolean'" [resizable]="true" [sortable]="true" [hasSummary]="false" [editable]="true">
                 </igx-column>
-                <igx-paginator></igx-paginator>
+                <igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
             </igx-grid>
         </div>
     </div>
