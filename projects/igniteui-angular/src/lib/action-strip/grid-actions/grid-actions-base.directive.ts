@@ -14,8 +14,6 @@ import { IgxIconService } from '../../icon/icon.service';
     standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
-    /* contentChildren */
-    /* blazorInclude */
     /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
