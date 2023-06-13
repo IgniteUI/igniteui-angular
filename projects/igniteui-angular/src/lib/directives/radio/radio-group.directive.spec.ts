@@ -89,7 +89,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(allDisabledButtons.length).toEqual(radioInstance.radioButtons.length);
     }));
 
-    it('Set value should change selected property and emit change event.', fakeAsync(() => {
+    it('Set value should change selected property', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
@@ -109,10 +109,10 @@ describe('IgxRadioGroupDirective', () => {
 
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-        expect(radioInstance.change.emit).toHaveBeenCalled();
+        expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
-    it('Set selected property should change value and emit change event.', fakeAsync(() => {
+    it('Set selected property should change value', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
@@ -132,7 +132,7 @@ describe('IgxRadioGroupDirective', () => {
 
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-        expect(radioInstance.change.emit).toHaveBeenCalled();
+        expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
     it('Clicking on a radio button should update the model.', fakeAsync(() => {
