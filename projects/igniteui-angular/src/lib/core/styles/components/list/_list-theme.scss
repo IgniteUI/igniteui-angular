@@ -317,16 +317,6 @@
         user-select: none;
     }
 
-    %igx-list-header--cosy,
-    %igx-list-item-content--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %igx-list-header--compact,
-    %igx-list-item-content--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-    }
-
     %igx-list-item-base {
         display: flex;
         flex-flow: column wrap;
@@ -440,6 +430,16 @@
         border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
+    }
+
+    %igx-list-header--cosy,
+    %igx-list-item-content--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    %igx-list-header--compact,
+    %igx-list-item-content--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-list__item-thumbnail {
