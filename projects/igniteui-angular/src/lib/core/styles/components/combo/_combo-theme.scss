@@ -15,6 +15,7 @@
 /// @param {Color} $empty-list-background [null] - The combo list background color.
 /// @param {Color} $toggle-button-background [null] - The combo toggle button background color.
 /// @param {Color} $toggle-button-background-focus [null] - The combo toggle button background color when the combo is focused in material box variant.
+/// @param {Color} $toggle-button-background-focus--border [null] - The combo toggle button background color when the combo is focused in material border variant.
 /// @param {Color} $toggle-button-background-disabled [null] - The combo toggle button background color when the combo is disabled.
 /// @param {Color} $toggle-button-foreground [null] - The combo toggle button foreground color.
 /// @param {Color} $toggle-button-foreground-focus [null] - The combo toggle button foreground color when the combo is focused.
@@ -40,6 +41,7 @@
     $toggle-button-foreground: null,
     $toggle-button-foreground-focus: null,
     $toggle-button-foreground-disabled: null,
+    $toggle-button-background-focus--border: null,
     $clear-button-background: null,
     $clear-button-background-focus: null,
     $clear-button-foreground: null,
@@ -73,6 +75,7 @@
         toggle-button-foreground-focus: $toggle-button-foreground-focus,
         toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
         toggle-button-foreground-filled: $toggle-button-foreground-filled,
+        toggle-button-background-focus--border: $toggle-button-background-focus--border,
         clear-button-background: $clear-button-background,
         clear-button-background-focus: $clear-button-background-focus,
         clear-button-foreground: $clear-button-foreground,
@@ -211,37 +214,47 @@
         }
 
         %igx-combo__clear-button {
-            background: var-get($theme, 'clear-button-background');
-            color: var-get($theme, 'clear-button-foreground');
-
             @if $variant == 'bootstrap' {
                 border-inline-end: rem(1px) solid var(--border-color);
             }
         }
     }
 
-    .igx-input-group.igx-input-group--filled {
+    .igx-input-group:not(.igx-input-group--disabled) {
+        %igx-combo__clear-button {
+            background: var-get($theme, 'clear-button-background');
+            color: var-get($theme, 'clear-button-foreground');
+        }
+    }
+
+    .igx-input-group--filled {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-filled');
         }
     }
 
-    @if $variant == 'material' {
-        .igx-input-group--box.igx-input-group--focused %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus');
+    .igx-input-group--focused {
+        %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
+            background: var-get($theme, 'toggle-button-background-focus');
         }
-    } @else {
-        .igx-input-group.igx-input-group--focused %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus');
-            color: var-get($theme, 'toggle-button-foreground-focus');
+
+        %igx-combo__clear-button {
+            color: var-get($theme, 'clear-button-foreground-focus');
+            background: var-get($theme, 'clear-button-background-focus');
+        }
+    }
+
+    .igx-input-group--border.igx-input-group--focused {
+        %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus--border');
         }
     }
 
     .igx-input-group--disabled {
-        %igx-select__toggle-button {
-            background: var-get($theme, 'toggle-button-background-disabled');
-            color: var-get($theme, 'toggle-button-foreground-disabled');
+        %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background-disabled') !important;
+            color: var-get($theme, 'toggle-button-foreground-disabled') !important;
         }
 
         %igx-combo__clear-button {
