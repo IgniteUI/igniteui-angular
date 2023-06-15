@@ -18,6 +18,7 @@
 /// @param {Color} $toggle-button-foreground-focus [null] - The select toggle button foreground color when the select is focused.
 /// @param {Color} $toggle-button-foreground-disabled [null] - The select toggle button foreground color when the select is disabled.
 /// @param {Color} $toggle-button-foreground-filled [null] - The select toggle button foreground color when the select is filled.
+/// @param {Color} $toggle-button-background-focus--border [null] - The select toggle button background color when the select is focused in material border variant.
 /// @example scss Change the select empty list background
 ///   $my-select-theme: igx-select-theme($empty-list-background);
 ///   // Pass the theme to the css-vars mixin
@@ -31,6 +32,7 @@
     $toggle-button-foreground-focus: null,
     $toggle-button-foreground-disabled: null,
     $toggle-button-foreground-filled: null,
+    $toggle-button-background-focus--border: null,
 ) {
     $name: 'igx-select';
     $selector: 'igx-select';
@@ -56,6 +58,7 @@
         toggle-button-foreground-focus: $toggle-button-foreground-focus,
         toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
         toggle-button-foreground-filled: $toggle-button-foreground-filled,
+        toggle-button-background-focus--border: $toggle-button-background-focus--border,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -70,12 +73,6 @@
     %igx-select {
         position: relative;
         display: block;
-    }
-
-    .igx-input-group--filled {
-        %igx-select__toggle-button {
-            color: var-get($theme, 'toggle-button-foreground-filled');
-        }
     }
 
     @if $variant == 'bootstrap' {
@@ -101,15 +98,25 @@
         }
     }
 
-    @if $variant == 'material' {
-        .igx-input-group--focused %igx-select__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus');
-            color: var-get($theme, 'toggle-button-foreground-focus');
+    .igx-input-group--filled {
+        %igx-select__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-filled');
         }
     }
 
+    .igx-input-group--focused %igx-select__toggle-button {
+        background: var-get($theme, 'toggle-button-background-focus');
+        color: var-get($theme, 'toggle-button-foreground-focus');
+    }
 
-    .igx-input-group--disabled {
+    .igx-input-group--border.igx-input-group--focused {
+        %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus--border');
+        }
+    }
+
+    .igx-input-group.igx-input-group--disabled.igx-input-group--filled,
+    .igx-input-group.igx-input-group--disabled {
         %igx-select__toggle-button {
             background: var-get($theme, 'toggle-button-background-disabled');
             color: var-get($theme, 'toggle-button-foreground-disabled');
