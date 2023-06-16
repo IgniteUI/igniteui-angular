@@ -2191,6 +2191,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const chips = filterRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toEqual(0, 'No chips should be present');
         }));
+
+        it('Should NOT THROW', fakeAsync(() => {
+            spyOn(console, 'error');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+            fix.detectChanges();
+
+            const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', inputGroup);
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
+        }));
     });
 
     describe('Integration scenarios', () => {
