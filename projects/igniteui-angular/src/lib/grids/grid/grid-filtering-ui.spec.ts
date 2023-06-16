@@ -2192,15 +2192,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toEqual(0, 'No chips should be present');
         }));
 
-        it('Should NOT THROW', fakeAsync(() => {
+        it('Should not throw error when pressing Backspace in empty dateTime filter.', fakeAsync(() => {
             spyOn(console, 'error');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
-            const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
-            UIInteractions.triggerEventHandlerKeyDown('Backspace', inputGroup);
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            GridFunctions.typeValueInFilterRowInput('', fix, input);
             tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
             fix.detectChanges();
 
             expect(console.error).not.toHaveBeenCalled();
