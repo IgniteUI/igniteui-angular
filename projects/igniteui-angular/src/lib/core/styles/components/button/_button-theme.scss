@@ -167,7 +167,7 @@
         }
 
         @if not($_border-radius) {
-            $_border-radius: border-radius(map.get($_schema, 'border-radius'));
+            $_border-radius: border-radius(map.get($_schema, 'border-radius')...);
         }
 
         $themes: map.merge($themes, (
