@@ -982,6 +982,7 @@
 
     @if $material-theme {
         %textarea-group-label--focused {
+            transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
         }
 
