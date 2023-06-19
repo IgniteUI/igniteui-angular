@@ -55,9 +55,9 @@
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
-/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
-/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
-/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+/// @param {List} $box-border-radius [null] - The border radius used for box input.
+/// @param {List} $border-border-radius [null] - The border radius used for border input.
+/// @param {List} $search-border-radius [null] - The border radius used for search input.
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 /// @example scss Change the focused border and label colors
@@ -205,15 +205,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius'));
+        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
+        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
+        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
     }
 
     @return extend($theme, (
