@@ -189,7 +189,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
-    public groupable = false;
+    public get groupable(): boolean {
+        return this._groupable;
+    }
+    public set groupable(value: boolean) {
+        this._groupable = value;
+        this.grid.groupablePipeTrigger++;
+    }
     /**
      * Gets whether the column is editable.
      * Default value is `false`.
@@ -1728,6 +1734,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected _groupable: boolean;
     /**
      *  @hidden
      */
