@@ -2995,6 +2995,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public summaryPipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public groupablePipeTrigger = 0;
 
     /**
     * @hidden @internal

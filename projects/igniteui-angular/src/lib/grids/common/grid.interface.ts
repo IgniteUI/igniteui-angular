@@ -324,6 +324,7 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     hasColumnLayouts: boolean;
     moving: boolean;
