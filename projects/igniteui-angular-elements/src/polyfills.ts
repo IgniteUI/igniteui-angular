@@ -52,3 +52,32 @@ import 'zone.js';  // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 import 'hammerjs';
+
+/**
+ * Temporary workaround to kick abort controller listeners out of zone handling
+ * until https://github.com/angular/angular/issues/49591 is fixed
+ * ~~ Who monkey-patches the monkey-patchers? ~~
+ */
+Zone && Zone.__load_patch('abortSignal_patchEventTarget', (global: Window, Zone: ZoneType, api: _ZonePrivate) => {
+    const EVENT_TARGET = global['EventTarget']?.prototype;
+    const ADD_EVENT_LISTENER = api.getGlobalObjects().ADD_EVENT_LISTENER_STR;
+    const originalDelegateName = api.symbol(ADD_EVENT_LISTENER);
+    const newDelegateName = api.symbol(`${ADD_EVENT_LISTENER}__ig_patch`);
+
+
+    if (!EVENT_TARGET?.[originalDelegateName]) {
+        // not patched, skip
+        return;
+    }
+
+    // `api.patchMethod(EVENT_TARGET.prototype, ADD_EVENT_LISTENER` won't work because already patched
+    EVENT_TARGET[newDelegateName] = EVENT_TARGET[ADD_EVENT_LISTENER];
+    EVENT_TARGET[ADD_EVENT_LISTENER] = function () {
+        if (arguments[2]?.signal) {
+            // skip zone for events with signal until zone can be removed or // https://github.com/angular/angular/issues/49591 is fixed
+            return EVENT_TARGET[originalDelegateName].apply(this, arguments);
+        } else {
+            return EVENT_TARGET[newDelegateName].apply(this, arguments);
+        }
+    }
+});
