@@ -1,5 +1,7 @@
 import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges, QueryList, Type, ViewContainerRef } from '@angular/core';
 import { NgElement, NgElementStrategy, NgElementStrategyFactory,  } from '@angular/elements';
+import { fromEvent } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 // TODO: Should be from '@angular/elements' when actually public
@@ -172,10 +174,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 }
             }
         }
+
+        if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
+            this.patchGridPopups();
+        }
     }
-
-
-
 
     public override setInputValue(property: string, value: any): void {
         if ((this as any).componentRef === null ||
@@ -294,6 +297,40 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             componentRef.changeDetectorRef.detectChanges();
         }
     }
+
+    //#region Grid popups hide on scroll
+    /**
+     * Close popup igc- components in the Grid on scroll, replicating what the grids do with `hideOverlays`
+     * TODO: Integrate in components directly (Elements extended components/mixin)
+     * TODO: Optimization opportunity to only hook the event listeners when a related template is passed/active
+     */
+    private patchGridPopups() {
+        const toggles = new Set<HTMLElement & { hide(): void /* IgcToggleComponent */ }>();
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+
+        const scrollSub = fromEvent(this.element, 'gridScroll').pipe(takeUntil(componentRef.instance.destroy$));
+        scrollSub.subscribe(() => {
+            // this.element.querySelectorAll<IgcComboComponent<any>>('igc-combo,igc-select').forEach(c => c.hide());
+            // this.element.dispatchEvent(new CustomEvent('scroll', { bubbles: false }));
+            if (toggles.size) {
+                toggles.forEach(t => {
+                    if (t.isConnected) {
+                        t.hide();
+                    }
+                });
+                toggles.clear();
+            }
+        });
+
+        fromEvent(this.element, 'igcOpened').pipe(takeUntil(componentRef.instance.destroy$)).subscribe((e: CustomEvent) => {
+            if (!Object.keys(e.detail).length) {
+                // toggle directive-based components emit void details
+                // TODO: need better flag
+                toggles.add(e.target as any);
+            }
+        });
+    }
+    //#endregion
 }
 
 /**
