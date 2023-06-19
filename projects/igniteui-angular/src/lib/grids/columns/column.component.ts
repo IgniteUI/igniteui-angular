@@ -1737,7 +1737,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _groupable: boolean = false;
+    protected _groupable = false;
     /**
      *  @hidden
      */
