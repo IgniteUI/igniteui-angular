@@ -31,7 +31,7 @@
     $banner-illustration-color: null
 ) {
     $name: 'igx-banner';
-    $selector: 'igx-banner, .igx-banner';
+    $selector: 'igx-banner, .igx-banner, .igx-banner--cosy, .igx-banner--compact';
     $banner-schema: ();
 
     @if map.has-key($schema, 'banner') {
@@ -94,10 +94,9 @@
         flex-wrap: wrap;
         gap: rem(8px);
 
-        padding-inline-start: pad-inline($padding-inline-start, $padding-inline-start, $padding-inline-start);
-        padding-inline-end: pad-inline($padding, $padding, $padding);
-        padding-block-start: pad-block($padding, $padding, $padding);
-        padding-block-end: pad-block($padding, $padding, $padding);
+        padding-inline-start: pad-inline($padding-inline-start);
+        padding-inline-end: pad-inline($padding);
+        padding-block: pad-block($padding);
         background: var-get($theme, 'banner-background');
     }
 
