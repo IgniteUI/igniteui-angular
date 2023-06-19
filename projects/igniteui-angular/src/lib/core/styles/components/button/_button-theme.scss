@@ -320,17 +320,16 @@
         compact: rem(1px, 16px)
     );
 
-
     $outlined-button-padding-indigo-inline: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(14px, 16px),
+        cosy: rem(10px, 16px),
+        compact: rem(6px, 16px)
     );
 
     $outlined-button-padding-indigo-block: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(6px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(2px, 16px)
     );
 
     $icon-button-width-material: (
