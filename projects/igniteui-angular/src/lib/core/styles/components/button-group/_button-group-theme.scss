@@ -296,6 +296,10 @@
             }
         }
 
+        &[igxButton] {
+            border-color: var-get($theme, 'item-selected-border-color');
+        }
+
         &[igxButton][disabled='true'] {
             position: relative;
 
