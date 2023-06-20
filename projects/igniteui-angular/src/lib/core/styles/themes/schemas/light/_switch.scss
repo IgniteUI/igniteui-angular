@@ -22,9 +22,9 @@
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
-/// @prop {Number} border-radius-track [7px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-ripple [24px] - The border radius used for switch ripple. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius-track [(rem(7px), rem(0), rem(7px))] - The border radius used for switch track.
+/// @prop {List} border-radius-thumb [(rem(10px), rem(0), rem(10px))] - The border radius used for switch thumb.
+/// @prop {List} border-radius-ripple [(rem(24px), rem(0), rem(24px))] - The border radius used for switch ripple.
 /// @prop {Color} border-color [transparent] - The border color of the switch.
 /// @prop {Color} border-hover-color [transparent] - The border color of the switch on hover.
 /// @prop {Color} border-disabled-color [transparent] - The border color of the disabled switch.
@@ -109,11 +109,23 @@ $light-switch: extend(
             color: ('gray', 500)
         ),
 
-        border-radius-track: rem(7px),
+        border-radius-track: (
+            rem(7px),
+            rem(0),
+            rem(7px),
+        ),
 
-        border-radius-thumb: rem(10px),
+        border-radius-thumb: (
+            rem(10px),
+            rem(0),
+            rem(10px),
+        ),
 
-        border-radius-ripple: rem(24px)
+        border-radius-ripple: (
+            rem(24px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
 
@@ -140,7 +152,7 @@ $light-switch: extend(
 /// @prop {Map} error-color-hover [color: ('gray', 800)] - The border and thumb color in invalid state on hover.
 /// @prop {Map} thumb-on-error-color [color: ('gray', 50)] - The color of the thumb when the switch is on and invalid.
 ///
-/// @prop {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius-track [(rem(10px), rem(0), rem(10px))] - The border radius used for switch track.
 ///
 ///
 /// @requires {Map} $light-switch
@@ -217,7 +229,11 @@ $fluent-switch: extend(
 
         track-disabled-color: transparent,
 
-        border-radius-track: rem(10px),
+        border-radius-track: (
+            rem(10px),
+            rem(0),
+            rem(10px),
+        ),
     )
 );
 
@@ -235,8 +251,8 @@ $fluent-switch: extend(
 /// @prop {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
 /// @prop {Map} error-color [color: ('gray', 400)] - The border and thumb color in invalid state.
 /// @prop {Map} error-color-hover [color: ('primary', 200)] - The border and thumb color in invalid state on hover.
-/// @prop {Number} border-radius-track [32px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-thumb [32px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius-track [(rem(32px), rem(0), rem(32px))] - The border radius used for switch track.
+/// @prop {List} border-radius-thumb [(rem(32px), rem(0), rem(32px))] - The border radius used for switch thumb.
 ///
 ///
 /// @requires {Map} $fluent-switch
@@ -289,9 +305,16 @@ $bootstrap-switch: extend(
             color: ('primary', 200)
         ),
 
-        border-radius-track: rem(32px),
-
-        border-radius-thumb: rem(32px),
+        border-radius-track: (
+            rem(32px),
+            rem(0),
+            rem(32px),
+        ),
+        border-radius-thumb: (
+            rem(32px),
+            rem(0),
+            rem(32px),
+        ),
     )
 );
 
@@ -314,8 +337,7 @@ $bootstrap-switch: extend(
 /// @prop {Map} thumb-on-error-color [color: ('gray', 50)] - The color of the thumb when the switch is on and invalid.
 /// @prop {Map} error-color [color: ('gray', 500)] - The border and thumb color in invalid state.
 /// @prop {Map} error-color-hover [color: ('gray', 300)] - The border and thumb color in invalid state on hover.
-/// @prop {Number} border-radius-track [8px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius-track [(rem(8px), rem(0), rem(8px))] - The border radius used for switch track.
 /// @prop {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @prop {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 ///
@@ -390,6 +412,10 @@ $indigo-switch: extend(
             color: ('gray', 300)
         ),
 
-        border-radius-track: rem(8px)
+        border-radius-track: (
+            rem(8px),
+            rem(0),
+            rem(8px),
+        ),
     )
 );

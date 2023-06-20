@@ -29,8 +29,8 @@
 /// @prop {Color} item-thumbnail-color ["'currentColor'"] - The list item thumbnail color.
 /// @prop {Color} item-thumbnail-color-hover ["'currentColor'"] - The list item thumbnail hover color.
 /// @prop {Color} item-thumbnail-color-active ["'currentColor'"] - The list item thumbnail active color.
-/// @prop {Number} border-radius [0] - The border radius used for list component. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} item-border-radius [0] - The border radius used for list item. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [()] - The border radius used for list component.
+/// @prop {List} item-border-radius [()] - The border radius used for list item.
 /// @prop {Number} border-color [transparent] - The list border color.
 /// @prop {Color} border-width [0] - The list border width.
 $light-list: extend(
@@ -101,9 +101,17 @@ $light-list: extend(
 
         border-width: 0,
 
-        border-radius: rem(0),
+        border-radius: (
+            rem(0),
+            rem(0),
+            rem(24px),
+        ),
 
-        item-border-radius: rem(0)
+        item-border-radius: (
+            rem(0),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
 
@@ -124,8 +132,7 @@ $fluent-list: extend(
 /// @prop {Map} item-text-color [color: ('gray', 900)] - The list item text color.
 /// @prop {Map} item-text-color-hover [color: ('gray', 900)] - The list item text color.
 /// @prop {Map} item-text-color-active [color: ('gray', 900)] - The active list item text color.
-/// @prop {Number} border-radius [4px] - The border radius used for list component. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} item-border-radius [0] - The border radius used for list item. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(24px))] - The border radius used for list component.
 /// @prop {Number} border-color [color: ('gray', 300)] - The list border color.
 /// @prop {Color} border-width [rem(1px)] - The list border width.
 /// @requires {Map} $light-list
@@ -160,7 +167,11 @@ $bootstrap-list: extend(
             color: ('gray', 900)
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
 
@@ -181,8 +192,7 @@ $bootstrap-list: extend(
 /// @prop {Color} item-thumbnail-color [color: ('gray', 600)] - The list item thumbnail color.
 /// @prop {Color} item-thumbnail-color-hover [color: ('gray', 600)] - The list item thumbnail hover color.
 /// @prop {Color} item-thumbnail-color-active [color: ('gray', 600)] - The list item thumbnail active color.
-/// @prop {Number} border-radius [0] - The border radius used for list component. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} item-border-radius [2px] - The border radius used for list item. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} item-border-radius [(rem(2px), rem(0), rem(24px))] - The border radius used for list item.
 /// @requires {Map} $light-list
 $indigo-list: extend(
     $light-list,
@@ -249,6 +259,10 @@ $indigo-list: extend(
             color: ('gray', 600)
         ),
 
-        item-border-radius: rem(2px)
+        item-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
