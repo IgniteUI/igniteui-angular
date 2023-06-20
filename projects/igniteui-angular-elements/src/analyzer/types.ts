@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 
-export type MethodInfo = { name: string }
+export type MethodInfo = { name: string };
+export type PropertyInfo = { name: string, writable?: boolean };
 
 export type ContentQuery = {
     property: string,
@@ -13,6 +14,7 @@ export type ComponentMetadata<T = ts.InterfaceType> = {
     parents: T[],
     contentQueries: ContentQuery[],
     methods: MethodInfo[],
+    additionalProperties: PropertyInfo[];
     templateProperties?: string[],
     booleanProperties?: string[],
     numericProperties?: string[],
