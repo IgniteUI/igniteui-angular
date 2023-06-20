@@ -11,32 +11,35 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
-/// @requires $light-schema
+/// @param {number} $size [null] - The size of the avatar.
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-avatar-theme);
 @function avatar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null,
     $color: null,
     $border-radius: null,
+    $size: null,
 ) {
     $name: 'igx-avatar';
     $avatar-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $avatar-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'avatar') {
+        $avatar-schema: map.get($schema, 'avatar');
     } @else {
         $avatar-schema: $schema;
     }
 
     $theme: digest-schema($avatar-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($color) and $background {
         $color: text-contrast($background);
@@ -46,11 +49,19 @@
         $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
+    @if not($size) {
+        $size: sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)});
+    }
+
     @return extend($theme, (
         name: $name,
         background: $background,
         color: $color,
         border-radius: $border-radius,
+        size: $size,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -58,7 +69,7 @@
 @mixin avatar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $box-shadow: map.get((
@@ -78,8 +89,6 @@
     }
 
     %igx-avatar-display {
-        --size: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
-
         position: relative;
         display: inline-flex;
         justify-content: center;
@@ -91,8 +100,8 @@
         border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
-        width: var(--size);
-        height: var(--size);
+        width: var-get($theme, 'size');
+        height: var-get($theme, 'size');
 
         &::after {
             box-shadow: none;
@@ -130,8 +139,8 @@
 
     %igx-avatar--initials {
         text-transform: uppercase;
-        font-size: calc(var(--size) / 2);
-        line-height: calc(var(--size) / 2);
+        font-size: calc(#{var-get($theme, 'size')} / 2);
+        line-height: calc(#{var-get($theme, 'size')} / 2);
     }
 
     %igx-avatar--small,

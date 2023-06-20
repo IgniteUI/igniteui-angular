@@ -1,27 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
+    IgxAvatarComponent,
+    IgxButtonDirective,
+    IgxCardActionsComponent,
+    IgxCardComponent,
+    IgxCardContentDirective,
+    IgxCellTemplateDirective,
+    IgxColumnComponent,
+    IgxGridComponent,
+    IgxIconComponent,
+    IgxRippleDirective,
+    IgxSliderComponent,
+    IgxSwitchComponent,
+    IgxTooltipDirective,
     IgxTooltipTargetDirective, OverlaySettings
 } from 'igniteui-angular';
-import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxSliderComponent } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
-import { FormsModule } from '@angular/forms';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxTooltipDirective } from '../../../projects/igniteui-angular/src/lib/directives/tooltip/tooltip.directive';
-import { IgxTooltipTargetDirective as IgxTooltipTargetDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/tooltip/tooltip-target.directive';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 
 @Component({
     selector: 'app-tooltip-sample',
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
     standalone: true,
-    imports: [IgxAvatarComponent, IgxTooltipTargetDirective_1, IgxTooltipDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TooltipSampleComponent implements OnInit {
 

@@ -10,13 +10,12 @@
 ////
 
 /// Column actions Theme
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
 /// @param {Color} $background-color [null] - The background color of the panel.
 ///
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the title color
 ///   $column-actions-theme: igx-column-actions-theme($title-color: black);
@@ -24,7 +23,7 @@
 ///   @include css-vars($column-actions-theme);
 ////
 @function column-actions-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $title-color: null,
@@ -33,8 +32,8 @@
     $name: 'igx-column-actions';
     $column-actions-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $column-actions-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'column-actions') {
+        $column-actions-schema: map.get($schema, 'column-actions');
     } @else {
         $column-actions-schema: $schema;
     }

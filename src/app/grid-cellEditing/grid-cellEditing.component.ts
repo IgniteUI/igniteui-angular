@@ -1,16 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { GridSelectionMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
-import { IgxDateSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 
 @Component({
     selector: 'app-grid-cellediting',

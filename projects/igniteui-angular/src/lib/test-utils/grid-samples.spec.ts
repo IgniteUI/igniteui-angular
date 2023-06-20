@@ -1545,15 +1545,16 @@ export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [batchEditing]="true"
-        [primaryKey]="'ProductID'" width="900px" height="900px" [paging]="paging" [perPage]="7">
+        [primaryKey]="'ProductID'" width="900px" height="900px">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
+        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
@@ -1579,16 +1580,17 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [batchEditing]="true"
-    [primaryKey]="'ProductID'" width="900px" height="900px" [paging]="paging" [perPage]="7">
+    [primaryKey]="'ProductID'" width="900px" height="900px">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'dateTime'" width="250px"></igx-column>
         <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
+        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductDateTimeData();
@@ -2189,7 +2191,7 @@ export class MRLTestComponent {
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
     [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true" [moving]="true">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [resizable]='true'>
+        [width]="c.width" [resizable]="true">
     </igx-column>
     <igx-paginator *ngIf="paging"></igx-paginator>
 
@@ -2305,6 +2307,17 @@ export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="" [width]="'100%'" [height]="'700px'">
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent]
+})
+export class EmptyGridComponent {
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 }
 
 /** Issue 9872 */

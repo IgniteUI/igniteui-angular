@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
+import { ColumnType, GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -29,12 +29,7 @@ export class IgxGridValidationService {
         if (!formGroup) {
             formGroup = new FormGroup({});
             for (const col of this.grid.columns) {
-                const value = resolveNestedPath(data || {}, col.field);
-                const field = this.getFieldKey(col.field);
-                const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
-                control.addValidators(col.validators);
-                formGroup.addControl(field, control);
-                control.setValue(value);
+                this.addFormControl(formGroup, data, col);
             }
             const args: IGridFormGroupCreatedEventArgs = {
                 formGroup,
@@ -48,11 +43,26 @@ export class IgxGridValidationService {
                 const formControl = formGroup.get(col.field);
                 if (formControl) {
                     formControl.markAsPristine();
+                } else {
+                    this.addFormControl(formGroup, data, col);
                 }
             }
         }
 
         return formGroup;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    private addFormControl(formGroup: FormGroup, data: any, column: ColumnType) {
+        const value = resolveNestedPath(data || {}, column.field);
+        const field = this.getFieldKey(column.field);
+        const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
+        control.addValidators(column.validators);
+        formGroup.addControl(field, control);
+        control.setValue(value);
     }
 
     /**

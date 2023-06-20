@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-ripple-sample',
