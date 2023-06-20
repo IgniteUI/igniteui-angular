@@ -48,10 +48,12 @@
         }
 
         @include m(cosy) {
+            @extend %igx-banner !optional;
             @extend %igx-banner--cosy !optional
         }
 
         @include m(compact) {
+            @extend %igx-banner !optional;
             @extend %igx-banner--compact !optional;
         }
     }

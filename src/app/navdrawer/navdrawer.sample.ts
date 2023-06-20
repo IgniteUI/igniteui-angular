@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
+import { AppComponent } from '../app.component';
 
-import { AppComponent } from './../app.component';
-import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+
 
 @Component({
     selector: 'app-navbar-sample',

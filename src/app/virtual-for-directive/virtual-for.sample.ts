@@ -1,15 +1,7 @@
 import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
-import { IgxForOfDirective, ButtonGroupAlignment } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
 import { NgClass, AsyncPipe } from '@angular/common';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
-import { IgxForOfDirective as IgxForOfDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
-import { IgxListComponent } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { RemoteService } from '../shared/remote.service';
+import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxInputDirective, IgxInputGroupComponent, IgxListItemComponent, IgxSuffixDirective } from 'igniteui-angular';
 
 
 @Component({
@@ -18,7 +10,7 @@ import { IgxListComponent } from '../../../projects/igniteui-angular/src/lib/lis
     styleUrls: ['virtual-for.sample.css'],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxListComponent, IgxForOfDirective_1, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
+    imports: [IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })

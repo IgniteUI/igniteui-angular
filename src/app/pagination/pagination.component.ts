@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxPaginatorComponent, IgxPaginatorContentDirective, IgxPageSizeSelectorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxButtonDirective, IgxIconComponent, IgxPageSizeSelectorComponent, IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-pagination',

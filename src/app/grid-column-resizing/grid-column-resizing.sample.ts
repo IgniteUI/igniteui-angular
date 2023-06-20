@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgFor } from '@angular/common';
-
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -13,7 +10,6 @@ import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/gri
     standalone: true,
     imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxButtonDirective]
 })
-
 export class GridColumnResizingSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
