@@ -210,8 +210,13 @@
 
       <igc-row-island key="Developers">
         <igc-column field="Name" header="Name" sortable="true"></igc-column>
-        <igc-column field="Position" header="Position" sortable="true"></igc-column>
-        <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
+        <igc-column-group header="Position Information">
+            <igc-column-group header="Position Details" collapsible>
+                <igc-column field="Position" header="Position" sortable="true" visible-when-collapsed></igc-column>
+                <igc-column field="Salary" header="Salary" sortable="true" visible-when-collapsed="false"></igc-column>
+            </igc-column-group>
+            <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
+        </igc-column-group>
         <igc-action-strip>
             <igc-grid-pinning-actions></igc-grid-pinning-actions>
             <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
