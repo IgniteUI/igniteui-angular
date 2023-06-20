@@ -3,6 +3,7 @@
 @use 'sass:list';
 @use 'sass:string';
 @use 'sass:math';
+@use 'igniteui-theming/sass/typography/functions' as *;
 
 /// Get the difference between two lists.
 /// @access private
