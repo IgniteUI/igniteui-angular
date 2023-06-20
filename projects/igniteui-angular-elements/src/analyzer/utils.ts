@@ -17,7 +17,7 @@ export function readTSConfig() {
 
 
 export function first<T>(arr?: T[]) {
-    return arr!.at(0) as T;
+    return arr!.at(0);
 }
 
 /**
@@ -40,7 +40,7 @@ export function hasDecorators(node: ts.HasDecorators): boolean {
  * @param {(ts.ClassDeclaration | ts.PropertyDeclaration)} node the decorated node
  * @return {*}  {readonly}
  */
-export function getDecorators(node: ts.ClassDeclaration | ts.PropertyDeclaration): readonly ts.Decorator[] {
+export function getDecorators(node: ts.HasDecorators): readonly ts.Decorator[] {
     return hasDecorators(node) ? ts.getDecorators(node)! : [];
 }
 
@@ -84,6 +84,19 @@ export function isPublic(symbol: ts.Symbol) {
         return !symbol.getJsDocTags().some(({ name }) => tags.has(name));
     }
     return false;
+}
+
+/** returns if a symbol is either readonly or just a getter equivalent */
+export function isReadOnly(symbol: ts.Symbol) {
+    const isGetter = (symbol.flags & ts.SymbolFlags.GetAccessor) !== ts.SymbolFlags.None &&
+        (symbol.flags & ts.SymbolFlags.SetAccessor) === ts.SymbolFlags.None;
+    const readonly = symbol.valueDeclaration && ts.getCombinedModifierFlags(symbol.valueDeclaration) & ts.ModifierFlags.Readonly;
+    return isGetter || readonly;
+}
+
+/** returns if a symbol has an override modifier */
+export function isOverride(symbol: ts.Symbol) {
+    return (ts.getCombinedModifierFlags(symbol.valueDeclaration!) & ts.ModifierFlags.Override) !== ts.ModifierFlags.None;
 }
 
 export function asString(x?: ts.Symbol) {

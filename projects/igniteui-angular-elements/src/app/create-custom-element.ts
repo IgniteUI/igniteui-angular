@@ -25,6 +25,32 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
         }
     }
 
+    // Reuse `createCustomElement`'s approach for Inputs, should work for any prop too:
+    componentConfig?.additionalProperties.forEach((p) => {
+        let set: (v: any) => void | undefined;
+
+
+        if (p.name in elementCtor.prototype) {
+            throw new Error(`Potentially illegal property name ${p.name} defined for ${component.name}`);
+
+        }
+
+        if (p.writable) {
+            set = function (newValue) {
+                this.ngElementStrategy.setInputValue(p.name, newValue);
+            }
+        }
+
+        Object.defineProperty(elementCtor.prototype, p.name, {
+            get() {
+                return this.ngElementStrategy.getInputValue(p.name);
+            },
+            set,
+            configurable: true,
+            enumerable: true,
+        });
+    });
+
     if (component === IgxGridComponent) {
         /**
          * @deprecated API access workaround moved from Grid for possible existing use compat. Remove in future version
