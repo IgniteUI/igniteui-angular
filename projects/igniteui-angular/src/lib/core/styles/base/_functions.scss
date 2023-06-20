@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:string';
+@use 'sass:math';
 
 /// Get the difference between two lists.
 /// @access private
@@ -62,4 +63,12 @@
         }
     }
     @return $items;
+}
+
+/// @param {Number} $max [$radius] - The maximum allowed value.
+/// @return {Number} - The clamped value
+@function border-radius($radius, $min: #{rem(0)}, $max: $radius) {
+    $factor: math.div($radius, $max);
+
+    @return clamp(#{$min}, #{calc(var(--ig-radius-factor, #{$factor}) * #{$max})}, #{$max});
 }

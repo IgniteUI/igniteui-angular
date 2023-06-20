@@ -142,3 +142,11 @@
 @mixin color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
     @include gen-color-classes($prop, $prefix, $suffix, $palette);
 }
+
+/// @example scss
+///    @include border-radius(4px, 0px, 12px);
+@mixin border-radius($radius, $min: #{rem(0)}, $max: $radius) {
+    $factor: math.div($radius, $max);
+
+    border-radius: clamp(#{$min}, #{calc(var(--ig-radius-factor, #{$factor}) * #{$max})}, #{$max});
+}

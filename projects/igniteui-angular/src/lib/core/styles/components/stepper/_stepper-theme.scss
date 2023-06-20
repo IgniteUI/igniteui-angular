@@ -75,8 +75,8 @@
 /// @param {Color} $step-separator-style [null] - The separator border-style of between the steps.
 /// @param {Color} $complete-step-separator-style [null] - The separator border-style between the completed steps.
 ///
-/// @param {Color} $border-radius-indicator [null] - The border-radius of the step indicator.
-/// @param {Color} $border-radius-step-header [null] - The border-radius of the step header.
+/// @param {List} $border-radius-indicator [null] - The border-radius of the step indicator.
+/// @param {List} $border-radius-step-header [null] - The border-radius of the step header.
 ///
 /// @requires $light-schema
 /// @example scss Set custom stepper colors
@@ -229,11 +229,11 @@
     }
 
     @if not($border-radius-indicator) {
-        $border-radius-indicator: border-radius(map.get($theme, 'border-radius-indicator'));
+        $border-radius-indicator: border-radius(map.get($theme, 'border-radius-indicator')...);
     }
 
     @if not($border-radius-step-header) {
-        $border-radius-step-header: border-radius(map.get($theme, 'border-radius-step-header'));
+        $border-radius-step-header: border-radius(map.get($theme, 'border-radius-step-header')...);
     }
 
     @return extend($theme, (
