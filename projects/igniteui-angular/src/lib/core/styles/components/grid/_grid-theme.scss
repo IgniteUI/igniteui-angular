@@ -3,9 +3,9 @@
 @use 'sass:color';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use '../../themes/schemas' as *;
 
 ////
 /// @group themes
@@ -14,7 +14,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
@@ -96,13 +96,13 @@
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the header background color
 ///   $my-grid-theme: grid-theme($header-background: black);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-grid-theme);
 @function grid-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $header-background: null,
@@ -212,8 +212,8 @@
     $selector: 'igx-grid, igc-grid, igx-hierarchical-grid, igc-hierarchical-grid, igx-pivot-grid, igc-pivot-grid, igx-tree-grid, igc-tree-grid, igx-advanced-filtering-dialog, igc-advanced-filtering-dialog, igx-grid-excel-style-filtering, igc-grid-excel-style-filtering, .igx-excel-filter__secondary';
     $grid-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $grid-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'grid') {
+        $grid-schema: map.get($schema, 'grid');
     } @else {
         $grid-schema: $schema;
     }
@@ -553,6 +553,7 @@
         cell-selected-within-text-color: $cell-selected-within-text-color,
 
         _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
@@ -574,7 +575,7 @@
 
     @include scale-in-ver-center();
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -711,35 +712,46 @@
     igx-grid,
     igx-hierarchical-grid,
     igx-pivot-grid,
-    igx-tree-grid, {
+    igx-tree-grid {
         @if $variant == 'material' {
             @if $theme-variant == 'light' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
                 --igx-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
                 --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
             }
             @if $theme-variant == 'dark' {
                 --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'fluent' {
             @if $theme-variant == 'dark' {
                 --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'bootstrap' {
             @if $theme-variant == 'dark' {
                 --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'indigo-design' {
             @if $theme-variant == 'light' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
                 --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
             }
             @if $theme-variant == 'dark' {
                 --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
     }
@@ -770,7 +782,7 @@
         }
 
         outline-style: none;
-        z-index: auto;
+        z-index: 1;
 
         %cbx-display {
             min-width: $cbx-size;

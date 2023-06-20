@@ -5,8 +5,8 @@ const config = {
     // logLevel: 'verbose',
     entryPoints: [`${ROOT}/index.js`],
     bundle: true,
-    minify: true,
-    outfile: `${ROOT}/element.js`,
+    minify: false, // temporary disabled due to Webpack issues https://github.com/webpack/webpack/issues/16262
+    outfile: `${ROOT}/elements.js`,
     format: 'esm',
     external: ['lit-html'],
     target: 'es2022',

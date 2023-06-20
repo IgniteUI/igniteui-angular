@@ -11,7 +11,8 @@ import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
-        ColumnsAddedOnInitComponent } from '../../test-utils/grid-samples.spec';
+        ColumnsAddedOnInitComponent, 
+        EmptyGridComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -36,7 +37,8 @@ describe('CSV Grid Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                ColumnsAddedOnInitComponent
+                ColumnsAddedOnInitComponent,
+                EmptyGridComponent
             ]
         }).compileComponents();
     }));
@@ -302,7 +304,7 @@ describe('CSV Grid Exporter', () => {
         });
 
         const wrapper = await getExportedData(grid, options);
-        wrapper.verifyData('');
+        wrapper.verifyData('ID,Name,JobTitle');
     });
 
     it('should skip column formatter when \'onColunmExporting\' skipFormatter is true', async () => {
@@ -372,6 +374,17 @@ describe('CSV Grid Exporter', () => {
         const grid = fix.componentInstance.grid;
         const wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridColumnsAddedOnInit, 'Columns should be exported in the same order as in the grid!');
+    });
+
+    it('should not export more than one file', async () => {
+        const fix = TestBed.createComponent(EmptyGridComponent);
+        fix.detectChanges();
+        
+        const grid = fix.componentInstance.grid;
+
+        exporter.export(grid, options);
+
+        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
     });
 
     describe('Tree Grid CSV export', () => {

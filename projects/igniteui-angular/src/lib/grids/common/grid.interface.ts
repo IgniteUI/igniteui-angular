@@ -69,7 +69,6 @@ export interface CellType {
     title?: any;
     width: string;
     visibleColumnIndex?: number;
-    defaultErrorTemplate?: TemplateRef<any>;
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
@@ -472,13 +471,15 @@ export interface GridType extends IGridDataBindable {
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
-
     pagingMode: GridPagingMode;
+    /** @hidden */
     pagingState: any;
 
     rowEditTabs: any;
     lastSearchInfo: ISearchInfo;
+    /** @hidden @internal */
     page: number;
+    /** @hidden @internal */
     perPage: number;
     /** @hidden @internal */
     dragRowID: any;
