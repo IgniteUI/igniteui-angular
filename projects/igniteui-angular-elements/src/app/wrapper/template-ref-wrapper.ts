@@ -2,6 +2,8 @@ import { ElementRef, EmbeddedViewRef, Injector, TemplateRef, ViewChild } from '@
 import { v4 as uuidv4 } from 'uuid';
 
 const CONTEXT_PROP = 'context';
+const IMPLICIT_PROP = 'implicit';
+const PREFIX_IMPLICIT_PROP = '$implicit';
 
 /**
  * Wraps a template ref and exposes the entire context to the template as additional prop
@@ -21,15 +23,16 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
     createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
         context[CONTEXT_PROP] = context;
+        context[IMPLICIT_PROP] = context[PREFIX_IMPLICIT_PROP];
 
         let isBridged = !!this._templateFunction.___isBridged;
 
         const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
-        
+
         let contentContext: TemplateRefWrapperContentContext;
         if (isBridged) {
             let root = viewRef.rootNodes[0];
-            
+
 
             contentContext = new TemplateRefWrapperContentContext();
             let contentId = uuidv4() as string;
@@ -46,8 +49,8 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             //contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, context);
         }
 
-        
-        
+
+
 
         if (isBridged) {
             viewRef.onDestroy(() => {
@@ -59,6 +62,7 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
         Object.defineProperty(viewRef, "context", {
             set: function(val) {
                 val[CONTEXT_PROP] = val;
+                val[IMPLICIT_PROP] = val[PREFIX_IMPLICIT_PROP];
                 if (isBridged) {
                     (val as any).___contentId = contentContext._id;
                     (val as any).___immediate = true;
