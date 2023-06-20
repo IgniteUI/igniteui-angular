@@ -156,6 +156,10 @@
     <igc-column field='start' data-type='date' sortable has-summary></igc-column>
     <igc-column field='finish' data-type='date' has-summary></igc-column>
     <igc-paginator per-page="10"></igc-paginator>
+    <igc-action-strip>
+        <igc-grid-pinning-actions></igc-grid-pinning-actions>
+        <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+    </igc-action-strip>
   </igc-tree-grid>
 
   <script src="assets/data/tree-grid-ds.js"></script>
@@ -184,10 +188,17 @@
         <igc-column field="Name" header="Name" sortable="true"></igc-column>
         <igc-column field="Position" header="Position" sortable="true"></igc-column>
         <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
-
+        <igc-action-strip>
+            <igc-grid-pinning-actions></igc-grid-pinning-actions>
+            <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+        </igc-action-strip>
         <igc-row-island auto-generate key="VirtualMachines"></igc-row-island>
         </igc-row-island>
     <igc-paginator per-page="10"></igc-paginator>
+    <igc-action-strip>
+        <igc-grid-pinning-actions></igc-grid-pinning-actions>
+        <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+    </igc-action-strip>
   </igc-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->
