@@ -48,12 +48,14 @@
 /// @param {Color} $cell-selected-background [null] - The selected cell background color.
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
 /// @param {Color} $cell-editing-background [null] - The background color of the cell being edited.
+/// @param {Color} $cell-editing-foreground [null] - The cell text color in edit mode.
+/// @param {Color} $cell-editing-focus-foreground [null] - The cell text color in edit mode on focus.
 /// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
 /// @param {Color} $cell-new-color [null] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @param {Color} $cell-disabled-color [null] - The text color of a disabled cell.
 /// @param {Color} $cell-selected-within-background [null] - The background of the selected cell inside a selected row/column.
 /// @param {Color} $cell-selected-within-text-color [null] - The color of the selected cell inside a selected row/column.
-/// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
+/// @param {Color} $edit-mode-color [null] - The color applied around the row/cell when in editing mode.
 /// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
 /// @param {Color} $drop-indicator-color [null] - The color applied to the line between the columns when dragging a column.
@@ -143,6 +145,8 @@
     $cell-selected-background: null,
     $cell-selected-text-color: null,
     $cell-editing-background: null,
+    $cell-editing-foreground: null,
+    $cell-editing-focus-foreground: null,
     $cell-edited-value-color: null,
     $cell-new-color: null,
     $cell-disabled-color: null,
@@ -483,6 +487,8 @@
         cell-active-border-color: $cell-active-border-color,
         cell-selected-background: $cell-selected-background,
         cell-editing-background: $cell-editing-background,
+        cell-editing-foreground: $cell-editing-foreground,
+        cell-editing-focus-foreground: $cell-editing-focus-foreground,
         cell-selected-text-color: $cell-selected-text-color,
 
         edit-mode-color: $edit-mode-color,
@@ -782,7 +788,7 @@
         }
 
         outline-style: none;
-        z-index: auto;
+        z-index: 1;
 
         %cbx-display {
             min-width: $cbx-size;
@@ -1550,6 +1556,11 @@
 
             input {
                 height: 100%;
+                color: var-get($theme, 'cell-editing-foreground');
+            }
+
+            input:focus {
+                color: var-get($theme, 'cell-editing-focus-foreground');
             }
 
             --theme: fluent;
