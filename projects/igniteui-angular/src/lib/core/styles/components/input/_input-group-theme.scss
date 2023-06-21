@@ -982,13 +982,14 @@
 
     @if $material-theme {
         %textarea-group-label--focused {
-            transform: translateY(0) !important;
+            transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
         }
 
         %textarea-group-label--filled--border,
         %textarea-group-label--focused--border {
-            top: rem(-6px);
+            top: 0;
+            transform: translateY(-50%);
             margin-block-end: auto !important;
         }
 
