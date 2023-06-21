@@ -33,20 +33,19 @@ $elements-selector-prefix: 'igc';
         $name: map.get($theme_schema, "name");
         $selector: map.get($theme_schema, "selector") or $name;
 
-        @debug "name: #{$name}";
+        // @debug "name: #{$name}";
 
         @if string.index($name, 'igx-') {
             $name: list.nth(string.split($name, 'igx-'), -1);
             $name: '#{$elements-var-prefix}-#{$name}';
-            @debug "name after: #{$name}";
+            // @debug "name after: #{$name}";
         }
 
-        // TODO: For exposed components also modify selector with updated element prefix
-        // For the rest of internal components ensure selector with original name is present so it won't default to the new name
+        // For exposed components also modify selector with updated element prefix:
         @if list.index(vars.$allowed, map.get($theme_schema, "name")) {
-            @debug "selector before: #{$selector}";
+            // @debug "selector before: #{$selector}";
             $selector: updateSelectors($selector);
-            @debug "selector after: #{$selector}";;
+            // @debug "selector after: #{$selector}";;
         }
 
         $result: map.merge($result, (name: $name, selector: $selector));
@@ -65,7 +64,6 @@ $elements-selector-prefix: 'igc';
     @each $sel in $selectors {
         $result: list.append($result, $sel, comma);
 
-        // TODO: only need igc- equivalents of exposed components, use theme include/exclude list?
         @if string.index($sel, 'igx-') == 1 {
             $igc-sel: list.nth(string.split($sel, 'igx-'), -1);
             $igc-sel: '#{$elements-selector-prefix}-#{$igc-sel}';
@@ -73,7 +71,7 @@ $elements-selector-prefix: 'igc';
         }
     }
 
-    @return "#{$result}"; // is this right?
+    @return "#{$result}";
 }
 
 /// Generates an Ignite UI for Angular Elements global theme.
