@@ -14,7 +14,7 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color of the button.
 /// @param {Color} $foreground [null] - The text color of the button.
@@ -41,7 +41,7 @@
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: button-theme(
@@ -51,7 +51,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-button-theme);
 @function button-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $background: null,
@@ -90,8 +90,8 @@
     $name: 'igx-button';
     $button-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $button-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'button') {
+        $button-schema: map.get($schema, 'button');
     } @else {
         $button-schema: $schema;
     }
@@ -107,7 +107,7 @@
         $_border-radius: $border-radius;
 
         @if not($variant) {
-            $variant: map.get($_schema, 'variant');
+            $variant: map.get($schema, '_meta', 'theme');
         }
 
         @if not($foreground) and $background {
@@ -320,17 +320,16 @@
         compact: rem(1px, 16px)
     );
 
-
     $outlined-button-padding-indigo-inline: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(14px, 16px),
+        cosy: rem(10px, 16px),
+        compact: rem(6px, 16px)
     );
 
     $outlined-button-padding-indigo-block: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(6px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(2px, 16px)
     );
 
     $icon-button-width-material: (
