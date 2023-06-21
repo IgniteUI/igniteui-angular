@@ -228,7 +228,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public cascadeOnDelete = true;
 
-    /* blazorSuppress */
+    /* csSuppress */
     /**
      * An @Input property that provides a callback for loading child rows on demand.
      * ```html
@@ -384,7 +384,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.cdr.markForCheck();
     }
 
-    
+
     /**
      * Get transactions service for the grid.
      *
