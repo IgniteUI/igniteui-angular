@@ -32,7 +32,6 @@
     $actions-border-radius: null,
 ) {
     $name: 'igx-action-strip';
-    $selector: 'igx-action-strip, igc-action-strip';
     $action-strip-schema: ();
 
     @if map.has-key($schema, 'action-strip') {
@@ -54,7 +53,6 @@
 
     @return extend($theme, (
         name: $name,
-        selector: $selector,
         background: $background,
         actions-background: $actions-background,
         icon-color: $icon-color,
