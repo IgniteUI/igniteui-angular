@@ -498,7 +498,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      * ```
      */
     public writeValue(value: any) {
-        this.value = this.value || value;
+        this.value = this.value ?? value;
 
         if (value === this.value) {
             this.select();
