@@ -388,8 +388,8 @@
         }
 
         @if $bootstrap-theme {
-            border-start-start-radius: border-radius(var-get($theme, 'border-radius'));
-            border-start-end-radius: border-radius(var-get($theme, 'border-radius'));
+            border-start-start-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: var-get($theme, 'border-radius');
         }
 
         @if $not-bootstrap-theme {
