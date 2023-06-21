@@ -1,28 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
 @use '../../../../igniteui-angular/src/lib/core/styles/themes' as igx;
 @use '../variables' as vars;
 @use '../util' as util;
-@use 'sass:map';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 $palette: igx.$light-bootstrap-palette;
 
-@function include($items, $register) {
-    @return map.keys(map.remove($register, $items...));
-}
-
-
 @include igx.core();
 @include igx.typography($font-family: igx.$bootstrap-typeface, $type-scale: igx.$bootstrap-type-scale);
-@debug map.keys(igx.$components);
+
 @include util.elements-theme(
     $palette: $palette,
-    // $exclude: include(vars.$allowed, igx.$components),
+    // TODO: adjust dependencies
+    // $exclude: util.include(vars.$allowed, igx.$components),
     $exclude: vars.$unused-themes,
     $schema: igx.$light-bootstrap-schema,
 );
-
-igc-grid {
-    --ig-grid-grouparea-background: #ff000012;
-    --ig-grid-drop-area-background: #ff004c12;
-}

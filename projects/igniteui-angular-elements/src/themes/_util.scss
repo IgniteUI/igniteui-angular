@@ -11,7 +11,15 @@ $elements-var-prefix: 'ig';
 /// Prefix used in place of `igx-` in component selectors
 $elements-selector-prefix: 'igc';
 
-
+/// Filter out included items to get exclude list
+/// @access private
+/// @param {Map} $items - The items to include
+/// @param {Map} $register - The full components list `igx.$components`
+/// @return {Map} - The resulting difference of items for excluding
+@function include($items, $register) {
+    // @debug map.keys(igx.$components);
+    @return map.keys(map.remove($register, $items...));
+}
 
 /// Callback to update component's name (for var prefix) and selectors for Elements
 /// @access private
@@ -20,19 +28,6 @@ $elements-selector-prefix: 'igc';
 @function updateElementName($theme_schema) {
     $prefix: 'ig';
     $result: $theme_schema;
-    @debug '--- called updateElementName ---';
-    // @each $key, $schema in $theme_schemas {
-    //     @if string.index($key, 'igx-') and map.has-key($schema, "name") {
-    //         $name: map.get($schema, "name");
-    //         @if string.index($name, 'igx-') {
-    //             $name: list.nth(string.split($name, 'igx-'), -1);
-    //             $name: igc-#{$name};
-    //         }
-    //         $result: map.merge($result, ($key: map.merge($schema, (name: $name) )));
-    //     } @else {
-    //         $result: map.merge($result, ($key: $schema));
-    //     }
-    // }
 
     @if map.has-key($theme_schema, "name") {
         $name: map.get($theme_schema, "name");
