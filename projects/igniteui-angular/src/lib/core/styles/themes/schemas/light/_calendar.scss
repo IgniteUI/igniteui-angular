@@ -66,7 +66,6 @@
 /// @prop {Map} week-number-color [color: ('grays', 500)] - The text color of the week number column.
 /// @prop {Map} week-number-background [color: ('grays', 200)] - The background color of the week number column.
 ///
-// @prop {Number} month-border-radius [20px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {List} border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar.
 /// @prop {List} date-border-radius [(rem(20px), rem(0), rem(20px))] - The border radius used for calendar date.
 /// @prop {List} month-border-radius [(rem(20px), rem(0), rem(20px))] - The border radius used for calendar month.
@@ -421,7 +420,7 @@ $fluent-calendar: extend(
 ///
 /// @prop {List} border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar.
 /// @prop {List} date-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar date.
-/// @prop {List
+/// @prop {List} month-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar date.
 /// @requires {function} extend
 /// @requires {Map} $light-calendar
 $bootstrap-calendar: extend(
