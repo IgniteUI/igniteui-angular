@@ -95,7 +95,7 @@ $elements-selector-prefix: 'igc';
     @include igx.theme-internal(
         $palette: $palette,
         $exclude: $exclude,
-        $schema: igx.$light-bootstrap-schema,
+        $schema: $schema,
         $theme-handler: meta.get-function("updateElementName")
     );
 }
