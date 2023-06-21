@@ -57,9 +57,9 @@
 /// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
 /// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
 ///
-/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
-/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
-/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+/// @param {List} $box-border-radius [null] - The border radius used for box input.
+/// @param {List} $border-border-radius [null] - The border radius used for border input.
+/// @param {List} $search-border-radius [null] - The border radius used for search input.
 ///
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
@@ -171,15 +171,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius'));
+        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
+        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
+        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
     }
 
     @return extend($theme, (
@@ -406,8 +406,8 @@
     %form-group-box-wrapper {
         border-radius: var-get($theme, 'box-border-radius');
         @if $variant == 'material' {
-            border-end-start-radius: border-radius(rem(0));
-            border-end-end-radius: border-radius(rem(0));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
         }
         overflow: hidden;
     }

@@ -13,7 +13,7 @@
 /// @property {Map} text-color [contrast-color: ('grays', 900)] - The text color used in the snackbar.
 /// @property {Map} button-color [color: ('secondary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
-/// @prop {Number} border-radius [4px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {List} border-radius [(rem(4px), rem(0), rem(24px))] - The border radius used for snackbar.
 /// @requires {function} extend
 /// @requires {Map} $default-elevation-snackbar
 /// @see $default-palette
@@ -34,13 +34,17 @@ $light-snackbar: extend(
             color: ('secondary', 500)
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
 
 /// Generates a fluent snackbar schema.
 /// @type {Map}
-/// @prop {Number} border-radius [2px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {List} border-radius [(rem(2px), rem(0), rem(24px))] - The border radius used for snackbar.
 /// @requires {function} extend
 /// @requires $light-snackbar
 $fluent-snackbar: extend(
@@ -48,7 +52,11 @@ $fluent-snackbar: extend(
     (
         variant: 'fluent',
 
-        border-radius: rem(2px)
+        border-radius: (
+            rem(2px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );
 
@@ -87,7 +95,7 @@ $bootstrap-snackbar: extend(
 /// @property {Map} background [color: ('grays', 700, .9)] - The background color used in the snackbar.
 /// @property {Map} text-color [contrast-color: ('grays', 700)] - The text color used in the snackbar.
 /// @property {Map} button-color [contrast-color: ('grays', 700)] - The button color used in the snackbar.
-/// @prop {Number} border-radius [6px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {List} border-radius [(rem(6px), rem(0), rem(24px))] - The border radius used for snackbar.
 ///
 /// @requires {function} extend
 /// @requires $light-snackbar
@@ -108,6 +116,10 @@ $indigo-snackbar: extend(
             contrast-color: ('grays', 700),
         ),
 
-        border-radius: rem(6px)
+        border-radius: (
+            rem(6px),
+            rem(0),
+            rem(24px),
+        ),
     )
 );

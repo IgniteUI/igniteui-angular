@@ -30,8 +30,8 @@
 /// @param {Color} $background-color [null] - The time-picker panel background color.
 /// @param {box-shadow} $modal-shadow [null] - The custom shadow to be used for the time picker in modal mode.
 /// @param {box-shadow} $dropdown-shadow [null] - The custom shadow to be used for the time picker in dropdown mode.
-/// @param {border-radius} $border-radius [null] - The border radius used for the outline of the picker.
-/// @param {border-radius} $active-item-border-radius [null] - The border radius used for the outline of the currently active item (hours, minutes, AM/PM).
+/// @param {List} $border-radius [null] - The border radius used for the outline of the picker.
+/// @param {List} $active-item-border-radius [null] - The border radius used for the outline of the currently active item (hours, minutes, AM/PM).
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -122,11 +122,11 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($active-item-border-radius) {
-        $active-item-border-radius: border-radius(map.get($theme, 'active-item-border-radius'));
+        $active-item-border-radius: border-radius(map.get($theme, 'active-item-border-radius')...);
     }
 
     @return extend($theme, (
