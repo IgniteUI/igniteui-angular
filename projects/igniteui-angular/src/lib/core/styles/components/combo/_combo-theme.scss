@@ -245,7 +245,7 @@
         }
     }
 
-    .igx-input-group--border.igx-input-group--focused {
+    .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
         %igx-combo__toggle-button {
             background: var-get($theme, 'toggle-button-background-focus--border');
         }
