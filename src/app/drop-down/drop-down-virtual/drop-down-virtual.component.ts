@@ -4,15 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { RemoteService } from 'src/app/shared/remote.service';
-import { IgxToastComponent } from '../../../../projects/igniteui-angular/src/lib/toast/toast.component';
-import { IgxDropDownItemComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IForOfState, IgxForOfDirective } from '../../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
-import { IgxDropDownComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxDropDownItemNavigationDirective } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
-import { IgxToggleActionDirective } from '../../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
-import { IgxButtonDirective } from '../../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { DisplayDensity } from '../../../../projects/igniteui-angular/src/lib/core/density';
-import { VerticalAlignment } from '../../../../projects/igniteui-angular/src/lib/services/public_api';
+import { DisplayDensity, IForOfState, IgxButtonDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxToastComponent, IgxToggleActionDirective, VerticalAlignment } from 'igniteui-angular';
 
 interface DataItem {
   name: string;

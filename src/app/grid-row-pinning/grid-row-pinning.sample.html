@@ -32,14 +32,14 @@
                     <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
                 </div>
             </ng-template>
-            <igx-column width='150px' [filterable]='false'>
+            <igx-column width='150px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
                     <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="imx-icons"
                         name="{{cell.row.pinned ? 'unpin-left' : 'pin-left'}}">
                     </igx-icon>
                 </ng-template>
             </igx-column>
-            <igx-column width='100px' [filterable]='false'>
+            <igx-column width='100px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
                     <button (click)="grid1.deleteRow(cell.row.key)">Delete</button>
                 </ng-template>
@@ -62,14 +62,14 @@
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
-            <igx-column width='70px' [filterable]='false'>
+            <igx-column width='70px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
                     <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)">
                         {{cell.row.pinned ? 'lock' : 'lock_open'}}
                     </igx-icon>
                 </ng-template>
             </igx-column>
-            <igx-column width='100px' [filterable]='false'>
+            <igx-column width='100px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
                     <button (click)="hGrid.deleteRow(cell.id.rowID)">Delete</button>
                 </ng-template>
@@ -102,7 +102,7 @@
                     </igx-grid-toolbar-exporter>
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
-            <igx-column width='150px' [filterable]='false'>
+            <igx-column width='150px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
                     <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)">
                         {{cell.row.pinned ? 'lock' : 'lock_open'}}

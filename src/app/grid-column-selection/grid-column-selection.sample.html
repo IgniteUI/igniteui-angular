@@ -56,6 +56,7 @@
                     [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true"
                     [selectable]="c.selectable" [dataType]="c.type">
                 </igx-column>
+                <igx-paginator *ngIf="paging"></igx-paginator>
             </igx-grid>
 
             <h4 class="sample-title">TEST EXAMPLE</h4>
@@ -87,7 +88,7 @@
                 </igx-buttongroup>
             </div>
             <div class="sample-buttons">
-                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
                 <br>
                 <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
                 <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>

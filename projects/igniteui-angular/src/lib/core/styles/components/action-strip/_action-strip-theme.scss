@@ -10,7 +10,7 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $icon-color [null] - The color used for the actions icons.
 /// @param {Color} $background [null] - The color used for the action strip component content background.
@@ -23,7 +23,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-action-strip-theme);
 @function action-strip-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $background: null,
     $actions-background: null,
@@ -34,13 +34,14 @@
     $name: 'igx-action-strip';
     $action-strip-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $action-strip-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'action-strip') {
+        $action-strip-schema: map.get($schema, 'action-strip');
     } @else {
         $action-strip-schema: $schema;
     }
 
     $theme: digest-schema($action-strip-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
@@ -57,6 +58,9 @@
         icon-color: $icon-color,
         delete-action: $delete-action,
         actions-border-radius: $actions-border-radius,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -70,7 +74,7 @@
         compact: rem(12px)
     );
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-action-strip-display {
         display: flex;
