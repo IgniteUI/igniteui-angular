@@ -30,6 +30,7 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
+const CSS_CLASS_DATE_SELECTED = 'igx-calendar__date--selected';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'today';
@@ -442,6 +443,54 @@ describe('IgxDatePicker', () => {
                 expect(toggle.clicked.observers).toHaveSize(0);
                 expect(clear.clicked.observers).toHaveSize(0);
             });
+        });
+
+        describe('UI Interaction', () => {
+            let fixture: ComponentFixture<any>;
+            let datePicker: IgxDatePickerComponent;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+            }));
+
+            it('should focus today\'s date when reopening the calendar', fakeAsync(() => {
+                datePicker.clear();
+                datePicker.open();
+                expect(datePicker.value).toEqual(null);
+                expect(datePicker.collapsed).toBeFalsy();
+
+                datePicker.close();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeTruthy();
+
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                const today = new Date().getDate().toString();
+                expect(document.activeElement.textContent.trim()).toEqual(today);
+                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+            }));
+
+            it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
+                datePicker.clear();
+                expect(datePicker.value).toEqual(null);
+                expect(datePicker.collapsed).toBeTruthy();
+
+                datePicker.select(new Date('test'));
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                const today = new Date().getDate().toString();
+                expect(document.activeElement.textContent.trim()).toEqual(today);
+                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+            }));
         });
     });
 
