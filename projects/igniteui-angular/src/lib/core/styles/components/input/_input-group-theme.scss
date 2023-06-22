@@ -544,6 +544,22 @@
             border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
             transition: all $transition-timing
         }
+
+        %form-group-bundle-start {
+            border: {
+                start: {
+                    start-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                };
+            }
+        }
+
+        %form-group-bundle-end {
+            border: {
+                start: {
+                    end-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                }
+            }
+        }
     }
 
     // We need to target the bundle :after here with classes since we have cases that
@@ -661,7 +677,10 @@
         align-items: center;
         min-width: 0;
         min-height: 100%;
-        overflow: hidden;
+
+        @if $variant == 'material' {
+            overflow: hidden;
+        }
     }
 
     %form-group-bundle-start--border,
@@ -821,9 +840,13 @@
     }
 
     %form-group-bundle--search {
-        border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
+
+        @if $variant != 'bootstrap' {
+            border-radius: var-get($theme, 'search-border-radius');
+            overflow: hidden;
+        }
 
         &::after {
             display: none;
@@ -1082,7 +1105,6 @@
 
     %form-group-clear-icon {
         &:focus {
-            border-radius: border-radius(rem(4px));
             background-color: color($color: 'primary', $variant: 500);
             color: contrast-color($color: 'primary', $variant: 600);
 
@@ -1091,12 +1113,7 @@
                 color: color($color: 'secondary', $variant: 500);
             }
 
-            @if $variant == 'fluent' {
-                border-radius: 0;
-            }
-
             @if $variant == 'bootstrap' {
-                border-radius: 0;
                 color: contrast-color($color: 'primary', $variant: 600);
             }
         }
@@ -1367,6 +1384,7 @@
 
     // INDIGO START
     %form-group-bundle--indigo {
+        border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
         transition: background $transition-timing;
         padding-top: 0;
 
@@ -1500,6 +1518,30 @@
 
         @if $variant == 'fluent' {
             border-radius: var-get($theme, 'border-border-radius');
+        }
+
+        // Those focus styles are needed since when we focus the button inside
+        // the file type input the class .igx-input-group--focused is not added but the input is focused.
+        &:focus,
+        &:focus-within {
+            %form-group-bundle-start {
+                margin-block-start: rem(-1px);
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-end {
+                margin-block-start: rem(-1px);
+                margin-inline-end: rem(-1px);
+            }
+
+            %form-group-bundle-start:empty + %form-group-bundle-main,
+            %form-group-bundle-end:empty + %form-group-bundle-main {
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-main {
+                margin-block-start: rem(-1px);
+            }
         }
     }
 
@@ -1638,6 +1680,23 @@
         button {
             border-radius: 0;
             height: 100%;
+        }
+    }
+
+    .igx-input-group--fluent [igxPrefix],
+    .igx-input-group--fluent igx-prefix {
+        &:first-child {
+            [igxButton]::after,
+            button::after {
+                border: {
+                    start: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                    end: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                }
+            }
         }
     }
 
