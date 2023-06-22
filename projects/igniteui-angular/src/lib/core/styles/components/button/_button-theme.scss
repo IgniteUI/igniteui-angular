@@ -657,6 +657,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: var-get($outlined-theme, 'border-radius');
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(2px);
@@ -761,6 +765,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: var-get($raised-theme, 'border-radius');
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -874,15 +882,19 @@
         }
 
         @if($variant == 'fluent') {
+            $outline-btn-indent: rem(3px);
+
+            &::after {
+                border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
+            }
+
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(3px);
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
                     inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
-                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
