@@ -399,12 +399,13 @@
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            @extend %form-group-prefix--filled;
+            @extend %form-group-prefix--filled
         }
     }
 
     %form-group-box-wrapper {
-        border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;;
+        border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
+
         @if $variant == 'material' {
             border-end-start-radius: 0;
             border-end-end-radius: 0;
@@ -1372,7 +1373,7 @@
         }
 
         .igx-button--raised {
-            &:after {
+            &::after {
                 border-radius: var-get($theme, 'border-border-radius') 0 0 var-get($theme, 'border-border-radius');
             }
         }
