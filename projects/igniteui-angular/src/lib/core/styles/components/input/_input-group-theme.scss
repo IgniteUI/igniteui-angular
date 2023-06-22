@@ -1728,17 +1728,6 @@
                 };
             }
         }
-
-        %form-group-bundle-start--bootstrap {
-            border: {
-                start: {
-                    start-radius: border-radius(rem(4px));
-                };
-                end: {
-                    start-radius: border-radius(rem(4px));
-                };
-            }
-        }
     }
 
     %form-group-display--bootstrap-suffixed {
@@ -1750,17 +1739,6 @@
                 };
                 end: {
                     end-radius: 0;
-                };
-            }
-        }
-
-        %form-group-bundle-end--bootstrap {
-            border: {
-                start: {
-                    end-radius: border-radius(rem(4px));
-                };
-                end: {
-                    end-radius: border-radius(rem(4px));
                 };
             }
         }
@@ -1824,10 +1802,10 @@
                 end-width: rem(1px);
             };
             start: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1844,10 +1822,10 @@
                 end-width: rem(1px);
             };
             start: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1888,7 +1866,14 @@
         padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
         padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
         grid-area: 1 / 2 / auto / auto;
-        border-radius: border-radius(rem(4px));
+        border: {
+            start: {
+                end-radius: var-get($theme, 'box-border-radius');
+            };
+            end: {
+                end-radius: var-get($theme, 'box-border-radius');
+            };
+        }
         z-index: 1;
     }
 
