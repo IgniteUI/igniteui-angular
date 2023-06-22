@@ -695,6 +695,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(2px);
@@ -785,6 +789,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -900,6 +908,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
