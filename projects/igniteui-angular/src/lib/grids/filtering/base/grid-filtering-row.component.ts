@@ -343,7 +343,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Event handler for input on the input.
      */
     public onInput(eventArgs) {
-        if (eventArgs === null) {
+        if (!eventArgs) {
             return;
         }
 
