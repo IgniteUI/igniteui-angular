@@ -288,6 +288,10 @@
         position: relative;
         z-index: 1;
 
+        &[igxButton] {
+            border-color: var-get($theme, 'item-selected-border-color');
+        }
+
         &:hover,
         &:focus {
             color: var-get($theme, 'item-selected-text-color');
