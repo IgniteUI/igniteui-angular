@@ -1866,14 +1866,7 @@
         padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
         padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
         grid-area: 1 / 2 / auto / auto;
-        border: {
-            start: {
-                end-radius: var-get($theme, 'box-border-radius');
-            };
-            end: {
-                end-radius: var-get($theme, 'box-border-radius');
-            };
-        }
+        border-radius: var-get($theme, 'box-border-radius');
         z-index: 1;
     }
 
