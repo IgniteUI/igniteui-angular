@@ -15,8 +15,13 @@
 /// @prop {Map} toggle-button-foreground-filled [color: ('gray', 900)] - The select toggle button foreground color when the select is focused.
 /// @prop {Map} toggle-button-background-disabled [color: ('gray', 300] - The select toggle button background color when the select is disabled.
 /// @prop {Map} toggle-button-foreground-disabled [color: ('gray', 500)] - The select toggle button foreground color when the select is disabled.
+/// @prop {Map} toggle-button-background-focus--border [color: ('gray', 300)] The select toggle button background color when the select is focused in material border and line variants.
 $light-select: (
     variant:'material',
+
+    toggle-button-background-focus--border: (
+        color: ('gray', 300,),
+    ),
 
     toggle-button-background: (
         color: ('gray', 300),
