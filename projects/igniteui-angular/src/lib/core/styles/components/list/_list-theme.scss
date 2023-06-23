@@ -42,8 +42,8 @@
 /// @param {Color} $item-thumbnail-color-hover [null] - The list item hover thumbnail color.
 /// @param {Color} $item-thumbnail-color-active [null] - The active list item thumbnail color.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for list component.
-/// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
+/// @param {List} $border-radius [null] - The border radius used for list component.
+/// @param {List} $item-border-radius [null] - The border radius used for list item.
 ///
 /// @param {Color} $border-width [null] - The list border width.
 /// @param {Number} $border-color [null] - The list border color.
@@ -215,11 +215,11 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
     }
 
     @return extend($theme, (
