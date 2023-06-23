@@ -1148,7 +1148,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragGhostCustomTemplate() {
-        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
+        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates?.first;
     }
 
     /**
@@ -1284,7 +1284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditTextTemplate(): TemplateRef<IgxGridRowEditTextTemplateContext> {
-        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+        return this._rowEditTextTemplate || this.rowEditTextDirectives?.first;
     }
     /**
      * Sets the row edit text template.
@@ -1344,7 +1344,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditActionsTemplate(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
-        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives?.first;
     }
     /**
      * Sets the row edit actions template.
@@ -2448,7 +2448,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
-        return this._headSelectorTemplate || this.headSelectorsTemplates.first;
+        return this._headSelectorTemplate || this.headSelectorsTemplates?.first;
     }
 
     /**
@@ -2489,7 +2489,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
-        return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
+        return this._rowSelectorTemplate || this.rowSelectorsTemplates?.first;
     }
 
     /**
@@ -2547,7 +2547,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
-        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates?.first;
     }
 
     /**
