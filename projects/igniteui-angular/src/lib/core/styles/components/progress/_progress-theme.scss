@@ -22,7 +22,7 @@
 /// @param {Color} $fill-color-success [null] - The track success fill color.
 /// @param {Color} $stripes-color [null] - The track stripes color.
 /// @param {Color} $text-color [null] - The track value text color.
-/// @param {Number} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
+/// @param {List} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -59,6 +59,10 @@
     }
 
     $theme: apply-palette($linear-bar-schema, $palette);
+
+    @if not($track-border-radius) {
+        $track-border-radius: border-radius(map.get($theme, 'track-border-radius')...);
+    }
 
     @return extend($theme, (
         name: $name,
@@ -161,7 +165,7 @@
         height: $bar-height;
         background: var-get($theme, 'track-color');
         overflow: hidden;
-        border-radius: border-radius(var-get($theme, 'track-border-radius'));
+        border-radius: var-get($theme, 'track-border-radius');
         z-index: 0;
     }
 

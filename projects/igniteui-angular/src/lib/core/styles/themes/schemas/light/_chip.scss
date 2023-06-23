@@ -9,7 +9,7 @@
 
 /// Generates a light chip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(16px), rem(0), rem(16px))] - The border radius used for chip.
 /// @prop {Map} text-color [color: ('grays', 700)] - The chip text color.
 /// @prop {Map} background [color: ('grays', 300)] - The chip background color.
 /// @prop {Color} border-color [transparent] - The chip border color.
@@ -115,7 +115,11 @@ $light-chip: extend(
 
         focus-selected-border-color: transparent,
 
-        border-radius: rem(16px)
+        border-radius: (
+            rem(16px),
+            rem(0),
+            rem(16px),
+        ),
     )
 );
 
@@ -133,7 +137,6 @@ $light-chip: extend(
 /// @prop {Map} focus-selected-text-color [contrast-color: ('primary', 500)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [color: ('primary', 500)] - The selected chip focus background color.
 /// @prop {Number} ghost-elevation [2] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
-/// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-chip
@@ -202,7 +205,7 @@ $fluent-chip: extend(
 /// @prop {Map} focus-selected-background [color: ('grays', 500, .8)] - The selected chip focus background color.
 /// @prop {Map} focus-selected-text-color [color: ('grays', 800)] - The selected chip text focus color.
 /// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
-/// @prop {Number} border-radius [4px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(16px))] - The border radius used for chip.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-chip
@@ -246,7 +249,11 @@ $bootstrap-chip: extend(
             color: ('grays', 800)
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(16px),
+        ),
     )
 );
 
@@ -254,7 +261,6 @@ $bootstrap-chip: extend(
 /// @type {Map}
 ///
 /// @prop {Number} ghost-elevation [1] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
-/// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} background [color: ('surface')] - The chip background color.
 /// @prop {Map} ghost-background [color: ('surface')] - The chip ghost background color.
 /// @prop {Map} hover-background [color: ('grays', 200)] - The chip hover background color.
