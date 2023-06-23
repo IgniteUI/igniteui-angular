@@ -36,7 +36,7 @@
 /// @param {Color} $selected-shadow-color [null] - The outline color of focused/selected button group items.
 /// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
+/// @param {List} $border-radius [null] - The border radius used for button-group component.
 ///
 /// @requires $light-material-schema
 ///
@@ -133,7 +133,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (

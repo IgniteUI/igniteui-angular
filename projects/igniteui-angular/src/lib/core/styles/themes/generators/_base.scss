@@ -35,7 +35,7 @@
     $palette,
     $schema: $light-material-schema,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
     $elevations: elevations.$material-elevations,
 ) {
@@ -64,7 +64,7 @@
     $palette,
     $schema: $light-material-schema,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
     $elevations: elevations.$material-elevations,
     $theme-handler: meta.get-function('theme-noop'),
@@ -639,7 +639,7 @@
 @mixin light-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $gray: color($palette, 'gray');
@@ -672,7 +672,7 @@
 @mixin dark-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $gray: color($palette, 'gray');
