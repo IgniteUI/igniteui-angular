@@ -8,8 +8,7 @@
 
         <!-- Simple combo -->
         <igx-simple-combo #densityCombo [allowCustomValues]="true" [displayDensity]="'comfortable'" [placeholder]="'Falsy Values'" name="falsyValueCombo"
-                          required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
-                          [disabled]="isDisabled">
+                          required [data]="uniqueFalsyData" displayKey="field" valueKey="value">
             <label igxLabel>Falsy unique values (simple-combo)</label>
             <igx-hint>Select a unique falsy value</igx-hint>
         </igx-simple-combo>
@@ -17,6 +16,7 @@
 
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Normal and simple combo next to each other</h1>
+        <igx-switch (click)="isDisabled = !isDisabled">{{isDisabled? 'Enable' : 'Disable'}}</igx-switch>
         <form class="combo-sample__form">
             <div class="combo-sample__row combo-sample__row--stretch">
                 <!-- Simple combo -->
@@ -108,7 +108,7 @@
 
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
-        <igx-simple-combo  
+        <igx-simple-combo
                     #simpleComboOpenOnClear
                     [displayDensity]="'comfortable'"
                     [(ngModel)]="singleValue"
@@ -117,12 +117,12 @@
                     [displayKey]="valueKeyVar"
                     [disabled]="isDisabled"
                     [valueKey]="valueKeyVar"
-                    [groupKey]="valueKeyVar ? 'region' : ''" 
+                    [groupKey]="valueKeyVar ? 'region' : ''"
                     (selectionChanging)="handleSelectionChanging($event)">
                 <label igxLabel>States</label>
         </igx-simple-combo>
         <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
-        <igx-simple-combo  
+        <igx-simple-combo
                     #simpleComboOpenOnClearWithTemplate
                     [displayDensity]="'comfortable'"
                     [(ngModel)]="singleValue"

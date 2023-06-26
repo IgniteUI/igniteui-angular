@@ -55,9 +55,9 @@
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
-/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
-/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
-/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+/// @param {List} $box-border-radius [null] - The border radius used for box input.
+/// @param {List} $border-border-radius [null] - The border radius used for border input.
+/// @param {List} $search-border-radius [null] - The border radius used for search input.
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 /// @example scss Change the focused border and label colors
@@ -205,15 +205,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius'));
+        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
+        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
+        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
     }
 
     @return extend($theme, (
@@ -522,8 +522,8 @@
         }
 
         @if $variant == 'material' {
-            border-end-start-radius: border-radius(rem(0));
-            border-end-end-radius: border-radius(rem(0));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
         }
         overflow: hidden;
     }
@@ -544,6 +544,22 @@
             width: 100%;
             border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
             transition: all $transition-timing
+        }
+
+        %form-group-bundle-start {
+            border: {
+                start: {
+                    start-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                };
+            }
+        }
+
+        %form-group-bundle-end {
+            border: {
+                start: {
+                    end-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                }
+            }
         }
     }
 
@@ -662,7 +678,10 @@
         align-items: center;
         min-width: 0;
         min-height: 100%;
-        overflow: hidden;
+
+        @if $variant == 'material' {
+            overflow: hidden;
+        }
     }
 
     %form-group-bundle-start--border,
@@ -822,9 +841,13 @@
     }
 
     %form-group-bundle--search {
-        border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
+
+        @if $variant != 'bootstrap' {
+            border-radius: var-get($theme, 'search-border-radius');
+            overflow: hidden;
+        }
 
         &::after {
             display: none;
@@ -1084,7 +1107,6 @@
 
     %form-group-clear-icon {
         &:focus {
-            border-radius: border-radius(rem(4px));
             background-color: color($color: 'primary', $variant: 500);
             color: contrast-color($color: 'primary', $variant: 600);
 
@@ -1093,12 +1115,7 @@
                 color: color($color: 'secondary', $variant: 500);
             }
 
-            @if $variant == 'fluent' {
-                border-radius: 0;
-            }
-
             @if $variant == 'bootstrap' {
-                border-radius: 0;
                 color: contrast-color($color: 'primary', $variant: 600);
             }
         }
@@ -1369,6 +1386,7 @@
 
     // INDIGO START
     %form-group-bundle--indigo {
+        border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
         transition: background $transition-timing;
         padding-top: 0;
 
@@ -1502,6 +1520,30 @@
 
         @if $variant == 'fluent' {
             border-radius: var-get($theme, 'border-border-radius');
+        }
+
+        // Those focus styles are needed since when we focus the button inside
+        // the file type input the class .igx-input-group--focused is not added but the input is focused.
+        &:focus,
+        &:focus-within {
+            %form-group-bundle-start {
+                margin-block-start: rem(-1px);
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-end {
+                margin-block-start: rem(-1px);
+                margin-inline-end: rem(-1px);
+            }
+
+            %form-group-bundle-start:empty + %form-group-bundle-main,
+            %form-group-bundle-end:empty + %form-group-bundle-main {
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-main {
+                margin-block-start: rem(-1px);
+            }
         }
     }
 
@@ -1643,6 +1685,23 @@
         }
     }
 
+    .igx-input-group--fluent [igxPrefix],
+    .igx-input-group--fluent igx-prefix {
+        &:first-child {
+            [igxButton]::after,
+            button::after {
+                border: {
+                    start: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                    end: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                }
+            }
+        }
+    }
+
     %form-group-prefix-fluent,
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
@@ -1671,17 +1730,6 @@
                 };
             }
         }
-
-        %form-group-bundle-start--bootstrap {
-            border: {
-                start: {
-                    start-radius: border-radius(rem(4px));
-                };
-                end: {
-                    start-radius: border-radius(rem(4px));
-                };
-            }
-        }
     }
 
     %form-group-display--bootstrap-suffixed {
@@ -1693,17 +1741,6 @@
                 };
                 end: {
                     end-radius: 0;
-                };
-            }
-        }
-
-        %form-group-bundle-end--bootstrap {
-            border: {
-                start: {
-                    end-radius: border-radius(rem(4px));
-                };
-                end: {
-                    end-radius: border-radius(rem(4px));
                 };
             }
         }
@@ -1767,10 +1804,10 @@
                 end-width: rem(1px);
             };
             start: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1787,10 +1824,10 @@
                 end-width: rem(1px);
             };
             start: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1831,7 +1868,7 @@
         padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
         padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
         grid-area: 1 / 2 / auto / auto;
-        border-radius: border-radius(rem(4px));
+        border-radius: var-get($theme, 'box-border-radius');
         z-index: 1;
     }
 
