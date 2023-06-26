@@ -34,7 +34,7 @@
 ///
 /// @property {Map} tab-ripple-color [color: ('grays', 100)] - The color used for the button background.
 /// @property {Map} button-ripple-color [color: ('grays', 100)] - The color used for the button background on hover.
-/// @property {Number} border-radius [0] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {List} border-radius [(rem(0), rem(0), rem(6px))] - The border radius used for tabs.
 ///
 /// @requires {function} extend
 /// @see $default-palette
@@ -122,7 +122,11 @@ $light-tabs: extend(
 
         border-color--hover: transparent,
 
-        border-radius: rem(0)
+        border-radius: (
+            rem(0),
+            rem(0),
+            rem(6px),
+        ),
     )
 );
 
@@ -193,7 +197,7 @@ $fluent-tabs: extend(
 /// @property {map} item-active-background [color: ('surface')] - The color used for the active/focused tab background.
 /// @property {map} border-color [color: ('grays', 300)] - The color used for the tab items border.
 /// @property {map} border-color--hover [color: ('grays', 200)] - The color used for the tab items border on hover.
-/// @property {Number} border-radius [4px] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {List} border-radius [(rem(4px), rem(0), rem(6px))] - The border radius used for tabs.
 /// @requires {function} extend
 /// @requires {Map} $light-tabs
 $bootstrap-tabs: extend(
@@ -269,7 +273,11 @@ $bootstrap-tabs: extend(
             color: ('primary', 500, .5)
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(6px),
+        ),
     )
 );
 

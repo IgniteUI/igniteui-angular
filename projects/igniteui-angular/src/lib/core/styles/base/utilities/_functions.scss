@@ -795,13 +795,15 @@ $p-test: palette(#fff, #000);
     @return ($max - $min) * $factor + $min;
 }
 
-/// Returns a middle value between an upper and lower bound
+/// Returns a middle value between an upper and a lower bound.
 /// @access private
 /// @param {Number} $radius - A preferred value
 /// @param {Number} $min - A minimum value
 /// @param {Number} $max - A maximum allowed value
-@function border-radius($radius, $min: rem(0), $max: $radius) {
-    @return clamp($min, calc(var(--igx-radius-factor) * #{$radius}), $max);
+@function border-radius($radius, $min: #{rem(0)}, $max: $radius) {
+    $factor: math.div($radius, $max);
+
+    @return clamp(#{$min}, #{calc(var(--igx-radius-factor, #{$factor}) * #{$max})}, #{$max});
 }
 
 /// A thin wrapper around Sass' color scale function

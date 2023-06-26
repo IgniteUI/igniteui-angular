@@ -2167,7 +2167,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 // check if first unpinned cell is active and is in view
