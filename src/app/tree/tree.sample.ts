@@ -1,25 +1,15 @@
 import { useAnimation } from '@angular/animations';
+import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     DisplayDensity, growVerIn, growVerOut,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
-    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode
+    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
-import { IgxTreeNodeComponent as IgxTreeNodeComponent_1, IgxTreeNodeLinkDirective } from '../../../projects/igniteui-angular/src/lib/tree/tree-node/tree-node.component';
-import { IgxTreeComponent as IgxTreeComponent_1 } from '../../../projects/igniteui-angular/src/lib/tree/tree.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { FormsModule } from '@angular/forms';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
 
 interface CompanyData {
     ID: string;
@@ -45,7 +35,7 @@ interface CompanyData {
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss'],
     standalone: true,
-    imports: [IgxLayoutDirective, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxLabelDirective, FormsModule, IgxSwitchComponent, IgxButtonGroupComponent, IgxTreeComponent_1, IgxTreeNodeComponent_1, NgFor, IgxTreeNodeLinkDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
+    imports: [IgxLayoutDirective, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxLabelDirective, FormsModule, IgxSwitchComponent, IgxButtonGroupComponent, IgxTreeComponent, IgxTreeNodeComponent, NgFor, IgxTreeNodeLinkDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
 })
 export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { static: true })

@@ -10,7 +10,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navbar background color.
@@ -19,13 +19,13 @@
 /// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the background color
 ///   $my-navbar-theme: navbar-theme($background: green);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-navbar-theme);
 @function navbar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $background: null,
@@ -38,13 +38,14 @@
     $name: 'igx-navbar';
     $navbar-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $navbar-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'navbar') {
+        $navbar-schema: map.get($schema, 'navbar');
     } @else {
         $navbar-schema: $schema;
     }
 
     $theme: digest-schema($navbar-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -73,14 +74,17 @@
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
-        shadow: $shadow
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
-    $variant: map.get($theme, 'variant');
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);

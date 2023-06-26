@@ -1,20 +1,22 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { IgxButtonGroupComponent, IgxSliderComponent,
-} from 'igniteui-angular';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { NgIf } from '@angular/common';
-import { IgxButtonGroupComponent as IgxButtonGroupComponent_1 } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { FormsModule } from '@angular/forms';
-import { IgxSliderComponent as IgxSliderComponent_1 } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+
+import {
+    IgxButtonGroupComponent,
+    IgxSliderComponent,
+    IgxSwitchComponent,
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-finjs-controllers',
     styleUrls: ['./controllers.component.scss'],
     templateUrl: './controllers.component.html',
     standalone: true,
-    imports: [IgxSwitchComponent, IgxSliderComponent_1, FormsModule, IgxButtonGroupComponent_1, NgIf]
+    imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent, NgIf]
 })
 export class ControllerComponent implements OnInit, OnDestroy {
     @ViewChild('buttonGroup1', { static: true }) public playButtons: IgxButtonGroupComponent;
