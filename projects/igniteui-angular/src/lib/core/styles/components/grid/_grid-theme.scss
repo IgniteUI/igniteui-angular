@@ -115,7 +115,7 @@
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
-/// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
+/// @param {List} $drop-area-border-radius [null] - The border radius used for column drop area.
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -459,7 +459,7 @@
     }
 
     @if not($drop-area-border-radius) {
-        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius'));
+        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius')...);
     }
 
     @return extend($theme, (

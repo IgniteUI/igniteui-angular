@@ -41,8 +41,8 @@
 ///
 /// @param {Number} $border-width [null] - The border width used for drop-down component.
 /// @param {Color} $border-color [null] - The border color used for drop-down component.
-/// @param {Number} $border-radius [null] - The border radius used for drop-down component.
-/// @param {Number} $item-border-radius [null] - The border radius used for drop-down items.
+/// @param {List} $border-radius [null] - The border radius used for drop-down component.
+/// @param {List} $item-border-radius [null] - The border radius used for drop-down items.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -165,11 +165,11 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
     }
 
     @return extend($theme, (
