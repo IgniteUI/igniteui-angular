@@ -25,11 +25,7 @@
 /// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
 /// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
-///
-/// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
-///
-/// @requires $light-schema
-///
+/// @param {List} $border-radius [null] - The border radius used for carousel component.
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: carousel-theme(
@@ -38,6 +34,7 @@
 ///   );
 ///   // Pass the carousel theme to the css-vars() mixin
 ///   @include css-vars($my-carousel-theme);
+/// @requires $light-schema
 @function carousel-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -90,7 +87,7 @@
     }
 
     @if not($border-radius){
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
@@ -128,7 +125,6 @@
     $indicator-border-style: rem(2px) solid;
 
     $variant: map.get($theme, variant);
-    $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
         display: flex;
@@ -147,7 +143,8 @@
         width: rem(46px);
         height: rem(46px);
         cursor: pointer;
-        @if $not-bootstrap-theme {
+
+        @if $variant != 'bootstrap' {
             border-radius: border-radius(50%);
         } @else {
             border-radius: var-get($theme, 'border-radius');

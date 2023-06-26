@@ -1192,6 +1192,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (this.ghostTemplate) {
             this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
+                // Change the display to default since display contents does not position the element absolutely.
+                this._dynamicGhostRef.rootNodes[0].style.display = 'block';
+            }
             this.ghostElement = this._dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
@@ -1204,7 +1208,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         this.ghostElement.style.transitionDuration = '0.0s';
         this.ghostElement.style.position = 'absolute';
-
 
         if (this.ghostClass) {
             this.renderer.addClass(this.ghostElement, this.ghostClass);

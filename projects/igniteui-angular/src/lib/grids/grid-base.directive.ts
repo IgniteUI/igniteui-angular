@@ -1241,7 +1241,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragGhostCustomTemplate() {
-        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
+        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates?.first;
     }
 
     /**
@@ -1372,7 +1372,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditTextTemplate(): TemplateRef<IgxGridRowEditTextTemplateContext> {
-        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+        return this._rowEditTextTemplate || this.rowEditTextDirectives?.first;
     }
     /**
      * Sets the row edit text template.
@@ -1432,7 +1432,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditActionsTemplate(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
-        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives?.first;
     }
     /**
      * Sets the row edit actions template.
@@ -2096,12 +2096,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public get rowHeight() {
+    public get rowHeight(): number {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
-    public set rowHeight(value) {
-        this._rowHeight = parseInt(value, 10);
+    public set rowHeight(value: number | string) {
+        if (typeof value !== 'number') {
+            value = parseInt(value, 10);
+        }
+        this._rowHeight = value;
     }
 
     /**
@@ -2537,7 +2540,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
-        return this._headSelectorTemplate || this.headSelectorsTemplates.first;
+        return this._headSelectorTemplate || this.headSelectorsTemplates?.first;
     }
 
     /**
@@ -2578,7 +2581,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
-        return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
+        return this._rowSelectorTemplate || this.rowSelectorsTemplates?.first;
     }
 
     /**
@@ -2636,7 +2639,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
-        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates?.first;
     }
 
     /**
@@ -3149,7 +3152,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private rowListDiffer;
     private _height: string | null = '100%';
     private _width: string | null = '100%';
-    private _rowHeight;
+    private _rowHeight: number | undefined;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
     // Caches
@@ -3458,13 +3461,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get virtualizationState() {
         return this.verticalScrollContainer.state;
-    }
-
-    /**
-     * @hidden
-     */
-    public set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
     }
 
     /**

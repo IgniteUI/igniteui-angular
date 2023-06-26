@@ -28,9 +28,9 @@
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
-/// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
-/// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
-/// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
+/// @param {List} $border-radius-track [null] - The border radius used for switch track.
+/// @param {List} $border-radius-thumb [null] - The border radius used for switch thumb.
+/// @param {List} $border-radius-ripple [null] - The border radius used for switch ripple.
 /// @param {Color} $border-color [null] - The border color of the switch.
 /// @param {Color} $border-hover-color [null] - The border color of the switch on hover.
 /// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
@@ -116,15 +116,15 @@
     }
 
     @if not($border-radius-track) {
-        $border-radius-track: border-radius(map.get($theme, 'border-radius-track'));
+        $border-radius-track: border-radius(map.get($theme, 'border-radius-track')...);
     }
 
     @if not($border-radius-thumb) {
-        $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb'));
+        $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb')...);
     }
 
     @if not($border-radius-ripple) {
-        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
+        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple')...);
     }
 
     @return extend($theme, (
