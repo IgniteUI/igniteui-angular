@@ -21,7 +21,7 @@
 /// @prop {Color} indicator-active-dot-color [color: ('gray', 50)] - The active indicator dot color.
 /// @prop {Color} indicator-active-border-color [color: ('gray', 50)] - The active indicator border color.
 /// @prop {Number} button-elevation [1] - The elevation level, between 0-24, to be used for the carousel buttons.
-/// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(36px), rem(0), rem(36px))] - The border radius used for carousel.
 /// @requires {Map} $default-elevation-carousel
 $light-carousel: extend(
     $default-elevation-carousel,
@@ -70,13 +70,16 @@ $light-carousel: extend(
             color: ('gray', 50)
         ),
 
-        border-radius: rem(0)
+        border-radius: (
+            rem(0),
+            rem(0),
+            rem(36px),
+        ),
     )
 );
 
 /// Generates a fluent carousel schema.
 /// @type {Map}
-/// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
 /// @requires {Map} $light-carousel
 /// @requires {Map} $fluent-elevation-carousel
@@ -90,7 +93,7 @@ $fluent-carousel: extend(
 
 /// Generates a bootstrap carousel schema.
 /// @type {Map}
-/// @prop {Number} border-radius [4px] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(36px))] - The border radius used for carousel.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
 /// @requires {Map} $light-carousel
 /// @requires {Map} $bootstrap-elevation-carousel
@@ -100,7 +103,11 @@ $bootstrap-carousel: extend(
     (
         variant: 'bootstrap',
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(36px),
+        ),
     )
 );
 
@@ -114,7 +121,6 @@ $bootstrap-carousel: extend(
 /// @prop {Map} button-disabled-arrow-color [color: ('gray' 400)] - The previous/next buttons disabled color.
 /// @prop {Map} indicator-dot-color [color: ('surface', 500, .6)] - The idle indicator dot color.
 /// @prop {Map} indicator-active-dot-color [color: 'surface'] - The active indicator dot color.
-/// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
 /// @requires {Map} $light-carousel
 /// @requires {Map} $indigo-elevation-carousel
