@@ -36,6 +36,10 @@
 
     $theme: digest-schema($icon-schema);
 
+    @if not($size) {
+        $size: #{rem(24px)};
+    }
+
     @return extend($theme, (
         name: $name,
         color: $color,
