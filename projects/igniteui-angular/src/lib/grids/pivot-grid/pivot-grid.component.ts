@@ -962,6 +962,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override set batchEditing(_val: boolean) {
     }
 
+    /* csSuppress */
     public override get selectedRows(): any[] {
         if (this.selectionService.getSelectedRows().length === 0) {
             return [];
@@ -992,6 +993,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return selectedRowIds;
     }
 
+    /* csSuppress */
     /**
      * Gets the default row height.
      *
