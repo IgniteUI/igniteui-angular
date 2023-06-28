@@ -2450,6 +2450,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return res;
     }
 
+    /* csSuppress */
     /**
      * A list of `IgxGridRowComponent`.
      *
@@ -2470,6 +2471,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return res;
     }
 
+    /* csSuppress */
     /**
      * A list of currently rendered `IgxGridRowComponent`'s.
      *
@@ -4346,6 +4348,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedVisible;
     }
 
+    /* csSuppress */
     /**
      * Gets an array of the pinned `IgxRowComponent`s.
      *
