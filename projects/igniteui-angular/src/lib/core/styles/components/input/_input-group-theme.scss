@@ -889,7 +889,6 @@
 
     %form-group-label {
         @include ellipsis();
-        position: absolute;
         max-width: 100%;
         padding-inline-end: rem(4px);
         line-height: normal;
@@ -997,6 +996,16 @@
         --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
         min-height: var(--size) !important;
         height: auto !important;
+
+        %form-group-label {
+            position: absolute;
+        }
+    }
+
+    %form-group-bundle--border {
+        %form-group-label {
+            position: relative;
+        }
     }
 
     %form-group-textarea-label {
