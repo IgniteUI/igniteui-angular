@@ -743,8 +743,11 @@
         %igx-input-group__notch {
             border-block-start: rem(1px) solid var-get($theme, 'border-color');
             border-block-end: rem(1px) solid var-get($theme, 'border-color');
-
             overflow: visible;
+
+            %form-group-label {
+                position: relative;
+            }
 
             &:empty {
                 display: none;
@@ -999,12 +1002,6 @@
 
         %form-group-label {
             position: absolute;
-        }
-    }
-
-    %form-group-bundle--border {
-        %form-group-label {
-            position: relative;
         }
     }
 
