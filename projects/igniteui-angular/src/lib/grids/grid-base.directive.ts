@@ -6563,6 +6563,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
+                this.groupablePipeTrigger++;
                 Promise.resolve().then(() => {
                     // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
                     // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
