@@ -58,15 +58,15 @@ describe('IgxButtonGroup', () => {
     }));
 
    it('should apply the correct class when justifyItems input is set on the component', () => {
-	   const fixture = TestBed.createComponent(JustifyButtonGroupComponent);
-	   fixture.detectChanges();
+        const fixture = TestBed.createComponent(JustifyButtonGroupComponent);
+        fixture.detectChanges();
 
-	   const instance = fixture.componentInstance;
-	   const buttonGroup = fixture.nativeElement.querySelector('igx-buttongroup').children[0];
+        const instance = fixture.componentInstance;
+        const buttonGroup = fixture.nativeElement.querySelector('igx-buttongroup').children[0];
 
-	   expect(instance.buttonGroup).toBeDefined();
-	   expect(instance.buttonGroup.justifyItems).toBeTruthy();
-	   expect(buttonGroup).toHaveClass('igx-button-group--justify');
+        expect(instance.buttonGroup).toBeDefined();
+        expect(instance.buttonGroup.justifyItems).toBeTruthy();
+        expect(buttonGroup).toHaveClass('igx-button-group--justify');
    });
 
    it('should initialize buttonGroup with default values', () => {
