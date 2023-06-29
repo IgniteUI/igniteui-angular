@@ -369,12 +369,6 @@
         width: max-content;
         align-items: center;
 
-        igx-icon {
-            width: sizable(rem(18px), rem(20px), rem(24px)) ;
-            height: sizable(rem(18px), rem(20px), rem(24px)) ;
-            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-        }
-
         @if $indigo-theme {
             height: calc(100% - #{rem(1px)}) !important;
         } @else {
@@ -391,13 +385,6 @@
 
     igx-input-group {
         --theme: #{map.get($theme, 'variant')};
-
-        igx-icon[igxPrefix],
-        igx-icon[igxSuffix] {
-            width: sizable(rem(18px), rem(20px), rem(24px)) ;
-            height: sizable(rem(18px), rem(20px), rem(24px)) ;
-            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-        }
     }
 
     %form-group-display--box {
@@ -459,10 +446,22 @@
 
     %form-group-display--cosy {
         --component-size: var(--ig-size, var(--ig-size-medium));
+
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--ig-size, var(--ig-size-medium));
+        }
     }
 
     %form-group-display--compact {
         --component-size: var(--ig-size, var(--ig-size-small));
+
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--ig-size, var(--ig-size-small));
+        }
     }
 
     %form-group-display--no-margin {
@@ -996,7 +995,11 @@
 
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
+        --size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
         min-height: var(--size) !important;
         height: auto !important;
 
@@ -1167,7 +1170,11 @@
     }
 
     %form-group-textarea {
-        --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
+        --size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
 
         min-height: var(--size);
         height: auto;
@@ -1862,17 +1869,37 @@
         height: auto;
         line-height: 1.5;
         margin: 0;
-        font-size: pad(map.get($bootstrap-font-size, 'compact'), map.get($bootstrap-font-size, 'cosy'), map.get($bootstrap-font-size, 'comfortable'));
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        font-size: pad(
+            map.get($bootstrap-font-size, 'compact'),
+            map.get($bootstrap-font-size, 'cosy'),
+            map.get($bootstrap-font-size, 'comfortable')
+        );
+        padding-block: pad-inline(
+            map.get($bootstrap-block-padding, 'compact'),
+            map.get($bootstrap-block-padding, 'cosy'),
+            map.get($bootstrap-block-padding, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($bootstrap-inline-padding, 'compact'),
+            map.get($bootstrap-inline-padding, 'cosy'),
+            map.get($bootstrap-inline-padding, 'comfortable')
+        );
         transition: box-shadow .15s ease-out, border .15s ease-out;
     }
 
     %bootstrap-input,
     %bootstrap-file-input {
         border: rem(1px) solid var-get($theme, 'border-color');
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        padding-block: pad-inline(
+            map.get($bootstrap-block-padding, 'compact'),
+            map.get($bootstrap-block-padding, 'cosy'),
+            map.get($bootstrap-block-padding, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($bootstrap-inline-padding, 'compact'),
+            map.get($bootstrap-inline-padding, 'cosy'),
+            map.get($bootstrap-inline-padding, 'comfortable')
+        );
         grid-area: 1 / 2 / auto / auto;
         border-radius: var-get($theme, 'box-border-radius');
         z-index: 1;
@@ -1953,9 +1980,10 @@
 
     %form-group-prefix,
     %form-group-suffix {
-        @include type-style($input-text) {
-            margin: 0;
+        &:not(igx-icon) {
+            @include type-style($input-text) {
+                margin: 0;
+            }
         }
     }
 }
-
