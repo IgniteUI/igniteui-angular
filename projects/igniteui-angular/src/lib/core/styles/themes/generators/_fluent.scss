@@ -15,7 +15,7 @@
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $primary: color($palette, 'primary');
@@ -51,7 +51,7 @@
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $primary: color($palette, 'primary');
