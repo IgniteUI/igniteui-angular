@@ -21,7 +21,8 @@ import {
     TrackByFunction,
     ViewContainerRef,
     AfterViewInit,
-    Inject
+    Inject,
+    NgIterable
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -83,7 +84,7 @@ export class IgxForOfContext<T> {
     standalone: true
 })
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
-export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
+export class IgxForOfDirective<T, U extends Array<T> = Array<T>> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
      * An @Input property that sets the data to be rendered.
@@ -92,7 +93,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForOf: any[] | null;
+    public igxForOf: U | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
@@ -237,7 +238,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected scrollComponent: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
-    protected heightCache = [];
+    protected heightCache: number[] = [];
     /** Internal track for scroll top that is being virtualized */
     protected _virtScrollTop = 0;
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
@@ -485,6 +486,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * @hidden @internal
+     * Asserts the correct type of the context for the template that `igxForOf` will render.
+     *
+     * The presence of this method is a signal to the Ivy template type-check compiler that the
+     * `IgxForOf` structural directive renders its template with a specific context type.
+     */
+    public static  ngTemplateContextGuard<T, U extends Array<T>>(dir: IgxForOfDirective<T, U>, ctx: any):
+            ctx is IgxForOfContext<T> {
+        return true;
+    }
+
+    /**
      * @hidden
      */
     public ngOnChanges(changes: SimpleChanges): void {
@@ -519,11 +532,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public ngDoCheck(): void {
         if (this._differ) {
-            const changes = this._differ.diff(this.igxForOf);
+            const changes = this._differ.diff(this.igxForOf as NgIterable<T>);
             if (changes) {
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [];
+                    this.igxForOf = [] as U;
                 }
                 this._updateSizeCache();
                 this._zone.run(() => {
@@ -1168,7 +1181,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected initSizesCache(items: any[]): number {
+    protected initSizesCache(items: U): number {
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForSizePropName || 'height';
@@ -1217,7 +1230,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.igxForSizePropName : 'height';
         const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         for (i; i < this.igxForOf.length; i++) {
-            let item = this.igxForOf[i];
+            let item: T | { value: T, height: number} = this.igxForOf[i];
             if (dimension === 'height') {
                 item = { value: this.igxForOf[i], height: this.heightCache[i] };
             }
@@ -1478,9 +1491,9 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     selector: '[igxGridFor][igxGridForOf]',
     standalone: true
 })
-export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
+export class IgxGridForOfDirective<T, U extends Array<T>> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
     @Input()
-    public set igxGridForOf(value) {
+    public set igxGridForOf(value: U | null) {
         this.igxForOf = value;
     }
 
@@ -1546,6 +1559,18 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         super(_viewContainer, _template, _differs, cdr, _zone, syncScrollService, _platformUtil, _document);
     }
 
+    /**
+     * @hidden @internal
+     * Asserts the correct type of the context for the template that `IgxGridForOfDirective` will render.
+     *
+     * The presence of this method is a signal to the Ivy template type-check compiler that the
+     * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
+     */
+    public static override ngTemplateContextGuard<T, U extends Array<T>>(dir: IgxGridForOfDirective<T, U>, ctx: any):
+            ctx is NgForOfContext<T, U> {
+        return true;
+    }
+
     public override ngOnInit() {
         this.syncService.setMaster(this);
         super.ngOnInit();
@@ -1602,7 +1627,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.dataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [];
+                    this.igxForOf = [] as U;
                 }
                 /* we need to reset the master dir if all rows are removed
                 (e.g. because of filtering); if all columns are hidden, rows are
@@ -1674,7 +1699,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return size;
     }
 
-    protected override initSizesCache(items: any[]): number {
+    protected override initSizesCache(items: U): number {
         if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
