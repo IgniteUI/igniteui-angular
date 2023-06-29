@@ -52,7 +52,8 @@ describe('IgxButtonGroup', () => {
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
                 TemplatedButtonGroupComponent,
-                TemplatedButtonGroupDesplayDensityComponent
+                TemplatedButtonGroupDesplayDensityComponent,
+                ButtonGroupWithSelectedButtonComponent
             ]
         }).compileComponents();
     }));
@@ -90,6 +91,23 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.itemContentCssClass).toEqual('customContentStyle');
         expect(buttongroup.selectedIndexes.length).toEqual(0);
         expect(buttongroup.selectedButtons.length).toEqual(0);
+    });
+
+    it('should fire selected event when button is selected by the user, not when it is initial selected', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupinstance = fixture.componentInstance.buttonGroup;
+        spyOn(btnGroupinstance.selected, 'emit');
+
+        btnGroupinstance.ngAfterViewInit();
+
+        fixture.detectChanges();
+        expect(btnGroupinstance.selected.emit).not.toHaveBeenCalled();
+
+        btnGroupinstance.buttons[1].select();
+        fixture.detectChanges();
+        expect(btnGroupinstance.selected.emit).toHaveBeenCalled();
     });
 
    it('Button Group single selection', () => {
@@ -376,5 +394,20 @@ class TemplatedButtonGroupComponent {
     imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
 })
 class TemplatedButtonGroupDesplayDensityComponent {
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+}
+
+@Component({
+    template: `
+    <igx-buttongroup>
+        <button igxButton [selected]="true">Button 0</button>
+        <button igxButton>Button 1</button>
+        <button igxButton>Button 2</button>
+    </igx-buttongroup>
+    `,
+    standalone: true,
+    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
+})
+class ButtonGroupWithSelectedButtonComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }
