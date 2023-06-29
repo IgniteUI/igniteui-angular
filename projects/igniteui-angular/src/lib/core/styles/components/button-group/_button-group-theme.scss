@@ -176,7 +176,8 @@
     $indigo-theme: $variant == 'indigo-design';
 
     %igx-group-display {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
         box-shadow: var-get($theme, 'shadow');
         transition: $transition;
         border-radius: var-get($theme, 'border-radius');
@@ -187,6 +188,10 @@
             margin-inline-end: 0;
             margin-bottom: 0;
         }
+    }
+
+    %igx-group-display--justify {
+        grid-auto-columns: 1fr;
     }
 
     %igx-group-item {
@@ -205,16 +210,6 @@
         z-index: 0;
         transition: $transition;
 
-        &[igxButton] {
-            border-radius: 0;
-            border-color: var-get($theme, 'item-border-color');
-
-            @if $bootstrap-theme {
-                margin: 0 !important;
-                border: none;
-            }
-        }
-
         &:not(:nth-child(0)) {
             margin-inline-start: rem(-1px);
         }
@@ -222,11 +217,21 @@
         &:first-of-type {
             border-start-start-radius: var-get($theme, 'border-radius');
             border-end-start-radius: var-get($theme, 'border-radius');
+
+            &[igxButton] {
+                border-start-start-radius: var-get($theme, 'border-radius');
+                border-end-start-radius: var-get($theme, 'border-radius');
+            }
         }
 
         &:last-of-type {
             border-start-end-radius: var-get($theme, 'border-radius');
             border-end-end-radius: var-get($theme, 'border-radius');
+
+            &[igxButton] {
+                border-start-end-radius: var-get($theme, 'border-radius');
+                border-end-end-radius: var-get($theme, 'border-radius');
+            }
         }
 
         &[igxButton][disabled='true'] {
@@ -250,27 +255,37 @@
                 z-index: 2;
             }
         }
+
+        > span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        &[igxButton] {
+            border-radius: 0;
+            border-color: var-get($theme, 'item-border-color');
+
+            @if $bootstrap-theme {
+                margin: 0 !important;
+                border: none;
+            }
+        }
     }
 
-    %igx-group-item-vertical {
-        &:not(:nth-child(0)) {
-            margin-top: rem(-1px);
-            margin-inline-start: 0;
-        }
+    %igx-group-item-content {
+        display: flex;
+        align-items: center;
+        flex-flow: row nowrap;
+        min-width: 0;
 
-        &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
-            border-end-start-radius: 0;
-            border-end-end-radius: 0;
+        * ~ * {
+            margin-inline-start: $group-items-margin;
         }
+    }
 
-        &:last-of-type {
-            border-start-start-radius: 0;
-            border-start-end-radius: 0;
-            border-end-start-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
-        }
+    %igx-button-group__button-text {
+        width: 100%;
+        @include ellipsis();
     }
 
     %igx-group-item-selected {
@@ -316,22 +331,27 @@
     }
 
     %igx-group-vertical {
-        flex-flow: column;
+        grid-auto-flow: row;
     }
 
-    %igx-group-item-content {
-        display: flex;
-        align-items: center;
-        flex-flow: row nowrap;
-        min-width: 0;
-
-        * ~ * {
-            margin-inline-start: $group-items-margin;
+    %igx-group-item-vertical {
+        &:not(:nth-child(0)) {
+            margin-top: rem(-1px);
+            margin-inline-start: 0;
         }
-    }
 
-    %igx-button-group__button-text {
-        width: 100%;
-        @include ellipsis();
+        &:first-of-type {
+            border-start-start-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: var-get($theme, 'border-radius');
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
+
+        &:last-of-type {
+            border-start-start-radius: 0;
+            border-start-end-radius: 0;
+            border-end-start-radius: var-get($theme, 'border-radius');
+            border-end-end-radius: var-get($theme, 'border-radius');
+        }
     }
 }

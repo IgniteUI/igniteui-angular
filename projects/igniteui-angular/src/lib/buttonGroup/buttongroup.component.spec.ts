@@ -57,6 +57,18 @@ describe('IgxButtonGroup', () => {
         }).compileComponents();
     }));
 
+   it('should apply the correct class when justifyItems input is set on the component', () => {
+	   const fixture = TestBed.createComponent(JustifyButtonGroupComponent);
+	   fixture.detectChanges();
+
+	   const instance = fixture.componentInstance;
+	   const buttonGroup = fixture.nativeElement.querySelector('igx-buttongroup').children[0];
+
+	   expect(instance.buttonGroup).toBeDefined();
+	   expect(instance.buttonGroup.justifyItems).toBeTruthy();
+	   expect(buttonGroup).toHaveClass('igx-button-group--justify');
+   });
+
    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
@@ -377,4 +389,15 @@ class TemplatedButtonGroupComponent {
 })
 class TemplatedButtonGroupDesplayDensityComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+}
+
+@Component({
+	template: `
+    <igx-buttongroup justifyItems></igx-buttongroup>
+    `,
+	standalone: true,
+	imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
+})
+class JustifyButtonGroupComponent {
+	@ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }

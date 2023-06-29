@@ -41,12 +41,12 @@
 
     <article class="sample-column">
         <h4 class="sample-title">
-            Exclusive Selection <i class="light">Vertical</i>
+            Exclusive Selection <i class="light">Justify</i>
         </h4>
         <igx-buttongroup
+            justifyItems
             [multiSelection]="false"
             [values]="cities"
-            alignment="vertical"
         >
         </igx-buttongroup>
     </article>
@@ -79,7 +79,7 @@
         <igx-buttongroup [multiSelection]="false">
             <button igxButton>
                 <igx-icon>alarm_on</igx-icon>
-                <span>Button 1 text</span>
+                <span>Button</span>
             </button>
             <button igxButton>
                 <igx-icon>autorenew</igx-icon>
@@ -125,15 +125,22 @@
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Programmatic Selection</h4>
-        <igx-buttongroup #programmatic>
+        <h4 class="sample-title">
+            Programmatic Selection <br>
+            <igx-switch [(ngModel)]="isJustify">
+                Justify items
+            </igx-switch>
+        </h4>
+
+        <igx-buttongroup #programmatic [justifyItems]="isJustify">
             <button
                 igxButton
                 *ngFor="let button of buttons; let i = index"
                 [selected]="i === selectedIndex"
                 (click)="selectedIndex = i"
             >
-                {{ button }}
+                <igx-icon>face</igx-icon>
+                <span>{{ button }}</span>
             </button>
         </igx-buttongroup>
         <div igxLayout igxLayoutJustify="flex-end">

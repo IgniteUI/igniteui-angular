@@ -15,6 +15,10 @@
 
         @extend %igx-group-display !optional;
 
+        @include m(justify) {
+            @extend %igx-group-display--justify !optional;
+        }
+
         @include e(item) {
             @extend %igx-group-item !optional;
         }

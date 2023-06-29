@@ -64,7 +64,9 @@ let NEXT_ID = 0;
     imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
 })
 export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
-    /**
+	private static ngAcceptInputType_justifyItems: boolean | '';
+
+	/**
      * A collection containing all buttons inside the button group.
      */
     public get buttons(): IgxButtonDirective[] {
@@ -152,6 +154,20 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Input() public values: any;
+
+	/**
+	 * An @Input property that allows you to make all items equal width. By default it's false.
+	 * ```html
+	 * <igx-buttongroup justifyItems></igx-buttongroup>
+	 * ```
+	 */
+	@Input()
+	public get justifyItems(): boolean {
+		return this._justifyItems || false;
+	}
+	public set justifyItems(value: boolean) {
+		this._justifyItems = (value as any === '') || value;
+	}
 
     /**
      * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
@@ -272,6 +288,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     private _isVertical: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
+    private _justifyItems: boolean;
 
     constructor(
         private _cdr: ChangeDetectorRef,

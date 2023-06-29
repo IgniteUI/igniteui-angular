@@ -1,12 +1,12 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typeface: $material-typeface;
-$type-scale: $material-type-scale;
+$palette: $light-indigo-palette;
+$schema: $light-indigo-schema;
+$typeface: $indigo-typeface;
+$type-scale: $indigo-type-scale;
 
 :root {
-    --ig-theme: material;
+    --ig-theme: indigo;
 }
 
 $background-color: contrast-color($palette, 'gray', 900);
