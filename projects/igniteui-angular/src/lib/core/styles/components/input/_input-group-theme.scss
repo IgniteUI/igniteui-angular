@@ -55,9 +55,9 @@
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
-/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
-/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
-/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+/// @param {List} $box-border-radius [null] - The border radius used for box input.
+/// @param {List} $border-border-radius [null] - The border radius used for border input.
+/// @param {List} $search-border-radius [null] - The border radius used for search input.
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 /// @example scss Change the focused border and label colors
@@ -205,15 +205,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius'));
+        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
+        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
+        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
     }
 
     @return extend($theme, (
@@ -369,12 +369,6 @@
         width: max-content;
         align-items: center;
 
-        igx-icon {
-            width: sizable(rem(18px), rem(20px), rem(24px)) ;
-            height: sizable(rem(18px), rem(20px), rem(24px)) ;
-            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-        }
-
         @if $indigo-theme {
             height: calc(100% - #{rem(1px)}) !important;
         } @else {
@@ -391,13 +385,6 @@
 
     igx-input-group {
         --theme: #{map.get($theme, 'variant')};
-
-        igx-icon[igxPrefix],
-        igx-icon[igxSuffix] {
-            width: sizable(rem(18px), rem(20px), rem(24px)) ;
-            height: sizable(rem(18px), rem(20px), rem(24px)) ;
-            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-        }
     }
 
     %form-group-display--box {
@@ -459,10 +446,22 @@
 
     %form-group-display--cosy {
         --component-size: var(--ig-size, var(--ig-size-medium));
+
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--ig-size, var(--ig-size-medium));
+        }
     }
 
     %form-group-display--compact {
         --component-size: var(--ig-size, var(--ig-size-small));
+
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--ig-size, var(--ig-size-small));
+        }
     }
 
     %form-group-display--no-margin {
@@ -522,8 +521,8 @@
         }
 
         @if $variant == 'material' {
-            border-end-start-radius: border-radius(rem(0));
-            border-end-end-radius: border-radius(rem(0));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
         }
         overflow: hidden;
     }
@@ -544,6 +543,22 @@
             width: 100%;
             border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
             transition: all $transition-timing
+        }
+
+        %form-group-bundle-start {
+            border: {
+                start: {
+                    start-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                };
+            }
+        }
+
+        %form-group-bundle-end {
+            border: {
+                start: {
+                    end-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                }
+            }
         }
     }
 
@@ -662,7 +677,10 @@
         align-items: center;
         min-width: 0;
         min-height: 100%;
-        overflow: hidden;
+
+        @if $variant == 'material' {
+            overflow: hidden;
+        }
     }
 
     %form-group-bundle-start--border,
@@ -724,8 +742,11 @@
         %igx-input-group__notch {
             border-block-start: rem(1px) solid var-get($theme, 'border-color');
             border-block-end: rem(1px) solid var-get($theme, 'border-color');
-
             overflow: visible;
+
+            %form-group-label {
+                position: relative;
+            }
 
             &:empty {
                 display: none;
@@ -822,9 +843,13 @@
     }
 
     %form-group-bundle--search {
-        border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
+
+        @if $variant != 'bootstrap' {
+            border-radius: var-get($theme, 'search-border-radius');
+            overflow: hidden;
+        }
 
         &::after {
             display: none;
@@ -866,7 +891,6 @@
 
     %form-group-label {
         @include ellipsis();
-        position: absolute;
         max-width: 100%;
         padding-inline-end: rem(4px);
         line-height: normal;
@@ -971,9 +995,17 @@
 
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
+        --size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
         min-height: var(--size) !important;
         height: auto !important;
+
+        %form-group-label {
+            position: absolute;
+        }
     }
 
     %form-group-textarea-label {
@@ -982,13 +1014,14 @@
 
     @if $material-theme {
         %textarea-group-label--focused {
-            transform: translateY(0) !important;
+            transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
         }
 
         %textarea-group-label--filled--border,
         %textarea-group-label--focused--border {
-            top: rem(-6px);
+            top: 0;
+            transform: translateY(-50%);
             margin-block-end: auto !important;
         }
 
@@ -1083,7 +1116,6 @@
 
     %form-group-clear-icon {
         &:focus {
-            border-radius: border-radius(rem(4px));
             background-color: color($color: 'primary', $variant: 500);
             color: contrast-color($color: 'primary', $variant: 600);
 
@@ -1092,12 +1124,7 @@
                 color: color($color: 'secondary', $variant: 500);
             }
 
-            @if $variant == 'fluent' {
-                border-radius: 0;
-            }
-
             @if $variant == 'bootstrap' {
-                border-radius: 0;
                 color: contrast-color($color: 'primary', $variant: 600);
             }
         }
@@ -1143,7 +1170,11 @@
     }
 
     %form-group-textarea {
-        --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
+        --size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
 
         min-height: var(--size);
         height: auto;
@@ -1368,6 +1399,7 @@
 
     // INDIGO START
     %form-group-bundle--indigo {
+        border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
         transition: background $transition-timing;
         padding-top: 0;
 
@@ -1501,6 +1533,30 @@
 
         @if $variant == 'fluent' {
             border-radius: var-get($theme, 'border-border-radius');
+        }
+
+        // Those focus styles are needed since when we focus the button inside
+        // the file type input the class .igx-input-group--focused is not added but the input is focused.
+        &:focus,
+        &:focus-within {
+            %form-group-bundle-start {
+                margin-block-start: rem(-1px);
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-end {
+                margin-block-start: rem(-1px);
+                margin-inline-end: rem(-1px);
+            }
+
+            %form-group-bundle-start:empty + %form-group-bundle-main,
+            %form-group-bundle-end:empty + %form-group-bundle-main {
+                margin-inline-start: rem(-1px);
+            }
+
+            %form-group-bundle-main {
+                margin-block-start: rem(-1px);
+            }
         }
     }
 
@@ -1642,6 +1698,23 @@
         }
     }
 
+    .igx-input-group--fluent [igxPrefix],
+    .igx-input-group--fluent igx-prefix {
+        &:first-child {
+            [igxButton]::after,
+            button::after {
+                border: {
+                    start: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                    end: {
+                        start-radius: var-get($theme, 'border-border-radius');
+                    };
+                }
+            }
+        }
+    }
+
     %form-group-prefix-fluent,
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
@@ -1670,17 +1743,6 @@
                 };
             }
         }
-
-        %form-group-bundle-start--bootstrap {
-            border: {
-                start: {
-                    start-radius: border-radius(rem(4px));
-                };
-                end: {
-                    start-radius: border-radius(rem(4px));
-                };
-            }
-        }
     }
 
     %form-group-display--bootstrap-suffixed {
@@ -1692,17 +1754,6 @@
                 };
                 end: {
                     end-radius: 0;
-                };
-            }
-        }
-
-        %form-group-bundle-end--bootstrap {
-            border: {
-                start: {
-                    end-radius: border-radius(rem(4px));
-                };
-                end: {
-                    end-radius: border-radius(rem(4px));
                 };
             }
         }
@@ -1766,10 +1817,10 @@
                 end-width: rem(1px);
             };
             start: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                start-radius: border-radius(rem(4px));
+                start-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1786,10 +1837,10 @@
                 end-width: rem(1px);
             };
             start: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
             end: {
-                end-radius: border-radius(rem(4px));
+                end-radius: var-get($theme, 'box-border-radius');
             };
         }
     }
@@ -1818,19 +1869,39 @@
         height: auto;
         line-height: 1.5;
         margin: 0;
-        font-size: pad(map.get($bootstrap-font-size, 'compact'), map.get($bootstrap-font-size, 'cosy'), map.get($bootstrap-font-size, 'comfortable'));
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        font-size: pad(
+            map.get($bootstrap-font-size, 'compact'),
+            map.get($bootstrap-font-size, 'cosy'),
+            map.get($bootstrap-font-size, 'comfortable')
+        );
+        padding-block: pad-inline(
+            map.get($bootstrap-block-padding, 'compact'),
+            map.get($bootstrap-block-padding, 'cosy'),
+            map.get($bootstrap-block-padding, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($bootstrap-inline-padding, 'compact'),
+            map.get($bootstrap-inline-padding, 'cosy'),
+            map.get($bootstrap-inline-padding, 'comfortable')
+        );
         transition: box-shadow .15s ease-out, border .15s ease-out;
     }
 
     %bootstrap-input,
     %bootstrap-file-input {
         border: rem(1px) solid var-get($theme, 'border-color');
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        padding-block: pad-inline(
+            map.get($bootstrap-block-padding, 'compact'),
+            map.get($bootstrap-block-padding, 'cosy'),
+            map.get($bootstrap-block-padding, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($bootstrap-inline-padding, 'compact'),
+            map.get($bootstrap-inline-padding, 'cosy'),
+            map.get($bootstrap-inline-padding, 'comfortable')
+        );
         grid-area: 1 / 2 / auto / auto;
-        border-radius: border-radius(rem(4px));
+        border-radius: var-get($theme, 'box-border-radius');
         z-index: 1;
     }
 
@@ -1909,9 +1980,10 @@
 
     %form-group-prefix,
     %form-group-suffix {
-        @include type-style($input-text) {
-            margin: 0;
+        &:not(igx-icon) {
+            @include type-style($input-text) {
+                margin: 0;
+            }
         }
     }
 }
-

@@ -26,7 +26,7 @@
 /// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
 /// @param {Color} $active-background [null] - The active background of the button.
 /// @param {Color} $active-foreground [null] - The active text color of the button.
-/// @param {Number} $border-radius [null] - The border radius of the button.
+/// @param {List} $border-radius [null] - The border radius of the button.
 /// @param {Color} $border-color [null] - The border color of the button.
 /// @param {Color} $hover-border-color [null] - The hover border color of the button.
 /// @param {Color} $focus-border-color [null] - The focus border color of the button.
@@ -167,7 +167,7 @@
         }
 
         @if not($_border-radius) {
-            $_border-radius: border-radius(map.get($_schema, 'border-radius'));
+            $_border-radius: border-radius(map.get($_schema, 'border-radius')...);
         }
 
         $themes: map.merge($themes, (
@@ -320,17 +320,16 @@
         compact: rem(1px, 16px)
     );
 
-
     $outlined-button-padding-indigo-inline: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(14px, 16px),
+        cosy: rem(10px, 16px),
+        compact: rem(6px, 16px)
     );
 
     $outlined-button-padding-indigo-block: (
-        comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(6px, 16px)
+        comfortable: rem(6px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(2px, 16px)
     );
 
     $icon-button-width-material: (
@@ -562,7 +561,6 @@
             width: var(--igx-icon-size, #{$icon-in-button-size});
             height: var(--igx-icon-size, #{$icon-in-button-size});
             font-size: var(--igx-icon-size, #{$icon-in-button-size});
-            color: inherit;
         }
 
         * + * {
@@ -697,6 +695,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(2px);
@@ -787,6 +789,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -902,6 +908,10 @@
         }
 
         @if($variant == 'fluent') {
+            &::after {
+                border-radius: inherit;
+            }
+
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -910,7 +920,7 @@
                     top: $outline-btn-indent;
                     inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
-                    border-radius: calc(#{border-radius(#{var-get($fab-theme, 'border-radius')})} - #{$outline-btn-indent});
+                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
