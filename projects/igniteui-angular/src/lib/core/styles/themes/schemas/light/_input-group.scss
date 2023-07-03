@@ -58,9 +58,9 @@
 /// @prop {Map} placeholder-color [color: ('grays', 500)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('grays', 400)] - The disabled placeholder color of an input group.
 ///
-/// @prop {Number} box-border-radius [4px 4px 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for search input.
 /// @prop {Color} label-floated-background [color: surface] - The background color of the label when floated for input of type border.
 /// @prop {Color} label-floated-disabled-background [color: surface] - The background color of the label when floated for input group of type border in its disabled state.
 ///
@@ -196,11 +196,23 @@ $light-input-group: extend(
             color: ('grays', 400)
         ),
 
-        box-border-radius: rem(4px),
+        box-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(4px),
+        border-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(4px),
+        search-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
         success-shadow-color: (
             color: ('success', 500, .38)
@@ -231,9 +243,9 @@ $light-input-group: extend(
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
 ///
-/// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for search input.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-input-group
@@ -276,11 +288,23 @@ $fluent-input-group: extend(
             color: ('grays', 100),
         ),
 
-        box-border-radius: rem(2px),
+        box-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(2px),
+        border-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(2px)
+        search-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -297,9 +321,6 @@ $fluent-input-group: extend(
 /// @prop {Map} success-secondary-color [color: ('success', 500)] - The success color used in the valid state.
 /// @prop {Map} warning-secondary-color [color: ('warn', 500)] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
-/// @prop {Number} box-border-radius [4px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-input-group
 $bootstrap-input-group: extend(
@@ -367,9 +388,9 @@ $bootstrap-input-group: extend(
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [1] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state of the search input.
-/// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for search input.
 /// @requires {function} extend
 /// @requires {Map} $light-input-group
 /// @requires {Map} $indigo-elevation-input-group
@@ -415,10 +436,22 @@ $indigo-input-group: extend(
             color: ('grays', 300)
         ),
 
-        box-border-radius: rem(0),
+        box-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(0),
+        border-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(2px)
+        search-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
