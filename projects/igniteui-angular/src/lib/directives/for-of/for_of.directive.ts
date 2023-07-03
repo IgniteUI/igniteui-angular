@@ -21,8 +21,7 @@ import {
     TrackByFunction,
     ViewContainerRef,
     AfterViewInit,
-    Inject,
-    NgIterable
+    Inject
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -84,7 +83,7 @@ export class IgxForOfContext<T> {
     standalone: true
 })
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
-export class IgxForOfDirective<T, U extends Array<T> = Array<T>> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
+export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
      * An @Input property that sets the data to be rendered.
@@ -93,7 +92,7 @@ export class IgxForOfDirective<T, U extends Array<T> = Array<T>> implements OnIn
      * ```
      */
     @Input()
-    public igxForOf: U | null;
+    public igxForOf: U&T[] | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
@@ -492,7 +491,7 @@ export class IgxForOfDirective<T, U extends Array<T> = Array<T>> implements OnIn
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxForOf` structural directive renders its template with a specific context type.
      */
-    public static  ngTemplateContextGuard<T, U extends Array<T>>(dir: IgxForOfDirective<T, U>, ctx: any):
+    public static  ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
             ctx is IgxForOfContext<T> {
         return true;
     }
@@ -532,7 +531,7 @@ export class IgxForOfDirective<T, U extends Array<T> = Array<T>> implements OnIn
      */
     public ngDoCheck(): void {
         if (this._differ) {
-            const changes = this._differ.diff(this.igxForOf as NgIterable<T>);
+            const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 //  re-init cache.
                 if (!this.igxForOf) {
@@ -1491,9 +1490,9 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     selector: '[igxGridFor][igxGridForOf]',
     standalone: true
 })
-export class IgxGridForOfDirective<T, U extends Array<T>> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
+export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
     @Input()
-    public set igxGridForOf(value: U | null) {
+    public set igxGridForOf(value: U&T[] | null) {
         this.igxForOf = value;
     }
 
@@ -1566,8 +1565,8 @@ export class IgxGridForOfDirective<T, U extends Array<T>> extends IgxForOfDirect
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
      */
-    public static override ngTemplateContextGuard<T, U extends Array<T>>(dir: IgxGridForOfDirective<T, U>, ctx: any):
-            ctx is NgForOfContext<T, U> {
+    public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
+            ctx is IgxForOfContext<T> {
         return true;
     }
 
