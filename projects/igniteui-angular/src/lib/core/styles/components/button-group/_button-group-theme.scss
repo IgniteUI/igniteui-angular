@@ -215,22 +215,22 @@
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-end-start-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-end-start-radius: inherit;
 
             &[igxButton] {
-                border-start-start-radius: var-get($theme, 'border-radius');
-                border-end-start-radius: var-get($theme, 'border-radius');
+                border-start-start-radius: inherit;
+                border-end-start-radius: inherit;
             }
         }
 
         &:last-of-type {
-            border-start-end-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: inherit;
+            border-end-end-radius: inherit;
 
             &[igxButton] {
-                border-start-end-radius: var-get($theme, 'border-radius');
-                border-end-end-radius: var-get($theme, 'border-radius');
+                border-start-end-radius: inherit;
+                border-end-end-radius: inherit;
             }
         }
 
@@ -341,17 +341,31 @@
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-start-end-radius: inherit;
             border-end-start-radius: 0;
             border-end-end-radius: 0;
+
+            &[igxButton] {
+                border-start-start-radius: inherit;
+                border-start-end-radius: inherit;
+                border-end-start-radius: 0;
+                border-end-end-radius: 0;
+            }
         }
 
         &:last-of-type {
             border-start-start-radius: 0;
             border-start-end-radius: 0;
-            border-end-start-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-end-start-radius: inherit;
+            border-end-end-radius: inherit;
+
+            &[igxButton] {
+                border-start-start-radius: 0;
+                border-start-end-radius: 0;
+                border-end-start-radius: inherit;
+                border-end-end-radius: inherit;
+            }
         }
     }
 }
