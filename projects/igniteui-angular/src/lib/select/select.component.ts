@@ -538,20 +538,26 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     protected onStatusChanged() {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (this.inputGroup.isFocused) {
-                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
+        this.manageRequiredAsterisk();
+        if (this.ngControl && !this.disabled && this.isTouchedOrDirty) {
+            if (this.hasValidators && this.inputGroup.isFocused) {
+                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+                // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+                this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
-            // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.input.valid = IgxInputState.INITIAL;
         }
-        this.manageRequiredAsterisk();
     }
 
+    private get isTouchedOrDirty(): boolean {
+        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+    }
 
     protected navigate(direction: Navigate, currentIndex?: number) {
         if (this.collapsed && this.selectedItem) {
