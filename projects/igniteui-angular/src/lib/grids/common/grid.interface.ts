@@ -101,7 +101,7 @@ export interface RowType {
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
-    virtDirRow?: IgxGridForOfDirective<any>;
+    virtDirRow?: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     pinned?: boolean;
     selected?: boolean;
     expanded?: boolean;

@@ -69,7 +69,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
      * @hidden
      */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
-    public virtDirRow: IgxGridForOfDirective<any>;
+    public virtDirRow: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     constructor(@Inject(IGX_GRID_BASE) public grid: GridType,
                 public element: ElementRef<HTMLElement>,
