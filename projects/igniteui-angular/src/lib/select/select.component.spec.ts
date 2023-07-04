@@ -30,7 +30,7 @@ const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
-const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
 const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
@@ -681,6 +681,36 @@ describe('igxSelect', () => {
             expect(inputGroupIsRequiredClass).toBeDefined();
             expect(inputGroupIsRequiredClass).not.toBeNull();
             expect(inputGroupIsRequiredClass).not.toBeUndefined();
+        }));
+
+        it('should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
+
+            // the form control has validators
+            formGroup.markAllAsTouched();
+            formGroup.get('optionsSelect').setErrors({ error: true });
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+
+            // remove the validators and set errors
+            (fix.componentInstance as IgxSelectReactiveFormComponent).removeValidators(formGroup);
+            formGroup.markAsUntouched();
+            fix.detectChanges();
+
+            formGroup.markAllAsTouched();
+            formGroup.get('optionsSelect').setErrors({ error: true });
+            fix.detectChanges();
+
+            // no validator, but there is a set error
+            expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
         }));
 
         it('Should properly initialize when used as a form control - with initial validators', fakeAsync(() => {

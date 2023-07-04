@@ -23,7 +23,7 @@ const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_DISABLED = 'igx-input-group--disabled';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
-const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_DROPDOWN = '.igx-time-picker--dropdown';
@@ -1727,6 +1727,36 @@ describe('IgxTimePicker', () => {
                 (fixture.componentInstance as IgxTimePickerReactiveFormComponent).disableForm();
                 fixture.detectChanges();
                 expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
+            });
+
+            it('should update validity state when programmatically setting errors on reactive form controls', () => {
+                fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
+                fixture.detectChanges();
+                timePicker = fixture.componentInstance.timePicker;
+                const form = fixture.componentInstance.form as UntypedFormGroup;
+
+                // the form control has validators
+                form.markAllAsTouched();
+                form.get('time').setErrors({ error: true });
+                fixture.detectChanges();
+
+                expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+            
+                // remove the validators and set errors
+                (fixture.componentInstance as IgxTimePickerReactiveFormComponent).removeValidators();
+                form.markAsUntouched();
+                fixture.detectChanges();
+
+                form.markAllAsTouched();
+                form.get('time').setErrors({ error: true });
+                fixture.detectChanges();
+
+                // no validator, but there is a set error
+                expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((timePicker as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+                expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
             });
         });
     });
