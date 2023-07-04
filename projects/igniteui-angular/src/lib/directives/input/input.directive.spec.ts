@@ -823,6 +823,72 @@ describe('IgxInput', () => {
         expect(igxInput.value).toEqual('');
         expect(model.inputValue).toEqual('');
     });
+
+    it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+        const fix = TestBed.createComponent(InputReactiveFormComponent);
+        fix.detectChanges();
+
+        const inputGroup = fix.componentInstance.igxInputGroup.element.nativeElement;
+        const formGroup = fix.componentInstance.reactiveForm;
+
+        // the form control has validators
+        formGroup.markAllAsTouched();
+        formGroup.get('fullName').setErrors({ error: true });
+        fix.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        // remove the validators and check the same
+        fix.componentInstance.removeValidators(formGroup);
+        formGroup.markAsUntouched();
+        tick();
+        fix.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        formGroup.markAllAsTouched();
+        formGroup.get('fullName').setErrors({ error: true });
+        fix.detectChanges();
+
+        // no validator, but there is a set error
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+    }));
+
+    it('should keep state as initial on type when there are no errors and validators on reactive form controls', fakeAsync(() => {
+        const fix = TestBed.createComponent(InputReactiveFormComponent);
+        fix.detectChanges();
+
+        const formGroup = fix.componentInstance.reactiveForm;
+
+        fix.componentInstance.removeValidators(formGroup);
+        formGroup.markAsUntouched();
+        fix.detectChanges();
+
+        const igxInput = fix.componentInstance.input;
+        const inputElement = fix.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fix);
+        dispatchInputEvent('blur', inputElement, fix);
+
+        const inputGroupElement = fix.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        dispatchInputEvent('focus', inputElement, fix);
+        igxInput.value = 'test';
+        fix.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
 });
 
 @Component({
