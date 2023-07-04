@@ -1566,10 +1566,7 @@
 
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
-
-        @if $fluent-theme {
-            border-width: rem(2px);
-        }
+        border-width: rem(2px);
     }
 
     %form-group-bundle-error--fluent,
