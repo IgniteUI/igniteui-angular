@@ -810,6 +810,54 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(4);
     }));
 
+    it('should update chip state after columns change.', () => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.groupingExpressions = [
+            {
+                dir: SortingDirection.Asc,
+                fieldName: "NewColumn"
+            }
+        ];
+        fix.detectChanges();
+
+        // no such column initially, so chip is disabled.
+        const chips = grid.groupArea.chips;
+        expect(chips.first.disabled).toBeTrue();
+        const newCols = [...fix.componentInstance.columns];
+        newCols.push({
+            field: "NewColumn",
+            width: 100
+        });
+        fix.componentInstance.columns = newCols;
+        fix.detectChanges();
+
+        // column now exists and has groupable=true, so chip should be enabled.
+        expect(chips.first.disabled).toBeFalse();
+    });
+
+    it('should update chip state on column groupable prop change', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const column = grid.getColumnByName('ProductName');
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // initially should not be disabled.
+        const chips = grid.groupArea.chips;
+        expect(chips.first.disabled).toBeFalse();
+
+        // should get disbaled on groupable=false
+        column.groupable = false;
+        fix.detectChanges();
+        expect(chips.first.disabled).toBeTrue();
+    });
+
     // GroupBy + Sorting integration
     it('should apply sorting on each group\'s records when non-grouped column is sorted.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -3821,7 +3869,7 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+                <igx-column [groupable]="true" *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
                 </igx-column>
         </igx-grid>
     `
