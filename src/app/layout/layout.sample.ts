@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxLayoutDirective, IgxFlexDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
+import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-layout-sample',

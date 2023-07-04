@@ -563,7 +563,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
                         }
 
                         if (!button.checked) {
-                            button.select();
+                            button.checked = true;
                         }
                     } else {
                         // non-selected button
