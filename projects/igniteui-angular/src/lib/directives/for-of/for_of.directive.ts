@@ -1022,7 +1022,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
-        const activeElement = this.document.activeElement as HTMLElement;
+        const document = (node.getRootNode() as any);
+        const activeElement = document.activeElement as HTMLElement;
 
         // Remove focus in case the the active element is inside the view container.
         // Otherwise we hit an exception while doing the 'small' scrolls swapping.
@@ -1030,7 +1031,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         //
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
         // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
-        if (node && node.contains(this.document.activeElement)) {
+        if (node && node.contains(activeElement)) {
             activeElement.blur();
         }
     }
