@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 27, version 16.0 (Due by June, 2023)
+## Milestone 27, (Due by July, 2023)
 
 1. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
 2. Igx Grid allow cell selection on specific columns [#11704](https://github.com/IgniteUI/igniteui-angular/issues/11704)
