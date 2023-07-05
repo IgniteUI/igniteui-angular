@@ -957,6 +957,12 @@
             }
         }
 
+        @include mx(bootstrap, textarea-group) {
+            @include e(bundle) {
+                @extend %form-group-bundle-bootstrap--textarea !optional;
+            }
+        }
+
         @include mx(bootstrap, disabled) {
             @include e(bundle) {
                 @extend %form-group-display--disabled-bootstrap !optional;
