@@ -110,7 +110,7 @@ export class IgxGridNavigationService {
 
     public headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!HEADER_KEYS.has(key) || Object.keys(this.activeNode).length === 0) {
+        if (!HEADER_KEYS.has(key) || this.activeNode?.row !== -1) {
             return;
         }
         event.preventDefault();
