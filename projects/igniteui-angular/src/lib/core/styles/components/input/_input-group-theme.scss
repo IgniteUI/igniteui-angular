@@ -1505,6 +1505,7 @@
         }
     }
 
+    %form-group-bundle-bootstrap--textarea,
     %form-group-bundle-fluent--textarea {
         display: flex;
     }
@@ -1792,6 +1793,8 @@
 
     %form-group-bundle-start--bootstrap,
     %form-group-bundle-end--bootstrap {
+        flex: none;
+
         &:empty {
             display: none;
         }
