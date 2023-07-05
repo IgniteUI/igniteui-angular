@@ -630,6 +630,12 @@
             }
         }
 
+        @include mx(fluent, textarea-group) {
+            @include e(bundle) {
+                @extend %form-group-bundle-fluent--textarea !optional;
+            }
+        }
+
         @include mx(fluent, focused) {
             @include e(bundle-start) {
                 @extend %form-group-bundle-start--fluent--focused !optional;
