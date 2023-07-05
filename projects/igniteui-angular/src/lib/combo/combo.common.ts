@@ -812,15 +812,27 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * The text displayed in the combo input
+     * The value of the selected item in the combo
      *
      * ```typescript
      * // get
      * let comboValue = this.combo.value;
      * ```
      */
-    public get value(): string {
+    public get value(): any[] {
         return this._value;
+    }
+
+    /**
+     * The text displayed in the combo input
+     *
+     * ```typescript
+     * // get
+     * let comboDisplayValue = this.combo.displayValue;
+     * ```
+     */
+    public get displayValue(): string[] {
+        return this._displayValue ? this._displayValue.split(', ') : [];
     }
 
     /**
@@ -923,7 +935,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
          this._filteringOptions = value;
      }
     protected _data = [];
-    protected _value = '';
+    protected _value = [];
+    protected _displayValue = '';
     protected _groupKey = '';
     protected _searchValue = '';
     protected _filteredData = [];
@@ -1009,8 +1022,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._value) {
-            this._value = this.createDisplayText(this.selection, []);
+        if (this.data?.length && this.selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(this.selection, []);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
         super.ngDoCheck();
     }
@@ -1032,7 +1046,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     public toggle(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
@@ -1052,7 +1066,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     public open(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
@@ -1090,7 +1104,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     public get selection() {
         const items = Array.from(this.selectionService.get(this.id));
-        return items;
+        return this.convertKeysToItems(items)
     }
 
     /**
@@ -1281,7 +1295,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
+        if (this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 

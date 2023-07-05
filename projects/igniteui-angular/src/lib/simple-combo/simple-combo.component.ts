@@ -185,8 +185,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
-        this._value = this.createDisplayText(this.selection, oldSelection);
-        this.filterValue = this._internalFilter = this._value?.toString();
+        this._displayValue = this.createDisplayText(this.selection, oldSelection);
+        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        this.filterValue = this._internalFilter = this._displayValue?.toString();
     }
 
     /** @hidden @internal */
@@ -246,7 +247,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         // and sets the selection to an invalid value in writeValue method
         if (!this.isValid(this.selectedItem)) {
             this.selectionService.clear(this.id);
-            this._value = '';
+            this._displayValue = '';
         }
 
         super.ngAfterViewInit();
@@ -435,7 +436,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     protected setSelection(newSelection: any): void {
         const newSelectionAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
         const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newSelectionAsArray), oldSelectionAsArray);
         const args: ISimpleComboSelectionChangingEventArgs = {
             newSelection: newSelectionAsArray[0],
             oldSelection: oldSelectionAsArray[0],
@@ -453,10 +454,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
+            this._value = argsSelection;
             if (this._updateInput) {
-                this.comboInput.value = this._internalFilter = this._value = this.searchValue = displayText !== args.displayText
+                this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText(argsSelection, [args.oldSelection]);
+                    : this.createDisplayText(this.selection, [args.oldSelection]);
             }
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
@@ -467,13 +469,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]): string {
         if (this.isRemote) {
-            return this.getRemoteSelection(newSelection, oldSelection);
+            const selection = this.valueKey ? newSelection.map(item => item[this.valueKey]) : newSelection;
+            return this.getRemoteSelection(selection, oldSelection);
         }
 
         if (this.displayKey !== null
             && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
+            return newSelection.filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
         }
 
         return newSelection[0]?.toString() || '';
@@ -533,7 +536,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this.comboInput.value = this._internalFilter = this._value = this.searchValue = '';
+        this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = '';
     }
 
     private isValid(value: any): boolean {
