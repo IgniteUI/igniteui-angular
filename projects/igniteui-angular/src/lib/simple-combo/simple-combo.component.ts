@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     NgModule, Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -62,7 +62,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ]
 })
-export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
+export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -245,6 +245,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
 
         super.ngAfterViewInit();
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length && !this._value) {
+            this._value = this.createDisplayText(this.selection, []);
+        }
+        super.ngDoCheck();
     }
 
     /** @hidden @internal */
