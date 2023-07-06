@@ -30,13 +30,14 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
+const CSS_CLASS_DATE_SELECTED = 'igx-calendar__date--selected';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'today';
 const DATE_PICKER_CLEAR_ICON = 'clear';
 
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
-const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 
 describe('IgxDatePicker', () => {
@@ -348,6 +349,36 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
             });
+
+            it('should update validity state when programmatically setting errors on reactive form controls', () => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+                const form = (fixture.componentInstance as IgxDatePickerReactiveFormComponent).form as UntypedFormGroup;
+
+                // the form control has validators
+                form.markAllAsTouched();
+                form.get('date').setErrors({ error: true });
+                fixture.detectChanges();
+
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((datePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((datePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+            
+                // remove the validators and set errors
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).removeValidators();
+                form.markAsUntouched();
+                fixture.detectChanges();
+
+                form.markAllAsTouched();
+                form.get('date').setErrors({ error: true });
+                fixture.detectChanges();
+
+                // no validator, but there is a set error
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((datePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((datePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+            });
         });
 
         describe('Projected elements', () => {
@@ -442,6 +473,54 @@ describe('IgxDatePicker', () => {
                 expect(toggle.clicked.observers).toHaveSize(0);
                 expect(clear.clicked.observers).toHaveSize(0);
             });
+        });
+
+        describe('UI Interaction', () => {
+            let fixture: ComponentFixture<any>;
+            let datePicker: IgxDatePickerComponent;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+            }));
+
+            it('should focus today\'s date when reopening the calendar', fakeAsync(() => {
+                datePicker.clear();
+                datePicker.open();
+                expect(datePicker.value).toEqual(null);
+                expect(datePicker.collapsed).toBeFalsy();
+
+                datePicker.close();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeTruthy();
+
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                const today = new Date().getDate().toString();
+                expect(document.activeElement.textContent.trim()).toEqual(today);
+                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+            }));
+
+            it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
+                datePicker.clear();
+                expect(datePicker.value).toEqual(null);
+                expect(datePicker.collapsed).toBeTruthy();
+
+                datePicker.select(new Date('test'));
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                const today = new Date().getDate().toString();
+                expect(document.activeElement.textContent.trim()).toEqual(today);
+                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+            }));
         });
     });
 

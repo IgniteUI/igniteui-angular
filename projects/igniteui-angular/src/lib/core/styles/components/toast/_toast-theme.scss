@@ -19,7 +19,7 @@
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $text-color [null] - The text-color used for the toast.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for the toast component.
+/// @param {List} $border-radius [null] - The border radius used for the toast component.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
 ///
 ///
@@ -64,7 +64,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
