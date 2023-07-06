@@ -12,7 +12,7 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
@@ -20,16 +20,16 @@
 /// @param {Number} $border-width [null] - The border width of the badge component.
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
-/// @param {border-radius} $border-radius [null] - The border radius used for badge component.
+/// @param {Number} $border-radius [null] - The border radius used for badge component.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-badge-theme);
 @function badge-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $icon-color: null,
@@ -45,8 +45,8 @@
     $name: 'igx-badge';
     $badge-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $badge-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'badge') {
+        $badge-schema: map.get($schema, 'badge');
     } @else {
         $badge-schema: $schema;
     }
@@ -67,7 +67,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (

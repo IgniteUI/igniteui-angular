@@ -5,8 +5,8 @@ import { LazyIconRoutingModule } from './lazyIcon.routing.module';
 
 @NgModule({
     imports: [
-    LazyIconRoutingModule,
-    LazyIconSampleComponent
-]
+        LazyIconRoutingModule,
+        LazyIconSampleComponent
+    ]
 })
 export class LazyIconModule { }
