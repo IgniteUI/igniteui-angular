@@ -1351,7 +1351,11 @@
         }
 
         &:empty {
-            display: none;
+            @if $variant == 'fluent' {
+                padding: 0;
+            } @else {
+                display: none;
+            }
         }
     }
 
@@ -1611,6 +1615,13 @@
 
         %form-group-bundle-main--fluent--focused {
             margin-block-start: rem(-1px);
+        }
+    }
+
+    %form-group-bundle-textarea-start--fluent,
+    %form-group-bundle-textarea-end--fluent {
+        &:empty {
+            display: none;
         }
     }
 
