@@ -537,6 +537,7 @@
     }
 
     %grid-excel-menu__secondary-footer {
+        padding: rem(8px) rem(16px);
         @if $bootstrap-theme {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         } @else {
