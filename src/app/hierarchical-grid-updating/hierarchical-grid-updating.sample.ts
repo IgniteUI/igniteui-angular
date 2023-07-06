@@ -3,11 +3,11 @@ import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IGridCreatedEventArgs,
-    GridSelectionMode
+    GridSelectionMode,
+    IgxButtonDirective,
+    IgxColumnComponent
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     selector: 'app-hierarchical-grid-updating-sample',

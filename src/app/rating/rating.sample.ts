@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
-import { IgcFormControlDirective } from '../../../projects/igniteui-angular/src/lib/directives/form-control/form-control.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { FormsModule } from '@angular/forms';
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
 import { NgFor } from '@angular/common';
+import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective } from 'igniteui-angular';
 
 defineComponents(IgcRatingComponent);
 

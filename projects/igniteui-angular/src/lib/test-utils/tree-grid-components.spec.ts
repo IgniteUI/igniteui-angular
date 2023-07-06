@@ -1067,7 +1067,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
             [expressions]="groupingExpressions"
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
-        <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
+        <igx-column [field]="groupKey" [resizable]="true" [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'JobTitle'" dataType="string"></igx-column>

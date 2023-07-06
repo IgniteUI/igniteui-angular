@@ -9,15 +9,15 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The color of the ripple.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the color
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-ripple-theme);
 @function ripple-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $color: null
 ) {
     $name: 'igx-ripple';
@@ -25,8 +25,8 @@
 
     $ripple-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $ripple-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'ripple') {
+        $ripple-schema: map.get($schema, 'ripple');
     } @else {
         $ripple-schema: $schema;
     }
