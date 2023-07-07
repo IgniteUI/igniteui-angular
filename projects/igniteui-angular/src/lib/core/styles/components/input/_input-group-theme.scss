@@ -1453,9 +1453,6 @@
     // FLUENT START
     // Input
     %igx-input-group-fluent {
-        display: flex;
-        flex-direction: column;
-
         igx-prefix,
         [igxPrefix] {
             @extend %form-group-prefix-fluent;
@@ -1506,6 +1503,11 @@
             inset-inline-start: calc(100% + #{rem(4px)});
             color: var-get($theme, 'error-secondary-color');
         }
+    }
+
+    %form-group-bundle-bootstrap--textarea,
+    %form-group-bundle-fluent--textarea {
+        display: flex;
     }
 
     %form-group-label-required--fluent {
@@ -1791,6 +1793,8 @@
 
     %form-group-bundle-start--bootstrap,
     %form-group-bundle-end--bootstrap {
+        flex: none;
+
         &:empty {
             display: none;
         }
