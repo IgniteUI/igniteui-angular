@@ -40,9 +40,10 @@ const MAX_PERF_SCROLL_DIFF = 4;
 /**
  *  @publicApi
  */
-export class IgxForOfContext<T> {
+export class IgxForOfContext<T, U extends T[] = T[]> {
     constructor(
         public $implicit: T,
+        public igxForOf: U,
         public index: number,
         public count: number
     ) { }
@@ -414,7 +415,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    new IgxForOfContext<T>(input, this.getContextIndex(input), this.igxForOf.length)
+                    new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -492,7 +493,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * `IgxForOf` structural directive renders its template with a specific context type.
      */
     public static  ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
-            ctx is IgxForOfContext<T> {
+            ctx is IgxForOfContext<T, U> {
         return true;
     }
 
@@ -1378,7 +1379,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         const input = this.igxForOf[elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            new IgxForOfContext<T>(input, this.getContextIndex(input), this.igxForOf.length)
+            new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
         );
 
         this._embeddedViews.push(embeddedView);
@@ -1487,6 +1488,17 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
 }
 
+export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext<T, U> {
+    constructor(
+        $implicit: T,
+        public igxGridForOf: U,
+        index: number,
+        count: number
+    ) {
+        super($implicit, igxGridForOf, index, count);
+     }
+}
+
 @Directive({
     selector: '[igxGridFor][igxGridForOf]',
     standalone: true
@@ -1567,7 +1579,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
      */
     public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
-            ctx is IgxForOfContext<T> {
+            ctx is IgxGridForOfContext<T, U> {
         return true;
     }
 
@@ -1809,7 +1821,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         const input = this.igxForOf[elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            new IgxForOfContext<T>(input, this.getContextIndex(input), this.igxForOf.length)
+            new IgxGridForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
         );
 
         this._embeddedViews.push(embeddedView);

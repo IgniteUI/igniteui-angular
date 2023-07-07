@@ -13,7 +13,9 @@ import {
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    DebugElement
+    DebugElement,
+    Pipe,
+    PipeTransform
 } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -1125,6 +1127,26 @@ describe('IgxForOf directive -', () => {
         });
     });
 
+    describe('`as` syntax', () => {
+        configureTestSuite();
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [LocalVariablesAsComponent]
+            }).compileComponents();
+        }));
+
+        it('should get correct data using `as` syntax', () => {
+            const fix = TestBed.createComponent(LocalVariablesAsComponent);
+            fix.detectChanges();
+            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER))[0].children;
+            expect(allItems.length).toEqual(50);
+            for (let i = 0; i < allItems.length; i++) {
+                const itemElems = allItems[i].nativeElement.textContent.split(":");
+                expect(itemElems[1].trim()).toEqual(itemElems[2].trim());
+            }
+        });
+    });
+
     describe('on destroy', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
@@ -1817,6 +1839,39 @@ export class NoWidthAndHeightComponent {
     imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
+    public data = [];
+
+    constructor() {
+        for (let i = 0; i < 100; i++) {
+            this.data.push({ text: i + '' });
+        }
+    }
+}
+
+
+@Pipe({
+    name: "customSlice",
+    standalone: true
+})
+export class CustomSlicePipe implements PipeTransform {
+    public transform(value: any[], start: number, end: number): any[] {
+        return value.slice(start, end);
+    }
+}
+
+@Component({
+    template: `
+    <div class='container'>
+        <div #markupItem
+            *igxFor="let item of data | customSlice:0:50 as localData; index as rowIndex; scrollOrientation: 'vertical'; containerSize: '500px'">
+            {{rowIndex}} : {{item.text}} : {{localData[rowIndex].text}}
+        </div>
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxForOfDirective, CustomSlicePipe, NgClass]
+})
+export class LocalVariablesAsComponent {
     public data = [];
 
     constructor() {
