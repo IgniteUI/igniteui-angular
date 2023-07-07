@@ -2210,6 +2210,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         }));
+
+        it('Should not throw error when pressing Arrow keys in filter when focus is outside of input.', fakeAsync(() => {
+            spyOn(console, 'error');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            const prefix = GridFunctions.getFilterRowPrefix(fix).nativeElement;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , prefix);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
+        }));
     });
 
     describe('Integration scenarios', () => {
