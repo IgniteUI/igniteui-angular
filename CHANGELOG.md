@@ -94,6 +94,8 @@ All notable changes for each version of this project will be documented in this 
 - `ISortingExpression` now accepts an optional generic type parameter for type narrowing of the `fieldName` property to keys of the data item, e.g. `ISortingExpression<MyDataItem>`
 - `Util`
     - Added new `CachedDataCloneStrategy` that allows for cloning object with circular references.
+- `IgxForOf`
+    - Add support for `as` syntax in template to get bound data
 
 ## 15.1.0
 
