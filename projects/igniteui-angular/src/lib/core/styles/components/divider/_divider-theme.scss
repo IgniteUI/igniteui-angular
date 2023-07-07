@@ -45,6 +45,7 @@
         display: block;
         height: rem(1px);
         background: var-get($theme, 'color');
+        margin: var(--igx-divider-inset, var(--inset, var(--_inset)));
     }
 
     %igx-divider--dashed {
