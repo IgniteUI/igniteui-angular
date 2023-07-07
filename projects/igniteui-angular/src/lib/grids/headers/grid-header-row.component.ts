@@ -118,7 +118,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
-    public headerContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
+    public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     public get headerForOf() {
         return this.headerContainer;
