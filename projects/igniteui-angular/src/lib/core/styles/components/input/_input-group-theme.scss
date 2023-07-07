@@ -1453,9 +1453,6 @@
     // FLUENT START
     // Input
     %igx-input-group-fluent {
-        display: flex;
-        flex-direction: column;
-
         igx-prefix,
         [igxPrefix] {
             @extend %form-group-prefix-fluent;
@@ -1506,6 +1503,11 @@
             inset-inline-start: calc(100% + #{rem(4px)});
             color: var-get($theme, 'error-secondary-color');
         }
+    }
+
+    %form-group-bundle-bootstrap--textarea,
+    %form-group-bundle-fluent--textarea {
+        display: flex;
     }
 
     %form-group-label-required--fluent {
@@ -1566,10 +1568,7 @@
 
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
-
-        @if $fluent-theme {
-            border-width: rem(2px);
-        }
+        border-width: rem(2px);
     }
 
     %form-group-bundle-error--fluent,
@@ -1794,6 +1793,8 @@
 
     %form-group-bundle-start--bootstrap,
     %form-group-bundle-end--bootstrap {
+        flex: none;
+
         &:empty {
             display: none;
         }

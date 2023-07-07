@@ -109,7 +109,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * The virtualized part of the header row containing the unpinned header groups.
     */
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
-    public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
+    public headerContainers: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
     public override get headerForOf() {
         return this.headerContainers.last;
