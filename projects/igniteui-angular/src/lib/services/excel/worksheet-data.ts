@@ -1,4 +1,4 @@
-import { HeaderType, ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
+import { ExportHeaderType, ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -91,10 +91,10 @@ export class WorksheetData {
         this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
 
         this._hasMultiColumnHeader = Array.from(this.owners.values())
-            .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader));
+            .some(o => o.columns.some(col => !col.skip && col.headerType === ExportHeaderType.MultiColumnHeader));
 
         this._hasMultiRowHeader = Array.from(this.owners.values())
-            .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiRowHeader));
+            .some(o => o.columns.some(col => !col.skip && col.headerType === ExportHeaderType.MultiRowHeader));
 
         this._isHierarchical = this.data[0]?.type === ExportRecordType.HierarchicalGridRecord
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');

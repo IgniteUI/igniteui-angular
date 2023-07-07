@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { NgFor } from '@angular/common';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
 
 @Component({
     template: `
@@ -11,7 +17,9 @@ import { Component } from '@angular/core';
                 <igx-icon igxListAction>phone</igx-icon>
             </igx-list-item>
         </igx-list>
-    `
+    `,
+    standalone: true,
+    imports: [IgxListComponent, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
 })
 export class TabsRoutingView1Component {
     public contacts = [{
@@ -55,7 +63,8 @@ export class TabsRoutingView1Component {
             a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
             arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
             Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-    `
+    `,
+    standalone: true
 })
 export class TabsRoutingView2Component {
 }
@@ -67,7 +76,8 @@ export class TabsRoutingView2Component {
             consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
             urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
             Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.</p>
-    `
+    `,
+    standalone: true
 })
 export class TabsRoutingView3Component {
 }

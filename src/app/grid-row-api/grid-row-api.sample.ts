@@ -1,20 +1,16 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import {
-    IgxGridComponent,
-    RowType,
-    IgxTreeGridComponent,
-    IgxHierarchicalGridComponent,
-    IPinningConfig,
-    RowPinningPosition,
-    GridSummaryCalculationMode,
-    GridSummaryPosition
-} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { GridSummaryCalculationMode, GridSummaryPosition, IPinningConfig, IgxButtonDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxPaginatorComponent, IgxPaginatorDirective, IgxRowDragGhostDirective, IgxRowIslandComponent, IgxTreeGridComponent, RowPinningPosition, RowType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-api-sample',
     styleUrls: ['grid-row-api.sample.scss'],
-    templateUrl: 'grid-row-api.sample.html'
+    templateUrl: 'grid-row-api.sample.html',
+    standalone: true,
+    imports: [FormsModule, IgxGridComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxPaginatorDirective]
 })
 
 export class GridRowAPISampleComponent implements OnInit {
@@ -56,10 +52,10 @@ export class GridRowAPISampleComponent implements OnInit {
     constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
-			this.grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
-			this.grid.summaryPosition = GridSummaryPosition.bottom;
+        this.grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
+        this.grid.summaryPosition = GridSummaryPosition.bottom;
+        this.treeGridHier.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
 
-			this.treeGridHier.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
             { field: 'CompanyName', width: '200px', groupable: true },
@@ -175,8 +171,7 @@ export class GridRowAPISampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-        byIndex: boolean, index: number, key: any) {
+    public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
         if (row.pinned) {
             row.unpin();

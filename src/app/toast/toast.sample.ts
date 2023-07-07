@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxToastComponent, VerticalAlignment } from 'igniteui-angular';
+import { IgxButtonDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxToastComponent, VerticalAlignment } from 'igniteui-angular';
 
 @Component({
     selector: 'app-toast-sample',
     styleUrls: ['toast.sample.scss'],
     templateUrl: 'toast.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxOverlayOutletDirective, IgxToastComponent]
 })
 export class ToastSampleComponent {
     @ViewChild('toast')

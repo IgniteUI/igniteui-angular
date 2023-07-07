@@ -10,7 +10,7 @@
 ////
 
 /// Returns a map containing all style properties related to the theming of the tree component.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} background [null] - The background color used for the tree node.
 /// @param {Color} foreground [null] - The color used for the tree node content.
 /// @param {Color} background-selected [null] - The background color used for the selected tree node.
@@ -23,15 +23,14 @@
 /// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
-/// @requires $light-schema
-///
+/// @requires $light-material-schema
 ///
 /// @example scss Change the tree background
 ///   $my-tree-theme: tree-theme($background: magenta);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-tree-theme);
 @function tree-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null,
     $background-selected: null,
     $background-active: null,
@@ -48,13 +47,14 @@
     $name: 'igx-tree';
     $tree-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $tree-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'tree') {
+        $tree-schema: map.get($schema, 'tree');
     } @else {
         $tree-schema: $schema;
     }
 
     $theme: digest-schema($tree-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($foreground) and $background {
         $foreground: text-contrast($background);
@@ -86,6 +86,9 @@
         foreground-disabled: $foreground-disabled,
         drop-area-color: $drop-area-color,
         border-color: $border-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -93,7 +96,7 @@
 @mixin tree($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $indigo-theme: $variant == 'indigo-design';
 
     $node-indent: (
@@ -157,8 +160,11 @@
     }
 
     %node-wrapper {
-        min-height: map.get($node-height, 'comfortable');
-        padding: 0 map.get($node-indent, 'comfortable');
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($node-height, 'compact')}, #{map.get($node-height, 'cosy')}, #{map.get($node-height, 'comfortable')})};
+        min-height: var(--size);
+        padding-inline: pad-inline(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
+        padding-block: 0;
         position: relative;
         background: var-get($theme, 'background');
         color: var-get($theme, 'foreground');
@@ -203,11 +209,10 @@
         }
 
         &--cosy {
-            min-height: map.get($node-height, 'cosy');
-            padding: 0 map.get($node-indent, 'cosy');
+            --component-size: var(--ig-size, var(--ig-size-medium));
 
             %node-spacer {
-                width: map.get($node-indent, 'cosy')
+                --component-size: var(--ig-size, var(--ig-size-medium));
             }
 
             %node-drop-indicator {
@@ -222,11 +227,10 @@
         }
 
         &--compact {
-            min-height: map.get($node-height, 'compact');
-            padding: 0 map.get($node-indent, 'compact');
+            --component-size: var(--ig-size, var(--ig-size-small));
 
             %node-spacer {
-                width: map.get($node-indent, 'compact')
+                --component-size: var(--ig-size, var(--ig-size-small));
             }
 
             %node-drop-indicator {
@@ -290,8 +294,10 @@
     }
 
     %node-spacer {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+        width: var(--size);
         display: inline-block;
-        width: map.get($node-indent, 'comfortable');
     }
 
     %node-content {

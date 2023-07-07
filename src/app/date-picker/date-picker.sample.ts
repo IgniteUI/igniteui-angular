@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxDatePickerComponent } from 'igniteui-angular';
-import { DateRangeDescriptor, DateRangeType } from 'projects/igniteui-angular/src/lib/core/dates/dateRange';
+import { DateRangeDescriptor, DateRangeType, IgxButtonDirective, IgxDatePickerComponent, IgxIconComponent, IgxLabelDirective, IgxPickerActionsDirective, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-picker-sample',
     styleUrls: ['date-picker.sample.scss'],
-    templateUrl: 'date-picker.sample.html'
+    templateUrl: 'date-picker.sample.html',
+    standalone: true,
+    imports: [IgxDatePickerComponent, IgxLabelDirective, IgxSuffixDirective, IgxIconComponent, IgxPickerActionsDirective, IgxButtonDirective, IgxRippleDirective]
 })
 
 export class DatePickerSampleComponent {

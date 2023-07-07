@@ -1,13 +1,10 @@
-import {
-    CommonModule
-} from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     OnDestroy,
     OnInit,
     Output,
@@ -29,16 +26,14 @@ import {
     Validator,
     NG_VALIDATORS
 } from '@angular/forms';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
+
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import {
     IgxItemListDirective,
-    IgxTimeItemDirective,
-    IgxTimePickerTemplateDirective,
-    IgxTimePickerActionsDirective
+    IgxTimeItemDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
@@ -46,22 +41,25 @@ import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil } from 'rxjs/operators';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxMaskModule } from '../directives/mask/mask.directive';
-import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerClearComponent, IgxPickersCommonModule } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -92,7 +90,9 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
         `:host {
             display: block;
         }`
-    ]
+    ],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, NgIf, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, NgFor, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
@@ -318,8 +318,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public label: IgxLabelDirective;
 
     /** @hidden @internal */
-    @ContentChild(IgxTimePickerActionsDirective)
-    public timePickerActionsDirective: IgxTimePickerActionsDirective;
+    @ContentChild(IgxPickerActionsDirective)
+    public timePickerActionsDirective: IgxPickerActionsDirective;
 
     @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private inputDirective: IgxInputDirective;
@@ -1061,10 +1061,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     protected onStatusChanged() {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator) &&
-            !this._ngControl.disabled) {
-            if (this._inputGroup.isFocused) {
+        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
+            if (this.hasValidators && this._inputGroup.isFocused) {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
@@ -1077,6 +1075,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private setMinMaxDropdownValue(type: string, time: Date): Date {
@@ -1270,37 +1276,3 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxTimePickerComponent,
-        IgxItemListDirective,
-        IgxTimeItemDirective,
-        IgxTimePickerTemplateDirective,
-        IgxTimePickerActionsDirective,
-        TimeFormatPipe,
-        TimeItemPipe
-    ],
-    exports: [
-        IgxTimePickerComponent,
-        IgxTimePickerTemplateDirective,
-        IgxTimePickerActionsDirective,
-        IgxPickersCommonModule,
-        IgxInputGroupModule
-    ],
-    imports: [
-        CommonModule,
-        IgxDateTimeEditorModule,
-        IgxInputGroupModule,
-        IgxIconModule,
-        IgxButtonModule,
-        IgxMaskModule,
-        IgxToggleModule,
-        IgxTextSelectionModule
-    ],
-    providers: []
-})
-export class IgxTimePickerModule { }

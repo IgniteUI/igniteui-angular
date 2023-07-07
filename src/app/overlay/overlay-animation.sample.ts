@@ -1,18 +1,22 @@
 import { Component, ViewChild } from '@angular/core';
+import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 import {
     OverlaySettings,
     GlobalPositionStrategy,
     NoOpScrollStrategy,
     IgxToggleDirective,
-    HorizontalAlignment
+    HorizontalAlignment,
+    IgxAvatarComponent,
+    IGX_CARD_DIRECTIVES
 } from 'igniteui-angular';
-import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-animation-sample',
     templateUrl: './overlay-animation.sample.html',
-    styleUrls: ['overlay-animation.sample.scss']
+    styleUrls: ['overlay-animation.sample.scss'],
+    standalone: true,
+    imports: [IgxAvatarComponent, IgxToggleDirective, IGX_CARD_DIRECTIVES]
 })
 export class OverlayAnimationSampleComponent {
     @ViewChild('audiToggle', { static: true }) public audiToggle: IgxToggleDirective;

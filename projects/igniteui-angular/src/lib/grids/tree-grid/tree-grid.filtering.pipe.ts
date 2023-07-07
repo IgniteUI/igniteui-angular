@@ -7,7 +7,10 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 
 /** @hidden */
-@Pipe({name: 'treeGridFiltering'})
+@Pipe({
+    name: 'treeGridFiltering',
+    standalone: true
+})
 export class IgxTreeGridFilteringPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {}

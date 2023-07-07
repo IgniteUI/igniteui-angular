@@ -4,14 +4,19 @@ import { FilteringExpressionsTree, IgxStringFilteringOperand,
     DisplayDensity,
     IgxQueryBuilderComponent,
     changei18n,
-    IExpressionTree} from 'igniteui-angular';
+    IExpressionTree,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxRippleDirective} from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 
 @Component({
     providers: [],
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
-    templateUrl: 'query-builder.sample.html'
+    templateUrl: 'query-builder.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })

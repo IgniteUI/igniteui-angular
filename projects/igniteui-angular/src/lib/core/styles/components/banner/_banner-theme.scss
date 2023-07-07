@@ -10,21 +10,21 @@
 
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $banner-background [null]- The background color used banner background.
 /// @param {Color} $banner-message-color [null]- The color used for banner label.
 /// @param {Color} $banner-border-color [null] - The border color used banner border.
 /// @param {Color} $banner-illustration-color [null] - The color used banner illustration.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background in banner
 ///   $my-banner-theme: banner-theme($banner-background: #000);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-banner-theme);
 @function banner-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
@@ -34,13 +34,14 @@
     $selector: 'igx-banner, .igx-banner, .igx-banner--cosy, .igx-banner--compact';
     $banner-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $banner-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'banner') {
+        $banner-schema: map.get($schema, 'banner');
     } @else {
         $banner-schema: $schema;
     }
 
     $theme: digest-schema($banner-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($banner-message-color) and $banner-background {
         $banner-message-color: text-contrast($banner-background);
@@ -52,20 +53,20 @@
         banner-background: $banner-background,
         banner-message-color: $banner-message-color,
         banner-border-color: $banner-border-color,
-        banner-illustration-color: $banner-illustration-color
+        banner-illustration-color: $banner-illustration-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin banner($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
 
-    $banner-padding: (
-        comfortable: rem(8px),
-        cosy: rem(8px),
-        compact: rem(8px)
-    );
+    $padding: rem(8px);
+    $padding-inline-start: calc(#{$padding} * 2);
 
     %igx-banner-host {
         igx-expansion-panel-body {
@@ -86,15 +87,25 @@
     }
 
     %igx-banner {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
-        grid-gap: rem(8px);
-        padding-inline-start: calc(#{map.get($banner-padding, 'comfortable') * 2});
-        padding-inline-end: map.get($banner-padding, 'comfortable');
-        padding-block-start: map.get($banner-padding, 'comfortable');
-        padding-block-end: map.get($banner-padding, 'comfortable');
+        gap: rem(8px);
+
+        padding-inline-start: pad-inline($padding-inline-start);
+        padding-inline-end: pad-inline($padding);
+        padding-block: pad-block($padding);
         background: var-get($theme, 'banner-background');
+    }
+
+    %igx-banner--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    %igx-banner--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-banner__illustration {
@@ -124,19 +135,6 @@
         }
     }
 
-    %igx-banner--cosy {
-        padding-inline-start: calc(#{map.get($banner-padding, 'cosy') * 2});
-        padding-inline-end: map.get($banner-padding, 'cosy');
-        padding-block-start: map.get($banner-padding, 'cosy');
-        padding-block-end: map.get($banner-padding, 'cosy');
-    }
-
-    %igx-banner--compact {
-        padding-inline-start: calc(#{map.get($banner-padding, 'compact') * 2});
-        padding-inline-end: map.get($banner-padding, 'compact');
-        padding-block-start: map.get($banner-padding, 'compact');
-        padding-block-end: map.get($banner-padding, 'compact');
-    }
 
     %igx-banner__message {
         min-width: rem(150px);

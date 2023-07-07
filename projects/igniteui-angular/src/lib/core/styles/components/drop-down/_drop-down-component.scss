@@ -24,6 +24,7 @@
         }
 
         @include e(item) {
+            @include sizable();
             @extend %igx-drop-down__item !optional;
         }
 

@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-grid-performance-sample',
-    styleUrls: ['grid-performance.sample.scss'],
-    templateUrl: 'grid-performance.sample.html'
+    templateUrl: 'grid-performance.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
 })
 
 export class GridPerformanceSampleComponent implements OnInit {

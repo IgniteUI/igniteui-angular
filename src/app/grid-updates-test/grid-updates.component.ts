@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IRowSelectionEventArgs } from 'igniteui-angular';
-import { IgxGridComponent } from 'projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { NgFor } from '@angular/common';
+import { IRowSelectionEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { AMINO_DATA } from './aminoData';
 
 @Component({
-  selector: 'app-grid-updates',
-  styleUrls: ['./grid-updates.component.scss'],
-  templateUrl: './grid-updates.component.html'
+    selector: 'app-grid-updates',
+    styleUrls: ['./grid-updates.component.scss'],
+    templateUrl: './grid-updates.component.html',
+    standalone: true,
+    imports: [IgxGridComponent, NgFor, IgxColumnComponent]
 })
 export class GridUpdatesComponent implements OnInit {
   @ViewChild('grid') public grid: IgxGridComponent;

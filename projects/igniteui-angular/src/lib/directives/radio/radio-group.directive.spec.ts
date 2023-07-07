@@ -1,29 +1,28 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxRadioModule, IgxRadioGroupDirective } from './radio-group.directive';
+import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { IgxRadioComponent } from '../../radio/radio.component';
+import { NgFor } from '@angular/common';
 
 describe('IgxRadioGroupDirective', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                NoopAnimationsModule,
                 RadioGroupComponent,
                 RadioGroupSimpleComponent,
                 RadioGroupWithModelComponent,
                 RadioGroupRequiredComponent,
                 RadioGroupReactiveFormsComponent,
                 RadioGroupDeepProjectionComponent
-            ],
-            imports: [
-                IgxRadioModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule
             ]
         })
         .compileComponents();
@@ -81,7 +80,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(allInvalidButtons.length).toEqual(radioInstance.radioButtons.length);
     }));
 
-    it('Set value should change selected property and emit change event.', fakeAsync(() => {
+    it('Set value should change selected property', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
@@ -101,10 +100,10 @@ describe('IgxRadioGroupDirective', () => {
 
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-        expect(radioInstance.change.emit).toHaveBeenCalled();
+        expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
-    it('Set selected property should change value and emit change event.', fakeAsync(() => {
+    it('Set selected property should change value', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
@@ -124,7 +123,7 @@ describe('IgxRadioGroupDirective', () => {
 
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-        expect(radioInstance.change.emit).toHaveBeenCalled();
+        expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
     it('Clicking on a radio button should update the model.', fakeAsync(() => {
@@ -231,6 +230,7 @@ describe('IgxRadioGroupDirective', () => {
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
         expect(radioGroup.selected).toBeUndefined;
+        expect(radioGroup.invalid).toBe(false);
 
         dispatchRadioEvent('keyup', domRadio, fixture);
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
@@ -238,6 +238,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
+        expect(radioGroup.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
 
         dispatchRadioEvent('keyup', domRadio, fixture);
@@ -248,6 +249,7 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
+        expect(radioGroup.invalid).toBe(false);
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
     }));
@@ -259,7 +261,9 @@ describe('IgxRadioGroupDirective', () => {
         <igx-radio [checked]="true">Option 1</igx-radio>
         <igx-radio>Option 2</igx-radio>
     </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -271,7 +275,9 @@ class RadioGroupSimpleComponent {
         {{item}}
     </igx-radio>
 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
 })
 class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -283,7 +289,9 @@ class RadioGroupComponent {
         {{item}}
     </igx-radio>
 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
 })
 class RadioGroupRequiredComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -300,7 +308,9 @@ interface Person {
                         {{item}}
                     </igx-radio>
                 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, FormsModule]
 })
 class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -324,7 +334,9 @@ class RadioGroupWithModelComponent {
         </igx-radio>
     </igx-radio-group>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
     public seasons = [
@@ -375,7 +387,9 @@ class RadioGroupReactiveFormsComponent {
                 </div>
             </igx-radio-group>
         </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
 

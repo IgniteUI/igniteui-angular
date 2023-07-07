@@ -11,7 +11,7 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
@@ -19,6 +19,11 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
+import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxGridTopLevelColumns } from '../common/pipes';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
 
 /**
  *
@@ -31,7 +36,9 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-row',
-    templateUrl: './grid-header-row.component.html'
+    templateUrl: './grid-header-row.component.html',
+    standalone: true,
+    imports: [NgIf, IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, NgFor, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
 
@@ -111,7 +118,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
-    public headerContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
+    public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     public get headerForOf() {
         return this.headerContainer;

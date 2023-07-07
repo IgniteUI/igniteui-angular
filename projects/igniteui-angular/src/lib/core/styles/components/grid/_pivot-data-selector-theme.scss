@@ -9,17 +9,17 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 @function pivot-data-selector-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $background: null
 ) {
     $name: 'igx-pivot-data-selector';
     $selector: '.igx-pivot-data-selector';
     $pivot-data-selector-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $pivot-data-selector-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'pivot-data-selector') {
+        $pivot-data-selector-schema: map.get($schema, 'pivot-data-selector');
     } @else {
         $pivot-data-selector-schema: $schema;
     }
@@ -171,15 +171,7 @@
         }
 
         %igx-chip__item {
-            height: map.get($chip-height-material, 'comfortable');
-        }
-
-        %igx-chip__item--cosy {
-            height: map.get($chip-height-material, 'cosy');
-        }
-
-        %igx-chip__item--compact {
-            height: map.get($chip-height-material, 'compact');
+            height: #{sizable(map.get($chip-height-material, 'compact'), map.get($chip-height-material, 'cosy'), map.get($chip-height-material, 'comfortable'))};
         }
 
         %igx-chip__content {

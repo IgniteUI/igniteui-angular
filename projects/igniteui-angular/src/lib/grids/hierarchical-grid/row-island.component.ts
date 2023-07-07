@@ -30,7 +30,7 @@ import {
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -57,7 +57,8 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
         IgxRowIslandAPIService,
         IgxFilteringService,
         IgxGridSelectionService
-    ]
+    ],
+    standalone: true
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
@@ -94,6 +95,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     public islandPaginatorTemplate: TemplateRef<any>;
 
+    /** @hidden @internal **/
     @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
     public actionStrips: QueryList<IgxActionStripComponent>;
 

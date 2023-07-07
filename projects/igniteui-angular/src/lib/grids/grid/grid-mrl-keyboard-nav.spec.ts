@@ -2,7 +2,6 @@
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IGridCellEventArgs } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -12,6 +11,9 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
+import { NgFor } from '@angular/common';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -25,10 +27,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                ColumnLayoutTestComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule],
+            imports: [NoopAnimationsModule, ColumnLayoutTestComponent]
         }).compileComponents();
     }));
 
@@ -2178,13 +2177,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 // check if first unpinned cell is active and is in view
-                let firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+                const firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(firstUnpinnedCell.active).toBe(true);
-                let diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
+                const diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
                     grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
 
@@ -2630,7 +2629,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent, NgFor]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

@@ -1,5 +1,5 @@
 ﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
-import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
+import { DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -11,7 +11,6 @@ import {
     IterableChanges,
     IterableDiffer,
     IterableDiffers,
-    NgModule,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -28,7 +27,7 @@ import {
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
-import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
@@ -80,10 +79,11 @@ export class IgxForOfContext<T> {
 
 @Directive({
     selector: '[igxFor][igxForOf]',
-    providers: [IgxForOfScrollSyncService]
+    providers: [IgxForOfScrollSyncService],
+    standalone: true
 })
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
-export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
+export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
      * An @Input property that sets the data to be rendered.
@@ -92,7 +92,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForOf: any[] | null;
+    public igxForOf: U&T[] | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
@@ -237,7 +237,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected scrollComponent: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
-    protected heightCache = [];
+    protected heightCache: number[] = [];
     /** Internal track for scroll top that is being virtualized */
     protected _virtScrollTop = 0;
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
@@ -485,6 +485,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * @hidden @internal
+     * Asserts the correct type of the context for the template that `igxForOf` will render.
+     *
+     * The presence of this method is a signal to the Ivy template type-check compiler that the
+     * `IgxForOf` structural directive renders its template with a specific context type.
+     */
+    public static  ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
+            ctx is IgxForOfContext<T> {
+        return true;
+    }
+
+    /**
      * @hidden
      */
     public ngOnChanges(changes: SimpleChanges): void {
@@ -523,7 +535,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             if (changes) {
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [];
+                    this.igxForOf = [] as U;
                 }
                 this._updateSizeCache();
                 this._zone.run(() => {
@@ -996,7 +1008,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * from the view container.
      * Often, called while handling a scroll event.
      */
-    protected updateTemplateContext(context: any, index: number = 0): void {
+    protected updateTemplateContext(context: any, index = 0): void {
         context.$implicit = this.igxForOf[index];
         context.index = this.getContextIndex(this.igxForOf[index]);
         context.count = this.igxForOf.length;
@@ -1022,7 +1034,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
-        const activeElement = this.document.activeElement as HTMLElement;
+        const document = node.getRootNode() as Document | ShadowRoot;
+        const activeElement = document.activeElement as HTMLElement;
 
         // Remove focus in case the the active element is inside the view container.
         // Otherwise we hit an exception while doing the 'small' scrolls swapping.
@@ -1030,7 +1043,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         //
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
         // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
-        if (node && node.contains(this.document.activeElement)) {
+        if (node && node.contains(activeElement)) {
             activeElement.blur();
         }
     }
@@ -1168,7 +1181,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected initSizesCache(items: any[]): number {
+    protected initSizesCache(items: U): number {
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForSizePropName || 'height';
@@ -1217,7 +1230,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.igxForSizePropName : 'height';
         const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         for (i; i < this.igxForOf.length; i++) {
-            let item = this.igxForOf[i];
+            let item: T | { value: T, height: number} = this.igxForOf[i];
             if (dimension === 'height') {
                 item = { value: this.igxForOf[i], height: this.heightCache[i] };
             }
@@ -1475,12 +1488,17 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
 }
 
 @Directive({
-    selector: '[igxGridFor][igxGridForOf]'
+    selector: '[igxGridFor][igxGridForOf]',
+    standalone: true
 })
-export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
+export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
     @Input()
-    public set igxGridForOf(value) {
+    public set igxGridForOf(value: U&T[] | null) {
         this.igxForOf = value;
+    }
+
+    public get igxGridForOf() {
+        return this.igxForOf;
     }
 
     @Input()
@@ -1488,10 +1506,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     @Input()
     public igxGridForOfVariableSizes = true;
-
-    public get igxGridForOf() {
-        return this.igxForOf;
-    }
 
     /**
      * @hidden
@@ -1543,6 +1557,18 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         syncScrollService: IgxForOfScrollSyncService,
         protected syncService: IgxForOfSyncService) {
         super(_viewContainer, _template, _differs, cdr, _zone, syncScrollService, _platformUtil, _document);
+    }
+
+    /**
+     * @hidden @internal
+     * Asserts the correct type of the context for the template that `IgxGridForOfDirective` will render.
+     *
+     * The presence of this method is a signal to the Ivy template type-check compiler that the
+     * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
+     */
+    public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
+            ctx is IgxForOfContext<T> {
+        return true;
     }
 
     public override ngOnInit() {
@@ -1601,7 +1627,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.dataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [];
+                    this.igxForOf = [] as U;
                 }
                 /* we need to reset the master dir if all rows are removed
                 (e.g. because of filtering); if all columns are hidden, rows are
@@ -1673,7 +1699,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return size;
     }
 
-    protected override initSizesCache(items: any[]): number {
+    protected override initSizesCache(items: U): number {
         if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
@@ -1837,23 +1863,4 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
 
     }
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxForOfDirective,
-        IgxGridForOfDirective,
-        DisplayContainerComponent,
-        VirtualHelperComponent,
-        HVirtualHelperComponent,
-        VirtualHelperBaseDirective
-    ],
-    exports: [IgxForOfDirective, IgxGridForOfDirective],
-    imports: [IgxScrollInertiaModule, CommonModule]
-})
-
-export class IgxForOfModule {
 }

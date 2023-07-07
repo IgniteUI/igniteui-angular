@@ -9,7 +9,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
@@ -19,7 +19,7 @@
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
 ///     $background-color: black
@@ -27,7 +27,7 @@
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-toolbar-theme);
 @function grid-toolbar-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $background-color: null,
@@ -44,14 +44,14 @@
     $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
     $grid-toolbar-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $grid-toolbar-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'grid-toolbar') {
+        $grid-toolbar-schema: map.get($schema, 'grid-toolbar');
     } @else {
         $grid-toolbar-schema: $schema;
     }
 
     $theme: digest-schema($grid-toolbar-schema);
-
+    $meta: map.get($theme, '_meta');
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -88,7 +88,10 @@
         item-hover-background: $item-hover-background,
         item-hover-text-color: $item-hover-text-color,
         item-focus-background: $item-focus-background,
-        item-focus-text-color: $item-focus-text-color
+        item-focus-text-color: $item-focus-text-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -96,16 +99,22 @@
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     // Caption
     $grid-toolbar-fs: rem(16px);
 
-    $grid-toolbar-padding: (
-        comfortable: rem(24px) rem(16px),
-        cosy: rem(16px) rem(12px),
-        compact: rem(12px) rem(8px)
+    $grid-toolbar-padding-start: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $grid-toolbar-padding-end: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
     );
 
     $grid-toolbar-spacer: (
@@ -137,12 +146,13 @@
 
         background: var-get($theme, 'background-color');
         height: auto;
-        min-height: map.get($grid-toolbar-height, 'comfortable');
+        min-height: sizable(map.get($grid-toolbar-height, 'compact'), map.get($grid-toolbar-height, 'cosy'), map.get($grid-toolbar-height, 'comfortable'));
         padding-block: 0;
-        padding-inline: map.get($grid-toolbar-padding, 'comfortable');
+        padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start, 'compact'), map.get($grid-toolbar-padding-start, 'cosy'), map.get($grid-toolbar-padding-start, 'comfortable'));
+        padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end, 'compact'), map.get($grid-toolbar-padding-end, 'cosy'), map.get($grid-toolbar-padding-end, 'comfortable'));
 
         [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
+            margin-inline-start: pad-inline(map.get($grid-toolbar-spacer, 'compact'), map.get($grid-toolbar-spacer, 'cosy'), map.get($grid-toolbar-spacer, 'comfortable'));
 
             &:first-of-type {
                 margin-inline-start: 0;
@@ -164,24 +174,6 @@
                     margin-inline-end: 0;
                 }
             }
-        }
-    }
-
-    %igx-grid-toolbar--cosy {
-        min-height: map.get($grid-toolbar-height, 'cosy');
-        padding-inline: map.get($grid-toolbar-padding, 'cosy');
-
-        [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'cosy');
-        }
-    }
-
-    %igx-grid-toolbar--compact {
-        min-height: map.get($grid-toolbar-height, 'compact');
-        padding-inline: map.get($grid-toolbar-padding, 'compact');
-
-        [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'compact');
         }
     }
 

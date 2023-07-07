@@ -1,17 +1,18 @@
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { AnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
-import { IgxTreeComponent, IgxTreeModule } from './tree.component';
+import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
@@ -488,18 +489,18 @@ describe('IgxTree #treeView', () => {
     describe('Rendering Tests', () => {
         let fix: ComponentFixture<IgxTreeSampleComponent>;
         let tree: IgxTreeComponent;
+
         beforeAll(
             waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTreeSampleComponent,],
                     imports: [
                         NoopAnimationsModule,
-                        IgxTreeModule
+                        IgxTreeSampleComponent
                     ]
                 }).compileComponents();
             })
         );
+
         beforeEach(() => {
             fix = TestBed.createComponent<IgxTreeSampleComponent>(IgxTreeSampleComponent);
             fix.detectChanges();
@@ -708,7 +709,9 @@ describe('IgxTree #treeView', () => {
             </igx-tree-node>
             <div *ngIf="divChild"></div>
         </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent, NgFor]
 })
 class IgxTreeSampleComponent {
     @ViewChild(IgxTreeComponent)

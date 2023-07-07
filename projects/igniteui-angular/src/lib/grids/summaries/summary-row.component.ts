@@ -16,13 +16,17 @@ import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { IgxGridNotGroupedPipe } from '../common/pipes';
+import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
 
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html',
-    providers: [IgxForOfSyncService]
+    providers: [IgxForOfSyncService],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, NgFor, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {
 
@@ -65,7 +69,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
      * @hidden
      */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
-    public virtDirRow: IgxGridForOfDirective<any>;
+    public virtDirRow: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     constructor(@Inject(IGX_GRID_BASE) public grid: GridType,
                 public element: ElementRef<HTMLElement>,

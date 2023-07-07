@@ -13,9 +13,11 @@ import { IgxColumnGroupComponent } from './column-group.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+    /** @hidden @internal **/
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
@@ -124,24 +126,12 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         }
     }
 
-    /*
-     * Gets whether the group contains the last pinned child column of the column layout.
-     * ```typescript
-     * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
-     * ```
-     * @memberof IgxColumnLayoutComponent
-     */
+    /** @hidden @internal **/
     public get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
     }
 
-    /*
-     * Gets whether the group contains the first pinned child column of the column layout.
-     * ```typescript
-     * let hasFirstPinnedChildColumn = this.columnLayout.hasFirstPinnedChildColumn;
-     * ```
-     * @memberof IgxColumnLayoutComponent
-     */
+    /** @hidden @internal **/
     public get hasFirstPinnedChildColumn() {
         return this.children.some(child => child.isFirstPinned);
     }

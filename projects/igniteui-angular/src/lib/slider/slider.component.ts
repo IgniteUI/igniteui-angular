@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgModule, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren
+    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { EditorProvider } from '../core/edit-provider';
@@ -38,7 +38,9 @@ let NEXT_ID = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
-    templateUrl: 'slider.component.html'
+    templateUrl: 'slider.component.html',
+    standalone: true,
+    imports: [NgIf, IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements
     ControlValueAccessor,
@@ -1437,24 +1439,4 @@ export class IgxSliderComponent implements
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxSliderComponent,
-        IgxThumbFromTemplateDirective,
-        IgxThumbToTemplateDirective,
-        IgxTickLabelTemplateDirective,
-        IgxSliderThumbComponent,
-        IgxThumbLabelComponent,
-        IgxTicksComponent,
-        IgxTickLabelsPipe
-    ],
-    exports: [
-        IgxSliderComponent,
-        IgxThumbFromTemplateDirective,
-        IgxThumbToTemplateDirective,
-        IgxTickLabelTemplateDirective
-    ],
-    imports: [CommonModule, FormsModule]
-})
-export class IgxSliderModule {
-}
+

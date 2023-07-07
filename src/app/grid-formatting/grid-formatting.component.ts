@@ -1,19 +1,20 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, AsyncPipe } from '@angular/common';
 
-import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
-    IFilteringExpressionsTree, FilteringStrategy, IgxSummaryOperand } from 'igniteui-angular';
+import { Observable } from 'rxjs';
+
 import { RemoteService } from '../shared/remote.service';
 import { data } from '../shared/data';
-import { Observable } from 'rxjs';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { FilteringStrategy, IFilteringExpressionsTree, IgxColumnComponent, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryOperand, IgxSummaryResult, IgxTreeGridComponent } from 'igniteui-angular';
 
 const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
 
 @Component({
     selector: 'app-grid-formatting',
-    styleUrls: ['grid-formatting.component.scss'],
-    templateUrl: 'grid-formatting.component.html'
+    templateUrl: 'grid-formatting.component.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, NgFor, AsyncPipe]
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {
 

@@ -1,21 +1,15 @@
 import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import {
-    OverlaySettings,
-    GlobalPositionStrategy,
-    NoOpScrollStrategy,
-    IgxToggleDirective,
-    IgxDragDirective,
-    IgxInsertDropStrategy,
-    IDragBaseEventArgs,
-    IgxDragLocation,
-    DragDirection,
-    IDropDroppedEventArgs
-} from 'igniteui-angular';
+import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+
+import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
+import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.scss']
+    styleUrls: ['drag-drop.sample.scss'],
+    standalone: true,
+    imports: [IgxDragDirective, NgIf, IgxIconComponent, IgxDragIgnoreDirective, NgClass, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective, IgxDragHandleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective, NgFor, IgxDropDirective, NgStyle, ShadowGridSampleComponent]
 })
 export class DragDropSampleComponent {
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })
@@ -23,6 +17,9 @@ export class DragDropSampleComponent {
 
     @ViewChild('dragGhostAnim', { read: IgxDragDirective, static: true })
     public dragGhostAnim: IgxDragDirective;
+
+    @ViewChild('dragGhostAnimHost', { read: IgxDragDirective, static: true })
+    public dragGhostAnimHost: IgxDragDirective;
 
     @ViewChild('animationDuration')
     public animationDuration: ElementRef;
@@ -68,6 +65,7 @@ export class DragDropSampleComponent {
     public customDraggedAnim = false;
     public customDraggedAnimScroll = false;
     public customDraggedAnimXY = false;
+    public customDraggedAnimHostXY = false;
     public ghostInDropArea = false;
     public friendlyArea = true;
     public draggingElem = false;
@@ -237,17 +235,33 @@ export class DragDropSampleComponent {
     }
 
     public toOriginGhost() {
+        this.toOriginGhostImpl(this.dragGhostAnim);
+    }
+
+    public toLocationGhost() {
+        this.toLocationGhostImpl(this.dragGhostAnim);
+    }
+
+    public toOriginGhostWithHost() {
+        this.toOriginGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toLocationGhostWithHost() {
+        this.toLocationGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toOriginGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
-        this.dragGhostAnim.transitionToOrigin({
+        dragElem.transitionToOrigin({
             duration: this.animationDuration.nativeElement.value,
             timingFunction: this.animationFunction.nativeElement.value,
             delay: this.animationDelay.nativeElement.value
         }, startLocation);
     }
 
-    public toLocationGhost() {
+    public toLocationGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
@@ -256,7 +270,7 @@ export class DragDropSampleComponent {
         const endY = this.endY.nativeElement.value;
         const endLocation: IgxDragLocation = endX && endY ? new IgxDragLocation(endX, endY) : null;
 
-        this.dragGhostAnim.transitionTo(
+        dragElem.transitionTo(
             endLocation,
             {
                 duration: this.animationDuration.nativeElement.value,

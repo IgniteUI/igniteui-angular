@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { IgxSliderType, IRangeSliderValue } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSliderComponent, IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue } from 'igniteui-angular';
 
 @Component({
-  selector: 'app-range-slider',
-  templateUrl: './range-slider.component.html',
-  styleUrls: ['./range-slider.component.scss']
+    selector: 'app-range-slider',
+    templateUrl: './range-slider.component.html',
+    styleUrls: ['./range-slider.component.scss'],
+    standalone: true,
+    imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, FormsModule, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 export class RangeSliderComponent {
     public sliderType: IgxSliderType = IgxSliderType.RANGE;

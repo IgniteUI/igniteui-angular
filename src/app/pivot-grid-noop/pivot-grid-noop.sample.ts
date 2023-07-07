@@ -1,12 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  IGridState,
-  IgxGridStateDirective,
-  IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension,
-  IPivotValue,
-  NoopPivotDimensionsStrategy,
-  NoopSortingStrategy
-} from 'igniteui-angular';
+import { IGridState, IPivotConfiguration, IPivotDimension, IPivotValue, IgxButtonDirective, IgxGridStateDirective, IgxPivotGridComponent, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy, NoopSortingStrategy } from 'igniteui-angular';
+
 import { take } from 'rxjs/operators';
 
 
@@ -25,10 +19,12 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
 
 
 @Component({
-  providers: [],
-  selector: 'app-tree-grid-sample',
-  styleUrls: ['pivot-grid-noop.sample.scss'],
-  templateUrl: 'pivot-grid-noop.sample.html'
+    providers: [],
+    selector: 'app-tree-grid-sample',
+    styleUrls: ['pivot-grid-noop.sample.scss'],
+    templateUrl: 'pivot-grid-noop.sample.html',
+    standalone: true,
+    imports: [IgxPivotGridComponent, IgxGridStateDirective, IgxButtonDirective]
 })
 
 export class PivotGridNoopSampleComponent {

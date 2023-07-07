@@ -26,7 +26,10 @@ import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Directive({ selector: '[igxRowBaseComponent]' })
+@Directive({
+    selector: '[igxRowBaseComponent]',
+    standalone: true
+})
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
@@ -163,9 +166,9 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * @hidden
      */
     @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
-    public _virtDirRow: QueryList<IgxGridForOfDirective<any>>;
+    public _virtDirRow: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
-    public get virtDirRow(): IgxGridForOfDirective<any> {
+    public get virtDirRow(): IgxGridForOfDirective<ColumnType, ColumnType[]> {
         return this._virtDirRow ? this._virtDirRow.first : null;
     }
 

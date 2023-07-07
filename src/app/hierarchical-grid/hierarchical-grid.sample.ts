@@ -1,17 +1,25 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IGridCellEventArgs,
     GridSelectionMode,
     DisplayDensity,
-    RowType
+    RowType,
+    IGX_HIERARCHICAL_GRID_DIRECTIVES,
+    IgxIconComponent,
+    IGX_BUTTON_GROUP_DIRECTIVES
 } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
     styleUrls: ['hierarchical-grid.sample.scss'],
-    templateUrl: 'hierarchical-grid.sample.html'
+    templateUrl: 'hierarchical-grid.sample.html',
+    standalone: true,
+    imports: [NgIf, NgFor, GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
     public columnsReady = false;

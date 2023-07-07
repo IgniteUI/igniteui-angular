@@ -2,16 +2,16 @@
     <h4 class="sample-title">igxGrid</h4>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="updateCell(grid, index, gridLogger)">Update</button>
+            <button igxButton="outlined" (click)="updateCell(grid, index, columnField, gridLogger)">Update</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="select(grid, index, gridLogger)">Select</button>
+            <button igxButton="outlined" (click)="select(grid, index, columnField, gridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined"  (click)="setEditMode(grid, index, gridLogger)">Set editMode</button>
+            <button igxButton="outlined"  (click)="setEditMode(grid, index, columnField, gridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined"  (click)="logState(grid, index, gridLogger)">Log state by Index</button>
+            <button igxButton="outlined"  (click)="logState(grid, index, columnField, gridLogger)">Log state by Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button igxButton="outlined"  (click)="logStateByKey(grid, cellKey, columnField, gridLogger)">Log state by key</button>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-grid #grid [rowDraggable]="true" [data]="data" [cellSelection]="'multiple'" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [columnSelection]="'single'"
+        <igx-grid #grid [rowDraggable]="true" [data]="data" [cellSelection]="'multiple'" [rowEditable]="true" [allowFiltering]="true" [primaryKey]="'ID'" [columnSelection]="'single'"
             [width]="'700px'" [height]="'600px'" [rowSelection]="'multiple'">
             <igx-paginator>
             </igx-paginator>
@@ -129,16 +129,16 @@
     <h4 class="sample-title">IgxTreeGrid Hierarchical Data</h4>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="updateCell(treeGridHier, tHIndex, tHGridLogger)">Update</button>
+            <button igxButton="outlined" (click)="updateCell(treeGridHier, tHIndex, tHcolumnField, tHGridLogger)">Update</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="select(treeGridHier, tHIndex, tHGridLogger)">Select</button>
+            <button igxButton="outlined" (click)="select(treeGridHier, tHIndex, tHcolumnField, tHGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="setEditMode(treeGridHier, tHIndex, tHGridLogger)">Set editMode</button>
+            <button igxButton="outlined" (click)="setEditMode(treeGridHier, tHIndex, tHcolumnField, tHGridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log state By Index</button>
+            <button igxButton="outlined" (click)="logState(treeGridHier, tHIndex, tHcolumnField, tHGridLogger)">Log state By Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button igxButton="outlined" (click)="logStateByKey(treeGridHier, tHCellKey, tHcolumnField, tHGridLogger)">Log state by key</button>
@@ -148,14 +148,14 @@
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
-            <input name="tHIndex" type="string" [(ngModel)]="tHIndex" />
+            <input name="tHIndex" type="number" [(ngModel)]="tHIndex" />
             <br/>
             <input name="tHCellKey" [(ngModel)]="tHCellKey" />
             <input name="tHcolumnField" [(ngModel)]="tHcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGridHier [width]="'700px'" [height]="'600px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'" [paging]="false">
+        <igx-tree-grid #treeGridHier [width]="'700px'" [height]="'600px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'">
             <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
                 [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
@@ -185,16 +185,16 @@
     <h4 class="sample-title">IgxTreeGrid Flat Data</h4>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="updateCell(treeGrid, tIndex, tGridLogger)">Update</button>
+            <button igxButton="outlined" (click)="updateCell(treeGrid, tIndex, tcolumnField, tGridLogger)">Update</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="select(treeGrid, tIndex, tGridLogger)">Select</button>
+            <button igxButton="outlined" (click)="select(treeGrid, tIndex, tcolumnField, tGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="setEditMode(treeGrid, tIndex, tGridLogger)">Set editMode</button>
+            <button igxButton="outlined" (click)="setEditMode(treeGrid, tIndex, tcolumnField, tGridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="logState(treeGrid, tIndex, tGridLogger)">Log state By Index</button>
+            <button igxButton="outlined" (click)="logState(treeGrid, tIndex, tcolumnField, tGridLogger)">Log state By Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button igxButton="outlined" (click)="logStateByKey(treeGrid, tCellKey, tcolumnField, tGridLogger)">Log state by key</button>
@@ -204,14 +204,14 @@
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
-            <input name="tIndex" type="string" [(ngModel)]="tIndex" />
+            <input name="tIndex" type="number" [(ngModel)]="tIndex" />
             <br/>
             <input name="tCellKey" type="number" [(ngModel)]="tCellKey" />
             <input name="tcolumnField" [(ngModel)]="tcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [moving]="true" [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'700px'" [height]="'600px'">
+        <igx-tree-grid #treeGrid [allowFiltering]="true" [moving]="true" [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'700px'" [height]="'600px'">
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
@@ -241,16 +241,16 @@
     <h4 class="sample-title">igxHierarchicalGrid</h4>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="updateCell(hGrid, hIndex, hGridLogger)">Update</button>
+            <button igxButton="outlined" (click)="updateCell(hGrid, hIndex, hcolumnField, hGridLogger)">Update</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="select(hGrid, hIndex, hGridLogger)">Select</button>
+            <button igxButton="outlined" (click)="select(hGrid, hIndex, hcolumnField, hGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="setEditMode(hGrid, hIndex, hGridLogger)">Set editMode</button>
+            <button igxButton="outlined" (click)="setEditMode(hGrid, hIndex, hcolumnField, hGridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button igxButton="outlined" (click)="logState(hGrid, hIndex, hGridLogger)">Log state By Index</button>
+            <button igxButton="outlined" (click)="logState(hGrid, hIndex, hcolumnField, hGridLogger)">Log state By Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button igxButton="outlined" (click)="logStateByKey(hGrid, hCellKey, hcolumnField, hGridLogger)">Log state by key</button>
@@ -259,15 +259,15 @@
             <button igxButton="outlined" (click)="logStateByColumn(hGrid, hIndex, hcolumnField, hGridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
-            <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
-            <input name="hIndex" type="string" [(ngModel)]="hIndex" />
+            <span>One digit indicates rowIndex</span><br />
+            <input name="hIndex" type="number" [(ngModel)]="hIndex" />
             <br/>
             <input name="hCellKey" type="string" [(ngModel)]="hCellKey" />
             <input name="hcolumnField" [(ngModel)]="hcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-hierarchical-grid #hGrid [width]="'700px'" [height]="'600px'" [columnSelection]="'single'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
+        <igx-hierarchical-grid #hGrid [width]="'700px'" [height]="'600px'" [columnSelection]="'single'" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
             <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
             </igx-column>
             <igx-grid-toolbar [displayDensity]="grid.displayDensity">

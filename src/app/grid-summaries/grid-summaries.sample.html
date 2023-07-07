@@ -55,6 +55,7 @@
     </igx-column>
     <igx-column field="Sum" [hasSummary]="true" [dataType]="'percent'" [summaries]="mySummary">
     </igx-column>
+    <igx-paginator *ngIf="paging"></igx-paginator>
 </igx-grid>
 
 <div class="properties-input">
@@ -74,7 +75,7 @@
     <input type="number" [(ngModel)]="rh">
 </div>
 
-<igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+<igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
 <igx-switch [(ngModel)]="columnHiding">columnHiding</igx-switch>
 <igx-switch [(ngModel)]="columnPinning">columnPinning</igx-switch>

@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
-import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, DisplayDensity } from 'igniteui-angular';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DisplayDensity, IgxCSVTextDirective, IgxColumnComponent, IgxCsvExporterService, IgxExcelExporterService, IgxExcelTextDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxSwitchComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-sample',
     styleUrls: ['grid-toolbar.sample.scss'],
-    templateUrl: 'grid-toolbar.sample.html'
+    templateUrl: 'grid-toolbar.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
 })
 export class GridToolbarSampleComponent {
     public showToolbar = true;
