@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 16.1.0
+
+### General
+- `IgxStepper`:
+    - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+
 ## 16.0.0
 
 ### General
