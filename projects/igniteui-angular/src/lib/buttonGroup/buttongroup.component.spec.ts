@@ -93,21 +93,27 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
-    it('should fire selected event when button is selected by the user, not when it is initial selected', () => {
+    it('should fire selected event when button is selected by the user interaction, not when it is initially or programmatically selected', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
 
-        const btnGroupinstance = fixture.componentInstance.buttonGroup;
-        spyOn(btnGroupinstance.selected, 'emit');
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        spyOn(btnGroupInstance.selected, 'emit');
 
-        btnGroupinstance.ngAfterViewInit();
-
+        btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
-        expect(btnGroupinstance.selected.emit).not.toHaveBeenCalled();
 
-        btnGroupinstance.buttons[1].select();
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].select();
         fixture.detectChanges();
-        expect(btnGroupinstance.selected.emit).toHaveBeenCalled();
+
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
     });
 
    it('Button Group single selection', () => {

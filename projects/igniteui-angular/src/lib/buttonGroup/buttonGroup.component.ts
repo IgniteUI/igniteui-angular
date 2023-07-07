@@ -270,7 +270,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     protected queryListNotifier$ = new Subject<boolean>();
 
     private _isVertical: boolean;
-    private _initialSelected: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
 
@@ -327,11 +326,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         if(this.selectedIndexes.indexOf(index) === -1) {
             this.selectedIndexes.push(index);
-            if (!this._initialSelected) {
-                this.selected.emit({ button, index });
-            } else {
-                this._initialSelected = false;
-            }
         }
 
         this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
@@ -416,7 +410,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 }
 
                 if (button.selected) {
-                    this._initialSelected = true;
                     this.updateSelected(index);
                 }
 
@@ -451,11 +444,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * @hidden
      */
-    public _clickHandler(i: number) {
-        if (this.selectedIndexes.indexOf(i) === -1) {
-            this.selectButton(i);
+    public _clickHandler(index: number) {
+        if (this.selectedIndexes.indexOf(index) === -1) {
+            this.selectButton(index);
+            const button = this.buttons[index];
+            this.selected.emit({ button, index });
         } else {
-            this.deselectButton(i);
+            this.deselectButton(index);
         }
     }
 }
