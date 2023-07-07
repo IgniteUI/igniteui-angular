@@ -18,6 +18,9 @@ export class DragDropSampleComponent {
     @ViewChild('dragGhostAnim', { read: IgxDragDirective, static: true })
     public dragGhostAnim: IgxDragDirective;
 
+    @ViewChild('dragGhostAnimHost', { read: IgxDragDirective, static: true })
+    public dragGhostAnimHost: IgxDragDirective;
+
     @ViewChild('animationDuration')
     public animationDuration: ElementRef;
 
@@ -62,6 +65,7 @@ export class DragDropSampleComponent {
     public customDraggedAnim = false;
     public customDraggedAnimScroll = false;
     public customDraggedAnimXY = false;
+    public customDraggedAnimHostXY = false;
     public ghostInDropArea = false;
     public friendlyArea = true;
     public draggingElem = false;
@@ -231,17 +235,33 @@ export class DragDropSampleComponent {
     }
 
     public toOriginGhost() {
+        this.toOriginGhostImpl(this.dragGhostAnim);
+    }
+
+    public toLocationGhost() {
+        this.toLocationGhostImpl(this.dragGhostAnim);
+    }
+
+    public toOriginGhostWithHost() {
+        this.toOriginGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toLocationGhostWithHost() {
+        this.toLocationGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toOriginGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
-        this.dragGhostAnim.transitionToOrigin({
+        dragElem.transitionToOrigin({
             duration: this.animationDuration.nativeElement.value,
             timingFunction: this.animationFunction.nativeElement.value,
             delay: this.animationDelay.nativeElement.value
         }, startLocation);
     }
 
-    public toLocationGhost() {
+    public toLocationGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
@@ -250,7 +270,7 @@ export class DragDropSampleComponent {
         const endY = this.endY.nativeElement.value;
         const endLocation: IgxDragLocation = endX && endY ? new IgxDragLocation(endX, endY) : null;
 
-        this.dragGhostAnim.transitionTo(
+        dragElem.transitionTo(
             endLocation,
             {
                 duration: this.animationDuration.nativeElement.value,
