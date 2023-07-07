@@ -383,7 +383,9 @@
         }
     }
 
-    igx-input-group {
+    igx-input-group,
+    igx-date-range-start,
+    igx-date-range-end {
         --theme: #{map.get($theme, 'variant')};
     }
 
