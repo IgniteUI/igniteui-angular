@@ -1119,7 +1119,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
-    public parentVirtDir: IgxGridForOfDirective<any>;
+    public parentVirtDir: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden
@@ -1173,13 +1173,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
-    public verticalScrollContainer: IgxGridForOfDirective<any>;
+    public verticalScrollContainer: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden @internal
      */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
-    public verticalScroll: IgxGridForOfDirective<any>;
+    public verticalScroll: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden @internal
@@ -2905,6 +2905,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public summaryPipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public groupablePipeTrigger = 0;
 
     /**
     * @hidden @internal
@@ -3059,7 +3063,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _height: string | null = '100%';
     private _width: string | null = '100%';
     private _rowHeight: number | undefined;
-    private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
+    private _horizontalForOfs: Array<IgxGridForOfDirective<any, any[]>> = [];
     private _multiRowLayoutRowSize = 1;
     // Caches
     private _totalWidth = NaN;
@@ -6568,6 +6572,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
+                this.groupablePipeTrigger++;
                 Promise.resolve().then(() => {
                     // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
                     // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
@@ -7078,7 +7083,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const vState = this.headerContainer.state;
         let colResized = false;
         const unpinnedInView = this.headerContainer.igxGridForOf.slice(vState.startIndex, vState.startIndex + vState.chunkSize).flatMap(x => x.columnGroup ? x.allChildren : x);
-        const columnsInView = this.pinnedColumns.concat(unpinnedInView);
+        const columnsInView = this.pinnedColumns.concat(unpinnedInView as IgxColumnComponent[]);
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths = [];
@@ -7226,7 +7231,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
+    protected scrollDirective(directive: IgxGridForOfDirective<any, any[]>, goal: number): void {
         if (!directive) {
             return;
         }
