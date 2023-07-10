@@ -19,7 +19,7 @@ export class IgxColumnResizingService {
     /**
      * @hidden
      */
-    public resizeCursor: string = 'col-resize';
+    public resizeCursor = 'col-resize';
     /**
      * @hidden
      */
