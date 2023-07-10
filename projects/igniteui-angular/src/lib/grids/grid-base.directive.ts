@@ -5502,7 +5502,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const columnsWithSetWidths = this.hasColumnLayouts ?
             visibleCols.filter(c => c.widthSetByUser) :
-            visibleChildColumns.filter(c => c.widthSetByUser);
+            visibleChildColumns.filter(c => c.widthSetByUser && c.width !== 'fit-content');
 
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
