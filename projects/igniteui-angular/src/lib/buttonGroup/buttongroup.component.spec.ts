@@ -51,7 +51,8 @@ describe('IgxButtonGroup', () => {
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
                 TemplatedButtonGroupComponent,
-                TemplatedButtonGroupDesplayDensityComponent
+                TemplatedButtonGroupDesplayDensityComponent,
+                ButtonGroupWithSelectedButtonComponent
             ],
             imports: [
                 IgxButtonGroupModule,
@@ -110,6 +111,29 @@ describe('IgxButtonGroup', () => {
         buttongroup.selectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(1);
         expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
+    });
+
+    it('should fire selected event when button is selected by the user interaction, not when it is initially or programmatically selected', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        spyOn(btnGroupInstance.selected, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].select();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
     });
 
    it('Button Group multiple selection', () => {
@@ -359,5 +383,14 @@ class TemplatedButtonGroupComponent {
                             <button igxButton>London</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupDesplayDensityComponent {
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+}
+
+@Component({ template: `<igx-buttongroup>
+                            <button igxButton [selected]="true">Button 0</button>
+                            <button igxButton>Button 1</button>
+                            <button igxButton>Button 2</button>
+                        </igx-buttongroup>` })
+class ButtonGroupWithSelectedButtonComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }
