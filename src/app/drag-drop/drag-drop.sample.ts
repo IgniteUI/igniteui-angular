@@ -2,17 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, Quer
 import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxToggleDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective, DragDirection, IDragBaseEventArgs, IgxDragLocation, IDropDroppedEventArgs } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxInsertDropStrategy } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.strategy';
-import { GlobalPositionStrategy, NoOpScrollStrategy, OverlaySettings } from '../../../projects/igniteui-angular/src/lib/services/public_api';
+import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
@@ -27,6 +17,9 @@ export class DragDropSampleComponent {
 
     @ViewChild('dragGhostAnim', { read: IgxDragDirective, static: true })
     public dragGhostAnim: IgxDragDirective;
+
+    @ViewChild('dragGhostAnimHost', { read: IgxDragDirective, static: true })
+    public dragGhostAnimHost: IgxDragDirective;
 
     @ViewChild('animationDuration')
     public animationDuration: ElementRef;
@@ -72,18 +65,24 @@ export class DragDropSampleComponent {
     public customDraggedAnim = false;
     public customDraggedAnimScroll = false;
     public customDraggedAnimXY = false;
+    public customDraggedAnimHostXY = false;
     public ghostInDropArea = false;
     public friendlyArea = true;
     public draggingElem = false;
     public dragEnteredArea = false;
+    public categoriesNotes = [
+        { text: 'Action', dragged: false },
+        { text: 'Fantasy', dragged: false },
+        { text: 'Drama', dragged: false }
+    ];
     public listNotes = [
-        { text: 'Avengers: Endgame', dragged: false },
-        { text: 'Avatar', dragged: false },
-        { text: 'Titanic', dragged: false },
-        { text: 'Star Wars: The Force Awakens', dragged: false },
-        { text: 'Avengers: Infinity War', dragged: false },
-        { text: 'Jurassic World', dragged: false },
-        { text: 'The Avengers', dragged: false }
+        { text: 'Avengers: Endgame', category: 'Action', dragged: false },
+        { text: 'Avatar', category: 'Fantasy', dragged: false },
+        { text: 'Titanic', category: 'Drama', dragged: false },
+        { text: 'Star Wars: The Force Awakens', category: 'Fantasy', dragged: false },
+        { text: 'Avengers: Infinity War', category: 'Action', dragged: false },
+        { text: 'Jurassic World', category: 'Fantasy', dragged: false },
+        { text: 'The Avengers', category: 'Action', dragged: false }
     ];
     public listObserver = null;
     public draggableElems: {value: string; hide?: boolean}[] = [
@@ -241,17 +240,33 @@ export class DragDropSampleComponent {
     }
 
     public toOriginGhost() {
+        this.toOriginGhostImpl(this.dragGhostAnim);
+    }
+
+    public toLocationGhost() {
+        this.toLocationGhostImpl(this.dragGhostAnim);
+    }
+
+    public toOriginGhostWithHost() {
+        this.toOriginGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toLocationGhostWithHost() {
+        this.toLocationGhostImpl(this.dragGhostAnimHost);
+    }
+
+    public toOriginGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
-        this.dragGhostAnim.transitionToOrigin({
+        dragElem.transitionToOrigin({
             duration: this.animationDuration.nativeElement.value,
             timingFunction: this.animationFunction.nativeElement.value,
             delay: this.animationDelay.nativeElement.value
         }, startLocation);
     }
 
-    public toLocationGhost() {
+    public toLocationGhostImpl(dragElem: IgxDragDirective) {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
         const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
@@ -260,7 +275,7 @@ export class DragDropSampleComponent {
         const endY = this.endY.nativeElement.value;
         const endLocation: IgxDragLocation = endX && endY ? new IgxDragLocation(endX, endY) : null;
 
-        this.dragGhostAnim.transitionTo(
+        dragElem.transitionTo(
             endLocation,
             {
                 duration: this.animationDuration.nativeElement.value,
@@ -417,5 +432,9 @@ export class DragDropSampleComponent {
       const draggedEl = event.drag.element.nativeElement;
       dropDivArea.appendChild(draggedEl);
       event.cancel = true;
+    }
+
+    public getCategoryMovies(inCategory: string){
+        return this.listNotes.filter(item => item.category === inCategory);
     }
 }

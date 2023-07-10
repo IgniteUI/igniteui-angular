@@ -1,25 +1,29 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
     IgxNumberSummaryOperand,
     IgxSummaryResult,
     ColumnPinningPosition,
     IPinningConfig,
-    DisplayDensity
+    DisplayDensity,
+    IgxButtonGroupComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarExporterComponent,
+    IgxExcelTextDirective,
+    IgxCSVTextDirective,
+    IgxColumnComponent,
+    IgxCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxSwitchComponent,
+    IgxPaginatorComponent
 } from 'igniteui-angular';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { FormsModule } from '@angular/forms';
-import { IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
-import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
-import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
-import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { NgIf } from '@angular/common';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -44,7 +48,7 @@ class MySummary extends IgxNumberSummaryOperand {
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent_1, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, FormsModule, IgxSwitchComponent]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
 })
 export class GridSummaryComponent implements OnInit {
 
@@ -70,6 +74,7 @@ export class GridSummaryComponent implements OnInit {
     public rowSelection = false;
     public density: DisplayDensity = 'compact';
     public displayDensities;
+    public paging = false;
 
     public data = [{
         __metadata: {

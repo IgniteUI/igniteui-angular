@@ -22,11 +22,7 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { changei18n, getCurrentResourceStrings, IResourceStrings } from '../../../projects/igniteui-angular/src/lib/core/i18n/resources';
+import { IResourceStrings, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-localization',

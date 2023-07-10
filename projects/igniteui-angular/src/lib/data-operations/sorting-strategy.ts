@@ -1,3 +1,4 @@
+import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
@@ -7,8 +8,8 @@ export enum SortingDirection {
     Desc = 2
 }
 
-export interface ISortingExpression extends IBaseEventArgs {
-    fieldName: string;
+export interface ISortingExpression<T = any> extends IBaseEventArgs {
+    fieldName: KeyOfOrString<T> & string;
     dir: SortingDirection;
     ignoreCase?: boolean;
     strategy?: ISortingStrategy;

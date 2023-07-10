@@ -1,21 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgFor, NgIf, CurrencyPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { data, dataWithoutPK } from '../shared/data';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { FormsModule } from '@angular/forms';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IColumnPipeArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
-import { IgxStringFilteringOperand } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-condition';
+import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+
  @Component({
     providers: [],
     selector: 'app-grid-percantge-widths.sample',

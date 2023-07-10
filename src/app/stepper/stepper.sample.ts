@@ -1,35 +1,14 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HorizontalAnimationType } from 'projects/igniteui-angular/src/lib/carousel/carousel-base';
-import {
-    IgxStepperTitlePosition, IgxStepperOrientation, IgxStepType, VerticalAnimationType
-} from 'projects/igniteui-angular/src/lib/stepper/stepper.common';
-import { IgxStepperComponent } from 'projects/igniteui-angular/src/lib/stepper/stepper.component';
-import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { IgxTimePickerComponent } from '../../../projects/igniteui-angular/src/lib/time-picker/time-picker.component';
-import { IgxBadgeComponent } from '../../../projects/igniteui-angular/src/lib/badge/badge.component';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 import { NgIf } from '@angular/common';
-import { IgxStepComponent } from '../../../projects/igniteui-angular/src/lib/stepper/step/step.component';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective } from '../../../projects/igniteui-angular/src/lib/stepper/stepper.directive';
-import { IgxStepperComponent as IgxStepperComponent_1 } from '../../../projects/igniteui-angular/src/lib/stepper/stepper.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective, IgxStepperComponent, HorizontalAnimationType, VerticalAnimationType, IgxStepType, IgxStepperTitlePosition, IgxStepperOrientation } from 'igniteui-angular';
+
 
 @Component({
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent_1, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubTitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
+    imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
 export class IgxStepperSampleComponent {
     @ViewChild('stepper', { static: true }) public stepper: IgxStepperComponent;
@@ -42,8 +21,8 @@ export class IgxStepperSampleComponent {
     public setTitlePos = false;
     public stepTypes = [];
     public titlePositions = [];
-    public horizontalAnimationTypes = [];
     public verticalAnimationTypes = [];
+    public horizontalAnimationTypes = [];
 
     public user = {
         firstName: 'John',

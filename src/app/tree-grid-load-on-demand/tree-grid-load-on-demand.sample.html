@@ -31,12 +31,13 @@
         <!-- <ng-template igxRowLoadingIndicator>
             <igx-icon>loop</igx-icon>
         </ng-template> -->
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-tree-grid>
 
     <div class="topMargin">
         <div class="toggle-group">
             <div class="switch-group">
-                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
             </div>
             <div class="switch-group">
                 <igx-switch [(ngModel)]="grid1.cascadeOnDelete">Cascade On Delete</igx-switch>

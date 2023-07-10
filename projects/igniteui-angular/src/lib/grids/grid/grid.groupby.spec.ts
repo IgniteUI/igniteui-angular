@@ -827,6 +827,54 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(4);
     }));
 
+    it('should update chip state after columns change.', () => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.groupingExpressions = [
+            {
+                dir: SortingDirection.Asc,
+                fieldName: "NewColumn"
+            }
+        ];
+        fix.detectChanges();
+
+        // no such column initially, so chip is disabled.
+        const chips = grid.groupArea.chips;
+        expect(chips.first.disabled).toBeTrue();
+        const newCols = [...fix.componentInstance.columns];
+        newCols.push({
+            field: "NewColumn",
+            width: 100
+        });
+        fix.componentInstance.columns = newCols;
+        fix.detectChanges();
+
+        // column now exists and has groupable=true, so chip should be enabled.
+        expect(chips.first.disabled).toBeFalse();
+    });
+
+    it('should update chip state on column groupable prop change', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const column = grid.getColumnByName('ProductName');
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // initially should not be disabled.
+        const chips = grid.groupArea.chips;
+        expect(chips.first.disabled).toBeFalse();
+
+        // should get disbaled on groupable=false
+        column.groupable = false;
+        fix.detectChanges();
+        expect(chips.first.disabled).toBeTrue();
+    });
+
     // GroupBy + Sorting integration
     it('should apply sorting on each group\'s records when non-grouped column is sorted.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -2372,7 +2420,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2413,7 +2461,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2425,7 +2473,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
-        fix.componentInstance.instance.paginate(0);
+        fix.componentInstance.instance.paginator.paginate(0);
         tick();
         fix.detectChanges();
 
@@ -3666,7 +3714,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
         grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
@@ -3876,7 +3923,7 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width + 'px'">
+                <igx-column *ngFor="let c of columns" [groupable]="true" [field]="c.field" [header]="c.field" [width]="c.width + 'px'">
                 </igx-column>
         </igx-grid>
     `,

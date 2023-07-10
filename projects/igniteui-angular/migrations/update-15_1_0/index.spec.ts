@@ -10,7 +10,6 @@ describe(`Update to ${version}`, () => {
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',
@@ -199,6 +198,36 @@ describe(`Update to ${version}`, () => {
                 <igx-icon>favorite</igx-icon>
             </button>
             <igx-icon>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+    });
+
+    it('shouldn\'t append igxStart and igxEnd directives to the child elements of the igx-card-actions if already applied', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
         </igx-card-actions>
         `
         );

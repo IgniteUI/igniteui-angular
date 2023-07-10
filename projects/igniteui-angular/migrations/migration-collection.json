@@ -150,6 +150,11 @@
             "version": "16.0.0",
             "description": "Updates Ignite UI for Angular from v15.1.x to v16.0.0",
             "factory": "./update-16_0_0"
+        },
+        "migration-31": {
+            "version": "16.1.0",
+            "description": "Updates Ignite UI for Angular from v16.0.0 to v16.1.0",
+            "factory": "./update-16_1_0"
         }
     }
 }

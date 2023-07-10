@@ -11,7 +11,7 @@
 ////
 
 /// Generates a drop-down theme.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
 /// @param {Color} $header-text-color [null] - The drop-down header text color.
@@ -31,15 +31,15 @@
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the drop-down.
 /// @param {Number} $border-width [null] - The border width used for drop-down component.
 /// @param {Color} $border-color [null] - The border color used for drop-down component.
-/// @param {Number} $border-radius [null] - The border radius used for drop-down component.
-/// @param {Number} $item-border-radius [null] - The border radius used for drop-down items.
-/// @requires $light-schema
+/// @param {List} $border-radius [null] - The border radius used for drop-down component.
+/// @param {List} $item-border-radius [null] - The border radius used for drop-down items.
+/// @requires $light-material-schema
 /// @example scss Change the background-color of the dropdown
 ///   $my-dropdown-theme: drop-down-theme($background-color: #09f);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-dropdown-theme);
 @function drop-down-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $border-radius: null,
@@ -73,16 +73,16 @@
 ) {
     $name: 'igx-drop-down';
     $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
-
     $drop-down-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $drop-down-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'drop-down') {
+        $drop-down-schema: map.get($schema, 'drop-down');
     } @else {
         $drop-down-schema: $schema;
     }
 
     $theme: digest-schema($drop-down-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -152,11 +152,11 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
     }
 
     @return extend($theme, (
@@ -181,20 +181,17 @@
         disabled-item-text-color: $disabled-item-text-color,
         shadow: $shadow,
         border-color: $border-color,
-        border-width: $border-width
+        border-width: $border-width,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin drop-down($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, variant);
-
-    $item-height: (
-        comfortable: #{rem(40px)},
-        cosy: #{rem(32px)},
-        compact: #{rem(28px)}
-    );
+    $variant: map.get($theme, '_meta', 'variant');
 
     $item-padding-inline: (
         comfortable: rem(24px),
@@ -262,7 +259,7 @@
         width: 100%;
         white-space: nowrap;
         position: relative;
-        height: map.get($item-height, 'comfortable');
+        height: sizable(#{rem(28px)}, #{rem(32px)}, #{rem(40px)});
 
         igx-prefix,
         [igxPrefix] {
@@ -310,8 +307,6 @@
     %igx-drop-down__header--cosy {
         --component-size: var(--ig-size, var(--ig-size-medium));
 
-        height: map.get($item-height, 'cosy');
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--cosy;
@@ -330,8 +325,6 @@
     %igx-drop-down__item--compact,
     %igx-drop-down__header--compact {
         --component-size: var(--ig-size, var(--ig-size-small));
-
-        height: map.get($item-height, 'compact');
 
         igx-prefix,
         [igxPrefix] {

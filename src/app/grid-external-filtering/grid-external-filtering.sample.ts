@@ -1,28 +1,8 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DisplayDensity, FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
-import { IgxAdvancedFilteringDialogComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
-import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
-import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxGridExcelStyleFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-filtering.component';
-import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxFlexDirective, IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { FilteringExpressionsTree } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expression.interface';
-import { IgxStringFilteringOperand } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-condition';
-import { FilterMode, GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     providers: [],

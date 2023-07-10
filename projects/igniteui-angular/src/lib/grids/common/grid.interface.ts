@@ -69,7 +69,6 @@ export interface CellType {
     title?: any;
     width: string;
     visibleColumnIndex?: number;
-    defaultErrorTemplate?: TemplateRef<any>;
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
@@ -102,7 +101,7 @@ export interface RowType {
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
-    virtDirRow?: IgxGridForOfDirective<any>;
+    virtDirRow?: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     pinned?: boolean;
     selected?: boolean;
     expanded?: boolean;
@@ -324,6 +323,8 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    /** @hidden @internal */
+    groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
     hasColumnLayouts: boolean;
@@ -331,7 +332,7 @@ export interface GridType extends IGridDataBindable {
     isLoading: boolean;
     dataCloneStrategy: IDataCloneStrategy;
 
-    gridAPI: GridServiceType;
+    readonly gridAPI: GridServiceType;
 
     filterMode: FilterMode;
 
@@ -357,14 +358,17 @@ export interface GridType extends IGridDataBindable {
     paginatorList?: QueryList<IgxPaginatorComponent>;
     /** @hidden @internal */
     crudService: any;
+    /** @hidden @internal */
     summaryService: any;
 
 
 
     virtualizationState: IForOfState;
     // TYPE
+    /** @hidden @internal */
     selectionService: any;
     navigation: any;
+    /** @hidden @internal */
     filteringService: any;
     outlet: any;
     /** @hidden @internal */
@@ -452,26 +456,26 @@ export interface GridType extends IGridDataBindable {
     _filteredSortedUnpinnedData: any[];
     filteredSortedData: any[];
     dataWithAddedInTransactionRows: any[];
-    transactions: TransactionService<Transaction, State>;
-    validation: IgxGridValidationService;
+    readonly transactions: TransactionService<Transaction, State>;
+    readonly validation: IgxGridValidationService;
     defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
-
     pagingMode: GridPagingMode;
+    /** @hidden */
     pagingState: any;
 
     rowEditTabs: any;
     lastSearchInfo: ISearchInfo;
+    /** @hidden @internal */
     page: number;
+    /** @hidden @internal */
     perPage: number;
     /** @hidden @internal */
     dragRowID: any;
     rowDragging: boolean;
-    evenRowCSS: string;
-    oddRowCSS: string;
 
     firstEditableColumnIndex: number;
     lastEditableColumnIndex: number;
@@ -486,7 +490,8 @@ export interface GridType extends IGridDataBindable {
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
-    cdr: ChangeDetectorRef;
+    readonly cdr: ChangeDetectorRef;
+    /** @hidden @internal */
     document: Document;
     rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;

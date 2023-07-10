@@ -2,19 +2,9 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { IgxGroupedTreeGridSorting, ITreeGridAggregation } from 'projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxTreeGridGroupingPipe } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxTreeGridGroupByAreaComponent } from '../../../projects/igniteui-angular/src/lib/grids/grouping/tree-grid-group-by-area.component';
-import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { IGroupingExpression } from '../../../projects/igniteui-angular/src/lib/data-operations/grouping-expression.interface';
-import { DefaultSortingStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
-import { ITreeGridRecord, TreeGridFilteringStrategy } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/public_api';
-import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe, DisplayDensity, IGroupingExpression, DefaultSortingStrategy, IgxGroupedTreeGridSorting, TreeGridFilteringStrategy, ITreeGridAggregation, ITreeGridRecord, GridSelectionMode } from 'igniteui-angular';
+
 
 @Component({
     providers: [],

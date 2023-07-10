@@ -5,6 +5,7 @@ import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
 import { cloneArray } from '../core/utils';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { IDataCloneStrategy } from './data-clone-strategy';
 
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
@@ -29,8 +30,9 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     public process(
         collection: any,
         rows: IPivotDimension[],
-        values?: IPivotValue[],
-        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
+        values: IPivotValue[],
+        cloneStrategy: IDataCloneStrategy,
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS,
     ): IPivotGridRecord[] {
         let hierarchies;
         let data: IPivotGridRecord[];
@@ -39,7 +41,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         PivotUtil.assignLevels(currRows);
 
         if (currRows.length === 0) {
-            hierarchies = PivotUtil.getFieldsHierarchy(collection, [{ memberName: '', enabled: true }], PivotDimensionType.Row, pivotKeys);
+            hierarchies = PivotUtil.getFieldsHierarchy(collection, [{ memberName: '', enabled: true }], PivotDimensionType.Row, pivotKeys, cloneStrategy);
             // generate flat data from the hierarchies
             data = PivotUtil.processHierarchy(hierarchies, pivotKeys, 0, true);
             return data;
@@ -48,12 +50,12 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         for (const row of currRows) {
             if (!data) {
                 // build hierarchies - groups and subgroups
-                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys);
+                hierarchies = PivotUtil.getFieldsHierarchy(collection, [row], PivotDimensionType.Row, pivotKeys, cloneStrategy);
                 // generate flat data from the hierarchies
                 data = PivotUtil.processHierarchy(hierarchies, pivotKeys, 0, true);
                 prevRowDims.push(row);
             } else {
-                PivotUtil.processGroups(data, row, pivotKeys);
+                PivotUtil.processGroups(data, row, pivotKeys, cloneStrategy);
             }
         }
         return data;
@@ -71,39 +73,40 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         collection: IPivotGridRecord[],
         columns: IPivotDimension[],
         values: IPivotValue[],
+        cloneStrategy: IDataCloneStrategy,
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): any[] {
-        const res = this.processHierarchy(collection, columns, values, pivotKeys);
+        const res = this.processHierarchy(collection, columns, values, pivotKeys, cloneStrategy);
         return res;
     }
 
-    private processHierarchy(collection: IPivotGridRecord[], columns: IPivotDimension[], values, pivotKeys) {
+    private processHierarchy(collection: IPivotGridRecord[], columns: IPivotDimension[], values, pivotKeys, cloneStrategy) {
         const result: IPivotGridRecord[] = [];
         collection.forEach(rec => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
-            this.groupColumns(rec, columns, values, pivotKeys);
+            this.groupColumns(rec, columns, values, pivotKeys, cloneStrategy);
             result.push(rec);
         });
         return result;
     }
 
-    private groupColumns(rec: IPivotGridRecord, columns, values, pivotKeys) {
+    private groupColumns(rec: IPivotGridRecord, columns, values, pivotKeys, cloneStrategy) {
         const children = rec.children;
         if (children && children.size > 0) {
             children.forEach((childRecs) => {
                 if (childRecs) {
                     childRecs.forEach(child => {
-                        this.groupColumns(child, columns, values, pivotKeys);
+                        this.groupColumns(child, columns, values, pivotKeys, cloneStrategy);
                     })
                 }
             });
         }
-        this.applyAggregates(rec, columns, values, pivotKeys);
+        this.applyAggregates(rec, columns, values, pivotKeys, cloneStrategy);
     }
 
-    private applyAggregates(rec, columns, values, pivotKeys) {
+    private applyAggregates(rec, columns, values, pivotKeys, cloneStrategy) {
         const leafRecords = this.getLeafs(rec.records, pivotKeys);
-        const hierarchy = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys);
+        const hierarchy = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys, cloneStrategy);
         PivotUtil.applyAggregations(rec, hierarchy, values, pivotKeys)
     }
 
@@ -121,6 +124,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
 }
 
 export class DimensionValuesFilteringStrategy extends FilteringStrategy {
+
     /**
      * Creates a new instance of FormattedValuesFilteringStrategy.
      *
@@ -149,7 +153,8 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
             data,
             [dim],
             PivotDimensionType.Column,
-            grid.pivotKeys
+            grid.pivotKeys,
+            grid.pivotValueCloneStrategy
         );
         const isNoop = grid.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy || grid.pivotConfiguration.rowStrategy instanceof NoopPivotDimensionsStrategy;
         const items: IgxFilterItem[] = !isNoop ? this._getFilterItems(allValuesHierarchy, grid.pivotKeys) : [{value : ''}];

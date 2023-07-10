@@ -16,7 +16,7 @@ import { ColumnType } from '../common/grid.interface';
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrop')
-    public override set data(val: ColumnType | IgxForOfDirective<any>) {
+    public override set data(val: ColumnType | IgxForOfDirective<ColumnType, ColumnType[]>) {
         if (val instanceof IgxGridForOfDirective) {
             this._displayContainer = val;
         } else {
@@ -48,7 +48,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _dropIndicator = null;
     private _lastDropIndicator = null;
     private _column: ColumnType;
-    private _displayContainer: IgxGridForOfDirective<any>;
+    private _displayContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid-th__drop-indicator--active';
 
