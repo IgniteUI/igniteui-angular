@@ -7,6 +7,12 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxStepper`:
     - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+- `IgxCombo`, `IgxSimpleCombo`:
+    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+
+### New Features
+- `IgxCombo`, `IgxSimpleCombo`
+    - Added new property `displayValue` that returns array of display keys.
 
 ## 16.0.0
 
