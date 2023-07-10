@@ -158,6 +158,11 @@ export class IgxDragHandleDirective {
     @HostBinding('class.igx-drag__handle')
     public baseClass = true;
 
+    /**
+     * @hidden
+     */
+    public parentDragElement: HTMLElement = null;
+
     constructor(public element: ElementRef<any>) {}
 }
 
@@ -688,8 +693,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (!this.platformUtil.isBrowser) {
                 return;
             }
-            const targetElements = this.dragHandles && this.dragHandles.length ?
-                this.dragHandles.map((item) => item.element.nativeElement) : [this.element.nativeElement];
+            const targetElements = this.dragHandles && this.dragHandles.length
+                ? this.dragHandles
+                    .filter(item => item.parentDragElement === null)
+                    .map(item => {
+                        item.parentDragElement = this.element.nativeElement;
+                        return item.element.nativeElement;
+                    })
+                : [this.element.nativeElement];
             targetElements.forEach((element) => {
                 if (this.pointerEventsEnabled) {
                     fromEvent(element, 'pointerdown').pipe(takeUntil(this._destroy))
@@ -908,7 +919,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._pointerDownId = event.pointerId;
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until ghostElement is created.
-        const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.currentTarget);
+        const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
         const targetElement = handleFound ? handleFound.element.nativeElement : this.element.nativeElement;
         if (this.pointerEventsEnabled) {
             targetElement.setPointerCapture(this._pointerDownId);
