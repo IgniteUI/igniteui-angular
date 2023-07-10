@@ -48,14 +48,6 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostListener('mouseover')
-    public onMouseOver() {
-        this.colResizingService.resizeCursor = 'col-resize';
-    }
-
-    /**
-     * @hidden
-     */
     @HostListener('dblclick')
     public onDoubleClick() {
         this._dblClick = true;
