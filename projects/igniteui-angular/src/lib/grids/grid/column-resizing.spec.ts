@@ -1020,7 +1020,9 @@ export class ColPercentageGridComponent implements OnInit {
     <igx-column [field]="'Released'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'ReleaseDate'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     `
-    )
+    ),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColAutosizeGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
