@@ -83,7 +83,7 @@ export class IgxDividerDirective {
      * this.divider.inset = '32px';
      * ```
      */
-    @HostBinding('style.margin')
+    @HostBinding('style.--_inset')
     public set inset(value: string) {
         this._inset = value;
     }

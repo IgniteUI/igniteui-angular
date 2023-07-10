@@ -1279,12 +1279,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     protected onStatusChanged = () => {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (!this.collapsed || this.inputGroup.isFocused) {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
+        if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
+            if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
             } else {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
@@ -1292,6 +1291,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         this.manageRequiredAsterisk();
     };
+
+    private get isTouchedOrDirty(): boolean {
+        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+    }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {

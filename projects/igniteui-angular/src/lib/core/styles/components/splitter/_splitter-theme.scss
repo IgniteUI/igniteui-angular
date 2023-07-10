@@ -11,12 +11,12 @@
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
-/// @param {color} $bar-color [null] - The background color of the bar.
-/// @param {color} $handle-color [null] - The color for the bar drag handle.
-/// @param {color} $expander-color [null] - The color for the arrow expander's.
-/// @param {number} $border-radius [null] - the border radios of the splitter bar drag handle
-/// @param {color} $focus-color [null] - The color used for focused splitter bar.
-/// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
+/// @param {Color} $bar-color [null] - The background color of the bar.
+/// @param {Color} $handle-color [null] - The color for the bar drag handle.
+/// @param {Color} $expander-color [null] - The color for the arrow expander's.
+/// @param {List} $border-radius [null] - the border radios of the splitter bar drag handle
+/// @param {Color} $focus-color [null] - The color used for focused splitter bar.
+/// @param {Number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
 /// @requires $light-material-schema
 /// @example scss Set a custom expander color
 ///   $my-splitter-theme: splitter-theme($expander-color: red);
@@ -54,7 +54,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
