@@ -556,6 +556,7 @@
         }
 
         igx-icon {
+            --component-size: 3;
             display: flex;
             justify-content: center;
             width: var(--igx-icon-size, #{$icon-in-button-size});
@@ -570,10 +571,18 @@
 
     %igx-button-display--cosy {
         --component-size: var(--ig-size, var(--ig-size-medium));
+
+        igx-icon {
+            --component-size: 2;
+        }
     }
 
     %igx-button-display--compact {
         --component-size: var(--ig-size, var(--ig-size-small));
+
+        igx-icon {
+            --component-size: 1;
+        }
     }
 
     igx-grid-filtering-row {

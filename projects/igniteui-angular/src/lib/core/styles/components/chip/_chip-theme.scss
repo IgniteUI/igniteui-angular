@@ -398,9 +398,13 @@
         }
 
         igx-avatar,
-        igx-circular-bar {
+        igx-circular-bar,
+        igx-icon {
             --component-size: 3;
+        }
 
+        igx-avatar,
+        igx-circular-bar {
             $avatar-size: (
                 comfortable: rem(24px),
                 cosy: rem(18),
@@ -426,13 +430,15 @@
     }
 
     %igx-chip__item--cosy {
-        igx-avatar {
+        igx-avatar,
+        igx-icon {
             --component-size: 2;
         }
     }
 
     %igx-chip__item--compact {
-        igx-avatar {
+        igx-avatar,
+        igx-icon {
             --component-size: 1;
         }
     }

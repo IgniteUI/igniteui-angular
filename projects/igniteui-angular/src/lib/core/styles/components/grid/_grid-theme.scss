@@ -864,6 +864,15 @@
         display: flex;
         overflow: hidden;
 
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: 3;
+                font-size: rem(24px);
+                width: rem(24px);
+                height: rem(24px);
+            }
+        }
+
         %igx-grid__drag-indicator {
             cursor: default;
         }
@@ -879,12 +888,24 @@
     }
 
     %grid-thead--cosy {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: 2;
+            }
+        }
+
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
         }
     }
 
     %grid-thead--compact {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: 1;
+            }
+        }
+
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
         }
