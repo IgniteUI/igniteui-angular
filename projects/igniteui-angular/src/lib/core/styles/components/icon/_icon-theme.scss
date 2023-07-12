@@ -9,17 +9,17 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The icon color.
 /// @param {String} $size [null] - The icon size.
 /// @param {Color} $disabled-color [null] - The disabled icon color.
-/// @requires $light-schema
+/// @requires $light-material-schema
 /// @example scss Change the icon color
 ///   $my-icon-theme: icon-theme($color: orange);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-icon-theme);
 @function icon-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
 
     $color: null,
     $size: null,
@@ -28,13 +28,17 @@
     $name: 'igx-icon';
     $icon-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $icon-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'icon') {
+        $icon-schema: map.get($schema, 'icon');
     } @else {
         $icon-schema: $schema;
     }
 
     $theme: digest-schema($icon-schema);
+
+    @if not($size) {
+        $size: sizable(rem(16px), rem(20px), rem(24px));
+    }
 
     @return extend($theme, (
         name: $name,
@@ -49,13 +53,16 @@
 @mixin icon($theme) {
     @include css-vars($theme);
 
-    $igx-icon-font-size: var-get($theme, 'size');
+    $size: var-get($theme, 'size');
 
     %igx-icon-display {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: inline-flex;
-        width: $igx-icon-font-size;
-        height: $igx-icon-font-size;
-        font-size: $igx-icon-font-size;
+        width: $size;
+        height: $size;
+        font-size: $size;
         color: var-get($theme, 'color');
         direction: inherit;
 

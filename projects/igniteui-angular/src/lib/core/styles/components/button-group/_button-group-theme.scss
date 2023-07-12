@@ -13,7 +13,7 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {box-shadow} $shadow [null] - The shadow to be applied for the button group.
@@ -36,9 +36,9 @@
 /// @param {Color} $selected-shadow-color [null] - The outline color of focused/selected button group items.
 /// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
+/// @param {List} $border-radius [null] - The border radius used for button-group component.
 ///
-/// @requires $light-schema
+/// @requires $light-material-schema
 ///
 /// @example scss Change the background, text, and border colors
 ///   $my-button-group-theme: button-group-theme(
@@ -49,7 +49,7 @@
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-button-group-theme);
 @function button-group-theme(
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $elevations: null,
 
     $shadow: null,
@@ -74,16 +74,16 @@
 ) {
     $name: 'igx-button-group';
     $selector: 'igx-buttongroup';
-
     $button-group-schema: ();
 
-    @if map.has-key($schema, $name) {
-        $button-group-schema: map.get($schema, $name);
+    @if map.has-key($schema, 'button-group') {
+        $button-group-schema: map.get($schema, 'button-group');
     } @else {
         $button-group-schema: $schema;
     }
 
     $theme: digest-schema($button-group-schema);
+    $meta: map.get($theme, '_meta');
 
     $border: rem(1px) solid map.get($theme, 'item-selected-border-color');
 
@@ -133,7 +133,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
@@ -156,6 +156,9 @@
         shadow: $shadow,
         idle-shadow-color: $idle-shadow-color,
         selected-shadow-color: $selected-shadow-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -168,7 +171,7 @@
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $in-out-quad;
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 
@@ -217,13 +220,13 @@
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-end-start-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-end-start-radius: inherit;
         }
 
         &:last-of-type {
-            border-start-end-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: inherit;
+            border-end-end-radius: inherit;
         }
 
         &[igxButton][disabled='true'] {
@@ -256,8 +259,8 @@
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-start-end-radius: inherit;
             border-end-start-radius: 0;
             border-end-end-radius: 0;
         }
@@ -265,8 +268,8 @@
         &:last-of-type {
             border-start-start-radius: 0;
             border-start-end-radius: 0;
-            border-end-start-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-end-start-radius: inherit;
+            border-end-end-radius: inherit;
         }
     }
 
@@ -291,6 +294,10 @@
             &:focus {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
             }
+        }
+
+        &[igxButton] {
+            border-color: var-get($theme, 'item-selected-border-color');
         }
 
         &[igxButton][disabled='true'] {

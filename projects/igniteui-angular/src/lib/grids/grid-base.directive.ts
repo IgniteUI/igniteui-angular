@@ -1119,7 +1119,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
-    public parentVirtDir: IgxGridForOfDirective<any>;
+    public parentVirtDir: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden
@@ -1148,7 +1148,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragGhostCustomTemplate() {
-        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
+        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates?.first;
     }
 
     /**
@@ -1173,13 +1173,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
-    public verticalScrollContainer: IgxGridForOfDirective<any>;
+    public verticalScrollContainer: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden @internal
      */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
-    public verticalScroll: IgxGridForOfDirective<any>;
+    public verticalScroll: IgxGridForOfDirective<any, any[]>;
 
     /**
      * @hidden @internal
@@ -1284,7 +1284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditTextTemplate(): TemplateRef<IgxGridRowEditTextTemplateContext> {
-        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+        return this._rowEditTextTemplate || this.rowEditTextDirectives?.first;
     }
     /**
      * Sets the row edit text template.
@@ -1344,7 +1344,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowEditActionsTemplate(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
-        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives?.first;
     }
     /**
      * Sets the row edit actions template.
@@ -2025,12 +2025,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public get rowHeight() {
+    public get rowHeight(): number {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
-    public set rowHeight(value) {
-        this._rowHeight = parseInt(value, 10);
+    public set rowHeight(value: number | string) {
+        if (typeof value !== 'number') {
+            value = parseInt(value, 10);
+        }
+        this._rowHeight = value;
     }
 
     /**
@@ -2445,7 +2448,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
-        return this._headSelectorTemplate || this.headSelectorsTemplates.first;
+        return this._headSelectorTemplate || this.headSelectorsTemplates?.first;
     }
 
     /**
@@ -2486,7 +2489,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
-        return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
+        return this._rowSelectorTemplate || this.rowSelectorsTemplates?.first;
     }
 
     /**
@@ -2544,7 +2547,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
-        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates?.first;
     }
 
     /**
@@ -2902,6 +2905,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public summaryPipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public groupablePipeTrigger = 0;
 
     /**
     * @hidden @internal
@@ -3055,8 +3062,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private rowListDiffer;
     private _height: string | null = '100%';
     private _width: string | null = '100%';
-    private _rowHeight;
-    private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
+    private _rowHeight: number | undefined;
+    private _horizontalForOfs: Array<IgxGridForOfDirective<any, any[]>> = [];
     private _multiRowLayoutRowSize = 1;
     // Caches
     private _totalWidth = NaN;
@@ -3368,13 +3375,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get virtualizationState() {
         return this.verticalScrollContainer.state;
-    }
-
-    /**
-     * @hidden
-     */
-    public set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
     }
 
     /**
@@ -5233,7 +5233,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const columnsWithSetWidths = this.hasColumnLayouts ?
             visibleCols.filter(c => c.widthSetByUser) :
-            visibleChildColumns.filter(c => c.widthSetByUser);
+            visibleChildColumns.filter(c => c.widthSetByUser && c.width !== 'fit-content');
 
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
@@ -6572,6 +6572,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
+                this.groupablePipeTrigger++;
                 Promise.resolve().then(() => {
                     // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
                     // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
@@ -7082,7 +7083,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const vState = this.headerContainer.state;
         let colResized = false;
         const unpinnedInView = this.headerContainer.igxGridForOf.slice(vState.startIndex, vState.startIndex + vState.chunkSize).flatMap(x => x.columnGroup ? x.allChildren : x);
-        const columnsInView = this.pinnedColumns.concat(unpinnedInView);
+        const columnsInView = this.pinnedColumns.concat(unpinnedInView as IgxColumnComponent[]);
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths = [];
@@ -7230,7 +7231,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
+    protected scrollDirective(directive: IgxGridForOfDirective<any, any[]>, goal: number): void {
         if (!directive) {
             return;
         }

@@ -101,7 +101,7 @@ export interface RowType {
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
-    virtDirRow?: IgxGridForOfDirective<any>;
+    virtDirRow?: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     pinned?: boolean;
     selected?: boolean;
     expanded?: boolean;
@@ -323,6 +323,8 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    /** @hidden @internal */
+    groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
     hasColumnLayouts: boolean;
@@ -461,13 +463,15 @@ export interface GridType extends IGridDataBindable {
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
-
     pagingMode: GridPagingMode;
+    /** @hidden */
     pagingState: any;
 
     rowEditTabs: any;
     lastSearchInfo: ISearchInfo;
+    /** @hidden @internal */
     page: number;
+    /** @hidden @internal */
     perPage: number;
     /** @hidden @internal */
     dragRowID: any;

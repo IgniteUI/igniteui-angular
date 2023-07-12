@@ -14,6 +14,8 @@ import {
     IgxDragHandleDirective,
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgFor } from '@angular/common';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -479,6 +481,44 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
         expect(firstDrag.ghostElement.innerText).toEqual('Drag Template');
         expect(firstDrag.ghostElement.className).toEqual('ghostElement');
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    });
+
+    it(`should take first child when creating ghost from template that has display content`, async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghostOffsetX = 0;
+        firstDrag.ghostOffsetY = 0;
+        firstDrag.ghostTemplate = fix.componentInstance.ghostTemplateContents;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        // + 10 margin to the final ghost position
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
+        expect(firstDrag.ghostElement.innerText).toEqual('Drag Template Content');
+        expect(firstDrag.ghostElement.id).toEqual('contentsTemplate');
+        expect(firstDrag.ghostElement.style.display).toEqual('block');
 
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
@@ -1829,6 +1869,59 @@ describe('Linked igxDrag/igxDrop ', () => {
     });
 });
 
+describe('Nested igxDrag elements', () => {
+    configureTestSuite();
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [TestDragDropNestedComponent]
+        })
+        .compileComponents();
+    }));
+
+    it('should correctly move nested element using drag handle.', async () => {
+        const fix = TestBed.createComponent(TestDragDropNestedComponent);
+        fix.detectChanges();
+
+        const rootList = fix.componentInstance.dragElems.get(0);
+        const firstCategory = fix.componentInstance.dragElems.get(1);
+        const firstMovie = fix.componentInstance.dragElems.get(2);
+        const thirdElement = firstMovie.element.nativeElement;
+        const dragDirsRects = getElemRects(thirdElement);
+        firstMovie.ghost = false;
+        firstMovie.dragTolerance = 0;
+
+        spyOn(rootList.dragStart, 'emit');
+        spyOn(firstCategory.dragStart, 'emit');
+        spyOn(firstMovie.dragStart, 'emit');
+
+        const dragHandle = thirdElement.children[0].children[0];
+        const dragHandleRects = dragHandle.getBoundingClientRect();
+        const handleStartX = (dragHandleRects.left + dragHandleRects.right) / 2;
+        const handleStartY = (dragHandleRects.top + dragHandleRects.bottom) / 2;
+        UIInteractions.simulatePointerEvent('pointerdown', dragHandle, handleStartX, handleStartY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 10, handleStartY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 20, handleStartY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointerup', dragHandle, handleStartX + 20, handleStartY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(thirdElement.getBoundingClientRect().left).toEqual(dragDirsRects.left + 20);
+        expect(thirdElement.getBoundingClientRect().top).toEqual(dragDirsRects.top + 20);
+        expect(firstMovie.dragStart.emit).toHaveBeenCalled();
+        expect(rootList.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstCategory.dragStart.emit).not.toHaveBeenCalled();
+    });
+})
+
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
     dragDirs.forEach((dragDir) => {
@@ -1884,6 +1977,18 @@ const generalStyles = [`
         float: right;
         margin: 5px;
     }
+    .rootList {
+        width: 300px;
+        height: 800px;
+    }
+    .movieListItem {
+        padding: 5px;
+        margin-top: 5px;
+        margin-left: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 6px 0 gray;
+        background-color: rgba(232, 232, 232, .5);
+    }
 `];
 
 @Component({
@@ -1902,6 +2007,11 @@ const generalStyles = [`
             </div>
             <ng-template #ghostTemplate>
                 <div class="ghostElement">Drag Template</div>
+            </ng-template>
+            <ng-template #ghostTemplateContents>
+                <div id="contentsTemplate" class="ghostElement" style="display: contents">
+                    Drag Template Content
+                </div>
             </ng-template>
         </div>
         <br/>
@@ -1923,6 +2033,9 @@ class TestDragDropComponent {
 
     @ViewChild('ghostTemplate', { read: TemplateRef, static: true })
     public ghostTemplate: TemplateRef<any>;
+
+    @ViewChild('ghostTemplateContents', { read: TemplateRef, static: true })
+    public ghostTemplateContents: TemplateRef<any>;
 
     constructor(public renderer: Renderer2) { }
 }
@@ -1990,3 +2103,48 @@ class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
     imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }
+
+@Component({
+    styles: generalStyles,
+    template: `
+        <div class="rootList movieListItem" igxDrag [ghost]="false">
+            <div>
+                <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                <span>Movies list</span>
+            </div>
+            <div class="movieListItem" *ngFor="let category of categoriesNotes" igxDrag [ghost]="false">
+                <div>
+                    <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                    <span>{{category.text}}</span>
+                </div>
+                <div class="movieListItem" *ngFor="let note of getCategoryMovies(category.text)" igxDrag [ghost]="false">
+                    <div>
+                        <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                        <span>{{note.text}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    standalone: true,
+    imports: [NgFor, IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
+})
+class TestDragDropNestedComponent extends TestDragDropComponent {
+    public categoriesNotes = [
+        { text: 'Action', dragged: false },
+        { text: 'Fantasy', dragged: false }
+    ];
+    public listNotes = [
+        { text: 'Avengers: Endgame', category: 'Action', dragged: false },
+        { text: 'Avatar', category: 'Fantasy', dragged: false },
+        { text: 'Titanic', category: 'Drama', dragged: false },
+        { text: 'Star Wars: The Force Awakens', category: 'Fantasy', dragged: false },
+        { text: 'Avengers: Infinity War', category: 'Action', dragged: false },
+        { text: 'Jurassic World', category: 'Fantasy', dragged: false },
+        { text: 'The Avengers', category: 'Action', dragged: false }
+    ];
+
+    public getCategoryMovies(inCategory: string){
+        return this.listNotes.filter(item => item.category === inCategory);
+    }
+ }
