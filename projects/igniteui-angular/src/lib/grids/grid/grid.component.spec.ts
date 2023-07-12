@@ -2936,7 +2936,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 @Component({
     template: `<div style="height:300px">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
-                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator> 
+                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
     standalone: true,
@@ -3022,7 +3022,7 @@ export class LocalService {
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'">
+        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'" [totalItemCount]="totalItemCount">
             <igx-column [sortable]="true" [filterable]="true" [field]="'Col1'" [header]="'Col1'">
             </igx-column>
         </igx-grid>
@@ -3035,6 +3035,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     public data;
+    protected totalItemCount = 0;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
@@ -3046,7 +3047,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 
     public ngAfterViewInit() {
         this.localService.getData(this.instance.virtualizationState, (count) => {
-            this.instance.totalItemCount = count;
+            this.totalItemCount = count;
             this.cdr.detectChanges();
         });
     }

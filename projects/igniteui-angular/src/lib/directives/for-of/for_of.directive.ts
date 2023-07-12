@@ -294,15 +294,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     public set totalItemCount(val) {
         if (this._totalItemCount !== val) {
             this._totalItemCount = val;
-            // update sizes in case total count changes.
-            const newSize = this.initSizesCache(this.igxForOf);
-            const sizeDiff = this.scrollComponent.size - newSize;
-            this.scrollComponent.size = newSize;
-            const lastChunkExceeded = this.state.startIndex + this.state.chunkSize > val;
-            if (lastChunkExceeded) {
-                this.state.startIndex = val - this.state.chunkSize;
+            if (this.igxForOf?.length) {
+                // update sizes in case total count changes.
+                const newSize = this.initSizesCache(this.igxForOf);
+                const sizeDiff = this.scrollComponent.size - newSize;
+                this.scrollComponent.size = newSize;
+                const lastChunkExceeded = this.state.startIndex + this.state.chunkSize > val;
+                if (lastChunkExceeded) {
+                    this.state.startIndex = val - this.state.chunkSize;
+                }
+                this._adjustScrollPositionAfterSizeChange(sizeDiff);
             }
-            this._adjustScrollPositionAfterSizeChange(sizeDiff);
         }
     }
 
