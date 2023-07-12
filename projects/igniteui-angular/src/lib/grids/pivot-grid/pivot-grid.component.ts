@@ -471,7 +471,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @ViewChildren('verticalRowDimScrollContainer', { read: IgxGridForOfDirective })
-    public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
+    public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any, any[]>>;
 
     /**
      * @hidden @internal

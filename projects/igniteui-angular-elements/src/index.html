@@ -117,7 +117,7 @@
   <script type="module">
     import { html } from "/lit-html.js";
     import { defineComponents, IgcSelectComponent, IgcComboComponent } from "igniteui-webcomponents";
-    import "igniteui-webcomponents/themes/light/bootstrap.css";
+    // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
     defineComponents(IgcSelectComponent, IgcComboComponent);
     const grid1 = document.getElementById('grid1');
@@ -125,6 +125,16 @@
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
+
+    let groupingExpression1 = [];
+    var groupingExpression2 = {};
+    groupingExpression2.fieldName = "CategoryName";
+    groupingExpression2.dir = 1 /* SortingDirection.Asc */;
+    groupingExpression2.ignoreCase = false;
+    groupingExpression1.push(groupingExpression2)
+
+    grid1.groupingExpressions = groupingExpression1;
+
     document.addEventListener('DOMContentLoaded', () => {
         grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
         grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;

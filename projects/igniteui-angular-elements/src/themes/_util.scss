@@ -32,6 +32,7 @@ $elements-selector-prefix: 'igc';
     @if map.has-key($theme_schema, "name") {
         $name: map.get($theme_schema, "name");
         $selector: map.get($theme_schema, "selector") or $name;
+        $modified: ();
 
         // @debug "name: #{$name}";
 
@@ -39,16 +40,28 @@ $elements-selector-prefix: 'igc';
             $name: list.nth(string.split($name, 'igx-'), -1);
             $name: '#{$elements-var-prefix}-#{$name}';
             // @debug "name after: #{$name}";
+            $modified: map.merge($modified, (name: $name));
         }
 
         // For exposed components also modify selector with updated element prefix:
         @if list.index(vars.$allowed, map.get($theme_schema, "name")) {
             // @debug "selector before: #{$selector}";
             $selector: updateSelectors($selector);
-            // @debug "selector after: #{$selector}";;
+            // @debug "selector after: #{$selector}";
         }
 
-        $result: map.merge($result, (name: $name, selector: $selector));
+        $modified: map.merge($modified, (selector: $selector));
+
+        @if map.has-key($theme_schema, 'themes') {
+            $themes: map.get($theme_schema, 'themes');
+            $newThemes: ();
+            @each $name, $sub_schema in $themes {
+                $newThemes: map.set($newThemes, $name, updateElementName($sub_schema));
+            }
+            $modified: map.merge($modified, (themes: $newThemes));
+        }
+
+        $result: map.merge($result, $modified);
     }
     @return $result;
 }
