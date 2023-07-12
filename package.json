@@ -125,7 +125,7 @@
     "sass-true": "^6.0.1",
     "sassdoc": "^2.7.4",
     "sassdoc-plugin-localization": "^1.4.3",
-    "stylelint": "^15.1.0",
+    "stylelint": "^15.10.1",
     "stylelint-scss": "^4.1.0",
     "ts-node": "^10.8.1",
     "typedoc": "^0.23.21",
