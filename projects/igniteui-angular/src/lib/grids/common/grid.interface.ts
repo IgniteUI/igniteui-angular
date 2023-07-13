@@ -670,6 +670,7 @@ export interface GridType extends IGridDataBindable {
     createRow?(index: number, data?: any): RowType;
     deleteRow(id: any): any;
     deleteRowById(id: any): any;
+    updateRow(value: any, rowSelector: any): void;
     collapseRow(id: any): void;
     notifyChanges(repaint?: boolean): void;
     resetColumnCollections(): void;
