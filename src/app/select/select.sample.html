@@ -32,9 +32,13 @@
             <igx-prefix igxPrefix>
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
-            <igx-select-item>None</igx-select-item>
+            <igx-select-item>
+                None
+            </igx-select-item>
             <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+                <igx-icon igxPrefix>alarm</igx-icon>
                 {{ item.field }}
+                <igx-icon igxSuffix>notifications_active</igx-icon>
             </igx-select-item>
             <ng-template igxSelectHeader>
                 <div class="custom-select-header" (click)="headerFootedClick($event);">
@@ -117,9 +121,21 @@
         </igx-prefix>
         <igx-select-item value="1">OutsideGroup</igx-select-item>
         <igx-select-item-group label="Group">
-            <igx-select-item [disabled]="true" value="2">InsideGroup1</igx-select-item>
-            <igx-select-item value="3">InsideGroup2</igx-select-item>
-            <igx-select-item value="4">InsideGroup3</igx-select-item>
+            <igx-select-item [disabled]="true" value="2">
+                <igx-icon igxPrefix>alarm</igx-icon>
+                InsideGroup1
+                <igx-icon igxSuffix>alarm</igx-icon>
+            </igx-select-item>
+            <igx-select-item value="3">
+                <igx-icon igxPrefix>alarm</igx-icon>
+                InsideGroup2
+                <igx-icon igxSuffix>alarm</igx-icon>
+            </igx-select-item>
+            <igx-select-item value="4">
+                <igx-icon igxPrefix>alarm</igx-icon>
+                InsideGroup3
+                <igx-icon igxSuffix>alarm</igx-icon>
+            </igx-select-item>
         </igx-select-item-group>
     </igx-select>
     </section>

@@ -3,7 +3,13 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
-    template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>',
+    template: `
+        <span class="igx-drop-down__content">
+	        <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
+		    <span class="igx-drop-down__inner"><ng-content></ng-content></span>
+	        <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
+        </span>
+    `,
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
