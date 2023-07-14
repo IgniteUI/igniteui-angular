@@ -600,8 +600,3 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         }
     }
 }
-
-/**
- * @hidden
- */
-
