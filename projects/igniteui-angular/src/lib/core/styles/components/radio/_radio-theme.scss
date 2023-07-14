@@ -569,17 +569,17 @@
 
     %radio-group-display {
         display: block;
-        %radio-display:not(:first-of-type) {
-            margin-inline-start: $horizontal-group-margin;
+        %radio-display:not(:last-of-type) {
+            margin-inline-end: $horizontal-group-margin;
         }
     }
 
     %radio-group-display--vertical {
         display: flex;
         flex-flow: column;
-        %radio-display:not(:first-of-type) {
-            margin-inline-start: 0;
-            margin-block-start: $vertical-group-margin;
+        %radio-display:not(:last-of-type) {
+            margin-inline-end: 0;
+            margin-block-end: $vertical-group-margin;
         }
     }
 }
