@@ -1008,14 +1008,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._value) {
-            this._value = this.createDisplayText(this.selection, []);
-        }
-        super.ngDoCheck();
-    }
-
-    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
