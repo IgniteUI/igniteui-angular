@@ -167,7 +167,7 @@ export class MaskParsingService {
                     cursor = literalsPositions[i] + 1;
                 }
             }
-            if (!isDelete && initialMaskedValue !== maskedValue) {
+            if (!isDelete) {
                 cursor++;
             }
         }
