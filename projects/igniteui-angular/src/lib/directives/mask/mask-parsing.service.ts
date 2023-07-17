@@ -131,7 +131,6 @@ export class MaskParsingService {
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);
-        let initialMaskedValue = maskedValue;
 
         for (let i = start; i < end || (chars.length && i < maskedValue.length); i++) {
             if (literalsPositions.indexOf(i) !== -1) {
