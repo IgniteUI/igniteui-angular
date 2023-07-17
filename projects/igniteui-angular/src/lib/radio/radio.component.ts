@@ -501,7 +501,9 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         this.value = this.value ?? value;
 
         if (value === this.value) {
-            this.select();
+            if (!this.checked) {
+                this.checked = true;
+            }
         } else {
             this.deselect();
         }
