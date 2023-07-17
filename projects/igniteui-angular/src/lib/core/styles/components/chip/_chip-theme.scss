@@ -400,7 +400,7 @@
         igx-avatar,
         igx-circular-bar,
         igx-icon {
-            --component-size: 3;
+            --component-size: var(--ig-size, var(--ig-size-large));
         }
 
         igx-avatar,
@@ -432,14 +432,14 @@
     %igx-chip__item--cosy {
         igx-avatar,
         igx-icon {
-            --component-size: 2;
+            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
     %igx-chip__item--compact {
         igx-avatar,
         igx-icon {
-            --component-size: 1;
+            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 

@@ -556,7 +556,7 @@
         }
 
         igx-icon {
-            --component-size: 3;
+            --component-size: var(--ig-size, var(--ig-size-large));
             display: flex;
             justify-content: center;
             width: var(--igx-icon-size, #{$icon-in-button-size});
@@ -573,7 +573,7 @@
         --component-size: var(--ig-size, var(--ig-size-medium));
 
         igx-icon {
-            --component-size: 2;
+            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
@@ -581,7 +581,7 @@
         --component-size: var(--ig-size, var(--ig-size-small));
 
         igx-icon {
-            --component-size: 1;
+            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 

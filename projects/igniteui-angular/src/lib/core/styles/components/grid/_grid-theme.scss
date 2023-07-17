@@ -866,7 +866,7 @@
 
         %igx-grid__header-indentation {
             igx-icon {
-                --component-size: 3;
+                --component-size: var(--ig-size, var(--ig-size-large));
                 font-size: rem(24px);
                 width: rem(24px);
                 height: rem(24px);
@@ -890,7 +890,7 @@
     %grid-thead--cosy {
         %igx-grid__header-indentation {
             igx-icon {
-                --component-size: 2;
+                --component-size: var(--ig-size, var(--ig-size-medium));
             }
         }
 
@@ -902,7 +902,7 @@
     %grid-thead--compact {
         %igx-grid__header-indentation {
             igx-icon {
-                --component-size: 1;
+                --component-size: var(--ig-size, var(--ig-size-small));
             }
         }
 
