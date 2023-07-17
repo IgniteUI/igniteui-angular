@@ -8,7 +8,7 @@ All notable changes for each version of this project will be documented in this 
     - The select component now has the ability to handle igxPrefix and IgxSuffix directives inside `igx-select-item`.
 
      ```html
-        <igx-select-item value="3">
+        <igx-select-item>
             <igx-icon igxPrefix>alarm</igx-icon>
             Select item text content
             <igx-icon igxSuffix>alarm</igx-icon>
