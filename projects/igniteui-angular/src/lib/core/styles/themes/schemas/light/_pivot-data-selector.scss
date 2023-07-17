@@ -1,4 +1,4 @@
-@use '../../../base' as *;
+@use "../../../base" as *;
 
 ////
 /// @group schemas
@@ -9,26 +9,46 @@
 /// Generates a light pivot data selector schema.
 /// @type {Map}
 $light-pivot-data-selector: (
+    variant: 'material',
+
     background: (
         color: 'surface',
     ),
 
     header-color: (
-        color: ('gray', 100)
-    )
+        color: (
+            'gray',
+            100,
+        ),
+    ),
 );
 
 /// Generates a fluent pivot data selector schema.
 /// @type {Map}
 /// @requires {Map} $light-pivot-data-selector
-$fluent-pivot-data-selector: $light-pivot-data-selector;
+$fluent-pivot-data-selector: extend(
+    $light-pivot-data-selector,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap pivot data selector schema.
 /// @type {Map}
 /// @requires {Map} $light-pivot-data-selector
-$bootstrap-pivot-data-selector: $light-pivot-data-selector;
+$bootstrap-pivot-data-selector: extend(
+    $light-pivot-data-selector,
+    (
+        variant: 'bootstrap',
+    )
+);
 
 /// Generates a indigo pivot data selector schema.
 /// @type {Map}
 /// @requires {Map} $light-pivot-data-selector
-$indigo-pivot-data-selector: $light-pivot-data-selector;
+$indigo-pivot-data-selector: extend(
+    $light-pivot-data-selector,
+    (
+        variant: 'indigo',
+    )
+);
