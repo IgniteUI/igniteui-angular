@@ -292,6 +292,14 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden @internal
      */
+    public onPointerDownIndicator(event) {
+        // Stop propagation of pointer events to now allow column dragging using the header indicators.
+        event.stopPropagation();
+    }
+
+    /**
+     * @hidden @internal
+     */
     public toggleExpandState(event: MouseEvent): void {
         event.stopPropagation();
         this.column.expanded = !this.column.expanded;
