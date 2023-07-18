@@ -3,6 +3,17 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 16.1.0
+### New Features
+- `IgxSelect`:
+    - The select component now has the ability to handle `igxPrefix` and `igxSuffix` directives inside `igx-select-item`.
+
+     ```html
+        <igx-select-item>
+            <igx-icon igxPrefix>alarm</igx-icon>
+            Select item text content
+            <igx-icon igxSuffix>alarm</igx-icon>
+        </igx-select-item>
+     ```
 
 ### General
 - `IgxStepper`:
