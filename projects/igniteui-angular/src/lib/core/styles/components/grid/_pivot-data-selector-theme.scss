@@ -148,6 +148,12 @@
         flex-direction: column;
         overflow: hidden;
 
+        igx-input-group {
+            @if $variant == 'bootstrap' {
+                padding: rem(4px);
+            }
+        }
+
         igx-list {
             display: flex;
             flex-direction: column;
