@@ -15,7 +15,7 @@
             <button igxButton [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
         </igx-buttongroup>
 
-        <h5>Density types</h5>
+        <h5>Density types - Prefix/suffix</h5>
         <igx-buttongroup [multiSelection]="false">
             <button igxButton [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Comfortable</button>
             <button igxButton [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy" displayDensity="cosy">Cosy</button>
@@ -58,19 +58,25 @@
 
     <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="comfortable">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 
     <igx-drop-down #dropDownCosy (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="cosy">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 
     <igx-drop-down #dropDownCompact (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' displayDensity="compact">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 </section>
