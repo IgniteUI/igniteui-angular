@@ -1,8 +1,25 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 import { foods } from './foods';
-import { ConnectedPositioningStrategy, IgxButtonDirective, IgxButtonGroupComponent, IgxDropDownComponent, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxInputDirective, IgxInputGroupComponent, IgxOverlayOutletDirective, IgxRippleDirective, IgxToggleActionDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
+import {
+	ConnectedPositioningStrategy,
+	IgxButtonDirective,
+	IgxButtonGroupComponent,
+	IgxDropDownComponent,
+	IgxDropDownGroupComponent,
+	IgxDropDownItemComponent,
+	IgxDropDownItemNavigationDirective,
+	IgxIconComponent,
+	IgxInputDirective,
+	IgxInputGroupComponent,
+	IgxOverlayOutletDirective,
+	IgxRippleDirective,
+	IgxToggleActionDirective,
+	IgxToggleDirective,
+	NoOpScrollStrategy,
+	OverlaySettings,
+} from 'igniteui-angular';
 
 
 @Component({
@@ -11,21 +28,23 @@ import { ConnectedPositioningStrategy, IgxButtonDirective, IgxButtonGroupCompone
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss'],
     standalone: true,
-    imports: [
-        NgFor,
-        IgxButtonGroupComponent,
-        IgxButtonDirective,
-        IgxDropDownItemNavigationDirective,
-        IgxToggleActionDirective,
-        IgxDropDownComponent,
-        IgxDropDownItemComponent,
-        IgxToggleDirective,
-        IgxDropDownGroupComponent,
-        IgxInputGroupComponent,
-        IgxInputDirective,
-        IgxRippleDirective,
-        IgxOverlayOutletDirective
-    ]
+	imports: [
+		NgFor,
+		IgxButtonGroupComponent,
+		IgxButtonDirective,
+		IgxDropDownItemNavigationDirective,
+		IgxToggleActionDirective,
+		IgxDropDownComponent,
+		IgxDropDownItemComponent,
+		IgxToggleDirective,
+		IgxDropDownGroupComponent,
+		IgxInputGroupComponent,
+		IgxInputDirective,
+		IgxRippleDirective,
+		IgxOverlayOutletDirective,
+		IgxIconComponent,
+		NgIf,
+	],
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
