@@ -25,15 +25,20 @@
     }
 
     $theme: digest-schema($pivot-data-selector-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $chip-height-material: (
         comfortable: rem(22px),
@@ -138,6 +143,12 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+
+        igx-input-group {
+            @if $variant == 'bootstrap' {
+                padding: rem(4px);
+            }
+        }
 
         igx-list {
             display: flex;
