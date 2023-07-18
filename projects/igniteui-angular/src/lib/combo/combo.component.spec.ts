@@ -1321,6 +1321,28 @@ describe('igxCombo', () => {
                 combo.select([combo.data[7][combo.valueKey]]);
                 expect(combo.value).toBe(combo.data[7][combo.displayKey]);
             });
+            it('should add selected items to the input when data is loaded', async() => {
+                expect(combo.selection.length).toEqual(0);
+                expect(combo.value).toEqual('');
+
+                // current combo data - id: 0 - 9
+                // select item that is not present in the data source yet
+                combo.select([9, 19]);
+                expect(combo.selection.length).toEqual(2);
+
+                const firstItem = combo.data[combo.data.length - 1];
+                expect(combo.value).toEqual(firstItem[combo.displayKey]);
+
+                combo.toggle();
+
+                // scroll to second selected item
+                combo.virtualScrollContainer.scrollTo(19);
+                await wait(30);
+                fixture.detectChanges();
+
+                const secondItem = combo.data[combo.data.length - 1];
+                expect(combo.value).toEqual(`${firstItem[combo.displayKey]}, ${secondItem[combo.displayKey]}`);
+            });
         });
         describe('Binding to ngModel tests: ', () => {
             let component: ComboModelBindingComponent;

@@ -1946,7 +1946,7 @@ describe('IgxSimpleCombo', () => {
                 expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                 expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                 expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
-            
+
                 // remove the validators and set errors
                 form.get('comboValue').clearValidators();
                 form.markAsUntouched();
@@ -2048,7 +2048,7 @@ describe('IgxSimpleCombo', () => {
 
             // scroll to selected item
             combo.virtualScrollContainer.scrollTo(15);
-            await wait();
+            await wait(30);
             fixture.detectChanges();
 
             const selectedItem = combo.data[combo.data.length - 1];
