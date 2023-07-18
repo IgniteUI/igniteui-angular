@@ -95,6 +95,13 @@
         %igx-select__toggle-button {
             background: var-get($theme, 'toggle-button-background');
             color: var-get($theme, 'toggle-button-foreground');
+
+            igx-icon {
+                $size: sizable(rem(18px), rem(24px), rem(36px));
+                width: $size;
+                height: $size;
+                font-size: $size;
+            }
         }
     }
 
