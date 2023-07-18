@@ -138,7 +138,7 @@
                 </igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column" #ind>
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column [resizable]="true" field="ID" [editable]="true">

@@ -1021,15 +1021,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._displayValue) {
-            this._displayValue = this.createDisplayText(this.selection, []);
-            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
-        }
-        super.ngDoCheck();
-    }
-
-    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
@@ -1104,7 +1095,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     public get selection() {
         const items = Array.from(this.selectionService.get(this.id));
-        return this.convertKeysToItems(items)
+        return this.convertKeysToItems(items);
     }
 
     /**

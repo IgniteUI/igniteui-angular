@@ -1,6 +1,6 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -67,7 +67,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
-export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
+export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -251,6 +251,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
 
         super.ngAfterViewInit();
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(this.selection, []);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+
+        }
+        super.ngDoCheck();
     }
 
     /** @hidden @internal */

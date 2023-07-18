@@ -3,10 +3,24 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 16.1.0
+### New Features
+- `IgxSelect`:
+    - The select component now has the ability to handle `igxPrefix` and `igxSuffix` directives inside `igx-select-item`.
+
+     ```html
+        <igx-select-item>
+            <igx-icon igxPrefix>alarm</igx-icon>
+            Select item text content
+            <igx-icon igxSuffix>alarm</igx-icon>
+        </igx-select-item>
+     ```
 
 ### General
 - `IgxStepper`:
     - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
+    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
 - `IgxCombo`, `IgxSimpleCombo`:
     - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
 

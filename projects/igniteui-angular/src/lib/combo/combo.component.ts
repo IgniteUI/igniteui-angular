@@ -1,7 +1,7 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -121,7 +121,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+    OnDestroy, DoCheck, EditorProvider {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
@@ -202,6 +202,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _prevInputValue = '';
 
+    private _displayText: string;
+
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
@@ -262,6 +264,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(this.selection, oldSelection);
         this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length) {
+            this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+
+        }
+        super.ngDoCheck();
     }
 
     /**
@@ -437,7 +449,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.selectionService.select_items(this.id, args.newSelection, true);
             this._value = args.newSelection;
             if (displayText !== args.displayText) {
-                this._displayValue = args.displayText;
+                this._displayValue = this._displayText = args.displayText;
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
