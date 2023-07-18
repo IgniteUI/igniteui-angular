@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
-    - The select component now has the ability to handle igxPrefix and IgxSuffix directives inside `igx-select-item`.
+    - The select component now has the ability to handle `igxPrefix` and `igxSuffix` directives inside `igx-select-item`.
 
      ```html
         <igx-select-item>
