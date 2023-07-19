@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IgxAvatarComponent, IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
-import { caseSensitive, } from '@igniteui/material-icons-extended';
+import { heartMonitor } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'app-badge-sample',
@@ -13,6 +13,6 @@ export class BadgeSampleComponent implements OnInit {
     constructor (protected _iconService: IgxIconService) {}
 
     public ngOnInit() {
-        this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+        this._iconService.addSvgIconFromText(heartMonitor.name, heartMonitor.value, 'imx-icons');
     }
 }
