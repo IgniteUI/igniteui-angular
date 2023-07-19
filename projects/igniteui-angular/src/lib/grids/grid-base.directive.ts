@@ -4,7 +4,6 @@ import {
     AfterViewInit,
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentRef,
     ContentChild,
     ContentChildren,
     createComponent,
@@ -3743,17 +3742,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.excelStyleFilteringComponent.overlayComponentId = id;
             return { id, ref: undefined };
         }
-        const ref = this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
+        const ref = this.viewRef.createComponent(IgxGridExcelStyleFilteringComponent, { injector: this.injector } );
         ref.instance.initialize(column, this.overlayService);
         const id = this.overlayService.attach(ref.instance.element, options);
         ref.instance.overlayComponentId = id;
         return { ref, id };
-    }
-
-    private createComponentInstance(component: any) {
-        const dynamicComponent: ComponentRef<any> = createComponent(component, { environmentInjector: this.envInjector, elementInjector: this.injector } );
-        this.appRef.attachView(dynamicComponent.hostView);
-        return dynamicComponent;
     }
 
     /** @hidden @internal */

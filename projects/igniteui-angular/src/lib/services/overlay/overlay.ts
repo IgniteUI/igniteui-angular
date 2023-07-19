@@ -701,11 +701,6 @@ export class IgxOverlayService implements OnDestroy {
             info.componentRef.changeDetectorRef.detectChanges();
             info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
         }
-
-        // set content div width only if element to show has width
-        if (info.initialSize.width !== 0) {
-            info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
-        }
     }
 
     private closeDone(info: OverlayInfo) {
