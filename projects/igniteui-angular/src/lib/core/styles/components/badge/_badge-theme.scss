@@ -117,9 +117,9 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: var(--igx-icon-size, #{var(--size) - rem(2px)});
-            height: var(--igx-icon-size, #{var(--size) - rem(2px)});
-            font-size: var(--igx-icon-size, #{var(--icon-font-size)});
+            width: var(--igx-icon-size, #{rem(20px)});
+            height: var(--igx-icon-size, #{rem(20px)});
+            font-size: var(--igx-icon-size, #{rem(12px)});
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
         }
