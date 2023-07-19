@@ -322,7 +322,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public updateSelected(index: number) {
         const button = this.buttons[index];
 
-        if(this.selectedIndexes.indexOf(index) === -1) {
+        if (this.selectedIndexes.indexOf(index) === -1) {
             this.selectedIndexes.push(index);
         }
 
@@ -373,8 +373,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         if (indexInViewButtons !== -1) {
             this.values[indexInViewButtons].selected = false;
         }
-
-        this.deselected.emit({ button, index });
     }
 
     /**
@@ -443,12 +441,22 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public _clickHandler(index: number) {
+        const button = this.buttons[index];
+
+        if (!this.multiSelection) {
+            this.buttons.forEach((b, i) => {
+                if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
+                    this.deselected.emit({ button: b, index: i });
+                }
+            });
+        }
+
         if (this.selectedIndexes.indexOf(index) === -1) {
             this.selectButton(index);
-            const button = this.buttons[index];
             this.selected.emit({ button, index });
         } else {
             this.deselectButton(index);
+            this.deselected.emit({ button, index });
         }
     }
 }

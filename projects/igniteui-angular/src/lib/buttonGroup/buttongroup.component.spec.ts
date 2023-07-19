@@ -98,7 +98,7 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
-    it('should fire selected event when button is selected by the user interaction, not when it is initially or programmatically selected', () => {
+    it('should fire the selected event when a button is selected by user interaction, not on initial or programmatic selection', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
 
@@ -119,6 +119,31 @@ describe('IgxButtonGroup', () => {
         button.click();
 
         expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
+    });
+
+    it('should fire the deselected event when a button is deselected by user interaction, not on programmatic deselection', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        btnGroupInstance.buttons[0].select();
+        btnGroupInstance.buttons[1].select();
+        spyOn(btnGroupInstance.deselected, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].deselect();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
     });
 
    it('Button Group single selection', () => {
