@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { IgxAvatarComponent, IgxBadgeComponent } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
+import { IgxAvatarComponent, IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
+import { heartMonitor } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'app-badge-sample',
@@ -8,4 +9,10 @@ import { IgxAvatarComponent, IgxBadgeComponent } from 'igniteui-angular';
     standalone: true,
     imports: [IgxAvatarComponent, IgxBadgeComponent]
 })
-export class BadgeSampleComponent {}
+export class BadgeSampleComponent implements OnInit {
+    constructor (protected _iconService: IgxIconService) {}
+
+    public ngOnInit() {
+        this._iconService.addSvgIconFromText(heartMonitor.name, heartMonitor.value, 'imx-icons');
+    }
+}
