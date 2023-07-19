@@ -398,9 +398,13 @@
         }
 
         igx-avatar,
-        igx-circular-bar {
-            --component-size: 3;
+        igx-circular-bar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-large));
+        }
 
+        igx-avatar,
+        igx-circular-bar {
             $avatar-size: (
                 comfortable: rem(24px),
                 cosy: rem(18),
@@ -426,14 +430,16 @@
     }
 
     %igx-chip__item--cosy {
-        igx-avatar {
-            --component-size: 2;
+        igx-avatar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
     %igx-chip__item--compact {
-        igx-avatar {
-            --component-size: 1;
+        igx-avatar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 
