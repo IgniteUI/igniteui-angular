@@ -87,7 +87,10 @@
         %form-group-prefix,
         %form-group-prefix--cosy,
         %form-group-prefix--compact {
-            padding-inline-end: rem(16px) !important;
+            @if $variant == 'material' {
+                padding-inline-end: rem(16px) !important;
+            }
+
             box-sizing: content-box;
         }
 
@@ -125,6 +128,7 @@
 
             > h6 {
                 font-size: rem(12px);
+                margin-bottom: 0;
             }
         }
 
