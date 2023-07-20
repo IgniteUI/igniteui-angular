@@ -660,6 +660,18 @@
             }
         }
 
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-start) {
+                @extend %form-group-bundle-textarea-start--fluent !optional;
+            }
+        }
+
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-end) {
+                @extend %form-group-bundle-textarea-end--fluent !optional;
+            }
+        }
+
         @include mx(fluent, required) {
             @include e(bundle) {
                 @extend %form-group-bundle-required--fluent !optional;
