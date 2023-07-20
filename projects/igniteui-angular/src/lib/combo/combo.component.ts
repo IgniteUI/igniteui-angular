@@ -271,7 +271,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
-
         }
         super.ngDoCheck();
     }

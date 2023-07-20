@@ -258,7 +258,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.data?.length && this.selection.length && !this._displayValue) {
             this._displayValue = this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
-
         }
         super.ngDoCheck();
     }
