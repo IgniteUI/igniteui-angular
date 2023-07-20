@@ -14,6 +14,29 @@ All notable changes for each version of this project will be documented in this 
             <igx-icon igxSuffix>alarm</igx-icon>
         </igx-select-item>
      ```
+- `IgxBadge`:
+    - Material icons extended along with any other custom icon set can now be used inside the badge component.
+    - Code example: 
+
+     ```typescript
+     import { IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
+     import { heartMonitor } from '@igniteui/material-icons-extended';
+
+     export class BadgeSampleComponent implements OnInit {
+        constructor (protected _iconService: IgxIconService) {}
+
+        public ngOnInit() {
+            this._iconService.addSvgIconFromText(heartMonitor.name, heartMonitor.value, 'imx-icons');
+        }
+     }
+     ```
+
+     ```html
+        <igx-badge icon="heart-monitor" iconSet="imx-icons"></igx-badge>
+     ```
+- `IgxCombo`:
+    - Exposed `comboIgnoreDiacriticsFilter` filter function which normalizes diacritics to their base representation.
+    When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
 
 ### General
 - `IgxStepper`:
@@ -28,11 +51,11 @@ All notable changes for each version of this project will be documented in this 
 - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 
   Now you can do:
-  
+
   ```typescript
   // IGX_GRID_DIRECTIVES exports all grid related components and directives
   import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
@@ -41,13 +64,13 @@ All notable changes for each version of this project will be documented in this 
       imports: [IGX_GRID_DIRECTIVES, AsyncPipe]
   })
   ```
-  
+
   or
-  
+
   ```typescript
   // Single import of only the <igx-grid> component.
   import { IgxGridComponent } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
@@ -56,13 +79,13 @@ All notable changes for each version of this project will be documented in this 
       imports: [IgxGridComponent, AsyncPipe]
   })
   ```
-  
+
   or still
-  
+
   ```typescript
   // `NgModule` import of the `IgxGridModule` module, which is equivalent to IGX_GRID_DIRECTIVES in terms of exported components and directives.
   import { IgxGridModule } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
