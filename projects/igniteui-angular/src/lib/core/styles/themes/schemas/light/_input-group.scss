@@ -48,9 +48,9 @@
 /// @prop {Map} error-shadow-color [color: ('error', 500, .38)] - The shadow/border color for error state for bootstrap input group.
 /// @prop {Map} placeholder-color [color: ('gray', 700)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 500)] - The disabled placeholder color of an input group.
-/// @prop {Number} box-border-radius [4px 4px 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for search input.
 /// @prop {Map} input-prefix-color--filled [color: ('gray', 900)] - The input prefix color in the filled state.
 /// @prop {Color} input-prefix-background--filled [inherit] - The background color of an input prefix in the filled state.
 /// @prop {Map} input-prefix-color--focused [color: ('gray', 900)] - The input prefix color in the focused state.
@@ -213,11 +213,23 @@ $light-input-group: extend(
             color: ('gray', 100)
         ),
 
-        box-border-radius: rem(4px),
+        box-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(4px),
+        border-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(4px),
+        search-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
         success-shadow-color: (
             color: ('success', 500, .38)
@@ -243,9 +255,9 @@ $light-input-group: extend(
 /// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
-/// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for search input.
 /// @prop {Map} input-prefix-color [color: ('gray', 700)] - The text color of an input prefix of type line, box and border.
 /// @prop {Map} input-prefix-color--filled [color: ('gray', 700)] - The input prefix color in the filled state.
 /// @prop {Map} input-prefix-color--focused [color: ('gray', 700)] - The input prefix color in the focused state.
@@ -350,11 +362,23 @@ $fluent-input-group: extend(
             color: ('gray', 100),
         ),
 
-        box-border-radius: rem(2px),
+        box-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(2px),
+        border-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(2px),
+        search-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -369,9 +393,6 @@ $fluent-input-group: extend(
 /// @prop {Map} warning-secondary-color [color: ('warn', 500)] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
 /// @prop {Map} disabled-text-color [color: ('gray', 400)] - The input text color in the disabled state.
-/// @prop {Number} box-border-radius [4px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} interim-bottom-line-color [color: ('primary', 500)] - The bottom line and border colors during the to-focused transition.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
 /// @prop {Map} input-prefix-color [color: ('gray', 800)] - The input prefix color in the idle state.
@@ -495,9 +516,9 @@ $bootstrap-input-group: extend(
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [1] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state of the search input.
-/// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} box-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for box input.
+/// @prop {List} border-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for border input.
+/// @prop {List} search-border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for search input.
 /// @prop {Map} placeholder-color [color: ('gray', 300)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 300)] - The disabled placeholder color of an input group.
 /// @prop {Map} input-prefix-color--filled [color: ('gray', 600)] - The input prefix color in the filled state.
@@ -596,11 +617,23 @@ $indigo-input-group: extend(
             color: ('gray', 300)
         ),
 
-        box-border-radius: rem(0),
+        box-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        border-border-radius: rem(0),
+        border-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        search-border-radius: rem(2px),
+        search-border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
 
         idle-secondary-color: (
             color: ('gray', 900)

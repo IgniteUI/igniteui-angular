@@ -46,6 +46,8 @@ const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
@@ -1932,6 +1934,33 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
             });
+
+            it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+                const form = (fixture.componentInstance as IgxSimpleComboInReactiveFormComponent).comboForm;
+
+                // the form control has validators
+                form.markAllAsTouched();
+                form.get('comboValue').setErrors({ error: true });
+                fixture.detectChanges();
+
+                expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+
+                // remove the validators and set errors
+                form.get('comboValue').clearValidators();
+                form.markAsUntouched();
+                fixture.detectChanges();
+
+                form.markAllAsTouched();
+                form.get('comboValue').setErrors({ error: true });
+                fixture.detectChanges();
+
+                // no validator, but there is a set error
+                expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+            }));
         });
     });
 
@@ -2019,7 +2048,7 @@ describe('IgxSimpleCombo', () => {
 
             // scroll to selected item
             combo.virtualScrollContainer.scrollTo(15);
-            await wait();
+            await wait(30);
             fixture.detectChanges();
 
             const selectedItem = combo.data[combo.data.length - 1];

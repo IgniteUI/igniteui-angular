@@ -53,9 +53,9 @@
 /// @prop {Map} border-color [color: ('gray', 300)] - The calendar border color.
 /// @prop {Map} week-number-color [color: ('gray', 500)] - The text color of the week number column.
 /// @prop {Map} week-number-background [color: ('gray', 200)] - The background color of the week number column.
-/// @prop {Number} border-radius [4px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [20px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} month-border-radius [20px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar.
+/// @prop {List} date-border-radius [(rem(20px), rem(0), rem(20px))] - The border radius used for calendar date.
+/// @prop {List} month-border-radius [(rem(20px), rem(0), rem(20px))] - The border radius used for calendar month.
 $light-calendar: extend(
     (
         variant: 'material',
@@ -238,11 +238,21 @@ $light-calendar: extend(
             color: ('gray', 200),
         ),
 
-        border-radius: rem(4px),
-
-        date-border-radius: rem(20px),
-
-        month-border-radius: rem(20px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
+        date-border-radius: (
+            rem(20px),
+            rem(0),
+            rem(20px),
+        ),
+        month-border-radius: (
+            rem(20px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -261,9 +271,9 @@ $light-calendar: extend(
 /// @prop {Map} date-current-hover-foreground [color: ('primary', 600)] - The hover text color for the current date.
 /// @prop {Map} date-current-focus-foreground [color: ('primary', 600)] - The focus text color for the current date.
 /// @prop {Map} date-selected-current-foreground [contrast-color: ('primary', 600)] - The text color for the selected/current date.
-/// @prop {Number} border-radius [0] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [0] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} month-border-radius [0] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for calendar.
+/// @prop {List} date-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for calendar date.
+/// @prop {List} month-border-radius [(rem(0), rem(0), rem(20px))] - The border radius used for calendar month.
 /// @requires {Map} $light-calendar
 $fluent-calendar: extend(
     $light-calendar,
@@ -329,11 +339,23 @@ $fluent-calendar: extend(
             contrast-color: ('primary', 50)
         ),
 
-        border-radius: rem(0),
+        border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        date-border-radius: rem(0),
+        date-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
 
-        month-border-radius: rem(0)
+        month-border-radius: (
+            rem(0),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -370,9 +392,9 @@ $fluent-calendar: extend(
 /// @prop {Map} date-selected-current-focus-background [color: ('primary', 700)] - The focus background color for the selected/current date.
 /// @prop {Map} date-current-hover-foreground [color: ('surface')] - The hover text color for the current date.
 /// @prop {Map} date-current-focus-foreground [color: ('surface')] - The focus text color for the current date.
-/// @prop {Number} border-radius [4px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [4px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} month-border-radius [4px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar.
+/// @prop {List} date-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar date.
+/// @prop {List} month-border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for calendar month.
 /// @requires {Map} $light-calendar
 $bootstrap-calendar: extend(
     $light-calendar,
@@ -519,11 +541,23 @@ $bootstrap-calendar: extend(
             color: ('gray', 300, .5),
         ),
 
-        border-radius: rem(4px),
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        date-border-radius: rem(4px),
+        date-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
 
-        month-border-radius: rem(4px)
+        month-border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -545,9 +579,7 @@ $bootstrap-calendar: extend(
 /// @prop {Map} date-selected-current-focus-foreground [contrast-color: ('primary', 500)] - The focus text color for the selected/current date.
 /// @prop {Map} date-current-hover-foreground [color: ('primary', 600)] - The hover text color for the current date.
 /// @prop {Map} date-current-focus-foreground [color: ('primary', 600)] - The focus text color for the current date.
-/// @prop {Number} border-radius [3px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} date-border-radius [20px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} month-border-radius [20px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(3px), rem(0), rem(20px))] - The border radius used for calendar.
 /// @requires {Map} $light-calendar
 $indigo-calendar: extend(
     $light-calendar,
@@ -616,6 +648,10 @@ $indigo-calendar: extend(
             color: ('primary', 500)
         ),
 
-        border-radius: rem(3px)
+        border-radius: (
+            rem(3px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );

@@ -15,7 +15,7 @@
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $primary: color($palette, 'primary');
@@ -51,7 +51,7 @@
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: 1,
+    $roundness: null,
     $elevation: true,
 ) {
     $primary: color($palette, 'primary');
