@@ -14,6 +14,26 @@ All notable changes for each version of this project will be documented in this 
             <igx-icon igxSuffix>alarm</igx-icon>
         </igx-select-item>
      ```
+- `IgxBadge`:
+    - Material icons extended along with any other custom icon set can now be used inside the badge component.
+    - Code example: 
+
+     ```typescript
+     import { IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
+     import { heartMonitor } from '@igniteui/material-icons-extended';
+
+     export class BadgeSampleComponent implements OnInit {
+        constructor (protected _iconService: IgxIconService) {}
+
+        public ngOnInit() {
+            this._iconService.addSvgIconFromText(heartMonitor.name, heartMonitor.value, 'imx-icons');
+        }
+     }
+     ```
+
+     ```html
+        <igx-badge icon="heart-monitor" iconSet="imx-icons"></igx-badge>
+     ```
 
 ### General
 - `IgxStepper`:
