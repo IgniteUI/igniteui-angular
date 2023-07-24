@@ -37,6 +37,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`:
     - Exposed `comboIgnoreDiacriticsFilter` filter function which normalizes diacritics to their base representation.
     When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
+- `Themes`:
+    - Include a standalone theme for the `igxLabel` directive to allow usage with components outside the Input Group.
 
 ### General
 - `IgxStepper`:
