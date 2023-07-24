@@ -57,6 +57,7 @@
 @use '../components/highlight/highlight-component' as highlight;
 @use '../components/icon/icon-component' as icon;
 @use '../components/input/input-group-component' as input-group;
+@use '../components/label/label-component' as label;
 @use '../components/list/list-component' as list;
 @use '../components/navbar/navbar-component' as navbar;
 @use '../components/navdrawer/navdrawer-component' as navdrawer;
@@ -152,6 +153,7 @@
     @include highlight.component();
     @include icon.component();
     @include input-group.component();
+    @include label.component();
     @include list.component();
     @include navbar.component();
     @include navdrawer.component();
