@@ -701,8 +701,10 @@ export class IgxOverlayService implements OnDestroy {
             info.componentRef.changeDetectorRef.detectChanges();
             info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
         }
+
         // set content div width only if element to show has width
-        if (info.initialSize.width !== 0) {
+        // excluding the esf filtering as its initial width is the same as grid's width and is resized after the element is moved to the overlay
+        if (info.initialSize.width !== 0  && info.elementRef.nativeElement.tagName.toLowerCase() !== 'igx-grid-excel-style-filtering') {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
         }
     }
