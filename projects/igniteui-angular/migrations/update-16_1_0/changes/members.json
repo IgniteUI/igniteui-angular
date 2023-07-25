@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "value",
+            "replaceWith": "displayValue",
+            "definedIn": [
+                "IgxComboComponent",
+                "IgxSimpleComboComponent"
+            ]
+        },
+        {
+            "member": "selection",
+            "replaceWith": "value",
+            "definedIn": [
+                "IgxComboComponent",
+                "IgxSimpleComboComponent"
+            ]
+        }
+    ]
+}
