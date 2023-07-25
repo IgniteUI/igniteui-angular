@@ -21,6 +21,7 @@
 
 <ng-template #headerDefaultTemplate let-column>
     <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
+        <!-- TODO remove inline style if possible -->
         <igx-icon style='flex-shrink: 0;' [attr.draggable]="false">
         </igx-icon>
         {{column.header}}

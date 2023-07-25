@@ -26,7 +26,7 @@
             class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="moving && columnInDrag && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+            class="igx-grid__scroll-on-drag-pinned" [style.inset-inline-start.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
@@ -80,7 +80,7 @@
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
-            <div style="overflow: auto; width: 100%;" [attr.data-rowindex]="rowIndex" (scroll)="onContainerScroll()"
+            <div [attr.data-rowindex]="rowIndex" (scroll)="onContainerScroll()"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
@@ -137,7 +137,7 @@
         <ng-template igxGridFor [igxGridForOf]="[]" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
