@@ -17,7 +17,6 @@
         <!-- Row dragging area -->
         <ng-container *ngIf="grid.rowDraggable">
             <div #headerDragContainer class="igx-grid__drag-indicator igx-grid__tr-action" (pointerdown)="$event.preventDefault()" [class.igx-grid__drag-indicator--header]="!grid.isRowSelectable">
-                <!-- TODO remove inline style if possible -->
                 <div style="visibility: hidden;">
                     <ng-container *ngTemplateOutlet="grid.dragIndicatorIconTemplate || grid.dragIndicatorIconBase"></ng-container>
                 </div>
