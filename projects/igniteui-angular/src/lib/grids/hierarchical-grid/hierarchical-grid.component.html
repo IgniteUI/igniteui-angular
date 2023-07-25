@@ -26,7 +26,7 @@
             class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="moving && columnInDrag && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-pinned" [style.inset-inline-start.px]="pinnedWidth"></span>
+            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger

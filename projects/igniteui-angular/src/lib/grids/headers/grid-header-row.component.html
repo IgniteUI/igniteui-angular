@@ -6,11 +6,11 @@
 
         <!-- Left column moving area -->
         <ng-container *ngIf="grid.moving && grid.columnInDrag && pinnedColumnCollection.length <= 0">
-            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.inset-inline-start.px]="grid.pinnedWidth"
+            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         </ng-container>
         <ng-container *ngIf="grid.moving && grid.columnInDrag && pinnedColumnCollection.length > 0">
-            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.inset-inline-start.px]="grid.pinnedWidth"
+            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         </ng-container>
 
