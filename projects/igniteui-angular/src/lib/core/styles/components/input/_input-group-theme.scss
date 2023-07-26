@@ -306,7 +306,7 @@
 
     $bootstrap-inline-padding: (
         'comfortable': rem(16px),
-        'cosy':rem(12px),
+        'cosy': rem(12px),
         'compact': rem(8px)
     );
 
@@ -645,7 +645,7 @@
     @if $material-theme {
         %form-group-bundle-main--box,
         %form-group-notch--box {
-            padding-inline-start: rem(4px)
+            padding-inline: rem(4px);
         }
     }
 
@@ -690,7 +690,7 @@
     %form-group-bundle-start--box,
     %form-group-bundle-end--box {
         @if $material-theme {
-            min-width: rem(12px);
+            min-width: pad(rem(10px), rem(12px), rem(14px));
         }
     }
 
@@ -814,18 +814,14 @@
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-start: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else {
-            padding-inline-start: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline-start: pad-inline(rem(14px), rem(16px), rem(18px));
         }
     }
 
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-end: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else {
-            padding-inline-end: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline-end: pad-inline(rem(14px), rem(16px), rem(18px));
         }
     }
     /* stylelint-enable */
@@ -1056,7 +1052,7 @@
         border: none;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        padding-inline-start: 0;
+        padding-inline: 0;
         height: calc(var(--size) - 2px);
         width: 100%;
         min-width: 0;
@@ -1189,13 +1185,8 @@
         }
     }
 
-    %form-group-notch--box-textarea {
-        padding-inline-start: 0;
-    }
-
     %form-group-textarea-group-bundle-main {
         overflow: hidden;
-        padding-inline-start: 0 !important;
 
         @if $material-theme or $indigo-theme {
             height: calc(100% - #{rem(2px)});
@@ -1396,6 +1387,22 @@
     // ==============================================
 
     // INDIGO START
+    @if $variant == 'indigo-design' {
+        %form-group-display.igx-input-group--prefixed {
+            input,
+            textarea {
+                padding-inline-start: rem(4px);
+            }
+        }
+
+        %form-group-display.igx-input-group--suffixed {
+            input,
+            textarea {
+                padding-inline-end: rem(4px);
+            }
+        }
+    }
+
     %form-group-bundle--indigo {
         border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
         transition: background $transition-timing;
@@ -1419,13 +1426,9 @@
         color: var-get($theme, 'success-secondary-color');
     }
 
-    %form-group-bundle--indigo-start {
-        min-width: rem(12px);
-    }
-
     %form-group-input--indigo {
         padding-block: rem(8px);
-        padding-inline-end: rem(12px);
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
 
     %indigo--box-focused {
@@ -1588,7 +1591,6 @@
     }
 
     %form-group-bundle-main--fluent {
-        padding-inline-start: rem(8px);
         align-self: center;
         cursor: default;
     }
@@ -1624,14 +1626,19 @@
     // Native input
     %fluent-input {
         font-size: rem(14px);
-        padding: 0;
+        padding-block: 0;
+        padding-inline: rem(8px);
         margin: 0;
         border: none;
     }
 
-    %indigo-textarea,
+    %indigo-textarea {
+        padding-block: rem(8px);
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
     %fluent-textarea {
-        padding: pad(rem(4px), rem(6px), rem(8px));
+        padding: rem(8px);
     }
 
     %fluent-input-disabled {
