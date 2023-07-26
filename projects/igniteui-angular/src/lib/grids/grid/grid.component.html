@@ -114,12 +114,12 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail="true" style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
+            <div detail="true" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
-                <div class="igx-grid__hierarchical-indent" style="display: flex">
+                <div class="igx-grid__hierarchical-indent">
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
@@ -176,7 +176,7 @@
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
