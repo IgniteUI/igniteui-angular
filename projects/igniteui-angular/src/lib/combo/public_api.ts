@@ -17,6 +17,7 @@ import {
 export { IComboFilteringOptions } from './combo.common';
 export * from './combo.component';
 export * from './combo.directives';
+export { comboIgnoreDiacriticsFilter } from './combo.pipes';
 
 /* NOTE: Combo directives collection for ease-of-use import in standalone components scenario */
 export const IGX_COMBO_DIRECTIVES = [

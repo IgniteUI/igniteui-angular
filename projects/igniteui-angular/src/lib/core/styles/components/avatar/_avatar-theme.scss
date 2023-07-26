@@ -45,8 +45,8 @@
         $color: text-contrast($background);
     }
 
-    @if not($border-radius) {
-        $border-radius: map.get($theme, 'border-radius');
+    @if not($size) {
+        $size: sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)});
     }
 
     @return extend($theme, (

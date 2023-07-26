@@ -12,7 +12,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="value" role="combobox"
+    <input #comboInput igxInput [value]="displayValue[0]" role="combobox"
         aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"

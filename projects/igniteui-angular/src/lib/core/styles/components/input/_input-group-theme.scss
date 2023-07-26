@@ -892,20 +892,12 @@
     }
 
     %form-group-label {
-        @include ellipsis();
-        max-width: 100%;
         padding-inline-end: rem(4px);
-        line-height: normal;
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
         transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
-        color: var-get($theme, 'idle-secondary-color');
-
-        [dir='rtl'] & {
-            transform-origin: top right;
-        }
     }
 
     %form-group-label--border {
