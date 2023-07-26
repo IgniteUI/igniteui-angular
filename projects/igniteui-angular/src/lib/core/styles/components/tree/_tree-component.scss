@@ -18,10 +18,18 @@
     }
 
     @include b(igx-tree-node) {
+        @include sizable();
         @extend %tree-node !optional;
 
+        @include m(cosy) {
+            @extend %tree-node--cosy !optional;
+        }
+
+        @include m(compact) {
+            @extend %tree-node--compact !optional;
+        }
+
         @include e(wrapper) {
-            @include sizable();
             @extend %node-wrapper !optional;
 
             &:hover {

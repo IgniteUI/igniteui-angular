@@ -69,7 +69,8 @@
     $disabled-item-text-color: null,
     $border-color: null,
     $border-width: null,
-    $shadow: null
+    $shadow: null,
+    $size: null
 ) {
     $name: 'igx-drop-down';
     $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
@@ -185,6 +186,7 @@
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
@@ -241,7 +243,7 @@
         width: 100%;
         white-space: nowrap;
         position: relative;
-        height: sizable(#{rem(28px)}, #{rem(32px)}, #{rem(40px)});
+        height: var-get($theme, 'size');
 
         igx-divider {
             position: absolute;
