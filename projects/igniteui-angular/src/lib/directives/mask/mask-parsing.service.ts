@@ -151,7 +151,7 @@ export class MaskParsingService {
                 cursor = i + 1;
                 char = chars.shift();
             }
-            if(value.length < 1){
+            if (value.length < 1) {
                 // on `delete` the cursor should move forward
                 cursor++;
             }
