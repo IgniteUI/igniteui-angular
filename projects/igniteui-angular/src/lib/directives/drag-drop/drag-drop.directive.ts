@@ -918,7 +918,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until ghostElement is created.
         const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
         const targetElement = handleFound ? handleFound.element.nativeElement : event.target || this.element.nativeElement;
-        const targetValid = document.body.contains(targetElement);
+        const targetValid = this.isElementInDOM(targetElement);
         if (this.pointerEventsEnabled && targetValid) {
             this._pointerDownId = event.pointerId;
             targetElement.setPointerCapture(this._pointerDownId);
@@ -1343,6 +1343,27 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             res.push(elFromPoint);
         }
         return res;
+    }
+
+    /**
+     * @hidden
+     * Checks if element is present in the DOM, if in ShadowDom traverse up.
+     */
+    protected isElementInDOM(element: HTMLElement) {
+        let currentDocument = element.getRootNode();
+        while(currentDocument) {
+            if (currentDocument === document) {
+                return true;
+            }
+
+            if (currentDocument instanceof ShadowRoot) {
+                currentDocument = currentDocument.host.getRootNode();
+            } else {
+                currentDocument = currentDocument.getRootNode();
+            }
+        }
+
+        return false;
     }
 
     /**
