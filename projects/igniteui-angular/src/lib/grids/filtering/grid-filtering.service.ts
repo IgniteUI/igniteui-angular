@@ -9,7 +9,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { OverlayEventArgs, OverlayInfo, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { fadeIn } from '../../animations/main';
@@ -66,6 +66,16 @@ export class IgxFilteringService implements OnDestroy {
 
         const filterIcon = column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
         const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement || element;
+
+        this._overlayService.contentAppended
+            .pipe(
+                first(),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((event: OverlayEventArgs) => {
+                const info: OverlayInfo = this._overlayService.getOverlayById(event.id);
+                info.initialSize = { width: 0, height: 0 };
+            });
 
         const { id, ref } = this.grid.createFilterDropdown(column, {
             ...this._filterMenuOverlaySettings,
