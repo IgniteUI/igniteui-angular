@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IgxAvatarComponent, IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
+import { IgxAvatarComponent, IgxBadgeComponent, IgxIconService, IgxIconComponent } from 'igniteui-angular';
 import { heartMonitor } from '@igniteui/material-icons-extended';
 
 @Component({
@@ -7,7 +7,7 @@ import { heartMonitor } from '@igniteui/material-icons-extended';
     styleUrls: ['badge.sample.scss'],
     templateUrl: 'badge.sample.html',
     standalone: true,
-    imports: [IgxAvatarComponent, IgxBadgeComponent]
+    imports: [IgxAvatarComponent, IgxBadgeComponent, IgxIconComponent]
 })
 export class BadgeSampleComponent implements OnInit {
     constructor (protected _iconService: IgxIconService) {}
