@@ -439,7 +439,6 @@ describe('IgxCalendar - ', () => {
 
                 const calendarRows = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`));
 
-                const maxWeeks = 52;
                 calendarRows.forEach((row, idx) => {
                     const firstRowItem = row.nativeElement.children[0];
                     if (idx === 0) {
