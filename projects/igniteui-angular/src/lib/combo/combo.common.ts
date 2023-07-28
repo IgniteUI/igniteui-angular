@@ -1280,7 +1280,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
+        if (this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 
