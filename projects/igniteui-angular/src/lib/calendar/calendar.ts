@@ -389,11 +389,29 @@ export class Calendar {
     }
 
     public getWeekNumber(date: Date) {
-        const firstJan = new Date(date.getFullYear(), 0, 1).getTime();
-        const today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-        const dayInMilSeconds = 86400000;
-        const dayOfYear = ((today - firstJan + 1) / dayInMilSeconds);
-        return Math.ceil(dayOfYear / 7);
+        const yearStart  = new Date(date.getFullYear(), 0, 1);
+        //the day of week the year begins on
+        let firstDayOfTheYear = yearStart.getDay();
+        firstDayOfTheYear = (firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7);
+        const dayInSeconds = 86400000;
+        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInSeconds) + 1;
+        let weekNumber;
+        //if the year starts before the middle of a week
+        if (firstDayOfTheYear < 4) {
+            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
+            if(weekNumber > 52) {
+                let nYear = new Date(date.getFullYear() + 1, 0, 1);
+                let nday = nYear.getDay();
+                nday = nday >= 0 ? nday : nday + 7;
+                /*if the next year starts before the middle of
+                the week, it is week #1 of that year*/
+                weekNumber = nday < 4 ? 1 : 53;
+            }
+        }
+        else {
+            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7);
+        }
+        return weekNumber;
     }
 
     private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
