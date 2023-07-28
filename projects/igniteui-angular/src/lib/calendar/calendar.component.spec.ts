@@ -439,7 +439,6 @@ describe('IgxCalendar - ', () => {
 
                 const calendarRows = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`));
 
-                const maxWeeks = 52;
                 calendarRows.forEach((row, idx) => {
                     const firstRowItem = row.nativeElement.children[0];
                     if (idx === 0) {
@@ -450,7 +449,7 @@ describe('IgxCalendar - ', () => {
                 });
             });
 
-            it('should be desplay correct week numbers appear as first column', () => {
+            it('should be displayed the correct week numbers in the first column', () => {
                 const firstDayOfMar = new Date(2023, 2, 1);
                 calendar.viewDate = firstDayOfMar;
                 calendar.weekStart = 0;
