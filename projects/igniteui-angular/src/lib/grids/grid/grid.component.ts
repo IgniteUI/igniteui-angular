@@ -1251,6 +1251,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
+    protected override onColumnsAddedOrRemoved() {
+        // update grouping states
+        this.groupablePipeTrigger++;
+        if (this.groupingExpressions && this.hideGroupedColumns) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
+        super.onColumnsAddedOrRemoved();
+    }
+
+    /**
+     * @hidden @internal
+     */
     protected override scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof (row) !== 'number') {
