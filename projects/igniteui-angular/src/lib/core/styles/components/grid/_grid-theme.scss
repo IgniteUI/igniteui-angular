@@ -864,6 +864,15 @@
         display: flex;
         overflow: hidden;
 
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-large));
+                font-size: rem(24px);
+                width: rem(24px);
+                height: rem(24px);
+            }
+        }
+
         %igx-grid__drag-indicator {
             cursor: default;
         }
@@ -879,12 +888,24 @@
     }
 
     %grid-thead--cosy {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-medium));
+            }
+        }
+
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
         }
     }
 
     %grid-thead--compact {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-small));
+            }
+        }
+
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
         }
@@ -1408,6 +1429,8 @@
 
     %grid-cell-text {
         @include ellipsis();
+
+        pointer-events: none;
     }
 
     %grid-cell--fixed-width {
@@ -2110,6 +2133,10 @@
             cursor: default;
             flex-grow: 0;
         }
+
+        %grid__cbx-selection {
+            background: initial;
+        }
     }
 
     %igx-grid__group-row--active {
@@ -2671,6 +2698,8 @@
     }
 
     %igx-grid__tr-container {
+        overflow: auto;
+        width: 100%;
         border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
     }
 
@@ -2746,6 +2775,7 @@
     }
 
     %igx-grid__hierarchical-indent {
+        display: flex;
         margin-inline-start: pad-inline(map.get($hierarchical-indent, 'compact'), map.get($hierarchical-indent, 'cosy'), map.get($hierarchical-indent, 'comfortable'));
         margin-inline-end: pad-inline(map.get($hierarchical-grid-indent, 'compact'), map.get($hierarchical-grid-indent, 'cosy'), map.get($hierarchical-grid-indent, 'comfortable'));
         margin-block: pad-block(map.get($hierarchical-grid-indent, 'compact'), map.get($hierarchical-grid-indent, 'cosy'), map.get($hierarchical-grid-indent, 'comfortable'));
@@ -2906,6 +2936,7 @@
     %igx-grid__tr-pivot--chip_drop_indicator {
         width: rem(2px);
         background: var-get($theme, 'resize-line-color');
+        visibility: hidden;
     }
 
     %igx-grid__tr-pivot--drop-row-area {

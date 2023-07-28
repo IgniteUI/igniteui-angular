@@ -892,20 +892,12 @@
     }
 
     %form-group-label {
-        @include ellipsis();
-        max-width: 100%;
         padding-inline-end: rem(4px);
-        line-height: normal;
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
         transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
-        color: var-get($theme, 'idle-secondary-color');
-
-        [dir='rtl'] & {
-            transform-origin: top right;
-        }
     }
 
     %form-group-label--border {
@@ -1353,7 +1345,11 @@
         }
 
         &:empty {
-            display: none;
+            @if $variant == 'fluent' {
+                padding: 0;
+            } @else {
+                display: none;
+            }
         }
     }
 
@@ -1615,6 +1611,13 @@
 
         %form-group-bundle-main--fluent--focused {
             margin-block-start: rem(-1px);
+        }
+    }
+
+    %form-group-bundle-textarea-start--fluent,
+    %form-group-bundle-textarea-end--fluent {
+        &:empty {
+            display: none;
         }
     }
 

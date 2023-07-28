@@ -1,7 +1,7 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -121,7 +121,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+    OnDestroy, DoCheck, EditorProvider {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
@@ -180,7 +180,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @hidden @internal
      */
     public get inputEmpty(): boolean {
-        return !this.value && !this.placeholder;
+        return this.displayValue.length === 0 && !this.placeholder;
     }
 
     /** @hidden @internal */
@@ -201,6 +201,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _prevInputValue = '';
+
+    private _displayText: string;
 
     constructor(
         elementRef: ElementRef,
@@ -260,7 +262,17 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, selection, true);
         this.cdr.markForCheck();
-        this._value = this.createDisplayText(this.selection, oldSelection);
+        this._displayValue = this.createDisplayText(this.selection, oldSelection);
+        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length) {
+            this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        }
+        super.ngDoCheck();
     }
 
     /**
@@ -420,7 +432,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const added = diffInSets(newSelection, this.selectionService.get(this.id));
         const newSelectionAsArray = Array.from(newSelection);
         const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newSelectionAsArray), oldSelectionAsArray);
         const args: IComboSelectionChangingEventArgs = {
             newSelection: newSelectionAsArray,
             oldSelection: oldSelectionAsArray,
@@ -434,10 +446,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newSelection, true);
+            this._value = args.newSelection;
             if (displayText !== args.displayText) {
-                this._value = args.displayText;
+                this._displayValue = this._displayText = args.displayText;
             } else {
-                this._value = this.createDisplayText(args.newSelection, args.oldSelection);
+                this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
             this._onChangeCallback(args.newSelection);
         } else if (this.isRemote) {
@@ -446,15 +459,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]) {
+        const selection = this.valueKey ? newSelection.map(item => item[this.valueKey]) : newSelection;
         return this.isRemote
-            ? this.getRemoteSelection(newSelection, oldSelection)
+            ? this.getRemoteSelection(selection, oldSelection)
             : this.concatDisplayText(newSelection);
     }
 
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
-            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.map(entry => entry[this.displayKey]).join(', ') :
             selection.join(', ');
         return value;
     }
