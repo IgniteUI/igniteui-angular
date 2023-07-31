@@ -641,8 +641,8 @@
     }
 
     @if $material-theme {
-        %form-group-bundle-main--box,
-        %form-group-notch--box {
+        %form-group-bundle-main,
+        %igx-input-group__notch {
             padding-inline: rem(4px);
         }
     }
@@ -680,14 +680,6 @@
 
         @if $variant == 'material' {
             overflow: hidden;
-        }
-    }
-
-    %form-group-bundle-start--border,
-    %form-group-bundle-end--border,
-    %form-group-bundle-start--box,
-    %form-group-bundle-end--box {
-        @if $material-theme {
             min-width: pad(rem(10px), rem(12px), rem(14px));
         }
     }
@@ -756,7 +748,6 @@
             flex-grow: 1;
             height: 100%;
             grid-area: 1 / 4;
-            min-width: rem(12px);
 
             border: {
                 color: var-get($theme, 'border-color');
@@ -821,17 +812,10 @@
     }
     /* stylelint-enable */
 
-    %form-group-display--search.igx-input-group--prefixed {
+    %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            padding-inline-start: 0;
-        }
-    }
-
-    %form-group-display--search.igx-input-group--suffixed {
-        %igx-input-group__notch--search,
-        %form-group-bundle-main--search {
-            padding-inline-end: 0;
+            padding-inline: rem(4px);
         }
     }
 
