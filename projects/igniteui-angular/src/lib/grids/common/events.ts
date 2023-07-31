@@ -228,11 +228,9 @@ export interface ISearchInfo {
     exactMatch: boolean;
     /** `activeMatchIndex` takes note of the index of the currently active (highlighted) match */
     activeMatchIndex: number;
-    /** 
-     * The matchInfoCache property is an array that stores information about the matches found during the search. 
-     * It contains information related to the location or metadata of each match 
-     */
-    matchInfoCache: any[];
+    /** Represents the number of the found matches */
+    matchCount: number;
+    content: string;
 }
 
 /**

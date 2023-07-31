@@ -3,10 +3,55 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 16.1.0
+### New Features
+- `IgxSelect`:
+    - The select component now has the ability to handle `igxPrefix` and `igxSuffix` directives inside `igx-select-item`.
+
+     ```html
+        <igx-select-item>
+            <igx-icon igxPrefix>alarm</igx-icon>
+            Select item text content
+            <igx-icon igxSuffix>alarm</igx-icon>
+        </igx-select-item>
+     ```
+- `IgxBadge`:
+    - Material icons extended along with any other custom icon set can now be used inside the badge component.
+    - Code example: 
+
+     ```typescript
+     import { IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
+     import { heartMonitor } from '@igniteui/material-icons-extended';
+
+     export class BadgeSampleComponent implements OnInit {
+        constructor (protected _iconService: IgxIconService) {}
+
+        public ngOnInit() {
+            this._iconService.addSvgIconFromText(heartMonitor.name, heartMonitor.value, 'imx-icons');
+        }
+     }
+     ```
+
+     ```html
+        <igx-badge icon="heart-monitor" iconSet="imx-icons"></igx-badge>
+     ```
+- `IgxCombo`:
+    - Exposed `comboIgnoreDiacriticsFilter` filter function which normalizes diacritics to their base representation.
+    When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
+- `Themes`:
+    - Include a standalone theme for the `igxLabel` directive to allow usage with components outside the Input Group.
 
 ### General
 - `IgxStepper`:
     - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
+    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
+- `IgxCombo`, `IgxSimpleCombo`:
+    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+
+### New Features
+- `IgxCombo`, `IgxSimpleCombo`
+    - Added new property `displayValue` that returns array of display keys.
 
 ## 16.0.0
 
@@ -14,11 +59,11 @@ All notable changes for each version of this project will be documented in this 
 - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 
   Now you can do:
-  
+
   ```typescript
   // IGX_GRID_DIRECTIVES exports all grid related components and directives
   import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
@@ -27,13 +72,13 @@ All notable changes for each version of this project will be documented in this 
       imports: [IGX_GRID_DIRECTIVES, AsyncPipe]
   })
   ```
-  
+
   or
-  
+
   ```typescript
   // Single import of only the <igx-grid> component.
   import { IgxGridComponent } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
@@ -42,13 +87,13 @@ All notable changes for each version of this project will be documented in this 
       imports: [IgxGridComponent, AsyncPipe]
   })
   ```
-  
+
   or still
-  
+
   ```typescript
   // `NgModule` import of the `IgxGridModule` module, which is equivalent to IGX_GRID_DIRECTIVES in terms of exported components and directives.
   import { IgxGridModule } from 'igniteui-angular';
-  
+
   @Component({
       selector: 'app-grid-sample',
       styleUrls: ['grid.sample.scss'],
