@@ -43,8 +43,10 @@
     $foreground-disabled: null,
     $drop-area-color: null,
     $border-color: null,
+    $size: null,
 ) {
     $name: 'igx-tree';
+    $selector: 'igx-tree-node';
     $tree-schema: ();
 
     @if map.has-key($schema, 'tree') {
@@ -74,6 +76,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         background: $background,
         foreground: $foreground,
         background-selected: $background-selected,
@@ -89,6 +92,7 @@
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
@@ -135,7 +139,16 @@
     }
 
     %tree-node {
+        --component-size: var(--ig-size, var(--ig-size-large));
         flex-direction: column;
+    }
+
+    %tree-node--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    %tree-node--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %node-wrapper,
@@ -160,9 +173,7 @@
     }
 
     %node-wrapper {
-        --component-size: var(--ig-size, var(--ig-size-large));
-        --size: #{sizable(#{map.get($node-height, 'compact')}, #{map.get($node-height, 'cosy')}, #{map.get($node-height, 'comfortable')})};
-        min-height: var(--size);
+        min-height: var-get($theme, 'size');
         padding-inline: pad-inline(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         padding-block: 0;
         position: relative;
@@ -209,12 +220,6 @@
         }
 
         &--cosy {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-
-            %node-spacer {
-                --component-size: var(--ig-size, var(--ig-size-medium));
-            }
-
             %node-drop-indicator {
                 inset-inline-end: map.get($node-indent, 'cosy');
                 width: map.get($drop-indicator-width, 'cosy');
@@ -227,12 +232,6 @@
         }
 
         &--compact {
-            --component-size: var(--ig-size, var(--ig-size-small));
-
-            %node-spacer {
-                --component-size: var(--ig-size, var(--ig-size-small));
-            }
-
             %node-drop-indicator {
                 inset-inline-end: map.get($node-indent, 'compact');
                 width: map.get($drop-indicator-width, 'compact');
@@ -295,8 +294,8 @@
 
     %node-spacer {
         --component-size: var(--ig-size, var(--ig-size-large));
-        --size: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
-        width: var(--size);
+        --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+        width: var(--spacer);
         display: inline-block;
     }
 

@@ -128,6 +128,7 @@
     $input-suffix-background--filled: null,
     $input-suffix-color--focused: null,
     $input-suffix-background--focused: null,
+    $size: null,
 ) {
     $name: 'igx-input-group';
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
@@ -270,6 +271,7 @@
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
         variant: map.get($schema, '_meta', 'theme'),
+        size: $size,
     ));
 }
 
@@ -396,7 +398,6 @@
     }
 
     %form-group-display {
-        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
         --component-size: var(--ig-size, var(--ig-size-large));
 
         position: relative;
@@ -533,7 +534,7 @@
         display: grid;
         grid-template-columns: auto 1fr auto;
         grid-area: 1 / 2 / span 1 / span 2;
-        height: var(--size);
+        height: var-get($theme, 'size');
         position: relative;
         max-width: 100%;
         font-size: rem(16px);
@@ -884,7 +885,6 @@
         background: transparent;
         padding: 0 rem(4px);
         font-size: rem(16px);
-        min-height: var(--size);
     }
 
     %form-group-label {
@@ -985,12 +985,12 @@
 
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --size: #{sizable(
+        --textarea-size: #{sizable(
             rem(82px, map.get($base-scale-size, 'compact')),
             rem(82px, map.get($base-scale-size, 'cosy')),
             rem(82px, map.get($base-scale-size, 'comfortable'))
         )};
-        min-height: var(--size) !important;
+        min-height: var(--textarea-size) !important;
         height: auto !important;
 
         %form-group-label {
@@ -1053,7 +1053,7 @@
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
         padding-inline: 0;
-        height: calc(var(--size) - 2px);
+        height: calc(var-get($theme, 'size') - 2px);
         width: 100%;
         min-width: 0;
         background: transparent;
@@ -1090,7 +1090,7 @@
         overflow: hidden;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        height: calc(var(--size) - 2px);
+        height: calc(var-get($theme, 'size') - 2px);
         color: var-get($theme, 'filled-text-color');
 
         span {
@@ -1160,13 +1160,13 @@
     }
 
     %form-group-textarea {
-        --size: #{sizable(
+        --textarea-size: #{sizable(
             rem(82px, map.get($base-scale-size, 'compact')),
             rem(82px, map.get($base-scale-size, 'cosy')),
             rem(82px, map.get($base-scale-size, 'comfortable'))
         )};
 
-        min-height: var(--size);
+        min-height: var(--textarea-size);
         height: auto;
         resize: vertical;
         overflow: hidden;
@@ -1524,10 +1524,9 @@
     }
 
     %form-group-bundle--fluent {
-        --size: #{sizable(rem(32px), rem(40px), rem(48px))};
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
 
-        min-height: var(--size);
+        min-height: var-get($theme, 'size');
         padding: 0;
         border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
@@ -1791,8 +1790,6 @@
 
     // Bundle
     %form-group-bundle--bootstrap {
-        --size: #{sizable(rem(31px), rem(38px), rem(48px))};
-
         padding: 0;
         box-shadow: none;
         z-index: 0;
