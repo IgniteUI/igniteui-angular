@@ -95,6 +95,7 @@
     $ghost-shadow: null,
     $remove-icon-color: null,
     $remove-icon-color-focus: null,
+    $size: null,
 ) {
     $name: 'igx-chip';
     $selector: 'igx-chip, .igx-chip__ghost, .igx-chip__ghost--compact, .igx-chip__ghost--cosy';
@@ -248,6 +249,7 @@
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
@@ -375,7 +377,7 @@
         justify-content: center;
         text-align: center;
         flex: 1 1 auto;
-        height: sizable(map.get($chip-height, 'compact'), map.get($chip-height, 'cosy'), map.get($chip-height, 'comfortable'));
+        height: var-get($theme, 'size');
         padding-inline: sizable(map.get($chip-padding, 'compact'), map.get($chip-padding, 'cosy'), map.get($chip-padding, 'comfortable'));
         gap: sizable(rem(3px), rem(6px), rem(8px));
         color: var-get($theme, 'text-color');
