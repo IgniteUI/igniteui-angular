@@ -2227,7 +2227,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultTextIdent = 8;
         const defItemFontSize = 14;
         const defInputFontSize = 16;
         let selectedItemIndex: number;
