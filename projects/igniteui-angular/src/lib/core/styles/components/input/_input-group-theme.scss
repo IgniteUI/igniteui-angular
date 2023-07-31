@@ -683,14 +683,6 @@
 
         @if $variant == 'material' {
             overflow: hidden;
-        }
-    }
-
-    %form-group-bundle-start,
-    %form-group-bundle-end,
-    %form-group-bundle-start,
-    %form-group-bundle-end {
-        @if $material-theme {
             min-width: pad(rem(10px), rem(12px), rem(14px));
         }
     }
