@@ -147,7 +147,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         const dim = enabledDimensions.find(x => x.memberName === column.field);
         const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
             data,
-            dim ? [dim] : [],
+            [dim],
             PivotDimensionType.Column,
             grid.pivotKeys
         );
