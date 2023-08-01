@@ -326,6 +326,18 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
+	/** @hidden @internal */
+	@HostBinding('class.igx-tree-node--cosy')
+	public get itemStyleCosy() {
+		return this.tree.displayDensity === 'cosy';
+	}
+
+	/** @hidden @internal */
+	@HostBinding('class.igx-tree-node--compact')
+	public get itemStyleCompact() {
+		return this.tree.displayDensity === 'compact';
+	}
+
     /** @hidden @internal */
     @HostBinding('attr.role')
     public get role() {
