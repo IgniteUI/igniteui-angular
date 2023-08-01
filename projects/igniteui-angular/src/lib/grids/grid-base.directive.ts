@@ -6581,15 +6581,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetCaches();
 
             if (added || removed) {
-                this.summaryService.clearSummaryCache();
-                this.groupablePipeTrigger++;
-                Promise.resolve().then(() => {
-                    // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-                    // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-                    this.notifyChanges(true);
-                });
+                this.onColumnsAddedOrRemoved();
             }
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected onColumnsAddedOrRemoved() {
+        this.summaryService.clearSummaryCache();
+        Promise.resolve().then(() => {
+            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+            this.notifyChanges(true);
+        });
     }
 
     /**
