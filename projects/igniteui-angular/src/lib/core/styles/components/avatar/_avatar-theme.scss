@@ -89,7 +89,6 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
         width: var-get($theme, 'size');
@@ -118,15 +117,11 @@
     }
 
     %igx-avatar--circle {
-        --igx-avatar-border-radius: #{rem(44px)};
+        border-radius: calc(#{var-get($theme, 'size')} / 2);
     }
 
     %igx-avatar--rounded {
-        --igx-avatar-border-radius: #{rem(8px)};
-
-        @if $variant == 'bootstrap' {
-            --igx-avatar-border-radius: #{rem(4px)};
-        }
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-avatar--initials {
