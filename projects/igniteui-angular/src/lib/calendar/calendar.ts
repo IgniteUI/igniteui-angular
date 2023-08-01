@@ -356,7 +356,7 @@ export class Calendar {
 
     public getWeekNumber(date: Date) {
         const yearStart = new Date(date.getFullYear(), 0, 1);
-        //the day of week the year begins on
+        //the day of the week on which the year begins
         let firstDayOfTheYear = yearStart.getDay();
         firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
         const dayInSeconds = 86400000;
@@ -367,12 +367,12 @@ export class Calendar {
         if (firstDayOfTheYear < 4) {
             weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
             if (weekNumber > 52) {
-                let nYear = new Date(date.getFullYear() + 1, 0, 1);
-                let nday = nYear.getDay();
-                nday = nday >= 0 ? nday : nday + 7;
+                let nextYear = new Date(date.getFullYear() + 1, 0, 1);
+                let nextYearFirstDay = nextYear.getDay();
+                nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
                 /*if the next year starts before the middle of
                 the week, it is week #1 of that year*/
-                weekNumber = nday < 4 ? 1 : 53;
+                weekNumber = nextYearFirstDay < 4 ? 1 : 53;
             }
         } else {
             weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7);
