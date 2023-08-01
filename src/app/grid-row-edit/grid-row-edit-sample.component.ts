@@ -10,7 +10,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
 import { IgxFocusDirective } from '../../../projects/igniteui-angular/src/lib/directives/focus/focus.directive';
 import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
-import { IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IGridEditDoneEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
@@ -198,10 +198,15 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    public cellEditExit(evt) {
+    public cellEditExit(eventArgs: IGridEditDoneEventArgs) {
+        eventArgs.owner.updateCell(
+          eventArgs.newValue,
+          eventArgs.rowID,
+          eventArgs.column.field
+        );
         if (this.events.cell.exit) {
             console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
-            console.log(evt);
+            console.log(eventArgs);
         }
     }
 
