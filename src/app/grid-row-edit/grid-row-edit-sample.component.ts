@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventArgs } from 'igniteui-angular';
+import { IGridEditDoneEventArgs, IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -183,10 +183,15 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    public cellEditExit(evt) {
+    public cellEditExit(eventArgs: IGridEditDoneEventArgs) {
+        eventArgs.owner.updateCell(
+          eventArgs.newValue,
+          eventArgs.rowID,
+          eventArgs.column.field
+        );
         if (this.events.cell.exit) {
             console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
-            console.log(evt);
+            console.log(eventArgs);
         }
     }
 
