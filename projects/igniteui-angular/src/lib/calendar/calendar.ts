@@ -354,10 +354,10 @@ export class Calendar {
         return this.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 
-    public getWeekNumber(date: Date) {
+    public getWeekNumber(date: Date, weekStart: WEEKDAYS | number) {
         const yearStart = new Date(date.getFullYear(), 0, 1);
         //the day of the week on which the year begins
-        let firstDayOfTheYear = yearStart.getDay();
+        let firstDayOfTheYear = yearStart.getDay() - weekStart;
         firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
         const dayInSeconds = 86400000;
         const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - 
@@ -368,7 +368,7 @@ export class Calendar {
             weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
             if (weekNumber > 52) {
                 let nextYear = new Date(date.getFullYear() + 1, 0, 1);
-                let nextYearFirstDay = nextYear.getDay();
+                let nextYearFirstDay = nextYear.getDay() - weekStart;
                 nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
                 /*if the next year starts before the middle of
                 the week, it is week #1 of that year*/
