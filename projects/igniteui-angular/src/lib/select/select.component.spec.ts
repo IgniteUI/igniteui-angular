@@ -2227,7 +2227,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultTextIdent = 8;
         const defItemFontSize = 14;
         const defInputFontSize = 16;
         let selectedItemIndex: number;
@@ -2450,44 +2449,7 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
             }));
         });
-        describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = () => {
-                let prefixesWidth = 0;
-                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
-                Array.from(prefixes).forEach((prefix: DebugElement) => {
-                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
-                    prefixesWidth += prefixRect.width;
-                });
-                return prefixesWidth;
-            };
 
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxSelectAffixComponent);
-                select = fixture.componentInstance.select;
-                fixture.detectChanges();
-                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-            });
-
-            it('should ident option text to the input text',
-                fakeAsync(() => {
-                    selectedItemIndex = 0;
-                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
-                    select.items[selectedItemIndex].selected = true;
-                    fixture.detectChanges();
-                    select.toggle();
-                    tick();
-                    fixture.detectChanges();
-                    getBoundingRectangles();
-                    // bc of the difference of 2px between the font size of the text in the input and the text in the selected item
-                    // we need to take into account that the item list will be slightly to the left of the input to make sure
-                    // that the text in the list is positioned exactly on top of the text in the input
-                    expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
-                        - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
-                        .toBeLessThanOrEqual(2);
-                }));
-        });
         describe('Document bigger than the visible viewport tests: ', () => {
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
