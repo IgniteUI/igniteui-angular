@@ -5,8 +5,8 @@
 ## Milestone 27, (Due by September, 2023)
 
 1. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
-2. Igx Grid allow cell selection on specific columns [#11704](https://github.com/IgniteUI/igniteui-angular/issues/11704)
-3. igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
+2. **[DONE]** Igx Grid allow cell selection on specific columns [#11704](https://github.com/IgniteUI/igniteui-angular/issues/11704)
+3. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
 4. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
 5. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
 6. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
