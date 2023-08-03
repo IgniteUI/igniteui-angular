@@ -216,15 +216,14 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     public onMoving(delta: number) {
         const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
         const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - minSibling;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - min;
 
-        const paneSize = this.initialPaneSize - delta;
-        const siblingSize = this.initialSiblingSize + delta;
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
+        let paneSize = this.initialPaneSize - delta;
+        let siblingSize = this.initialSiblingSize + delta;
+        paneSize = Math.min(Math.max(min, paneSize), max);
+        siblingSize = Math.min(Math.max(minSibling, siblingSize), maxSibling);
         this.pane.dragSize = paneSize + 'px';
         this.sibling.dragSize = siblingSize + 'px';
 
@@ -234,16 +233,18 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     public onMoveEnd(delta: number) {
         const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
         const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - minSibling;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - min;
 
-        const paneSize = this.initialPaneSize - delta;
-        const siblingSize = this.initialSiblingSize + delta;
+        let paneSize = this.initialPaneSize - delta;
+        let siblingSize = this.initialSiblingSize + delta;
 
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
+        paneSize = Math.min(Math.max(min, paneSize), max);
+        siblingSize = Math.min(Math.max(minSibling, siblingSize), maxSibling);
+        // if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
+        //    return;
+        //}
         if (this.pane.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
