@@ -9,7 +9,8 @@ import {
     IDragBaseEventArgs,
     IgxDragLocation,
     DragDirection,
-    IDropDroppedEventArgs
+    IDropDroppedEventArgs,
+    IDragStartEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -99,6 +100,11 @@ export class DragDropSampleComponent {
 
     public toggleStartPageX;
     public toggleStartPageY;
+
+    // Multi selection row drag
+    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => { return {name: "Item " + i, selected: false}});
+    public targetRows: any[] = [];
+    public selectedRows: any[] = [];
 
     /** List drag properties */
     public draggedDir = null;
@@ -442,5 +448,37 @@ export class DragDropSampleComponent {
 
     public getCategoryMovies(inCategory: string){
         return this.listNotes.filter(item => item.category === inCategory);
+    }
+
+
+    // Multi selection row drag
+    public rowClicked(event: MouseEvent): void {
+        const target = event.target as Element;
+        const clickedCardId = target?.id;
+        const index = this.sourceRows.findIndex((item) => item.name === clickedCardId);
+        if(index < 0) return;
+        this.sourceRows[index].selected = !this.sourceRows[index].selected;
+    }
+
+    public dragStartHandler(event: IDragStartEventArgs) {
+        const dragItemId = event.owner.element.nativeElement.id;
+        if(dragItemId !== undefined){
+          const index = this.sourceRows.findIndex((item) => item.name === dragItemId);
+          if(index >= 0) this.sourceRows[index].selected = true;
+        }
+
+        this.selectedRows = this.sourceRows.filter(item => item.selected).map((item) => { return {name: item.name, selected: false}});
+    }
+
+    public onSelectRowDropped() {
+        if(this.selectedRows.length === 0) return;
+        this.selectedRows.forEach(clickedCard => {
+          const dragItemIndexInFromArray = this.sourceRows.findIndex((item) => item.name === clickedCard.name);
+          this.sourceRows.splice(dragItemIndexInFromArray, 1);
+        });
+        this.targetRows.push(...this.selectedRows);
+        console.log(this.targetRows);
+
+        this.selectedRows = [];
     }
 }
