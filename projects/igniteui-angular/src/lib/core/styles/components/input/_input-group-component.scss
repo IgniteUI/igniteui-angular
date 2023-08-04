@@ -888,6 +888,10 @@
         }
 
         @include mx(bootstrap, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle--bootstrap-focused !optional;
+            }
+
             @include e(input) {
                 @extend %bootstrap-input--focus !optional;
             }
