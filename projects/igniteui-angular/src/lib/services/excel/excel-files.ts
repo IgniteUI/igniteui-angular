@@ -459,10 +459,10 @@ export class WorksheetFile implements IExcelFile {
                     return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
                 }
 
-                return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
+                return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
             }
 
-            return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
+            return `<c r="${columnName}" s="1"><f>${summaryFunc}</f></c>`;
         }
     }
 
