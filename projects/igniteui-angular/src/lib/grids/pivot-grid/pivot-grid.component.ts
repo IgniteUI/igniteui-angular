@@ -21,7 +21,6 @@ import {
     ViewChildren,
     ViewContainerRef,
     Injector,
-    ApplicationRef,
     ContentChild,
     createComponent,
     EnvironmentInjector,

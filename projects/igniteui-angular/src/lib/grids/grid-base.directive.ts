@@ -2,7 +2,6 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
-    ApplicationRef,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,

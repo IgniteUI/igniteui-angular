@@ -18,7 +18,6 @@ import {
     ViewContainerRef,
     Optional,
     LOCALE_ID,
-    ApplicationRef,
     Injector,
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA

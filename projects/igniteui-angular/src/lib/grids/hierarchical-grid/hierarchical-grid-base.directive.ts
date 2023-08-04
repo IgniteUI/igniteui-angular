@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     ChangeDetectorRef,
     createComponent,
     Directive,
