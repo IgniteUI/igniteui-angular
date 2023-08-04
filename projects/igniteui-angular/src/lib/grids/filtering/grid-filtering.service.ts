@@ -82,7 +82,7 @@ export class IgxFilteringService implements OnDestroy {
                     event.componentRef.instance.initialize(column, this._overlayService);
                     event.componentRef.instance.overlayComponentId = id;
                 }
-                this.lastActiveNode = this.grid.navigation.activeNode 
+                this.lastActiveNode = this.grid.navigation.activeNode;
             });
 
         this._overlayService.closed

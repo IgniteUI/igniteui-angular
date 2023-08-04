@@ -3283,7 +3283,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public readonly cdr: ChangeDetectorRef,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        private appRef: ApplicationRef,
         protected injector: Injector,
         protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
