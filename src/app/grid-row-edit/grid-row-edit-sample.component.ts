@@ -183,15 +183,10 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    public cellEditExit(eventArgs: IGridEditDoneEventArgs) {
-        eventArgs.owner.updateCell(
-          eventArgs.newValue,
-          eventArgs.rowID,
-          eventArgs.column.field
-        );
+    public cellEditExit(evt) {
         if (this.events.cell.exit) {
             console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
-            console.log(eventArgs);
+            console.log(evt);
         }
     }
 
