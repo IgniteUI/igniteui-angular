@@ -18,7 +18,7 @@ describe('IgxRadioGroupDirective', () => {
                 ReactiveFormsModule,
                 NoopAnimationsModule,
                 RadioGroupComponent,
-                RadioGroupOnPush,
+                RadioGroupOnPushComponent,
                 RadioGroupSimpleComponent,
                 RadioGroupWithModelComponent,
                 RadioGroupRequiredComponent,
@@ -51,7 +51,7 @@ describe('IgxRadioGroupDirective', () => {
     }));
 
     it('Propery initializes FormControlValue with OnPush change detection strategy', fakeAsync(() => {
-        const fixture = TestBed.createComponent(RadioGroupOnPush);
+        const fixture = TestBed.createComponent(RadioGroupOnPushComponent);
         const radioInstance = fixture.componentInstance.radio;
 
         fixture.detectChanges();
@@ -327,7 +327,7 @@ interface Person {
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class RadioGroupOnPush {
+class RadioGroupOnPushComponent {
     @ViewChild('checkedRadio', { read: IgxRadioComponent, static: true })
     public radio: IgxRadioComponent;
 
