@@ -339,6 +339,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
             this.queryChange$.next();
             setTimeout(() => this._initRadioButtons());
         });
+
+
+        if (this.ngControl) {
+            this.radioButtons.forEach((button) => {
+                if (this.ngControl.disabled) {
+                    button.disabled = this.ngControl.disabled;
+                }
+            });
+        }
     }
 
     /**
@@ -359,16 +368,16 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.blurRadio
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => {
-                    this.updateValidityOnBlur()
-                });
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe(() => {
+                        this.updateValidityOnBlur()
+                    });
 
                 fromEvent(button.nativeElement, 'keyup')
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((event: KeyboardEvent) => {
-                    this.updateOnKeyUp(event)
-                });
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe((event: KeyboardEvent) => {
+                        this.updateOnKeyUp(event)
+                    });
             });
         }
     }
