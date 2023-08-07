@@ -11,8 +11,6 @@
 
 /// @param {Map} $theme - The calendar theme used to style the component.
 @mixin date-picker($theme) {
-    @include css-vars($theme, '.igx-date-picker');
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
