@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IGridEditDoneEventArgs, IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventArgs } from 'igniteui-angular';
+import { IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
