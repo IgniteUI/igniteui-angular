@@ -107,13 +107,6 @@ export interface ISearchInfo {
     content: string;
 }
 
-export interface IMatchInfoCache {
-    row: any;
-    index: number;
-    column: string;
-    metadata: Map<string, boolean>;
-}
-
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: GridType;
     exporter: IgxBaseExporter;
