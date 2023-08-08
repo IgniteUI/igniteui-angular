@@ -178,6 +178,12 @@
         }
     }
 
+    @if not($picker-background-color) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $picker-background-color: $content-background;
+        }
+    }
+
     @if not($weekend-text-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
             $weekend-text-color: rgba($content-text-color, .7);
