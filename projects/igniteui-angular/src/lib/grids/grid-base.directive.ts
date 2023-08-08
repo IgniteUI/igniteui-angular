@@ -2840,6 +2840,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         caseSensitive: false,
         exactMatch: false,
         activeMatchIndex: 0,
+        matchInfoCache: [],
         matchCount: 0,
         content: ''
     };
@@ -3120,7 +3121,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
-    private _matchInfoCache: IMatchInfoCache[] = [];
 
     /**
      * @hidden @internal
@@ -5056,7 +5056,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (updateActiveInfo) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-                this._matchInfoCache.forEach((match, i) => {
+                this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
@@ -5091,6 +5091,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             caseSensitive: false,
             exactMatch: false,
             activeMatchIndex: 0,
+            matchInfoCache: [],
             matchCount: 0,
             content: ''
         };
@@ -7501,6 +7502,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 activeMatchIndex: 0,
                 caseSensitive: caseSensitiveResolved,
                 exactMatch: exactMatchResolved,
+                matchInfoCache: [],
                 matchCount: 0,
                 content: ''
             };
@@ -7529,7 +7531,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (this.lastSearchInfo.matchCount > 0) {
-            const matchInfo = this._matchInfoCache[this.lastSearchInfo.activeMatchIndex];
+            const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
@@ -7551,7 +7553,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private rebuildMatchCache() {
-        this._matchInfoCache = [];
+        this.lastSearchInfo.matchInfoCache = [];
 
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const exactMatch = this.lastSearchInfo.exactMatch;
@@ -7579,7 +7581,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
                             };
 
-                            this._matchInfoCache.push(mic);
+                            this.lastSearchInfo.matchInfoCache.push(mic);
                         }
                     } else {
                         let occurrenceIndex = 0;
@@ -7593,7 +7595,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
                             };
 
-                            this._matchInfoCache.push(mic);
+                            this.lastSearchInfo.matchInfoCache.push(mic);
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
                             searchIndex = searchValue.indexOf(searchText);
@@ -7603,7 +7605,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         });
 
-        this.lastSearchInfo.matchCount = this._matchInfoCache.length;
+        this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
     }
 
     // TODO: About to Move to CRUD

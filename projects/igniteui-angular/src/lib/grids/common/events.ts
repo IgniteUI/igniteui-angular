@@ -98,13 +98,17 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
     readonly event?: Event;
 }
 
-export interface ISearchInfo {
+export interface IBaseSearchInfo {
     searchText: string;
     caseSensitive: boolean;
     exactMatch: boolean;
-    activeMatchIndex: number;
     matchCount: number;
     content: string;
+}
+
+export interface ISearchInfo extends IBaseSearchInfo {
+    matchInfoCache: any[];
+    activeMatchIndex: number;
 }
 
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
