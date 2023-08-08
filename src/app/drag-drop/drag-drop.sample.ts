@@ -102,7 +102,9 @@ export class DragDropSampleComponent {
     public toggleStartPageY;
 
     // Multi selection row drag
-    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => { return {name: "Item " + i, selected: false}});
+    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => {
+        return {name: "Item " + i, selected: false}
+    });
     public targetRows: any[] = [];
     public selectedRows: any[] = [];
 
@@ -467,7 +469,9 @@ export class DragDropSampleComponent {
           if(index >= 0) this.sourceRows[index].selected = true;
         }
 
-        this.selectedRows = this.sourceRows.filter(item => item.selected).map((item) => { return {name: item.name, selected: false}});
+        this.selectedRows = this.sourceRows.filter(item => item.selected).map((item) => {
+            return {name: item.name, selected: false}
+        });
     }
 
     public onSelectRowDropped() {
