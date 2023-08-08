@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, Quer
 import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
-import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxCardComponent, IgxCardModule, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
+import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
@@ -101,7 +101,9 @@ export class DragDropSampleComponent {
     public toggleStartPageY;
 
     // Multi selection row drag
-    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => { return {name: "Item " + i, selected: false}});
+    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => {
+        return {name: "Item " + i, selected: false}
+    });
     public targetRows: any[] = [];
     public selectedRows: any[] = [];
 
@@ -466,7 +468,9 @@ export class DragDropSampleComponent {
           if(index >= 0) this.sourceRows[index].selected = true;
         }
 
-        this.selectedRows = this.sourceRows.filter(item => item.selected).map((item) => { return {name: item.name, selected: false}});
+        this.selectedRows = this.sourceRows.filter(item => item.selected).map((item) => {
+            return {name: item.name, selected: false}
+        });
     }
 
     public onSelectRowDropped() {
