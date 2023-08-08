@@ -50,7 +50,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
     }));
 
-    it('Propery initializes FormControlValue with OnPush change detection strategy', fakeAsync(() => {
+    it('Properly initializes FormControlValue with OnPush change detection strategy', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupOnPushComponent);
         const radioInstance = fixture.componentInstance.radio;
 
