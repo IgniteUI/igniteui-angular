@@ -448,22 +448,23 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         if (!this.multiSelection) {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselected.emit({ button: b, index: i });
+                    this.deselected.emit({ owner: this, button: b, index: i });
                 }
             });
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
             this.selectButton(index);
-            this.selected.emit({ button, index });
+            this.selected.emit({ owner: this, button, index });
         } else {
             this.deselectButton(index);
-            this.deselected.emit({ button, index });
+            this.deselected.emit({ owner: this, button, index });
         }
     }
 }
 
 export interface IButtonGroupEventArgs extends IBaseEventArgs {
+    owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;
 }
