@@ -355,26 +355,34 @@ export class Calendar {
     }
 
     public getWeekNumber(date: Date, weekStart: WEEKDAYS | number) {
+        //current year
         const yearStart = new Date(date.getFullYear(), 0, 1);
-        //the day of the week on which the year begins
+        //first day number of the current year
         let firstDayOfTheYear = yearStart.getDay() - weekStart;
         firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
-        const dayInSeconds = 86400000;
+        const dayInMilSeconds = 86400000;
+        //day number in the year
         const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - 
-            (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInSeconds) + 1;
+        (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
         let weekNumber;
-        //if the year starts before the middle of a week
+        //if 01 Jan is Monday to Thursday, is considered 1st week of the year 
+        //if 01 Jan starts Friday to Sunday, is considered last week of previous year
         if (firstDayOfTheYear < 4) {
+            //when calculating the week number we add 1 for the 1st week
             weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
+            //if the week number is greater than week 52
             if (weekNumber > 52) {
+                //next year
                 let nextYear = new Date(date.getFullYear() + 1, 0, 1);
+                //first day of the next year
                 let nextYearFirstDay = nextYear.getDay() - weekStart;
                 nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
-                /*if the next year starts before the middle of
-                the week, it is week #1 of that year*/
+                //if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year 
+                //if 01 Jan is Friday to Sunday, is considered 53rd week of the current year
                 weekNumber = nextYearFirstDay < 4 ? 1 : 53;
             }
         } else {
+            //calculating the week number
             weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7);
         }
         return weekNumber;
