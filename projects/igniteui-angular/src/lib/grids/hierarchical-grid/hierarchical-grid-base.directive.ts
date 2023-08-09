@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     ChangeDetectorRef,
     createComponent,
     Directive,
@@ -152,7 +151,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        appRef: ApplicationRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
@@ -175,7 +173,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             cdr,
             differs,
             viewRef,
-            appRef,
             injector,
             envInjector,
             navigation,
