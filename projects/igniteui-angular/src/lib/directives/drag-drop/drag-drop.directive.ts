@@ -1204,7 +1204,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghostTemplate) {
-            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.zone.run(() => {
+                // Create template in zone, so it gets updated by it automatically.
+                this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            });
             if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
                 // Change the display to default since display contents does not position the element absolutely.
                 this._dynamicGhostRef.rootNodes[0].style.display = 'block';
