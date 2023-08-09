@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { IgxGridDetailTemplateDirective } from './public_api';
+import { IgxGridDetailTemplateDirective } from '../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
