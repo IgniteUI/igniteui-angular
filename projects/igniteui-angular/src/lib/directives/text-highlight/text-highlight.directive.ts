@@ -13,7 +13,14 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { compareMaps } from '../../core/utils';
-import { IBaseSearchInfo } from '../../grids/common/events';
+
+export interface IBaseSearchInfo {
+    searchText: string;
+    caseSensitive: boolean;
+    exactMatch: boolean;
+    matchCount: number;
+    content: string;
+}
 
 /**
  * An interface describing information for the active highlight.

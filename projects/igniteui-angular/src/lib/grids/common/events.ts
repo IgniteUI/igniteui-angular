@@ -6,6 +6,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';
 import { IgxExporterOptionsBase } from '../../services/exporter-common/exporter-options-base';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IBaseSearchInfo } from '../../directives/text-highlight/text-highlight.directive';
 
 export interface IGridClipboardEvent {
     data: any[];
@@ -96,14 +97,6 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
     readonly added: string[];
     readonly removed: string[];
     readonly event?: Event;
-}
-
-export interface IBaseSearchInfo {
-    searchText: string;
-    caseSensitive: boolean;
-    exactMatch: boolean;
-    matchCount: number;
-    content: string;
 }
 
 export interface ISearchInfo extends IBaseSearchInfo {
