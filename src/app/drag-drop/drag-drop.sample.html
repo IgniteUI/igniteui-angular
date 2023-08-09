@@ -226,6 +226,41 @@
     </article>
 </section>
 <hr [style.width]="'100%'">
+<section>
+    <div>
+        <h4 class="sample-title">Multi selection row drag with custom ghost:</h4>
+        <span>From</span><br/>
+        <div id="fromDiv" class="rowsContainer scrollContainer">
+            <div igxDrag
+                *ngFor="let item of sourceRows"
+                [id]="item.name"
+                [ngClass]="{'lightblue' : item.selected, 'white': !item.selected}"
+                (click)="rowClicked($event)"
+                (dragStart)="dragStartHandler($event)"
+                [ghostTemplate]="customGhost">
+                    <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <span>To</span><br/>
+        <div id="toDiv" class="rowsContainer scrollContainer" igxDrop (dropped)="onSelectRowDropped()">
+            <div *ngFor="let item of targetRows">
+                <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #customGhost>
+        <div class="dragGhost">
+            <span *ngFor="let row of selectedRows">
+                {{ row.name }}
+            </span>
+        </div>
+    </ng-template>
+</section>
+<hr [style.width]="'100%'">
 <section class="sample-content">
     <article class="sample-column">
         <div [style.width]="'70%'" >
