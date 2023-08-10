@@ -2936,11 +2936,11 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 @Component({
     template: `<div style="height:300px">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
-                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator> 
+                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
     standalone: true,
-    imports: [IgxGridComponent]
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public override paging = false;
