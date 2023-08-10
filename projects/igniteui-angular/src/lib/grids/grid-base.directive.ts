@@ -79,7 +79,7 @@ import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
-} from './grid/grid.directives';
+} from './grid.directives';
 import {
     GridKeydownTargetType,
     GridSelectionMode,
