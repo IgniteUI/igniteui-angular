@@ -164,3 +164,37 @@
     box-shadow: 0 2px 6px 0 gray;
     background-color: rgba(232, 232, 232, .5);
 }
+
+.white {
+    background-color: white;
+}
+
+.lightblue {
+    background-color: lightblue;
+}
+
+.rowsContainer {
+    margin: 1em;
+    height: 100px;
+    width: 50%;
+    border: 1px solid gray;
+}
+
+.scrollContainer{
+    overflow: auto;
+}
+
+.dragGhost {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: rem(180px);
+    color: black;
+    background-color: yellow;
+    /*border-color: gray;*/
+    border: 1px solid gray;
+    font-size: rem(13px);
+    padding: rem(8px);
+    border-radius: rem(4px);
+}

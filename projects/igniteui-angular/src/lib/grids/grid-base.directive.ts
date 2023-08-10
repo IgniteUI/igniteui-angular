@@ -2,9 +2,7 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
-    ApplicationRef,
     ChangeDetectorRef,
-    ComponentRef,
     ContentChild,
     ContentChildren,
     createComponent,
@@ -81,7 +79,7 @@ import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
-} from './grid/grid.directives';
+} from './grid.directives';
 import {
     GridKeydownTargetType,
     GridSelectionMode,
@@ -3284,7 +3282,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public readonly cdr: ChangeDetectorRef,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        private appRef: ApplicationRef,
         protected injector: Injector,
         protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
@@ -3750,19 +3747,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.excelStyleFilteringComponent.initialize(column, this.overlayService);
             const id = this.overlayService.attach(this.excelStyleFilteringComponent.element, options);
             this.excelStyleFilteringComponent.overlayComponentId = id;
-            return { id, ref: undefined };
+            return id;
         }
-        const ref = this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
-        ref.instance.initialize(column, this.overlayService);
-        const id = this.overlayService.attach(ref.instance.element, options);
-        ref.instance.overlayComponentId = id;
-        return { ref, id };
-    }
-
-    private createComponentInstance(component: any) {
-        const dynamicComponent: ComponentRef<any> = createComponent(component, { environmentInjector: this.envInjector, elementInjector: this.injector } );
-        this.appRef.attachView(dynamicComponent.hostView);
-        return dynamicComponent;
+        const id = this.overlayService.attach(IgxGridExcelStyleFilteringComponent, this.viewRef, options);
+        return id;
     }
 
     /** @hidden @internal */
