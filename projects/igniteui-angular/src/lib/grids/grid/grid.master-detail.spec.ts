@@ -4,7 +4,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { IgxGridDetailTemplateDirective } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -19,7 +18,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
-import { CellType, IgxColumnComponent } from '../public_api';
+import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -1324,7 +1323,7 @@ export class DefaultGridMasterDetailComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1367,7 +1366,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 
