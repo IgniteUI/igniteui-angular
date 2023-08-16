@@ -97,7 +97,7 @@
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
-/// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
+/// @param {List} $drop-area-border-radius [null] - The border radius used for column drop area.
 /// @requires $light-material-schema
 /// @example scss Change the header background color
 ///   $my-grid-theme: grid-theme($header-background: black);
@@ -444,7 +444,7 @@
     }
 
     @if not($drop-area-border-radius) {
-        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius'));
+        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius')...);
     }
 
     @return extend($theme, (
@@ -864,6 +864,15 @@
         display: flex;
         overflow: hidden;
 
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-large));
+                font-size: rem(24px);
+                width: rem(24px);
+                height: rem(24px);
+            }
+        }
+
         %igx-grid__drag-indicator {
             cursor: default;
         }
@@ -879,12 +888,24 @@
     }
 
     %grid-thead--cosy {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-medium));
+            }
+        }
+
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
         }
     }
 
     %grid-thead--compact {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-small));
+            }
+        }
+
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
         }

@@ -14,7 +14,7 @@
 /// Chip Theme
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
-/// @param {String} $border-radius [null] - The chip border-radius.
+/// @param {List} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
 /// @param {Color} $background [null] - The chip background color.
@@ -203,7 +203,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
@@ -398,9 +398,13 @@
         }
 
         igx-avatar,
-        igx-circular-bar {
-            --component-size: 3;
+        igx-circular-bar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-large));
+        }
 
+        igx-avatar,
+        igx-circular-bar {
             $avatar-size: (
                 comfortable: rem(24px),
                 cosy: rem(18),
@@ -426,14 +430,16 @@
     }
 
     %igx-chip__item--cosy {
-        igx-avatar {
-            --component-size: 2;
+        igx-avatar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
     %igx-chip__item--compact {
-        igx-avatar {
-            --component-size: 1;
+        igx-avatar,
+        igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 

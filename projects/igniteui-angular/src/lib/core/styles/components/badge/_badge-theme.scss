@@ -20,7 +20,7 @@
 /// @param {Number} $border-width [null] - The border width of the badge component.
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
-/// @param {border-radius} $border-radius [null] - The border radius used for badge component.
+/// @param {Number} $border-radius [null] - The border radius used for badge component.
 ///
 /// @requires $light-material-schema
 ///
@@ -64,10 +64,6 @@
     @if not($shadow) {
         $elevation: map.get($badge-schema, 'elevation');
         $shadow: elevation($elevation);
-    }
-
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (

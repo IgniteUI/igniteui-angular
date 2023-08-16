@@ -112,7 +112,7 @@ export interface RowType {
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
     /* blazorSuppress */
-    virtDirRow?: IgxGridForOfDirective<any>;
+    virtDirRow?: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     pinned?: boolean;
     selected?: boolean;
     expanded?: boolean;
@@ -355,6 +355,8 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    /** @hidden @internal */
+    groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
     hasColumnLayouts: boolean;

@@ -2191,6 +2191,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const chips = filterRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toEqual(0, 'No chips should be present');
         }));
+
+        it('Should not throw error when pressing Backspace in empty dateTime filter.', fakeAsync(() => {
+            spyOn(console, 'error');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            GridFunctions.typeValueInFilterRowInput('', fix, input);
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
+        }));
+
+        it('Should not throw error when pressing Arrow keys in filter when focus is outside of input.', fakeAsync(() => {
+            spyOn(console, 'error');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            const prefix = GridFunctions.getFilterRowPrefix(fix).nativeElement;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , prefix);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
+        }));
     });
 
     describe('Integration scenarios', () => {

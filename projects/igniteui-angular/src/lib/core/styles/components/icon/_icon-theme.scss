@@ -36,6 +36,10 @@
 
     $theme: digest-schema($icon-schema);
 
+    @if not($size) {
+        $size: sizable(rem(16px), rem(20px), rem(24px));
+    }
+
     @return extend($theme, (
         name: $name,
         color: $color,
@@ -49,13 +53,16 @@
 @mixin icon($theme) {
     @include css-vars($theme);
 
-    $igx-icon-font-size: var-get($theme, 'size');
+    $size: var-get($theme, 'size');
 
     %igx-icon-display {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: inline-flex;
-        width: $igx-icon-font-size;
-        height: $igx-icon-font-size;
-        font-size: $igx-icon-font-size;
+        width: $size;
+        height: $size;
+        font-size: $size;
         color: var-get($theme, 'color');
         direction: inherit;
 

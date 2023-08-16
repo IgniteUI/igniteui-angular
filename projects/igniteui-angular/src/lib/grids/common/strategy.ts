@@ -104,9 +104,9 @@ export class IgxSorting implements IGridSortingStrategy {
         if (date && isDate && isTime) {
             resolvedValue = date;
         } else if (date && isDate && !isTime) {
-            resolvedValue = new Date(date.setHours(0, 0, 0, 0));
+            resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
         } else if (date && isTime && !isDate) {
-            resolvedValue = new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
         }
         return resolvedValue;
     }

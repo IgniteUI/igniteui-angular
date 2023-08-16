@@ -14,8 +14,8 @@
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
-/// @param {number} $border-radius [null] - The border-radius used of the avatar.
-/// @param {number} $size [null] - The size of the avatar.
+/// @param {Number} $border-radius [null] - The border-radius used of the avatar.
+/// @param {Number} $size [null] - The size of the avatar.
 /// @requires $light-material-schema
 ///
 /// @example scss Change the background and icon colors in icon avatars
@@ -43,10 +43,6 @@
 
     @if not($color) and $background {
         $color: text-contrast($background);
-    }
-
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @if not($size) {

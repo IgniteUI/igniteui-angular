@@ -26,8 +26,8 @@
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
-/// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
-/// @param {border-radius} $item-border-radius [null] - The border radius used for the navdrawer item.
+/// @param {List} $border-radius [null] - The border radius used for the navdrawer.
+/// @param {List} $item-border-radius [null] - The border radius used for the navdrawer item.
 /// @requires $light-material-schema
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: navdrawer-theme(
@@ -114,11 +114,11 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
     }
 
     @return extend($theme, (
