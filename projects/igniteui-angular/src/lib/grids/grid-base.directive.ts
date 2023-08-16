@@ -1995,7 +1995,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
-    /* csSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the height.
      *
@@ -2011,7 +2011,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._height;
     }
 
-    /* csSuppress */
+    /* blazorCSSuppress */
     public set height(value: string | null) {
         if (this._height !== value) {
             this._height = value;
@@ -2028,7 +2028,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._width || this._hostWidth;
     }
 
-    /* csSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the width of the grid.
      *
@@ -2043,7 +2043,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._width;
     }
 
-    /* csSuppress */
+    /* blazorCSSuppress */
     public set width(value: string | null) {
         if (this._width !== value) {
             this._width = value;
