@@ -1297,7 +1297,15 @@ export abstract class IgxBaseExporter {
         let startIndex = 0;
         const key = keys[0];
         const records = this.flatRecords.map(r => r.data);
-        const groupedRecords = records.reduce((hash, obj) => ({...hash, [obj[key.name]]:( hash[obj[key.name]] || []).concat(obj)}), {})
+        const groupedRecords = {};
+
+        records.forEach(obj => {
+            const keyValue = obj[key.name];
+            if (!groupedRecords[keyValue]) {
+                groupedRecords[keyValue] = [];
+            }
+            groupedRecords[keyValue].push(obj);
+        });
 
         if (columnGroupParent) {
             const mapKeys = [...this.pivotGridKeyValueMap.keys()];
