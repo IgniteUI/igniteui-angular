@@ -273,14 +273,7 @@ export class IgxGridCell implements CellType {
     }
 
     private isCellInEditMode(): boolean {
-        if (this.grid.crudService.cellInEditMode) {
-            const cellInEditMode = this.grid.crudService.cell.id;
-            const isCurrentCell = cellInEditMode.rowID === this.id.rowID &&
-                cellInEditMode.rowIndex === this.id.rowIndex &&
-                cellInEditMode.columnID === this.id.columnID;
-            return isCurrentCell;
-        }
-        return false;
+        return this.grid.crudService.cellInEditMode;
     }
 
     private endEdit(): void {
