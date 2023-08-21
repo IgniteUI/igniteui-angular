@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
+import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxInputGroupModule, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
 
@@ -8,7 +8,8 @@ import { data, dataWithoutPK } from '../shared/data';
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxInputGroupModule,
+         IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

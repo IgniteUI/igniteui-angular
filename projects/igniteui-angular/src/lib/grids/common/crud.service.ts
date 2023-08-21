@@ -110,6 +110,7 @@ export class IgxCell {
     public get editValue() {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         if (formControl) {
+           // console.log(this.column.visibleIndex, formControl);
             return formControl.value;
         }
     }
@@ -184,6 +185,7 @@ export class IgxCellCrudState {
     public isInCompositionMode = false;
 
     public createCell(cell): IgxCell {
+        // createCell
         return this.cell = new IgxCell(cell.cellID || cell.id, cell.row.index, cell.column, cell.value, cell.value,
             cell.row.data, cell.grid);
     }
@@ -611,7 +613,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                     this.rowEditingBlocked = false;
                     this.endRowEdit();
                 }
+                debugger;
                 this.createCell(cell);
+                console.log('EDIT VALUE', this.cell.editValue);
 
                 const canceled = this.beginRowEdit(event);
                 if (!canceled) {
