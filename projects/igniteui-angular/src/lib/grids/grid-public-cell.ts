@@ -60,21 +60,6 @@ export class IgxGridCell implements CellType {
         return this._column || this.grid.getColumnByName(this._columnField);
     }
 
-    private searchColumnIndexByName(columnIndex: number, name: string): any {
-        const columns = this.grid.getAllColumnsByName(name);
-
-        if (columns.length === 0 || columnIndex < 0 || columnIndex >= columns.length) {
-            return -1;
-        }
-    
-        const columnAtIndex = columns[columnIndex];
-        if (columnAtIndex.field === name) {
-            return columnIndex;
-        }
-    
-        return -1; // Column at index doesn't match the name
-    }
-
     /**
      * Gets the current edit value while a cell is in edit mode.
      * ```typescript
@@ -292,7 +277,7 @@ export class IgxGridCell implements CellType {
             const cellInEditMode = this.grid.crudService.cell.id;
             const isCurrentCell = cellInEditMode.rowID === this.id.rowID &&
                 cellInEditMode.rowIndex === this.id.rowIndex &&
-                cellInEditMode.columnID === this.searchColumnIndexByName(cellInEditMode.columnID, this._columnField);
+                cellInEditMode.columnID === this.id.columnID;
             return isCurrentCell;
         }
         return false;

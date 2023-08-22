@@ -628,8 +628,6 @@ export interface GridType extends IGridDataBindable {
     openAdvancedFilteringDialog(): void;
     showSnackbarFor(index: number): void;
     getColumnByName(name: string): any;
-    getAllColumnsByName(name: string): any[];
-    getColumnByIndex(index: number): any;
     getColumnByVisibleIndex(index: number): ColumnType;
     getHeaderGroupWidth(column: ColumnType): string;
     getRowByKey?(key: any): RowType;
