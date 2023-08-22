@@ -1136,7 +1136,7 @@
 
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
-            z-index: 1;
+            z-index: 10002;
         }
     }
 
