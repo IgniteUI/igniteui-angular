@@ -304,18 +304,17 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-button--cosy')
-    public get cosy(): boolean {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--compact')
-    public get compact(): boolean {
-        return this.displayDensity === DisplayDensity.compact;
+    @HostBinding('style.--component-size')
+    public get size(): string {
+        switch(this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
     }
 
     /**
