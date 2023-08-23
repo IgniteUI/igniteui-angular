@@ -14,7 +14,7 @@ import {
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
@@ -525,6 +525,23 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('style.--component-size')
+    public get size(): string {
+        switch(this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
+    }
+
+    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -583,8 +600,24 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @hidden
      * @internal
      */
-    public get ghostClass(): string {
-        return this.getComponentDensityClass('igx-chip__ghost');
+    public get ghostStyles() {
+        // Ideally this should depend on the `--component-size` variable from the host element.
+        // In essence carrying it over to the created ghost.
+        switch(this.displayDensity) {
+            case DisplayDensity.compact:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-small))',
+                };
+            case DisplayDensity.cosy:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-medium))',
+                };
+            case DisplayDensity.comfortable:
+            default:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-large))',
+                };
+        }
     }
 
     /** @hidden @internal */

@@ -31,7 +31,7 @@
     $banner-illustration-color: null
 ) {
     $name: 'igx-banner';
-    $selector: 'igx-banner, .igx-banner, .igx-banner--cosy, .igx-banner--compact';
+    $selector: 'igx-banner, .igx-banner';
     $banner-schema: ();
 
     @if map.has-key($schema, 'banner') {
