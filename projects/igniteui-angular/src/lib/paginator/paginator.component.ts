@@ -111,19 +111,22 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
-    @HostBinding('class.igx-paginator--cosy')
-    private get classCosy(): boolean {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    @HostBinding('class.igx-paginator--compact')
-    private get classCompact(): boolean {
-        return this.displayDensity === DisplayDensity.compact;
-    }
-
+    /** @hidden @internal */
     @HostBinding('class.igx-paginator')
-    private get classComfortable(): boolean {
-        return this.displayDensity === DisplayDensity.comfortable;
+    public cssClass = 'igx-paginator';
+
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get size() {
+        switch(this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
     }
 
     /**
@@ -299,14 +302,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this.elementRef.nativeElement;
     }
 
-    /**
-     * Sets DisplayDensity for the <select> inside the paginator
-     *
-     * @hidden
-     */
-    public get paginatorSelectDisplayDensity(): DisplayDensity {
-        return DisplayDensity.compact;
-    }
     /**
      * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
      * ```typescript

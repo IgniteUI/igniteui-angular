@@ -17,16 +17,6 @@
 
         @extend %igx-paginator !optional;
         @extend %igx-paginator--sizable !optional;
-
-        @include m(cosy) {
-            @extend %igx-paginator !optional;
-            @extend %igx-paginator--cosy !optional;
-        }
-
-        @include m(compact) {
-            @extend %igx-paginator !optional;
-            @extend %igx-paginator--compact !optional;
-        }
     }
 
     @include b(igx-page-nav) {
