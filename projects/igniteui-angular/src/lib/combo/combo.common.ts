@@ -1008,14 +1008,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._value) {
-            this._value = this.createDisplayText(this.selection, []);
-        }
-        super.ngDoCheck();
-    }
-
-    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
@@ -1288,7 +1280,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
+        if (this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 

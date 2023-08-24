@@ -158,7 +158,7 @@
     $week-number-background: null,
 ) {
     $name: 'igx-calendar';
-    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
+    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view, .igx-date-picker';
     $calendar-schema: ();
 
     @if map.has-key($schema, 'calendar') {
@@ -176,6 +176,12 @@
     @if not($content-text-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
             $content-text-color: text-contrast($content-background);
+        }
+    }
+
+    @if not($picker-background-color) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $picker-background-color: $content-background;
         }
     }
 

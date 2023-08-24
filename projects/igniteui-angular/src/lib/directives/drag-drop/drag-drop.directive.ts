@@ -920,7 +920,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until ghostElement is created.
         const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
-        const targetElement = handleFound ? handleFound.element.nativeElement : this.element.nativeElement;
+        const targetElement = handleFound ? handleFound.element.nativeElement : event.target || this.element.nativeElement;
         if (this.pointerEventsEnabled) {
             targetElement.setPointerCapture(this._pointerDownId);
         } else {
@@ -1202,7 +1202,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghostTemplate) {
-            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.zone.run(() => {
+                // Create template in zone, so it gets updated by it automatically.
+                this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            });
             if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
                 // Change the display to default since display contents does not position the element absolutely.
                 this._dynamicGhostRef.rootNodes[0].style.display = 'block';

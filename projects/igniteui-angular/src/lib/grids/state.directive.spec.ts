@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { IgxGridComponent, IgxGridDetailTemplateDirective } from './grid/public_api';
+import { IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
@@ -18,7 +18,7 @@ import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
-import { IgxColumnComponent } from './public_api';
+import { IgxColumnComponent, IgxGridDetailTemplateDirective } from './public_api';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {

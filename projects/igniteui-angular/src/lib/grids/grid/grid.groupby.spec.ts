@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -3486,6 +3486,30 @@ describe('IgxGrid - GroupBy #grid', () => {
             const groupRows = grid.groupsRowList.toArray();
 
             expect(groupRows.length).toEqual(3);
+        }));
+
+        it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
+            fakeAsync(() => {
+                const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+                fix.detectChanges();
+                const grid = fix.componentInstance.instance;
+                fix.componentInstance.columns = [];
+                grid.hideGroupedColumns = true;
+                fix.detectChanges();
+                tick();
+                fix.detectChanges();
+                fix.componentInstance.columns = [
+                    { field: 'A', width: 100 },
+                    { field: 'B', width: 100 },
+                    { field: 'C', width: 100 }
+                ];
+                grid.groupingExpressions = [
+                    { fieldName: 'A', dir: SortingDirection.Asc }
+                ];
+                fix.detectChanges();
+                tick();
+
+                expect(grid.getColumnByName('A').hidden).toBe(true);
         }));
 
     it('should respect current sorting direction when grouping', (async () => {

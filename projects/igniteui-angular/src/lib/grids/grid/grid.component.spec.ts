@@ -2940,7 +2940,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
             </igx-grid>
         </div>`,
     standalone: true,
-    imports: [IgxGridComponent]
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public override paging = false;

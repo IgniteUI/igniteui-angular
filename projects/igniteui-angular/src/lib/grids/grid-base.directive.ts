@@ -81,7 +81,7 @@ import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
-} from './grid/grid.directives';
+} from './grid.directives';
 import {
     GridKeydownTargetType,
     GridSelectionMode,
@@ -173,6 +173,13 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
+
+interface IMatchInfoCache {
+    row: any;
+    index: number;
+    column: string;
+    metadata: Map<string, boolean>;
+}
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -2826,14 +2833,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public disableTransitions = false;
 
     /**
-     * @hidden @internal
+     * Represents the last search information.
      */
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
         caseSensitive: false,
         exactMatch: false,
         activeMatchIndex: 0,
-        matchInfoCache: []
+        matchInfoCache: [],
+        matchCount: 0,
+        content: ''
     };
 
     /**
@@ -5082,7 +5091,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             caseSensitive: false,
             exactMatch: false,
             activeMatchIndex: 0,
-            matchInfoCache: []
+            matchInfoCache: [],
+            matchCount: 0,
+            content: ''
         };
 
         this.rowList.forEach((row) => {
@@ -6571,15 +6582,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetCaches();
 
             if (added || removed) {
-                this.summaryService.clearSummaryCache();
-                this.groupablePipeTrigger++;
-                Promise.resolve().then(() => {
-                    // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-                    // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-                    this.notifyChanges(true);
-                });
+                this.onColumnsAddedOrRemoved();
             }
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected onColumnsAddedOrRemoved() {
+        this.summaryService.clearSummaryCache();
+        Promise.resolve().then(() => {
+            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+            this.notifyChanges(true);
+        });
     }
 
     /**
@@ -7485,7 +7502,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 activeMatchIndex: 0,
                 caseSensitive: caseSensitiveResolved,
                 exactMatch: exactMatchResolved,
-                matchInfoCache: []
+                matchInfoCache: [],
+                matchCount: 0,
+                content: ''
             };
 
             rebuildCache = true;
@@ -7505,13 +7524,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.rebuildMatchCache();
         }
 
-        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchCount) {
             this.lastSearchInfo.activeMatchIndex = 0;
         } else if (this.lastSearchInfo.activeMatchIndex < 0) {
-            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchCount - 1;
         }
 
-        if (this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.matchCount > 0) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
@@ -7530,7 +7549,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             IgxTextHighlightDirective.clearActiveHighlight(this.id);
         }
 
-        return this.lastSearchInfo.matchInfoCache.length;
+        return this.lastSearchInfo.matchCount;
     }
 
     private rebuildMatchCache() {
@@ -7541,6 +7560,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
@@ -7554,28 +7574,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
-                            const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
-                            this.lastSearchInfo.matchInfoCache.push({
+                            const mic: IMatchInfoCache = {
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
-                                metadata,
-                            });
+                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+                            };
+
+                            this.lastSearchInfo.matchInfoCache.push(mic);
                         }
                     } else {
-                        let occurenceIndex = 0;
+                        let occurrenceIndex = 0;
                         let searchIndex = searchValue.indexOf(searchText);
 
                         while (searchIndex !== -1) {
-                            const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
-                            this.lastSearchInfo.matchInfoCache.push({
+                            const mic: IMatchInfoCache = {
                                 row: dataRow,
                                 column: c.field,
-                                index: occurenceIndex++,
-                                metadata,
-                            });
+                                index: occurrenceIndex++,
+                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+                            };
+
+                            this.lastSearchInfo.matchInfoCache.push(mic);
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
                             searchIndex = searchValue.indexOf(searchText);
@@ -7584,6 +7604,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         });
+
+        this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
     }
 
     // TODO: About to Move to CRUD

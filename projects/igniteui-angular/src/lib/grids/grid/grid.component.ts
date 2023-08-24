@@ -10,7 +10,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
+import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from '../grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
@@ -1243,6 +1243,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override getGroupAreaHeight(): number {
         return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected override onColumnsAddedOrRemoved() {
+        // update grouping states
+        this.groupablePipeTrigger++;
+        if (this.groupingExpressions && this.hideGroupedColumns) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
+        super.onColumnsAddedOrRemoved();
     }
 
     /**

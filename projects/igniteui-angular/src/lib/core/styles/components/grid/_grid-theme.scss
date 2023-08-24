@@ -864,6 +864,15 @@
         display: flex;
         overflow: hidden;
 
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-large));
+                font-size: rem(24px);
+                width: rem(24px);
+                height: rem(24px);
+            }
+        }
+
         %igx-grid__drag-indicator {
             cursor: default;
         }
@@ -879,12 +888,24 @@
     }
 
     %grid-thead--cosy {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-medium));
+            }
+        }
+
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
         }
     }
 
     %grid-thead--compact {
+        %igx-grid__header-indentation {
+            igx-icon {
+                --component-size: var(--ig-size, var(--ig-size-small));
+            }
+        }
+
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
         }
@@ -1115,7 +1136,7 @@
 
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
-            z-index: 1;
+            z-index: 10002;
         }
     }
 
