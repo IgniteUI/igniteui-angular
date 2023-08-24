@@ -1996,6 +1996,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /* blazorCSSuppress */
+    /* reactRedirectToContainer */
     /**
      * Gets/Sets the height.
      *
@@ -2012,6 +2013,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /* blazorCSSuppress */
+    /* reactRedirectToContainer */
     public set height(value: string | null) {
         if (this._height !== value) {
             this._height = value;
@@ -2029,6 +2031,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /* blazorCSSuppress */
+    /* reactRedirectToContainer */
     /**
      * Gets/Sets the width of the grid.
      *
@@ -2044,6 +2047,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /* blazorCSSuppress */
+    /* reactRedirectToContainer */
     public set width(value: string | null) {
         if (this._width !== value) {
             this._width = value;
