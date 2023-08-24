@@ -235,8 +235,10 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        --component-size: var(--ig-size, var(--ig-size-large));
+        @include sizable();
 
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --dropdown-size: var(--component-size);
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -254,7 +256,7 @@
 
         igx-icon {
             justify-content: center;
-            --component-size: var(--ig-size, var(--ig-size-large));
+            --component-size: var(--dropdown-size);
         }
     }
 
@@ -274,25 +276,6 @@
         &:hover {
             background: var-get($theme, 'hover-item-background');
             color: var-get($theme, 'hover-item-text-color');
-        }
-    }
-
-
-    %igx-drop-down__item--cosy,
-    %igx-drop-down__header--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-medium))
-        }
-    }
-
-    %igx-drop-down__item--compact,
-    %igx-drop-down__header--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 

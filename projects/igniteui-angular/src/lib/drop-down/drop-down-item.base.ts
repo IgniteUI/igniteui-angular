@@ -2,6 +2,7 @@ import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
+import { DisplayDensity } from '../core/density';
 
 let NEXT_ID = 0;
 
@@ -97,20 +98,18 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         return !this.isHeader;
     }
 
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__item--cosy')
-    public get itemStyleCosy() {
-        return this.dropDown.displayDensity === 'cosy' && !this.isHeader;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__item--compact')
-    public get itemStyleCompact() {
-        return this.dropDown.displayDensity === 'compact' && !this.isHeader;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get size() {
+        switch(this.dropDown.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
     }
 
     /**
@@ -192,22 +191,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @Input()
     @HostBinding('class.igx-drop-down__header')
     public isHeader: boolean;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__header--cosy')
-    public get headerClassCosy() {
-        return this.isHeader && this.dropDown.displayDensity === 'cosy';
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__header--compact')
-    public get headerClassCompact() {
-        return this.isHeader && this.dropDown.displayDensity === 'compact';
-    }
 
     /**
      * Sets/gets if the given item is disabled
