@@ -157,22 +157,18 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._filled || (this.input && this.input.value);
     }
 
-    /** @hidden */
-    @HostBinding('class.igx-input-group--cosy')
-    public get isDisplayDensityCosy() {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--comfortable')
-    public get isDisplayDensityComfortable() {
-        return this.displayDensity === DisplayDensity.comfortable;
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--compact')
-    public get isDisplayDensityCompact() {
-        return this.displayDensity === DisplayDensity.compact;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get size() {
+        switch(this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
     }
 
     /** @hidden */
