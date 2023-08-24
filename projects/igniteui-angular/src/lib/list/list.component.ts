@@ -516,25 +516,23 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
+        return !this.isListEmpty;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list--compact')
-    public get cssClassCompact(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list--cosy')
-    public get cssClassCosy(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get size() {
+        if (!this.isListEmpty) {
+            switch(this.displayDensity) {
+                case DisplayDensity.compact:
+                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-small))';
+                case DisplayDensity.cosy:
+                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-medium))';
+                case DisplayDensity.comfortable:
+                default:
+                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-large))';
+            }
+        }
     }
 
     /**
