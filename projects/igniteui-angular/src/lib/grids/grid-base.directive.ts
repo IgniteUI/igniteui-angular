@@ -4318,7 +4318,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getColumnByName(name: string): IgxColumnComponent {
         return this._columns.find((col) => col.field === name);
     }
-    
+
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
         return this.visibleColumns.find((col) =>
             !col.columnGroup && !col.columnLayout &&
