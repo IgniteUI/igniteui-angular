@@ -623,7 +623,11 @@ class TestComponentDIComponent {
 }
 
 @Component({
-    selector: 'igx-test-cmp-pin'
+    selector: 'igx-test-cmp-pin',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
@@ -632,7 +636,11 @@ class TestComponentPinComponent extends TestComponentDIComponent {
 }
 
 @Component({
-    selector: 'igx-test-cmp-mini'
+    selector: 'igx-test-cmp-mini',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;
