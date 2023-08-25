@@ -658,7 +658,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellStyles = null;
 
-    /* treatAsRef */
     /* alternateType: CellValueFormatterEventHandler */
     /* blazorOnlyScript */
     /**
@@ -699,7 +698,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public formatter: (value: any, rowData?: any) => any;
 
-    /* treatAsRef*/
     /* alternateType: SummaryValueFormatterEventHandler */
     /* blazorOnlyScript */
     /**
