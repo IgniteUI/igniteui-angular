@@ -93,6 +93,8 @@
     $icon-size: rem(18px);
 
     %advanced-filter {
+        @include sizable();
+
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
@@ -126,7 +128,11 @@
 
     %advanced-filter__header,
     %advanced-filter__main {
-        padding-inline: pad-inline(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($vertical-space, 'compact'),
+            map.get($vertical-space, 'cosy'),
+            map.get($vertical-space, 'comfortable')
+        );
         padding-block: rem(16px);
     }
 
@@ -145,7 +151,11 @@
         + %filter-tree,
         + %filter-tree__expression-item,
         + %filter-tree__inputs {
-            margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+            margin-top: pad(
+                map.get($vertical-space, 'compact'),
+                map.get($vertical-space, 'cosy'),
+                map.get($vertical-space, 'comfortable')
+            );
         }
     }
 
@@ -196,7 +206,11 @@
         + %filter-tree,
         + %filter-tree__inputs,
         + %filter-tree__expression-item {
-            margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+            margin-top: pad(
+                map.get($vertical-space, 'compact'),
+                map.get($vertical-space, 'cosy'),
+                map.get($vertical-space, 'comfortable')
+            );
         }
 
         > igx-chip igx-prefix {
@@ -236,12 +250,20 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+        margin-top: pad(
+            map.get($vertical-space, 'compact'),
+            map.get($vertical-space, 'cosy'),
+            map.get($vertical-space, 'comfortable')
+        );
 
         + %filter-tree,
         + %filter-tree__expression-item,
         + %filter-tree__inputs {
-            margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+            margin-top: pad(
+                map.get($vertical-space, 'compact'),
+                map.get($vertical-space, 'cosy'),
+                map.get($vertical-space, 'comfortable')
+            );
         }
     }
 
@@ -260,7 +282,11 @@
 
         + %filter-tree,
         + %filter-tree__expression-item {
-            margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+            margin-top: pad(
+                map.get($vertical-space, 'compact'),
+                map.get($vertical-space, 'cosy'),
+                map.get($vertical-space, 'comfortable')
+            );
         }
     }
 
@@ -326,7 +352,11 @@
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
         [igxButton] + igx-buttongroup {
-            margin-top: pad(map.get($vertical-space, 'compact'), map.get($vertical-space, 'cosy'), map.get($vertical-space, 'comfortable'));
+            margin-top: pad(
+                map.get($vertical-space, 'compact'),
+                map.get($vertical-space, 'cosy'),
+                map.get($vertical-space, 'comfortable')
+            );
         }
 
         > [igxButton]%filter-con-menu__close-btn + [igxButton],
@@ -380,7 +410,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: pad(map.get($filter-empty, 'compact'), map.get($filter-empty, 'cosy'), map.get($filter-empty, 'comfortable'));
+        height: pad(
+            map.get($filter-empty, 'compact'),
+            map.get($filter-empty, 'cosy'),
+            map.get($filter-empty, 'comfortable')
+        );
     }
 
     %filter-empty__title {

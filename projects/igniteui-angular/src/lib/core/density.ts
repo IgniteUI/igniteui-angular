@@ -121,6 +121,21 @@ export class DisplayDensityBase implements DoCheck, OnInit {
                 return baseStyleClass;
         }
     }
+
+    /**
+     * Sets the `--component-size` CSS variable based on the value of Display Density
+     */
+    protected getComponentSizeStyles(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
+    }
 }
 
 

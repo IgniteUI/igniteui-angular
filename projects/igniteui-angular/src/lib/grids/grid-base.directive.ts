@@ -1703,9 +1703,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
 
-    @HostBinding('class')
-    private get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+    @HostBinding('class.igx-grid')
+    protected baseClass = 'igx-grid';
+
+    @HostBinding('style.--component-size')
+    protected get hostStyles(): string {
+        return this.getComponentSizeStyles();
     }
 
     /**
