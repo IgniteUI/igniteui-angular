@@ -635,10 +635,12 @@ export interface GridType extends IGridDataBindable {
     deselectAllRows(onlyFilterData?: boolean): void;
     setUpPaginator(): void;
     createFilterDropdown(column: ColumnType, options: OverlaySettings): any;
+    updateCell(value: any, rowSelector: any, column: string): void;
     // Type to RowType
     createRow?(index: number, data?: any): RowType;
     deleteRow(id: any): any;
     deleteRowById(id: any): any;
+    updateRow(value: any, rowSelector: any): void;
     collapseRow(id: any): void;
     notifyChanges(repaint?: boolean): void;
     resetColumnCollections(): void;
