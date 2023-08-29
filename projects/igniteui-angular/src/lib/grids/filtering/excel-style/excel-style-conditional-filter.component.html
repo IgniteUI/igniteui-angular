@@ -13,7 +13,7 @@
     <igx-drop-down
         #subMenu
         [maxHeight]="'397px'"
-        [displayDensity]="esf.grid.displayDensity"
+        [displayDensity]="esf.displayDensity"
         (selectionChanging)="onSubMenuSelection($event)"
         (closed)="onSubMenuClosed()"
         [allowItemsFocus]="true">
@@ -40,6 +40,6 @@
         [column]="esf.column"
         [filteringService]="esf.grid.filteringService"
         [overlayComponentId]="esf.overlayComponentId"
-        [displayDensity]="esf.grid.displayDensity">
+        [displayDensity]="esf.splayDensity">
     </igx-excel-style-custom-dialog>
 </ng-container>
