@@ -2066,6 +2066,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return false;
         }
 
+        if (typeof index === 'string') {
+            index = Number(index)
+        }
+
         if (this.parent && !this.parent.pinned) {
             return this.topLevelParent.pin(index);
         }
@@ -2118,7 +2122,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            index === grid._pinnedColumns.length - 1 ? grid._moveColumns(this, targetColumn, 1) : grid._moveColumns(this, targetColumn, 0);
+            index === grid._pinnedColumns.length - 1 ? 
+            grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {
