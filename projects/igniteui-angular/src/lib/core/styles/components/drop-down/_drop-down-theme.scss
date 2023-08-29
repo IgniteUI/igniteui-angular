@@ -183,10 +183,10 @@
         shadow: $shadow,
         border-color: $border-color,
         border-width: $border-width,
+        size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
-        size: $size,
     ));
 }
 
@@ -200,6 +200,10 @@
     }
 
     %igx-drop-down__list {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --dropdown-size: var(--component-size);
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
@@ -235,10 +239,6 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        @include sizable();
-
-        --component-size: var(--ig-size, var(--ig-size-large));
-        --dropdown-size: var(--component-size);
         display: flex;
         justify-content: flex-start;
         align-items: center;
