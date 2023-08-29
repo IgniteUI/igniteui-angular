@@ -444,7 +444,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public _clickHandler(index: number) {
         const button = this.buttons[index];
-        const args: IButtonGroupEventArgs = { cancel: false, owner: this, button, index };
+        const args: IButtonGroupEventArgs = { cancel: false, button, index };
 
         if (!this.multiSelection) {
             this.buttons.forEach((b, i) => {
@@ -469,7 +469,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 }
 
 export interface IButtonGroupEventArgs extends IBaseEventArgs, CancelableEventArgs {
-    owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;
 }
