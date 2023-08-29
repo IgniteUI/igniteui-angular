@@ -295,7 +295,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public get displayDensity() {
-        switch(this._size) {
+        switch (this._size) {
             case '1':
                 return DisplayDensity.compact;
             case '2':
@@ -341,7 +341,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 .getPropertyValue(sizeVar)
                 .trim();
 
-            if(cssProp !== '') {
+            if (cssProp !== '') {
                 Promise.resolve().then(() => {
                     this._size$.next(cssProp);
                     this.cdr.markForCheck();
@@ -500,18 +500,18 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             }));
 
             this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
-            (obj, key) => {
-                let resolvedValue = obj[key];
-                if (this.column.dataType === GridColumnDataType.Time) {
-                    resolvedValue = new Date().setHours(
-                        resolvedValue.getHours(),
-                        resolvedValue.getMinutes(),
-                        resolvedValue.getSeconds(),
-                        resolvedValue.getMilliseconds());
-                }
+                (obj, key) => {
+                    let resolvedValue = obj[key];
+                    if (this.column.dataType === GridColumnDataType.Time) {
+                        resolvedValue = new Date().setHours(
+                            resolvedValue.getHours(),
+                            resolvedValue.getMinutes(),
+                            resolvedValue.getSeconds(),
+                            resolvedValue.getMilliseconds());
+                    }
 
-                return resolvedValue;
-            });
+                    return resolvedValue;
+                });
 
             this.renderValues();
             this.loadingEnd.emit();
