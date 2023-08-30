@@ -3,7 +3,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+        "igniteui-angular": [
+          "projects/igniteui-angular/src/public_api.ts"
+        ],
+        "igniteui-angular-i18n": [
+          "dist/igniteui-angular-i18n"
+        ]
+    }
   },
   "files": [
     "src/main.ts",
