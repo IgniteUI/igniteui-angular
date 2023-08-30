@@ -533,6 +533,7 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
 }
 
 @Component({
+    selector: 'igx-tabs-contacts',
     template: `
     <div #wrapperDiv>
         <igx-tabs>
