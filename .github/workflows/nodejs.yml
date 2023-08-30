@@ -36,6 +36,8 @@ jobs:
         run: npm run lint:i18n
       - name: Build Lib
         run: npm run build:lib
+      - name: Bundle Tree-Shake Test
+        run: npm run build:bundletest
       - name: Build TypeDoc & SassDoc
         run: |
             npm run build:typedoc:en:production
