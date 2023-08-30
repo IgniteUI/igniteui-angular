@@ -467,8 +467,3 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
     index: number;
 }
-
-/**
- * @hidden
- */
-
