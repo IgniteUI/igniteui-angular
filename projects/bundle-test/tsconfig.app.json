@@ -6,7 +6,7 @@
     "types": [],
     "paths": {
         "igniteui-angular": [
-          "projects/igniteui-angular/src/public_api.ts"
+          "dist/igniteui-angular"
         ],
         "igniteui-angular-i18n": [
           "dist/igniteui-angular-i18n"
