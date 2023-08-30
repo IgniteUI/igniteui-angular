@@ -472,8 +472,3 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs, CancelableEventAr
     button: IgxButtonDirective;
     index: number;
 }
-
-/**
- * @hidden
- */
-
