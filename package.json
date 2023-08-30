@@ -44,7 +44,7 @@
     "build:sassdoc:en:staging": "set NODE_ENV=staging && set SASSDOC_LANG=en && gulp sassdocBuildEN",
     "build:sassdoc:ja:production": "set NODE_ENV=production && set SASSDOC_LANG=jp && gulp sassdocBuildJA --render true",
     "build:sassdoc:ja:staging": "set NODE_ENV=staging && set SASSDOC_LANG=jp && gulp sassdocBuildJA --render true",
-    "build:i18n": "tsc --project projects/igniteui-angular-i18n/tsconfig.build.json",
+    "build:i18n": "tsc --project projects/igniteui-angular-i18n/tsconfig.build.json && cp projects/igniteui-angular-i18n/package.json dist/igniteui-angular-i18n/package.json",
     "build:bundletest": "ng build bundle-test --configuration production",
     "lint:i18n": "eslint projects/igniteui-angular-i18n/src/**/*.ts",
     "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
