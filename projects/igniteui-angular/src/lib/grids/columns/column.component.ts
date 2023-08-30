@@ -2058,15 +2058,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public pin(index?: any): boolean {
+    public pin(index?: number): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         const grid = (this.grid as any);
         if (this._pinned) {
             return false;
         }
-
-        index = parseInt(index, 10);
 
         if (this.parent && !this.parent.pinned) {
             return this.topLevelParent.pin(index);
