@@ -52,8 +52,8 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
-export * from './lib/action-strip/public_api';
 export * from './lib/accordion/public_api';
+export * from './lib/action-strip/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/public_api';
@@ -70,6 +70,7 @@ export * from './lib/dialog/public_api';
 export * from './lib/drop-down/public_api';
 export * from './lib/grids/public_api';
 export * from './lib/grids/grid/public_api';
+export * from './lib/grids/pivot-grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
 export * from './lib/icon/public_api';
@@ -94,7 +95,6 @@ export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
 export * from './lib/tree/public_api';
-export * from './lib/grids/pivot-grid/public_api';
 export * from './lib/query-builder/public_api';
 
 /**

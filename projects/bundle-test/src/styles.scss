@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+@use '../../igniteui-angular/src/lib/core/styles/themes' as *;
+
+$primary: #fff;
+$secondary: #FF0A3A;
+$gray: #ddd;
+$background: #192053;
+
+$app-palette: palette(
+  $primary: $primary,
+  $secondary: $secondary,
+  $surface: $background,
+  $gray: $gray
+);
+
+@include core();
+@include typography();
+
+$include: (
+  igx-chip
+);
+
+@include light-theme(
+  $palette: $app-palette,
+  $exclude: map-keys(map-remove($components, $include...),)
+);
