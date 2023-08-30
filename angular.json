@@ -304,10 +304,6 @@
             ],
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/bundle-test/src/favicon.ico",
-              "projects/bundle-test/src/assets"
-            ],
             "styles": [
               "projects/bundle-test/src/styles.scss"
             ],
@@ -372,10 +368,6 @@
             ],
             "tsConfig": "projects/bundle-test/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/bundle-test/src/favicon.ico",
-              "projects/bundle-test/src/assets"
-            ],
             "styles": [
               "projects/bundle-test/src/styles.scss"
             ],
