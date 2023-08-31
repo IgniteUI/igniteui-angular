@@ -45,7 +45,7 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeAll(waitForAsync(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,
@@ -235,8 +235,8 @@ describe('IgxButtonGroup', () => {
         UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
         UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
         expect(buttongroup.selectedButtons.length).toBe(0);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[3].nativeElement);
+        buttongroup.buttons[0].nativeElement.click();
+        buttongroup.buttons[3].nativeElement.click();
         // Button 3 is disabled, and it should not be selected with mouse click
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
