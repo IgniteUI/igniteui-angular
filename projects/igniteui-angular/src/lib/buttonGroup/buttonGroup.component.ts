@@ -447,7 +447,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         if (!this.multiSelection) {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselected.emit(args);
+                    this.deselected.emit({ cancel: false, button: b, index: i });
                 }
             });
         }
