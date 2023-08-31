@@ -186,6 +186,17 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             });
 
+            it('should pin the column on the last position if the index for the last position is provided', () => {
+                grid.pinColumn('CompanyName');
+                fix.detectChanges();
+
+                grid.pinColumn('City', 2);
+                fix.detectChanges();
+
+                expect(grid.pinnedColumns.length).toEqual(3);
+                expect(grid.pinnedColumns[2].field).toEqual('City');
+            });
+
             it('should correctly initialize pinned columns z-index values.', () => {
 
                 const headers = GridFunctions.getColumnHeaders(fix);
