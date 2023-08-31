@@ -1109,12 +1109,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
-    /* contentChild */
+    /* contentChildren */
     /* blazorInclude */
-    /* ngQueryListName: actionStrip */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ActionStripCollection */
+    /* ngQueryListName: actionStripComponents */
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent)
-    public actionStrip: IgxActionStripComponent;
+    @ContentChildren(IgxActionStripComponent)
+    protected actionStripComponents: QueryList<IgxActionStripComponent>;
+
+    /** @hidden @internal */
+    public get actionStrip() {
+        return this.actionStripComponents?.first;
+    }
 
     /**
      * @hidden @internal
