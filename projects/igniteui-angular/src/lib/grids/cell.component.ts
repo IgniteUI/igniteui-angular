@@ -255,7 +255,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get context(): IgxCellTemplateContext {
-        const getCellType = () => this.editMode ? this.grid.crudService.cell : this.getCellType(true);
+        const getCellType = () => this.getCellType(true);
         const ctx: IgxCellTemplateContext = {
             $implicit: this.value,
             additionalTemplateContext: this.column.additionalTemplateContext,
@@ -1242,6 +1242,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.data) : this.intRow.index;
-        return new IgxGridCell(this.grid, rowID, this.column.field);
+        return new IgxGridCell(this.grid, rowID, this.column);
     }
 }
