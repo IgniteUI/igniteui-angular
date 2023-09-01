@@ -177,9 +177,7 @@
         transition: width, transform;
         transition-timing-function: $out-quad, $out-quad;
         box-shadow: var-get($theme, 'shadow');
-        @if $variant != 'indigo-design' {
-            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
-        }
+        border-inline-end: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
     }
 
