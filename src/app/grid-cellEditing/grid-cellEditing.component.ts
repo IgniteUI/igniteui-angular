@@ -3,13 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
-import { IgxInputGroupModule } from "../../../projects/igniteui-angular/src/lib/input-group/input-group.module";
 
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective, IgxInputGroupModule]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
