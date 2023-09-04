@@ -3484,6 +3484,30 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
         }));
 
+        it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
+            fakeAsync(() => {
+                const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+                fix.detectChanges();
+                const grid = fix.componentInstance.instance;
+                fix.componentInstance.columns = [];
+                grid.hideGroupedColumns = true;
+                fix.detectChanges();
+                tick();
+                fix.detectChanges();
+                fix.componentInstance.columns = [
+                    { field: 'A', width: 100 },
+                    { field: 'B', width: 100 },
+                    { field: 'C', width: 100 }
+                ];
+                grid.groupingExpressions = [
+                    { fieldName: 'A', dir: SortingDirection.Asc }
+                ];
+                fix.detectChanges();
+                tick();
+
+                expect(grid.getColumnByName('A').hidden).toBe(true);
+        }));
+
     it('should respect current sorting direction when grouping', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

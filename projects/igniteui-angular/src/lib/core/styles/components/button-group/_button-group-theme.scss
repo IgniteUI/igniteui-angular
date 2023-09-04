@@ -212,7 +212,7 @@
             }
         }
 
-        &:not(:nth-child(0)) {
+        &:not(:nth-child(1)) {
             margin-inline-start: rem(-1px);
         }
 
@@ -250,7 +250,7 @@
     }
 
     %igx-group-item-vertical {
-        &:not(:nth-child(0)) {
+        &:not(:nth-child(1)) {
             margin-top: rem(-1px);
             margin-inline-start: 0;
         }
