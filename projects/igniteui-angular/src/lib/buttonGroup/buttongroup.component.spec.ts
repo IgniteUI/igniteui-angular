@@ -45,13 +45,14 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeAll(waitForAsync(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
                 TemplatedButtonGroupComponent,
-                TemplatedButtonGroupDesplayDensityComponent
+                TemplatedButtonGroupDesplayDensityComponent,
+                ButtonGroupWithSelectedButtonComponent
             ],
             imports: [
                 IgxButtonGroupModule,
@@ -95,6 +96,54 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.itemContentCssClass).toEqual('customContentStyle');
         expect(buttongroup.selectedIndexes.length).toEqual(0);
         expect(buttongroup.selectedButtons.length).toEqual(0);
+    });
+
+    it('should fire the selected event when a button is selected by user interaction, not on initial or programmatic selection', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        spyOn(btnGroupInstance.selected, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].select();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
+    });
+
+    it('should fire the deselected event when a button is deselected by user interaction, not on programmatic deselection', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        btnGroupInstance.buttons[0].select();
+        btnGroupInstance.buttons[1].select();
+        spyOn(btnGroupInstance.deselected, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].deselect();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
     });
 
    it('Button Group single selection', () => {
@@ -145,8 +194,8 @@ describe('IgxButtonGroup', () => {
         UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
         UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
         expect(buttongroup.selectedButtons.length).toBe(0);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[3].nativeElement);
+        buttongroup.buttons[0].nativeElement.click();
+        buttongroup.buttons[3].nativeElement.click();
         // Button 3 is disabled, and it should not be selected with mouse click
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
@@ -359,5 +408,14 @@ class TemplatedButtonGroupComponent {
                             <button igxButton>London</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupDesplayDensityComponent {
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+}
+
+@Component({ template: `<igx-buttongroup>
+                            <button igxButton [selected]="true">Button 0</button>
+                            <button igxButton>Button 1</button>
+                            <button igxButton>Button 2</button>
+                        </igx-buttongroup>` })
+class ButtonGroupWithSelectedButtonComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }
