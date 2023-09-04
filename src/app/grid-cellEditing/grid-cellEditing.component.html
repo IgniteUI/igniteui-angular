@@ -69,3 +69,64 @@
 </igx-grid>
 <button igxButton="raised" (click)="moveColumns()">Move OrderDate and ProductName</button>
 <button igxButton="raised" (click)="updateSelectedCell()">Update Selected Cell</button>
+<h4 class="sample-title"></h4>
+<h4 class="sample-title">Cell Editing with more than one column bound to the same data</h4>
+<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
+    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="string" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true" >
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="string" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="date" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="date" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="number" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>  
+    </igx-column>
+    <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="number" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="boolean" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
+        <ng-template igxCellEditor let-cell="cell">
+            <igx-input-group>
+              <input igxInput type="boolean" [(ngModel)]="cell.editValue" />
+            </igx-input-group>
+        </ng-template>
+    </igx-column>
+    <igx-paginator></igx-paginator>
+</igx-grid>
