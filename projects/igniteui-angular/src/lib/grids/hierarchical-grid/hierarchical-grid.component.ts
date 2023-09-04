@@ -68,11 +68,11 @@ let NEXT_ID = 0;
 
 export interface HierarchicalStateRecord {
     /**
-     * @deprecated since version 16.0.0
+     * @deprecated since version 16.1.0
      * Use `key` instead
-     // TODO remove this interfacxe?
+     // TODO remove this interface?
      */
-    
+
     rowID: any;
     key: any;
 }
