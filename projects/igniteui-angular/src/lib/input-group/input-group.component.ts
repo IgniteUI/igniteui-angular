@@ -159,16 +159,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /** @hidden @internal */
     @HostBinding('style.--component-size')
-    public get size() {
-        switch(this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /** @hidden */
@@ -246,7 +238,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
 
         this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;

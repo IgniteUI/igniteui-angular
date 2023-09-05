@@ -152,7 +152,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
         private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
     }
 
     /**
@@ -305,16 +305,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     @HostBinding('style.--component-size')
-    public get size(): string {
-        switch(this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /**

@@ -2617,7 +2617,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
-        return `${this.getComponentDensityClass('igx-banner')} ${position}`;
+        return `igx-banner ${position}`;
     }
 
     /**
@@ -3298,7 +3298,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;

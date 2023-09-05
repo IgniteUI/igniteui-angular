@@ -1,15 +1,30 @@
-import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit, Directive, Optional, Inject } from '@angular/core';
-import { IBaseEventArgs, mkenum } from './utils';
+import { DOCUMENT } from "@angular/common";
+import {
+    InjectionToken,
+    Input,
+    Output,
+    EventEmitter,
+    DoCheck,
+    OnInit,
+    Directive,
+    Optional,
+    Inject,
+    inject,
+    ElementRef,
+    HostBinding,
+} from "@angular/core";
+import { IBaseEventArgs, mkenum } from "./utils";
 
 /**
  * Defines the possible values of the components' display density.
  */
 export const DisplayDensity = mkenum({
-    comfortable: 'comfortable',
-    cosy: 'cosy',
-    compact: 'compact'
+    comfortable: "comfortable",
+    cosy: "cosy",
+    compact: "compact",
 });
-export type DisplayDensity = (typeof DisplayDensity)[keyof typeof DisplayDensity];
+export type DisplayDensity =
+    (typeof DisplayDensity)[keyof typeof DisplayDensity];
 
 /**
  * Describes the object used to configure the DisplayDensity in Angular DI.
@@ -27,18 +42,22 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
  * @hidden
  * Defines the DisplayDensity DI token.
  */
-export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('DisplayDensity');
+export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
+    "DisplayDensity"
+);
 
 /**
  * @hidden
  * Base class containing all logic required for implementing DisplayDensity.
  */
 @Directive({
-    selector: '[igxDisplayDensityBase]',
-    standalone: true
+    selector: "[igxDisplayDensityBase]",
+    standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
+    private _document: Document = inject(DOCUMENT);
+
     @Output()
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
@@ -52,8 +71,23 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      */
     @Input()
     public get displayDensity(): DisplayDensity {
-        return this._displayDensity ||
-            ((this.displayDensityOptions && this.displayDensityOptions.displayDensity) || DisplayDensity.comfortable);
+        if (!this.size) {
+            return (
+                this._displayDensity ??
+                this.displayDensityOptions?.displayDensity ??
+                DisplayDensity.comfortable
+            );
+        }
+
+        switch (this.size) {
+            case "1":
+                return DisplayDensity.compact;
+            case "2":
+                return DisplayDensity.cosy;
+            case "3":
+            default:
+                return DisplayDensity.comfortable;
+        }
     }
 
     /**
@@ -66,11 +100,18 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         if (currentDisplayDensity !== this._displayDensity) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: currentDisplayDensity,
-                newDensity: this._displayDensity
+                newDensity: this._displayDensity,
             };
 
             this.densityChanged.emit(densityChangedArgs);
         }
+    }
+
+    public get size() {
+        return this._document.defaultView
+            .getComputedStyle(this._host.nativeElement)
+            .getPropertyValue("--ig-size")
+            .trim();
     }
 
     /**
@@ -78,11 +119,17 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      */
     public initialDensity: DisplayDensity;
 
-    protected oldDisplayDensityOptions: IDisplayDensityOptions = { displayDensity: DisplayDensity.comfortable };
+    protected oldDisplayDensityOptions: IDisplayDensityOptions = {
+        displayDensity: DisplayDensity.comfortable,
+    };
     protected _displayDensity: DisplayDensity;
 
-
-    constructor(@Optional() @Inject(DisplayDensityToken) protected displayDensityOptions: IDisplayDensityOptions) {
+    constructor(
+        @Optional()
+        @Inject(DisplayDensityToken)
+        protected displayDensityOptions: IDisplayDensityOptions,
+        protected _host: ElementRef
+    ) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
     }
 
@@ -95,15 +142,22 @@ export class DisplayDensityBase implements DoCheck, OnInit {
 
     /** @hidden @internal **/
     public ngDoCheck() {
-        if (!this._displayDensity && this.displayDensityOptions &&
-                this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
+        if (
+            !this._displayDensity &&
+            this.displayDensityOptions &&
+            this.oldDisplayDensityOptions.displayDensity !==
+                this.displayDensityOptions.displayDensity
+        ) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: this.oldDisplayDensityOptions.displayDensity,
-                newDensity: this.displayDensityOptions.displayDensity
+                newDensity: this.displayDensityOptions.displayDensity,
             };
 
             this.densityChanged.emit(densityChangedArgs);
-            this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
+            this.oldDisplayDensityOptions = Object.assign(
+                this.oldDisplayDensityOptions,
+                this.displayDensityOptions
+            );
         }
     }
 
@@ -125,17 +179,15 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     /**
      * Sets the `--component-size` CSS variable based on the value of Display Density
      */
-    protected getComponentSizeStyles(): string {
+    public getComponentSizeStyles() {
         switch (this.displayDensity) {
             case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
+                return "var(--ig-size, var(--ig-size-small))";
             case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
+                return "var(--ig-size, var(--ig-size-medium))";
             case DisplayDensity.comfortable:
             default:
-                return 'var(--ig-size, var(--ig-size-large))';
+                return "var(--ig-size, var(--ig-size-large))";
         }
     }
 }
-
-

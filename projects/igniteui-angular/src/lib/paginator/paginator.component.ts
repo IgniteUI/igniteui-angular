@@ -117,16 +117,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /** @hidden @internal */
     @HostBinding('style.--component-size')
-    public get size() {
-        switch(this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -260,7 +252,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
     }
 
     /**

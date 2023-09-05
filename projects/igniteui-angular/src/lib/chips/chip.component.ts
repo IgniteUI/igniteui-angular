@@ -514,31 +514,13 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
         return this.variant === IgxChipTypeVariant.DANGER;
     }
 
-    @HostBinding('class.igx-chip--cosy')
-    protected get isCosy() {
-        return this.displayDensity === 'cosy';
-    }
-
-    @HostBinding('class.igx-chip--compact')
-    protected get isCompact() {
-        return this.displayDensity === 'compact';
-    }
-
     /**
      * @hidden
      * @internal
      */
     @HostBinding('style.--component-size')
-    public get size(): string {
-        switch(this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
+    public get componentSize(): string {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -601,8 +583,6 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get ghostStyles() {
-        // Ideally this should depend on the `--component-size` variable from the host element.
-        // In essence carrying it over to the created ghost.
         switch(this.displayDensity) {
             case DisplayDensity.compact:
                 return {
@@ -645,7 +625,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
 
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, ref);
     }
 
     /**

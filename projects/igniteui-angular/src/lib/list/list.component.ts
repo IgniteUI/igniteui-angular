@@ -469,7 +469,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
     }
 
     /**
@@ -521,17 +521,9 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /** @hidden @internal */
     @HostBinding('style.--component-size')
-    public get size() {
+    public get componentSize() {
         if (!this.isListEmpty) {
-            switch(this.displayDensity) {
-                case DisplayDensity.compact:
-                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-small))';
-                case DisplayDensity.cosy:
-                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-medium))';
-                case DisplayDensity.comfortable:
-                default:
-                    return !this.isListEmpty && 'var(--ig-size, var(--ig-size-large))';
-            }
+            return this.getComponentSizeStyles();
         }
     }
 

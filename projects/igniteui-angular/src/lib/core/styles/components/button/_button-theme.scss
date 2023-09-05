@@ -469,7 +469,7 @@
         min-width: $button-width;
         padding-inline: pad-inline(
             map.get($button-padding-inline, 'compact'),
-            map.get($button-padding-inline, 'cosy'), 
+            map.get($button-padding-inline, 'cosy'),
             map.get($button-padding-inline, 'comfortable')
         );
         padding-block: pad-block(
@@ -511,8 +511,8 @@
     igx-grid-filtering-row {
         @if ($variant == 'bootstrap') {
             --filtering-row-button-size: #{sizable(
-                #{map.get($filtering-row-button-size, 'compact')}, 
-                #{map.get($filtering-row-button-size, 'cosy')}, 
+                #{map.get($filtering-row-button-size, 'compact')},
+                #{map.get($filtering-row-button-size, 'cosy')},
                 #{map.get($filtering-row-button-size, 'comfortable')}
             )};
 
@@ -784,7 +784,7 @@
             map.get($button-floating-padding-block, 'comfortable')
         );
         padding-inline: pad-inline(
-            map.get($button-floating-padding-inline, 'compact'), 
+            map.get($button-floating-padding-inline, 'compact'),
             map.get($button-floating-padding-inline, 'cosy'),
             map.get($button-floating-padding-inline, 'comfortable')
         );

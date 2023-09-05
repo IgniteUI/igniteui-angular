@@ -101,15 +101,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /** @hidden @internal */
     @HostBinding('style.--component-size')
     public get size() {
-        switch(this.dropDown.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
+        return this.dropDown.getComponentSizeStyles();
     }
 
     /**
