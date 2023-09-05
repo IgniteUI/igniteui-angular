@@ -6058,7 +6058,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Finishes the row transactions on the current row.
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled. 
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
@@ -6070,8 +6070,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
-    public endEdit(commit = true, event?: Event) {
-        this.crudService.endEdit(commit, event);
+    public endEdit(commit = true, event?: Event): boolean {
+        return this.crudService.endEdit(commit, event);
     }
 
     /**
