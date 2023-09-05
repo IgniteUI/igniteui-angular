@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
-    DisplayDensity, DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
+    DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
 } from '../core/density';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';

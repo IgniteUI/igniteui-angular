@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';

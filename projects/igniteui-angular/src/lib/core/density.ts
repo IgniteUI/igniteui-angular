@@ -1,4 +1,4 @@
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common';
 import {
     InjectionToken,
     Input,
@@ -11,17 +11,16 @@ import {
     Inject,
     inject,
     ElementRef,
-    HostBinding,
-} from "@angular/core";
-import { IBaseEventArgs, mkenum } from "./utils";
+} from '@angular/core';
+import { IBaseEventArgs, mkenum } from './utils';
 
 /**
  * Defines the possible values of the components' display density.
  */
 export const DisplayDensity = mkenum({
-    comfortable: "comfortable",
-    cosy: "cosy",
-    compact: "compact",
+    comfortable: 'comfortable',
+    cosy: 'cosy',
+    compact: 'compact',
 });
 export type DisplayDensity =
     (typeof DisplayDensity)[keyof typeof DisplayDensity];
@@ -43,7 +42,7 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
  * Defines the DisplayDensity DI token.
  */
 export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
-    "DisplayDensity"
+    'DisplayDensity'
 );
 
 /**
@@ -51,7 +50,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
  * Base class containing all logic required for implementing DisplayDensity.
  */
 @Directive({
-    selector: "[igxDisplayDensityBase]",
+    selector: '[igxDisplayDensityBase]',
     standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
@@ -80,11 +79,11 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         }
 
         switch (this.size) {
-            case "1":
+            case '1':
                 return DisplayDensity.compact;
-            case "2":
+            case '2':
                 return DisplayDensity.cosy;
-            case "3":
+            case '3':
             default:
                 return DisplayDensity.comfortable;
         }
@@ -110,7 +109,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public get size() {
         return this._document.defaultView
             .getComputedStyle(this._host.nativeElement)
-            .getPropertyValue("--ig-size")
+            .getPropertyValue('--ig-size')
             .trim();
     }
 
@@ -182,12 +181,12 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public getComponentSizeStyles() {
         switch (this.displayDensity) {
             case DisplayDensity.compact:
-                return "var(--ig-size, var(--ig-size-small))";
+                return 'var(--ig-size, var(--ig-size-small))';
             case DisplayDensity.cosy:
-                return "var(--ig-size, var(--ig-size-medium))";
+                return 'var(--ig-size, var(--ig-size-medium))';
             case DisplayDensity.comfortable:
             default:
-                return "var(--ig-size, var(--ig-size-large))";
+                return 'var(--ig-size, var(--ig-size-large))';
         }
     }
 }

@@ -10,7 +10,7 @@ import {
     Optional,
     Inject
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 

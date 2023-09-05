@@ -27,7 +27,7 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { IListResourceStrings } from '../core/i18n/list-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
