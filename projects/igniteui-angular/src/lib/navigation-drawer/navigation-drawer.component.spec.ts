@@ -19,8 +19,8 @@ describe('Navigation Drawer', () => {
         // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             imports: [
-                TestComponentPin,
-                TestComponentMini,
+                TestComponentPinComponent,
+                TestComponentMiniComponent,
                 TestComponent,
                 TestComponentDIComponent
             ]
@@ -215,7 +215,7 @@ describe('Navigation Drawer', () => {
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentMini, {
+        TestBed.overrideComponent(TestComponentMiniComponent, {
             set: {
                 template
             }
@@ -225,7 +225,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentMini);
+            fixture = TestBed.createComponent(TestComponentMiniComponent);
             fixture.detectChanges();
             asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside'));
 
@@ -245,7 +245,7 @@ describe('Navigation Drawer', () => {
     it('should set pin, gestures options', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
                             </igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentPin, {
+        TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
                 template
             }
@@ -253,7 +253,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(TestComponentPin);
+            const fixture = TestBed.createComponent(TestComponentPinComponent);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.pin).toBeTruthy();
@@ -278,11 +278,11 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>
                           </div>`;
 
-        TestBed.overrideComponent(TestComponentPin, { set: { template } });
+        TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
                 document.body.style.overflow = 'hidden';
-                const fixture = TestBed.createComponent(TestComponentPin);
+                const fixture = TestBed.createComponent(TestComponentPinComponent);
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
                 const container = fixture.debugElement.query(By.css('div')).nativeElement;
@@ -309,10 +309,10 @@ describe('Navigation Drawer', () => {
 
     it('should set flex-basis and order when pinned', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentPin, { set: { template } });
+        TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
-                const fixture = TestBed.createComponent(TestComponentPin);
+                const fixture = TestBed.createComponent(TestComponentPinComponent);
                 const drawer = fixture.componentInstance.navDrawer;
                 drawer.isOpen = true;
                 fixture.detectChanges();
@@ -485,7 +485,7 @@ describe('Navigation Drawer', () => {
 
     it('should update pin based on window width (pinThreshold)', async () => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
-        TestBed.overrideComponent(TestComponentPin, {
+        TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
                 template
             }
@@ -493,7 +493,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         await TestBed.compileComponents();
-        const fixture: ComponentFixture<TestComponentPin> = TestBed.createComponent(TestComponentPin);
+        const fixture: ComponentFixture<TestComponentPinComponent> = TestBed.createComponent(TestComponentPinComponent);
 
         // watch for initial pin with 2-way bind expression changed errors
         expect(() => fixture.detectChanges()).not.toThrow();
@@ -611,7 +611,7 @@ class TestComponent {
 
 @Component({
     providers: [IgxNavigationService],
-    selector: 'igx-test-cmp',
+    selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
@@ -622,12 +622,26 @@ class TestComponentDIComponent {
     public drawerWidth: string | number;
 }
 
-class TestComponentPin extends TestComponentDIComponent {
+@Component({
+    selector: 'igx-test-cmp-pin',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+})
+class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
     public enableGestures = '';
     public pinThreshold = 1024;
 }
 
-class TestComponentMini extends TestComponentDIComponent {
+@Component({
+    selector: 'igx-test-cmp-mini',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+})
+class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;
 }

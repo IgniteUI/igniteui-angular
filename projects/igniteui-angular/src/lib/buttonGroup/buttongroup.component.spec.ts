@@ -45,7 +45,7 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeAll(waitForAsync(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -141,6 +141,47 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
     });
 
+    it('should not select the button on click if event is canceled ', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        fixture.detectChanges();
+
+        btnGroupInstance.buttons[1].select();
+        fixture.detectChanges();
+
+        btnGroupInstance.selected.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.buttons[0].selected).toBe(false);
+    });
+
+    it('should not deselect the button on click if event is canceled ', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        fixture.detectChanges();
+
+        btnGroupInstance.deselected.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.buttons[0].selected).toBe(true);
+    });
+
    it('Button Group single selection', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
@@ -189,8 +230,8 @@ describe('IgxButtonGroup', () => {
         UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
         UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
         expect(buttongroup.selectedButtons.length).toBe(0);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[3].nativeElement);
+        buttongroup.buttons[0].nativeElement.click();
+        buttongroup.buttons[3].nativeElement.click();
         // Button 3 is disabled, and it should not be selected with mouse click
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
@@ -350,7 +391,7 @@ class InitButtonGroupComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+    <igx-buttongroup [multiSelection]="true" itemContentCssClass="customContentStyle"
         [values]="cities" [alignment]="alignment">
     </igx-buttongroup>
     `,

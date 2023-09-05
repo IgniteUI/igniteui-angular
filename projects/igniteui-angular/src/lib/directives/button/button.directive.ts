@@ -338,9 +338,3 @@ export class IgxButtonDirective extends DisplayDensityBase {
 export interface IButtonEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
 }
-
-/**
- *
- * @hidden
- */
-
