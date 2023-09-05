@@ -1,6 +1,6 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { ElementRef, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import {
@@ -833,4 +833,9 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 export const rem = (value: number | string) => {
     const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
     return Number(value) / base;
+}
+
+/** Get the size of the component as derived from the CSS size variable */
+export function getComponentSize(el: Element) {
+    return window.getComputedStyle(el).getPropertyValue('--component-size');
 }

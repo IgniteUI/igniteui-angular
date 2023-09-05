@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxInputState } from '../directives/input/input.directive';
@@ -53,15 +53,6 @@ const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
-const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
-const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
-const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
-const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
-const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_EMPTY = 'igx-combo__empty';
@@ -3096,20 +3087,20 @@ describe('igxCombo', () => {
                     form.markAllAsTouched();
                     form.get('townCombo').setErrors({ error: true });
                     fixture.detectChanges();
-    
+
                     expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
-                
+
                     // remove the validators and set errors
                     form.get('townCombo').clearValidators();
                     form.markAsUntouched();
                     fixture.detectChanges();
-    
+
                     form.markAllAsTouched();
                     form.get('townCombo').setErrors({ error: true });
                     fixture.detectChanges();
-    
+
                     // no validator, but there is a set error
                     expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
@@ -3245,24 +3236,22 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
             });
-            it('should apply correct styles to items and input when Display Density is set', () => {
+            it('should apply correct styles to items when Display Density is set', () => {
                 combo.toggle();
                 fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COSY).length).toBe(2);
+                combo.dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('2');
+                });
                 fixture.componentInstance.density = DisplayDensity.compact;
                 fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMPACT).length).toBe(2);
+                combo.dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('1');
+                });
                 fixture.componentInstance.density = DisplayDensity.comfortable;
                 fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_ITEM).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMFORTABLE).length).toBe(2);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+                combo.dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('3');
+                });
             });
             it('should scale items container depending on displayDensity (itemHeight * 10)', () => {
                 combo.toggle();
