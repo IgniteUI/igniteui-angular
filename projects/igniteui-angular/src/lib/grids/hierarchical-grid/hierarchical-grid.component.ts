@@ -751,7 +751,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            return new IgxGridCell(this, rowIndex, column);
         }
     }
 
@@ -771,7 +771,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
