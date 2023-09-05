@@ -1384,7 +1384,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override endEdit(_commit = true, _event?: Event) {
+    public override endEdit(_commit = true, _event?: Event): any {
     }
 
     /**
