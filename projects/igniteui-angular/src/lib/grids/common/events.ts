@@ -14,7 +14,7 @@ export interface IGridClipboardEvent {
 
 export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: CellType;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     event: Event;
 }
 
@@ -136,7 +136,7 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
 export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     target: any;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     event: Event;
     cancel: boolean;
 }
@@ -191,7 +191,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The scroll direction - vertical or horizontal. */
     direction: string;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /** The original browser scroll event. */
     event: Event;
     /** The new scroll position */
