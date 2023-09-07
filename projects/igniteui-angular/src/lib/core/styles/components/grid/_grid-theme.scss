@@ -2474,6 +2474,8 @@
     }
 
     %igx-grid__outlet {
+        --ig-size: var(--grid-size);
+
         z-index: 10002;
         position: fixed;
     }
@@ -2835,7 +2837,7 @@
     %igx-grid__hierarchical-indent {
         display: flex;
         margin-inline-start: pad-inline(
-            map.get($hierarchical-indent, 'compact'), 
+            map.get($hierarchical-indent, 'compact'),
             map.get($hierarchical-indent, 'cosy'),
             map.get($hierarchical-indent, 'comfortable')
         );

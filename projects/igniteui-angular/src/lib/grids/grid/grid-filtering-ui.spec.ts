@@ -1844,7 +1844,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(300);
 
             verifyMultipleChipsVisibility(fix, [true, true, false, false]);
 

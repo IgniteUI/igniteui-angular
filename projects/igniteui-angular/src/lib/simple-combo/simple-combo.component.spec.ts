@@ -2036,7 +2036,7 @@ describe('IgxSimpleCombo', () => {
 
             // Scroll selected item out of view
             combo.virtualScrollContainer.scrollTo(40);
-            await wait();
+            await wait(300);
             fixture.detectChanges();
 
             input.nativeElement.focus();

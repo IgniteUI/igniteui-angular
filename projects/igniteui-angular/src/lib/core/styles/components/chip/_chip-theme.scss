@@ -398,7 +398,7 @@
         // hacking `overflow: hidden` with border radius
         // not playing nicely together
         filter: opacity(1);
-        transition: all 120ms ease-in;
+        // transition: all 120ms ease-in;
 
         igx-avatar {
             display: flex !important;
