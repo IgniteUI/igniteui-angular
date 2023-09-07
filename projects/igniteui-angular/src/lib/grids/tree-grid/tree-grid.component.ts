@@ -832,7 +832,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, columnField);
+            return new IgxGridCell(this as any, rowIndex, column);
         }
     }
 
@@ -852,7 +852,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this as any, row.index, columnField);
+            return new IgxGridCell(this as any, row.index, column);
         }
     }
 
