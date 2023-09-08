@@ -161,6 +161,10 @@
         color: var-get($theme, 'button-arrow-color');
         background: var-get($theme, 'button-background');
         box-shadow: var-get($theme, 'button-shadow');
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-nav-arrow--disabled {

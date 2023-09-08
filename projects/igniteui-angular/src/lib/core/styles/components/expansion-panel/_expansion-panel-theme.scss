@@ -194,6 +194,7 @@
         color: var-get($theme, 'header-icon-color');
 
         igx-icon {
+            --component-size: 3;
             color: var-get($theme, 'header-icon-color');
         }
     }

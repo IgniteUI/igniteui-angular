@@ -1374,6 +1374,10 @@
         [dir='rtl'] & {
             transform: scaleX(-1);
         }
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-grid__tree-loading-indicator {
