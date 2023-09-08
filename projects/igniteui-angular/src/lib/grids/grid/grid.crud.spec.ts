@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../common/events';
+import { ICellEditEventArgs, IRowEditEventArgs } from '../common/events';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -359,7 +359,7 @@ export class DefaultCRUDGridComponent {
         { index: 1, value: 1}
     ];
 
-    public editDone(event: IGridEditEventArgs) {
+    public editDone(event: ICellEditEventArgs | IRowEditEventArgs) {
         if (event.newValue === 666) {
             event.newValue = event.cellID ? 777 : { index: 777, value: 777 };
         }

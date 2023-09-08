@@ -48,9 +48,9 @@ import {
     ICellEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
-    IColumnVisibilityChangedEventArgs, 
+    IColumnVisibilityChangedEventArgs,
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -530,7 +530,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowAdd = new EventEmitter<IRowDataEventArgs>();
+    public override rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * @hidden @internal
@@ -548,7 +548,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowDelete = new EventEmitter<IRowDataEventArgs>();
+    public override rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * @hidden @internal

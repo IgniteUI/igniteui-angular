@@ -15,7 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
+import { ICellEditDoneEventArgs, ICellEditEventArgs, IGridEditDoneEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -591,9 +591,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = {
+            let cellArgs: ICellEditEventArgs = {
                 rowID: cell.row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -618,7 +618,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell2.id,
                 rowID: cell2.row.key,
-                primaryKey: cell2.row.key,
+                rowKey: cell2.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
                 oldValue: 20,
@@ -635,7 +635,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should be able to cancel 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            grid.cellEditEnter.subscribe((e: IGridEditEventArgs) => {
+            grid.cellEditEnter.subscribe((e: ICellEditEventArgs) => {
                 e.cancel = true;
             });
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -645,9 +645,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = {
+            let cellArgs: ICellEditEventArgs = {
                 cellID: cell.cellID,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -673,7 +673,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             cellArgs = {
                 cellID: cell.cellID,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -702,9 +702,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditDoneEventArgs = {
+            let cellArgs: ICellEditDoneEventArgs = {
                 rowID: cell.row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -728,7 +728,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             initialRowData = {...cell.row.data};
             cellArgs = {
                 cellID: cell.cellID,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -745,7 +745,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should properly emit 'cellEdit' event`, () => {
             spyOn(grid.cellEdit, 'emit').and.callThrough();
-            let cellArgs: IGridEditEventArgs;
+            let cellArgs: ICellEditEventArgs;
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -763,7 +763,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 data: cell.row.data,
@@ -791,7 +791,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 data: cell.row.data,
@@ -809,7 +809,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
             const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
-            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
+            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
                 e.cancel = true;
             });
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -830,9 +830,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
 
-            const cellArgs: IGridEditEventArgs = {
+            const cellArgs: ICellEditEventArgs = {
                 rowID: cell.row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -887,7 +887,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             spyOn(grid.cellEdit, 'emit').and.callThrough();
-            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
+            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
                 if (e.cellID.columnID === 0) {
                     grid.updateCell(1, e.rowID, 'age');
                 }
@@ -929,7 +929,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // update the cell value via updateRow and cancel the event
-            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
+            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.gridAPI.get_row_by_index(rowIndex);
                 grid.updateRow({[(row as any).columns[e.cellID.columnID].field]: e.newValue}, row.key);
@@ -974,10 +974,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(cell.value).toBe(newValue);
 
-            const cellArgs: IGridEditDoneEventArgs = {
+            const cellArgs: ICellEditDoneEventArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 data: updatedRowData,
                 oldValue: initialValue,
@@ -1007,10 +1007,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fixture.detectChanges();
 
-            const cellArgs: IGridEditDoneEventArgs = {
+            const cellArgs: ICellEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
                 oldValue: 'John Brown',
@@ -1029,7 +1029,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it(`Should properly emit 'cellEditDone' event`, () => {
             const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
-            let cellArgs: IGridEditDoneEventArgs;
+            let cellArgs: ICellEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
             const firstNewValue = 'New Name';
             const secondNewValue = 1;
@@ -1048,7 +1048,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             cellArgs = {
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
@@ -1076,7 +1076,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             updatedRowData = Object.assign({}, cell.row.data, { age: secondNewValue });
             cellArgs = {
                 cellID: cell.id,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
                 data: cell.row.data,
@@ -1090,8 +1090,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
-            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-            expect(spyDoneArgs.rowData).toBe(grid.data[0]);
+            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as ICellEditDoneEventArgs;
+            expect(spyDoneArgs.data).toBe(grid.data[0]);
         });
 
         it('Should not enter cell edit when cellEditEnter is canceled', () => {

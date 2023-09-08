@@ -15,7 +15,7 @@ import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-comp
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { IgxColumnComponent } from '../../grids/public_api';
+import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -357,19 +357,18 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editActions[3].componentInstance.iconName).toBe('delete');
             const deleteChildBtn = editActions[3].componentInstance;
 
-            const rowDeleteArgs = {
-                rowID: row.key,
-                primaryKey: row.key,
+            const rowDeleteArgs: IRowDataCancelableEventArgs = {
+                key: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 data: treeGrid.getRowData(row.key),
-                oldValue: null,
-                owner: treeGrid
+                owner: treeGrid,
             };
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
                 primaryKey: row.key,
+                key: row.key,
                 owner: treeGrid
             };
 

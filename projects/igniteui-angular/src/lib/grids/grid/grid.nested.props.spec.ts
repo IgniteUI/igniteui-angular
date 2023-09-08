@@ -8,7 +8,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxComboComponent } from '../../combo/public_api';
-import { IGridEditEventArgs } from '../common/events';
+import { ICellEditEventArgs, IRowEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnComponent } from '../public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
@@ -531,9 +531,9 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const cellArgs: IGridEditEventArgs = {
+        const cellArgs: ICellEditEventArgs = {
             rowID: cell.row.key,
-            primaryKey: cell.row.key,
+            rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             data: initialRowData,
@@ -596,9 +596,9 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const cellArgs: IGridEditEventArgs = {
+        const cellArgs: ICellEditEventArgs = {
             rowID: cell.row.key,
-            primaryKey: cell.row.key,
+            rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             data: initialRowData,
@@ -668,9 +668,9 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         // TODO ROW addRow
-        const rowArgs: IGridEditEventArgs = {
+        const rowArgs: IRowEditEventArgs = {
             rowID: row.key,
-            primaryKey: cell.row.key,
+            key: cell.row.key,
             rowData: initialRowData,
             data: initialRowData,
             oldValue: row.data,
@@ -734,9 +734,9 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         // TODO ROW addRow
-        const rowArgs: IGridEditEventArgs = {
+        const rowArgs: IRowEditEventArgs = {
             rowID: row.key,
-            primaryKey: cell.row.key,
+            key: cell.row.key,
             rowData: initialRowData,
             data: initialRowData,
             oldValue: row.data,

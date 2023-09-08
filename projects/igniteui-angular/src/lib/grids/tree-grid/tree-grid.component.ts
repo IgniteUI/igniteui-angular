@@ -611,7 +611,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data: data, owner: this, primaryKey: data[this.primaryKey] });
+        this.rowAddedNotifier.next({ data: data, owner: this,
+            primaryKey: data[this.primaryKey], key: data[this.primaryKey] });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -733,11 +734,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  us in case of delete action to delete all child rows as single undo action
         const args = {
             rowID: rowId,
-            primaryKey: rowId,
+            key: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
-            oldValue: null,
             owner: this
         };
         this.rowDelete.emit(args);
@@ -747,7 +747,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this, primaryKey: record[this.primaryKey] };
+            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this,
+                primaryKey: record[this.primaryKey], key: record[this.primaryKey] };
             this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
