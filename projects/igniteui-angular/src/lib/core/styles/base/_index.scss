@@ -4,6 +4,6 @@
 @forward 'igniteui-theming/sass/bem';
 @forward 'igniteui-theming/sass/color';
 @forward 'igniteui-theming/sass/elevations';
-@forward 'igniteui-theming/sass/themes';
+@forward 'igniteui-theming/sass/themes' hide border-radius;
 @forward 'igniteui-theming/sass/typography' hide typography;
 @forward 'igniteui-theming/sass/utils';

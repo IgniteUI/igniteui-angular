@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -266,10 +266,10 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         const invalidInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--invalid`);
-        expect(invalidInputGroups.length).toBe(4);
+        expect(invalidInputGroups.length).toBe(6);
 
         const requiredInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--required`);
-        expect(requiredInputGroups.length).toBe(4);
+        expect(requiredInputGroups.length).toBe(6);
     });
 
     it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
@@ -825,6 +825,72 @@ describe('IgxInput', () => {
         expect(igxInput.value).toEqual('');
         expect(model.inputValue).toEqual('');
     });
+
+    it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+        const fix = TestBed.createComponent(InputReactiveFormComponent);
+        fix.detectChanges();
+
+        const inputGroup = fix.componentInstance.igxInputGroup.element.nativeElement;
+        const formGroup = fix.componentInstance.reactiveForm;
+
+        // the form control has validators
+        formGroup.markAllAsTouched();
+        formGroup.get('fullName').setErrors({ error: true });
+        fix.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        // remove the validators and check the same
+        fix.componentInstance.removeValidators(formGroup);
+        formGroup.markAsUntouched();
+        tick();
+        fix.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        formGroup.markAllAsTouched();
+        formGroup.get('fullName').setErrors({ error: true });
+        fix.detectChanges();
+
+        // no validator, but there is a set error
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+    }));
+
+    it('should keep state as initial on type when there are no errors and validators on reactive form controls', fakeAsync(() => {
+        const fix = TestBed.createComponent(InputReactiveFormComponent);
+        fix.detectChanges();
+
+        const formGroup = fix.componentInstance.reactiveForm;
+
+        fix.componentInstance.removeValidators(formGroup);
+        formGroup.markAsUntouched();
+        fix.detectChanges();
+
+        const igxInput = fix.componentInstance.input;
+        const inputElement = fix.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fix);
+        dispatchInputEvent('blur', inputElement, fix);
+
+        const inputGroupElement = fix.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        dispatchInputEvent('focus', inputElement, fix);
+        igxInput.value = 'test';
+        fix.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
 });
 
 @Component({
@@ -1033,7 +1099,20 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
             <input type="number" formControlName="num" igxInput igxMask="###">
         </igx-input-group>
         </section>
-    </form>`
+    </form>
+    <form>
+        <section>
+            <igx-input-group>
+                <label igxLabel>single line</label>
+                <input type="text" [formControl]="inputControl" igxInput>
+            </igx-input-group>
+            <igx-input-group>
+                <label igxLabel>multi line</label>
+                <textarea type="text" [formControl]="textareaControl" igxInput></textarea>
+            </igx-input-group>
+        </section>
+    </form>
+    `
 })
 class ReactiveFormComponent {
     @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
@@ -1044,6 +1123,9 @@ class ReactiveFormComponent {
         password: ['', Validators.required],
         num: [null, Validators.required]
     });
+
+    public inputControl = new FormControl('', [Validators.required]);
+    public textareaControl = new FormControl('', [Validators.required]);
 
     constructor(private fb: UntypedFormBuilder) { }
 
@@ -1056,6 +1138,12 @@ class ReactiveFormComponent {
                 }
             }
         }
+
+        this.inputControl.markAsTouched();
+        this.inputControl.updateValueAndValidity();
+
+        this.textareaControl.markAsTouched();
+        this.textareaControl.updateValueAndValidity();
     }
 }
 

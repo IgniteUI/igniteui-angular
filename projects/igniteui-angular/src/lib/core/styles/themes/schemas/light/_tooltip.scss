@@ -10,7 +10,7 @@
 /// @type {Map}
 /// @prop {Map} background [color: ('gray', 700, .8),] - The background color of the tooltip.
 /// @prop {Map} text-color [contrast-color: ('gray', 700)] - The text color of the tooltip.
-/// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(16px))] - The border radius used for tooltip.
 $light-tooltip: extend(
     (
         variant: 'material',
@@ -23,7 +23,11 @@ $light-tooltip: extend(
             contrast-color: ('gray', 700),
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(16px),
+        ),
     )
 );
 
@@ -31,7 +35,7 @@ $light-tooltip: extend(
 /// @type {Map}
 /// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
-/// @prop {Number} border-radius [2px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(2px), rem(0), rem(16px))] - The border radius used for tooltip.
 /// @requires {Map} $light-tooltip
 $fluent-tooltip: extend(
     $light-tooltip,
@@ -46,7 +50,11 @@ $fluent-tooltip: extend(
             contrast-color: ('gray', 900)
         ),
 
-        border-radius: rem(2px)
+        border-radius: (
+            rem(2px),
+            rem(0),
+            rem(16px),
+        ),
     )
 );
 
@@ -54,7 +62,6 @@ $fluent-tooltip: extend(
 /// @type {Map}
 /// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
-/// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires $light-tooltip
 $bootstrap-tooltip: extend(
     $light-tooltip,
@@ -72,13 +79,17 @@ $bootstrap-tooltip: extend(
 
 /// Generates an indigo tooltip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [3px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(3px), rem(0), rem(16px))] - The border radius used for tooltip.
 /// @requires {Map} $light-tooltip
 $indigo-tooltip: extend(
     $light-tooltip,
     (
         variant: 'indigo-design',
 
-        border-radius: rem(3px)
+        border-radius: (
+            rem(3px),
+            rem(0),
+            rem(16px),
+        ),
     )
 );

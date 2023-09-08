@@ -158,6 +158,11 @@ export class IgxDragHandleDirective {
     @HostBinding('class.igx-drag__handle')
     public baseClass = true;
 
+    /**
+     * @hidden
+     */
+    public parentDragElement: HTMLElement = null;
+
     constructor(public element: ElementRef<any>) {}
 }
 
@@ -686,8 +691,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (!this.platformUtil.isBrowser) {
                 return;
             }
-            const targetElements = this.dragHandles && this.dragHandles.length ?
-                this.dragHandles.map((item) => item.element.nativeElement) : [this.element.nativeElement];
+            const targetElements = this.dragHandles && this.dragHandles.length
+                ? this.dragHandles
+                    .filter(item => item.parentDragElement === null)
+                    .map(item => {
+                        item.parentDragElement = this.element.nativeElement;
+                        return item.element.nativeElement;
+                    })
+                : [this.element.nativeElement];
             targetElements.forEach((element) => {
                 if (this.pointerEventsEnabled) {
                     fromEvent(element, 'pointerdown').pipe(takeUntil(this._destroy))
@@ -775,10 +786,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public setLocation(newLocation: IgxDragLocation) {
         // We do not subtract marginLeft and marginTop here because here we calculate deltas.
         if (this.ghost && this.ghostElement) {
-            const offsetHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
-            const offsetHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
-            this.ghostLeft = newLocation.pageX - offsetHostX + this.windowScrollLeft;
-            this.ghostTop = newLocation.pageY - offsetHostY + this.windowScrollTop;
+            this.ghostLeft = newLocation.pageX + this.windowScrollLeft;
+            this.ghostTop = newLocation.pageY + this.windowScrollTop;
         } else if (!this.ghost) {
             const deltaX = newLocation.pageX - this.pageX;
             const deltaY = newLocation.pageY - this.pageY;
@@ -908,8 +917,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._pointerDownId = event.pointerId;
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until ghostElement is created.
-        const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.currentTarget);
-        const targetElement = handleFound ? handleFound.element.nativeElement : this.element.nativeElement;
+        const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
+        const targetElement = handleFound ? handleFound.element.nativeElement : event.target || this.element.nativeElement;
         if (this.pointerEventsEnabled) {
             targetElement.setPointerCapture(this._pointerDownId);
         } else {
@@ -1191,7 +1200,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghostTemplate) {
-            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.zone.run(() => {
+                // Create template in zone, so it gets updated by it automatically.
+                this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            });
+            if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
+                // Change the display to default since display contents does not position the element absolutely.
+                this._dynamicGhostRef.rootNodes[0].style.display = 'block';
+            }
             this.ghostElement = this._dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
@@ -1199,12 +1215,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         const totalMovedX = pageX - this._startX;
         const totalMovedY = pageY - this._startY;
-        this._ghostHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
-        this._ghostHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
+        this._ghostHostX = this.getGhostHostBaseOffsetX();
+        this._ghostHostY = this.getGhostHostBaseOffsetY();
 
         this.ghostElement.style.transitionDuration = '0.0s';
         this.ghostElement.style.position = 'absolute';
-
 
         if (this.ghostClass) {
             this.renderer.addClass(this.ghostElement, this.ghostClass);
@@ -1407,24 +1422,38 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.element.nativeElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
     }
 
-    protected ghostHostOffsetLeft(ghostHost: any) {
-        const ghostPosition = document.defaultView.getComputedStyle(ghostHost).getPropertyValue('position');
-        if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
+    /**
+     * Since we are using absolute position to move the ghost, the ghost host might not have position: relative.
+     * Combined with position static, this means that the absolute position in the browser is relative to the offsetParent.
+     * The offsetParent is pretty much the closes parent that has position: relative, or if no such until it reaches the body.
+     * That's why if this is the case, we need to know how much we should compensate for the ghostHost being offset from
+     * its offsetParent.
+     *
+     * OffsetParent can be null in the case of position: fixed applied to the ghost host or display: none. In that case
+     * just get the clientRects of the ghost host.
+     */
+    protected getGhostHostBaseOffsetX() {
+        if (!this.ghostHost) return 0;
+
+        const ghostPosition = document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === document.body) {
             return 0;
-        } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().left - this.windowScrollLeft;
+        } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
+            return this.ghostHost.offsetParent.getBoundingClientRect().left + this.windowScrollLeft;
         }
-        return ghostHost.getBoundingClientRect().left - this.windowScrollLeft;
+        return this.ghostHost.getBoundingClientRect().left + this.windowScrollLeft;
     }
 
-    protected ghostHostOffsetTop(ghostHost: any) {
-        const ghostPosition = document.defaultView.getComputedStyle(ghostHost).getPropertyValue('position');
-        if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
+    protected getGhostHostBaseOffsetY() {
+        if (!this.ghostHost) return 0;
+
+        const ghostPosition = document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === document.body) {
             return 0;
-        } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().top - this.windowScrollTop;
+        } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
+            return this.ghostHost.offsetParent.getBoundingClientRect().top + this.windowScrollTop;
         }
-        return ghostHost.getBoundingClientRect().top - this.windowScrollTop;
+        return this.ghostHost.getBoundingClientRect().top + this.windowScrollTop;
     }
 
     protected getContainerScrollDirection() {

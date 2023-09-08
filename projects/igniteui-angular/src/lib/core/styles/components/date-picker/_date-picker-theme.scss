@@ -10,14 +10,14 @@
 
 /// @param {Map} $theme - The calendar theme used to style the component.
 @mixin date-picker($theme) {
-    @include css-vars($theme, '.igx-date-picker');
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
         box-shadow: elevation(24);
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
 
@@ -70,11 +70,6 @@
 
         %cal-value--weekend {
             color: var-get($theme, 'weekend-text-color');
-        }
-
-        %cal-value--special {
-            color: var-get($theme, 'date-special-text-color');
-            background: var-get($theme, 'date-special-background');
         }
 
         %cal-value--disabled {

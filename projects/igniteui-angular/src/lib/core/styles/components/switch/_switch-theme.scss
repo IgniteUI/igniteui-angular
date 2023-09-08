@@ -28,9 +28,9 @@
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
-/// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
-/// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
-/// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
+/// @param {List} $border-radius-track [null] - The border radius used for switch track.
+/// @param {List} $border-radius-thumb [null] - The border radius used for switch thumb.
+/// @param {List} $border-radius-ripple [null] - The border radius used for switch ripple.
 /// @param {Color} $border-color [null] - The border color of the switch.
 /// @param {Color} $border-hover-color [null] - The border color of the switch on hover.
 /// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
@@ -41,6 +41,7 @@
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
 /// @param {Color} $label-invalid-color [null] - The color of the switch label in invalid state.
 /// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
+/// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
 /// @param {Color} $error-color [null] - The border and fill colors in invalid state.
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
 /// @requires $light-schema
@@ -84,6 +85,7 @@
     $focus-outline-color-focused: null,
     $focus-fill-color: null,
     $track-error-color: null,
+    $thumb-on-error-color: null,
     $error-color: null,
     $error-color-hover: null,
 ) {
@@ -114,15 +116,15 @@
     }
 
     @if not($border-radius-track) {
-        $border-radius-track: border-radius(map.get($theme, 'border-radius-track'));
+        $border-radius-track: border-radius(map.get($theme, 'border-radius-track')...);
     }
 
     @if not($border-radius-thumb) {
-        $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb'));
+        $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb')...);
     }
 
     @if not($border-radius-ripple) {
-        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
+        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple')...);
     }
 
     @return extend($theme, (
@@ -160,6 +162,7 @@
         focus-outline-color-focused: $focus-outline-color-focused,
         focus-fill-color: $focus-fill-color,
         track-error-color: $track-error-color,
+        thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
     ));
@@ -381,6 +384,10 @@
         background: var-get($theme, 'error-color');
     }
 
+    %switch-composite-thumb--x--invalid {
+        background: var-get($theme, 'thumb-on-error-color');
+    }
+
     %switch-composite-thumb--disabled {
         background: var-get($theme, 'thumb-disabled-color');
         box-shadow: $thumb-disabled-shadow;
@@ -540,12 +547,12 @@
         margin-inline-end: $label-margin;
     }
 
-    %switch-label--disabled {
-        color: var-get($theme, 'label-disabled-color');
-    }
-
     %switch-label--invalid {
         color: var-get($theme, 'label-invalid-color');
+    }
+
+    %switch-label--disabled {
+        color: var-get($theme, 'label-disabled-color');
     }
 
     %switch-ripple--hover {
@@ -576,6 +583,12 @@
     %switch-ripple--hover-invalid {
         &::after {
             background: var-get($theme, 'error-color-hover');
+        }
+    }
+
+    %switch-ripple--hover-checked-invalid {
+        &::after {
+            background: var-get($theme, 'thumb-on-color');
         }
     }
 

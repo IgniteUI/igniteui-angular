@@ -16,7 +16,7 @@
 /// @param {Color} $background [null] - The color used for the action strip component content background.
 /// @param {Color} $actions-background [null] - The color used for the actions background.
 /// @param {Color} $delete-action [null] - The color used for the delete icon in action strip component.
-/// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
+/// @param {List} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @example scss Change the background and icon colors in action strip
 ///   $my-action-strip-theme: action-strip-theme($background: black);
@@ -47,7 +47,7 @@
     }
 
     @if not($actions-border-radius) {
-        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius'));
+        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius')...);
     }
 
     @return extend($theme, (

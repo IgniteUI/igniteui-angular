@@ -61,6 +61,8 @@ const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const CSS_CLASS_ITEM_CHECKBOX = 'igx-combo__checkbox';
 const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
@@ -1319,6 +1321,28 @@ describe('igxCombo', () => {
                 combo.select([combo.data[7][combo.valueKey]]);
                 expect(combo.value).toBe(combo.data[7][combo.displayKey]);
             });
+            it('should add selected items to the input when data is loaded', async() => {
+                expect(combo.selection.length).toEqual(0);
+                expect(combo.value).toEqual('');
+
+                // current combo data - id: 0 - 9
+                // select item that is not present in the data source yet
+                combo.select([9, 19]);
+                expect(combo.selection.length).toEqual(2);
+
+                const firstItem = combo.data[combo.data.length - 1];
+                expect(combo.value).toEqual(firstItem[combo.displayKey]);
+
+                combo.toggle();
+
+                // scroll to second selected item
+                combo.virtualScrollContainer.scrollTo(19);
+                await wait(30);
+                fixture.detectChanges();
+
+                const secondItem = combo.data[combo.data.length - 1];
+                expect(combo.value).toEqual(`${firstItem[combo.displayKey]}, ${secondItem[combo.displayKey]}`);
+            });
         });
         describe('Binding to ngModel tests: ', () => {
             let component: ComboModelBindingComponent;
@@ -2101,6 +2125,38 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([]);
                 expect(combo.value).toBe('');
             });
+            it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+                combo.displayKey = combo.valueKey = 'value';
+                combo.data = [
+                    { value: "Mississippi " }
+                ];
+                const dropdown = combo.dropdown;
+
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+                UIInteractions.simulateTyping('Mississippi ', input);
+                // combo.searchValue = 'My New Custom Item';
+                // combo.handleInputChange();
+                fixture.detectChanges();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+                UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                tick();
+                fixture.detectChanges();
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+                combo.onBlur();
+                tick();
+                fixture.detectChanges();
+                expect(combo.value).toBe('Mississippi ');
+            }));
             it('should prevent selection when selectionChanging is cancelled', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
                 combo.toggle();
@@ -2959,6 +3015,32 @@ describe('igxCombo', () => {
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
                 });
+
+                it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+                    const form = fixture.componentInstance.reactiveForm;
+
+                    form.markAllAsTouched();
+                    form.get('townCombo').setErrors({ error: true });
+                    fixture.detectChanges();
+    
+                    expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                    expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                    expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+                
+                    // remove the validators and set errors
+                    form.get('townCombo').clearValidators();
+                    form.markAsUntouched();
+                    fixture.detectChanges();
+    
+                    form.markAllAsTouched();
+                    form.get('townCombo').setErrors({ error: true });
+                    fixture.detectChanges();
+    
+                    // no validator, but there is a set error
+                    expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                    expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                    expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+                }));
             });
             describe('Template form tests: ', () => {
                 let inputGroupRequired: DebugElement;

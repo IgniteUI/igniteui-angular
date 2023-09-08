@@ -24,8 +24,8 @@
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
-/// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
-/// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
+/// @param {List} $border-radius [null] - The border radius used for checkbox component.
+/// @param {List} $border-radius-ripple [null] - The border radius used for checkbox ripple.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// @param {Color} $error-color [null] - The border and fill colors in invalid state.
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
@@ -67,11 +67,11 @@
     $theme: digest-schema($checkbox-schema);
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @if not($border-radius-ripple) {
-        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
+        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple')...);
     }
 
     @return extend($theme, (
@@ -213,7 +213,6 @@
 
     %cbx-composite--x {
         border-color: var-get($theme, 'fill-color');
-        background: var-get($theme, 'fill-color');
 
         &::after {
             background: var-get($theme, 'fill-color');
@@ -232,7 +231,6 @@
 
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
-        background: var-get($theme, 'error-color');
 
         &::after {
             background: var-get($theme, 'error-color');
@@ -242,10 +240,19 @@
     %cbx-composite--x--fluent {
         @if $variant == 'fluent' {
             border-color: var-get($theme, 'fill-color-hover');
-            background: var-get($theme, 'fill-color-hover');
 
             &::after {
                 background: var-get($theme, 'fill-color-hover');
+            }
+        }
+    }
+
+    %cbx-composite--x--invalid--fluent {
+        @if $variant == 'fluent' {
+            border-color: var-get($theme, 'error-color-hover');
+
+            &::after {
+                background: var-get($theme, 'error-color-hover');
             }
         }
     }
@@ -346,6 +353,40 @@
                 &::before {
                     border-color: var-get($theme, 'disabled-color');
                     background: var-get($theme, 'disabled-color');
+                }
+            }
+        }
+    }
+
+    %igx-checkbox--indeterminate--invalid {
+        %cbx-composite--x {
+            &::after {
+                background: var-get($theme, 'error-color');
+            }
+        }
+
+        @if $variant == 'fluent' {
+            %cbx-composite {
+                border-color: var-get($theme, 'error-color');
+
+                &::before {
+                    border-color: var-get($theme, 'error-color');
+                }
+            }
+
+            %cbx-composite--x {
+                &::after {
+                    background: transparent;
+                }
+            }
+
+            &:hover {
+                %cbx-composite {
+                    border-color: var-get($theme, 'error-color-hover');
+
+                    &::before {
+                        border-color: var-get($theme, 'error-color-hover');
+                    }
                 }
             }
         }

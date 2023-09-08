@@ -188,7 +188,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
-    public groupable = false;
+    public get groupable(): boolean {
+        return this._groupable;
+    }
+    public set groupable(value: boolean) {
+        this._groupable = value;
+        this.grid.groupablePipeTrigger++;
+    }
     /**
      * Gets whether the column is editable.
      * Default value is `false`.
@@ -1359,7 +1365,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
                     this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
-                    const cell = new IgxGridCell(this.grid as any, index, this.field);
+                    const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }
             }).filter(cell => cell);
@@ -1728,6 +1734,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected _groupable = false;
     /**
      *  @hidden
      */
@@ -2104,7 +2114,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            index === grid._pinnedColumns.length - 1 ? 
+            grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {

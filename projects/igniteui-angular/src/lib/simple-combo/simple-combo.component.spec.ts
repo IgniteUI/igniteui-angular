@@ -46,6 +46,8 @@ const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
@@ -1454,6 +1456,28 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
         }));
+
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            fixture.detectChanges();
+
+            dropdown.toggle();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('Ohio ', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(combo.value).toBe('Ohio ');
+        }));
     });
 
     describe('Display density', () => {
@@ -1910,6 +1934,33 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
             });
+
+            it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+                const form = (fixture.componentInstance as IgxSimpleComboInReactiveFormComponent).comboForm;
+
+                // the form control has validators
+                form.markAllAsTouched();
+                form.get('comboValue').setErrors({ error: true });
+                fixture.detectChanges();
+
+                expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+
+                // remove the validators and set errors
+                form.get('comboValue').clearValidators();
+                form.markAsUntouched();
+                fixture.detectChanges();
+
+                form.markAllAsTouched();
+                form.get('comboValue').setErrors({ error: true });
+                fixture.detectChanges();
+
+                // no validator, but there is a set error
+                expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+            }));
         });
     });
 
@@ -1981,6 +2032,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.selection).toEqual([selectedItem[combo.valueKey]]);
         }));
+        it('should set combo.value to empty string when bound to remote data and selected item\'s data is not present', (async () => {
+            expect(combo.valueKey).toBeDefined();
+            expect(combo.valueKey).toEqual('id');
+            expect(combo.selection.length).toEqual(0);
+
+            // current combo data - id: 0 - 9
+            // select item that is not present in the data source yet
+            combo.select(15);
+
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('');
+
+            combo.toggle();
+
+            // scroll to selected item
+            combo.virtualScrollContainer.scrollTo(15);
+            await wait(30);
+            fixture.detectChanges();
+
+            const selectedItem = combo.data[combo.data.length - 1];
+            expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
+        }));
     });
 });
 
@@ -2020,7 +2093,7 @@ class IgxSimpleComboSampleComponent {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
@@ -2269,7 +2342,7 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
 @Component({
     template: `
         <div style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
-            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'" 
+            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'"
             style="margin-bottom: 60px;">
             </igx-simple-combo>
         </div>`
