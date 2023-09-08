@@ -121,6 +121,8 @@ export interface ICellEditEventArgs extends CancelableEventArgs, ICellEditDoneEv
 export interface IRowEditEventArgs extends CancelableEventArgs, IRowEditDoneEventArgs {
 }
 
+export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IRowEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
+
 /**
  * The event arguments after a column's pin state is changed.
  * `insertAtIndex`specifies at which index in the pinned/unpinned area the column was inserted.
@@ -154,9 +156,10 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  * Represents event arguments related to events, that can occur for rows in a grid
  * Example for events: adding, deleting, selection, transaction, etc.
  */
-export interface IRowDataEventArgs extends IBaseEventArgs {
+export interface IBaseRowDataEventArgs extends IBaseEventArgs {
     data: any;
     /**
+     * @deprecated since version 16.1.0
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
      */
@@ -164,6 +167,12 @@ export interface IRowDataEventArgs extends IBaseEventArgs {
     /** Represents the grid instance that owns the edit event. */
     owner: GridType;
 }
+
+
+export interface IRowDataEventArgs extends IBaseRowDataEventArgs {
+    key: any;
+ }
+// to extend in a new interface
 
 /** The event arguments when a column is being resized */
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
