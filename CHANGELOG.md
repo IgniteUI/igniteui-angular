@@ -68,8 +68,8 @@ All notable changes for each version of this project will be documented in this 
     Add --ig-size to a component or global file.
     Available values are:
     compact: --ig-size-small
-    cosy: --ig-size-cosy
-    comfortable: --ig-size-comfortable
+    cosy: --ig-size-medium
+    comfortable: --ig-size-large
     */
     igx-grid {
         --ig-size: var(--ig-size-small);
