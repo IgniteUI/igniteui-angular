@@ -1172,7 +1172,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (this.pagingMode === 1 && this.page !== 0) {
                 row.index = rowIndex + this.perPage * this.page;
             }
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
@@ -1192,7 +1192,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByKey(rowSelector);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
