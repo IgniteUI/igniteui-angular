@@ -3,6 +3,8 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, NgFor, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import localeJa from '@angular/common/locales/ja';
+
 import { IgxGridComponent } from './grid.component';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -30,6 +32,7 @@ import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCell
 describe('IgxGrid - Column properties #grid', () => {
 
     registerLocaleData(localeFr);
+    registerLocaleData(localeJa);
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
