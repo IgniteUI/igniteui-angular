@@ -1391,10 +1391,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     protected dispatchEvent(target, eventName: string, eventArgs: IgxDragCustomEventDetails) {
         // This way is IE11 compatible.
-        const dragLeaveEvent = document.createEvent('CustomEvent');
-        dragLeaveEvent.initCustomEvent(eventName, false, false, eventArgs);
-        target.dispatchEvent(dragLeaveEvent);
+        // const dragLeaveEvent = document.createEvent('CustomEvent');
+        // dragLeaveEvent.initCustomEvent(eventName, false, false, eventArgs);
+        // target.dispatchEvent(dragLeaveEvent);
         // Otherwise can be used `target.dispatchEvent(new CustomEvent(eventName, eventArgs));`
+        target.dispatchEvent(new CustomEvent(eventName, { detail: eventArgs }));
     }
 
     protected getTransformX(elem) {
