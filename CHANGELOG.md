@@ -50,6 +50,31 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
 - `IgxCombo`, `IgxSimpleCombo`:
     - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+- **Deprecation** - The `DisplayDensityToken` injection token has been deprecated. Consequently, the `displayDensity` input for all components injecting the `DisplayDensityToken` is also deprecated. Changing the size of the component(s) should be done via a new custom CSS property - `--ig-size`;
+    - Code example:
+    ```typescript
+    // *.component.ts
+    // remove the provider declaration for `DisplayDensityToken`
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
+    ```
+
+    ```html
+    <!-- Remove `[displayDensity]="'compact'"` -->
+    <igx-grid [displayDensity]="'compact'">...</igx-grid>
+    ```
+
+    ```css
+    /* 
+    Add --ig-size to a component or global file.
+    Available values are:
+    compact: --ig-size-small
+    cosy: --ig-size-cosy
+    comfortable: --ig-size-comfortable
+    */
+    igx-grid {
+        --ig-size: var(--ig-size-small);
+    }
+    ```
 
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`

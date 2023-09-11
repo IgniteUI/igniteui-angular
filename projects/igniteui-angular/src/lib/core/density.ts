@@ -57,6 +57,8 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
+     * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+     *
      * Returns the theme of the component.
      * The default theme is `comfortable`.
      * Available options are `comfortable`, `cosy`, `compact`.
