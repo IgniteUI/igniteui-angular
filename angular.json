@@ -307,8 +307,7 @@
             "index": "projects/bundle-test/src/index.html",
             "main": "projects/bundle-test/src/main.ts",
             "polyfills": [
-              "zone.js",
-              "hammerjs"
+              "zone.js"
             ],
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
