@@ -15,7 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { ICellEditDoneEventArgs, ICellEditEventArgs, IGridEditDoneEventArgs, IgxColumnComponent } from '../public_api';
+import { ICellEditDoneEventArgs, ICellEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
