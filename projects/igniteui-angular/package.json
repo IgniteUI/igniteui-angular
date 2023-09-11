@@ -108,5 +108,6 @@
         "./themes": {
             "sass": "./lib/core/styles/themes/_index.scss"
         }
-    }
+    },
+    "sideEffects": false
 }

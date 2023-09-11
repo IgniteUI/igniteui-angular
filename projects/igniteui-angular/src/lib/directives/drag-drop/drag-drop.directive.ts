@@ -674,7 +674,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public element: ElementRef,
         public viewContainer: ViewContainerRef,
         public zone: NgZone,
-        public renderer: Renderer2,
         protected platformUtil: PlatformUtil,
     ) {
     }
@@ -1225,7 +1224,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.ghostElement.style.position = 'absolute';
 
         if (this.ghostClass) {
-            this.renderer.addClass(this.ghostElement, this.ghostClass);
+            this.ghostElement.classList.add(this.ghostClass);
         }
 
         const createEventArgs = {
