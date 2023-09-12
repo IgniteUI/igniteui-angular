@@ -163,7 +163,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * on the current display density.
      */
     protected getComponentDensityClass(baseStyleClass: string): string {
-        switch (this._displayDensity) {
+        switch (this._displayDensity || this.oldDisplayDensityOptions.displayDensity) {
             case DisplayDensity.cosy:
                 return `${baseStyleClass}--${DisplayDensity.cosy}`;
             case DisplayDensity.compact:
@@ -177,7 +177,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * Sets the `--component-size` CSS variable based on the value of Display Density
      */
     public getComponentSizeStyles() {
-        switch (this._displayDensity) {
+        switch (this._displayDensity || this.oldDisplayDensityOptions.displayDensity) {
             case DisplayDensity.compact:
                 return 'var(--ig-size, var(--ig-size-small))';
             case DisplayDensity.cosy:
