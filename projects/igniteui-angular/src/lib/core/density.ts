@@ -20,10 +20,17 @@ export const DisplayDensity = mkenum({
     cosy: 'cosy',
     compact: 'compact',
 });
+/**
+ * @deprecated since version 16.1.x.
+ * Please use the `--ig-size` CSS custom property.
+ * @see {@link https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x}
+ */
 export type DisplayDensity =
     (typeof DisplayDensity)[keyof typeof DisplayDensity];
 
 /**
+ * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+ *
  * Describes the object used to configure the DisplayDensity in Angular DI.
  */
 export interface IDisplayDensityOptions {
@@ -36,6 +43,8 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
 }
 
 /**
+ * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+ *
  * @hidden
  * Defines the DisplayDensity DI token.
  */
