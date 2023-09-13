@@ -23,7 +23,7 @@ export const DisplayDensity = mkenum({
 /**
  * @deprecated since version 16.1.x.
  * Please use the `--ig-size` CSS custom property.
- * @see {@link https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x}
+ * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
  */
 export type DisplayDensity =
     (typeof DisplayDensity)[keyof typeof DisplayDensity];
@@ -43,7 +43,9 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
 }
 
 /**
- * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+ * @deprecated since version 16.1.x.
+ * Please use the `--ig-size` CSS custom property.
+ * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
  *
  * @hidden
  * Defines the DisplayDensity DI token.
@@ -66,7 +68,9 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
-     * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+     * @deprecated since version 16.1.x.
+     * Please use the `--ig-size` CSS custom property.
+     * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
      *
      * Returns the theme of the component.
      * The default theme is `comfortable`.
