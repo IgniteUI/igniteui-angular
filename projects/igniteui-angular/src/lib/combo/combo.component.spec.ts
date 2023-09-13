@@ -3247,7 +3247,6 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo.open();
                 combo.dropdown.items.forEach(item => {
-                    debugger;
                     expect(getComponentSize(item.element.nativeElement)).toEqual('1');
                 });
                 combo.close();
