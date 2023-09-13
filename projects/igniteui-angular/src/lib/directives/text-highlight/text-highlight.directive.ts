@@ -13,7 +13,14 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { compareMaps } from '../../core/utils';
-import { ISearchInfo } from '../../grids/common/events';
+
+export interface IBaseSearchInfo {
+    searchText: string;
+    caseSensitive: boolean;
+    exactMatch: boolean;
+    matchCount: number;
+    content: string;
+}
 
 /**
  * An interface describing information for the active highlight.
@@ -149,13 +156,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public column: any;
 
     /**
-     * A map that contains all aditional conditions, that you need to activate a highlighted
+     * A map that contains all additional conditions, that you need to activate a highlighted
      * element. To activate the condition, you will have to add a new metadata key to
      * the `metadata` property of the IActiveHighlightInfo interface.
      *
      * @example
      * ```typescript
-     *  // Set a property, which would disable the highlight for a given element on a cetain condition
+     *  // Set a property, which would disable the highlight for a given element on a certain condition
      *  const metadata = new Map<string, any>();
      *  metadata.set('highlightElement', false);
      * ```
@@ -172,7 +179,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    public get lastSearchInfo(): ISearchInfo {
+    public get lastSearchInfo(): IBaseSearchInfo {
         return this._lastSearchInfo;
     }
 
@@ -185,7 +192,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
     private destroy$ = new Subject<boolean>();
     private _value = '';
-    private _lastSearchInfo: ISearchInfo;
+    private _lastSearchInfo: IBaseSearchInfo;
     private _div = null;
     private _observer: MutationObserver = null;
     private _nodeWasRemoved = false;
@@ -271,8 +278,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
             content: this.value,
             matchCount: 0,
             caseSensitive: false,
-            exactMatch: false,
-            activeMatchIndex: 0
+            exactMatch: false
         };
 
         this._container = this.parentElement.firstElementChild;
