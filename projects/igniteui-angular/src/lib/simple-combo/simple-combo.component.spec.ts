@@ -1513,18 +1513,22 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
         });
         it('should apply correct styles to items and input when Display Density is set', () => {
-            combo.toggle();
+            combo.open();
             fixture.detectChanges();
             combo.dropdown.items.forEach(item => {
                 expect(getComponentSize(item.element.nativeElement)).toEqual('2');
             });
+            combo.close();
             fixture.componentInstance.density = DisplayDensity.compact;
             fixture.detectChanges();
+            combo.open();
             combo.dropdown.items.forEach(item => {
                 expect(getComponentSize(item.element.nativeElement)).toEqual('1');
             });
+            combo.close();
             fixture.componentInstance.density = DisplayDensity.comfortable;
             fixture.detectChanges();
+            combo.open();
             expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
             expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_ITEM).length);
             combo.dropdown.items.forEach(item => {

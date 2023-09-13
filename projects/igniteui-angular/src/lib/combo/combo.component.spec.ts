@@ -3236,23 +3236,28 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
             });
-            it('should apply correct styles to items when Display Density is set', () => {
-                combo.toggle();
+            it('should apply correct styles to items when Display Density is set', fakeAsync(() => {
+                combo.open();
                 fixture.detectChanges();
                 combo.dropdown.items.forEach(item => {
                     expect(getComponentSize(item.element.nativeElement)).toEqual('2');
                 });
+                combo.close();
                 fixture.componentInstance.density = DisplayDensity.compact;
                 fixture.detectChanges();
+                combo.open();
                 combo.dropdown.items.forEach(item => {
+                    debugger;
                     expect(getComponentSize(item.element.nativeElement)).toEqual('1');
                 });
+                combo.close();
                 fixture.componentInstance.density = DisplayDensity.comfortable;
                 fixture.detectChanges();
+                combo.open();
                 combo.dropdown.items.forEach(item => {
                     expect(getComponentSize(item.element.nativeElement)).toEqual('3');
                 });
-            });
+            }));
             it('should scale items container depending on displayDensity (itemHeight * 10)', () => {
                 combo.toggle();
                 fixture.detectChanges();
