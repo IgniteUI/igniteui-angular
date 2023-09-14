@@ -2394,6 +2394,8 @@
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
             width: var(--igx-icon-size, #{$indicator-icon-width});
+            height: var(--igx-icon-size, #{$indicator-icon-width});
+            font-size: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2798,6 +2800,8 @@
         }
 
         igx-icon {
+            --component-size: 3;
+
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
             min-width: $hierarchical-action-icon;
