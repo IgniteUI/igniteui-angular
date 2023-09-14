@@ -334,7 +334,7 @@ export interface ColumnType extends FieldType {
 
     /** 
      * Custom CSS styling, appplied to every column 
-     * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent
+     * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;
     minWidthPx: number;
@@ -343,6 +343,7 @@ export interface ColumnType extends FieldType {
     maxWidth: string;
     minWidthPercent: number;
     maxWidthPercent: number;
+    resolvedWidth: string;
 
     /**
      * Optional
