@@ -109,14 +109,14 @@
         compact: rem(12px)
     );
 
-    $node-height: (
-        comfortable: rem(50px),
-        cosy: rem(40px),
-        compact: rem(32px)
-    );
-
     $icon-size: rem(24px);
     $icon-space: rem(8px);
+
+    $circular-bar-size: (
+        comfortable: #{$icon-size},
+        cosy: calc(#{$icon-size} - 4px),
+        compact: calc(#{$icon-size} - 6px)
+    );
 
     $drop-indicator-width: (
         comfortable: calc(100% - ((#{map.get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space}))),
@@ -139,16 +139,11 @@
     }
 
     %tree-node {
+        @include sizable();
+
         --component-size: var(--ig-size, var(--ig-size-large));
+        --tree-size: var(--component-size);
         flex-direction: column;
-    }
-
-    %tree-node--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %tree-node--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %node-wrapper,
@@ -215,32 +210,9 @@
         }
 
         igx-circular-bar {
-            width: $icon-size;
-            height: $icon-size;
-        }
-
-        &--cosy {
-            %node-drop-indicator {
-                inset-inline-end: map.get($node-indent, 'cosy');
-                width: map.get($drop-indicator-width, 'cosy');
-            }
-
-            igx-circular-bar {
-                width: calc(#{$icon-size} - 4px);
-                height: calc(#{$icon-size} - 4px);
-            }
-        }
-
-        &--compact {
-            %node-drop-indicator {
-                inset-inline-end: map.get($node-indent, 'compact');
-                width: map.get($drop-indicator-width, 'compact');
-            }
-
-            igx-circular-bar {
-                width: calc(#{$icon-size} - 6px);
-                height: calc(#{$icon-size} - 6px);
-            }
+            --circular-bar: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})};
+            width: var(--circular-bar);
+            height: var(--circular-bar);
         }
     }
 
@@ -293,7 +265,7 @@
     }
 
     %node-spacer {
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--tree-size);
         --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
         width: var(--spacer);
         display: inline-block;
@@ -317,9 +289,9 @@
         display: flex;
         visibility: hidden;
         position: absolute;
-        inset-inline-end: map.get($node-indent, 'comfortable');
+        inset-inline-end: pad(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         bottom: 0;
-        width: map.get($drop-indicator-width, 'comfortable');
+        width: pad(map.get($drop-indicator-width, 'compact'), map.get($drop-indicator-width, 'cosy'), map.get($drop-indicator-width, 'comfortable'));
 
         > div {
             flex: 1;

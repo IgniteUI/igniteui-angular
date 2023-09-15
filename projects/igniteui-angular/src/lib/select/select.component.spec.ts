@@ -18,6 +18,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
+import { getComponentSize } from '../core/utils';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -35,9 +36,6 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
-const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
-const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_GROUP_COMPACT = 'igx-input-group--compact';
 
 const arrowDownKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 const arrowUpKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
@@ -489,13 +487,13 @@ describe('igxSelect', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             // Default display density is 'comfortable'
             expect(select.displayDensity).toEqual('comfortable');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMFORTABLE)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('3');
             select.displayDensity = 'cosy';
             fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COSY)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('2');
             select.displayDensity = 'compact';
             fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('1');
         });
 
         it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
