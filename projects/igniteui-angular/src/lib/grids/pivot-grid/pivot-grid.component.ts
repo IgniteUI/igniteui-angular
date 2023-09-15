@@ -708,7 +708,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override actionStrip: IgxActionStripComponent;
+    // public override actionStrip: IgxActionStripComponent;
 
     /**
      * @hidden @internal

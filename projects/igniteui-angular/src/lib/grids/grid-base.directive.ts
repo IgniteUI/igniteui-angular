@@ -1118,9 +1118,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxActionStripComponent)
     protected actionStripComponents: QueryList<IgxActionStripComponent>;
 
+    protected internalActionStrip: IgxActionStripComponent;
+
     /** @hidden @internal */
     public get actionStrip() {
+        if (this.internalActionStrip) {
+            return this.internalActionStrip;
+        }
         return this.actionStripComponents?.first;
+    }
+
+    /** @hidden @internal */
+    public set actionStrip(value: IgxActionStripComponent) {
+        this.internalActionStrip = value;
     }
 
     /**
