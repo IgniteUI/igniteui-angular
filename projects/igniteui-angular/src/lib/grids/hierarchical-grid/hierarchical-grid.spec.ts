@@ -22,6 +22,7 @@ import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-st
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { getComponentSize } from '../../core/utils';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -396,19 +397,19 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid']));
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
             hierarchicalGrid.displayDensity = DisplayDensity.cosy;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
             hierarchicalGrid.displayDensity = DisplayDensity.compact;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 
         it('should update child grid data when root grid data is changed.', () => {

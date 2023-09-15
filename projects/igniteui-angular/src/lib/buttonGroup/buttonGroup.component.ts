@@ -14,7 +14,8 @@ import {
     QueryList,
     Renderer2,
     ViewChildren,
-    OnDestroy
+    OnDestroy,
+    ElementRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -276,9 +277,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     constructor(
         private _cdr: ChangeDetectorRef,
         private _renderer: Renderer2,
+        private _el: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, _el);
     }
 
     /**

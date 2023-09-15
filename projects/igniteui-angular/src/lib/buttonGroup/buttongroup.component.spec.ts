@@ -5,6 +5,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
+import { getComponentSize } from '../core/utils';
 
 interface IButton {
     type?: string;
@@ -319,7 +320,7 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         expect(buttongroup.displayDensity).toBe('compact', 'DisplayDensity not set!');
-        expect(buttongroup.buttons[1].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Missing density class!');
+        expect(getComponentSize(buttongroup.buttons[1].nativeElement)).toBe('1', 'Missing density class!');
     });
 
     it('Button Group - DisplayDensity property is applied to templated buttons', () => {
@@ -333,8 +334,8 @@ describe('IgxButtonGroup', () => {
         const groupChildren = buttongroup.buttons;
         // The density class should be applied only to buttons with no DisplayDensity set
         expect(groupChildren[0].displayDensity).toBe('compact');
-        expect(groupChildren[0].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Missing density class!');
-        expect(groupChildren[1].element.nativeElement.classList.contains('igx-button--cosy')).toBe(true, 'Missing density class!');
+        expect(getComponentSize(groupChildren[0].element.nativeElement)).toBe('1', 'Missing density class!');
+        expect(getComponentSize(groupChildren[1].element.nativeElement)).toBe('2', 'Missing density class!');
     });
 
     it('Button Group - should support tab navigation', () => {

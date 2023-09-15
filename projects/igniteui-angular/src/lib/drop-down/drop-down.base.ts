@@ -179,7 +179,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
+            super(_displayDensityOptions, elementRef);
         }
 
     /** Keydown Handler */

@@ -660,6 +660,7 @@ export interface GridServiceType {
  * Extends `IGridDataBindable`
  */
 export interface GridType extends IGridDataBindable {
+    /** @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property. */
     displayDensity: DisplayDensity;
     /** Represents the locale of the drig: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
