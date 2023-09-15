@@ -18,16 +18,7 @@
     }
 
     @include b(igx-tree-node) {
-        @include sizable();
         @extend %tree-node !optional;
-
-        @include m(cosy) {
-            @extend %tree-node--cosy !optional;
-        }
-
-        @include m(compact) {
-            @extend %tree-node--compact !optional;
-        }
 
         @include e(wrapper) {
             @extend %node-wrapper !optional;
@@ -37,14 +28,6 @@
                     @extend %indigo-opacity !optional;
                 }
             }
-        }
-
-        @include e(wrapper, $m: cosy) {
-            @extend %node-wrapper--cosy !optional;
-        }
-
-        @include e(wrapper, $m: compact) {
-            @extend %node-wrapper--compact !optional;
         }
 
         // STATES START
@@ -74,7 +57,6 @@
         }
 
         @include e(spacer) {
-            @include sizable();
             @extend %node-spacer !optional;
         }
 
