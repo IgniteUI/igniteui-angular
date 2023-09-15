@@ -10,7 +10,7 @@ import {
     Optional,
     Inject
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 
@@ -152,7 +152,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
         private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
     }
 
     /**
@@ -304,18 +304,9 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-button--cosy')
-    public get cosy(): boolean {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--compact')
-    public get compact(): boolean {
-        return this.displayDensity === DisplayDensity.compact;
+    @HostBinding('style.--component-size')
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /**

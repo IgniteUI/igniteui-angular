@@ -313,6 +313,8 @@
         justify-content: flex-start;
 
         igx-icon {
+            --component-size: 3;
+
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
                 margin-inline-start: rem(4px);
