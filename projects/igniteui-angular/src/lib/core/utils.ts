@@ -834,3 +834,8 @@ export const rem = (value: number | string) => {
     const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
     return Number(value) / base;
 }
+
+/** Get the size of the component as derived from the CSS size variable */
+export function getComponentSize(el: Element) {
+    return window.getComputedStyle(el).getPropertyValue('--component-size');
+}

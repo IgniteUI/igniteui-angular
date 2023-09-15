@@ -614,6 +614,10 @@
         [dir='rtl'] & {
             transform: scaleX(-1);
         }
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %cal-picker-arrow__prev {

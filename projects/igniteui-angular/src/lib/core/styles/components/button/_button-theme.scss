@@ -374,7 +374,7 @@
         compact: rem(6px)
     );
 
-    $icon-in-button-margin: (
+    $items-gap: (
         comfortable: rem(12px),
         cosy: rem(8px),
         compact: rem(4px)
@@ -459,6 +459,7 @@
     ), $variant);
 
     %igx-button-display {
+        @include sizable();
         --component-size: var(--ig-size, var(--ig-size-large));
 
         position: relative;
@@ -466,8 +467,16 @@
         align-items: center;
         justify-content: center;
         min-width: $button-width;
-        padding-inline: pad-inline(map.get($button-padding-inline, 'compact'), map.get($button-padding-inline, 'cosy'), map.get($button-padding-inline, 'comfortable'));
-        padding-block: pad-block(map.get($button-padding-block, 'compact'), map.get($button-padding-block, 'cosy'), map.get($button-padding-block, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($button-padding-inline, 'compact'),
+            map.get($button-padding-inline, 'cosy'),
+            map.get($button-padding-inline, 'comfortable')
+        );
+        padding-block: pad-block(
+            map.get($button-padding-block, 'compact'),
+            map.get($button-padding-block, 'cosy'),
+            map.get($button-padding-block, 'comfortable')
+        );
         min-height: var-get($flat-theme, 'size');
         border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
@@ -477,6 +486,12 @@
         overflow: hidden;
         white-space: nowrap;
         transition: $button-transition;
+        gap: pad-inline(
+            map.get($items-gap, 'compact'),
+            map.get($items-gap, 'cosy'),
+            map.get($items-gap, 'comfortable')
+        );
+
 
         @if ($variant == 'bootstrap') {
             // important is needed to override the typography margins
@@ -491,31 +506,15 @@
             height: var(--igx-icon-size, #{$icon-in-button-size});
             font-size: var(--igx-icon-size, #{$icon-in-button-size});
         }
-
-        * + * {
-            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
-        }
-    }
-
-    %igx-button-display--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-        }
-    }
-
-    %igx-button-display--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-small));
-        }
     }
 
     igx-grid-filtering-row {
         @if ($variant == 'bootstrap') {
-            --filtering-row-button-size: #{sizable(#{map.get($filtering-row-button-size, 'compact')}, #{map.get($filtering-row-button-size, 'cosy')}, #{map.get($filtering-row-button-size, 'comfortable')})};
+            --filtering-row-button-size: #{sizable(
+                #{map.get($filtering-row-button-size, 'compact')},
+                #{map.get($filtering-row-button-size, 'cosy')},
+                #{map.get($filtering-row-button-size, 'comfortable')}
+            )};
 
             %igx-button-display {
                 min-height: var(--filtering-row-button-size);
@@ -575,8 +574,16 @@
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
-        padding-block: pad-block(map.get($outlined-button-padding-block, 'compact'), map.get($outlined-button-padding-block, 'cosy'), map.get($outlined-button-padding-block, 'comfortable'));
-        padding-inline: pad-inline(map.get($outlined-button-padding-inline, 'compact'), map.get($outlined-button-padding-inline, 'cosy'), map.get($outlined-button-padding-inline, 'comfortable'));
+        padding-block: pad-block(
+            map.get($outlined-button-padding-block, 'compact'),
+            map.get($outlined-button-padding-block, 'cosy'),
+            map.get($outlined-button-padding-block, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($outlined-button-padding-inline, 'compact'),
+            map.get($outlined-button-padding-inline, 'cosy'),
+            map.get($outlined-button-padding-inline, 'comfortable')
+        );
 
         @if $variant == 'indigo-design' {
             border-width: rem(2px);
@@ -661,10 +668,6 @@
                 }
                 /* stylelint-enable */
             }
-        }
-
-        * + * {
-            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
         }
     }
 
@@ -775,8 +778,16 @@
     }
 
     %igx-button--fab {
-        padding-block: pad-block(map.get($button-floating-padding-block, 'compact'), map.get($button-floating-padding-block, 'cosy'), map.get($button-floating-padding-block, 'comfortable'));
-        padding-inline: pad-inline(map.get($button-floating-padding-inline, 'compact'), map.get($button-floating-padding-inline, 'cosy'), map.get($button-floating-padding-inline, 'comfortable'));
+        padding-block: pad-block(
+            map.get($button-floating-padding-block, 'compact'),
+            map.get($button-floating-padding-block, 'cosy'),
+            map.get($button-floating-padding-block, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($button-floating-padding-inline, 'compact'),
+            map.get($button-floating-padding-inline, 'cosy'),
+            map.get($button-floating-padding-inline, 'comfortable')
+        );
         min-width: var-get($fab-theme, 'size');
         min-height: var-get($fab-theme, 'size');
         line-height: unset;
@@ -869,10 +880,6 @@
                 }
                 /* stylelint-enable */
             }
-        }
-
-        * + * {
-            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
         }
     }
 

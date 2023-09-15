@@ -58,7 +58,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionItem {
@@ -71,7 +71,7 @@ class ExpressionItem {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionGroupItem extends ExpressionItem {
@@ -86,7 +86,7 @@ class ExpressionGroupItem extends ExpressionItem {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionOperandItem extends ExpressionItem {
@@ -397,9 +397,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     constructor(public cdr: ChangeDetectorRef,
         protected iconService: IgxIconService,
         protected platform: PlatformUtil,
+        protected el: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, el);
         this.locale = this.locale || this._localeId;
     }
 
