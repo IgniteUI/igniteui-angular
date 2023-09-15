@@ -15,7 +15,8 @@ import {
     AfterContentInit,
     TemplateRef,
     ContentChildren,
-    QueryList
+    QueryList,
+    RendererStyleFlags2
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
@@ -277,6 +278,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @Input()
     public ghostClass = '';
 
+    /**
+     * Set styles that will be added to the `ghostElement` element.
+     * ```html
+     * <div igxDrag [ghostStyle]="{'--ig-size': 'var(--ig-size-small)'}">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     *
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public ghostStyle = {};
 
     /**
      * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
@@ -1225,6 +1238,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (this.ghostClass) {
             this.ghostElement.classList.add(this.ghostClass);
+        }
+
+        if (this.ghostStyle) {
+            Object.entries(this.ghostStyle).map(([name, value]) => {
+                this.renderer.setStyle(this.ghostElement, name, value, RendererStyleFlags2.DashCase);
+            });
         }
 
         const createEventArgs = {

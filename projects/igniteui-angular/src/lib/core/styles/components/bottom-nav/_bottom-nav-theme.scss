@@ -129,6 +129,10 @@
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
         outline-style: none;
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-bottom-nav-menu-item--disabled {

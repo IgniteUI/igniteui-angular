@@ -8,14 +8,12 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
+import { getComponentSize } from '../core/utils';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
-const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
-const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
-const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 
 describe('IgxInputGroup', () => {
     configureTestSuite();
@@ -187,7 +185,7 @@ describe('IgxInputGroup', () => {
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
         const inputGroupElement = inputGroup.element.nativeElement;
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBe(true);
+        expect(getComponentSize(inputGroupElement)).toBe('3');
     });
 
     it('cosy Display Density applied', () => {
@@ -196,8 +194,7 @@ describe('IgxInputGroup', () => {
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
         const inputGroupElement = inputGroup.element.nativeElement;
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COSY_DENSITY_CSS_CLASS)).toBeTruthy();
+        expect(getComponentSize(inputGroupElement)).toBe('2');
     });
 
     it('compact Display Density applied', () => {
@@ -206,8 +203,7 @@ describe('IgxInputGroup', () => {
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
         const inputGroupElement = inputGroup.element.nativeElement;
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
+        expect(getComponentSize(inputGroupElement)).toBe('1');
     });
 
     it('compact Display Density applied via input', () => {
@@ -216,8 +212,7 @@ describe('IgxInputGroup', () => {
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
         const inputGroupElement = inputGroup.element.nativeElement;
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
+        expect(getComponentSize(inputGroupElement)).toBe('1');
     });
 
     it('should correctly prevent default on pointer down', () => {

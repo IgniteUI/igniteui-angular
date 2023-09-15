@@ -767,14 +767,24 @@
     }
 
     %grid-host {
+        @include sizable();
+
         --component-size: var(--ig-size, var(--ig-size-large));
+        --grid-size: var(--component-size);
     }
 
     %grid-display {
-        @include sizable();
-        --header-size: #{sizable(map.get($grid-header-height, 'compact'), map.get($grid-header-height, 'cosy'), map.get($grid-header-height, 'comfortable'))};
-        --grouparea-size: #{sizable(map.get($grouparea-min-height, 'compact'), map.get($grouparea-min-height, 'cosy'), map.get($grouparea-min-height, 'comfortable'))};
-        --igx-tree-indent-size: #{rem(24px)};
+        --header-size: #{sizable(
+            map.get($grid-header-height, 'compact'),
+            map.get($grid-header-height, 'cosy'),
+            map.get($grid-header-height, 'comfortable')
+        )};
+        --grouparea-size: #{sizable(
+            map.get($grouparea-min-height, 'compact'),
+            map.get($grouparea-min-height, 'cosy'),
+            map.get($grouparea-min-height, 'comfortable')
+        )};
+        --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
 
         position: relative;
         display: grid;
@@ -793,16 +803,6 @@
         %cbx-display {
             min-width: $cbx-size;
         }
-    }
-
-    %grid-display-cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-        --igx-tree-indent-size: #{rem(16px)};
-    }
-
-    %grid-display-compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -851,7 +851,11 @@
 
         %grid__cbx-selection--push {
             align-items: flex-start;
-            padding-block-start: pad-block(math.div(map.get($grid-header-height, 'compact') - rem(20px), 2), math.div(map.get($grid-header-height, 'cosy') - rem(20px), 2), math.div(map.get($grid-header-height, 'comfortable') - rem(20px), 2));
+            padding-block-start: pad-block(
+                math.div(map.get($grid-header-height, 'compact') - rem(20px), 2),
+                math.div(map.get($grid-header-height, 'cosy') - rem(20px), 2),
+                math.div(map.get($grid-header-height, 'comfortable') - rem(20px), 2)
+            );
         }
 
         %grid-row {
@@ -887,36 +891,16 @@
         }
     }
 
-    %grid-thead--cosy {
-        %igx-grid__header-indentation {
-            igx-icon {
-                --component-size: var(--ig-size, var(--ig-size-medium));
-            }
-        }
-
-        %grid__cbx-selection--push--cosy {
-            align-items: flex-start;
-        }
-    }
-
-    %grid-thead--compact {
-        %igx-grid__header-indentation {
-            igx-icon {
-                --component-size: var(--ig-size, var(--ig-size-small));
-            }
-        }
-
-        %grid__cbx-selection--push--compact {
-            align-items: flex-start;
-        }
-    }
-
     %grid-thead-title {
         flex-basis: auto !important;
         align-items: center !important;
         border-bottom: $grid-header-border;
         height: var(--header-size);
-        padding-inline: pad-inline(map.get($grid-cell-padding-inline, 'compact'), map.get($grid-cell-padding-inline, 'cosy'), map.get($grid-cell-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-cell-padding-inline, 'compact'),
+            map.get($grid-cell-padding-inline, 'cosy'),
+            map.get($grid-cell-padding-inline, 'comfortable')
+        );
         padding-block: 0;
     }
 
@@ -1144,7 +1128,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-inline: pad-inline(map.get($grid-cell-padding-inline, 'compact'), map.get($grid-cell-padding-inline, 'cosy'), map.get($grid-cell-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-cell-padding-inline, 'compact'),
+            map.get($grid-cell-padding-inline, 'cosy'),
+            map.get($grid-cell-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         flex: 1 0 auto;
         // Fix for IE 11
@@ -1386,6 +1374,10 @@
         [dir='rtl'] & {
             transform: scaleX(-1);
         }
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-grid__tree-loading-indicator {
@@ -1409,7 +1401,11 @@
         flex: 1 1 0%;
         align-items: center;
         outline-style: none;
-        padding-inline: pad-inline(map.get($grid-cell-padding-inline, 'compact'), map.get($grid-cell-padding-inline, 'cosy'), map.get($grid-cell-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-cell-padding-inline, 'compact'),
+            map.get($grid-cell-padding-inline, 'cosy'),
+            map.get($grid-cell-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         font-size: $grid-cell-fs;
         line-height: $grid-cell-lh;
@@ -1697,7 +1693,11 @@
         font-size: $grid-head-fs;
         font-weight: $grid-head-fw;
         min-width: 0;
-        padding-inline: pad-inline(map.get($grid-header-padding-inline, 'compact'), map.get($grid-header-padding-inline, 'cosy'), map.get($grid-header-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-header-padding-inline, 'compact'),
+            map.get($grid-header-padding-inline, 'cosy'),
+            map.get($grid-header-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         border-inline-end: $grid-header-border;
         min-height: var(--header-size);
@@ -2207,7 +2207,11 @@
 
     [dir='rtl'] {
         %igx-grid__group-content {
-            padding-inline-start: pad-inline(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'))
+            padding-inline-start: pad-inline(
+                map.get($grid-grouping-indicator-padding, 'compact'),
+                map.get($grid-grouping-indicator-padding, 'cosy'),
+                map.get($grid-grouping-indicator-padding, 'comfortable')
+            );
         }
 
         %igx-group-label {
@@ -2226,8 +2230,16 @@
         align-items: center;
         justify-content: flex-start;
         flex: 1 1 auto;
-        padding-inline-start: pad-inline(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'));
-        min-height: sizable(map.get($grid-header-height, 'compact'), map.get($grid-header-height, 'cosy'), map.get($grid-header-height, 'comfortable'));
+        padding-inline-start: pad-inline(
+            map.get($grid-grouping-indicator-padding, 'compact'),
+            map.get($grid-grouping-indicator-padding, 'cosy'),
+            map.get($grid-grouping-indicator-padding, 'comfortable')
+        );
+        min-height: sizable(
+            map.get($grid-header-height, 'compact'),
+            map.get($grid-header-height, 'cosy'),
+            map.get($grid-header-height, 'comfortable')
+        );
 
         &:focus {
             outline: transparent;
@@ -2239,8 +2251,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-inline-start: pad-inline(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'));
-        padding-inline-end: pad-inline(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'));
+        padding-inline-start: pad-inline(
+            map.get($grid-grouping-indicator-padding, 'compact'),
+            map.get($grid-grouping-indicator-padding, 'cosy'),
+            map.get($grid-grouping-indicator-padding, 'comfortable')
+        );
+        padding-inline-end: pad-inline(
+            map.get($grid-grouping-indicator-padding, 'compact'),
+            map.get($grid-grouping-indicator-padding, 'cosy'),
+            map.get($grid-grouping-indicator-padding, 'comfortable')
+        );
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
@@ -2280,7 +2300,11 @@
         background: var-get($theme, 'grouparea-background');
         color: var-get($theme, 'grouparea-color');
         min-height: var(--grouparea-size);
-        padding-inline: pad-inline(map.get($grouparea-padding-inline, 'compact'), map.get($grouparea-padding-inline, 'cosy'), map.get($grouparea-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grouparea-padding-inline, 'compact'),
+            map.get($grouparea-padding-inline, 'cosy'),
+            map.get($grouparea-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         z-index: 2;
         height: 100%;
@@ -2313,15 +2337,24 @@
     }
 
     %igx-drop-area {
-        min-width: rem(80px);
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        height: sizable(map.get($drop-area-height, 'compact'), map.get($drop-area-height, 'cosy'), map.get($drop-area-height, 'comfortable'));
-        padding-inline: pad-inline(map.get($grid-cell-padding-inline, 'compact'), map.get($grid-cell-padding-inline, 'cosy'), map.get($grid-cell-padding-inline, 'comfortable'));
+        min-width: rem(80px);
+        height: sizable(
+            map.get($drop-area-height, 'compact'),
+            map.get($drop-area-height, 'cosy'),
+            map.get($drop-area-height, 'comfortable')
+        );
+        padding-inline: pad-inline(
+            map.get($grid-cell-padding-inline, 'compact'),
+            map.get($grid-cell-padding-inline, 'cosy'),
+            map.get($grid-cell-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         flex: 1 0 0%;
         background: var-get($theme, 'drop-area-background');
+        border-radius: var-get($theme, 'drop-area-border-radius');
 
         %igx-drop-area__icon {
             color: var-get($theme, 'drop-area-icon-color');
@@ -2334,12 +2367,6 @@
 
     %igx-drop-area--hover {
         background: var-get($theme, 'drop-area-on-drop-background');
-    }
-
-    %igx-drop-area,
-    %igx-drop-area--cosy,
-    %igx-drop-area--compact {
-        border-radius: var-get($theme, 'drop-area-border-radius');
     }
 
     %igx-drop-area__text {
@@ -2357,12 +2384,18 @@
         z-index: 1;
         cursor: pointer;
         padding-inline-end: $grouping-padding-right;
-        margin-inline-start: sizable(#{map.get($grid-grouping-indicator-padding, 'compact')}, #{map.get($grid-grouping-indicator-padding, 'cosy')}, #{map.get($grid-grouping-indicator-padding, 'comfortable')});
+        margin-inline-start: sizable(
+            #{map.get($grid-grouping-indicator-padding, 'compact')},
+            #{map.get($grid-grouping-indicator-padding, 'cosy')},
+            #{map.get($grid-grouping-indicator-padding, 'comfortable')
+        });
         min-height: var(--header-size);
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
             width: var(--igx-icon-size, #{$indicator-icon-width});
+            height: var(--igx-icon-size, #{$indicator-icon-width});
+            font-size: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2381,10 +2414,18 @@
 
     %igx-grid__header-indentation {
         position: relative;
-        padding-inline-end: sizable(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'));
+        padding-inline-end: sizable(
+            map.get($grid-grouping-indicator-padding, 'compact'),
+            map.get($grid-grouping-indicator-padding, 'cosy'),
+            map.get($grid-grouping-indicator-padding, 'comfortable')
+        );
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         background: var-get($theme, 'header-background');
         z-index: 4;
+
+        igx-icon {
+            --component-size: var(--grid-size);
+        }
     }
 
 
@@ -2393,14 +2434,22 @@
         cursor: pointer;
         user-select: none;
         inset-block-start: calc(50% - 12px);
-        inset-inline-start: sizable(map.get($grid-grouping-indicator-padding, 'compact'), map.get($grid-grouping-indicator-padding, 'cosy'), map.get($grid-grouping-indicator-padding, 'comfortable'));
+        inset-inline-start: sizable(
+            map.get($grid-grouping-indicator-padding, 'compact'),
+            map.get($grid-grouping-indicator-padding, 'cosy'),
+            map.get($grid-grouping-indicator-padding, 'comfortable')
+        );
 
         &:hover {
             color: var-get($theme, 'expand-icon-hover-color');
         }
 
         &%igx-grid__group-expand-btn--push {
-            inset-block-start: sizable(math.div(map.get($grid-header-height, 'compact') - rem(24px), 2), math.div(map.get($grid-header-height, 'cosy') - rem(24px), 2), math.div(map.get($grid-header-height, 'comfortable') - rem(24px), 2));
+            inset-block-start: sizable(
+                math.div(map.get($grid-header-height, 'compact') - rem(24px), 2),
+                math.div(map.get($grid-header-height, 'cosy') - rem(24px), 2),
+                math.div(map.get($grid-header-height, 'comfortable') - rem(24px), 2)
+            );
         }
     }
 
@@ -2431,6 +2480,8 @@
     }
 
     %igx-grid__outlet {
+        --ig-size: var(--grid-size);
+
         z-index: 10002;
         position: fixed;
     }
@@ -2472,7 +2523,11 @@
         border-inline-end: $grid-header-border;
         border-top: $grid-header-border;
         height: var(--header-size);
-        padding-inline: pad-inline(map.get($grid-header-padding-inline, 'compact'), map.get($grid-header-padding-inline, 'cosy'), map.get($grid-header-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-header-padding-inline, 'compact'),
+            map.get($grid-header-padding-inline, 'cosy'),
+            map.get($grid-header-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         overflow: hidden;
 
@@ -2524,7 +2579,11 @@
     }
 
     %igx-grid__filtering-row {
-        $filtering-row-height: #{sizable(map.get($grid-header-height, 'compact'), map.get($grid-header-height, 'cosy'), map.get($grid-header-height, 'comfortable'))};
+        $filtering-row-height: #{sizable(
+            map.get($grid-header-height, 'compact'),
+            map.get($grid-header-height, 'cosy'),
+            map.get($grid-header-height, 'comfortable')
+        )};
         position: absolute;
         display: flex;
         width: 100%;
@@ -2713,7 +2772,11 @@
     %igx-grid__hierarchical-expander {
         user-select: none;
         background: inherit;
-        padding-inline: pad-inline(map.get($hierarchical-grid-indent, 'compact'), map.get($hierarchical-grid-indent, 'cosy'), map.get($hierarchical-grid-indent, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($hierarchical-grid-indent, 'compact'),
+            map.get($hierarchical-grid-indent, 'cosy'),
+            map.get($hierarchical-grid-indent, 'comfortable')
+        );
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2737,6 +2800,8 @@
         }
 
         igx-icon {
+            --component-size: 3;
+
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
             min-width: $hierarchical-action-icon;
@@ -2779,12 +2844,28 @@
 
     %igx-grid__hierarchical-indent {
         display: flex;
-        margin-inline-start: pad-inline(map.get($hierarchical-indent, 'compact'), map.get($hierarchical-indent, 'cosy'), map.get($hierarchical-indent, 'comfortable'));
-        margin-inline-end: pad-inline(map.get($hierarchical-grid-indent, 'compact'), map.get($hierarchical-grid-indent, 'cosy'), map.get($hierarchical-grid-indent, 'comfortable'));
-        margin-block: pad-block(map.get($hierarchical-grid-indent, 'compact'), map.get($hierarchical-grid-indent, 'cosy'), map.get($hierarchical-grid-indent, 'comfortable'));
+        margin-inline-start: pad-inline(
+            map.get($hierarchical-indent, 'compact'),
+            map.get($hierarchical-indent, 'cosy'),
+            map.get($hierarchical-indent, 'comfortable')
+        );
+        margin-inline-end: pad-inline(
+            map.get($hierarchical-grid-indent, 'compact'),
+            map.get($hierarchical-grid-indent, 'cosy'),
+            map.get($hierarchical-grid-indent, 'comfortable')
+        );
+        margin-block: pad-block(
+            map.get($hierarchical-grid-indent, 'compact'),
+            map.get($hierarchical-grid-indent, 'cosy'),
+            map.get($hierarchical-grid-indent, 'comfortable')
+        );
 
         &--scroll {
-            margin-inline-end: pad-inline(map.get($hierarchical-indent-scroll, 'compact'), map.get($hierarchical-indent-scroll, 'cosy'), map.get($hierarchical-indent-scroll, 'comfortable'));
+            margin-inline-end: pad-inline(
+                map.get($hierarchical-indent-scroll, 'compact'),
+                map.get($hierarchical-indent-scroll, 'cosy'),
+                map.get($hierarchical-indent-scroll, 'comfortable')
+            );
         }
     }
 
@@ -2877,7 +2958,11 @@
         overflow: hidden;
         z-index: 3;
         height: var(--header-size);
-        padding-inline: pad-inline(map.get($grid-header-padding-inline, 'compact'), map.get($grid-header-padding-inline, 'cosy'), map.get($grid-header-padding-inline, 'comfortable'));
+        padding-inline: pad-inline(
+            map.get($grid-header-padding-inline, 'compact'),
+            map.get($grid-header-padding-inline, 'cosy'),
+            map.get($grid-header-padding-inline, 'comfortable')
+        );
         padding-block: 0;
         background-clip: border-box !important;
         border-inline-start: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
@@ -2926,7 +3011,11 @@
     %igx-grid__tr-pivot--row-area {
         height: auto !important;
         align-items: flex-end;
-        padding-bottom: pad-block(map.get($pivot-row-aria-padding, 'compact'), map.get($pivot-row-aria-padding, 'cosy'), map.get($pivot-row-aria-padding, 'comfortable'));
+        padding-bottom: pad-block(
+            map.get($pivot-row-aria-padding, 'compact'),
+            map.get($pivot-row-aria-padding, 'cosy'),
+            map.get($pivot-row-aria-padding, 'comfortable')
+        );
         border-inline-start: 0;
         border-bottom: 0;
     }
