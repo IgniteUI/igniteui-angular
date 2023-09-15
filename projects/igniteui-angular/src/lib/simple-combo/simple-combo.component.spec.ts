@@ -10,7 +10,7 @@ import { RemoteDataService } from '../combo/combo.component.spec';
 import { IComboSelectionChangingEventArgs, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from '../combo/public_api';
 import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
+import { getComponentSize, IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
@@ -39,14 +39,7 @@ const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
-const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
 const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
-const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
-const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
-const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
-const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
@@ -1520,23 +1513,27 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
         });
         it('should apply correct styles to items and input when Display Density is set', () => {
-            combo.toggle();
+            combo.open();
             fixture.detectChanges();
-            expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
-            expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
-            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COSY).length).toBe(1);
+            combo.dropdown.items.forEach(item => {
+                expect(getComponentSize(item.element.nativeElement)).toEqual('2');
+            });
+            combo.close();
             fixture.componentInstance.density = DisplayDensity.compact;
             fixture.detectChanges();
-            expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
-            expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
-            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMPACT).length).toBe(1);
+            combo.open();
+            combo.dropdown.items.forEach(item => {
+                expect(getComponentSize(item.element.nativeElement)).toEqual('1');
+            });
+            combo.close();
             fixture.componentInstance.density = DisplayDensity.comfortable;
             fixture.detectChanges();
+            combo.open();
             expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
             expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_ITEM).length);
-            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMFORTABLE).length).toBe(1);
-            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
-            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+            combo.dropdown.items.forEach(item => {
+                expect(getComponentSize(item.element.nativeElement)).toEqual('3');
+            });
         });
         it('should scale items container depending on displayDensity (itemHeight * 10)', () => {
             combo.toggle();
@@ -2043,7 +2040,7 @@ describe('IgxSimpleCombo', () => {
 
             // Scroll selected item out of view
             combo.virtualScrollContainer.scrollTo(40);
-            await wait();
+            await wait(300);
             fixture.detectChanges();
 
             input.nativeElement.focus();

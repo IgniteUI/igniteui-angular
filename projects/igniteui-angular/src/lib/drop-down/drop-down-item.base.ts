@@ -97,20 +97,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         return !this.isHeader;
     }
 
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__item--cosy')
-    public get itemStyleCosy() {
-        return this.dropDown.displayDensity === 'cosy' && !this.isHeader;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__item--compact')
-    public get itemStyleCompact() {
-        return this.dropDown.displayDensity === 'compact' && !this.isHeader;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get size() {
+        return this.dropDown.getComponentSizeStyles();
     }
 
     /**
@@ -192,22 +182,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @Input()
     @HostBinding('class.igx-drop-down__header')
     public isHeader: boolean;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__header--cosy')
-    public get headerClassCosy() {
-        return this.isHeader && this.dropDown.displayDensity === 'cosy';
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down__header--compact')
-    public get headerClassCompact() {
-        return this.isHeader && this.dropDown.displayDensity === 'compact';
-    }
 
     /**
      * Sets/gets if the given item is disabled

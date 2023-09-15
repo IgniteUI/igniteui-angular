@@ -59,6 +59,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public overlayComponentId: string;
 
+    /*
+     * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
+     */
     @Input()
     public displayDensity: DisplayDensity;
 
