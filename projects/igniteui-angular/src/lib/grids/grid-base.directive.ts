@@ -6169,7 +6169,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }
