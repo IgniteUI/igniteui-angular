@@ -6,6 +6,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxBaseExporter } from '../../services/exporter-common/base-export-service';
 import { IgxExporterOptionsBase } from '../../services/exporter-common/exporter-options-base';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IBaseSearchInfo } from '../../directives/text-highlight/text-highlight.directive';
 
 /** The event arguments when data from a grid is being copied. */
 export interface IGridClipboardEvent {
@@ -208,29 +209,9 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
     readonly event?: Event;
 }
 
-/** 
- * Represents information for managing search functionality and storing information related to the search process: 
- * search text, search options, and information about the matches found
- */
-export interface ISearchInfo {
-    /** 
-     * Represents the text, the user has entered, in order to search matching results with it
-     * it's non optional, but can be empty string
-     */
-    searchText: string;
-    /**
-     * Indicates whether the search should match results, no matter the case of the letters (upper and lower) 
-     * If the value is true, the result will depend on the case (example: `E` will not match `e`)
-     * If the value is false, the result will not depend on the case (example: `E` will match `e`)
-     */
-    caseSensitive: boolean;
-    /** Indicates whether the search should match the exact text (value: true) or allow partial matches (value: false) */
-    exactMatch: boolean;
-    /** `activeMatchIndex` takes note of the index of the currently active (highlighted) match */
+export interface ISearchInfo extends IBaseSearchInfo {
+    matchInfoCache: any[];
     activeMatchIndex: number;
-    /** Represents the number of the found matches */
-    matchCount: number;
-    content: string;
 }
 
 /**
