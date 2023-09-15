@@ -11,6 +11,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 /* blazorIndirectRender */
 /* blazorAlternateBaseType: GridToolbarBaseAction */
 /* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured button to open the advanced filtering dialog of the grid.
  *

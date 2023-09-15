@@ -19,6 +19,7 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 /* wcElementTag: igc-column-group */
 /* jsonAPIManageCollectionInMarkup */
 /* blazorIndirectRender */
+/* additionalIdentifier: Children.Field */
 /**
  * **Ignite UI for Angular Column Group**
  *

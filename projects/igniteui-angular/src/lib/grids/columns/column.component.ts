@@ -65,6 +65,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 /* contentParent: ColumnGroup */
 /* wcElementTag: igc-column */
 /* blazorIndirectRender */
+/* additionalIdentifier: Field */
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)
@@ -1113,7 +1114,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._sortStrategy;
     }
 
-    
+
     /**
      * Sets the column `sortStrategy`.
      * ```typescript

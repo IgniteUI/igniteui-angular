@@ -13,6 +13,7 @@ import { IgxColumnGroupComponent } from './column-group.component';
 /* omitModule */
 /* wcElementTag: igc-column-layout */
 /* jsonAPIManageCollectionInMarkup */
+/* additionalIdentifier: Children.Field */
 /**
  * Column layout for declaration of Multi-row Layout
  *

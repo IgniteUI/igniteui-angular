@@ -11,6 +11,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 /* wcElementTag: igc-grid-toolbar-pinning */
 /* blazorIndirectRender */
 /* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured column pinning component for the grid.
  *

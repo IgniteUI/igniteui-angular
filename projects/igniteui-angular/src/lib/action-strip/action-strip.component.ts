@@ -44,6 +44,7 @@ export class IgxActionStripMenuItemDirective {
 /* jsonAPIManageItemInMarkup */
 /* wcElementTag: igc-action-strip */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Action Strip provides templatable area for one or more actions.
  *

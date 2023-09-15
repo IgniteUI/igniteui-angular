@@ -12,6 +12,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 /* wcElementTag: igc-grid-toolbar-hiding */
 /* blazorIndirectRender */
 /* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured column hiding component for the grid.
  *
