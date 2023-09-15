@@ -658,7 +658,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellStyles = null;
 
-    /* csTreatAsEvent: CellValueFormatterEventHandler */
+    /* alternateType: CellValueFormatterEventHandler */
     /* blazorOnlyScript */
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
@@ -698,7 +698,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public formatter: (value: any, rowData?: any) => any;
 
-    /* csTreatAsEvent: SummaryValueFormatterEventHandler */
+    /* alternateType: SummaryValueFormatterEventHandler */
     /* blazorOnlyScript */
     /**
      * The summaryFormatter is used to format the display of the column summaries.
@@ -1113,7 +1113,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._sortStrategy;
     }
 
-    
+
     /**
      * Sets the column `sortStrategy`.
      * ```typescript

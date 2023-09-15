@@ -1109,12 +1109,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
-    /* contentChild */
+    /* contentChildren */
     /* blazorInclude */
-    /* ngQueryListName: actionStrip */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ActionStripCollection */
+    /* ngQueryListName: actionStripComponents */
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent)
-    public actionStrip: IgxActionStripComponent;
+    @ContentChildren(IgxActionStripComponent)
+    protected actionStripComponents: QueryList<IgxActionStripComponent>;
+
+    /** @hidden @internal */
+    public get actionStrip() {
+        return this.actionStripComponents?.first;
+    }
 
     /**
      * @hidden @internal
@@ -6170,7 +6177,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }
