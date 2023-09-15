@@ -4315,6 +4315,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /* ngQueryListName: columnList */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ColumnCollection */
+    /* reactContentChildren */
     /**
      * Gets an array of `IgxColumnComponent`s.
      *
