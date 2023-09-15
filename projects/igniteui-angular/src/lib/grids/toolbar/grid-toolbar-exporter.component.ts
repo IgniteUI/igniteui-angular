@@ -21,7 +21,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
 
-
+/* jsonAPIComplexObject */
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
     /* alternateType: ExporterOptionsBase */

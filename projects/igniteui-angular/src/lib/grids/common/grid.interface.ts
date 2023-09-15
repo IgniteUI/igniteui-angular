@@ -52,6 +52,7 @@ export interface IGridDataBindable {
 }
 
 /* marshalByValue */
+/* jsonAPIComplexObject */
 export interface CellType {
     value: any;
     editValue: any;
@@ -83,6 +84,7 @@ export interface CellType {
     onClick?(event: MouseEvent): void;
 }
 
+/* jsonAPIComplexObject */
 export interface HeaderType {
     /* blazorSuppress */
     nativeElement: HTMLElement;
@@ -95,6 +97,7 @@ export interface HeaderType {
     sortDirection: SortingDirection;
 }
 
+/* jsonAPIComplexValue */
 /* marshalByValue */
 export interface RowType {
     /* blazorSuppress */
@@ -872,6 +875,7 @@ export interface IgxCellTemplateContext {
     cell: CellType
 }
 
+/* jsonAPIComplexObject */
 export interface IgxRowSelectorTemplateDetails {
     index: number;
     /** @deprecated Use `key` */
@@ -886,6 +890,7 @@ export interface IgxRowSelectorTemplateContext {
     $implicit: IgxRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxGroupByRowSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
@@ -895,6 +900,7 @@ export interface IgxGroupByRowSelectorTemplateContext {
     $implicit: IgxGroupByRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxHeadSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
