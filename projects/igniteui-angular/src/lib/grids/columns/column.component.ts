@@ -2490,7 +2490,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
