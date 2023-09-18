@@ -1,12 +1,10 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
-/* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
 }
 
-/* marshalByValue */
 export interface IgxSummaryResult {
     key: string;
     label: string;

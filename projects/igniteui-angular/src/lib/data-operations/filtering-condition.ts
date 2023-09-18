@@ -852,7 +852,6 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     }
 }
 
-/* marshalByValue */
 /**
  * Interface describing filtering operations
  *

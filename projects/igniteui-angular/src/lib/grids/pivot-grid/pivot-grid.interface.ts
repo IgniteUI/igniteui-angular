@@ -192,7 +192,6 @@ export interface IPivotGridColumn {
         value: IPivotValue
 }
 
-/* marshalByValue */
 /** Interface describing the Pivot data keys used for data generation.
 *  Can be used for custom remote scenarios where the data is pre-populated.
 */
