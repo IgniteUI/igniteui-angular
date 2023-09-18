@@ -83,9 +83,14 @@
 /// @param {Color} $filtering-background-or [null] - The background color of advanced filtering "OR" condition.
 /// @param {Color} $filtering-background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
 /// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
-/// @param {Color} $filtering-header-text-color [null] - The text color color of the filtered column header.
+/// @param {Color} $filtering-header-text-color [null] - The text color of the filtered column header.
 /// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
-/// @param {Color} $filtering-row-text-color [null] - The text-color color of the filtering row.
+/// @param {Color} $filtering-row-text-color [null] - The text color of the filtering row.
+/// @param {Color} $excel-filtering-header-foreground [null] - The text color of the header in the excel style filtering.
+/// @param {Color} $excel-filtering-subheader-foreground [null] - The text color of the sorting and moving headers in the excel style filtering.
+/// @param {Color} $excel-filtering-actions-foreground [null] - The text color of the excel style filtering options.
+/// @param {Color} $excel-filtering-actions-hover-foreground [null] - The text color of the excel style filtering options in hover/focus state.
+/// @param {Color} $excel-filtering-actions-disabled-foreground [null] - The text color of the excel style filtering options in disabled state.
 /// @param {Color} $tree-filtered-text-color [null] - grouping row background color on focus.
 /// @param {Color} $body-summaries-background [null] - The background color of the summary groups located the body.
 /// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
@@ -194,6 +199,12 @@
     $tree-filtered-text-color: null,
     $tree-selected-filtered-row-text-color: null,
     $tree-selected-filtered-cell-text-color: null,
+
+    $excel-filtering-header-foreground: null,
+    $excel-filtering-subheader-foreground: null,
+    $excel-filtering-actions-foreground: null,
+    $excel-filtering-actions-hover-foreground: null,
+    $excel-filtering-actions-disabled-foreground: null,
 
     $body-summaries-background: null,
     $body-summaries-text-color: null,
@@ -536,6 +547,12 @@
         filtering-background-or: $filtering-background-or,
         filtering-background-and--focus: $filtering-background-and--focus,
         filtering-background-or--focus: $filtering-background-or--focus,
+
+        excel-filtering-header-foreground: $excel-filtering-header-foreground,
+        excel-filtering-subheader-foreground: $excel-filtering-subheader-foreground,
+        excel-filtering-actions-foreground: $excel-filtering-actions-foreground,
+        excel-filtering-actions-hover-foreground: $excel-filtering-actions-hover-foreground,
+        excel-filtering-actions-disabled-foreground: $excel-filtering-actions-disabled-foreground,
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
