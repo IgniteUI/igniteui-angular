@@ -228,9 +228,11 @@
         border-color: var-get($theme, 'error-color');
     }
 
-    %cbx-composite--invalid--fluent {
-        @if $variant == 'fluent' {
+    %cbx-composite--invalid--hover {
+        @if $variant == 'material' or  $variant == 'fluent' {
             border-color: var-get($theme, 'error-color-hover');
+        } @else {
+            border-color: var-get($theme, 'error-color');
         }
     }
 
@@ -242,22 +244,26 @@
         }
     }
 
-    %cbx-composite--x--fluent {
-        @if $variant == 'fluent' {
-            border-color: var-get($theme, 'fill-color-hover');
+    %cbx-composite--x--hover {
+        border-color: var-get($theme, 'fill-color-hover');
 
-            &::after {
-                background: var-get($theme, 'fill-color-hover');
-            }
+        &::after {
+            background: var-get($theme, 'fill-color-hover');
         }
     }
 
-    %cbx-composite--x--invalid--fluent {
-        @if $variant == 'fluent' {
+    %cbx-composite--x--invalid--hover {
+        @if $variant == 'material' or  $variant == 'fluent' {
             border-color: var-get($theme, 'error-color-hover');
 
             &::after {
                 background: var-get($theme, 'error-color-hover');
+            }
+        } @else {
+            border-color: var-get($theme, 'error-color');
+
+            &::after {
+                background: var-get($theme, 'error-color');
             }
         }
     }
@@ -276,6 +282,15 @@
 
         &::after {
             background: var-get($theme, 'disabled-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            background: var-get($theme, 'disabled-indeterminate-color');
+            border-color: var-get($theme, 'disabled-indeterminate-color');
+
+            &::after {
+                background: var-get($theme, 'disabled-indeterminate-color');
+            }
         }
 
         @if $bootstrap-theme {
@@ -303,9 +318,25 @@
             inset-inline-start: $mark-offset;
         }
 
+        &:hover {
+            %cbx-composite {
+                border-color: var-get($theme, 'fill-color-hover');
+
+                &::before {
+                    border-color: var-get($theme, 'fill-color-hover');
+                }
+
+                @if $variant != 'fluent' {
+                    &::after {
+                        background: var-get($theme, 'fill-color-hover');
+                    }
+                }
+            }
+        }
+
         @if $variant == 'material' {
             %cbx-composite--x--disabled {
-                border: var-get($theme, 'disabled-indeterminate-color');
+                border-color: var-get($theme, 'disabled-indeterminate-color');
 
                 &::after {
                     background: var-get($theme, 'disabled-indeterminate-color');
@@ -335,16 +366,6 @@
                     border-radius: border-radius(rem(2px));
                     border: rem(5px) solid var-get($theme, 'fill-color');
                     z-index: 1;
-                }
-            }
-
-            &:hover {
-                %cbx-composite {
-                    border-color: var-get($theme, 'fill-color-hover');
-
-                    &::before {
-                        border-color: var-get($theme, 'fill-color-hover');
-                    }
                 }
             }
 
