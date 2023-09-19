@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
@@ -36,11 +36,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         element: ElementRef<HTMLElement>,
         viewContainer: ViewContainerRef,
         zone: NgZone,
+        renderer: Renderer2,
         cdr: ChangeDetectorRef,
         private cms: IgxColumnMovingService,
         _platformUtil: PlatformUtil,
     ) {
-        super(cdr, element, viewContainer, zone, _platformUtil);
+        super(cdr, element, viewContainer, zone, renderer, _platformUtil);
         this.ghostClass = this._ghostClass;
     }
 

@@ -687,6 +687,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public element: ElementRef,
         public viewContainer: ViewContainerRef,
         public zone: NgZone,
+        public renderer: Renderer2,
         protected platformUtil: PlatformUtil,
     ) {
     }
