@@ -63,9 +63,13 @@ export class UpdateChanges {
             if (!wsProject) {
                 return null;
             }
-            const mainRelPath = wsProject.architect?.build?.options['main'] ?
-                path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
-                `src/main.ts`;
+            const mainConfigPath = wsProject.architect?.build?.options['main'];
+            let mainRelPath = `src/main.ts`;
+            if (mainConfigPath) {
+                mainRelPath = mainConfigPath.startsWith(wsProject.root) ?
+                    mainConfigPath :
+                    path.join(wsProject.root, mainConfigPath);
+            }
             // patch TSConfig so it includes angularOptions.strictTemplates
             // ivy ls requires this in order to function properly on templates
             this.patchTsConfig();
