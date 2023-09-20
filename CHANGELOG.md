@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.0.0
+### New Features
+- `IgxButtonGroup`:
+    - **Breaking Change** Added the `selectionMode` property that sets the selection mode of the buttons in the `IgxButtonGroup`. Selection modes are `single`, `singleRequired` and `multi` as default is `single`.
+    - **Breaking Change** Deprecated the `multiSelection` property and all references have been migrated to `selectionMode="multi"`.
+
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
@@ -39,8 +45,6 @@ All notable changes for each version of this project will be documented in this 
     When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
 - `IgxButtonGroup`:
     - Added `owner` to the `IButtonGroupEventArgs` to identify the emitting button group instance.
-    - **Breaking Change** Added the `selectionMode` property that sets the selection mode of the buttons in the `IgxButtonGroup`. Selection modes are `single`, `singleRequired` and `multi` as default is `single`.
-    - **Breaking Change** Deprecated the `multiSelection` property and all references have been migrated to `selectionMode="multi"`.
 - `Themes`:
     - Include a standalone theme for the `igxLabel` directive to allow usage with components outside the Input Group.
 
