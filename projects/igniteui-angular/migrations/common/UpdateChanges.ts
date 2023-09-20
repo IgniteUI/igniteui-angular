@@ -78,8 +78,12 @@ export class UpdateChanges {
             this._projectService.openClientFile(scriptInfo.fileName);
 
 
-            const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
-            project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
+            try {
+                const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
+                project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
+            } catch (err) {
+                return this._projectService;
+            }
         }
 
         return this._projectService;
