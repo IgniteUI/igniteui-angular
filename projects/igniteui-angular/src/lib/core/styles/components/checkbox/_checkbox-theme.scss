@@ -207,21 +207,11 @@
         -webkit-tap-highlight-color: transparent;
         transition: border-color .2s $ease-out-quad;
         overflow: hidden;
-
-        &::after {
-            position: absolute;
-            content: '';
-            inset: 0;
-            transition: background .2s $ease-out-quad;
-        }
     }
 
     %cbx-composite--x {
         border-color: var-get($theme, 'fill-color');
-
-        &::after {
-            background: var-get($theme, 'fill-color');
-        }
+        background: var-get($theme, 'fill-color');
     }
 
     %cbx-composite--invalid {
@@ -238,33 +228,21 @@
 
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
-
-        &::after {
-            background: var-get($theme, 'error-color');
-        }
+        background: var-get($theme, 'error-color');
     }
 
     %cbx-composite--x--hover {
         border-color: var-get($theme, 'fill-color-hover');
-
-        &::after {
-            background: var-get($theme, 'fill-color-hover');
-        }
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-composite--x--invalid--hover {
         @if $variant == 'material' or  $variant == 'fluent' {
             border-color: var-get($theme, 'error-color-hover');
-
-            &::after {
-                background: var-get($theme, 'error-color-hover');
-            }
+            background: var-get($theme, 'error-color-hover');
         } @else {
             border-color: var-get($theme, 'error-color');
-
-            &::after {
-                background: var-get($theme, 'error-color');
-            }
+            background: var-get($theme, 'error-color');
         }
     }
 
@@ -278,19 +256,13 @@
     }
 
     %cbx-composite--x--disabled {
-        background: var-get($theme, 'disabled-color');
-
-        &::after {
+        @if $variant != 'indigo-design' {
             background: var-get($theme, 'disabled-color');
         }
 
         @if $variant == 'indigo-design' {
             background: var-get($theme, 'disabled-indeterminate-color');
             border-color: var-get($theme, 'disabled-indeterminate-color');
-
-            &::after {
-                background: var-get($theme, 'disabled-indeterminate-color');
-            }
         }
 
         @if $bootstrap-theme {
@@ -323,13 +295,7 @@
                 border-color: var-get($theme, 'fill-color-hover');
 
                 &::before {
-                    border-color: var-get($theme, 'fill-color-hover');
-                }
-
-                @if $variant != 'fluent' {
-                    &::after {
-                        background: var-get($theme, 'fill-color-hover');
-                    }
+                    background: var-get($theme, 'fill-color-hover');
                 }
             }
         }
@@ -337,10 +303,7 @@
         @if $variant == 'material' {
             %cbx-composite--x--disabled {
                 border-color: var-get($theme, 'disabled-indeterminate-color');
-
-                &::after {
-                    background: var-get($theme, 'disabled-indeterminate-color');
-                }
+                background: var-get($theme, 'disabled-indeterminate-color');
             }
         }
 
@@ -352,10 +315,6 @@
             %cbx-composite {
                 background: transparent;
 
-                &::after {
-                    background: transparent;
-                }
-
                 &::before {
                     content: '';
                     position: absolute;
@@ -364,7 +323,7 @@
                     width: rem(10px);
                     height: rem(10px);
                     border-radius: border-radius(rem(2px));
-                    border: rem(5px) solid var-get($theme, 'fill-color');
+                    background: var-get($theme, 'fill-color');
                     z-index: 1;
                 }
             }
@@ -372,12 +331,7 @@
             %cbx-composite--x--disabled {
                 background: transparent;
 
-                &::after {
-                    background: transparent;
-                }
-
                 &::before {
-                    border-color: var-get($theme, 'disabled-color');
                     background: var-get($theme, 'disabled-color');
                 }
             }
@@ -386,9 +340,7 @@
 
     %igx-checkbox--indeterminate--invalid {
         %cbx-composite--x {
-            &::after {
-                background: var-get($theme, 'error-color');
-            }
+            background: var-get($theme, 'error-color');
         }
 
         @if $variant == 'fluent' {
@@ -396,14 +348,12 @@
                 border-color: var-get($theme, 'error-color');
 
                 &::before {
-                    border-color: var-get($theme, 'error-color');
+                    background: var-get($theme, 'error-color');
                 }
             }
 
             %cbx-composite--x {
-                &::after {
-                    background: transparent;
-                }
+                background: transparent;
             }
 
             &:hover {
@@ -411,7 +361,7 @@
                     border-color: var-get($theme, 'error-color-hover');
 
                     &::before {
-                        border-color: var-get($theme, 'error-color-hover');
+                        background: var-get($theme, 'error-color-hover');
                     }
                 }
             }
