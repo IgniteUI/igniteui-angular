@@ -6,12 +6,14 @@ export enum FilteringLogic {
     Or
 }
 
+/* tsPlainInterface */
+/* marshalByValue */
 /**
  * Represents filtering expressions.
  */
 export declare interface IFilteringExpression {
     fieldName: string;
     condition: IFilteringOperation;
-    searchVal?: any;
+    searchVal?: any;   
     ignoreCase?: boolean;
 }

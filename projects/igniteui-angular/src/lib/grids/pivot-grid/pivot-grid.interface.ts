@@ -44,7 +44,7 @@ export interface IPivotConfigurationChangedEventArgs {
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
 export interface IPivotDimensionStrategy {
-    /* csSuppress */
+    /* blazorCSSuppress */
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],
@@ -192,6 +192,7 @@ export interface IPivotGridColumn {
         value: IPivotValue
 }
 
+/* marshalByValue */
 /** Interface describing the Pivot data keys used for data generation.
 *  Can be used for custom remote scenarios where the data is pre-populated.
 */

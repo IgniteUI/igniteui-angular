@@ -14,12 +14,12 @@ const DATE_TIME_TYPE = 'dateTime';
 const STRING_TYPE = 'string';
 
 export interface IGridSortingStrategy {
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
 }
 
 export interface IGridGroupingStrategy extends IGridSortingStrategy {
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     groupBy(data: any[], state: IGroupingState, grid?: any, groupsRecords?: any[], fullResult?: IGroupByResult): IGroupByResult;
 }
 

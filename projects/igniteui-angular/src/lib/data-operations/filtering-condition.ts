@@ -852,6 +852,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* tsPlainInterface */
+/* marshalByValue */
 /**
  * Interface describing filtering operations
  *
@@ -862,7 +864,7 @@ export interface IFilteringOperation {
     isUnary: boolean;
     iconName: string;
     hidden?: boolean;
-    /* csSuppress */
+    /* blazorCSSuppress */
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 
