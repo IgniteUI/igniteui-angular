@@ -89,7 +89,13 @@
         "@igniteui/angular-schematics": "~16.0.1200"
     },
     "ng-update": {
-        "migrations": "./migrations/migration-collection.json"
+        "migrations": "./migrations/migration-collection.json",
+        "packageGroup": [
+            "igniteui-angular",
+            "@infragistics/igniteui-angular",
+            "igniteui-angular-i18n",
+            "@igniteui/angular-schematics"
+        ]
     },
     "schematics": "./schematics/collection.json",
     "exports": {
