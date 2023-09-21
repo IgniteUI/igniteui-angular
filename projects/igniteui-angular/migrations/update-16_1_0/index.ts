@@ -14,6 +14,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
     const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
+    update.applyChanges();
 
     const prop = ['[multiSelection]'];
 
@@ -59,5 +60,4 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
 
     applyChanges();
-    changes.clear();
 };
