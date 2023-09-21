@@ -43,7 +43,8 @@
 
     %igx-divider-display {
         display: block;
-        height: rem(1px);
+        min-height: rem(1px);
+        flex-basis: rem(1px);
         background: var-get($theme, 'color');
         margin: var(--igx-divider-inset, var(--inset, var(--_inset)));
     }
@@ -55,7 +56,7 @@
 
     %igx-divider--vertical {
         display: inline-block;
-        width: rem(1px);
+        flex-basis: rem(1px);
         min-width: rem(1px);
         height: auto;
     }

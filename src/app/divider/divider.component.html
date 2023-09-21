@@ -1,0 +1,9 @@
+<button igxButton="raised" (click)="toggleDividerDirection()">Change to {{direction? 'horizontal':  'vertical'}}</button>
+<button igxButton="raised" (click)="toggleDividerType()">Change type</button>
+
+<div #dividerWrapper class="divider-wrapper">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet dolorem eaque eligendi eum nisi numquam quas soluta, tenetur. Accusantium aut dicta minima! Ab alias dolorum, enim eveniet qui suscipit!</p>
+    <igx-divider [vertical]="direction"></igx-divider>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet dolorem eaque eligendi eum nisi numquam quas soluta, tenetur. Accusantium aut dicta minima! Ab alias dolorum, enim eveniet qui suscipit!</p>
+    <span class="hint">Flex direction: {{direction? 'row':  'column'}}</span>
+</div>

@@ -1,0 +1,40 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 5%;
+
+    > button {
+        align-self: center;
+    }
+}
+
+.divider-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: .5rem;
+    border: 1px solid hsla(var(--ig-gray-300));
+    position: relative;
+
+    p {
+        margin: 0;
+        text-align: justify;
+        letter-spacing: 0;
+    }
+
+    &--vertical {
+        flex-direction: row;
+    }
+
+    .hint {
+        display: inline-block;
+        font-size: .8rem;
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: .5rem;
+        padding: .2rem .4rem;
+        background: hsla(var(--ig-gray-300));
+    }
+}
