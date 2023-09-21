@@ -67,14 +67,6 @@
     $theme: digest-schema($checkbox-schema);
     $meta: map.get($theme, '_meta');
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($border-radius-ripple) {
-        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple')...);
-    }
-
     @return extend($theme, (
         name: $name,
         label-color: $label-color,
