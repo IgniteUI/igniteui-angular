@@ -293,7 +293,10 @@
         &:hover {
             %cbx-composite {
                 border-color: var-get($theme, 'fill-color-hover');
-                background: var-get($theme, 'fill-color-hover');
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'fill-color-hover');
+                }
 
                 &::before {
                     background: var-get($theme, 'fill-color-hover');
