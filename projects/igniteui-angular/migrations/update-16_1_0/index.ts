@@ -5,13 +5,17 @@ import {
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile } from '../common/util';
-import { HtmlParser } from '@angular/compiler';
+import { nativeImport } from '../common/import-helper.js';
+import { Element } from '@angular/compiler';
 
 const version = '16.1.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
+
+    const prop = ['[multiSelection]'];
 
     const changes = new Map<string, FileChange[]>();
 
@@ -40,11 +44,11 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         buttonGroups.map(node => getSourceOffset(node as Element))
             .forEach(offset => {
                 const { startTag, file, node } = offset;
-                const { name, value } = getAttribute(node, 'multiSelection')[0];
+                const { name, value } = getAttribute(node, prop)[0];
                 const repTxt = file.content.substring(startTag.start, startTag.end);
                 const property = `${name}="${value}"`;
                 if (value === 'true') {
-                    const removePropTxt = repTxt.replace(property, 'selectionMode="multi"');
+                    const removePropTxt = repTxt.replace(property, `[selectionMode]="'multi'"`);
                     addChange(file.url, new FileChange(startTag.start, removePropTxt, repTxt, 'replace'));
                 } else {
                     const removePropTxt = repTxt.replace(property, '');
@@ -52,9 +56,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 }
         });
 
-    };
+    }
 
     applyChanges();
-    update.applyChanges();
     changes.clear();
 };

@@ -135,22 +135,19 @@ describe(`Update to ${version}`, () => {
 
     it('Should remove multiSelection property set to "true" and replace it with selectionMode property set to "multi"', async () => {
         appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-buttongroup [multiSelection]="'true'">
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup [multiSelection]="true">
                 <button igxButton>
                     Button 1
                 </button>
                 <button igxButton>
                     Button 2
                 </button>
-                <button igxButton>
-                    Button 3
-                </button>
             </igx-buttongroup>`);
 
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
-
+    
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
             `<igx-buttongroup [selectionMode]="'multi'">
@@ -160,24 +157,18 @@ describe(`Update to ${version}`, () => {
                 <button igxButton>
                     Button 2
                 </button>
-                <button igxButton>
-                    Button 3
-                </button>
             </igx-buttongroup>`);
     });
 
     it('Should remove multiSelection property set to "false"', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
-            `<igx-buttongroup [multiSelection]="'false'">
+            `<igx-buttongroup [multiSelection]="false">
                 <button igxButton>
                     Button 1
                 </button>
                 <button igxButton>
                     Button 2
-                </button>
-                <button igxButton>
-                    Button 3
                 </button>
             </igx-buttongroup>`);
 
@@ -186,15 +177,12 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
-            `<igx-buttongroup>
+            `<igx-buttongroup >
                 <button igxButton>
                     Button 1
                 </button>
                 <button igxButton>
                     Button 2
-                </button>
-                <button igxButton>
-                    Button 3
                 </button>
             </igx-buttongroup>`);
     });
