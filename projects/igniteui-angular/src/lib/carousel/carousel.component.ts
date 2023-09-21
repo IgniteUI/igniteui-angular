@@ -24,8 +24,7 @@ import {
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
 
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
@@ -34,6 +33,7 @@ import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { igxI18N } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -385,7 +385,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;

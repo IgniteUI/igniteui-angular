@@ -19,8 +19,8 @@ import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { IBannerResourceStrings } from '../core/i18n/banner-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/banner-resources';
+import { igxI18N } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
@@ -160,9 +160,6 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     public get resourceStrings(): IBannerResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.BannerResourceStrings;
-        }
         return this._resourceStrings;
     }
     /**
@@ -205,7 +202,7 @@ export class IgxBannerComponent implements IToggleView {
 
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(BannerResourceStringsEN);
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
 

@@ -17,8 +17,7 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -36,6 +35,7 @@ import {
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { igxI18N } from '../core/i18n/resources';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -270,10 +270,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Show/hide week numbers
-     * 
+     *
      * @remarks
      * Default is `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
@@ -407,7 +407,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
-    private _resourceStrings = CurrentResourceStrings.DateRangePickerResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;

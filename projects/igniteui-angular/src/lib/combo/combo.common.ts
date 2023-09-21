@@ -43,8 +43,8 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
-import { IComboResourceStrings } from '../core/i18n/combo-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
+import { igxI18N } from '../core/i18n/resources';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -467,9 +467,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
-        }
         return this._resourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
@@ -942,7 +939,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings;
+    protected _resourceStrings = igxI18N.instance().getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();

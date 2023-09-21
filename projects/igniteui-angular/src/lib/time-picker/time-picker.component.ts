@@ -45,8 +45,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
@@ -60,6 +59,7 @@ import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { igxI18N } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -452,7 +452,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> = { hours: 1, minutes: 1, seconds: 1 };

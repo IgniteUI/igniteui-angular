@@ -17,11 +17,11 @@ import {
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
-import { IChipResourceStrings } from '../core/i18n/chip-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { igxI18N } from '../core/i18n/resources';
 
 export const IgxChipTypeVariant = mkenum({
     PRIMARY: 'primary',
@@ -621,7 +621,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    private _resourceStrings = CurrentResourceStrings.ChipResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {

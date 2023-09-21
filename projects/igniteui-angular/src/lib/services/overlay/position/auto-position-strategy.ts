@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { isHorizontalAnimation, isVerticalAnimation, reverseAnimationResolver } from '../../../core/utils';
+import { AnimationUtil } from '../../../core/utils';
 import { ConnectedFit, HorizontalAlignment, VerticalAlignment } from './../utilities';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
@@ -188,13 +188,13 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
     private updateAnimation(animation: AnimationReferenceMetadata, direction: FlipDirection): AnimationReferenceMetadata {
         switch (direction) {
             case FlipDirection.Horizontal:
-                if (isHorizontalAnimation(animation)) {
-                    return reverseAnimationResolver(animation);
+                if (AnimationUtil.instance().isHorizontalAnimation(animation)) {
+                    return AnimationUtil.instance().reverseAnimationResolver(animation);
                 }
                 break;
             case FlipDirection.Vertical:
-                if (isVerticalAnimation(animation)) {
-                    return reverseAnimationResolver(animation);
+                if (AnimationUtil.instance().isVerticalAnimation(animation)) {
+                    return AnimationUtil.instance().reverseAnimationResolver(animation);
                 }
                 break;
         }

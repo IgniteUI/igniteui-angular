@@ -12,8 +12,7 @@ import { Subject, Subscription } from 'rxjs';
 import {
     DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
 } from '../core/density';
-import { IInputResourceStrings } from '../core/i18n/input-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { mkenum, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
@@ -27,6 +26,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
+import { igxI18N } from '../core/i18n/resources';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -137,7 +137,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _theme: IgxInputGroupTheme;
     private _theme$ = new Subject();
     private _subscription: Subscription;
-    private _resourceStrings = CurrentResourceStrings.InputResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')

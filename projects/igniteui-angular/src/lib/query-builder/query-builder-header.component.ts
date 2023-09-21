@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { NgIf } from '@angular/common';
+import { igxI18N } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
@@ -11,7 +11,7 @@ import { NgIf } from '@angular/common';
 })
 export class IgxQueryBuilderHeaderComponent {
 
-    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
      * An @Input property that sets the title of the `IgxQueryBuilderHeaderComponent`.
