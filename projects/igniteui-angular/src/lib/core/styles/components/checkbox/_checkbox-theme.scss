@@ -205,7 +205,7 @@
         border-color: var-get($theme, 'empty-color');
         border-radius: var-get($theme, 'border-radius');
         -webkit-tap-highlight-color: transparent;
-        transition: border-color .2s $ease-out-quad;
+        transition: border-color .2s $ease-out-quad, background .2s $ease-out-quad;
         overflow: hidden;
     }
 
@@ -293,6 +293,7 @@
         &:hover {
             %cbx-composite {
                 border-color: var-get($theme, 'fill-color-hover');
+                background: var-get($theme, 'fill-color-hover');
 
                 &::before {
                     background: var-get($theme, 'fill-color-hover');
