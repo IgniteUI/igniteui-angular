@@ -4,6 +4,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 /* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;
+    /* blazorCSSuppress */
     customSummary?: any;
 }
 
