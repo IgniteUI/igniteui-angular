@@ -18,7 +18,8 @@
 ///   @include css-vars($my-divider-theme);
 @function divider-theme(
     $schema: $light-material-schema,
-    $color: null
+    $color: null,
+    $inset: null
 ) {
     $name: 'igx-divider';
     $divider-schema: ();
@@ -33,7 +34,8 @@
 
     @return extend($theme, (
         name: $name,
-        color: $color
+        color: $color,
+        inset: 0
     ));
 }
 
@@ -42,27 +44,83 @@
     @include css-vars($theme);
 
     %igx-divider-display {
-        display: block;
-        min-height: rem(1px);
-        flex-basis: rem(1px);
-        background: var-get($theme, 'color');
-        margin: var(--igx-divider-inset, var(--inset, var(--_inset)));
+        position: relative;
+        justify-content: center;
+        overflow: hidden;
+
+        &:after {
+            content: '';
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: var-get($theme, 'color');
+        }
     }
 
-    %igx-divider--dashed {
-        background: linear-gradient(to right, var-get($theme, 'color') 50%, transparent 50%);
-        background-size: rem(10px) rem(1px); /* dash size */
+    %igx-divider-display:not(%igx-divider--vertical) {
+        display: flex;
+        min-height: rem(1px);
+        width: 100%;
+        position: relative;
+
+        &::after {
+            inset-inline-start: var-get($theme, 'inset');
+        }
+
+        &:not(%igx-divider--inset) {
+            &::after {
+                width: 100%;
+            }
+        }
+    }
+
+    %igx-divider--inset:not(%igx-divider--vertical) {
+        &::after {
+            min-width: rem(4px);
+            width: calc(100% - (var-get($theme, 'inset') * 2));
+        }
+    }
+
+    %igx-divider-display%igx-divider--dashed:not(%igx-divider--vertical) {
+        &::after {
+            background: repeating-linear-gradient(
+                to right,
+                var-get($theme, 'color'),
+                var-get($theme, 'color') rem(10px),
+                transparent rem(10px),
+                transparent rem(20px)
+            );
+        }
+    }
+
+    %igx-divider-display%igx-divider--dashed {
+        &::after {
+            background: repeating-linear-gradient(
+                to bottom,
+                var-get($theme, 'color'),
+                var-get($theme, 'color') rem(10px),
+                transparent rem(10px),
+                transparent rem(20px)
+            );
+        }
     }
 
     %igx-divider--vertical {
-        display: inline-block;
-        flex-basis: rem(1px);
+        display: inline-flex;
         min-width: rem(1px);
-        height: auto;
+        width: rem(1px);
+
+        &:after {
+            inset-block-start: var-get($theme, 'inset');
+            width: 100%;
+            height: 100%;
+        }
     }
 
-    %igx-divider--vertical-dashed {
-        background: linear-gradient(to bottom, var-get($theme, 'color') 50%, transparent 50%);
-        background-size: rem(1px) rem(10px); /* dash size */
+    %igx-divider--vertical%igx-divider--inset {
+        &::after {
+            min-height: rem(4px);
+            height: calc(100% - (var-get($theme, 'inset') * 2));
+        }
     }
 }
