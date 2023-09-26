@@ -319,10 +319,8 @@ describe('Pivot pipes #pivotGrid', () => {
         expect(IgxPivotTimeAggregate.latestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 22:00'));
         expect(IgxPivotTimeAggregate.earliestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 1:00'));
 
-        // check localization can be changed
-        IgxPivotTimeAggregate.resourceStrings = {
-            igx_grid_pivot_aggregate_time_earliest: 'Earliest Custom Time'
-        };
+        // check string can be changed
+        IgxPivotTimeAggregate.aggregators().find(x => x.key === "EARLIEST").label = 'Earliest Custom Time';
 
         expect(IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label).toEqual('Earliest Custom Time');
     });
