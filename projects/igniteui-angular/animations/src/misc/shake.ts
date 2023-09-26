@@ -2,7 +2,6 @@ import {
     animate,
     animation,
     AnimationMetadata,
-    AnimationReferenceMetadata,
     keyframes,
     style
 } from '@angular/animations';
@@ -66,7 +65,7 @@ const baseRecipe: AnimationMetadata[] = [
     )
 ];
 
-export const shakeHor: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeHor = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         direction: 'X',
@@ -81,7 +80,7 @@ export const shakeHor: AnimationReferenceMetadata = /*@__PURE__*/animation(baseR
     }
 });
 
-export const shakeVer: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeVer = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         direction: 'Y',
@@ -96,7 +95,7 @@ export const shakeVer: AnimationReferenceMetadata = /*@__PURE__*/animation(baseR
     }
 });
 
-export const shakeTop: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeTop = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         direction: 'X',
@@ -111,7 +110,7 @@ export const shakeTop: AnimationReferenceMetadata = /*@__PURE__*/animation(baseR
     }
 });
 
-export const shakeBottom: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeBottom = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -126,7 +125,7 @@ export const shakeBottom: AnimationReferenceMetadata = /*@__PURE__*/animation(ba
     }
 });
 
-export const shakeRight: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeRight = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -141,7 +140,7 @@ export const shakeRight: AnimationReferenceMetadata = /*@__PURE__*/animation(bas
     }
 });
 
-export const shakeLeft: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeLeft = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -156,7 +155,7 @@ export const shakeLeft: AnimationReferenceMetadata = /*@__PURE__*/animation(base
     }
 });
 
-export const shakeCenter: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeCenter = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -171,7 +170,7 @@ export const shakeCenter: AnimationReferenceMetadata = /*@__PURE__*/animation(ba
     }
 });
 
-export const shakeTr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeTr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -186,7 +185,7 @@ export const shakeTr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRe
     }
 });
 
-export const shakeBr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeBr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -201,7 +200,7 @@ export const shakeBr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRe
     }
 });
 
-export const shakeBl: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeBl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',
@@ -216,7 +215,7 @@ export const shakeBl: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRe
     }
 });
 
-export const shakeTl: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const shakeTl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '800ms',

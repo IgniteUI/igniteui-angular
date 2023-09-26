@@ -1,4 +1,4 @@
-import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
+import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
 
 const baseRecipe: AnimationMetadata[] = [
@@ -18,7 +18,7 @@ const baseRecipe: AnimationMetadata[] = [
     )
 ];
 
-export const rotateInCenter: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInCenter = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -35,7 +35,7 @@ export const rotateInCenter: AnimationReferenceMetadata = animation(baseRecipe, 
     }
 });
 
-export const rotateOutCenter: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutCenter = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -52,7 +52,7 @@ export const rotateOutCenter: AnimationReferenceMetadata = animation(baseRecipe,
     }
 });
 
-export const rotateInTop: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInTop = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -69,7 +69,7 @@ export const rotateInTop: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutTop: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTop = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -86,7 +86,7 @@ export const rotateOutTop: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInRight: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInRight = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -103,7 +103,7 @@ export const rotateInRight: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutRight: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutRight = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -120,7 +120,7 @@ export const rotateOutRight: AnimationReferenceMetadata = animation(baseRecipe, 
     }
 });
 
-export const rotateInBottom: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBottom = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -137,7 +137,7 @@ export const rotateInBottom: AnimationReferenceMetadata = animation(baseRecipe, 
     }
 });
 
-export const rotateOutBottom: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBottom = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -154,7 +154,7 @@ export const rotateOutBottom: AnimationReferenceMetadata = animation(baseRecipe,
     }
 });
 
-export const rotateInLeft: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInLeft = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -171,7 +171,7 @@ export const rotateInLeft: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutLeft: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutLeft = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -188,7 +188,7 @@ export const rotateOutLeft: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInTr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInTr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -205,7 +205,7 @@ export const rotateInTr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutTr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -222,7 +222,7 @@ export const rotateOutTr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInBr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -239,7 +239,7 @@ export const rotateInBr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutBr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBr = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -256,7 +256,7 @@ export const rotateOutBr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInBl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -273,7 +273,7 @@ export const rotateInBl: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutBl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -290,7 +290,7 @@ export const rotateOutBl: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInTl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInTl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -307,7 +307,7 @@ export const rotateInTl: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutTl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTl = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -324,7 +324,7 @@ export const rotateOutTl: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInDiagonal1 = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -341,7 +341,7 @@ export const rotateInDiagonal1: AnimationReferenceMetadata = animation(baseRecip
     }
 });
 
-export const rotateOutDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutDiagonal1 = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -358,7 +358,7 @@ export const rotateOutDiagonal1: AnimationReferenceMetadata = animation(baseReci
     }
 });
 
-export const rotateInDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInDiagonal2 = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -375,7 +375,7 @@ export const rotateInDiagonal2: AnimationReferenceMetadata = animation(baseRecip
     }
 });
 
-export const rotateOutDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutDiagonal2 = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -392,7 +392,7 @@ export const rotateOutDiagonal2: AnimationReferenceMetadata = animation(baseReci
     }
 });
 
-export const rotateInHor: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInHor = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -409,7 +409,7 @@ export const rotateInHor: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutHor: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutHor = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -426,7 +426,7 @@ export const rotateOutHor: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateInVer: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInVer = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -443,7 +443,7 @@ export const rotateInVer: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-export const rotateOutVer: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutVer = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',

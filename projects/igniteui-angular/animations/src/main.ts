@@ -40,7 +40,72 @@ export {
     rotateOutVer
 } from './rotate/index';
 export * from './misc/index';
-export * from './scale/index';
-export * from './slide/index';
-export * from './swing/index';
+export {
+    scaleInTop,
+    scaleInRight,
+    scaleInBottom,
+    scaleInLeft,
+    scaleInCenter,
+    scaleInTr,
+    scaleInBr,
+    scaleInBl,
+    scaleInTl,
+    scaleInVerTop,
+    scaleInVerBottom,
+    scaleInVerCenter,
+    scaleInHorCenter,
+    scaleInHorLeft,
+    scaleInHorRight,
+    scaleOutTop,
+    scaleOutRight,
+    scaleOutBottom,
+    scaleOutLeft,
+    scaleOutCenter,
+    scaleOutTr,
+    scaleOutBr,
+    scaleOutBl,
+    scaleOutTl,
+    scaleOutVerTop,
+    scaleOutVerBottom,
+    scaleOutVerCenter,
+    scaleOutHorCenter,
+    scaleOutHorLeft,
+    scaleOutHorRight
+} from './scale/index';
+export {
+    slideInTop,
+    slideInRight,
+    slideInBottom,
+    slideInLeft,
+    slideInTr,
+    slideInBr,
+    slideInBl,
+    slideInTl,
+    slideOutTop,
+    slideOutBottom,
+    slideOutRight,
+    slideOutLeft,
+    slideOutTr,
+    slideOutBr,
+    slideOutBl,
+    slideOutTl
+} from './slide/index';
+export {
+    swingInTopFwd,
+    swingInRightFwd,
+    swingInLeftFwd,
+    swingInBottomFwd,
+    swingInTopBck,
+    swingInRightBck,
+    swingInBottomBck,
+    swingInLeftBck,
+    swingOutTopFwd,
+    swingOutRightFwd,
+    swingOutBottomFwd,
+    swingOutLefttFwd,
+    swingOutTopBck,
+    swingOutRightBck,
+    swingOutBottomBck,
+    swingOutLeftBck
+} from './swing/index';
 export { growVerIn, growVerOut } from './grow/index';

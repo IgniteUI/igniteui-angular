@@ -2,7 +2,6 @@ import {
     animate,
     animation,
     AnimationMetadata,
-    AnimationReferenceMetadata,
     keyframes,
     style
 } from '@angular/animations';
@@ -30,7 +29,7 @@ const baseRecipe: AnimationMetadata[] = [
     )
 ];
 
-export const flipTop: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipTop = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -45,7 +44,7 @@ export const flipTop: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRe
     }
 });
 
-export const flipBottom: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipBottom = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -60,7 +59,7 @@ export const flipBottom: AnimationReferenceMetadata = /*@__PURE__*/animation(bas
     }
 });
 
-export const flipLeft: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipLeft = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -75,7 +74,7 @@ export const flipLeft: AnimationReferenceMetadata = /*@__PURE__*/animation(baseR
     }
 });
 
-export const flipRight: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipRight = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -90,7 +89,7 @@ export const flipRight: AnimationReferenceMetadata = /*@__PURE__*/animation(base
     }
 });
 
-export const flipHorFwd: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipHorFwd = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -105,7 +104,7 @@ export const flipHorFwd: AnimationReferenceMetadata = /*@__PURE__*/animation(bas
     }
 });
 
-export const flipHorBck: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipHorBck = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -120,7 +119,7 @@ export const flipHorBck: AnimationReferenceMetadata = /*@__PURE__*/animation(bas
     }
 });
 
-export const flipVerFwd: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipVerFwd = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',
@@ -135,7 +134,7 @@ export const flipVerFwd: AnimationReferenceMetadata = /*@__PURE__*/animation(bas
     }
 });
 
-export const flipVerBck: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
+export const flipVerBck = /*@__PURE__*/animation(baseRecipe, {
     params: {
         delay: '0s',
         duration: '600ms',

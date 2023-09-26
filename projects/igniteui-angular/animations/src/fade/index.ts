@@ -1,4 +1,4 @@
-import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
+import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseOut } from '../easings';
 
 const base: AnimationMetadata[] = [
@@ -13,7 +13,7 @@ const base: AnimationMetadata[] = [
     )
 ];
 
-export const fadeIn: AnimationReferenceMetadata = /*@__PURE__*/animation(base, {
+export const fadeIn = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -23,7 +23,7 @@ export const fadeIn: AnimationReferenceMetadata = /*@__PURE__*/animation(base, {
     }
 });
 
-export const fadeOut: AnimationReferenceMetadata = /*@__PURE__*/animation(base, {
+export const fadeOut = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',

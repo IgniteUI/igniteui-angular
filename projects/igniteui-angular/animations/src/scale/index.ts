@@ -1,6 +1,5 @@
-import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
+import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseOut } from '../easings';
-import { IAnimationParams } from '../interface';
 
 const base: AnimationMetadata[] = [
     /*@__PURE__*/style({
@@ -18,20 +17,7 @@ const base: AnimationMetadata[] = [
     )
 ];
 
-const baseOutParams: IAnimationParams = {
-    delay: '0s',
-    direction: '',
-    duration: '350ms',
-    xPos: '50%',
-    yPos: '50%',
-    easing: EaseOut.Sine,
-    endOpacity: 0,
-    fromScale: 1,
-    startOpacity: 1,
-    toScale: .5
-};
-
-const scaleInCenter: AnimationReferenceMetadata = animation(base, {
+export const scaleInCenter = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -46,7 +32,7 @@ const scaleInCenter: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInBl: AnimationReferenceMetadata = animation(base, {
+export const scaleInBl = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -61,7 +47,7 @@ const scaleInBl: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInVerCenter: AnimationReferenceMetadata = animation(base, {
+export const scaleInVerCenter = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -76,7 +62,7 @@ const scaleInVerCenter: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInTop: AnimationReferenceMetadata = animation(base, {
+export const scaleInTop = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -91,7 +77,7 @@ const scaleInTop: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInLeft: AnimationReferenceMetadata = animation(base, {
+export const scaleInLeft = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -106,7 +92,7 @@ const scaleInLeft: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInVerTop: AnimationReferenceMetadata = animation(base, {
+export const scaleInVerTop = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -121,7 +107,7 @@ const scaleInVerTop: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInTr = animation(base, {
+export const scaleInTr = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -136,7 +122,7 @@ const scaleInTr = animation(base, {
     }
 });
 
-const scaleInTl: AnimationReferenceMetadata = animation(base, {
+export const scaleInTl = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -151,7 +137,7 @@ const scaleInTl: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInVerBottom: AnimationReferenceMetadata = animation(base, {
+export const scaleInVerBottom = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -166,7 +152,7 @@ const scaleInVerBottom: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInRight: AnimationReferenceMetadata = animation(base, {
+export const scaleInRight = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -181,7 +167,7 @@ const scaleInRight: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInHorCenter: AnimationReferenceMetadata = animation(base, {
+export const scaleInHorCenter = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -196,7 +182,7 @@ const scaleInHorCenter: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInBr: AnimationReferenceMetadata = animation(base, {
+export const scaleInBr = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -211,7 +197,7 @@ const scaleInBr: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInHorLeft: AnimationReferenceMetadata = animation(base, {
+export const scaleInHorLeft = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -226,7 +212,7 @@ const scaleInHorLeft: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInBottom: AnimationReferenceMetadata = animation(base, {
+export const scaleInBottom = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -241,7 +227,7 @@ const scaleInBottom: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleInHorRight: AnimationReferenceMetadata = animation(base, {
+export const scaleInHorRight = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -256,7 +242,7 @@ const scaleInHorRight: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutCenter: AnimationReferenceMetadata = animation(base, {
+export const scaleOutCenter = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -271,7 +257,7 @@ const scaleOutCenter: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutBl: AnimationReferenceMetadata = animation(base, {
+export const scaleOutBl = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -286,7 +272,7 @@ const scaleOutBl: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutBr: AnimationReferenceMetadata = animation(base, {
+export const scaleOutBr = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         direction: '',
@@ -301,7 +287,7 @@ const scaleOutBr: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutVerCenter: AnimationReferenceMetadata = animation(base, {
+export const scaleOutVerCenter = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -316,7 +302,7 @@ const scaleOutVerCenter: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutVerTop: AnimationReferenceMetadata = animation(base, {
+export const scaleOutVerTop = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -331,141 +317,152 @@ const scaleOutVerTop: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const scaleOutVerBottom: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'Y',
-            toScale: .3,
-            xPos: '0',
-            yPos: '100%'
-        }
+export const scaleOutVerBottom = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'Y',
+        toScale: .3,
+        xPos: '0',
+        yPos: '100%'
     }
-);
+});
 
-const scaleOutTop: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '50%',
-            yPos: '0'
-        }
+export const scaleOutTop = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '50%',
+        yPos: '0'
     }
-);
+});
 
-const scaleOutLeft: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '0',
-            yPos: '50%'
-        }
+export const scaleOutLeft = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '0',
+        yPos: '50%'
     }
-);
+});
 
-const scaleOutTr: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '100%',
-            yPos: '0'
-        }
+export const scaleOutTr = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '100%',
+        yPos: '0'
     }
-);
+});
 
-const scaleOutTl: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '0',
-            yPos: '0'
-        }
+export const scaleOutTl = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '0',
+        yPos: '0'
     }
-);
+});
 
-const scaleOutRight: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '100%',
-            yPos: '50%'
-        }
+export const scaleOutRight = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '100%',
+        yPos: '50%'
     }
-);
+});
 
-const scaleOutBottom: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '50%',
-            yPos: '100%'
-        }
+export const scaleOutBottom = /*@__PURE__*/animation(base,{
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '50%',
+        yPos: '100%'
     }
-);
+});
 
-const scaleOutHorCenter: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'X',
-            toScale: .3
-        }
+export const scaleOutHorCenter = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        xPos: '50%',
+        yPos: '50%',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'X',
+        toScale: .3
     }
-);
+});
 
-const scaleOutHorLeft: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'X',
-            toScale: .3,
-            xPos: '0',
-            yPos: '0'
-        }
+export const scaleOutHorLeft = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'X',
+        toScale: .3,
+        xPos: '0',
+        yPos: '0'
     }
-);
+});
 
-const scaleOutHorRight: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'X',
-            toScale: .3,
-            xPos: '100%',
-            yPos: '100%'
-        }
+export const scaleOutHorRight = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'X',
+        toScale: .3,
+        xPos: '100%',
+        yPos: '100%'
     }
-);
-
-export {
-    scaleInTop,
-    scaleInRight,
-    scaleInBottom,
-    scaleInLeft,
-    scaleInCenter,
-    scaleInTr,
-    scaleInBr,
-    scaleInBl,
-    scaleInTl,
-    scaleInVerTop,
-    scaleInVerBottom,
-    scaleInVerCenter,
-    scaleInHorCenter,
-    scaleInHorLeft,
-    scaleInHorRight,
-    scaleOutTop,
-    scaleOutRight,
-    scaleOutBottom,
-    scaleOutLeft,
-    scaleOutCenter,
-    scaleOutTr,
-    scaleOutBr,
-    scaleOutBl,
-    scaleOutTl,
-    scaleOutVerTop,
-    scaleOutVerBottom,
-    scaleOutVerCenter,
-    scaleOutHorCenter,
-    scaleOutHorLeft,
-    scaleOutHorRight
-};
+});

@@ -1,16 +1,15 @@
-import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
+import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
-import { IAnimationParams } from '../interface';
 
 const swingBase: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         opacity: `{{startOpacity}}`,
         transform: `rotate{{direction}}({{startAngle}}deg)`,
         transformOrigin: `{{xPos}} {{yPos}}`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        style({
+        /*@__PURE__*/style({
             opacity: `{{endOpacity}}`,
             transform: `rotate{{direction}}({{endAngle}}deg)`,
             transformOrigin: `{{xPos}} {{yPos}}`
@@ -18,55 +17,59 @@ const swingBase: AnimationMetadata[] = [
     )
 ];
 
-const swingParams: IAnimationParams = {
-    delay: '0s',
-    direction: 'X',
-    duration: '.5s',
-    easing: EaseOut.Back,
-    endAngle: 0,
-    endOpacity: 1,
-    startAngle: -100,
-    startOpacity: 0,
-    xPos: 'top',
-    yPos: 'center'
-};
-
-const swingOutParams: IAnimationParams = {
-    ...swingParams,
-    duration: '.55s',
-    easing: EaseIn.Back,
-    endAngle: 70,
-    endOpacity: 0,
-    startAngle: 0,
-    startOpacity: 1
-};
-
-const swingInTopFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInTopFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams
+        delay: '0s',
+        direction: 'X',
+        duration: '.5s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -100,
+        startOpacity: 0,
+        xPos: 'top',
+        yPos: 'center'
     }
 });
 
-const swingInRightFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInRightFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        duration: '.5s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -100,
+        startOpacity: 0,
         direction: 'Y',
         xPos: 'center',
         yPos: 'right'
     }
 });
 
-const swingInBottomFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInBottomFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        direction: 'X',
+        duration: '.5s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
+        yPos: 'center',
         startAngle: 100,
         xPos: 'bottom'
     }
 });
 
-const swingInLeftFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInLeftFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        duration: '.5s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
         direction: 'Y',
         startAngle: 100,
         xPos: 'center',
@@ -74,17 +77,28 @@ const swingInLeftFwd: AnimationReferenceMetadata = animation(swingBase, {
     }
 });
 
-const swingInTopBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInTopBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        direction: 'X',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
+        xPos: 'top',
+        yPos: 'center',
         duration: '.6s',
         startAngle: 70
     }
 });
 
-const swingInRightBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInRightBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
         direction: 'Y',
         duration: '.6s',
         startAngle: 70,
@@ -93,18 +107,28 @@ const swingInRightBck: AnimationReferenceMetadata = animation(swingBase, {
     }
 });
 
-const swingInBottomBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInBottomBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        direction: 'X',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
+        yPos: 'center',
         duration: '.6s',
         startAngle: -70,
         xPos: 'bottom'
     }
 });
 
-const swingInLeftBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingInLeftBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingParams,
+        delay: '0s',
+        easing: EaseOut.Back,
+        endAngle: 0,
+        endOpacity: 1,
+        startOpacity: 0,
         direction: 'Y',
         duration: '.6s',
         startAngle: -70,
@@ -113,32 +137,59 @@ const swingInLeftBck: AnimationReferenceMetadata = animation(swingBase, {
     }
 });
 
-const swingOutTopFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutTopFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams
+        delay: '0s',
+        direction: 'X',
+        xPos: 'top',
+        yPos: 'center',
+        duration: '.55s',
+        easing: EaseIn.Back,
+        endAngle: 70,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1
     }
 });
 
-const swingOutRightFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutRightFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        duration: '.55s',
+        easing: EaseIn.Back,
+        endAngle: 70,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         direction: 'Y',
         xPos: 'center',
         yPos: 'right'
     }
 });
 
-const swingOutBottomFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutBottomFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        direction: 'X',
+        yPos: 'center',
+        duration: '.55s',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         endAngle: -70,
         xPos: 'bottom'
     }
 });
 
-const swingOutLefttFwd: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutLefttFwd = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        duration: '.55s',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         direction: 'Y',
         endAngle: -70,
         xPos: 'center',
@@ -146,17 +197,28 @@ const swingOutLefttFwd: AnimationReferenceMetadata = animation(swingBase, {
     }
 });
 
-const swingOutTopBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutTopBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        direction: 'X',
+        xPos: 'top',
+        yPos: 'center',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         duration: '.45s',
         endAngle: -100
     }
 });
 
-const swingOutRightBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutRightBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         direction: 'Y',
         duration: '.45s',
         endAngle: -100,
@@ -165,18 +227,28 @@ const swingOutRightBck: AnimationReferenceMetadata = animation(swingBase, {
     }
 });
 
-const swingOutBottomBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutBottomBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        direction: 'X',
+        yPos: 'center',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         duration: '.45s',
         endAngle: 100,
         xPos: 'bottom'
     }
 });
 
-const swingOutLeftBck: AnimationReferenceMetadata = animation(swingBase, {
+export const swingOutLeftBck = /*@__PURE__*/animation(swingBase, {
     params: {
-        ...swingOutParams,
+        delay: '0s',
+        easing: EaseIn.Back,
+        endOpacity: 0,
+        startAngle: 0,
+        startOpacity: 1,
         direction: 'Y',
         duration: '.45s',
         endAngle: 100,
@@ -184,22 +256,3 @@ const swingOutLeftBck: AnimationReferenceMetadata = animation(swingBase, {
         yPos: 'left'
     }
 });
-
-export {
-    swingInTopFwd,
-    swingInRightFwd,
-    swingInLeftFwd,
-    swingInBottomFwd,
-    swingInTopBck,
-    swingInRightBck,
-    swingInBottomBck,
-    swingInLeftBck,
-    swingOutTopFwd,
-    swingOutRightFwd,
-    swingOutBottomFwd,
-    swingOutLefttFwd,
-    swingOutTopBck,
-    swingOutRightBck,
-    swingOutBottomBck,
-    swingOutLeftBck
-};
