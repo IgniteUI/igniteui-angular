@@ -10,6 +10,7 @@ export enum SortingDirection {
 }
 
 /* marshalByValue */
+/* tsPlainInterface */
 export interface ISortingExpression<T = any> extends IBaseEventArgs {
     fieldName: KeyOfOrString<T> & string;
     /* mustCoerceToInt */
