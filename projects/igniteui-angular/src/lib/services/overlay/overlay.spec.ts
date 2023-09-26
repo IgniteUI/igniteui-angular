@@ -12,7 +12,6 @@ import {
 import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
-import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
@@ -43,6 +42,7 @@ import {
     VerticalAlignment
 } from './utilities';
 import { NgIf } from '@angular/common';
+import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
