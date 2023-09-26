@@ -38,8 +38,8 @@ import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
-export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
-export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
+export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
+export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
 
 /** Interface representing a segment of a path in a hierarchical grid. */
 export interface IPathSegment {
