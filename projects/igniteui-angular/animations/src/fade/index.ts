@@ -1,32 +1,29 @@
 import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
 import { EaseOut } from '../easings';
-import { IAnimationParams } from '../interface';
 
 const base: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         opacity: `{{startOpacity}}`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        style({
+        /*@__PURE__*/style({
             opacity: `{{endOpacity}}`
         })
     )
 ];
 
-const baseParams: IAnimationParams = {
-    delay: '0s',
-    duration: '350ms',
-    easing: EaseOut.Sine,
-    endOpacity: 1,
-    startOpacity: 0
-};
-
-const fadeIn: AnimationReferenceMetadata = animation(base, {
-    params: baseParams
+export const fadeIn: AnimationReferenceMetadata = /*@__PURE__*/animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 1,
+        startOpacity: 0
+    }
 });
 
-const fadeOut: AnimationReferenceMetadata = animation(base, {
+export const fadeOut: AnimationReferenceMetadata = /*@__PURE__*/animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
@@ -35,5 +32,3 @@ const fadeOut: AnimationReferenceMetadata = animation(base, {
         startOpacity: 1
     }
 });
-
-export { fadeIn, fadeOut };

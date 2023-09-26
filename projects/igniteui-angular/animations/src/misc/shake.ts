@@ -7,58 +7,57 @@ import {
     style
 } from '@angular/animations';
 import { EaseInOut } from '../easings';
-import { IAnimationParams } from '../interface';
 
 const baseRecipe: AnimationMetadata[] = [
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        keyframes([
-            style({
+        /*@__PURE__*/keyframes([
+            /*@__PURE__*/style({
                 offset: 0,
                 transform: `rotate(0deg) translate{{direction}}(0)`,
                 transformOrigin: `{{xPos}} {{yPos}}`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.1,
                 transform: `rotate({{endAngle}}deg) translate{{direction}}(-{{startDistance}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.2,
                 transform: `rotate(-{{startAngle}}deg) translate{{direction}}({{startDistance}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.3,
                 transform: `rotate({{startAngle}}deg) translate{{direction}}(-{{startDistance}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.4,
                 transform: `rotate(-{{startAngle}}deg) translate{{direction}}({{startDistance}})`
 
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.5,
                 transform: `rotate({{startAngle}}deg) translate{{direction}}(-{{startDistance}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.6,
                 transform: `rotate(-{{startAngle}}deg) translate{{direction}}({{startDistance}})`
 
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.7,
                 transform: `rotate({{startAngle}}deg) translate{{direction}}(-{{startDistance}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.8,
                 transform: `rotate(-{{endAngle}}deg) translate{{direction}}({{endDistance}})`
 
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.9,
                 transform: `rotate({{endAngle}}deg) translate{{direction}}(-{{endDistance}})`
 
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 1,
                 transform: `rotate(0deg) translate{{direction}}(0)`,
                 transformOrigin: `{{xPos}} {{yPos}}`
@@ -67,36 +66,43 @@ const baseRecipe: AnimationMetadata[] = [
     )
 ];
 
-const baseParams: IAnimationParams = {
-    delay: '0s',
-    direction: 'X',
-    duration: '800ms',
-    easing: EaseInOut.Quad,
-    endAngle: 0,
-    endDistance: '8px',
-    startAngle: 0,
-    startDistance: '10px',
-    xPos: 'center',
-    yPos: 'center'
-};
-
-const shakeHor: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeHor: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
-        direction: 'X'
+        delay: '0s',
+        direction: 'X',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
+        endAngle: 0,
+        endDistance: '8px',
+        startAngle: 0,
+        startDistance: '10px',
+        xPos: 'center',
+        yPos: 'center'
     }
 });
 
-const shakeVer: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeVer: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
-        direction: 'Y'
+        delay: '0s',
+        direction: 'Y',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
+        endAngle: 0,
+        endDistance: '8px',
+        startAngle: 0,
+        startDistance: '10px',
+        xPos: 'center',
+        yPos: 'center'
     }
 });
 
-const shakeTop: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeTop: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        direction: 'X',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
+        xPos: 'center',
         endAngle: 2,
         endDistance: '0',
         startAngle: 4,
@@ -105,9 +111,12 @@ const shakeTop: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeBottom: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeBottom: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
+        xPos: 'center',
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -117,9 +126,11 @@ const shakeBottom: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeRight: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeRight: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -130,9 +141,11 @@ const shakeRight: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeLeft: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeLeft: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -143,9 +156,11 @@ const shakeLeft: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeCenter: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeCenter: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 8,
         endDistance: '0',
@@ -156,9 +171,11 @@ const shakeCenter: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeTr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeTr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -169,9 +186,11 @@ const shakeTr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeBr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeBr: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -182,9 +201,11 @@ const shakeBr: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeBl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeBl: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -195,9 +216,11 @@ const shakeBl: AnimationReferenceMetadata = animation(baseRecipe, {
     }
 });
 
-const shakeTl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const shakeTl: AnimationReferenceMetadata = /*@__PURE__*/animation(baseRecipe, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '800ms',
+        easing: EaseInOut.Quad,
         direction: 'Y',
         endAngle: 2,
         endDistance: '0',
@@ -207,17 +230,3 @@ const shakeTl: AnimationReferenceMetadata = animation(baseRecipe, {
         yPos: 'top'
     }
 });
-
-export {
-    shakeHor,
-    shakeVer,
-    shakeTop,
-    shakeBottom,
-    shakeRight,
-    shakeLeft,
-    shakeCenter,
-    shakeTr,
-    shakeBr,
-    shakeBl,
-    shakeTl
-};

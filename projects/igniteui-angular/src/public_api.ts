@@ -4,8 +4,9 @@
 
 /**
  * Animations
+ * MOVED TO igniteui-angular/animations
  */
-export * from './lib/animations/main';
+//export * from './lib/animations/main';
 
 /**
  * Directives
