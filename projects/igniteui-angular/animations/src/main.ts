@@ -1,5 +1,6 @@
 export { IAnimationParams } from './interface';
 export { AnimationUtil } from './util';
+export { EaseIn, EaseInOut, EaseOut } from './easings';
 export { fadeIn, fadeOut } from './fade/index';
 export {
     flipTop,

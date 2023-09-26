@@ -64,7 +64,7 @@ There are three main timing function groups - **EaseIn**, **EaseOut**, and **Eas
 
 To use a specific timing function, import it first:
 ``` typescript 
-import { EaseOut } from "igniteui-angular/animations/easings";
+import { EaseOut } from "igniteui-angular/animations";
 ```
 and then use it as value for the easing param in any animation:
 
