@@ -3,14 +3,14 @@ import { EaseOut } from '../easings';
 import { IAnimationParams } from '../interface';
 
 const base: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         opacity: `{{startOpacity}}`,
         transform: `scale{{direction}}({{fromScale}})`,
         transformOrigin: `{{xPos}} {{yPos}}`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        style({
+        /*@__PURE__*/style({
             opacity: `{{endOpacity}}`,
             transform: `scale{{direction}}({{toScale}})`,
             transformOrigin: `{{xPos}} {{yPos}}`
@@ -18,21 +18,12 @@ const base: AnimationMetadata[] = [
     )
 ];
 
-const baseInParams: IAnimationParams = {
+const baseOutParams: IAnimationParams = {
     delay: '0s',
     direction: '',
     duration: '350ms',
-    easing: EaseOut.Quad,
-    endOpacity: 1,
-    fromScale: .5,
-    startOpacity: 0,
-    toScale: 1,
     xPos: '50%',
-    yPos: '50%'
-};
-
-const baseOutParams: IAnimationParams = {
-    ...baseInParams,
+    yPos: '50%',
     easing: EaseOut.Sine,
     endOpacity: 0,
     fromScale: 1,
@@ -40,199 +31,305 @@ const baseOutParams: IAnimationParams = {
     toScale: .5
 };
 
-const scaleInCenter: AnimationReferenceMetadata = animation(base, { params: baseInParams });
-
-const scaleInBl: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '0',
-            yPos: '100%'
-        }
+const scaleInCenter: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '50%',
+        yPos: '50%'
     }
-);
+});
 
-const scaleInVerCenter: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'Y',
-            fromScale: .4
-        }
+const scaleInBl: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '0',
+        yPos: '100%'
     }
-);
+});
 
-const scaleInTop: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '50%',
-            yPos: '0'
-        }
+const scaleInVerCenter: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '50%',
+        yPos: '50%',
+        direction: 'Y',
+        fromScale: .4
     }
-);
+});
 
-const scaleInLeft: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '0',
-            yPos: '50%'
-        }
+const scaleInTop: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '50%',
+        yPos: '0'
     }
-);
+});
 
-const scaleInVerTop: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'Y',
-            fromScale: .4,
-            xPos: '100%',
-            yPos: '0'
-        }
+const scaleInLeft: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '0',
+        yPos: '50%'
     }
-);
+});
 
-const scaleInTr = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '100%',
-            yPos: '0'
-        }
+const scaleInVerTop: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        direction: 'Y',
+        fromScale: .4,
+        xPos: '100%',
+        yPos: '0'
     }
-);
+});
 
-const scaleInTl: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '0',
-            yPos: '0'
-        }
+const scaleInTr = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '100%',
+        yPos: '0'
     }
-);
+});
 
-const scaleInVerBottom: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'Y',
-            fromScale: .4,
-            xPos: '0',
-            yPos: '100%'
-        }
+const scaleInTl: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '0',
+        yPos: '0'
     }
-);
+});
 
-const scaleInRight: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '100%',
-            yPos: '50%'
-        }
+const scaleInVerBottom: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        direction: 'Y',
+        fromScale: .4,
+        xPos: '0',
+        yPos: '100%'
     }
-);
+});
 
-const scaleInHorCenter: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'X',
-            fromScale: .4
-        }
+const scaleInRight: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '100%',
+        yPos: '50%'
     }
-);
+});
 
-const scaleInBr: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '100%',
-            yPos: '100%'
-        }
+const scaleInHorCenter: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '50%',
+        yPos: '50%',
+        direction: 'X',
+        fromScale: .4
     }
-);
+});
 
-const scaleInHorLeft: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'X',
-            fromScale: .4,
-            xPos: '0',
-            yPos: '0'
-        }
+const scaleInBr: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '100%',
+        yPos: '100%'
     }
-);
+});
 
-const scaleInBottom: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            xPos: '50%',
-            yPos: '100%'
-        }
+const scaleInHorLeft: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        direction: 'X',
+        fromScale: .4,
+        xPos: '0',
+        yPos: '0'
     }
-);
+});
 
-const scaleInHorRight: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseInParams,
-            direction: 'X',
-            fromScale: .4,
-            xPos: '100%',
-            yPos: '100%'
-        }
+const scaleInBottom: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        fromScale: .5,
+        startOpacity: 0,
+        toScale: 1,
+        xPos: '50%',
+        yPos: '100%'
     }
-);
+});
 
-const scaleOutCenter: AnimationReferenceMetadata = animation(base, { params: baseOutParams });
-
-const scaleOutBl: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '0',
-            yPos: '100%'
-        }
+const scaleInHorRight: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Quad,
+        endOpacity: 1,
+        startOpacity: 0,
+        toScale: 1,
+        direction: 'X',
+        fromScale: .4,
+        xPos: '100%',
+        yPos: '100%'
     }
-);
+});
 
-const scaleOutBr: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            xPos: '100%',
-            yPos: '100%'
-        }
+const scaleOutCenter: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        xPos: '50%',
+        yPos: '50%',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5
     }
-);
+});
 
-const scaleOutVerCenter: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'Y',
-            toScale: .3
-        }
+const scaleOutBl: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '0',
+        yPos: '100%'
     }
-);
+});
 
-const scaleOutVerTop: AnimationReferenceMetadata = animation(base,
-    {
-        params: {
-            ...baseOutParams,
-            direction: 'Y',
-            toScale: .3,
-            xPos: '100%',
-            yPos: '0'
-        }
+const scaleOutBr: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        direction: '',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        toScale: .5,
+        xPos: '100%',
+        yPos: '100%'
     }
-);
+});
+
+const scaleOutVerCenter: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        xPos: '50%',
+        yPos: '50%',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'Y',
+        toScale: .3
+    }
+});
+
+const scaleOutVerTop: AnimationReferenceMetadata = animation(base, {
+    params: {
+        delay: '0s',
+        duration: '350ms',
+        easing: EaseOut.Sine,
+        endOpacity: 0,
+        fromScale: 1,
+        startOpacity: 1,
+        direction: 'Y',
+        toScale: .3,
+        xPos: '100%',
+        yPos: '0'
+    }
+});
 
 const scaleOutVerBottom: AnimationReferenceMetadata = animation(base,
     {

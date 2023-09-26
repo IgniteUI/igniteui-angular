@@ -1,16 +1,15 @@
 import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
-import { IAnimationParams } from '../interface';
 
 const baseRecipe: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         opacity: `{{startOpacity}}`,
         transform: `rotate3d({{rotateX}},{{rotateY}},{{rotateZ}},{{startAngle}}deg)`,
         transformOrigin: `{{xPos}} {{yPos}}`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        style({
+        /*@__PURE__*/style({
             offset: 0,
             opacity: `{{endOpacity}}`,
             transform: `rotate3d({{rotateX}},{{rotateY}},{{rotateZ}},{{endAngle}}deg)`,
@@ -19,253 +18,444 @@ const baseRecipe: AnimationMetadata[] = [
     )
 ];
 
-const baseInParams: IAnimationParams = {
-    delay: '0s',
-    duration: '600ms',
-    easing: EaseOut.Quad,
-    endAngle: 0,
-    endOpacity: 1,
-    rotateX: 0,
-    rotateY: 0,
-    rotateZ: 1,
-    startAngle: -360,
-    startOpacity: 0,
-    xPos: 'center',
-    yPos: 'center'
-};
-
-const baseOutParams: IAnimationParams = {
-    ...baseInParams,
-    easing: EaseIn.Quad,
-    endOpacity: 0,
-    startOpacity: 1
-};
-
-const rotateInCenter: AnimationReferenceMetadata = animation(baseRecipe, {
-    params: { ...baseInParams }
-});
-
-const rotateOutCenter: AnimationReferenceMetadata = animation(baseRecipe, {
-    params: { ...baseOutParams }
-});
-
-const rotateInTop: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInCenter: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        xPos: 'center',
+        yPos: 'center'
+    }
+});
+
+export const rotateOutCenter: AnimationReferenceMetadata = animation(baseRecipe, {
+    params: {
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        xPos: 'center',
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1
+    }
+});
+
+export const rotateInTop: AnimationReferenceMetadata = animation(baseRecipe, {
+    params: {
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        yPos: 'center',
         xPos: 'top'
     }
 });
 
-const rotateOutTop: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTop: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'top'
     }
 });
 
-const rotateInRight: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInRight: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        yPos: 'center',
         xPos: 'right'
     }
 });
 
-const rotateOutRight: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutRight: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'right'
     }
 });
 
-const rotateInBottom: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBottom: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        yPos: 'center',
         xPos: 'bottom'
     }
 });
 
-const rotateOutBottom: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBottom: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'bottom'
     }
 });
 
-const rotateInLeft: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInLeft: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        yPos: 'center',
         xPos: 'left'
     }
 });
 
-const rotateOutLeft: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutLeft: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'left'
     }
 });
 
-const rotateInTr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInTr: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
         xPos: 'right',
         yPos: 'top'
     }
 });
 
-const rotateOutTr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTr: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'right',
         yPos: 'top'
     }
 });
 
-const rotateInBr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBr: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
         xPos: 'right',
         yPos: 'bottom'
     }
 });
 
-const rotateOutBr: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBr: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'right',
         yPos: 'bottom'
     }
 });
 
-const rotateInBl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInBl: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
         xPos: 'left',
         yPos: 'bottom'
     }
 });
 
-const rotateOutBl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutBl: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'left',
         yPos: 'bottom'
     }
 });
 
-const rotateInTl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInTl: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        startOpacity: 0,
         xPos: 'left',
         yPos: 'top'
     }
 });
 
-const rotateOutTl: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutTl: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 1,
+        startAngle: -360,
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         xPos: 'left',
         yPos: 'top'
     }
 });
 
-const rotateInDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        xPos: 'center',
+        yPos: 'center',
         rotateX: 1,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateOutDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutDiagonal1: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        startAngle: -360,
+        xPos: 'center',
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         rotateX: 1,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateInDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        xPos: 'center',
+        yPos: 'center',
         rotateX: -1,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateOutDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutDiagonal2: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        startAngle: -360,
+        xPos: 'center',
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         rotateX: -1,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateInHor: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInHor: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        xPos: 'center',
+        yPos: 'center',
         rotateX: 0,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateOutHor: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutHor: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        startAngle: -360,
+        xPos: 'center',
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         rotateX: 0,
         rotateY: 1,
         rotateZ: 0
     }
 });
 
-const rotateInVer: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateInVer: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseInParams,
+        delay: '0s',
+        duration: '600ms',
+        easing: EaseOut.Quad,
+        endAngle: 0,
+        endOpacity: 1,
+        startAngle: -360,
+        startOpacity: 0,
+        xPos: 'center',
+        yPos: 'center',
         rotateX: 1,
         rotateY: 0,
         rotateZ: 0
     }
 });
 
-const rotateOutVer: AnimationReferenceMetadata = animation(baseRecipe, {
+export const rotateOutVer: AnimationReferenceMetadata = animation(baseRecipe, {
     params: {
-        ...baseOutParams,
+        delay: '0s',
+        duration: '600ms',
+        endAngle: 0,
+        startAngle: -360,
+        xPos: 'center',
+        yPos: 'center',
+        easing: EaseIn.Quad,
+        endOpacity: 0,
+        startOpacity: 1,
         rotateX: 1,
         rotateY: 0,
         rotateZ: 0
     }
 });
-
-export {
-    rotateInCenter,
-    rotateInTop,
-    rotateInRight,
-    rotateInLeft,
-    rotateInBottom,
-    rotateInTr,
-    rotateInBr,
-    rotateInBl,
-    rotateInTl,
-    rotateInDiagonal1,
-    rotateInDiagonal2,
-    rotateInHor,
-    rotateInVer,
-    rotateOutCenter,
-    rotateOutTop,
-    rotateOutRight,
-    rotateOutLeft,
-    rotateOutBottom,
-    rotateOutTr,
-    rotateOutBr,
-    rotateOutBl,
-    rotateOutTl,
-    rotateOutDiagonal1,
-    rotateOutDiagonal2,
-    rotateOutHor,
-    rotateOutVer
-};
