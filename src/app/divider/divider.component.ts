@@ -51,17 +51,6 @@ export class DividerComponent {
 		};
 	}
 
-	public onBlur() {
-		const value = this.insetControl.value;
-
-		// Check if the input is a valid number
-		const parsedValue = parseFloat(value);
-		if (!isNaN(parsedValue)) {
-			// Append "px" to the numeric value and update the form control
-			this.insetControl.setValue(parsedValue + 'px');
-		}
-	}
-
 	public onInsetInputChange(event: any) {
 		const value = event.target.value;
 		// Update the inset value whenever the user types
