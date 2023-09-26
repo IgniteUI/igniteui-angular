@@ -449,7 +449,8 @@ describe('IgxSlider', () => {
             });
         });
 
-        it('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
+        // K.D. Removing this functionality because of 0 benefit and lots of issues.
+        xit('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
