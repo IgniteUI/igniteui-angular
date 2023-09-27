@@ -1,18 +1,38 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
 	IgxButtonDirective,
-	IgxDividerDirective,
+	IgxDividerDirective, IgxHintDirective,
 	IgxIconComponent,
 	IgxInputDirective,
 	IgxInputGroupComponent, IgxLabelDirective, IgxSwitchComponent,
 } from 'igniteui-angular';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+	AbstractControl,
+	FormControl,
+	FormsModule,
+	ReactiveFormsModule,
+	ValidationErrors,
+	ValidatorFn,
+} from '@angular/forms';
 
 @Component({
 	selector: 'app-divider',
 	standalone: true,
-	imports: [CommonModule, FormsModule, IgxSwitchComponent, IgxButtonDirective, IgxDividerDirective, IgxInputGroupComponent, IgxInputDirective, IgxIconComponent, IgxLabelDirective, ReactiveFormsModule, IgxSwitchComponent],
+	imports: [
+		CommonModule,
+		FormsModule,
+		IgxSwitchComponent,
+		IgxButtonDirective,
+		IgxDividerDirective,
+		IgxInputGroupComponent,
+		IgxInputDirective,
+		IgxIconComponent,
+		IgxLabelDirective,
+		ReactiveFormsModule,
+		IgxSwitchComponent,
+		IgxHintDirective
+	],
 	templateUrl: './divider.component.html',
 	styleUrls: ['./divider.component.scss'],
 })
@@ -24,32 +44,62 @@ export class DividerComponent {
 	public middle = false;
 	public inset = '0px';
 
-	private insetControl = new FormControl('', [this.validateCSSUnit()]);
+	public insetControl = new FormControl('', [this.validateCSSUnit()]);
 
-	// Define a custom validator function
-	private validateCSSUnit() {
-		return (control: FormControl) => {
-			const value = control.value;
+	public validateCSSUnit(): ValidatorFn {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const inputValue = control.value;
 
-			if (value === '0') {
-				return null; // Validation passed
-			} else {
-				// Check if the value contains only text or starts with text
-				if (!/^[a-zA-Z]+$/.test(value) && !/^[a-zA-Z].*$/.test(value)) {
-					// Define a regular expression for valid CSS units (px, em, %)
-					const validCSSUnits = /(px|em|%)$/;
-
-					if (!validCSSUnits.test(value)) {
-						return { invalidCSSUnit: true }; // Validation failed
-					}
-				} else {
-					return { invalidCSSUnit: true }; // Validation failed
-				}
+			// If the value is zero, it's invalid
+			if (this.isZeroValue(inputValue)) {
+				return { invalidCSSUnit: true };
 			}
 
-			return null; // Validation passed
+			// If the value contains only alphabets, it's invalid
+			if (this.containsOnlyText(inputValue)) {
+				return { invalidCSSUnit: true };
+			}
+
+			// If the value contains only numbers, it's invalid
+			if (this.containsOnlyNumbers(inputValue)) {
+				return { invalidCSSUnit: true };
+			}
+
+			// If the value doesn't start with a number or a negative sign followed by a number, it's invalid
+			if (!this.startsWithNumberOrNegativeNumber(inputValue)) {
+				return { invalidCSSUnit: true };
+			}
+
+			// If the value doesn't match the valid CSS units, it's invalid
+			if (!this.isValidCSSUnit(inputValue)) {
+				return { invalidCSSUnit: true };
+			}
+
+			return null;
 		};
 	}
+
+	private isZeroValue(value: string) {
+		return value === '0';
+	}
+
+	private containsOnlyText(value: string) {
+		return /^[a-zA-Z]+$/.test(value);
+	}
+
+	private containsOnlyNumbers(value: string) {
+		return /^-?[0-9]+$/.test(value);
+	}
+
+	private startsWithNumberOrNegativeNumber(value: string) {
+		return /^-?[0-9]/.test(value);
+	}
+
+	private isValidCSSUnit(value: string) {
+		const validUnits = /^-?\d+(\.\d+)?(px|em|rem|vw|vh|%)$/;
+		return validUnits.test(value);
+	}
+
 
 	public onInsetInputChange(event: any) {
 		const value = event.target.value;

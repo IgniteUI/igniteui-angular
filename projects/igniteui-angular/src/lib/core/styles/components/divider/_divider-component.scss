@@ -26,8 +26,8 @@
             @extend %igx-divider--vertical !optional;
         }
 
-        @include mx(vertical, dashed) {
-            @extend %igx-divider--vertical-dashed !optional;
+        @include mx(vertical, inset) {
+            @extend %igx-divider--vertical-inset !optional;
         }
     }
 }

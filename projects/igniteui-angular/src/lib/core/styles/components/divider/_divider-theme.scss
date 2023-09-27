@@ -11,6 +11,7 @@
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The color of the divider. (Gradients are not supported for dashed dividers).
+/// @param {number} $inset [null] - The inset value of the divider.
 /// @requires $light-material-schema
 /// @example scss Change the color of the divider
 ///   $my-divider-theme: divider-theme($color: orange);
@@ -35,7 +36,7 @@
     @return extend($theme, (
         name: $name,
         color: $color,
-        inset: 0
+        inset: $inset
     ));
 }
 
@@ -81,7 +82,7 @@
         }
     }
 
-    %igx-divider-display%igx-divider--dashed:not(%igx-divider--vertical) {
+    %igx-divider--dashed:not(%igx-divider--vertical) {
         &::after {
             background: repeating-linear-gradient(
                 to right,
@@ -93,7 +94,7 @@
         }
     }
 
-    %igx-divider-display%igx-divider--dashed {
+    %igx-divider--dashed {
         &::after {
             background: repeating-linear-gradient(
                 to bottom,
@@ -117,7 +118,7 @@
         }
     }
 
-    %igx-divider--vertical%igx-divider--inset {
+    %igx-divider--vertical-inset {
         &::after {
             min-height: rem(4px);
             height: calc(100% - (var-get($theme, 'inset') * 2));

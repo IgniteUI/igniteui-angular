@@ -5,17 +5,19 @@ $padding: 32px;
     display: flex;
 
     --ig-size: 1;
-    --igx-divider-color: hsla(var(--ig-primary-600));
 
     igx-button {
         --ig-size: var(--ig-size-medium);
     }
 
     igx-divider {
+
         &::after {
             transition: all 2ms ease-in-out;
         }
     }
+
+
 }
 
 .sample-min-width {
