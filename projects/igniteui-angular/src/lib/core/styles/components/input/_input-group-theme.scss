@@ -206,15 +206,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
+        $box-border-radius: map.get($theme, 'box-border-radius');
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
+        $border-border-radius: map.get($theme, 'border-border-radius');
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
+        $search-border-radius: map.get($theme, 'search-border-radius');
     }
 
     @return extend($theme, (
