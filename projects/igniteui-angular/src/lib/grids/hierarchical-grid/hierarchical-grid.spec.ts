@@ -457,6 +457,28 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid.data).toBe(newData2[0].childData);
         });
 
+        it('should update already created child grid with new records added to the root data', () => {
+            let row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            let childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            fixture.componentInstance.data[0].childData = [...hierarchicalGrid.data[0].childData ?? [], { ID: 10, ProductName: 'New child' }];
+            fixture.componentInstance.data = [...fixture.componentInstance.data];
+            fixture.detectChanges();
+
+            childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            const length = fixture.componentInstance.data[0].childData.length;
+            const newRow = childGrid.gridAPI.get_row_by_index(length - 1) as IgxHierarchicalRowComponent;
+
+            expect(newRow).not.toBeUndefined();
+            expect(childGrid.data).toBe(fixture.componentInstance.data[0].childData);
+        });
+
         it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
