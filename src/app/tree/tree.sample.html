@@ -101,6 +101,9 @@
                     <ng-template #nodeTemplate let-node>
                         <a [igxTreeNodeLink]="node" href="https://google.com">Link to Google</a>
                     </ng-template>
+                    <ng-template igxTreeExpandIndicator let-expanded>
+                        <igx-icon>{{ expanded ? "close_fullscreen": "open_in_full"}}</igx-icon>
+                    </ng-template>
                 </igx-tree>
             </div>
 
