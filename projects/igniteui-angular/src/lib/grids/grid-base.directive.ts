@@ -2188,6 +2188,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._emptyFilteredGridMessage || this.resourceStrings.igx_grid_emptyFilteredGrid_message;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * Gets/Sets the initial pinning configuration.
      *
