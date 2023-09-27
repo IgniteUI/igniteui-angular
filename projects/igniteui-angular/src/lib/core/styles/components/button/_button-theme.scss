@@ -167,10 +167,6 @@
             $_active-shadow: elevation($active-elevation);
         }
 
-        @if not($_border-radius) {
-            $_border-radius: border-radius(map.get($_schema, 'border-radius')...);
-        }
-
         $themes: map.merge($themes, (
             $_name: extend( digest-schema($_schema), (
                 name: $name,
