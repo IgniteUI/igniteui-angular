@@ -323,18 +323,6 @@
         $week-number-color: text-contrast($week-number-background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($month-border-radius) {
-        $month-border-radius: border-radius(map.get($theme, 'month-border-radius')...);
-    }
-
-    @if not($date-border-radius) {
-        $date-border-radius: border-radius(map.get($theme, 'date-border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,

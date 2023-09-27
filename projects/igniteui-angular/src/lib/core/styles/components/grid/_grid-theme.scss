@@ -455,7 +455,7 @@
     }
 
     @if not($drop-area-border-radius) {
-        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius')...);
+        $drop-area-border-radius: map.get($theme, 'drop-area-border-radius');
     }
 
     @return extend($theme, (
