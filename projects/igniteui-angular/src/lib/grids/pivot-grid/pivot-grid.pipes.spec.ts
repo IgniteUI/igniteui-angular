@@ -320,9 +320,10 @@ describe('Pivot pipes #pivotGrid', () => {
         expect(IgxPivotTimeAggregate.earliestTime(['01/01/2021 8:00', '01/01/2021 1:00', '01/01/2021 22:00'])).toEqual(new Date('01/01/2021 1:00'));
 
         // check string can be changed
-        IgxPivotTimeAggregate.aggregators().find(x => x.key === "EARLIEST").label = 'Earliest Custom Time';
+        // This test no longer covers functionality that is provided. Overriding labels is done by extending the class.
+        // IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label = 'Earliest Custom Time';
 
-        expect(IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label).toEqual('Earliest Custom Time');
+        // expect(IgxPivotTimeAggregate.aggregators().find(x => x.key === 'EARLIEST').label).toEqual('Earliest Custom Time');
     });
 
     it('allow setting NoopPivotDimensionsStrategy for rows/columns', () => {
