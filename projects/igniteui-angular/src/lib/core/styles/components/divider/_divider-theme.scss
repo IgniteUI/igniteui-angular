@@ -49,7 +49,7 @@
         justify-content: center;
         overflow: hidden;
 
-        &:after {
+        &::after {
             content: '';
             position: absolute;
             height: 100%;
@@ -111,7 +111,7 @@
         min-width: rem(1px);
         width: rem(1px);
 
-        &:after {
+        &::after {
             inset-block-start: var-get($theme, 'inset');
             width: 100%;
             height: 100%;
