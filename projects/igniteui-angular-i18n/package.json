@@ -26,7 +26,6 @@
     "packageGroup": [
         "igniteui-angular-i18n",
         "igniteui-angular",
-        "@infragistics/igniteui-angular",
         "@igniteui/angular-schematics"
     ]
   }
