@@ -48,7 +48,7 @@
     }
 
     @if not($actions-border-radius) {
-        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius')...);
+        $actions-border-radius: map.get($theme, 'actions-border-radius');
     }
 
     @return extend($theme, (
