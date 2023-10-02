@@ -92,8 +92,7 @@
         "migrations": "./migrations/migration-collection.json",
         "packageGroup": [
             "igniteui-angular",
-            "igniteui-angular-i18n",
-            "@igniteui/angular-schematics"
+            "igniteui-angular-i18n"
         ]
     },
     "schematics": "./schematics/collection.json",
