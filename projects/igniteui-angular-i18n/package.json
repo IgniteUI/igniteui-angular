@@ -23,9 +23,5 @@
   },
   "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme",
   "ng-update": {
-    "packageGroup": [
-        "igniteui-angular",
-        "igniteui-angular-i18n"
-    ]
   }
 }
