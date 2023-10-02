@@ -21,7 +21,5 @@
   "bugs": {
     "url": "https://github.com/IgniteUI/igniteui-angular/issues"
   },
-  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme",
-  "ng-update": {
-  }
+  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme"
 }
