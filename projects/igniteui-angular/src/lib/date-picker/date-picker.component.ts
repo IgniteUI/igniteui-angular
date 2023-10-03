@@ -43,7 +43,7 @@ import {
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { fadeIn, fadeOut } from '../animations/fade';
+
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
@@ -67,6 +67,7 @@ import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { igxI18N } from '../core/i18n/resources';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 

@@ -1,16 +1,15 @@
-import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
-import { EaseIn, EaseOut } from '../easings';
-import { IAnimationParams } from '../interface';
+import { animate, animation, AnimationMetadata, style } from '@angular/animations';
+import { EaseOut } from '../easings';
 
 const base: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         opacity: `{{ startOpacity }}`,
         height: `{{ startHeight }}`,
         paddingBlock: `{{ startPadding }}`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        style({
+        /*@__PURE__*/style({
             opacity: `{{ endOpacity }}`,
             height: `{{ endHeight }}`,
             paddingBlock: `{{ endPadding }}`
@@ -18,21 +17,10 @@ const base: AnimationMetadata[] = [
     )
 ];
 
-const baseParams: IAnimationParams = {
-    delay: '0s',
-    duration: '350ms',
-    easing: EaseIn.Quad,
-    startOpacity: 0,
-    endOpacity: 1,
-    startHeight: '',
-    endHeight: '',
-    startPadding: '',
-    endPadding: '',
-};
-
-const growVerIn: AnimationReferenceMetadata = animation(base, {
+export const growVerIn = /*@__PURE__*/animation(base, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '350ms',
         easing: EaseOut.Quad,
         startOpacity: 0,
         endOpacity: 1,
@@ -43,9 +31,10 @@ const growVerIn: AnimationReferenceMetadata = animation(base, {
     }
 });
 
-const growVerOut: AnimationReferenceMetadata = animation(base, {
+export const growVerOut = /*@__PURE__*/animation(base, {
     params: {
-        ...baseParams,
+        delay: '0s',
+        duration: '350ms',
         easing: EaseOut.Quad,
         startOpacity: 1,
         endOpacity: 0,
@@ -55,5 +44,3 @@ const growVerOut: AnimationReferenceMetadata = animation(base, {
         endPadding: '0px'
     }
 });
-
-export { growVerIn, growVerOut };

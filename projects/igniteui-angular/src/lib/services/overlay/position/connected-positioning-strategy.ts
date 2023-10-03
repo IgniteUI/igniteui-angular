@@ -1,4 +1,4 @@
-import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
+import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 import { ConnectedFit } from '../utilities';
 import {
   HorizontalAlignment,

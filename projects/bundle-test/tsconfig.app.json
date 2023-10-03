@@ -8,6 +8,9 @@
         "igniteui-angular": [
           "dist/igniteui-angular"
         ],
+        "igniteui-angular/*": [
+          "dist/igniteui-angular/*"
+        ],
         "igniteui-angular-i18n": [
           "dist/igniteui-angular-i18n"
         ]
