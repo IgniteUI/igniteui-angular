@@ -47,13 +47,13 @@ export class ServerHost implements ts.server.ServerHost {
     public watchFile(_path: string, _callback: ts.FileWatcherCallback, _pollingInterval?: number):
         ts.FileWatcher {
         // return ts.sys.watchFile(path, callback, pollingInterval);
-        return undefined;
+        return { close: () => {} };
     }
 
     public watchDirectory(_path: string, _callback: ts.DirectoryWatcherCallback, _recursive?: boolean):
         ts.FileWatcher {
         // return ts.sys.watchDirectory(path, callback, recursive);
-        return undefined;
+        return { close: () => {} };
     }
     //#endregion
 
