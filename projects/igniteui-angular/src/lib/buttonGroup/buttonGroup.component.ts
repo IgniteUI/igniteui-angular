@@ -119,10 +119,9 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that enables selecting multiple buttons. By default, multi-selection is false.
-     * ```html
-     * <igx-buttongroup [multiSelection]="false" [alignment]="alignment"></igx-buttongroup>
-     * ```
+     * @deprecated in version 16.1.0. Set/Use selectionMode property instead.
+     * 
+     * Enables selecting multiple buttons. By default, multi-selection is false.
      */
     @Input()
     public get multiSelection() {
