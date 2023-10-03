@@ -109,6 +109,11 @@ export class AppComponent implements OnInit {
             icon: 'date_range',
             name: 'DatePicker'
         },
+		{
+			link: '/divider',
+			icon: 'safety_divider',
+			name: 'Divider'
+		},
         {
             link: '/dialog',
             icon: 'all_out',
