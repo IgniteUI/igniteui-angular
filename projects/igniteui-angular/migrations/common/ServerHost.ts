@@ -106,7 +106,7 @@ export class ServerHost implements ts.server.ServerHost {
         // check directory contents in Tree (w/ relative paths)
         path = pathFs.relative(this.getCurrentDirectory(), path);
         // return directory contents w/ absolute paths for LS
-        return this.host.getDir(path).subdirs.map(e => pathFs.resolve(e));
+        return this.host.getDir(path).subdirs.map(e => pathFs.resolve(path, e));
     }
 
     /**
@@ -116,7 +116,7 @@ export class ServerHost implements ts.server.ServerHost {
         // check directory contents in Tree (w/ relative paths)
         path = pathFs.relative(this.getCurrentDirectory(), path);
         // return directory contents w/ absolute paths for LS
-        return this.host.getDir(path).subfiles.map(e => pathFs.resolve(e));
+        return this.host.getDir(path).subfiles.map(e => pathFs.resolve(path, e));
     }
 
     public require(initialPath: string, moduleName: string) {
