@@ -521,7 +521,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public get expandIndicatorTemplate(): TemplateRef<any> {
-        return this.tree?.expandIndicator ? this.tree.expandIndicator : this._defaultExpandIndicatorTemplate;
+        return this.tree?.expandIndicator || this._defaultExpandIndicatorTemplate;
     }
 
     /**
