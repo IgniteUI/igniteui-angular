@@ -295,7 +295,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);

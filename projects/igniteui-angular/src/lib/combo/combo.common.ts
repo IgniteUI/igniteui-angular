@@ -970,7 +970,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
     }
 
     public ngAfterViewChecked() {

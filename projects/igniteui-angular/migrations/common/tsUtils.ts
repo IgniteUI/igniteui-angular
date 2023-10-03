@@ -318,8 +318,10 @@ export const getTypeDefinitionAtPosition =
                 return null;
             }
 
-            const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
-            if (!member?.name) {
+            const member: ts.ClassElement = classDeclaration.members
+                .filter(x => x.kind !== ts.SyntaxKind.Constructor)
+                .find(m => m.name?.getText() === definition.name);
+            if (!member) {
                 return null;
             }
 

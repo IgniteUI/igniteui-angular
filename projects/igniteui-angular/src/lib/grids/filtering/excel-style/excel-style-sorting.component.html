@@ -2,28 +2,28 @@
 <header>
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
 </header>
-<igx-buttongroup #sortButtonGroup [multiSelection]="false">
+<igx-buttongroup #sortButtonGroup>
     <button igxButton
-        [displayDensity]="esf.grid.displayDensity"
+        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (click)="onSortButtonClicked(1)"
         >
         <igx-icon>arrow_upwards</igx-icon>
         <span>
-            {{ esf.grid.displayDensity==='compact'?
+            {{ esf.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc  }}
         </span>
     </button>
 
     <button igxButton
-        [displayDensity]="esf.grid.displayDensity"
+        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (click)="onSortButtonClicked(2)"
         >
         <igx-icon>arrow_downwards</igx-icon>
         <span>
-            {{ esf.grid.displayDensity==='compact'?
+            {{ esf.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc
         }}

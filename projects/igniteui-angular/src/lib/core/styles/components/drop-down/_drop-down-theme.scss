@@ -152,14 +152,6 @@
         $shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -183,10 +175,10 @@
         shadow: $shadow,
         border-color: $border-color,
         border-width: $border-width,
+        size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
-        size: $size,
     ));
 }
 
@@ -200,6 +192,10 @@
     }
 
     %igx-drop-down__list {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --dropdown-size: var(--component-size);
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
@@ -235,8 +231,6 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        --component-size: var(--ig-size, var(--ig-size-large));
-
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -254,11 +248,14 @@
 
         igx-icon {
             justify-content: center;
-            --component-size: var(--ig-size, var(--ig-size-large));
+            --component-size: var(--dropdown-size);
         }
     }
 
     %igx-drop-down__item {
+        @include sizable();
+        --component-size: (--dropdown-size);
+
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
         padding-inline: pad-inline(rem(16px), rem(20px), rem(24px));
@@ -274,25 +271,6 @@
         &:hover {
             background: var-get($theme, 'hover-item-background');
             color: var-get($theme, 'hover-item-text-color');
-        }
-    }
-
-
-    %igx-drop-down__item--cosy,
-    %igx-drop-down__header--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-medium))
-        }
-    }
-
-    %igx-drop-down__item--compact,
-    %igx-drop-down__header--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-small));
         }
     }
 

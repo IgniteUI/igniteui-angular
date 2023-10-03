@@ -206,15 +206,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
+        $box-border-radius: map.get($theme, 'box-border-radius');
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
+        $border-border-radius: map.get($theme, 'border-border-radius');
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
+        $search-border-radius: map.get($theme, 'search-border-radius');
     }
 
     @return extend($theme, (
@@ -398,7 +398,9 @@
     }
 
     %form-group-display {
+        @include sizable();
         --component-size: var(--ig-size, var(--ig-size-large));
+        --input-size: var(--component-size);
 
         position: relative;
         display: block;
@@ -445,25 +447,11 @@
         input[type='search']::-webkit-search-decoration {
             -webkit-appearance: none;
         }
-    }
-
-    %form-group-display--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
 
         igx-icon,
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-        }
-    }
-
-    %form-group-display--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-icon,
-        igx-icon[igxPrefix],
-        igx-icon[igxSuffix] {
-            --component-size: var(--ig-size, var(--ig-size-small));
+            --component-size: var(--input-size);
         }
     }
 

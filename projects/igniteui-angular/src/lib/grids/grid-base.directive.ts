@@ -1705,9 +1705,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
 
-    @HostBinding('class')
-    private get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+    @HostBinding('class.igx-grid')
+    protected baseClass = 'igx-grid';
+
+    @HostBinding('style.--component-size')
+    protected get hostStyles(): string {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -2616,7 +2619,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
-        return `${this.getComponentDensityClass('igx-banner')} ${position}`;
+        return `igx-banner ${position}`;
     }
 
     /**
@@ -2840,6 +2843,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         caseSensitive: false,
         exactMatch: false,
         activeMatchIndex: 0,
+        matchInfoCache: [],
         matchCount: 0,
         content: ''
     };
@@ -3120,7 +3124,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
-    private _matchInfoCache: IMatchInfoCache[] = [];
 
     /**
      * @hidden @internal
@@ -3297,7 +3300,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
@@ -5046,7 +5049,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (updateActiveInfo) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-                this._matchInfoCache.forEach((match, i) => {
+                this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
@@ -5081,6 +5084,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             caseSensitive: false,
             exactMatch: false,
             activeMatchIndex: 0,
+            matchInfoCache: [],
             matchCount: 0,
             content: ''
         };
@@ -5218,8 +5222,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.featureColumnsWidth();
-
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -5255,6 +5257,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!sumExistingWidths && !columnsToSize) {
             return '0px';
         }
+        computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
@@ -6066,7 +6069,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Finishes the row transactions on the current row.
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled.
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
@@ -6078,8 +6081,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
-    public endEdit(commit = true, event?: Event) {
-        this.crudService.endEdit(commit, event);
+    public endEdit(commit = true, event?: Event): boolean {
+        return this.crudService.endEdit(commit, event);
     }
 
     /**
@@ -6600,8 +6603,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
+        this.resetCaches(recalcFeatureWidth);
+
         const hasScroll = this.hasVerticalScroll();
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);
@@ -7491,6 +7495,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 activeMatchIndex: 0,
                 caseSensitive: caseSensitiveResolved,
                 exactMatch: exactMatchResolved,
+                matchInfoCache: [],
                 matchCount: 0,
                 content: ''
             };
@@ -7519,7 +7524,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (this.lastSearchInfo.matchCount > 0) {
-            const matchInfo = this._matchInfoCache[this.lastSearchInfo.activeMatchIndex];
+            const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
@@ -7541,7 +7546,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private rebuildMatchCache() {
-        this._matchInfoCache = [];
+        this.lastSearchInfo.matchInfoCache = [];
 
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const exactMatch = this.lastSearchInfo.exactMatch;
@@ -7569,7 +7574,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
                             };
 
-                            this._matchInfoCache.push(mic);
+                            this.lastSearchInfo.matchInfoCache.push(mic);
                         }
                     } else {
                         let occurrenceIndex = 0;
@@ -7583,7 +7588,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
                             };
 
-                            this._matchInfoCache.push(mic);
+                            this.lastSearchInfo.matchInfoCache.push(mic);
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
                             searchIndex = searchValue.indexOf(searchText);
@@ -7593,7 +7598,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         });
 
-        this.lastSearchInfo.matchCount = this._matchInfoCache.length;
+        this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
     }
 
     // TODO: About to Move to CRUD

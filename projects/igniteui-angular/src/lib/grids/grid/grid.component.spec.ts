@@ -27,6 +27,7 @@ import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
 import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { getComponentSize } from '../../core/utils';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -285,6 +286,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
 
             expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid', 'custom']));
+            expect(getComponentSize(grid.nativeElement)).toEqual('3');
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
@@ -295,7 +297,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy', 'custom']));
+            expect(getComponentSize(grid.nativeElement)).toEqual('2');
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
@@ -306,7 +308,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact', 'custom']));
+            expect(getComponentSize(grid.nativeElement)).toEqual('1');
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
