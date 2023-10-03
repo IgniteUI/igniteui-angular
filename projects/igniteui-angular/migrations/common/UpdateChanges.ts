@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
-import { WorkspaceSchema, WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
+import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
@@ -59,17 +59,13 @@ export class UpdateChanges {
             // Force Angular service to compile project on initial load w/ configure project
             // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
             // and no actual angular metadata will be resolved for the rest of the migration
-            const wsProject = this.resolveWorkspaceProject();
-            if (!wsProject) {
+
+            // TODO: this patter/issue might be obsolete; if so, should be safe to return _projectService directly
+            const mainRelPath = this.getWorkspaceProjectEntryPath();
+            if (!mainRelPath) {
                 return null;
             }
-            const mainConfigPath = wsProject.architect?.build?.options['main'];
-            let mainRelPath = `src/main.ts`;
-            if (mainConfigPath) {
-                mainRelPath = mainConfigPath.startsWith(wsProject.root) ?
-                    mainConfigPath :
-                    path.join(wsProject.root, mainConfigPath);
-            }
+
             // patch TSConfig so it includes angularOptions.strictTemplates
             // ivy ls requires this in order to function properly on templates
             this.patchTsConfig();
@@ -82,7 +78,9 @@ export class UpdateChanges {
                 const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
                 project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
             } catch (err) {
-                return this._projectService;
+                this.context.logger.warn(
+                    "An error occurred during TypeScript project service setup. Some migrations relying on language services might not be applied."
+                );
             }
         }
 
@@ -837,22 +835,26 @@ export class UpdateChanges {
         return project;
     }
 
-    private resolveWorkspaceProject(): WorkspaceProject<ProjectType> | null {
-        let wsProject = this.workspace.projects[0];
-        if (!wsProject) {
-            const projectKeys = Object.keys(this.workspace.projects);
-            if (!projectKeys.length) {
-                this.context
-                    .logger
-                    .info(
+    private getWorkspaceProjectEntryPath(): string | null {
+        const projectKeys = Object.keys(this.workspace.projects);
+        if (!projectKeys.length) {
+            this.context.logger.info(
 `Could not resolve project from directory ${this.serverHost.getCurrentDirectory()}. Some migrations may not be applied.`);
-                return null;
-            }
-            // get the first configured project in the workspace
-            wsProject = this.workspace.projects[projectKeys[0]];
+            return null;
         }
 
-        return wsProject;
+        // grab the first possible main path:
+        for (const key of projectKeys) {
+            const wsProject = this.workspace.projects[key];
+            // intentionally compare against string values of the enum to avoid hard import
+            if (wsProject.projectType == "application" && wsProject.architect?.build?.options['main']) {
+                return wsProject.architect.build.options['main'];
+            } else if (wsProject.projectType == "library") {
+                // TODO: attempt to resolve from project ng-package.json or tsConfig
+            }
+        }
+
+        return null;
     }
 }
 
