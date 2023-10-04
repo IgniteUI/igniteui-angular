@@ -47,7 +47,7 @@ describe(`Update to ${version}`, () => {
             public title: IgxStepSubTitleDirective;
         }
         `);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree).toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
         import { IgxStepSubtitleDirective } from 'igniteui-angular';
@@ -72,18 +72,18 @@ describe(`Update to ${version}`, () => {
             `<igx-stepper>
                 <igx-step>
                    <p igxStepTitle>Home</p>
-                   <p igxStepSubTitle>Home Sub Title</p>                   
+                   <p igxStepSubTitle>Home Sub Title</p>
                 </igx-step>
             </igx-stepper>`);
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
             `<igx-stepper>
                 <igx-step>
                    <p igxStepTitle>Home</p>
-                   <p igxStepSubtitle>Home Sub Title</p>                   
+                   <p igxStepSubtitle>Home Sub Title</p>
                 </igx-step>
             </igx-stepper>`);
 
@@ -108,9 +108,7 @@ describe(`Update to ${version}`, () => {
         }
         `);
 
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
@@ -133,7 +131,7 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    it('Should remove multiSelection property set to "true" and replace it with selectionMode property set to "multi"', async () => {
+    it('Should remove button-group multiSelection property set to "true" and replace it with selectionMode property set to "multi"', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `<igx-buttongroup [multiSelection]="true">
@@ -145,9 +143,8 @@ describe(`Update to ${version}`, () => {
                 </button>
             </igx-buttongroup>`);
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
-    
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
             `<igx-buttongroup [selectionMode]="'multi'">
@@ -160,7 +157,7 @@ describe(`Update to ${version}`, () => {
             </igx-buttongroup>`);
     });
 
-    it('Should remove multiSelection property set to "false"', async () => {
+    it('Should remove button-group multiSelection property set to "false"', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-buttongroup [multiSelection]="false">
@@ -172,8 +169,7 @@ describe(`Update to ${version}`, () => {
                 </button>
             </igx-buttongroup>`);
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
@@ -185,5 +181,27 @@ describe(`Update to ${version}`, () => {
                     Button 2
                 </button>
             </igx-buttongroup>`);
+    });
+
+    it('Should not update button-group without multiSelection prop', async () => {
+        const content = `<igx-buttongroup alignment="horizontal">
+                <button igxButton>
+                    Button 1
+                </button>
+                <button igxButton>
+                    Button 2
+                </button>
+            </igx-buttongroup>
+            <igx-buttongroup>
+                <button igxButton>
+                    Button 1
+                </button>
+            </igx-buttongroup>`;
+
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`, content);
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(content);
     });
 });
