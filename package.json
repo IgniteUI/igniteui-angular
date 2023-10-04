@@ -73,7 +73,7 @@
     "@lit-labs/ssr-dom-shim": "^1.2.0",
     "@types/source-map": "0.5.2",
     "fflate": "^0.7.3",
-    "igniteui-theming": "^2.0.0",
+    "igniteui-theming": "^2.1.1",
     "igniteui-trial-watermark": "^3.0.2",
     "lodash-es": "^4.17.21",
     "rxjs": "^6.6.7",
