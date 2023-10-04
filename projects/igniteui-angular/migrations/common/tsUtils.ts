@@ -260,7 +260,12 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  */
 export const getTypeDefinitionAtPosition =
     (langServ: tss.LanguageService, entryPath: string, position: number): MemberInfo | null => {
-        const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
+        let definition;
+        try {
+            definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
+        } catch (err) {
+            return null;
+        }
         if (!definition) {
             return null;
         }
@@ -352,7 +357,12 @@ export const isMemberIgniteUI =
             matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 1)[0]?.start ?? matchPosition;
         }
 
-        const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition);
+        let typeDef;
+        try {
+            typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition);
+        } catch (err) {
+            false;
+        }
         if (!typeDef) {
             return false;
         }
