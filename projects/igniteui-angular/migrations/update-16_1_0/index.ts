@@ -4,7 +4,7 @@ import {
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile } from '../common/util';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from '../common/import-helper.js';
 import { Element } from '@angular/compiler';
 
@@ -23,11 +23,11 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {
           let buffer = host.read(path).toString();
-    
+
           change.sort((c, c1) => c.position - c1.position)
             .reverse()
             .forEach(c => buffer = c.apply(buffer));
-    
+
           host.overwrite(path, buffer);
         }
       };
@@ -42,7 +42,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     for (const path of update.templateFiles) {
         const buttonGroups = findElementNodes(parseFile(new HtmlParser(), host, path), 'igx-buttongroup');
-        buttonGroups.map(node => getSourceOffset(node as Element))
+        buttonGroups
+            .filter(node => hasAttribute(node as Element, prop))
+            .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
                 const { startTag, file, node } = offset;
                 const { name, value } = getAttribute(node, prop)[0];
