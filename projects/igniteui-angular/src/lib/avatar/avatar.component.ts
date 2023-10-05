@@ -315,7 +315,7 @@ export class IgxAvatarComponent implements OnInit {
 
     @HostBinding('style.--component-size')
     protected get componentSize() {
-        if(this._size) {
+        if (this._size) {
             return `var(--ig-size-${this._size})`;
         } 
     }
