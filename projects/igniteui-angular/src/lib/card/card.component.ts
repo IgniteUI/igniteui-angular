@@ -194,6 +194,9 @@ export class IgxCardFooterDirective {
  * ```
  */
 
+/**
+ * @deprecated in 16.2.0. To switch betweet `outlined` and `elevated` card use the `elevated` property.
+ */
 export const IgxCardType = mkenum({
     ELEVATED: 'elevated',
     OUTLINED: 'outlined'
@@ -223,6 +226,15 @@ export class IgxCardComponent {
     public id = `igx-card-${NEXT_ID++}`;
 
     /**
+     * Sets the `igx-card` css class to the card component.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-card')
+    public cssClass = 'igx-card';
+
+    /**
      * An @Input property that sets the value of the `role` attribute of the card.
      * By default the value is set to `group`.
      *
@@ -236,6 +248,8 @@ export class IgxCardComponent {
     public role = 'group';
 
     /**
+     * @deprecated in version 16.2.0. Use `elevated` property instead.
+     * 
      * An @Input property that sets the value of the `type` attribute of the card.
      * By default the value is set to `elevated`. You can make the card use the
      * outlined style by setting the value to `outlined`.
@@ -245,7 +259,6 @@ export class IgxCardComponent {
      * <igx-card type="outlined"></igx-card>
      * ```
      */
-    @HostBinding('class.igx-card')
     @Input()
     public type: IgxCardType | string = IgxCardType.ELEVATED;
 
@@ -255,6 +268,27 @@ export class IgxCardComponent {
     @HostBinding('class.igx-card--outlined')
     public get isOutlinedCard() {
         return this.type === IgxCardType.OUTLINED;
+    }
+
+    /**
+     * An @Input property that sets/gets whether the card is elevated.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-card elevated></igx-card>
+     * ```
+     * ```typescript
+     * let cardElevation = this.card.elevated;
+     * ```
+     */
+    @HostBinding('class.igx-card--elevated')
+    @Input()
+    public get elevated(): boolean {
+        return this._elevated;
+    }
+    public set elevated(value: boolean) {
+        this._elevated = (value as any === '') || value;
     }
 
     /**
@@ -270,6 +304,12 @@ export class IgxCardComponent {
     @HostBinding('class.igx-card--horizontal')
     @Input()
     public horizontal = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _elevated = false;
 }
 
 export const IgxCardActionsLayout = mkenum({
