@@ -36,7 +36,7 @@ import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -380,7 +380,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,

@@ -1,5 +1,5 @@
 import { GridResourceStringsEN, IGridResourceStrings } from '../../core/i18n/grid-resources';
-import { igxI18N } from '../../core/i18n/resources';
+import { getCurrentResourceStrings } from '../../core/i18n/resources';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
@@ -123,7 +123,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(GridResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
     private _monthIntl = new Intl.DateTimeFormat('default', { month: 'long' });

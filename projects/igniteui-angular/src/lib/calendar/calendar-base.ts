@@ -7,7 +7,7 @@ import { isDate, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 /** @hidden @internal */
 @Directive({
@@ -194,7 +194,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
 
     /** @hidden @internal */
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(CalendarResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
      * @hidden

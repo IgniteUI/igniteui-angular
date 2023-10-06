@@ -11,7 +11,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -107,7 +107,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(PaginatorResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 

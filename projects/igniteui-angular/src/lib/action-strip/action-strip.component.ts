@@ -28,7 +28,7 @@ import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive'
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -180,7 +180,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
     private _hidden = false;
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(ActionStripResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
 
     constructor(
         private _viewContainer: ViewContainerRef,

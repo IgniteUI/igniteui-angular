@@ -14,7 +14,7 @@ import { IFilteringExpressionsTree } from '../../../data-operations/filtering-ex
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
 import { NgIf, NgClass } from '@angular/common';
-import { igxI18N } from '../../../core/i18n/resources';
+import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 
 /**
@@ -208,7 +208,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         const gridRS = this.grid.resourceStrings;
 
         if (gridRS !== GridResourceStringsEN) {
-            const queryBuilderRS = igxI18N.instance().getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
             Object.keys(gridRS).forEach((prop) => {
                 const reg = /^igx_grid_(advanced_)?filter_(row_)?/;
                 if (!reg.test(prop)) {

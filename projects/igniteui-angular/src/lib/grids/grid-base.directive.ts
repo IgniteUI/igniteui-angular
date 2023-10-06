@@ -170,7 +170,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 IgcTrialWatermark.register();
 
@@ -3038,7 +3038,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(GridResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;

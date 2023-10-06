@@ -39,7 +39,7 @@ import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.c
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
-import { igxI18N } from '../../core/i18n/resources';
+import { getCurrentResourceStrings } from '../../core/i18n/resources';
 
 // TODO: Implement aria functionality
 /**
@@ -402,7 +402,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
     /** @hidden @internal */
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(TreeResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
 
     private _tabIndex = null;
     private _disabled = false;

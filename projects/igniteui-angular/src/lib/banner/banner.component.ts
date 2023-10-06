@@ -20,7 +20,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/banner-resources';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
@@ -202,7 +202,7 @@ export class IgxBannerComponent implements IToggleView {
 
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(BannerResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
 

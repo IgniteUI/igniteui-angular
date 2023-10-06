@@ -66,7 +66,7 @@ import {
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { igxI18N } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
@@ -458,7 +458,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
-    private _resourceStrings = igxI18N.instance().getCurrentResourceStrings(DatePickerResourceStringsEN);
+    private _resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN);
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;

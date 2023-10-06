@@ -50,3 +50,11 @@ export class igxI18N {
         return this._currentResourceStrings;
     }
 }
+
+export function getCurrentResourceStrings(en: IResourceStrings) {
+    return igxI18N.instance().getCurrentResourceStrings(en);
+}
+
+export function changei18n(resourceStrings: IResourceStrings) {
+    igxI18N.instance().changei18n(resourceStrings);
+}
