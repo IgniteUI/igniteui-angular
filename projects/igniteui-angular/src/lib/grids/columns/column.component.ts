@@ -970,6 +970,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
     }
 
+    /** @hidden @internal **/
+    public get resolvedWidth(): string {
+        if (this.columnLayoutChild) {
+            return '';
+        }
+        const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
+        return isAutoWidth ? this.width : this.calcPixelWidth + 'px';
+    }
+
     /**
      * Gets the column index.
      * ```typescript
@@ -2497,7 +2506,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseFloat(this._calcWidth);
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
 
     /**
