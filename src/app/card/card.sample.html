@@ -1,7 +1,7 @@
 <div class="grid-container grid-container--fit">
     <!-- Google Coffee -->
     <article class="card">
-        <igx-card>
+        <igx-card [elevated]="true">
             <igx-card-media>
                 <img [src]="cards[8].imageUrl">
             </igx-card-media>
@@ -40,7 +40,7 @@
 
     <!-- Google Weather  -->
     <article class="card">
-        <igx-card class="weather-card">
+        <igx-card class="weather-card" elevated>
             <igx-card-header>
                 <h3 class="igx-card-header__title">{{ cards[9].title }}</h3>
                 <h5 class="igx-card-header__subtitle">{{ cards[9].subtitle }}</h5>

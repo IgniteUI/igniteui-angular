@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.0.0
+### General
+- `IgxCard`
+    - **Breaking Change** The `type` attribute has been deprecated and will be removed in a future version. The default view of the card component is now `outlined`. Users can switch to `elevated` view by adding the newly created `elevated` property to a card.
+
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
