@@ -111,6 +111,8 @@ export interface ISearchInfo {
     matchInfoCache: any[];
 }
 
+/* jsonAPIPlainObject */
+/*  tsPlainInterface */
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: GridType;
     exporter: IgxBaseExporter;
