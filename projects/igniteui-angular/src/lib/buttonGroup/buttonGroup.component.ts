@@ -150,7 +150,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         return this._selectionMode;
     }
     public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
-        if (selectionMode !== this._selectionMode) {
+        if (this.viewButtons && selectionMode !== this._selectionMode) {
             this.buttons.forEach((b,i) => {
                 this.deselectButton(i);
             });
