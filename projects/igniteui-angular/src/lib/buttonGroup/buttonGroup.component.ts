@@ -140,12 +140,25 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that sets the selection mode of the buttons. By default, the selection mode is single.
+     * An @Input property that get/set the selection mode 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
      * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
      * ```
      */
-    @Input() public selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
+    @Input()
+    public get selectionMode() {
+        return this._selectionMode;
+    }
+    public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
+        if (selectionMode !== this._selectionMode) {
+            this.buttons.forEach((b,i) => {
+                this.deselectButton(i);
+            });
+            this._selectionMode = selectionMode;
+        } else {
+            this._selectionMode = selectionMode;
+        }
+    }
 
     /**
      * An @Input property that allows setting the buttons in the button group.
@@ -294,6 +307,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     private _isVertical: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
+    private _selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
 
     constructor(
         private _cdr: ChangeDetectorRef,
