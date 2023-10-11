@@ -63,7 +63,7 @@ export interface CellType {
     /* blazorSuppress */
     nativeElement?: HTMLElement;
     column: ColumnType;
-    /* csSuppress */
+    /* blazorCSSuppress */
     row: RowType;
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
