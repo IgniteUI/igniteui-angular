@@ -44,7 +44,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public override children = new QueryList<IgxColumnComponent>();
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Set if the column group is collapsible.
      * Default value is `false`
