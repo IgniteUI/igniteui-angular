@@ -2054,6 +2054,18 @@ describe('IgxSimpleCombo', () => {
             const selectedItem = combo.data[combo.data.length - 1];
             expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
         }));
+        it('should clear input on blur when bound to remote data and no item is selected', () => {
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('pro', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.comboInput.value).toEqual('');
+        });
     });
 });
 
