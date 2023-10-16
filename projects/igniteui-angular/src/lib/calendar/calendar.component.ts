@@ -122,7 +122,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar [vertical] = "true"></igx-calendar>
+     * <igx-calendar [vertical]="true"></igx-calendar>
      * ```
      */
     @Input()
@@ -284,7 +284,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
+     * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */
@@ -312,7 +312,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
+     * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */

@@ -212,7 +212,7 @@ export class IgxCardComponent {
      *
      * @example
      * ```html
-     * <igx-card id = "my-first-card"></igx-card>
+     * <igx-card id="my-first-card"></igx-card>
      * ```
      * ```typescript
      * let cardId =  this.card.id;

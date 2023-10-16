@@ -25,7 +25,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
      * <igx-carousel>
-     *  <igx-slide index = "1"></igx-slide>
+     *  <igx-slide index="1"></igx-slide>
      * <igx-carousel>
      * ```
      *

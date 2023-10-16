@@ -170,7 +170,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [navigation] = "false"></igx-carousel>
+     * <igx-carousel [navigation]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -181,7 +181,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Controls whether the carousel should support keyboard navigation.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
+     * <igx-carousel [keyboardSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -192,7 +192,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Controls whether the carousel should support gestures.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+     * <igx-carousel [gesturesSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -203,7 +203,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Controls the maximum indexes that can be shown.
      * Default value is `5`.
      * ```html
-     * <igx-carousel [maximumIndicatorsCount] = "10"></igx-carousel>
+     * <igx-carousel [maximumIndicatorsCount]="10"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -529,7 +529,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Sets the time `interval` in milliseconds before the slide changes.
      * If not set, the carousel will not change `slides` automatically.
      * ```html
-     * <igx-carousel [interval] = "1000"></igx-carousel>
+     * <igx-carousel [interval]="1000"></igx-carousel>
      * ```
      *
      * @memberof IgxCarouselComponent

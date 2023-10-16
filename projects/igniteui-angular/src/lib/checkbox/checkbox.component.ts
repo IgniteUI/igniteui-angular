@@ -27,7 +27,8 @@ export const LabelPosition = mkenum({
 export type LabelPosition = typeof LabelPosition[keyof typeof LabelPosition];
 
 export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
-    checked: boolean;
+    checked?: boolean;
+    value?: any;
 }
 
 let nextId = 0;
@@ -149,7 +150,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox labelId = "Label1"></igx-checkbox>
+     * <igx-checkbox labelId="Label1"></igx-checkbox>
      * ```
      * ```typescript
      * let labelId =  this.component.labelId;
@@ -162,7 +163,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox [value] = "'CheckboxValue'"></igx-checkbox>
+     * <igx-checkbox [value]="'CheckboxValue'"></igx-checkbox>
      * ```
      * ```typescript
      * let value =  this.checkbox.value;
@@ -175,7 +176,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox name = "Checkbox1"></igx-checkbox>
+     * <igx-checkbox name="Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
      * let name =  this.checkbox.name;
@@ -188,7 +189,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox [tabindex] = "1"></igx-checkbox>
+     * <igx-checkbox [tabindex]="1"></igx-checkbox>
      * ```
      * ```typescript
      * let tabIndex =  this.checkbox.tabindex;
@@ -202,7 +203,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox labelPosition = "before"></igx-checkbox>
+     * <igx-checkbox labelPosition="before"></igx-checkbox>
      * ```
      * ```typescript
      * let labelPosition =  this.checkbox.labelPosition;
@@ -217,7 +218,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox [disableRipple] = "true"></igx-checkbox>
+     * <igx-checkbox [disableRipple]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let isRippleDisabled = this.checkbox.desableRipple;
@@ -252,7 +253,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox aria-labelledby = "Checkbox1"></igx-checkbox>
+     * <igx-checkbox aria-labelledby="Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
      * let ariaLabelledBy = this.checkbox.ariaLabelledBy;
@@ -266,7 +267,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox aria-label = "Checkbox1"></igx-checkbox>
+     * <igx-checkbox aria-label="Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
      * let ariaLabel = this.checkbox.ariaLabel;
@@ -307,7 +308,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox [indeterminate] = "true"></igx-checkbox>
+     * <igx-checkbox [indeterminate]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let isIndeterminate = this.checkbox.indeterminate;
@@ -323,7 +324,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      *
      * @example
      * ```html
-     * <igx-checkbox [checked] = "true"></igx-checkbox>
+     * <igx-checkbox [checked]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let isChecked =  this.checkbox.checked;
@@ -421,6 +422,14 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     public inputId = `${this.id}-input`;
     /**
      * @hidden
+     */
+    protected _onChangeCallback: (_: any) => void = noop;
+    /**
+     * @hidden
+     */
+    private _onTouchedCallback: () => void = noop;
+    /**
+     * @hidden
      * @internal
      */
     private _checked = false;
@@ -439,17 +448,9 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     private _invalid = false;
-    /**
-     * @hidden
-     */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     */
-    private _onChangeCallback: (_: any) => void = noop;
 
     constructor(
-        private cdr: ChangeDetectorRef,
+        protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
         @Optional() @Self() public ngControl: NgControl,
     ) {
@@ -506,7 +507,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
         // bound on change would have to perform self checks for weather the value has changed because
         // of the initial set on initialization
-        this.change.emit({ checked: this.checked, owner: this });
+        this.change.emit({ checked: this.checked, value: this.value, owner: this });
     }
 
     /**

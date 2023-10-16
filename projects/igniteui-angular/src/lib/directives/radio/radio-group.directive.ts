@@ -8,8 +8,9 @@ import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
-import { IChangeRadioEventArgs, IgxRadioComponent } from '../../radio/radio.component';
+import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
+import { IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
 
 /**
  * Determines the Radio Group alignment
@@ -173,7 +174,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * ```
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
 
     /**
      * The css class applied to the component.
@@ -524,9 +525,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
-    private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
+    private _selectedRadioButtonChanged(args: IChangeCheckboxEventArgs) {
         this.radioButtons.forEach((button) => {
-            button.checked = button.id === args.radio.id;
+            button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {
                 this.invalid = button.ngControl.invalid;
             } else if (button.checked) {
@@ -534,7 +535,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
             }
         });
 
-        this._selected = args.radio;
+        this._selected = args.owner;
         this._value = args.value;
 
         if (this._isInitialized) {
