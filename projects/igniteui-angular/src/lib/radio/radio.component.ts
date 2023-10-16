@@ -1,12 +1,10 @@
 import {
     AfterViewInit,
     Component,
-    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
-    Input,
-    ViewChild
+    Input
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
@@ -39,17 +37,6 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
     imports: [IgxRippleDirective]
 })
 export class IgxRadioComponent extends IgxCheckboxComponent implements AfterViewInit, ControlValueAccessor, EditorProvider {
-    /**
-     * Returns reference to native radio element.
-     * ```typescript
-     * let radioElement =  this.radio.nativeRadio;
-     * ```
-     *
-     * @memberof IgxRadioComponent
-     */
-    @ViewChild('radio', { static: true })
-    public nativeRadio: ElementRef;
-
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 
@@ -214,11 +201,6 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
         } else {
             this.deselect();
         }
-    }
-
-    /** @hidden */
-    public override getEditElement() {
-        return this.nativeRadio.nativeElement;
     }
 
     /**

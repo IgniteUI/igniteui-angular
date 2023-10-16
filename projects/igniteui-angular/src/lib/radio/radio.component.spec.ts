@@ -33,7 +33,7 @@ describe('IgxRadio', () => {
         const radioInstance = fixture.componentInstance.radio;
         fixture.detectChanges();
 
-        const nativeRadio = radioInstance.nativeRadio.nativeElement;
+        const nativeRadio = radioInstance.nativeInput.nativeElement;
         const nativeLabel = radioInstance.nativeLabel.nativeElement;
         const placeholderLabel = radioInstance.placeholderLabel.nativeElement;
 
@@ -115,7 +115,7 @@ describe('IgxRadio', () => {
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(RadioExternalLabelComponent);
         const radioInstance = fixture.componentInstance.radio;
-        const nativeRadio = radioInstance.nativeRadio.nativeElement;
+        const nativeRadio = radioInstance.nativeInput.nativeElement;
         const externalLabel = fixture.debugElement.query(By.css('#my-label')).nativeElement;
         fixture.detectChanges();
 
@@ -126,7 +126,7 @@ describe('IgxRadio', () => {
     it('Initializes with invisible label', () => {
         const fixture = TestBed.createComponent(RadioInvisibleLabelComponent);
         const radioInstance = fixture.componentInstance.radio;
-        const nativeRadio = radioInstance.nativeRadio.nativeElement;
+        const nativeRadio = radioInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
         expect(nativeRadio.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
@@ -145,7 +145,7 @@ describe('IgxRadio', () => {
 
         // get the disabled radio button
         const componentInstance = testInstance.radios.last as IgxRadioComponent;
-        const radio = componentInstance.nativeRadio.nativeElement as HTMLInputElement;
+        const radio = componentInstance.nativeInput.nativeElement as HTMLInputElement;
 
         expect(componentInstance.disabled).toBe(true);
         expect(radio.disabled).toBe(true);
@@ -154,7 +154,7 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
 
         // Should not update
-        expect(componentInstance.nativeRadio.nativeElement.checked).toBe(false);
+        expect(componentInstance.nativeInput.nativeElement.checked).toBe(false);
         expect(radio.checked).toBe(false);
         expect(testInstance.selected).not.toEqual('Bar');
     }));

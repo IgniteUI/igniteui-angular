@@ -91,8 +91,8 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * let checkboxElement =  this.component.checkboxElement;
      * ```
      */
-    @ViewChild('checkbox', { static: true })
-    public nativeCheckbox: ElementRef;
+    @ViewChild('input', { static: true })
+    public nativeInput: ElementRef;
 
     /**
      * Returns reference to the native label element.
@@ -114,7 +114,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     public get nativeElement() {
-        return this.nativeCheckbox.nativeElement;
+        return this.nativeInput.nativeElement;
     }
 
     /**
@@ -498,7 +498,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
             return;
         }
 
-        this.nativeCheckbox.nativeElement.focus();
+        this.nativeInput.nativeElement.focus();
 
         this.indeterminate = false;
         this.checked = !this.checked;
@@ -570,7 +570,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
 
     /** @hidden @internal */
     public getEditElement() {
-        return this.nativeCheckbox.nativeElement;
+        return this.nativeInput.nativeElement;
     }
 
     /**
