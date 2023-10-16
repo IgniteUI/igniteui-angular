@@ -22,7 +22,8 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IResourceStrings, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
+import { IResourceStrings, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, changei18n } from 'igniteui-angular';
+import { GridResourceStringsEN } from 'igniteui-angular/src/lib/core/i18n/grid-resources';
 
 @Component({
     selector: 'app-grid-localization',
@@ -56,7 +57,7 @@ export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
         registerLocaleData(localeHant);
         registerLocaleData(localeHI);
         this.data = DATA;
-        this.cashedLocalizationEN = Object.assign({}, getCurrentResourceStrings());
+        this.cashedLocalizationEN = Object.assign({}, GridResourceStringsEN);
         // Creating a custom locale (HI) for specific grid strings.
         // Similarly can localize all needed strings in a separate IgxResourceStringsHI file (feel free to contribute)
         this.partialCustomHindi = {
