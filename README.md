@@ -195,7 +195,7 @@ ng update igniteui-cli
 ng build igniteui-angular
 
 // build the css
-npm run build:style
+npm run build:styles
 
 // build them both
 npm run build:lib
