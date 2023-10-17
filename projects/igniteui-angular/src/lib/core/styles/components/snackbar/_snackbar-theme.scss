@@ -100,7 +100,7 @@
         box-shadow: var-get($theme, 'shadow');
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %igx-snackbar-message {

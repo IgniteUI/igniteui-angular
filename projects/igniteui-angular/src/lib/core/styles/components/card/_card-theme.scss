@@ -129,7 +129,7 @@
         background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         @if $not-material-theme {
             border: em(1px) solid var-get($theme, 'outline-color');

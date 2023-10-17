@@ -405,7 +405,7 @@
         position: relative;
         display: block;
         color: var-get($theme, 'idle-text-color');
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         igx-prefix,
         [igxPrefix] {

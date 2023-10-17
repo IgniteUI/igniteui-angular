@@ -109,7 +109,7 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         &::before {
             @extend %handle-area;

@@ -48,7 +48,7 @@
         position: relative;
         justify-content: center;
         overflow: hidden;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         &::after {
             content: '';

@@ -292,7 +292,7 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %igx-list--empty {

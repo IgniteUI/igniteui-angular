@@ -106,7 +106,7 @@
         box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %igx-navbar-part {

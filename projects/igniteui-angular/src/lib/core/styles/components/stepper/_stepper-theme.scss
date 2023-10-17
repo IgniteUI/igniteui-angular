@@ -380,7 +380,7 @@
     %stepper-display {
         flex-direction: column;
         width: 100%;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %igx-stepper__header {

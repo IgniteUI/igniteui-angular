@@ -137,7 +137,7 @@
         height: 100%;
         align-items: center;
         flex-flow: column nowrap;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %igx-nav-arrow {

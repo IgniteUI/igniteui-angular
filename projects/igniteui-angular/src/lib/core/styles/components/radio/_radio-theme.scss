@@ -166,7 +166,7 @@
         flex-flow: row nowrap;
         align-items: center;
         color: var-get($theme, 'label-color');
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %radio-input {

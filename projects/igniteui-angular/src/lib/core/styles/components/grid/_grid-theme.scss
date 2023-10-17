@@ -789,7 +789,7 @@
         --component-size: var(--ig-size, var(--ig-size-large));
         --grid-size: var(--component-size);
 
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
     }
 
     %grid-display {

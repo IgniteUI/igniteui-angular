@@ -77,7 +77,7 @@
 
     %igx-bottom-nav-panel {
         display: block;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         &:focus {
             outline-style: none;

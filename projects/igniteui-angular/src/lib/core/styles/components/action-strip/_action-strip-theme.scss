@@ -96,7 +96,7 @@
         padding-inline: pad-inline(em(12px), em(16px), em(24px));
         padding-block: 0;
         z-index: 9999;
-        font-size: var(--broser-context, var(--ig-contenxt));
+        font-size: var(--broser-context, var(--ig-browser-context));
 
         [igxButton='icon'] {
             --component-size: var(--action-strip-size) !important;
