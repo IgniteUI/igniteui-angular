@@ -100,7 +100,7 @@
         background-color: var-get($theme, 'background');
         border-radius: border-radius(em(4px));
         box-shadow: elevation(12);
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %advanced-filter__header {

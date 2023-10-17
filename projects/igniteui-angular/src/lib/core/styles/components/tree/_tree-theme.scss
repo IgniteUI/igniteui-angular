@@ -128,7 +128,7 @@
         display: block;
         z-index: 0;
         overflow-y: auto;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %tree-node,

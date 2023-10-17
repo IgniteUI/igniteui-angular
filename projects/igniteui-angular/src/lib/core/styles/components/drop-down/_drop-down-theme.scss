@@ -202,7 +202,7 @@
         box-shadow: var-get($theme, 'shadow');
         min-width: em(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %igx-drop-down__list-scroll {

@@ -21,7 +21,7 @@
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
 
         %cal-display {
             background: var-get($theme, 'content-background');

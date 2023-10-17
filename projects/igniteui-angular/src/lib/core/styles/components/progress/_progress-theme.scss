@@ -143,7 +143,7 @@
         width: 100%;
         flex: 1 1 100%;
         flex-direction: column;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
 
         &[dir='rtl'],
         [dir='rtl'] & {

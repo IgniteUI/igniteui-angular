@@ -458,7 +458,7 @@
         border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
 
         %cal-display {
             @if $bootstrap-theme {

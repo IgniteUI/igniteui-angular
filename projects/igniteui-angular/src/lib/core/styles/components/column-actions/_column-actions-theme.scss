@@ -65,7 +65,7 @@
         flex: 1 1 auto;
         min-width: em(180px);
         // TODO NOT SURE IF NEEDED HERE
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %column-actions-title {

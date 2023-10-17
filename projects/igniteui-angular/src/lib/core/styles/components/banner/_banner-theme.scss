@@ -94,7 +94,7 @@
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: em(8px);
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
 
         padding-inline-start: pad-inline($padding-inline-start);
         padding-inline-end: pad-inline($padding);

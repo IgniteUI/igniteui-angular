@@ -265,7 +265,7 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %switch-input {

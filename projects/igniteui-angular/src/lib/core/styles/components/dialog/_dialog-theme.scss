@@ -116,7 +116,7 @@
 
     %igx-dialog-display {
         outline-style: none;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %igx-dialog--hidden {

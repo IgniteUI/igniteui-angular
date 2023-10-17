@@ -67,7 +67,7 @@
         color: var-get($theme, 'text-color');
         border-radius: var-get($theme, 'border-radius');
         margin: 0 auto;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
     }
 
     %tooltip--desktop {

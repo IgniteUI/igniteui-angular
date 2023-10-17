@@ -37,7 +37,7 @@
 
     %igx-date-range-picker {
         display: flex;
-        font-size: var(--broser-context, var(--ig-browser-context));
+        font-size: var(--browser-context, var(--ig-browser-context));
 
         > igx-icon {
             cursor: pointer;
