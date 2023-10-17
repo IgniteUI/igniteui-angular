@@ -47,6 +47,10 @@
     <ng-template igxEmptyList>
         <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
     </ng-template>
+
+    <div class="igx-excel-filter__filter-results" aria-live="assertive" aria-atomic="true">
+        {{ displayedListData.length }} matches.
+    </div>
 </igx-list>
 
 <div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
