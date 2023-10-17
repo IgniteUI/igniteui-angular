@@ -139,12 +139,12 @@
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
-    $drawer-icon-size: rem(24px);
-    $drawer-item-margin: rem(8px);
-    $text-side-padding: rem(8px);
+    $drawer-icon-size: em(24px);
+    $drawer-item-margin: em(8px);
+    $text-side-padding: em(8px);
     $drawer-item-min-h: auto;
-    $drawer-item-max-h: rem(48px);
-    $drawer-item-min-w: rem(32px);
+    $drawer-item-max-h: em(48px);
+    $drawer-item-min-w: em(32px);
 
     $variant: map.get($theme, '_meta', 'variant');
 
@@ -153,6 +153,7 @@
         transition-duration: .3s;
         transition-timing-function: $out-quad;
         flex-shrink: 0;
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %aside {
@@ -169,7 +170,7 @@
         transition: width, transform;
         transition-timing-function: $out-quad, $out-quad;
         box-shadow: var-get($theme, 'shadow');
-        border-inline-end: rem(1px) solid var-get($theme, 'border-color');
+        border-inline-end: em(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
     }
 
@@ -215,19 +216,19 @@
         inset-inline-start: auto;
         inset-inline-end: 0;
         border-inline-end: none;
-        border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        border-inline-start: em(1px) solid var-get($theme, 'border-color');
     }
 
     %aside--mini {
-        width: rem(60px);
+        width: em(60px);
         transition-duration: .2s, .2s;
 
         %item {
             justify-content: center;
             @if $variant == 'indigo-design' {
-                max-width: rem(32px);
+                max-width: em(32px);
                 // important is needed to override the typography margins
-                margin: rem(14px) auto !important;
+                margin: em(14px) auto !important;
             }
 
             igx-icon {
@@ -237,7 +238,7 @@
     }
 
     %aside--normal {
-        width: rem(242px);
+        width: em(242px);
         transition-duration: .3s, .3s;
     }
 
@@ -285,13 +286,13 @@
         @if $variant != 'indigo-design' {
             // important is needed to override the typography margins
             margin: $drawer-item-margin !important;
-            padding: rem(12px) rem(8px);
-            gap: rem(32px);
+            padding: em(12px) em(8px);
+            gap: em(32px);
         } @else {
             // important is needed to override the typography margins
-            margin: rem(15px) $drawer-item-margin !important;
-            padding: rem(4px);
-            gap: calc(rem(32px) - #{$text-side-padding});
+            margin: em(15px) $drawer-item-margin !important;
+            padding: em(4px);
+            gap: calc(em(32px) - #{$text-side-padding});
         }
 
         cursor: pointer;
@@ -309,7 +310,7 @@
 
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
+                margin-inline-start: em(4px);
             }
         }
 
@@ -389,7 +390,7 @@
 
     %item--header {
         display: block;
-        padding: rem(12px) rem(16px);
+        padding: em(12px) em(16px);
         white-space: nowrap;
         color: var-get($theme, 'item-header-text-color');
     }

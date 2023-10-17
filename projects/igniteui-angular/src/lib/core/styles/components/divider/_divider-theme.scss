@@ -48,6 +48,7 @@
         position: relative;
         justify-content: center;
         overflow: hidden;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         &::after {
             content: '';
@@ -60,7 +61,7 @@
 
     %igx-divider-display:not(%igx-divider--vertical) {
         display: flex;
-        min-height: rem(1px);
+        min-height: em(1px);
         width: 100%;
         position: relative;
 
@@ -77,7 +78,7 @@
 
     %igx-divider--inset:not(%igx-divider--vertical) {
         &::after {
-            min-width: rem(4px);
+            min-width: em(4px);
             width: calc(100% - (var-get($theme, 'inset') * 2));
         }
     }
@@ -87,9 +88,9 @@
             background: repeating-linear-gradient(
                 to right,
                 var-get($theme, 'color'),
-                var-get($theme, 'color') rem(10px),
-                transparent rem(10px),
-                transparent rem(20px)
+                var-get($theme, 'color') em(10px),
+                transparent em(10px),
+                transparent em(20px)
             );
         }
     }
@@ -99,17 +100,17 @@
             background: repeating-linear-gradient(
                 to bottom,
                 var-get($theme, 'color'),
-                var-get($theme, 'color') rem(10px),
-                transparent rem(10px),
-                transparent rem(20px)
+                var-get($theme, 'color') em(10px),
+                transparent em(10px),
+                transparent em(20px)
             );
         }
     }
 
     %igx-divider--vertical {
         display: inline-flex;
-        min-width: rem(1px);
-        width: rem(1px);
+        min-width: em(1px);
+        width: em(1px);
 
         &::after {
             inset-block-start: var-get($theme, 'inset');
@@ -120,7 +121,7 @@
 
     %igx-divider--vertical-inset {
         &::after {
-            min-height: rem(4px);
+            min-height: em(4px);
             height: calc(100% - (var-get($theme, 'inset') * 2));
         }
     }

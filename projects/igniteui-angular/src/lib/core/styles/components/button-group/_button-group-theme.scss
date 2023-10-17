@@ -85,7 +85,7 @@
     $theme: digest-schema($button-group-schema);
     $meta: map.get($theme, '_meta');
 
-    $border: rem(1px) solid map.get($theme, 'item-selected-border-color');
+    $border: em(1px) solid map.get($theme, 'item-selected-border-color');
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -162,9 +162,9 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin button-group($theme) {
     @include css-vars($theme);
-    $group-item-min-width: rem(24px);
-    $group-item-border-thickness: rem(1px);
-    $group-items-margin: rem(10px, 16px);
+    $group-item-min-width: em(24px);
+    $group-item-border-thickness: em(1px);
+    $group-items-margin: em(10px);
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -174,6 +174,7 @@
         display: flex;
         box-shadow: var-get($theme, 'shadow');
         border-radius: var-get($theme, 'border-radius');
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         button {
             // The margin here is required to fix a bug in Safari #7858
@@ -209,7 +210,7 @@
         }
 
         &:not(:nth-child(1)) {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: em(-1px);
         }
 
         &:first-of-type {
@@ -236,7 +237,7 @@
 
         &:focus {
             @if $bootstrap-theme or $indigo-theme {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'idle-shadow-color');
+                box-shadow: 0 0 0 em(3px) var-get($theme, 'idle-shadow-color');
             }
 
             @if $indigo-theme {
@@ -247,7 +248,7 @@
 
     %igx-group-item-vertical {
         &:not(:nth-child(1)) {
-            margin-top: rem(-1px);
+            margin-top: em(-1px);
             margin-inline-start: 0;
         }
 
@@ -285,7 +286,7 @@
 
         @if $indigo-theme {
             &:focus {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
+                box-shadow: 0 0 0 em(3px) var-get($theme, 'selected-shadow-color');
             }
         }
 

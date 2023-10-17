@@ -70,13 +70,13 @@
 
     $variant: map.get($theme, '_meta', 'variant');
     $icon-button-size: map.get((
-        material: rem(36px),
-        fluent: rem(32px),
-        bootstrap: rem(36px),
-        indigo-design: rem(36px),
+        material: em(36px),
+        fluent: em(32px),
+        bootstrap: em(36px),
+        indigo-design: em(36px),
     ), $variant);
-    $button-size: sizable(rem(28px), rem(28px), $icon-button-size);
-    $icon-size: sizable(rem(14px), rem(14px), rem(18px));
+    $button-size: sizable(em(28px), em(28px), $icon-button-size);
+    $icon-size: sizable(em(14px), em(14px), em(18px));
 
     %igx-action-strip {
         @include sizable();
@@ -93,9 +93,10 @@
         inset-inline-start: 0;
         background: var-get($theme, 'background');
         color: inherit;
-        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-inline: pad-inline(em(12px), em(16px), em(24px));
         padding-block: 0;
         z-index: 9999;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         [igxButton='icon'] {
             --component-size: var(--action-strip-size) !important;
@@ -128,14 +129,14 @@
         igx-icon {
             --component-size: var(--action-strip-size);
 
-            width: var(--igx-icon-size, rem(18px));
-            height: var(--igx-icon-size, rem(18px));
-            font-size: var(--igx-icon-size, rem(18px));
+            width: var(--igx-icon-size, em(18px));
+            height: var(--igx-icon-size, em(18px));
+            font-size: var(--igx-icon-size, em(18px));
         }
 
         &%igx-drop-down__item {
             igx-icon + [igxLabel] {
-                margin-inline-start: pad-inline(rem(8px), rem(10px), rem(12px));
+                margin-inline-start: pad-inline(em(8px), em(10px), em(12px));
             }
         }
     }
@@ -162,7 +163,7 @@
         color: var-get($theme, 'icon-color');
         border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
-        max-height: rem(36px);
+        max-height: em(36px);
 
         &:last-child {
             margin-inline-end: 0;
@@ -185,7 +186,7 @@
 
     %igx-action-strip__editing-actions {
         > [igxButton] {
-            margin-inline-start: rem(4px);
+            margin-inline-start: em(4px);
 
             &:first-of-type {
                 margin-inline-start: 0;

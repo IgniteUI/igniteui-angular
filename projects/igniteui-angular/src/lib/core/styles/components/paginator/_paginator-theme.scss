@@ -56,9 +56,9 @@
     @include css-vars($theme);
 
     $paginator-padding-inline: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: em(24px),
+        cosy: em(16px),
+        compact: em(12px)
     );
 
     %igx-paginator {
@@ -69,8 +69,8 @@
         align-items: center;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
-        font-size: rem(12px);
-        border-top: rem(1px) solid var-get($theme, 'border-color');
+        font-size: em(12px);
+        border-top: em(1px) solid var-get($theme, 'border-color');
         z-index: 1;
         padding-inline: pad-inline(map.get($paginator-padding-inline, 'compact'), map.get($paginator-padding-inline, 'cosy'), map.get($paginator-padding-inline, 'comfortable'));
         padding-block: 0;
@@ -101,14 +101,14 @@
     }
 
     %igx-page-size__label {
-        margin-inline-end: rem(8px);
+        margin-inline-end: em(8px);
         @include ellipsis();
     }
 
     %igx-page-size__select {
         display: flex;
-        max-width: rem(114px);
-        min-width: rem(100px);
+        max-width: em(114px);
+        min-width: em(100px);
 
         igx-select {
             --ig-size: 1;
@@ -122,7 +122,7 @@
         flex: 1;
 
         > * {
-            margin-inline-start: rem(8px);
+            margin-inline-start: em(8px);
         }
 
         [dir='rtl'] & {

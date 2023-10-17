@@ -200,8 +200,9 @@
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
         box-shadow: var-get($theme, 'shadow');
-        min-width: rem(128px);
+        min-width: em(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %igx-drop-down__list-scroll {
@@ -215,7 +216,7 @@
         display: flex;
         width: 100%;
         align-items: center;
-        gap: rem(8px)
+        gap: em(8px)
     }
 
     %igx-drop-down__inner {
@@ -258,7 +259,7 @@
 
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
-        padding-inline: pad-inline(rem(16px), rem(20px), rem(24px));
+        padding-inline: pad-inline(em(16px), em(20px), em(24px));
         border-radius: var-get($theme, 'item-border-radius');
 
         &:focus {
@@ -277,7 +278,7 @@
     %igx-drop-down__header {
         color: var-get($theme, 'header-text-color');
         pointer-events: none;
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-inline: pad-inline(em(8px), em(12px), em(16px));
     }
 
     %igx-drop-down__group {

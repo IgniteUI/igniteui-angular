@@ -84,11 +84,11 @@
 
     $badge-font-weight: normal;
 
-    $badge-value-padding: rem(4px);
+    $badge-value-padding: em(4px);
     $border-type: solid;
 
     %igx-badge-display {
-        --size: #{rem(22px)};
+        --size: #{em(22px)};
         --_badge-size: var(--size);
 
         display: flex;

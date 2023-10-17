@@ -98,7 +98,7 @@
     }
 
     %igx-combo__checkbox {
-        margin-inline-end: rem(8);
+        margin-inline-end: em(8);
     }
 
     %igx-combo__drop-down {
@@ -111,11 +111,11 @@
     }
 
     %igx-combo__search {
-        padding-inline: pad-inline(rem(16px));
-        padding-block: pad-block(rem(8px));
+        padding-inline: pad-inline(em(16px));
+        padding-block: pad-block(em(8px));
         margin: 0 !important;
         z-index: 26;
-        border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
+        border-bottom: em(1px) dashed var-get($theme, 'search-separator-border-color');
 
         .igx-input-group__bundle {
             padding-block-start: 0;
@@ -130,9 +130,9 @@
     %igx-combo__case-icon,
     %igx-combo__case-icon--active {
         .igx-icon {
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: em(16px);
+            height: em(16px);
+            font-size: em(16px);
         }
     }
 
@@ -166,8 +166,8 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        padding: rem(16px);
-        gap: rem(16px);
+        padding: em(16px);
+        gap: em(16px);
         background: var-get($theme, 'empty-list-background');
     }
 
@@ -183,27 +183,27 @@
         align-items: center;
         width: 100%;
         color: var-get($theme, 'empty-list-placeholder-color');
-        padding: 0 rem(24px);
-        font-size: rem(13px);
+        padding: 0 em(24px);
+        font-size: em(13px);
     }
 
     @if $variant == 'bootstrap' {
         .igx-input-group--disabled {
             %igx-combo__toggle-button {
-                border-inline-start-width: rem(1px);
+                border-inline-start-width: em(1px);
                 border-inline-start-style: solid;
                 border-inline-start-color: inherit;
             }
         }
 
         igx-suffix:not(.igx-combo__clear-button) + %igx-combo__toggle-button {
-            border-inline-start-width: rem(1px);
+            border-inline-start-width: em(1px);
             border-inline-start-style: solid;
             border-inline-start-color: inherit;
         }
 
         .igx-input-group__bundle::after {
-            height: rem(1px) !important;
+            height: em(1px) !important;
         }
     }
 
@@ -215,7 +215,7 @@
 
         %igx-combo__clear-button {
             @if $variant == 'bootstrap' {
-                border-inline-end: rem(1px) solid var(--border-color);
+                border-inline-end: em(1px) solid var(--border-color);
             }
         }
     }

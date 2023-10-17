@@ -11,10 +11,10 @@
 
 :host ::ng-deep {
     .hamburger {
-        margin-right: rem(16px);
+        margin-right: em(16px);
 
         [dir='rtl'] & {
-            margin-left: rem(16px);
+            margin-left: em(16px);
             margin-right: initial;
         }
     }
@@ -23,8 +23,8 @@
 .sample-header {
     display: flex;
     align-items: center;
-    height: rem(90px);
-    padding: 0 rem(16px);
+    height: em(90px);
+    padding: 0 em(16px);
     background: hsl(var(--ig-primary-500));
     overflow: hidden;
 

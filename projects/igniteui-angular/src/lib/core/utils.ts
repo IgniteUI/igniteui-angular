@@ -830,7 +830,7 @@ export const formatDate = (value: string | number | Date, format: string, locale
 export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
-export const rem = (value: number | string) => {
+export const em = (value: number | string) => {
     const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
     return Number(value) / base;
 }

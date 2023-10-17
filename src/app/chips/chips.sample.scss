@@ -3,7 +3,7 @@
 @use '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme' as *;
 
 igx-chip {
-    margin: rem(4px);
+    margin: em(4px);
 }
 
 .sample-title {
@@ -94,9 +94,9 @@ $padding: 32px;
 }
 
 .chip-avatar {
-    width: rem(24px);
-    height: rem(24px);
-    min-width: rem(24px);
+    width: em(24px);
+    height: em(24px);
+    min-width: em(24px);
 }
 
 .chip-storyboard {
@@ -106,7 +106,7 @@ $padding: 32px;
     gap: 20px;
 
     igx-chip {
-        margin: rem(4px);
+        margin: em(4px);
     }
 }
 

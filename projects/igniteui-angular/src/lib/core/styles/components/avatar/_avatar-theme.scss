@@ -67,7 +67,7 @@
     $box-shadow: map.get((
         material: null,
         fluent: null,
-        bootstrap: 0 0 0 rem(3px) var-get($theme, 'background'),
+        bootstrap: 0 0 0 em(3px) var-get($theme, 'background'),
         indigo-design: null,
     ), $variant);
 
@@ -93,6 +93,7 @@
         flex-shrink: 0;
         width: var-get($theme, 'size');
         height: var-get($theme, 'size');
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         &::after {
             box-shadow: none;

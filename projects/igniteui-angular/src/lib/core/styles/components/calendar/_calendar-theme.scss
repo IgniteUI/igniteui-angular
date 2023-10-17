@@ -404,24 +404,24 @@
 
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
-    $cal-header-padding: rem(16px);
+    $cal-header-padding: em(16px);
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cal-picker-padding: map.get((
-        material: rem(16px),
-        fluent: rem(16px),
-        bootstrap: rem(8px),
-        indigo-design: rem(16px),
+        material: em(16px),
+        fluent: em(16px),
+        bootstrap: em(8px),
+        indigo-design: em(16px),
     ), $variant);
 
     $cal-value-w: map.get((
-        material: rem(40px),
-        fluent: rem(40px),
-        bootstrap: rem(32px),
-        indigo-design: rem(40px),
+        material: em(40px),
+        fluent: em(40px),
+        bootstrap: em(32px),
+        indigo-design: em(40px),
     ), $variant);
 
     $border-width: map.get((
@@ -442,25 +442,25 @@
     $cal-value-br: math.div($cal-value-w, 2);
     $cal-value-fw: 600;
 
-    $cal-value-month-margin: 0 rem(12px);
-    $cal-value-month-height: rem(91px);
+    $cal-value-month-margin: 0 em(12px);
+    $cal-value-month-height: em(91px);
 
-    $cal-row-padding: rem(8px);
-    $cal-row-margin: rem(2px) 0;
+    $cal-row-padding: em(8px);
+    $cal-row-margin: em(2px) 0;
 
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: rem(290px);
+        min-width: em(290px);
         background: var-get($theme, 'content-background');
         outline: none;
         border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         %cal-display {
-
             @if $bootstrap-theme {
                 border: none;
                 border-radius: 0;
@@ -497,7 +497,7 @@
     igx-month-picker {
         %cal-picker-display {
             @if $bootstrap-theme {
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-bottom: em(1px) solid var-get($theme, 'border-color');
             }
         }
     }
@@ -514,7 +514,7 @@
         flex-flow: row nowrap;
 
         %cal-header-display {
-            min-width: rem(168px);
+            min-width: em(168px);
         }
     }
 
@@ -553,7 +553,7 @@
 
     %cal-picker-display {
         display: flex;
-        height: rem(56px);
+        height: em(56px);
         align-items: center;
         padding-bottom: $cal-picker-padding;
         background: var-get($theme, 'picker-background-color');
@@ -620,7 +620,7 @@
         color: var-get($theme, 'picker-text-color');
         text-align: center;
         outline: none;
-        padding: 0 rem(2px);
+        padding: 0 em(2px);
 
         &:hover,
         &:focus {
@@ -689,7 +689,7 @@
             @if $bootstrap-theme {
                 margin-top: 0;
                 background: var-get($theme, 'picker-background-color');
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-bottom: em(1px) solid var-get($theme, 'border-color');
                 padding-bottom: $cal-picker-padding;
                 padding-top: $cal-picker-padding;
             }
@@ -866,8 +866,8 @@
             position: absolute; content: '';
             width: calc(100% - 4px);
             height: calc(100% - 4px);
-            top: rem(2px);
-            inset-inline-start: rem(2px);
+            top: em(2px);
+            inset-inline-start: em(2px);
             border-radius: inherit;
             z-index: -1;
         }
@@ -961,7 +961,7 @@
 
             &::after {
                 top: 100%;
-                height: if($not-bootstrap-theme, math.div($cal-row-padding, 2) + rem(2px), $cal-row-padding + rem(5px));
+                height: if($not-bootstrap-theme, math.div($cal-row-padding, 2) + em(2px), $cal-row-padding + em(5px));
             }
 
             &::before {
@@ -980,7 +980,7 @@
     %cal-value--year {
         margin: 0;
         min-width: 8ch;
-        line-height: rem(52px);
+        line-height: em(52px);
 
         &:first-of-type {
             padding-inline-start: 0;
@@ -1032,7 +1032,7 @@
             inset-inline-start: 0;
             inset-inline-end: 0;
             transform: translateY(-50%);
-            height: rem(48px);
+            height: em(48px);
             background: transparent;
             border-radius: var-get($theme, 'month-border-radius');
             transition: background-color .15s ease-out;
@@ -1249,8 +1249,8 @@
 
     %cal-value--year-current {
         @include type-style($content) {
-            font-size: rem(24px);
-            line-height: rem(52px);
+            font-size: em(24px);
+            line-height: em(52px);
             margin: 0;
         }
     }

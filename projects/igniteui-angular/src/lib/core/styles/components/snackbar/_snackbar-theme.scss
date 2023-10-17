@@ -79,10 +79,10 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $snackbar-min-height: rem(48px);
-    $snackbar-padding: rem(7px) rem(24px);
-    $snackbar-button-left-margin: rem(24px);
-    $snackbar-button-line-height: rem(16px);
+    $snackbar-min-height: em(48px);
+    $snackbar-padding: em(7px) em(24px);
+    $snackbar-button-left-margin: em(24px);
+    $snackbar-button-line-height: em(16px);
     $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
@@ -93,13 +93,14 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
-        margin: rem(8px);
+        margin: em(8px);
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
         box-shadow: var-get($theme, 'shadow');
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %igx-snackbar-message {

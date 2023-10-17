@@ -139,27 +139,29 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    $vertical-header-width: rem(168px);
+    $vertical-header-width: em(168px);
 
     $picker-buttons-padding: map.get((
-        material: rem(8px),
-        fluent: rem(8px),
-        bootstrap: rem(16px)
+        material: em(8px),
+        fluent: em(8px),
+        bootstrap: em(16px)
     ), $variant);
 
     %time-picker-display {
         display: flex;
         flex-flow: column nowrap;
-        max-width: rem(340px);
-        min-width: rem(320px);
+        max-width: em(340px);
+        min-width: em(320px);
         border-radius: var-get($theme, 'border-radius');
         box-shadow: var-get($theme, 'modal-shadow');
         overflow: hidden;
+        font-size: var(--broser-context, var(--ig-contenxt));
+
     }
 
     %time-picker-display--vertical {
         flex-flow: row nowrap;
-        min-width: rem(540px);
+        min-width: em(540px);
     }
 
     %time-picker__main {
@@ -168,13 +170,13 @@
     }
 
     %time-picker--dropdown {
-        min-width: rem(200px);
+        min-width: em(200px);
         box-shadow: var-get($theme, 'dropdown-shadow');
     }
 
     %time-picker__body {
         display: flex;
-        padding: rem(10px) 0;
+        padding: em(10px) 0;
         justify-content: center;
     }
 
@@ -216,7 +218,7 @@
     %time-picker__ampmList {
         display: flex;
         flex-direction: column;
-        padding-top: rem(48px);
+        padding-top: em(48px);
 
         [dir='rtl'] & {
             order: 3;
@@ -224,8 +226,8 @@
     }
 
     %time-picker__column {
-        max-width: rem(64px);
-        height: rem(325px);
+        max-width: em(64px);
+        height: em(325px);
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -242,10 +244,10 @@
     }
 
     %time-picker__item {
-        width: rem(54px);
-        padding: rem(5px) rem(10px);
+        width: em(54px);
+        padding: em(5px) em(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
-        height: rem(48px);
+        height: em(48px);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -261,7 +263,7 @@
     }
 
     %time-picker__item--selected {
-        font-size: rem(24px);
+        font-size: em(24px);
         color: var-get($theme, 'selected-text-color');
     }
 
@@ -277,7 +279,7 @@
 
     %time-picker__header {
         background: var-get($theme, 'header-background');
-        padding: rem(24px) rem(16px);
+        padding: em(24px) em(16px);
     }
 
     %time-picker__header-ampm {
@@ -307,13 +309,13 @@
         display: flex;
         justify-content: flex-end;
         @if $not-bootstrap-theme {
-            height: rem(52px);
+            height: em(52px);
         }
 
         padding: $picker-buttons-padding;
 
         [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: em(8px);
         }
     }
 }

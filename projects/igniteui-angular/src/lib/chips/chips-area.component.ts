@@ -24,7 +24,7 @@ import {
 import { IDropBaseEventArgs, IDragBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { rem } from '../core/utils';
+import { em } from '../core/utils';
 
 export interface IBaseChipsAreaEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -103,8 +103,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /** @hidden @internal */
     @HostBinding('style.width.rem')
-    public get _widthToRem() {
-        return rem(this.width);
+    public get _widthToem() {
+        return em(this.width);
     }
 
     /**
@@ -120,8 +120,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /** @hidden @internal */
     @HostBinding('style.height.rem')
-    public get _heightToRem() {
-        return rem(this.height);
+    public get _heightToem() {
+        return em(this.height);
     }
 
     /**

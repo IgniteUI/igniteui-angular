@@ -104,13 +104,13 @@
     $indigo-theme: $variant == 'indigo-design';
 
     $node-indent: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: em(24px),
+        cosy: em(16px),
+        compact: em(12px)
     );
 
-    $icon-size: rem(24px);
-    $icon-space: rem(8px);
+    $icon-size: em(24px);
+    $icon-space: em(8px);
 
     $circular-bar-size: (
         comfortable: #{$icon-size},
@@ -128,6 +128,7 @@
         display: block;
         z-index: 0;
         overflow-y: auto;
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %tree-node,
@@ -244,7 +245,7 @@
     }
 
     %node-wrapper--focused {
-        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+        box-shadow: inset 0 0 0 em(1px) var-get($theme, 'border-color');
     }
 
     %node-wrapper--disabled {
@@ -295,7 +296,7 @@
 
         > div {
             flex: 1;
-            height: rem(1px);
+            height: em(1px);
             background: var-get($theme, 'drop-area-color');
         }
     }

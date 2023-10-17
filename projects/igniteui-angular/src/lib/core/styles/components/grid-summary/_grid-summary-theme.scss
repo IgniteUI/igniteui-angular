@@ -94,15 +94,15 @@
     );
 
     $item-padding-block: (
-        comfortable: rem(6px),
-        cosy: rem(2px),
+        comfortable: em(6px),
+        cosy: em(2px),
         compact: 0
     );
 
     $summary-padding-inline: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: em(24px),
+        cosy: em(16px),
+        compact: em(12px)
     );
 
     %igx-grid-summary {
@@ -154,14 +154,14 @@
         align-items: center;
         padding-block: pad(map.get($item-padding-block, 'compact'), map.get($item-padding-block, 'cosy'), map.get($item-padding-block, 'comfortable'));
         padding-inline: 0;
-        font-size: rem(12px);
+        font-size: em(12px);
         position: relative;
     }
 
     %igx-grid-summary__label {
         color: var-get($theme, 'label-color');
-        min-width: rem(30px);
-        margin-inline-end: rem(3px);
+        min-width: em(30px);
+        margin-inline-end: em(3px);
 
         &:hover {
             color: var-get($theme, 'label-hover-color');

@@ -94,7 +94,7 @@
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
 
-    $panel-padding: rem(16px) rem(24px);
+    $panel-padding: em(16px) em(24px);
 
     %igx-expansion-panel {
         display: flex;
@@ -102,11 +102,12 @@
         border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
         transition: margin 350ms $out-quad;
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %igx-expansion-panel__header-title {
         color: var-get($theme, 'header-title-color');
-        margin-inline-end: rem(16px, 16px);
+        margin-inline-end: em(16px);
     }
 
     %igx-expansion-panel__header-description {
@@ -168,12 +169,12 @@
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
-        margin-inline-start: rem(16px, 16px);
+        margin-inline-start: em(16px);
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
-        margin-inline-end: rem(16px, 16px);
+        margin-inline-end: em(16px);
     }
 
     %igx-expansion-panel__header-icon--none {

@@ -67,16 +67,17 @@
         color: var-get($theme, 'text-color');
         border-radius: var-get($theme, 'border-radius');
         margin: 0 auto;
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %tooltip--desktop {
-        padding: 0 rem(8px);
-        min-height: rem(24px);
+        padding: 0 em(8px);
+        min-height: em(24px);
     }
 
     %tooltip--mobile {
-        padding: 0 rem(16px);
-        min-height: rem(32px);
+        padding: 0 em(16px);
+        min-height: em(32px);
     }
 
     %tooltip--hidden {
@@ -104,7 +105,7 @@
         }
     } @else {
         %tooltip--desktop {
-            font-size: rem(10px);
+            font-size: em(10px);
             font-weight: 600;
         }
     }

@@ -16,7 +16,7 @@ import {
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
-import { rem } from '../core/utils';
+import { em } from '../core/utils';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 
 /**
@@ -246,13 +246,13 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /** @hidden @internal */
-    public get offsetWidthInRem() {
-        return rem(this.element.offsetWidth);
+    public get offsetWidthInem() {
+        return em(this.element.offsetWidth);
     }
 
     /** @hidden @internal */
-    public get offsetHeightInRem() {
-        return rem(this.element.offsetHeight);
+    public get offsetHeightInem() {
+        return em(this.element.offsetHeight);
     }
 
     constructor(

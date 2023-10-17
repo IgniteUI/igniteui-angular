@@ -78,14 +78,14 @@
     @if $variant == 'bootstrap' {
         .igx-input-group--disabled {
             %igx-select__toggle-button {
-                border-inline-start-width: rem(1px);
+                border-inline-start-width: em(1px);
                 border-inline-start-style: solid;
                 border-inline-start-color: inherit;
             }
         }
 
         igx-suffix + %igx-select__toggle-button {
-            border-inline-start-width: rem(1px);
+            border-inline-start-width: em(1px);
             border-inline-start-style: solid;
             border-inline-start-color: inherit;
         }

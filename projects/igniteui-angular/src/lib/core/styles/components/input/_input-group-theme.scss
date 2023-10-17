@@ -293,7 +293,7 @@
     $NOT-bootstrap-theme: $variant != 'bootstrap';
 
     $required-symbol: '*';
-    $required-symbol-margin: rem(2px);
+    $required-symbol-margin: em(2px);
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -307,44 +307,44 @@
     );
 
     $bootstrap-inline-padding: (
-        'comfortable': rem(16px),
-        'cosy': rem(12px),
-        'compact': rem(8px)
+        'comfortable': em(16px),
+        'cosy': em(12px),
+        'compact': em(8px)
     );
 
     $bootstrap-block-padding: (
-        'comfortable': rem(8px),
-        'cosy': rem(6px),
-        'compact': rem(4px)
+        'comfortable': em(8px),
+        'cosy': em(6px),
+        'compact': em(4px)
     );
 
     $bootstrap-font-size: (
-        'comfortable': rem(20px),
-        'cosy': rem(16px),
-        'compact': rem(14px),
+        'comfortable': em(20px),
+        'cosy': em(16px),
+        'compact': em(14px),
     );
 
-    $input-top-padding: rem(20px);
-    $input-bottom-padding: rem(6px);
+    $input-top-padding: em(20px);
+    $input-bottom-padding: em(6px);
 
     $bundle-padding-top: (
-        'comfortable': rem(18px, map.get($base-scale-size, 'comfortable')),
-        'cosy': rem(18px, map.get($base-scale-size, 'cosy')),
-        'compact': rem(18px, map.get($base-scale-size, 'compact')),
+        'comfortable': em(18px, map.get($base-scale-size, 'comfortable')),
+        'cosy': em(18px, map.get($base-scale-size, 'cosy')),
+        'compact': em(18px, map.get($base-scale-size, 'compact')),
     );
 
     $hint-spacing-block: map.get((
-        material: rem(5px),
-        fluent: rem(5px),
-        bootstrap: rem(4px),
-        indigo-design: rem(6px),
+        material: em(5px),
+        fluent: em(5px),
+        bootstrap: em(4px),
+        indigo-design: em(6px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        material: rem(16px),
+        material: em(16px),
         fluent: 0,
         bootstrap: 0,
-        indigo-design: rem(12px),
+        indigo-design: em(12px),
     ), $variant);
 
     // Base Start
@@ -372,16 +372,16 @@
         align-items: center;
 
         @if $indigo-theme {
-            height: calc(100% - #{rem(1px)}) !important;
+            height: calc(100% - #{em(1px)}) !important;
         } @else {
             height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
 
         @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            padding-inline: pad-inline(em(12px), em(14px), em(16px));
         } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline: pad-inline(em(8px), em(12px), em(16px));
         }
     }
 
@@ -405,6 +405,7 @@
         position: relative;
         display: block;
         color: var-get($theme, 'idle-text-color');
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         igx-prefix,
         [igxPrefix] {
@@ -525,21 +526,21 @@
         height: var-get($theme, 'size');
         position: relative;
         max-width: 100%;
-        font-size: rem(16px);
+        font-size: em(16px);
 
         &::after {
             content: '';
             position: absolute;
             bottom: 0%;
             width: 100%;
-            border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
+            border-block-end: em(1px) solid var-get($theme, 'idle-bottom-line-color');
             transition: all $transition-timing
         }
 
         %form-group-bundle-start {
             border: {
                 start: {
-                    start-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                    start-radius: calc(var-get($theme, 'box-border-radius') - em(1px));
                 };
             }
         }
@@ -547,7 +548,7 @@
         %form-group-bundle-end {
             border: {
                 start: {
-                    end-radius: calc(var-get($theme, 'box-border-radius') - rem(1px));
+                    end-radius: calc(var-get($theme, 'box-border-radius') - em(1px));
                 }
             }
         }
@@ -568,14 +569,14 @@
         cursor: pointer;
 
         &::after {
-            border-block-end-width: rem(1px);
+            border-block-end-width: em(1px);
             border-block-end-color: var-get($theme, 'hover-bottom-line-color');
         }
     }
 
     %form-group-bundle--focus {
         &::after {
-            border-block-end-width: rem(2px);
+            border-block-end-width: em(2px);
             border-block-end-color: var-get($theme, 'focused-bottom-line-color');
         }
     }
@@ -634,7 +635,7 @@
     @if $material-theme {
         %form-group-bundle-main,
         %igx-input-group__notch {
-            padding-inline: rem(4px);
+            padding-inline: em(4px);
         }
     }
 
@@ -650,7 +651,7 @@
     }
 
     %igx-input-group__notch--border {
-        padding: 0 rem(4px);
+        padding: 0 em(4px);
     }
 
     %igx-input-group__filler {
@@ -671,7 +672,7 @@
 
         @if $variant == 'material' {
             overflow: hidden;
-            min-width: pad(rem(10px), rem(12px), rem(14px));
+            min-width: pad(em(10px), em(12px), em(14px));
         }
     }
 
@@ -693,13 +694,13 @@
                 style: solid;
 
                 inline: {
-                    start-width: rem(1px);
+                    start-width: em(1px);
                     end-width: 0;
                 };
 
                 block: {
-                    start-width: rem(1px);
-                    end-width: rem(1px);
+                    start-width: em(1px);
+                    end-width: em(1px);
                 };
 
                 start: {
@@ -714,7 +715,7 @@
 
         %igx-input-group__filler {
             border: {
-                width: rem(1px);
+                width: em(1px);
                 style: solid;
                 color: var-get($theme, 'border-color');
                 left: none;
@@ -723,8 +724,8 @@
         }
 
         %igx-input-group__notch {
-            border-block-start: rem(1px) solid var-get($theme, 'border-color');
-            border-block-end: rem(1px) solid var-get($theme, 'border-color');
+            border-block-start: em(1px) solid var-get($theme, 'border-color');
+            border-block-end: em(1px) solid var-get($theme, 'border-color');
             overflow: visible;
 
             %form-group-label {
@@ -749,12 +750,12 @@
 
                 inline: {
                     start-width: 0;
-                    end-width: rem(1px);
+                    end-width: em(1px);
                 };
 
                 block: {
-                    start-width: rem(1px);
-                    end-width: rem(1px);
+                    start-width: em(1px);
+                    end-width: em(1px);
                 };
 
                 start: {
@@ -794,14 +795,14 @@
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-start: pad-inline(rem(14px), rem(16px), rem(18px));
+            padding-inline-start: pad-inline(em(14px), em(16px), em(18px));
         }
     }
 
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-end: pad-inline(rem(14px), rem(16px), rem(18px));
+            padding-inline-end: pad-inline(em(14px), em(16px), em(18px));
         }
     }
     /* stylelint-enable */
@@ -809,7 +810,7 @@
     %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            padding-inline: rem(4px);
+            padding-inline: em(4px);
         }
     }
 
@@ -855,17 +856,17 @@
 
     %form-group-bundle-main--border {
         background: transparent;
-        padding: 0 rem(4px);
-        font-size: rem(16px);
+        padding: 0 em(4px);
+        font-size: em(16px);
     }
 
     %form-group-label {
-        padding-inline-end: rem(4px);
+        padding-inline-end: em(4px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
         transition: all $transition-timing;
-        margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
+        margin-inline-start: pad-inline(0, em(-2px), em(-4px));
     }
 
     %form-group-label--border {
@@ -889,7 +890,7 @@
     %form-group-label--float {
         --floating-label-position: -73%;
         transform: translateY(var(--floating-label-position));
-        font-size: rem(12px);
+        font-size: em(12px);
     }
 
     %form-group-label--focused-border,
@@ -903,18 +904,18 @@
 
     %form-group-label--focused-border {
         %form-group-bundle-start {
-            border-inline-start-width: rem(2px);
-            border-block-start-width: rem(2px);
-            border-block-end-width: rem(2px);
+            border-inline-start-width: em(2px);
+            border-block-start-width: em(2px);
+            border-block-end-width: em(2px);
             border-inline-start-color: var-get($theme, 'focused-border-color');
             border-block-start-color: var-get($theme, 'focused-border-color');
             border-block-end-color: var-get($theme, 'focused-border-color');
         }
 
         %form-group-bundle-end {
-            border-inline-end-width: rem(2px);
-            border-block-start-width: rem(2px);
-            border-block-end-width: rem(2px);
+            border-inline-end-width: em(2px);
+            border-block-start-width: em(2px);
+            border-block-end-width: em(2px);
             border-inline-end-color: var-get($theme, 'focused-border-color');
             border-block-start-color: var-get($theme, 'focused-border-color');
             border-block-end-color: var-get($theme, 'focused-border-color');
@@ -922,7 +923,7 @@
 
         %igx-input-group__filler,
         %igx-input-group__notch {
-            border-block-width: rem(2px);
+            border-block-width: em(2px);
         }
 
         %igx-input-group__filler {
@@ -935,13 +936,13 @@
 
         %form-group-prefix {
             &:first-child {
-                margin-inline-start: rem(-1px);
+                margin-inline-start: em(-1px);
             }
         }
 
         %form-group-suffix {
             &:last-child {
-                margin-inline-end: rem(-1px);
+                margin-inline-end: em(-1px);
             }
         }
     }
@@ -949,7 +950,7 @@
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
         transform: translateY(calc(var(--label-position) * -1));
-        font-size: rem(12px);
+        font-size: em(12px);
         margin-top: 0;
         overflow: hidden;
         will-change: font-size, color, transform;
@@ -958,9 +959,9 @@
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
         --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
+            em(82px, map.get($base-scale-size, 'compact')),
+            em(82px, map.get($base-scale-size, 'cosy')),
+            em(82px, map.get($base-scale-size, 'comfortable'))
         )};
         min-height: var(--textarea-size) !important;
         height: auto !important;
@@ -988,7 +989,7 @@
         }
 
         %textarea-group-notch--focused {
-            border-block-start-width: rem(2px);
+            border-block-start-width: em(2px);
         }
     }
 
@@ -1009,7 +1010,7 @@
             content: '#{$required-symbol}';
             font-size: inherit;
             vertical-align: top;
-            margin-inline-start: $required-symbol-margin; /* rem(2px) base is 16px */
+            margin-inline-start: $required-symbol-margin; /* em(2px) base is 16px */
             display: inline-block;
         }
     }
@@ -1133,9 +1134,9 @@
 
     %form-group-textarea {
         --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
+            em(82px, map.get($base-scale-size, 'compact')),
+            em(82px, map.get($base-scale-size, 'cosy')),
+            em(82px, map.get($base-scale-size, 'comfortable'))
         )};
 
         min-height: var(--textarea-size);
@@ -1161,8 +1162,8 @@
         overflow: hidden;
 
         @if $material-theme or $indigo-theme {
-            height: calc(100% - #{rem(2px)});
-            top: rem(1px);
+            height: calc(100% - #{em(2px)});
+            top: em(1px);
         }
 
         @if $material-theme {
@@ -1183,7 +1184,7 @@
             position: absolute;
             width: 100%;
             inset-inline-end: 0;
-            height: rem(2px);
+            height: em(2px);
             align-self: end;
             transform: scaleX(0);
             transform-origin: center;
@@ -1300,7 +1301,7 @@
         justify-content: space-between;
 
         > * {
-            margin-inline-end: rem(8px);
+            margin-inline-end: em(8px);
 
             &:last-child {
                 margin-inline-end: 0;
@@ -1363,14 +1364,14 @@
         %form-group-display.igx-input-group--prefixed {
             input,
             textarea {
-                padding-inline-start: rem(4px);
+                padding-inline-start: em(4px);
             }
         }
 
         %form-group-display.igx-input-group--suffixed {
             input,
             textarea {
-                padding-inline-end: rem(4px);
+                padding-inline-end: em(4px);
             }
         }
     }
@@ -1399,8 +1400,8 @@
     }
 
     %form-group-input--indigo {
-        padding-block: rem(8px);
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-block: em(8px);
+        padding-inline: pad-inline(em(8px), em(12px), em(16px));
     }
 
     %indigo--box-focused {
@@ -1444,8 +1445,8 @@
         }
 
         select {
-            width: calc(100% + #{rem(8px)});
-            margin-inline-start: rem(-8px) !important;
+            width: calc(100% + #{em(8px)});
+            margin-inline-start: em(-8px) !important;
             cursor: pointer !important;
         }
     }
@@ -1472,8 +1473,8 @@
         &::before {
             content: '*';
             position: absolute;
-            top: rem(-8px);
-            inset-inline-start: calc(100% + #{rem(4px)});
+            top: em(-8px);
+            inset-inline-start: calc(100% + #{em(4px)});
             color: var-get($theme, 'error-secondary-color');
         }
     }
@@ -1496,11 +1497,11 @@
     }
 
     %form-group-bundle--fluent {
-        --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
+        --min-width: #{sizable(em(4px), em(6px), em(8px))};
 
         min-height: var-get($theme, 'size');
         padding: 0;
-        border: rem(1px) solid var-get($theme, 'border-color');
+        border: em(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
         align-items: stretch;
         overflow: hidden;
@@ -1514,22 +1515,22 @@
         &:focus,
         &:focus-within {
             %form-group-bundle-start {
-                margin-block-start: rem(-1px);
-                margin-inline-start: rem(-1px);
+                margin-block-start: em(-1px);
+                margin-inline-start: em(-1px);
             }
 
             %form-group-bundle-end {
-                margin-block-start: rem(-1px);
-                margin-inline-end: rem(-1px);
+                margin-block-start: em(-1px);
+                margin-inline-end: em(-1px);
             }
 
             %form-group-bundle-start:empty + %form-group-bundle-main,
             %form-group-bundle-end:empty + %form-group-bundle-main {
-                margin-inline-start: rem(-1px);
+                margin-inline-start: em(-1px);
             }
 
             %form-group-bundle-main {
-                margin-block-start: rem(-1px);
+                margin-block-start: em(-1px);
             }
         }
     }
@@ -1540,7 +1541,7 @@
 
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
-        border-width: rem(2px);
+        border-width: em(2px);
     }
 
     %form-group-bundle-error--fluent,
@@ -1568,22 +1569,22 @@
 
     @if $fluent-theme {
         %form-group-bundle-start--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-start: rem(-1px);
+            margin-block-start: em(-1px);
+            margin-inline-start: em(-1px);
         }
 
         %form-group-bundle-end--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-end: rem(-1px);
+            margin-block-start: em(-1px);
+            margin-inline-end: em(-1px);
         }
 
         %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
         %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: em(-1px);
         }
 
         %form-group-bundle-main--fluent--focused {
-            margin-block-start: rem(-1px);
+            margin-block-start: em(-1px);
         }
     }
 
@@ -1596,20 +1597,20 @@
 
     // Native input
     %fluent-input {
-        font-size: rem(14px);
+        font-size: em(14px);
         padding-block: 0;
-        padding-inline: rem(8px);
+        padding-inline: em(8px);
         margin: 0;
         border: none;
     }
 
     %indigo-textarea {
-        padding-block: rem(8px);
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-block: em(8px);
+        padding-inline: pad-inline(em(8px), em(12px), em(16px));
     }
 
     %fluent-textarea {
-        padding: rem(8px);
+        padding: em(8px);
     }
 
     %fluent-input-disabled {
@@ -1619,14 +1620,14 @@
     // Label
     %fluent-label {
         display: block;
-        font-size: rem(14px);
+        font-size: em(14px);
         font-weight: 600;
         position: static;
         transform: translateY(0);
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
+        margin-block-end: em(4px);
         color: var-get($theme, 'idle-secondary-color');
 
         [dir='rtl'] & {
@@ -1662,7 +1663,7 @@
     }
 
     %form-group-helper--textarea--fluent--focused {
-        margin-block-start: rem(-1px);
+        margin-block-start: em(-1px);
     }
 
     %fluent-placeholder-label {
@@ -1701,7 +1702,7 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-inline: pad-inline(em(8px), em(12px), em(16px));
     }
 
     %fluent-upload-button {
@@ -1781,7 +1782,7 @@
             display: none;
         }
 
-        border-width: rem(1px);
+        border-width: em(1px);
         border-style: solid;
         border-color: var-get($theme, 'border-color');
         overflow: hidden;
@@ -1792,12 +1793,12 @@
 
         border: {
             inline: {
-                start-width: rem(1px);
+                start-width: em(1px);
                 end-width: 0;
             };
             block: {
-                start-width: rem(1px);
-                end-width: rem(1px);
+                start-width: em(1px);
+                end-width: em(1px);
             };
             start: {
                 start-radius: var-get($theme, 'box-border-radius');
@@ -1813,11 +1814,11 @@
         border: {
             inline: {
                 start-width: 0;
-                end-width: rem(1px);
+                end-width: em(1px);
             };
             block: {
-                start-width: rem(1px);
-                end-width: rem(1px);
+                start-width: em(1px);
+                end-width: em(1px);
             };
             start: {
                 end-radius: var-get($theme, 'box-border-radius');
@@ -1834,13 +1835,13 @@
         display: block;
         color: var-get($theme, 'idle-secondary-color');
         padding: 0;
-        line-height: rem(24px);
+        line-height: em(24px);
         transform: translateY(0);
         transform-origin: top left;
         margin-block-start: 0 !important;
-        margin-block-end: rem(4px);
+        margin-block-end: em(4px);
         height: auto;
-        font-size: rem(16px);
+        font-size: em(16px);
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -1872,7 +1873,7 @@
 
     %bootstrap-input,
     %bootstrap-file-input {
-        border: rem(1px) solid var-get($theme, 'border-color');
+        border: em(1px) solid var-get($theme, 'border-color');
         padding-block: pad-inline(
             map.get($bootstrap-block-padding, 'compact'),
             map.get($bootstrap-block-padding, 'cosy'),
@@ -1893,23 +1894,23 @@
     }
 
     %bootstrap-input--focus {
-        border: rem(1px) solid var-get($theme, 'focused-border-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
+        border: em(1px) solid var-get($theme, 'focused-border-color');
+        box-shadow: 0 0 0 em(4px) var-get($theme, 'focused-secondary-color');
     }
 
     %bootstrap-input--success {
-        border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+        border: em(1px) solid var-get($theme, 'success-secondary-color');
+        box-shadow: 0 0 0 em(4px) var-get($theme, 'success-shadow-color');
     }
 
     %bootstrap-input--error {
-        border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+        border: em(1px) solid var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 em(4px) var-get($theme, 'error-shadow-color');
     }
 
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
-        border: rem(1px) solid var-get($theme, 'disabled-border-color');
+        border: em(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
     }
 
@@ -1930,7 +1931,7 @@
 
         [igxButton] {
             min-height: 0;
-            height: calc(100% - #{rem(8px)});
+            height: calc(100% - #{em(8px)});
         }
     }
 }

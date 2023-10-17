@@ -189,12 +189,12 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: rem(180px);
+    width: em(180px);
     color: black;
     background-color: yellow;
     /*border-color: gray;*/
     border: 1px solid gray;
-    font-size: rem(13px);
-    padding: rem(8px);
-    border-radius: rem(4px);
+    font-size: em(13px);
+    padding: em(8px);
+    border-radius: em(4px);
 }

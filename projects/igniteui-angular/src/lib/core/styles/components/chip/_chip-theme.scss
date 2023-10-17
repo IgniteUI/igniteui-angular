@@ -258,32 +258,32 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     $chip-height: (
-        comfortable: rem(32px),
-        cosy: rem(24px),
-        compact: rem(20px)
+        comfortable: em(32px),
+        cosy: em(24px),
+        compact: em(20px)
     );
 
     $chip-padding: (
-        comfortable: rem(12px),
-        cosy: rem(6px),
-        compact: rem(2px)
+        comfortable: em(12px),
+        cosy: em(6px),
+        compact: em(2px)
     );
 
     $box-shadow-focus: map.get((
         material: null,
         fluent: null,
-        bootstrap: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color')
+        bootstrap: 0 0 0 em(2px) var-get($theme, 'focus-outline-color'),
+        indigo-design: 0 0 0 em(3px) var-get($theme, 'focus-outline-color')
     ), $variant);
 
     $box-shadow-focus-selected: map.get((
         material: null,
         fluent: null,
-        bootstrap: 0 0 0 rem(2px) var-get($theme, 'focus-selected-outline-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($theme, 'focus-selected-outline-color')
+        bootstrap: 0 0 0 em(2px) var-get($theme, 'focus-selected-outline-color'),
+        indigo-design: 0 0 0 em(3px) var-get($theme, 'focus-selected-outline-color')
     ), $variant);
 
-    $border-size: rem(1px);
+    $border-size: em(1px);
 
     %igx-chip-area {
         display: flex;
@@ -383,7 +383,7 @@
             map.get($chip-padding, 'cosy'),
             map.get($chip-padding, 'comfortable')
         );
-        gap: sizable(rem(3px), rem(6px), rem(8px));
+        gap: sizable(em(3px), em(6px), em(8px));
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border: $border-size solid var-get($theme, 'border-color');
@@ -413,8 +413,8 @@
         igx-circular-bar {
             max-width: 100%;
             max-height: 100%;
-            width: sizable(rem(14px), rem(18px), rem(24px));
-            height: sizable(rem(14px), rem(18px), rem(24px));
+            width: sizable(em(14px), em(18px), em(24px));
+            height: sizable(em(14px), em(18px), em(24px));
         }
 
         @extend  %igx-chip-custom-icon;
@@ -472,11 +472,11 @@
                     color: contrast-color($color: 'primary', $variant: 500);
                     background: color($color: 'primary', $variant: 500);
                     border-color: color($color: 'primary', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'primary', $variant: 200);
+                    box-shadow: 0 0 0 em(3px) color($color: 'primary', $variant: 200);
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'primary', $variant: 200);
+                    box-shadow: 0 0 0 em(2px) color($color: 'primary', $variant: 200);
                 }
             }
         }
@@ -513,11 +513,11 @@
                     color: contrast-color($color: 'info', $variant: 500);
                     background: color($color: 'info', $variant: 500);
                     border-color: color($color: 'info', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: 200);
+                    box-shadow: 0 0 0 em(3px) color($color: 'info', $variant: 200);
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'info', $variant: 200);
+                    box-shadow: 0 0 0 em(2px) color($color: 'info', $variant: 200);
                 }
             }
         }
@@ -558,11 +558,11 @@
                     color: contrast-color($color: 'success', $variant: 500);
                     background: color($color: 'success', $variant: 500);
                     border-color: color($color: 'success', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 200);
+                    box-shadow: 0 0 0 em(3px) color($color: 'success', $variant: 200);
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'success', $variant: 200);
+                    box-shadow: 0 0 0 em(2px) color($color: 'success', $variant: 200);
                 }
             }
         }
@@ -599,11 +599,11 @@
                     color: contrast-color($color: 'warn', $variant: 500);
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 200);
+                    box-shadow: 0 0 0 em(3px) color($color: 'warn', $variant: 200);
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'warn', $variant: 200);
+                    box-shadow: 0 0 0 em(2px) color($color: 'warn', $variant: 200);
                 }
             }
         }
@@ -644,11 +644,11 @@
                     color: contrast-color($color: 'error', $variant: 500);
                     background: color($color: 'error', $variant: 500);
                     border-color: color($color: 'error', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: 200);
+                    box-shadow: 0 0 0 em(3px) color($color: 'error', $variant: 200);
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'error', $variant: 200);
+                    box-shadow: 0 0 0 em(2px) color($color: 'error', $variant: 200);
                 }
             }
         }
@@ -658,7 +658,7 @@
         igx-avatar,
         igx-circular-bar {
             &:first-child {
-                margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                margin-inline-start: calc(#{sizable(em(0), em(4px), em(8px))} * -1);
             }
         }
     }
@@ -667,7 +667,7 @@
         igx-avatar,
         igx-circular-bar {
             &:last-child {
-                margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                margin-inline-end: calc(#{sizable(em(0), em(4px), em(8px))} * -1);
             }
         }
     }
@@ -685,9 +685,9 @@
 
     %igx-chip-custom-icon {
         igx-icon {
-            width: sizable(rem(16px), rem(20px), rem(20px));
-            height: sizable(rem(16px), rem(20px), rem(20px));
-            font-size: sizable(rem(16px), rem(20px), rem(20px));
+            width: sizable(em(16px), em(20px), em(20px));
+            height: sizable(em(16px), em(20px), em(20px));
+            font-size: sizable(em(16px), em(20px), em(20px));
             outline-style: none;
         }
     }

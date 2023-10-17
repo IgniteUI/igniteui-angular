@@ -9,7 +9,7 @@ import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component'
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
 import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { rem } from '../core/utils';
+import { em } from '../core/utils';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { NgIf } from '@angular/common';
 
@@ -32,8 +32,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     /** @hidden @internal */
     @HostBinding('style.height.rem')
-    public get _itemHeightToRem() {
-        return rem(this.itemHeight);
+    public get _itemHeightToem() {
+        return em(this.itemHeight);
     }
 
     @HostBinding('attr.aria-label')

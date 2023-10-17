@@ -37,6 +37,7 @@
 
     %igx-date-range-picker {
         display: flex;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         > igx-icon {
             cursor: pointer;
@@ -58,16 +59,16 @@
         display: flex;
         align-items: center;
         color: var-get($theme, 'label-color');
-        margin: 0 rem(8px);
+        margin: 0 em(8px);
     }
 
     %igx-date-range-picker-buttons {
         display: flex;
         justify-content: flex-end;
-        padding: 0 rem(16px) rem(16px) rem(16px);
+        padding: 0 em(16px) em(16px) em(16px);
 
         > * {
-            margin-inline-end: rem(8px);
+            margin-inline-end: em(8px);
 
             &:last-of-type {
                 margin-inline-end: 0;

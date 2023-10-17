@@ -11,6 +11,7 @@ body {
 
 :root {
     --some-dynamic-color: hsl(#{random(360)}, 100%, 50%);
+    --ig-browser-context: 16px;
 }
 
 @include core();

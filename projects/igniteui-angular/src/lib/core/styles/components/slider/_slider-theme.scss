@@ -107,11 +107,11 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $slider-height: rem(48px);
-    $ripple-size: rem(40px);
+    $slider-height: em(48px);
+    $ripple-size: em(40px);
     $ripple-radius: math.div($ripple-size, 2);
-    $thumb-label-width: rem(40px);
-    $thumb-label-height: rem(30px);
+    $thumb-label-width: em(40px);
+    $thumb-label-height: em(30px);
 
     $slider-track-height: map.get((
         material: 6px,
@@ -128,10 +128,10 @@
     ), $variant);
 
     // Slider ticks
-    $base-tick-height: rem(8px);
+    $base-tick-height: em(8px);
     $tick-height: $base-tick-height;
     $tick-height--tall: $base-tick-height * 2;
-    $tick-width: rem(2px);
+    $tick-width: em(2px);
 
     // Slider Thumb
     $thumb-size: map.get((
@@ -158,10 +158,10 @@
     ), $variant);
 
     // Slider Label
-    $slider-label-width: rem(36px);
+    $slider-label-width: em(36px);
     $slider-label-height: $slider-label-width;
     $slider-label-radius: math.div($slider-label-width, 2);
-    $slider-label-padding: 0 rem(2px);
+    $slider-label-padding: 0 em(2px);
 
     %igx-slider-display {
         display: flex;
@@ -173,6 +173,7 @@
         flex-grow: 1;
         align-items: center;
         transition: all .2s $out-quad;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         &:hover {
             %igx-slider-track-fill {
@@ -185,7 +186,7 @@
 
             @if $variant == 'fluent'{
                 %igx-slider-thumb__dot::before {
-                    border: rem($thumb-border-width) solid var-get($theme, 'thumb-focus-color');
+                    border: em($thumb-border-width) solid var-get($theme, 'thumb-focus-color');
                 }
             }
         }
@@ -211,9 +212,9 @@
     %igx-slider-track {
         position: relative;
         width: 100%;
-        height: rem($slider-track-height);
+        height: em($slider-track-height);
         overflow: hidden;
-        border-radius: border-radius(rem(32px));
+        border-radius: border-radius(em(32px));
 
         @if $variant == 'indigo-design' {
             border-radius: initial;
@@ -229,7 +230,7 @@
         border-radius: inherit;
 
         @if $variant == 'material' {
-            height: rem(4px);
+            height: em(4px);
             top: 50%;
             transform: translateY(-50%);
         }
@@ -278,11 +279,11 @@
         position: relative;
 
         &:first-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: em(-1px);
         }
 
         &:last-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-start: em(-1px);
         }
     }
 
@@ -352,7 +353,7 @@
         position: absolute;
         display: flex;
         width: 100%;
-        height: rem(4px);
+        height: em(4px);
         opacity: .85;
         transition: opacity .2s ease-out;
         top: 50%;
@@ -360,7 +361,7 @@
         color: var-get($theme, 'track-step-color');
 
         svg {
-            clip-path: inset(0 rem(3px) 0 rem(3px));
+            clip-path: inset(0 em(3px) 0 em(3px));
         }
 
         line {
@@ -382,7 +383,7 @@
 
         %igx-slider__ticks--tall {
             %igx-slider__ticks-label {
-                top: calc(#{$tick-height--tall} + #{rem(2px)});
+                top: calc(#{$tick-height--tall} + #{em(2px)});
             }
         }
 
@@ -394,7 +395,7 @@
 
             %igx-slider__ticks--tall {
                 %igx-slider__ticks-label {
-                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                    bottom: calc(#{$tick-height--tall} + #{em(2px)});
                 }
             }
         }
@@ -418,7 +419,7 @@
 
             %igx-slider__ticks--tall {
                 %igx-slider__ticks-label {
-                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                    bottom: calc(#{$tick-height--tall} + #{em(2px)});
                 }
             }
         }
@@ -430,11 +431,11 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        width: rem($thumb-size);
-        height: rem($thumb-size);
+        width: em($thumb-size);
+        height: em($thumb-size);
         outline-style: none;
-        top: -#{rem($thumb-radius)};
-        margin-inline-start: -#{rem($thumb-radius)};
+        top: -#{em($thumb-radius)};
+        margin-inline-start: -#{em($thumb-radius)};
 
         @if $variant == 'material' {
             &:hover div::after {
@@ -449,7 +450,7 @@
         }
 
         &:focus div::before {
-            box-shadow: 0 0 0 rem($slider-outline-width) var-get($theme, 'thumb-focus-color');
+            box-shadow: 0 0 0 em($slider-outline-width) var-get($theme, 'thumb-focus-color');
 
             @if $variant == 'bootstrap' {
                 border-color: var-get($theme, 'thumb-border-focus-color');
@@ -460,7 +461,7 @@
     @if $variant == 'fluent' {
         %igx-slider-thumb--focused {
             div::after {
-                $focus-outline-offset: rem(2px);
+                $focus-outline-offset: em(2px);
 
                 position: absolute;
                 content: '';
@@ -468,9 +469,9 @@
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'thumb-border-focus-color');
-                width: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
-                height: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
+                box-shadow: 0 0 0 em(1px) var-get($theme, 'thumb-border-focus-color');
+                width: calc(em($thumb-size) + (#{$focus-outline-offset} * 2));
+                height: calc(em($thumb-size) + (#{$focus-outline-offset} * 2));
             }
         }
     }
@@ -493,18 +494,18 @@
         position: absolute;
         pointer-events: none;
         display: flex;
-        top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
+        top: calc(((#{$thumb-label-height}) + em(20px)) * -1);
         height: $thumb-label-height;
     }
 
     %igx-slider-thumb-label__container {
-        border-radius: rem(2px);
+        border-radius: em(2px);
         display: flex;
         align-items: center;
         justify-content: center;
         white-space: nowrap;
         margin-inline-start: -50%;
-        padding: 0 rem(2px);
+        padding: 0 em(2px);
         background: var-get($theme, 'label-background-color');
         color: var-get($theme, 'label-text-color');
         min-width: $thumb-label-width;
@@ -514,9 +515,9 @@
             content: '';
             position: absolute;
             top: 85%;
-            border-inline-start: rem(10px) solid transparent;
-            border-inline-end: rem(10px) solid transparent;
-            border-top: rem(10px) solid var-get($theme, 'label-background-color');
+            border-inline-start: em(10px) solid transparent;
+            border-inline-end: em(10px) solid transparent;
+            border-top: em(10px) solid var-get($theme, 'label-background-color');
         }
     }
 
@@ -528,15 +529,15 @@
         &::before {
             position: absolute;
             content: '';
-            width: rem($thumb-size);
-            height: rem($thumb-size);
-            inset-inline-start: #{rem($thumb-radius) - math.div(rem($thumb-size), 2)};
+            width: em($thumb-size);
+            height: em($thumb-size);
+            inset-inline-start: #{em($thumb-radius) - math.div(em($thumb-size), 2)};
             top: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             margin-inline-start: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             background: var-get($theme, 'thumb-color');
-            border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
+            border: em($thumb-border-width) solid var-get($theme, 'thumb-border-color');
             transition: transform .1s $out-quad, border-radius .1s $out-quad;
-            border-radius: border-radius(rem($thumb-radius));
+            border-radius: border-radius(em($thumb-radius));
         }
 
         @if $variant == 'material' {
@@ -564,7 +565,7 @@
         &::before {
             background: var-get($theme, 'disabled-thumb-color');
             border-color: var-get($theme, 'thumb-disabled-border-color');
-            border-radius: border-radius(rem($thumb-radius));
+            border-radius: border-radius(em($thumb-radius));
         }
     }
 

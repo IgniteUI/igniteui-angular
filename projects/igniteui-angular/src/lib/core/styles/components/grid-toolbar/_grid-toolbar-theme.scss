@@ -105,30 +105,30 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     // Caption
-    $grid-toolbar-fs: rem(16px);
+    $grid-toolbar-fs: em(16px);
 
     $grid-toolbar-padding-start: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: em(24px),
+        cosy: em(16px),
+        compact: em(12px)
     );
 
     $grid-toolbar-padding-end: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
+        comfortable: em(16px),
+        cosy: em(12px),
+        compact: em(8px)
     );
 
     $grid-toolbar-spacer: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
+        comfortable: em(16px),
+        cosy: em(12px),
+        compact: em(8px)
     );
 
     $grid-toolbar-height: (
-        comfortable: rem(58px),
-        cosy: rem(52px),
-        compact: rem(44px)
+        comfortable: em(58px),
+        cosy: em(52px),
+        compact: em(44px)
     );
 
     %igx-grid-toolbar {
@@ -141,9 +141,9 @@
         font-size: $grid-toolbar-fs;
 
         @if $bootstrap-theme {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 100);
+            border-bottom: em(1px) solid color($color: 'gray', $variant: 100);
         } @else {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 300);
+            border-bottom: em(1px) solid color($color: 'gray', $variant: 300);
         }
 
         background: var-get($theme, 'background-color');
@@ -170,7 +170,7 @@
 
             [igxButton] {
                 margin-inline-start: 0;
-                margin-inline-end: rem(8);
+                margin-inline-end: em(8);
 
                 &:last-child {
                     margin-inline-end: 0;
@@ -232,8 +232,8 @@
         width: 100%;
         inset-inline-start: 0;
         inset-inline-end: 0;
-        bottom: rem(-1px);
-        height: rem(2px);
+        bottom: em(-1px);
+        height: em(2px);
         overflow: hidden;
         background: var-get($theme, 'background-color');
 
@@ -250,7 +250,7 @@
         border-color: color($color: 'secondary') !important;
 
         @if $bootstrap-theme {
-            border-width: rem(2px);
+            border-width: em(2px);
             border-color: color($color: 'primary', $variant: 800) !important;
             color: color($color: 'primary', $variant: 800);
 
@@ -276,7 +276,7 @@
     %igx-grid-toolbar__dd-list-items {
         cursor: pointer;
         position: relative;
-        padding: rem(8px) rem(16px);
+        padding: em(8px) em(16px);
         color: var-get($theme, 'item-text-color');
         white-space: nowrap;
 

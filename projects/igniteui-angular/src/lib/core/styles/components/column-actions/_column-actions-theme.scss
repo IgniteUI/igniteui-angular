@@ -63,19 +63,21 @@
         box-shadow: elevation(8);
         width: 100%;
         flex: 1 1 auto;
-        min-width: rem(180px);
+        min-width: em(180px);
+        // TODO NOT SURE IF NEEDED HERE
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %column-actions-title {
         color: var-get($theme, 'title-color');
         margin: 0;
-        padding: rem(16px) rem(16px) rem(8px);
+        padding: em(16px) em(16px) em(8px);
     }
 
     %column-actions-input {
-        font-size: rem(16px) !important;
-        margin: rem(-16px) 0 0 !important;
-        padding: rem(8px) rem(16px);
+        font-size: em(16px) !important;
+        margin: em(-16px) 0 0 !important;
+        padding: em(8px) em(16px);
     }
 
     %column-actions-columns {
@@ -86,14 +88,14 @@
     }
 
     %column-actions-item {
-        padding: rem(4px) rem(16px);
-        min-height: rem(32px);
+        padding: em(4px) em(16px);
+        min-height: em(32px);
     }
 
     %column-actions-buttons {
         display: flex;
         justify-content: flex-end;
-        padding: rem(8px) rem(16px);
+        padding: em(8px) em(16px);
     }
 }
 

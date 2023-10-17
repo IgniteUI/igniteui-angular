@@ -216,7 +216,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin button($theme) {
-    $button-width: rem(88px);
+    $button-width: em(88px);
 
     $variant: map.get($theme, variant);
 
@@ -246,34 +246,34 @@
 
     $button-disabled-shadow: none;
 
-    $button-floating-width: rem(56px);
+    $button-floating-width: em(56px);
     $button-floating-height: $button-floating-width;
 
     $button-icon-width: map.get((
-        material: rem(36px, 16px),
-        fluent: rem(32px, 16px),
-        bootstrap: rem(36px, 16px),
-        indigo-design: rem(36px, 16px),
+        material: em(36px),
+        fluent: em(32px),
+        bootstrap: em(36px),
+        indigo-design: em(36px),
     ), $variant);
 
     $button-icon-height: $button-icon-width;
 
     $button-padding-material-inline: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(16px, 16px),
-        compact: rem(16px, 16px)
+        comfortable: em(16px),
+        cosy: em(16px),
+        compact: em(16px)
     );
 
     $button-padding-material-block: (
-        comfortable: rem(7px, 16px),
-        cosy: rem(4px, 16px),
-        compact: rem(1px, 16px)
+        comfortable: em(7px),
+        cosy: em(4px),
+        compact: em(1px)
     );
 
     $button-padding-fluent-inline: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(16px, 16px),
-        compact: rem(16px, 16px)
+        comfortable: em(16px),
+        cosy: em(16px),
+        compact: em(16px)
     );
 
     $button-padding-fluent-block: (
@@ -283,51 +283,51 @@
     );
 
     $button-padding-bootstrap-inline: (
-        comfortable: rem(12px, 16px),
-        cosy: rem(10px, 16px),
-        compact: rem(8px, 16px)
+        comfortable: em(12px),
+        cosy: em(10px),
+        compact: em(8px)
     );
 
     $button-padding-bootstrap-block: (
-        comfortable: rem(6px, 16px),
-        cosy: rem(4px, 16px),
-        compact: rem(2px, 16px)
+        comfortable: em(6px),
+        cosy: em(4px),
+        compact: em(2px)
     );
 
     $button-padding-indigo-inline: (
-        comfortable: rem(12px, 16px),
-        cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
+        comfortable: em(12px),
+        cosy: em(12px),
+        compact: em(8px)
     );
 
     $button-padding-indigo-block: (
-        comfortable: rem(3px, 16px),
-        cosy: rem(2px, 16px),
-        compact: rem(1px, 16px)
+        comfortable: em(3px),
+        cosy: em(2px),
+        compact: em(1px)
     );
 
     $outlined-button-padding-material-inline: (
-        comfortable: rem(14px, 16px),
-        cosy: rem(14px, 16px),
-        compact: rem(14px, 16px)
+        comfortable: em(14px),
+        cosy: em(14px),
+        compact: em(14px)
     );
 
     $outlined-button-padding-material-block: (
-        comfortable: rem(7px, 16px),
-        cosy: rem(4px, 16px),
-        compact: rem(1px, 16px)
+        comfortable: em(7px),
+        cosy: em(4px),
+        compact: em(1px)
     );
 
     $outlined-button-padding-indigo-inline: (
-        comfortable: rem(14px, 16px),
-        cosy: rem(10px, 16px),
-        compact: rem(6px, 16px)
+        comfortable: em(14px),
+        cosy: em(10px),
+        compact: em(6px)
     );
 
     $outlined-button-padding-indigo-block: (
-        comfortable: rem(6px, 16px),
-        cosy: rem(4px, 16px),
-        compact: rem(2px, 16px)
+        comfortable: em(6px),
+        cosy: em(4px),
+        compact: em(2px)
     );
 
     $button-padding-inline: map.get((
@@ -359,34 +359,34 @@
     ), $variant);
 
     $button-floating-padding-block: (
-        comfortable: rem(8px),
-        cosy: rem(4px),
+        comfortable: em(8px),
+        cosy: em(4px),
         compact: 0
     );
 
     $button-floating-padding-inline: (
-        comfortable: rem(14px),
-        cosy: rem(10px),
-        compact: rem(6px)
+        comfortable: em(14px),
+        cosy: em(10px),
+        compact: em(6px)
     );
 
     $items-gap: (
-        comfortable: rem(12px),
-        cosy: rem(8px),
-        compact: rem(4px)
+        comfortable: em(12px),
+        cosy: em(8px),
+        compact: em(4px)
     );
 
     $icon-sizes: map.get((
-        material: rem(18px),
-        fluent: rem(16px),
-        bootstrap: rem(18px),
-        indigo-design: rem(18px),
+        material: em(18px),
+        fluent: em(16px),
+        bootstrap: em(18px),
+        indigo-design: em(18px),
     ), $variant);
 
     $filtering-row-button-size: (
-        comfortable: rem(40px),
-        cosy: rem(30px),
-        compact: rem(21px)
+        comfortable: em(40px),
+        cosy: em(30px),
+        compact: em(21px)
     );
 
     $icon-in-button-size: $icon-sizes;
@@ -407,16 +407,16 @@
 
     $raised-shadow--focus: map.get((
         material: var-get($raised-theme, 'focus-shadow'),
-        fluent: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
+        fluent: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'),
+        bootstrap: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'),
+        indigo-design: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color')
     ), $variant);
 
     $raised-shadow--active: map.get((
         material: var-get($raised-theme, 'active-shadow'),
-        fluent: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color')
+        fluent: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'),
+        bootstrap: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'),
+        indigo-design: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color')
     ), $variant);
 
     $fab-shadow: map.get((
@@ -435,23 +435,23 @@
 
     $fab-shadow--focus: map.get((
         material: var-get($fab-theme, 'focus-shadow'),
-        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+        fluent:  0 0 0 em(3px) var-get($fab-theme, 'shadow-color'),
+        bootstrap: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color'),
+        indigo-design: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color')
     ), $variant);
 
     $fab-shadow--active: map.get((
         material: var-get($fab-theme, 'active-shadow'),
-        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+        fluent:  0 0 0 em(3px) var-get($fab-theme, 'shadow-color'),
+        bootstrap: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color'),
+        indigo-design: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color')
     ), $variant);
 
     $icon-shadow: map.get((
         material: var-get($icon-theme, 'focus-shadow'),
-        fluent: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color')
+        fluent: 0 0 0 em(3px) var-get($icon-theme, 'shadow-color'),
+        bootstrap: 0 0 0 em(3px) var-get($icon-theme, 'shadow-color'),
+        indigo-design: 0 0 0 em(3px) var-get($icon-theme, 'shadow-color')
     ), $variant);
 
     %igx-button-display {
@@ -474,7 +474,7 @@
             map.get($button-padding-block, 'comfortable')
         );
         min-height: var-get($flat-theme, 'size');
-        border: rem(1px) solid var-get($flat-theme, 'border-color');
+        border: em(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -487,11 +487,12 @@
             map.get($items-gap, 'cosy'),
             map.get($items-gap, 'comfortable')
         );
+        font-size: var(--broser-context, var(--ig-contenxt));
 
 
         @if ($variant == 'bootstrap') {
             // important is needed to override the typography margins
-            margin: rem(4px) !important;
+            margin: em(4px) !important;
         }
 
         igx-icon {
@@ -519,7 +520,7 @@
                 > * {
                     display: flex;
                     align-items: center;
-                    height: rem(18px);
+                    height: em(18px);
                 }
             }
         }
@@ -539,14 +540,14 @@
         &:focus {
             background: var-get($flat-theme, 'focus-background');
             color: var-get($flat-theme, 'focus-foreground');
-            box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            box-shadow: 0 0 0 em(3px) var-get($flat-theme, 'shadow-color');
             border-color: var-get($flat-theme, 'focus-border-color');
         }
 
         &:active {
             background: var-get($flat-theme, 'active-background');
             color: var-get($flat-theme, 'active-foreground');
-            box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
+            box-shadow: 0 0 0 em(3px) var-get($flat-theme, 'shadow-color');
             border-color: var-get($flat-theme, 'active-border-color');
         }
 
@@ -560,7 +561,7 @@
             &:focus,
             &:active,
             &:focus-visible {
-                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0 0 0 em(3px) var-get($outlined-theme, 'shadow-color');
             }
         }
     }
@@ -582,7 +583,7 @@
         );
 
         @if $variant == 'indigo-design' {
-            border-width: rem(2px);
+            border-width: em(2px);
         }
 
         &:hover {
@@ -601,9 +602,9 @@
                     background: var-get($outlined-theme, 'hover-background');
                     color: var-get($outlined-theme, 'hover-foreground');
                 }
-                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0 0 0 em(3px) var-get($outlined-theme, 'shadow-color');
             } @else if($variant == 'indigo-design') {
-                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0 0 0 em(3px) var-get($outlined-theme, 'shadow-color');
             }
         }
 
@@ -611,7 +612,7 @@
             background: var-get($outlined-theme, 'active-background');
             color: var-get($outlined-theme, 'active-foreground');
             border-color: var-get($outlined-theme, 'active-border-color');
-            box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            box-shadow: 0 0 0 em(3px) var-get($outlined-theme, 'shadow-color');
         }
 
         &:focus-visible {
@@ -639,7 +640,7 @@
 
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(2px);
+                    $outline-btn-indent: em(2px);
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
@@ -647,19 +648,19 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
 
                 /* stylelint-disable */
                 &:hover {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'hover-foreground');
                     }
                 }
 
                 &:active {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'active-foreground');
                     }
                 }
                 /* stylelint-enable */
@@ -686,7 +687,7 @@
             border-color: var-get($raised-theme, 'focus-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
+                box-shadow: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
             }
@@ -698,7 +699,7 @@
             border-color: var-get($raised-theme, 'active-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--active;
+                box-shadow: 0 0 0 em(3px) var-get($raised-theme, 'shadow-color'), $raised-shadow--active;
             } @else {
                 box-shadow: $raised-shadow--active;
             }
@@ -729,7 +730,7 @@
 
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(3px);
+                    $outline-btn-indent: em(3px);
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
@@ -737,19 +738,19 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
 
                 /* stylelint-disable */
                 &:hover {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'hover-foreground');
                     }
                 }
 
                 &:active {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'active-foreground');
                     }
                 }
                 /* stylelint-enable */
@@ -807,7 +808,7 @@
             border-color: var-get($flat-theme, 'focus-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
+                box-shadow: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
             }
@@ -819,7 +820,7 @@
             border-color: var-get($flat-theme, 'active-border-color');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
+                box-shadow: 0 0 0 em(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
             } @else {
                 box-shadow: $raised-shadow--active;
             }
@@ -850,7 +851,7 @@
 
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(3px);
+                    $outline-btn-indent: em(3px);
                     content: '';
                     position: absolute;
                     top: $outline-btn-indent;
@@ -859,19 +860,19 @@
                     border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'focus-visible-foreground');
                 }
 
                 /* stylelint-disable */
                 &:hover {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'hover-foreground');
                     }
                 }
 
                 &:active {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                        box-shadow: 0 0 0 em(1px) var-get($outlined-theme, 'active-foreground');
                     }
                 }
                 /* stylelint-enable */
@@ -884,7 +885,7 @@
         height: var-get($icon-theme, 'size');
         min-width: unset;
         min-height: unset;
-        font-size: rem(24px, 24px);
+        font-size: em(24px, 24px);
         padding: 0;
         color: var-get($icon-theme, 'foreground');
         background: var-get($icon-theme, 'background');
@@ -892,7 +893,7 @@
         border-color: var-get($icon-theme, 'border-color');
 
         @if $variant == 'indigo-design' {
-            border-width: rem(3px);
+            border-width: em(3px);
         }
 
         &:hover {
@@ -952,7 +953,7 @@
         &:focus,
         &:active {
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) var-get($icon-theme, 'shadow-color'), $icon-shadow;
+                box-shadow: 0 0 0 em(3px) var-get($icon-theme, 'shadow-color'), $icon-shadow;
             } @else {
                 box-shadow: $icon-shadow;
             }

@@ -76,14 +76,14 @@
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
 
-    $width: rem(52px);
-    $margin: rem(42px) auto;
+    $width: em(52px);
+    $margin: em(42px) auto;
 
     $padding: map.get((
-        'material': rem(16px) rem(24px),
-        'fluent': rem(16px) rem(24px),
-        'bootstrap': rem(12px),
-        'indigo-design': rem(14px) rem(24px)
+        'material': em(16px) em(24px),
+        'fluent': em(16px) em(24px),
+        'bootstrap': em(12px),
+        'indigo-design': em(14px) em(24px)
     ), $variant);
 
     %igx-toast-display {
@@ -95,10 +95,12 @@
         min-width: $width;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
-        border: rem(1px) solid var-get($theme, 'border-color');
+        border: em(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
+        font-size: var(--broser-context, var(--ig-contenxt));
+
     }
 }
 

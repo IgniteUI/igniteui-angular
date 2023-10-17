@@ -112,9 +112,9 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-material-theme: $variant != 'material';
 
-    $card-heading-padding: rem(16px, 16px);
-    $card-content-padding: rem(14px);
-    $card-actions-padding: rem(8px);
+    $card-heading-padding: em(16px);
+    $card-content-padding: em(14px);
+    $card-actions-padding: em(8px);
 
     $card-tgroup-margin: 0 em(16px);
 
@@ -129,9 +129,10 @@
         background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         @if $not-material-theme {
-            border: rem(1px) solid var-get($theme, 'outline-color');
+            border: em(1px) solid var-get($theme, 'outline-color');
         }
 
         &:hover {
@@ -141,7 +142,7 @@
 
     %igx-card--outlined {
         box-shadow: none;
-        border: rem(1px) solid var-get($theme, 'outline-color');
+        border: em(1px) solid var-get($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;
@@ -178,13 +179,13 @@
             justify-content: center;
             align-self: unset;
             margin-inline-end: 0;
-            margin-bottom: rem(16px);
+            margin-bottom: em(16px);
         }
     }
 
     %igx-card-header-thumbnail {
         align-self: flex-start;
-        margin-inline-end: rem(16px);
+        margin-inline-end: em(16px);
 
         &:empty {
             display: none;
@@ -253,7 +254,7 @@
         }
 
         [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: em(8px);
         }
     }
 
@@ -307,7 +308,7 @@
 
         [igxButton] ~ [igxButton] {
             margin-inline-start: 0;
-            margin-top: rem(8px);
+            margin-top: em(8px);
         }
     }
 
@@ -341,7 +342,7 @@
         flex-flow: row nowrap;
 
         [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
+            margin-inline-start: em(8px);
         }
     }
 

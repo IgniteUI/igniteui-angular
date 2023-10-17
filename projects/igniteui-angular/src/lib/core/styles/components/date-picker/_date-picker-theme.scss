@@ -21,6 +21,7 @@
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
+        font-size: var(--broser-context, var(--ig-contenxt));
 
         %cal-display {
             background: var-get($theme, 'content-background');
@@ -118,7 +119,7 @@
     }
 
     %date-picker--vertical {
-        min-width: rem(368px); /* 168px for header + 200px for the content */
+        min-width: em(368px); /* 168px for header + 200px for the content */
     }
 
     %date-picker--dropdown {
@@ -131,6 +132,6 @@
     %date-picker__buttons {
         display: flex;
         justify-content: flex-end;
-        padding: rem(8px);
+        padding: em(8px);
     }
 }

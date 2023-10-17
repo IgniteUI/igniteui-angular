@@ -48,20 +48,20 @@
         color: var-get($theme, 'color');
         max-width: 100%;
         line-height: normal;
-        font-size: rem(16px);
+        font-size: em(16px);
 
         [dir='rtl'] & {
             transform-origin: top right;
         }
 
         @if $variant == 'fluent' or $variant == 'indigo-design' {
-            font-size: rem(14px);
+            font-size: em(14px);
             font-weight: 600;
             height: auto;
         }
 
         @if $variant == 'bootstrap' {
-            line-height: rem(24px);
+            line-height: em(24px);
             height: auto;
         }
     }

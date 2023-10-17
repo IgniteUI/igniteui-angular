@@ -248,10 +248,10 @@
 
     $switch-thumb-height: $switch-thumb-width;
 
-    $ripple-size: rem(40px);
+    $ripple-size: em(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $label-margin: rem(8px);
+    $label-margin: em(8px);
 
     $input-transition: all .2s $ease-in-out-quad;
 
@@ -265,6 +265,7 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
+        font-size: var(--broser-context, var(--ig-contenxt));
     }
 
     %switch-input {
@@ -280,9 +281,9 @@
     %switch-composite {
         display: flex;
         align-items: center;
-        width: rem($switch-width);
-        height: rem($switch-height);
-        border: rem(1px) solid var-get($theme, 'border-color');
+        width: em($switch-width);
+        height: em($switch-height);
+        border: em(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
         cursor: pointer;
@@ -290,7 +291,7 @@
         transition: $input-transition;
 
         @if $variant == 'indigo-design' {
-            border: rem(2px) solid var-get($theme, 'border-color');
+            border: em(2px) solid var-get($theme, 'border-color');
         }
     }
 
@@ -356,17 +357,17 @@
     %switch-composite-thumb {
         position: relative;
         display: block;
-        width: rem($switch-thumb-width);
+        width: em($switch-thumb-width);
         height: $switch-thumb-height;
-        min-width: rem($switch-thumb-width);
+        min-width: em($switch-thumb-width);
         border-radius: var-get($theme, 'border-radius-thumb');
         background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
-        transform: translateX(#{rem($switch-off-offset)});
+        transform: translateX(#{em($switch-off-offset)});
 
         [dir='rtl'] & {
-            transform: translateX(#{rem(-1 * $switch-off-offset)});
+            transform: translateX(#{em(-1 * $switch-off-offset)});
         }
 
         @if $variant != 'bootstrap' {
@@ -378,10 +379,10 @@
 
     %switch-composite-thumb--x {
         background: var-get($theme, 'thumb-on-color');
-        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
+        transform: translateX(#{em($switch-width) - em($switch-thumb-width) - em($switch-on-offset)});
 
         [dir='rtl'] & {
-            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
+            transform: translateX(-#{em($switch-width) - em($switch-thumb-width) - em($switch-on-offset)});
         }
     }
 
@@ -417,15 +418,15 @@
         @if $variant == 'fluent' {
             %switch-composite {
                 position: relative;
-                $focus-outline-offset-top: rem(2px);
-                $focus-outline-offset-left: rem(2px);
+                $focus-outline-offset-top: em(2px);
+                $focus-outline-offset-left: em(2px);
 
                 &::after {
                     content: '';
                     position: absolute;
                     top: -$focus-outline-offset-top;
                     inset-inline-start: -$focus-outline-offset-left;
-                    box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
+                    box-shadow: 0 0 0 em(1px) var-get($theme, 'focus-outline-color');
                     width: calc(100% + (#{$focus-outline-offset-left} * 2));
                     height: calc(100% + (#{$focus-outline-offset-top} * 2));
                 }
@@ -435,7 +436,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 em(2px) var-get($theme, 'focus-outline-color');
             }
 
             %switch-composite-thumb {
@@ -446,7 +447,7 @@
         @if $variant == 'indigo-design' {
             %switch-composite {
                 border-radius: var-get($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 em(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -455,7 +456,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'error-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 em(2px) var-get($theme, 'error-color-hover');
             }
 
             %switch-composite-thumb {
@@ -465,7 +466,7 @@
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 em(3px) var-get($theme, 'error-color-hover');
             }
         }
     }
@@ -483,7 +484,7 @@
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 em(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }
