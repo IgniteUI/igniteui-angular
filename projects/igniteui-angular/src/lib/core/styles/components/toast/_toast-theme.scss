@@ -100,7 +100,6 @@
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
         font-size: var(--broser-context, var(--ig-browser-context));
-
     }
 }
 

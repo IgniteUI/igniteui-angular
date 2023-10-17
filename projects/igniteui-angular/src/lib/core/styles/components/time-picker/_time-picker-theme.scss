@@ -156,7 +156,6 @@
         box-shadow: var-get($theme, 'modal-shadow');
         overflow: hidden;
         font-size: var(--broser-context, var(--ig-browser-context));
-
     }
 
     %time-picker-display--vertical {
