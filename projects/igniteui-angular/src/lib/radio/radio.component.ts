@@ -129,14 +129,6 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
     @HostBinding('class.igx-radio--focused')
     public override focused = false;
 
-    protected onStatusChanged() {
-        if (this.disabled !== this.ngControl.disabled) {
-            this.disabled = this.ngControl.disabled;
-        }
-
-        this.updateValidityState();
-    }
-
     /**
      * @hidden
      * @internal
