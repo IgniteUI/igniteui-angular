@@ -432,7 +432,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @hidden
      * @internal
      */
-    private _checked = false;
+    protected _checked = false;
     /**
      * @hidden
      * @internal

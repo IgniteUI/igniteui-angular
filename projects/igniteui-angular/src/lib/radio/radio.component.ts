@@ -55,7 +55,7 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * Sets/gets  the `checked` attribute.
      * Default value is `false`.
      * ```html
-     * <igx-radio [checked] = "true"></igx-radio>
+     * <igx-radio [checked]="true"></igx-radio>
      * ```
      * ```typescript
      * let isChecked =  this.radio.checked;
@@ -66,10 +66,10 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
     @HostBinding('class.igx-radio--checked')
     @Input()
     public override set checked(value: boolean) {
-        super.checked = value;
+        this._checked = value;
     }
     public override get checked() {
-        return super.checked;
+        return this._checked;
     }
 
     /**
@@ -144,7 +144,7 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @hidden
      */
     @HostListener('click')
-    public _clicked() {
+    public override _onCheckboxClick() {
         this.select();
     }
 
@@ -157,8 +157,10 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @memberof IgxRadioComponent
      */
     public select() {
-        if(!this.checked) {
+        if (!this.checked) {
             this.checked = true;
+            this.change.emit({ value: this.value, owner: this });
+            this._onChangeCallback(this.value);
         }
     }
 
