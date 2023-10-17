@@ -91,7 +91,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * let checkboxElement =  this.component.checkboxElement;
      * ```
      */
-    @ViewChild('input', { static: true })
+    @ViewChild('checkbox', { static: true })
     public nativeInput: ElementRef;
 
     /**

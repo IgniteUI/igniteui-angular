@@ -53,8 +53,8 @@ describe('IgxRadio', () => {
         const radio = fixture.componentInstance.radio;
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
 
-        expect(radio.id).toContain('igx-radio-');
-        expect(domRadio.id).toContain('igx-radio-');
+        expect(radio.id).toContain('igx-checkbox-');
+        expect(domRadio.id).toContain('igx-checkbox-');
 
         radio.id = 'customRadio';
         fixture.detectChanges();
@@ -168,7 +168,7 @@ describe('IgxRadio', () => {
 
         // get the required radio button
         const radioInstance = radios[1];
-        const nativeRadio = radioInstance.nativeRadio.nativeElement;
+        const nativeRadio = radioInstance.nativeInput.nativeElement;
 
         expect(radioInstance.required).toBe(true);
         expect(nativeRadio.required).toBe(true);
