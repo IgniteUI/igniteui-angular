@@ -853,6 +853,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* tsPlainInterface */
 /* marshalByValue */
 /**
  * Interface describing filtering operations

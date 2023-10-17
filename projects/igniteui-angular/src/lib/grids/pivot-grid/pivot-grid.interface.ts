@@ -44,7 +44,7 @@ export interface IPivotConfigurationChangedEventArgs {
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
 export interface IPivotDimensionStrategy {
-    /* csSuppress */
+    /* blazorCSSuppress */
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],

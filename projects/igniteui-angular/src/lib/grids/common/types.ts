@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
+/* tsPlainInterface */
 /* marshalByValue */
 export interface GridSelectionRange {
     rowStart: number;

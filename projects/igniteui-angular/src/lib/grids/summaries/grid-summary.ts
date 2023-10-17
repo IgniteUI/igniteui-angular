@@ -1,11 +1,14 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
+/* tsPlainInterface */
 /* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;
+    /* blazorCSSuppress */
     customSummary?: any;
 }
 
+/* tsPlainInterface */
 /* marshalByValue */
 export interface IgxSummaryResult {
     key: string;
