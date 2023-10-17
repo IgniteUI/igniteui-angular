@@ -2,19 +2,9 @@
 
 # Current Milestone
 
-## Milestone 27, (Due by September, 2023)
+## Milestone 28, (Due by December, 2023)
 
-1. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
-2. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
-3. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
-4. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
-5. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
-6. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
-7. **[DONE]** Icon: should be able to size via --ig-size [#13175](https://github.com/IgniteUI/igniteui-angular/issues/13175)
-8. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
-9. **[DONE]** Stepper - Differences with the step indicаtor between WC and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
-10. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
-11. **[DONE]** Button group justify items [#13138](https://github.com/IgniteUI/igniteui-angular/issues/13138)
+1. Support of Angular 17
 
 ## Going down the road
 
@@ -27,8 +17,22 @@
 7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 8. Suggestion for igx-grid group by row template [#12752](https://github.com/IgniteUI/igniteui-angular/issues/12752)
 9. Way to filter auto-generated columns [#12577](https://github.com/IgniteUI/igniteui-angular/issues/12577)
+10. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
+11. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
 
 # Previous Milestone
+
+## Milestone 27,  version 16.1 (Released Oct 5th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-16-1-0)
+
+1. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
+2. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
+3. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
+4. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
+5. **[DONE]** Icon: should be able to size via --ig-size [#13175](https://github.com/IgniteUI/igniteui-angular/issues/13175)
+6. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
+7. **[DONE]** Stepper - Differences with the step indicаtor between WC and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
+8. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
+9. **[DONE]** Button group justify items [#13138](https://github.com/IgniteUI/igniteui-angular/issues/13138)
 
 ## Milestone 26, version 16.0 (Released May 15th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/archive/2023/05/15/ignite-ui-for-angular-16-0-0-release)
 
