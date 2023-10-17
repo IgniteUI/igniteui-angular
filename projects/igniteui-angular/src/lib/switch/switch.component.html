@@ -25,6 +25,12 @@
     </div>
 </span>
 
+<span *ngIf="value || value === 0"
+    [class]="labelClass"
+    [id]="labelId">
+    {{value}}
+</span>
+
 <span #placeholderLabel
     [class]="labelClass"
     [id]="labelId">

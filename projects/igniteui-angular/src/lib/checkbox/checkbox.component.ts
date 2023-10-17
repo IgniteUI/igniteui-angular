@@ -19,6 +19,7 @@ import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
 
 export const LabelPosition = mkenum({
     BEFORE: 'before',
@@ -64,7 +65,7 @@ let nextId = 0;
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
     standalone: true,
-    imports: [IgxRippleDirective]
+    imports: [IgxRippleDirective, NgIf]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
     private static ngAcceptInputType_required: boolean | '';
