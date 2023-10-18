@@ -1,6 +1,6 @@
 <section class="sample-content">
     <article class="sample-column">
-        <form class="input-group-form" [formGroup]="user" (ngSubmit)="onSubmit()">
+        <form class="input-group-form" [formGroup]="user" (ngSubmit)="user.valid && onSubmit()">
             <h4 class="sample-title">Book your movie ticket</h4>
             <div class="container">
                 <igx-select #select name="movies" formControlName="movie">
