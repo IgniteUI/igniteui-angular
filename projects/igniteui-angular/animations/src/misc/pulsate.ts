@@ -5,33 +5,32 @@ import {
     keyframes,
     style
 } from '@angular/animations';
-import { IAnimationParams } from '../interface';
 
 const heartbeatBase: AnimationMetadata[] = [
-    style({
+    /*@__PURE__*/style({
         animationTimingFunction: `ease-out`,
         transform: `scale(1)`,
         transformOrigin: `center center`
     }),
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        keyframes([
-            style({
+        /*@__PURE__*/keyframes([
+            /*@__PURE__*/style({
                 animationTimingFunction: `ease-in`,
                 offset: 0.1,
                 transform: `scale(0.91)`
             }),
-            style({
+            /*@__PURE__*/style({
                 animationTimingFunction: `ease-out`,
                 offset: 0.17,
                 transform: `scale(0.98)`
             }),
-            style({
+            /*@__PURE__*/style({
                 animationTimingFunction: `ease-in`,
                 offset: 0.33,
                 transform: `scale(0.87)`
             }),
-            style({
+            /*@__PURE__*/style({
                 animationTimingFunction: `ease-out`,
                 offset: 0.45,
                 transform: `scale(1)`
@@ -40,25 +39,19 @@ const heartbeatBase: AnimationMetadata[] = [
     )
 ];
 
-const heartbeatParams: IAnimationParams = {
-    delay: '0s',
-    duration: '1.5s',
-    easing: 'ease-in-out'
-};
-
 const pulsateBase: AnimationMetadata[] = [
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        keyframes([
-            style({
+        /*@__PURE__*/keyframes([
+            /*@__PURE__*/style({
                 offset: 0,
                 transform: `scale({{fromScale}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.5,
                 transform: `scale({{toScale}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 1,
                 transform: `scale({{fromScale}})`
             })
@@ -66,29 +59,21 @@ const pulsateBase: AnimationMetadata[] = [
     )
 ];
 
-const pulsateParams: IAnimationParams = {
-    delay: '0s',
-    duration: '.5s',
-    easing: 'ease-in-out',
-    fromScale: 1,
-    toScale: 1.1
-};
-
 const blinkBase: AnimationMetadata[] = [
-    animate(
+    /*@__PURE__*/animate(
         `{{duration}} {{delay}} {{easing}}`,
-        keyframes([
-            style({
+        /*@__PURE__*/keyframes([
+            /*@__PURE__*/style({
                 offset: 0,
                 opacity: .8,
                 transform: `scale({{fromScale}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 0.8,
                 opacity: 0,
                 transform: `scale({{midScale}})`
             }),
-            style({
+            /*@__PURE__*/style({
                 offset: 1,
                 opacity: 0,
                 transform: `scale({{toScale}})`
@@ -97,43 +82,41 @@ const blinkBase: AnimationMetadata[] = [
     )
 ];
 
-const blinkParams: IAnimationParams = {
-    delay: '0s',
-    duration: '.8s',
-    easing: 'ease-in-out',
-    fromScale: .2,
-    midScale: 1.2,
-    toScale: 2.2
-};
-
-const pulsateFwd = animation(pulsateBase, {
+export const pulsateFwd = /*@__PURE__*/animation(pulsateBase, {
     params: {
-        ...pulsateParams
+        delay: '0s',
+        duration: '.5s',
+        easing: 'ease-in-out',
+        fromScale: 1,
+        toScale: 1.1
     }
 });
 
-const pulsateBck = animation(pulsateBase, {
+export const pulsateBck = /*@__PURE__*/animation(pulsateBase, {
     params: {
-        ...pulsateParams,
+        delay: '0s',
+        duration: '.5s',
+        easing: 'ease-in-out',
+        fromScale: 1,
         toScale: .9
     }
 });
 
-const heartbeat = animation(heartbeatBase, {
+export const heartbeat = /*@__PURE__*/animation(heartbeatBase, {
     params: {
-        ...heartbeatParams
+        delay: '0s',
+        duration: '1.5s',
+        easing: 'ease-in-out'
     }
 });
 
-const blink = animation(blinkBase, {
+export const blink = /*@__PURE__*/animation(blinkBase, {
     params: {
-        ...blinkParams
+        delay: '0s',
+        duration: '.8s',
+        easing: 'ease-in-out',
+        fromScale: .2,
+        midScale: 1.2,
+        toScale: 2.2
     }
 });
-
-export {
-    heartbeat,
-    pulsateFwd,
-    pulsateBck,
-    blink
-};

@@ -19,10 +19,10 @@ import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.d
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
-import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxFocusTrapDirective } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let DIALOG_ID = 0;
 /**

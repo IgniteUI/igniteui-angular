@@ -1,4 +1,4 @@
-import { fadeIn, fadeOut } from '../../../animations/main';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { HorizontalAlignment, PositionSettings, Util, VerticalAlignment } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 

@@ -22,7 +22,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
+import { igxI18N } from '../../core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
@@ -51,6 +51,7 @@ import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -1086,10 +1087,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = getCurrentResourceStrings();
+            const strings = GridResourceStringsEN;
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
-            changei18n(strings);
+            igxI18N.instance().changei18n(strings);
             fix.detectChanges();
 
             const initialChips = GridFunctions.getFilteringChips(fix);
@@ -1107,7 +1108,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
-            changei18n({
+            igxI18N.instance().changei18n({
                 igx_grid_filter: 'Filter',
                 igx_grid_filter_row_close: 'Close'
             });
@@ -6614,7 +6615,7 @@ const checkUIForType = (type: string, elem: DebugElement) => {
 };
 
 const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
-    let size = getSize(expectedDisplayDensity);
+    const size = getSize(expectedDisplayDensity);
 
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
