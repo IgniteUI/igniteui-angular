@@ -81,6 +81,9 @@
     }
 
     %igx-avatar-display {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-small));
+
         position: relative;
         display: inline-flex;
         justify-content: center;
@@ -94,6 +97,10 @@
         width: var-get($theme, 'size');
         height: var-get($theme, 'size');
         font-size: var(--browser-context, var(--ig-browser-context));
+
+        igx-icon {
+            --component-size: 3;
+        }
 
         &::after {
             box-shadow: none;
@@ -129,20 +136,5 @@
         text-transform: uppercase;
         font-size: calc(#{var-get($theme, 'size')} / 2);
         line-height: calc(#{var-get($theme, 'size')} / 2);
-    }
-
-    %igx-avatar--small,
-    %igx-avatar-initials--small {
-        --component-size: var(--ig-size, var(--ig-size-small));
-    }
-
-    %igx-avatar--medium,
-    %igx-avatar-initials--medium {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %igx-avatar--large,
-    %igx-avatar-initials--large {
-        --component-size: var(--ig-size, var(--ig-size-large));
     }
 }

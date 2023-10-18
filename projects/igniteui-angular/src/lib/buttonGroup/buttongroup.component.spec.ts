@@ -183,6 +183,28 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.buttons[0].selected).toBe(true);
     });
 
+    it('should should reset its current selection state on selectionMode runtime change', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const buttonGroup = fixture.componentInstance.buttonGroup;
+
+        buttonGroup.selectionMode = 'multi';
+        fixture.detectChanges();
+
+        buttonGroup.selectButton(0);
+        buttonGroup.selectButton(1);
+        buttonGroup.selectButton(2);
+        fixture.detectChanges();
+
+        expect(buttonGroup.selectedButtons.length).toBe(3);
+
+        buttonGroup.selectionMode = 'single';
+        fixture.detectChanges();
+
+        expect(buttonGroup.selectedButtons.length).toBe(0);
+    });
+
    it('Button Group single selection', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();

@@ -402,6 +402,9 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
     public override data = SampleTestData.personJobDataFull();
     public override width = '100%';
     public override height = '100%';
+    public formatter = (value: any, rowData: any) => {
+        return `${value} - ${rowData.JobTitle}`;
+    };
 }
 
 @Component({
