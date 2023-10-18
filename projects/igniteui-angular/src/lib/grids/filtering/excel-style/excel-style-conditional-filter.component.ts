@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GridColumnDataType } from '../../../data-operations/data-util';
@@ -54,7 +54,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
+    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil, private elementRef: ElementRef) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;
@@ -65,6 +65,47 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         if (this.esf.grid) {
             this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
         }
+    }
+
+    public getFocusableElement(last = false) {
+        const targetEl = (this.elementRef.nativeElement.querySelector('#excelFilter') as HTMLElement);
+
+        if (last) {
+            let nextElement = targetEl.parentElement.nextElementSibling;
+            
+            while (nextElement) {
+                const focusableChild = this.findFocusableChild(nextElement);
+
+                if (focusableChild) {
+                    return focusableChild;
+                }
+
+                nextElement = nextElement.nextElementSibling;
+            }
+        }
+
+        return targetEl;
+    }
+
+    private findFocusableChild(element: Element): Element | null {
+        const tabIndex = element.getAttribute('tabindex');
+      
+        if (tabIndex !== null) {
+          const tabIndexValue = parseInt(tabIndex);
+          if (!isNaN(tabIndexValue) && tabIndexValue >= 0) {
+            return element;
+          }
+        }
+
+        for (let i = 0; i < element.children.length; i++) {
+            const child = element.children[i] as HTMLElement;
+            const focusableChild = this.findFocusableChild(child);
+            if (focusableChild) {
+                return focusableChild;
+            }
+        }
+        
+        return null;
     }
 
     public ngOnDestroy(): void {
@@ -103,7 +144,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
                 this._subMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
             }
 
-            this.subMenu.open(this._subMenuOverlaySettings);
+            this.subMenu.open(this._subMenuOverlaySettings, this);
             this.shouldOpenSubMenu = false;
         }
     }

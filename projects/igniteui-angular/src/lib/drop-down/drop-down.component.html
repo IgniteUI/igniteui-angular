@@ -2,6 +2,7 @@
     igxToggle
     [style.--component-size]="getComponentSizeStyles()"
     (appended)="onToggleContentAppended($event)"
+    (keydown)="handleKeyDown($event)"
     (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
     (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
     <div class="igx-drop-down__list-scroll" #scrollContainer [attr.id]="this.listId" role="listbox" [attr.aria-labelledby]="this.labelledBy"

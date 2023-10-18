@@ -32,6 +32,7 @@ import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { NgIf } from '@angular/common';
+import { IgxExcelStyleConditionalFilterComponent } from '../grids/filtering/excel-style/excel-style-conditional-filter.component';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -143,6 +144,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @ViewChild('scrollContainer', { static: true })
     protected scrollContainerRef: ElementRef;
 
+    private excelFilter: IgxExcelStyleConditionalFilterComponent;
+
     /**
      * @hidden @internal
      */
@@ -235,6 +238,41 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         super(elementRef, cdr, _displayDensityOptions);
     }
 
+    public handleKeyDown(event: KeyboardEvent): void {
+        const key = event.key.toLowerCase();
+        const evTargetId = (event.target as HTMLElement).id;
+        const firstChild = this.children.first.id;
+        const lastChild = this.children.last.id;
+
+        if (key === 'tab') {
+            let elementToFocus;
+
+            if (!event.shiftKey && evTargetId === lastChild) {
+                event.preventDefault();
+                elementToFocus = this.excelFilter.getFocusableElement(true);
+            }
+
+            if (event.shiftKey && evTargetId === firstChild) {
+                event.preventDefault();
+                elementToFocus = this.excelFilter.getFocusableElement();
+            }
+
+            if (elementToFocus) { 
+                elementToFocus.focus();
+                this.close();
+            }
+        }
+
+        if (key === 'enter' || key === 'space' || key === 'spacebar' || key === ' ') {
+            const child = this.items.filter(el => (el.element.nativeElement as HTMLElement).id === evTargetId)[0];
+            const childIndex = this.items.indexOf(child);
+
+            if (childIndex >= 0) {
+                this.setSelectedItem(childIndex);
+            }
+        }
+      }
+
     /**
      * Opens the dropdown
      *
@@ -242,7 +280,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * this.dropdown.open();
      * ```
      */
-    public open(overlaySettings?: OverlaySettings) {
+    public open(overlaySettings?: OverlaySettings, excelFilter?: IgxExcelStyleConditionalFilterComponent) {
+        this.excelFilter = excelFilter;
         this.toggleDirective.open(overlaySettings);
         this.updateScrollPosition();
     }
