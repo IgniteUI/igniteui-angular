@@ -160,8 +160,8 @@
                 <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                                            [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                                           [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                           [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                           [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                           [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                                            (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 </ng-container>
@@ -175,8 +175,8 @@
                         <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                                                [style.height.px]='totalDepth > 1 ? calcHeight(column, i) : undefined'
                                                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                                               [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                               [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                               [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                               [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                                                [class.igx-grid__tr-pivot--columnDimensionLeaf] = 'isDuplicateOfExistingParent(column, i)'
                                                [class.igx-grid__tr-pivot--columnMultiRowSpan] = 'isMultiRow(column, i)'
                         >
@@ -190,8 +190,8 @@
                 <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                                            [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                                           [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                           [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                           [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                           [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                                            [style.left]="column.rightPinnedOffset" (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 </ng-container>

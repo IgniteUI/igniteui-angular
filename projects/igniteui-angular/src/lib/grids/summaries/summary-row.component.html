@@ -29,9 +29,9 @@
             [active]="isCellActive(col.visibleIndex)"
             [style.max-height.px]="minHeight"
             [style.min-height.px]="minHeight"
-            [style.min-width]="col.getCellWidth()"
-            [style.max-width]="col.getCellWidth()"
-            [style.flex-basis]="col.getCellWidth()">
+            [style.min-width]="col.resolvedWidth"
+            [style.max-width]="col.resolvedWidth"
+            [style.flex-basis]="col.resolvedWidth">
         </igx-grid-summary-cell>
     </ng-template>
     <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
@@ -58,9 +58,9 @@
             [active]="isCellActive(col.visibleIndex)"
             [style.max-height.px]="minHeight"
             [style.min-height.px]="minHeight"
-            [style.min-width]="col.getCellWidth()"
-            [style.max-width]="col.getCellWidth()"
-            [style.flex-basis]="col.getCellWidth()"
+            [style.min-width]="col.resolvedWidth"
+            [style.max-width]="col.resolvedWidth"
+            [style.flex-basis]="col.resolvedWidth"
             [style.left]="col.rightPinnedOffset">
         </igx-grid-summary-cell>
 </ng-template>

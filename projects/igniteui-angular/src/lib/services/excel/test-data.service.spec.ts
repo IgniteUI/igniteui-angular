@@ -1500,6 +1500,24 @@ export class FileContentData {
         return this.createData();
     }
 
+    public get exportGriWithFormattedColumn() {
+        this._sharedStringsData =
+            `count="12" uniqueCount="12"><si><t>ID</t></si><si><t>Name</t></si><si><t>Casey Houston - Vice President</t></si><si><t>Gilberto Todd - Director</t></si><si><t>Tanya Bennett - Director</t></si><si><t>Jack Simon - Software Developer</t></si><si><t>Celia Martinez - Senior Software Developer</t></si><si><t>Erma Walsh - CEO</t></si><si><t>Debra Morton - Associate Software Developer</t></si><si><t>Erika Wells - Software Development Team Lead</t></si><si><t>Leslie Hansen - Associate Software Developer</t></si><si><t>Eduardo Ramirez - Manager</t></si>`;
+
+        this._tableData =
+            `ref="A1:B11" totalsRowShown="0">
+            <autoFilter ref="A1:B11"/><tableColumns count="2"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/></tableColumns>`;
+
+        this._worksheetData =
+            `<dimension ref="A1:B11"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>2</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>3</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>4</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>5</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>6</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>7</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>8</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>9</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>10</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>11</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
     public get exportHierarchicalDataWithSkippedColumns() {
         this._sharedStringsData =
             `count="89" uniqueCount="47"><si><t>Artist</t></si><si><t>Grammy Nominations</t></si><si><t>Grammy Awards</t></si><si><t>Naomí Yepes</t></si><si><t>Launch Date</t></si><si><t>US Billboard 200</t></si><si><t>No.</t></si><si><t>Title</t></si><si><t>Genre</t></si><si><t>Wood Shavifdsafdsafsangs Forever</t></si><si><t>*fdasfsa</t></si><si><t>Wood Shavifdsafdsafsavngs Forever</t></si><si><t>*vxzvczx</t></si><si><t>Wfdsafsaings Forever</t></si><si><t>*fdsacewwwqwq</t></si><si><t>Wood Shavings Forever</t></si><si><t>*rewqrqcxz</t></si><si><t>Wood Shavings Forever - Remix</t></si><si><t>Punk</t></si><si><t>SANTORINI</t></si><si><t>Hip-Hop</t></si><si><t>HEARTBEAT</t></si><si><t>OVERSEAS</t></si><si><t>Zoom</t></si><si><t>Do You?</t></si><si><t>No Photos</t></si><si><t>Tour</t></si><si><t>Started on</t></si><si><t>Location</t></si><si><t>Headliner</t></si><si><t>Faithful Tour</t></si><si><t>Sep 12</t></si><si><t>Worldwide</t></si><si><t>NO</t></si><si><t>Country</t></si><si><t>Attendants</t></si><si><t>Belgium</t></si><si><t>USA</t></si><si><t>Babila Ebwélé</t></si><si><t>Show Out</t></si><si><t>Mood Swings</t></si><si><t>Scenario</t></si><si><t>Astroworld</t></si><si><t>Jul 21</t></si><si><t>Bulgaria</t></si><si><t>Romania</t></si><si><t>Chloe</t></si>`;
