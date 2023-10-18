@@ -5,6 +5,8 @@
 ## Milestone 28, (Due by December, 2023)
 
 1. Support of Angular 17
+2. Refactor switch and radio to inherit from checkbox [#13563](https://github.com/IgniteUI/igniteui-angular/issues/13563)
+3. Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
 
 ## Going down the road
 
