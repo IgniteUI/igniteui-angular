@@ -332,9 +332,9 @@ export interface ColumnType extends FieldType {
      /** Represents custom CSS styles applied to the header group. When added, they take different styling */
     headerGroupStyles: any;
 
-    /**
-     * Custom CSS styling, appplied to every column
-     * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent
+    /** 
+     * Custom CSS styling, appplied to every column 
+     * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;
     minWidthPx: number;
@@ -343,6 +343,7 @@ export interface ColumnType extends FieldType {
     maxWidth: string;
     minWidthPercent: number;
     maxWidthPercent: number;
+    resolvedWidth: string;
 
     /**
      * Optional
