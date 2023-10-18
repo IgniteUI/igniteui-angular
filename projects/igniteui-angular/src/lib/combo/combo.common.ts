@@ -150,7 +150,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
      * ```html
-     * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
+     * <igx-combo [overlaySettings]="customOverlaySettings"></igx-combo>
      * ```
      *
      * ```typescript

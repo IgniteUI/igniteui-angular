@@ -19,7 +19,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
      * ```html
-     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
+     * <igx-calendar [hideOutsideDays]="true"></igx-calendar>
      * ```
      * ```typescript
      * let hideOutsideDays = this.calendar.hideOutsideDays;
