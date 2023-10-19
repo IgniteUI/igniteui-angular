@@ -43,7 +43,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
  *
  * @example
  * ```html
- * <button igxButton="outlined">A Button</button>
+ * <button type="button" igxButton="outlined">A Button</button>
  * ```
  */
 @Directive({
@@ -127,7 +127,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
+     * <button type="button" igxButton="flat" [selected]="button.selected"></button>
      * ```
      */
     @Input()
@@ -176,7 +176,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="icon"></button>
+     * <button type="button" igxButton="icon"></button>
      * ```
      */
     @Input('igxButton')
@@ -192,7 +192,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton igxButtonColor="orange"></button>
+     * <button type="button" igxButton igxButtonColor="orange"></button>
      * ```
      */
     @Input('igxButtonColor')
@@ -206,7 +206,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton igxButtonBackground="red"></button>
+     * <button type="button" igxButton igxButtonBackground="red"></button>
      * ```
      */
     @Input('igxButtonBackground')
@@ -220,7 +220,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton="flat" igxLabel="Label"></button>
+     * <button type="button" igxButton="flat" igxLabel="Label"></button>
      * ```
      */
     @Input('igxLabel')
@@ -248,7 +248,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton= "fab" [disabled]="true"></button>
+     * <button type="button" igxButton="fab" [disabled]="true"></button>
      * ```
      */
     public set disabled(val: boolean) {
