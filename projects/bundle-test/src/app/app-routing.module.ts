@@ -3,13 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChipComponent } from './chip/chip.component';
 
 const routes: Routes = [
-    { path: '', component: ChipComponent },
+    { path: '', redirectTo: '/chip', pathMatch: 'full' },
     { path: 'chip', component: ChipComponent },
-    { path: 'stepper', loadComponent: () => import('./stepper/stepper.component').then(m => m.StepperComponent) }
+    // { path: 'form', loadComponent: () => import('./form/form.component').then(m => m.FormComponent) },
+    // { path: 'stepper', loadComponent: () => import('./stepper/stepper.component').then(m => m.StepperComponent) }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

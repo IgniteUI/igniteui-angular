@@ -361,7 +361,7 @@ export class TreeGridFunctions {
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
             expect(selectedRows.includes(rowComponent.key)).toBe(false);
-        }  else {
+        } else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(
                 expectedCheckboxState, 'Incorrect native checkbox selection state');

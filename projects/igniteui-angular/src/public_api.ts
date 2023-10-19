@@ -22,7 +22,7 @@ export * from './lib/directives/focus-trap/focus-trap.directive';
 export * from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
-export * from './lib/directives/radio/radio-group.directive';
+export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
