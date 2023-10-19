@@ -592,7 +592,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.toggle()">Toggle Node</button>
+     * <button type="button" igxButton (click)="node.toggle()">Toggle Node</button>
      * ```
      *
      * ```typescript
@@ -634,7 +634,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.expand()">Expand Node</button>
+     * <button type="button" igxButton (click)="node.expand()">Expand Node</button>
      * ```
      *
      * ```typescript
@@ -669,7 +669,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.collapse()">Collapse Node</button>
+     * <button type="button" igxButton (click)="node.collapse()">Collapse Node</button>
      * ```
      *
      * ```typescript
