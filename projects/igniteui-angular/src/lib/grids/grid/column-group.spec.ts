@@ -710,7 +710,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 .querySelector("igx-grid-header")
                 .getBoundingClientRect().width;
             const expectedWidth = headersWidth * 3;
-            expect(headersWidth).toBe(Math.round((parseFloat(columnWidth) / 100) * grid.calcWidth));
+            expect(headersWidth).toBe(Math.floor((parseFloat(columnWidth) / 100) * grid.calcWidth));
             const locationColGroupHeaderWidth = grid.nativeElement
                 .querySelector("igx-grid-header-group")
                 .getBoundingClientRect().width;

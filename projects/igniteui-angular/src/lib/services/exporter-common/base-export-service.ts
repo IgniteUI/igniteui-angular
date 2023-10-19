@@ -468,7 +468,7 @@ export abstract class IgxBaseExporter {
                             rawValue = rawValue.toString();
                         }
 
-                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue, record.data) : rawValue;
 
                         if (this.isPivotGridExport && !isNaN(parseFloat(formattedValue))) {
                             formattedValue = parseFloat(formattedValue);
