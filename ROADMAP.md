@@ -7,6 +7,7 @@
 1. Support of Angular 17
 2. Refactor switch and radio to inherit from checkbox [#13563](https://github.com/IgniteUI/igniteui-angular/issues/13563)
 3. Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
+4.  **[DONE]** Improve package tree-shaking of animations [#13494](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 
 ## Going down the road
 
@@ -26,15 +27,19 @@
 
 ## Milestone 27,  version 16.1 (Released Oct 5th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-16-1-0)
 
-1. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
-2. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
-3. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
-4. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
-5. **[DONE]** Icon: should be able to size via --ig-size [#13175](https://github.com/IgniteUI/igniteui-angular/issues/13175)
-6. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
-7. **[DONE]** Stepper - Differences with the step indicаtor between WC and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
-8. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
-9. **[DONE]** Button group justify items [#13138](https://github.com/IgniteUI/igniteui-angular/issues/13138)
+1. **[DONE]** Deprecate the Display Density Token in favour of --ig-size CSS variable [#13389](https://github.com/IgniteUI/igniteui-angular/issues/13389)
+2. **[DONE]** Improved tree-shaking support of i18 resources [#13411](https://github.com/IgniteUI/igniteui-angular/issues/13411) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+3. **[DONE]** Improved tree-shaking support of materials icons extended [#13423](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+4. **[DONE]** Improved tree-shaking support for all grid [#13412](https://github.com/IgniteUI/igniteui-angular/pull/13412) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+5. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
+6. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
+7. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
+8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
+9. **[DONE]** Icon: should be able to size via --ig-size [#13175](https://github.com/IgniteUI/igniteui-angular/issues/13175)
+10. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
+11. **[DONE]** Stepper - Differences with the step indicаtor between WC and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
+12. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
+13. **[DONE]** Button group justify items [#13138](https://github.com/IgniteUI/igniteui-angular/issues/13138)
 
 ## Milestone 26, version 16.0 (Released May 15th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/archive/2023/05/15/ignite-ui-for-angular-16-0-0-release)
 
