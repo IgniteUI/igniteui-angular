@@ -34,8 +34,7 @@
 6. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
 7. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
 8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
-10. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
-11. **[DONE]** Stepper - Resolve differences in the step indicаtor between Web Components and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
+9. **[DONE]** Stepper - Resolve differences in the step indicаtor between Web Components and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
 
 ## Milestone 26, version 16.0 (Released May 15th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/archive/2023/05/15/ignite-ui-for-angular-16-0-0-release)
 
@@ -47,6 +46,7 @@
 6. **[DONE]** Generate child igx-hierarchical-grids dynamically [#12765](https://github.com/IgniteUI/igniteui-angular/issues/12765)
 7. **[DONE]** Support height for card component [#12555](https://github.com/IgniteUI/igniteui-angular/issues/12555)
 8. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
+9. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
 
 ## Milestone 25, version 15.1 (Releasd March 28th, 2023) 
 
