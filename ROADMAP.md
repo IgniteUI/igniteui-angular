@@ -29,7 +29,7 @@
 
 1. **[DONE]** Introduce `--ig-size` CSS variable. [#13389](https://github.com/IgniteUI/igniteui-angular/issues/13389) **NOTE**: DisplayDensity will be deprecated in `17.0.0` with `--ig-size` becoming the primary sizing approach.
 2. **[DONE]** Improved tree-shaking support for `igniteui-angular-i18n` [#13411](https://github.com/IgniteUI/igniteui-angular/issues/13411) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
-3. **[DONE]** Improved tree-shaking support of materials icons extended [#13423](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+3. **[DONE]** Improved tree-shaking support for `@igniteui/materials-icons-extended` [#13423](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 4. **[DONE]** Improved tree-shaking support for all grid [#13412](https://github.com/IgniteUI/igniteui-angular/pull/13412) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 6. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
 7. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
