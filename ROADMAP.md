@@ -36,7 +36,7 @@
 8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
 9. **[DONE]** Icon: should be able to size via --ig-size [#13175](https://github.com/IgniteUI/igniteui-angular/issues/13175)
 10. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
-11. **[DONE]** Stepper - Differences with the step indicаtor between WC and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
+11. **[DONE]** Stepper - Resolve differences in the step indicаtor between Web Components and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
 12. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
 13. **[DONE]** Button group justify items [#13138](https://github.com/IgniteUI/igniteui-angular/issues/13138)
 
