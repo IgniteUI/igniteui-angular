@@ -31,7 +31,6 @@
 2. **[DONE]** Improved tree-shaking support for `igniteui-angular-i18n` [#13411](https://github.com/IgniteUI/igniteui-angular/issues/13411) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 3. **[DONE]** Improved tree-shaking support of materials icons extended [#13423](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 4. **[DONE]** Improved tree-shaking support for all grid [#13412](https://github.com/IgniteUI/igniteui-angular/pull/13412) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
-5. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
 6. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
 7. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
 8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
