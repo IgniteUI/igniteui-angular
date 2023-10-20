@@ -33,7 +33,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
-import 'igniteui-trial-watermark';
+import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
@@ -173,6 +173,8 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
+
+IgcTrialWatermark.register();
 
 interface IMatchInfoCache {
     row: any;
@@ -4890,7 +4892,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columnName
      * @param index
      */
-    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public pinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.pin(index);
     }
@@ -4905,7 +4907,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columnName
      * @param index
      */
-    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public unpinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.unpin(index);
     }
@@ -5229,8 +5231,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.featureColumnsWidth();
-
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -5266,6 +5266,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!sumExistingWidths && !columnsToSize) {
             return '0px';
         }
+        computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
@@ -6077,7 +6078,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Finishes the row transactions on the current row.
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled.
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
@@ -6089,8 +6090,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
-    public endEdit(commit = true, event?: Event) {
-        this.crudService.endEdit(commit, event);
+    public endEdit(commit = true, event?: Event): boolean {
+        return this.crudService.endEdit(commit, event);
     }
 
     /**
@@ -6611,8 +6612,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
+        this.resetCaches(recalcFeatureWidth);
+
         const hasScroll = this.hasVerticalScroll();
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);

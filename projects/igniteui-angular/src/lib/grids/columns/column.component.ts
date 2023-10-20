@@ -973,6 +973,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
     }
 
+    /** @hidden @internal **/
+    public get resolvedWidth(): string {
+        if (this.columnLayoutChild) {
+            return '';
+        }
+        const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
+        return isAutoWidth ? this.width : this.calcPixelWidth + 'px';
+    }
+
     /**
      * Gets the column index.
      * ```typescript
@@ -1368,7 +1377,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
                     this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
-                    const cell = new IgxGridCell(this.grid as any, index, this.field);
+                    const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }
             }).filter(cell => cell);
@@ -2118,7 +2127,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            index === grid._pinnedColumns.length - 1 ? 
+            grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {
@@ -2493,14 +2503,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseFloat(this._calcWidth);
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
 
     /**

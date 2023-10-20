@@ -1800,6 +1800,29 @@ describe('IgxGrid Component Tests #grid', () => {
 
         });
 
+        it('cells and columns widths should be equal. column widths in percentages', () => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 6);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.grid.height = "250px";
+            fix.detectChanges();
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
+            fix.detectChanges();
+            const percentageWidths = ['5%', '12%', '10%', '12%', '5%', '11%'];
+            for (let i = 0; i < grid.columnList.length; i++) {
+                grid.columnList.get(i).width = percentageWidths[i];
+            }
+            fix.detectChanges();
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            for (let i = 0; i < grid.columnList.length; i++) {
+                const header = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[i];
+                const cell = fix.debugElement.queryAll(By.css('igx-grid-cell'))[i];
+                expect(header.nativeElement.offsetWidth).toEqual(cell.nativeElement.offsetWidth);
+                expect(Number.isInteger(header.nativeElement.offsetWidth)).toBe(true);
+            }
+        });
+
         it('should render all columns if grid width is set to null.', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 30);
