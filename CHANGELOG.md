@@ -79,6 +79,9 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
 - `IgxCombo`, `IgxSimpleCombo`:
     - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+- Improved tree-shaking support for the `@igniteui/material-icons-extended` package.
+- Improved tree-shaking support for the `igniteui-angular-i18n` package.
+- Improved tree-shaking support for all grids.
 
 ## 16.0.0
 
