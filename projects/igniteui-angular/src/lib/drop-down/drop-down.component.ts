@@ -244,32 +244,46 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const firstChild = this.children.first.id;
         const lastChild = this.children.last.id;
 
-        if (key === 'tab') {
-            let elementToFocus;
+        let elementToFocus: HTMLElement;
+        let target: IgxDropDownItemBaseDirective;
+      
+        switch (key) {
+            case 'tab':
+                if (!event.shiftKey && evTargetId === lastChild) {
+                    elementToFocus = this.excelFilter.getFocusableElement(true);
+                }
 
-            if (!event.shiftKey && evTargetId === lastChild) {
-                event.preventDefault();
-                elementToFocus = this.excelFilter.getFocusableElement(true);
-            }
+                if (event.shiftKey && evTargetId === firstChild) {
+                    elementToFocus = this.excelFilter.getFocusableElement();
+                }
 
-            if (event.shiftKey && evTargetId === firstChild) {
-                event.preventDefault();
+                if (elementToFocus) {
+                    event.preventDefault();
+                    elementToFocus.focus();
+                    this.close();
+                }
+                break;
+            case 'enter':
+            case 'space':
+            case 'spacebar':
+            case ' ':
+                target = this.items.find(el => (el.element.nativeElement as HTMLElement).id === evTargetId);
+
+                if (target) {
+                    this.setSelectedItem(this.items.indexOf(target));
+                }
+                break;
+            case 'escape':
+            case 'esc':
                 elementToFocus = this.excelFilter.getFocusableElement();
-            }
 
-            if (elementToFocus) { 
-                elementToFocus.focus();
+                if (elementToFocus) {
+                    event.preventDefault();
+                    elementToFocus.focus();
+                }
+
                 this.close();
-            }
-        }
-
-        if (key === 'enter' || key === 'space' || key === 'spacebar' || key === ' ') {
-            const child = this.items.filter(el => (el.element.nativeElement as HTMLElement).id === evTargetId)[0];
-            const childIndex = this.items.indexOf(child);
-
-            if (childIndex >= 0) {
-                this.setSelectedItem(childIndex);
-            }
+                break;
         }
       }
 

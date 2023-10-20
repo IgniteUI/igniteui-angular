@@ -67,11 +67,11 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         }
     }
 
-    public getFocusableElement(last = false) {
-        const targetEl = (this.elementRef.nativeElement.querySelector('#excelFilter') as HTMLElement);
+    public getFocusableElement(last = false): HTMLElement {
+        const targetEl = this.elementRef.nativeElement.querySelector('#excelFilter') as HTMLElement;
 
         if (last) {
-            let nextElement = targetEl.parentElement.nextElementSibling;
+            let nextElement = targetEl.parentElement.nextElementSibling as HTMLElement;
             
             while (nextElement) {
                 const focusableChild = this.findFocusableChild(nextElement);
@@ -80,14 +80,14 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
                     return focusableChild;
                 }
 
-                nextElement = nextElement.nextElementSibling;
+                nextElement = nextElement.nextElementSibling as HTMLElement;
             }
         }
 
         return targetEl;
     }
 
-    private findFocusableChild(element: Element): Element | null {
+    private findFocusableChild(element: HTMLElement): HTMLElement | null {
         const tabIndex = element.getAttribute('tabindex');
       
         if (tabIndex !== null) {
