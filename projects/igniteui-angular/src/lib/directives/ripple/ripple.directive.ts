@@ -17,8 +17,8 @@ export class IgxRippleDirective {
      * ```
      * Can set the ripple to activate on a child element inside the parent where igxRipple is defined.
      * ```html
-     * <div #rippleContainer [igxRippleTarget] = "'#child"'>
-     *  <button id="child">Click</button>
+     * <div #rippleContainer [igxRippleTarget]="'#child"'>
+     *   <button type="button" igxButton id="child">Click</button>
      * </div>
      * ```
      *
@@ -29,7 +29,7 @@ export class IgxRippleDirective {
     /**
      * Sets/gets the ripple color.
      * ```html
-     * <button #rippleContainer [igxRipple] = "'red'" ></button>
+     * <button type="button" #rippleContainer igxButton [igxRipple]="'red'"></button>
      * ```
      * ```typescript
      * @ViewChild('rippleContainer', {read: IgxRippleDirective})
@@ -45,7 +45,7 @@ export class IgxRippleDirective {
      * Sets/gets the ripple duration(in milliseconds).
      * Default value is `600`.
      * ```html
-     * <button #rippleContainer igxRipple [igxRippleDuration] = "800"></button>
+     * <button type="button" #rippleContainer igxButton igxRipple [igxRippleDuration]="800"></button>
      * ```
      * ```typescript
      * @ViewChild('rippleContainer', {read: IgxRippleDirective})
@@ -60,7 +60,7 @@ export class IgxRippleDirective {
     /**
      * Enables/disables the ripple to be centered.
      * ```html
-     * <button #rippleContainer igxRipple [igxRippleCentered] = "true"></button>
+     * <button type="button" #rippleContainer igxButton igxRipple [igxRippleCentered]="true"></button>
      * ```
      *
      * @memberof IgxRippleDirective
@@ -73,7 +73,7 @@ export class IgxRippleDirective {
      * Sets/gets whether the ripple is disabled.
      * Default value is `false`.
      * ```html
-     * <button #rippleContainer igxRipple [igxRippleDisabled] = "true"></button>
+     * <button type="button" #rippleContainer igxRipple [igxRippleDisabled]="true"></button>
      * ```
      * ```typescript
      * @ViewChild('rippleContainer', {read: IgxRippleDirective})

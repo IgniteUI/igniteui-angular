@@ -11,14 +11,14 @@
                 </span>
             </div>
             <div class="igx-banner__actions">
-                    <ng-container *ngIf="useDefaultTemplate">
-                        <button igxButton="flat" igxRipple (click)="close()">
-                            {{ resourceStrings.igx_banner_button_dismiss }}
-                        </button>
-                    </ng-container>
-                    <ng-container *ngIf="!useDefaultTemplate">
-                        <ng-content select="igx-banner-actions"></ng-content>
-                    </ng-container>
+                <ng-container *ngIf="useDefaultTemplate">
+                    <button type="button" igxButton="flat" igxRipple (click)="close()">
+                        {{ resourceStrings.igx_banner_button_dismiss }}
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="!useDefaultTemplate">
+                    <ng-content select="igx-banner-actions"></ng-content>
+                </ng-container>
             </div>
         </div>
     </igx-expansion-panel-body>
