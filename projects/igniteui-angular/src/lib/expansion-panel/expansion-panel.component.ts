@@ -237,7 +237,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.collapse($event)">Collpase Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.collapse($event)">Collpase Panel</button>
      * ```
      */
     public collapse(evt?: Event) {
@@ -269,7 +269,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.expand($event)">Expand Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.expand($event)">Expand Panel</button>
      * ```
      */
     public expand(evt?: Event) {
@@ -300,7 +300,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.toggle($event)">Expand Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.toggle($event)">Expand Panel</button>
      * ```
      */
     public toggle(evt?: Event) {

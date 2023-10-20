@@ -650,7 +650,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button class="combo__add-button">
+     *          <button type="button" igxButton="raised" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>
@@ -1019,7 +1019,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens/closes the combo.
      *
      * ```html
-     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1039,7 +1039,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens the combo.
      *
      * ```html
-     * <button (click)="combo.open()">Open Combo</button>
+     * <button type="button" (click)="combo.open()">Open Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1057,7 +1057,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that closes the combo.
      *
      * ```html
-     * <button (click)="combo.close()">Close Combo</button>
+     * <button type="button" (click)="combo.close()">Close Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */

@@ -1679,7 +1679,7 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <button>Delete</button>
+                <button type="button">Delete</button>
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -1745,8 +1745,8 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>
@@ -2546,7 +2546,7 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
     <igx-grid #grid1 [data]="data">
         <igx-column>
             <ng-template igxCell>
-                <button>SimpleBtn</button>
+                <button type="button">SimpleBtn</button>
             </ng-template>
         </igx-column>
         <igx-column header="" field="ID"></igx-column>
