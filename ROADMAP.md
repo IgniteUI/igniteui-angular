@@ -36,7 +36,6 @@
 8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
 10. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
 11. **[DONE]** Stepper - Resolve differences in the step indicаtor between Web Components and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
-12. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
 
 ## Milestone 26, version 16.0 (Released May 15th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/archive/2023/05/15/ignite-ui-for-angular-16-0-0-release)
 
@@ -47,6 +46,7 @@
 5. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
 6. **[DONE]** Generate child igx-hierarchical-grids dynamically [#12765](https://github.com/IgniteUI/igniteui-angular/issues/12765)
 7. **[DONE]** Support height for card component [#12555](https://github.com/IgniteUI/igniteui-angular/issues/12555)
+8. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
 
 ## Milestone 25, version 15.1 (Releasd March 28th, 2023) 
 
