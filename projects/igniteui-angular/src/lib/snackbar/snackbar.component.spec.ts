@@ -221,7 +221,7 @@ describe('IgxSnackbar with custom content', () => {
         expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
 
         // Verify the custom content element is on the left side of the button
-        const button = fixture.debugElement.query(By.css('.igx-snackbar__button'));
+        const button = fixture.debugElement.query(By.css('.igx-button'));
         const buttonRect = button.nativeElement.getBoundingClientRect();
         expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
         expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
