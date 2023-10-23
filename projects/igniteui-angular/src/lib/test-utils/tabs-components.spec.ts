@@ -246,7 +246,7 @@ export class TabsTestCustomStylesComponent {
 
 @Component({
     template: `
-    <button igxButton="flat" [igxToggleAction]="userProfile">
+    <button type="button" igxButton="flat" [igxToggleAction]="userProfile">
         Click
     </button>
     <igx-drop-down #userProfile>
