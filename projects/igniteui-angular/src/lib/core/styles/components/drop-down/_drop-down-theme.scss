@@ -194,7 +194,7 @@
     %igx-drop-down__list {
         @include sizable();
 
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, var-get($theme, 'default-size'));
         --dropdown-size: var(--component-size);
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
