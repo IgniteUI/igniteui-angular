@@ -192,6 +192,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
         groupsRecords?: any[], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
         const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
+        grid.groupingPerformedSubject.next();
         return {
             data: grouping,
             metadata
