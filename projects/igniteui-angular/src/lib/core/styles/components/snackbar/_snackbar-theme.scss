@@ -101,22 +101,12 @@
         backdrop-filter: blur(8px);
 
         [igxButton] {
+            @include animation(fade-in .35s ease-out);
             --ig-size: 1;
             background: transparent;
             color: var-get($theme, 'button-color');
-            text-transform: uppercase;
-            user-select: none;
-            font-weight: $snackbar-button-font-weight;
             -webkit-tap-highlight-color: transparent;
-            outline: none;
             box-shadow: none;
-            transition: color .2s ease;
-            font-family: inherit;
-            @include animation(fade-in .35s ease-out);
-
-            &:hover {
-                color: var-get($theme, 'button-color');
-            }
         }
     }
 
