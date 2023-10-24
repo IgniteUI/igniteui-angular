@@ -456,7 +456,7 @@
 
     %igx-button-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, var($theme, 'default-size'));
 
         position: relative;
         display: inline-flex;

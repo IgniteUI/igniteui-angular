@@ -299,7 +299,7 @@
 
     %igx-chip {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, var($theme, 'default-size'));
         --chip-size: var(--component-size);
 
         position: relative;
