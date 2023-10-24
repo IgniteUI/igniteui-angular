@@ -15,8 +15,7 @@
         [maxHeight]="'397px'"
         [displayDensity]="esf.displayDensity"
         (selectionChanging)="onSubMenuSelection($event)"
-        (closed)="onSubMenuClosed()"
-        [allowItemsFocus]="true">
+        (closed)="onSubMenuClosed()">
         <div>
             <igx-drop-down-item
             *ngFor="let condition of conditions"
