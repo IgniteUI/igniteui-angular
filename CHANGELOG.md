@@ -42,22 +42,15 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`:
     - Exposed `comboIgnoreDiacriticsFilter` filter function which normalizes diacritics to their base representation.
     When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
+- `IgxCombo`, `IgxSimpleCombo`
+    - Added new property `displayValue` that returns array of display keys.
 - `IgxButtonGroup`:
     - Added `owner` to the `IButtonGroupEventArgs` to identify the emitting button group instance.
     - **Breaking Change** Added the `selectionMode` property that sets the selection mode of the buttons in the `IgxButtonGroup`. Selection modes are `single`, `singleRequired` and `multi` as default is `single`.
     - **Breaking Change** Deprecated the `multiSelection` property and all references have been migrated to `selectionMode="multi"`.
 - `Themes`:
     - Include a standalone theme for the `igxLabel` directive to allow usage with components outside the Input Group.
-
-### General
-- `IgxStepper`:
-    - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
-    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
-- `IgxCombo`, `IgxSimpleCombo`:
-    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
-- **Deprecation** - The `DisplayDensityToken` injection token has been deprecated. Consequently, the `displayDensity` input for all components injecting the `DisplayDensityToken` is also deprecated. Changing the size of the component(s) should be done via a new custom CSS property - `--ig-size`;
+- Changing the size of Ignite UI components can now be done via a new custom CSS property - `--ig-size` . The `DisplayDensityToken` injection token and consequently, the `displayDensity` inputs for all components will be deprecated in the next major version and it is recommended that they no longer be used for sizing components.
     - Code example:
     ```typescript
     // *.component.ts
@@ -83,9 +76,14 @@ All notable changes for each version of this project will be documented in this 
     }
     ```
 
-### New Features
-- `IgxCombo`, `IgxSimpleCombo`
-    - Added new property `displayValue` that returns array of display keys.
+### General
+- `IgxStepper`:
+    - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
+    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
+- `IgxCombo`, `IgxSimpleCombo`:
+    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
 
 ## 16.0.0
 
