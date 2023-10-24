@@ -542,7 +542,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param rowIndex
      * @param index
      */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
@@ -819,7 +819,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public override isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record && record?.records && record.records?.length &&
-            record.expression && record.expression?.fieldName;
+         record.expression && record.expression?.fieldName;
     }
 
     /**
