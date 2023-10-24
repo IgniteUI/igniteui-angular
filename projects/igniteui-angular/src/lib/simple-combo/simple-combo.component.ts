@@ -529,8 +529,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private clearOnBlur(): void {
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
-            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
-            if (remoteValue && searchValue !== remoteValue) {
+            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
+            if (searchValue !== remoteValue) {
                 this.clear();
             }
             return;

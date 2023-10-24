@@ -26,7 +26,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="snackbar.show()">Send message</button>
+ * <button type="button" igxButton (click)="snackbar.show()">Send message</button>
  * <div>
  *   <igx-snackbar #snackbar>
  *      Message sent

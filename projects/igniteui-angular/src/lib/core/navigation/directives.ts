@@ -6,7 +6,7 @@ import {IgxNavigationService} from './nav.service';
  *
  * Usage:
  * ```
- * <button igxNavToggle="ID"> Toggle </button>
+ * <button type="button" igxNavToggle="ID">Toggle</button>
  * ```
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */
@@ -31,7 +31,7 @@ export class IgxNavigationToggleDirective {
  *
  * Usage:
  * ```
- * <button igxNavClose="ID"> Close </button>
+ * <button type="button" igxNavClose="ID">Close</button>
  * ```
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */

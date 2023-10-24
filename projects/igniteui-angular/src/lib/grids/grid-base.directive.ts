@@ -33,7 +33,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
-import 'igniteui-trial-watermark';
+import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
@@ -173,6 +173,8 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
+
+IgcTrialWatermark.register();
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -1438,8 +1440,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets the row edit actions template.
      *```html
      * <ng-template #template igxRowEditActions let-endRowEdit>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
      * </ng-template>
      * ```
      *```typescript
@@ -6353,7 +6355,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */

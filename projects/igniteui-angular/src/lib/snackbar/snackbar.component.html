@@ -2,6 +2,6 @@
     {{ textMessage }}
     <ng-content></ng-content>
 </div>
-<button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" (click)="triggerAction()">
+<button type="button" class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" (click)="triggerAction()">
     {{ actionText }}
 </button>
