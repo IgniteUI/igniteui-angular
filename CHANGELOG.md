@@ -2,6 +2,33 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 16.1.4
+### New Features
+- `Themes`:
+    - **Experimental** - Added the ability to configure the base font-size used to calculate the rem values in all component themes. This allows for proper scaling of components when a different document font-size is used.
+
+    - Code example:
+
+    ```scss
+    // Configure the base font-size
+    @use 'igniteui-theming/sass/config' as * with (
+        $base-font-size: 10px // <-- 10px == 1rem
+    );
+
+    // Standard imports and theme declarations
+    @use 'igniteui-angular/src/lib/core/styles/themes' as *;
+
+    // This change also adds a new CSS variable `--ig-base-font-size`
+    // that you can use to configure your own stylesheets:
+    html {
+        font-size: var(--ig-base-font-size); // 10px
+    }
+
+    @include core();
+    @include typography();
+    @include theme();
+    ``` 
+
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
