@@ -7,8 +7,8 @@ The Toast component shows application messages in a stylized pop-up box position
 ## Simple Toast
 
 ```html
-<button (click)="toast.open()">Show toast</button>
-<button (click)="toast.close()">Hide toast</button>
+<button type="button" igxButton (click)="toast.open()">Show toast</button>
+<button type="button" igxButton (click)="toast.close()">Hide toast</button>
 
 <igx-toast #toast>Well, hi there!</igx-toast>
 ```
@@ -25,7 +25,7 @@ You can set the `positon` property to `top`, `middle`, or `bottom`, which will p
 *By default the toast renders inside a global overlay outlet. You can specify a different overlay outlet by setting the `outlet` property on the toast;
 
 ```html
-<button (click)="toast.open()">Show toast</button>
+<button type="button" igxButton (click)="toast.open()">Show toast</button>
 <igx-toast #toast position="top">Top Positioned Toast</igx-toast>
 ```
 
@@ -43,7 +43,7 @@ You can display various content by placing it between the `igx-toast` tags.
 ## Toast Events
 
 ```html
-<button (click)="toast.open()">Show toast</button>
+<button type="button" igxButton (click)="toast.open()">Show toast</button>
 
 <igx-toast
     #toast

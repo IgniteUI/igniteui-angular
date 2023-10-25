@@ -478,7 +478,7 @@ export class UpdateChanges {
     protected updateSassVariables(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        const allowedStartCharacters = new RegExp('(\:|\,)\s?', 'g');
+        const allowedStartCharacters = new RegExp(/(:|,)\s?/, 'g');
         // eslint-disable-next-line no-control-regex
         const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
         for (const change of this.themeChanges.changes) {

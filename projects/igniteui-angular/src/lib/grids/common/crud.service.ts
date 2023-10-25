@@ -676,13 +676,13 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
     }
 
     /**
-     * Finishes the row transactions on the current row and returns whether the grid editing was canceled. 
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled.
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */
