@@ -108,6 +108,10 @@
             -webkit-tap-highlight-color: transparent;
             box-shadow: none;
         }
+
+        .custom-btn {
+            display: contents;
+        }
     }
 
     %igx-snackbar-message {

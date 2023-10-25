@@ -2,7 +2,9 @@
     {{ textMessage }}
     <ng-content></ng-content>
 </div>
-<ng-content *ngIf="buttonTemplate" select="[igxButton]"></ng-content>
-<button *ngIf="!buttonTemplate && actionText" igxButton (click)="triggerAction()">
+<div #customButton class="custom-btn">
+    <ng-content select="[igxButton]"></ng-content>
+</div>
+<button *ngIf="!customButton.children.length && actionText" igxButton (click)="triggerAction()">
     {{ actionText }}
 </button>

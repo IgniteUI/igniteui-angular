@@ -2,7 +2,6 @@ import { useAnimation } from '@angular/animations';
 import { NgIf } from '@angular/common';
 import {
     Component,
-    ContentChild,
     EventEmitter,
     HostBinding,
     Input,
@@ -103,23 +102,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * ```
      */
     @Output() public animationDone = new EventEmitter<ToggleViewEventArgs>();
-
-    /**
-     * @hidden
-     */
-    public get buttonTemplate(): boolean {
-        return this._buttonTemplate;
-    }
-
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxButtonDirective)
-    public set buttonTemplate(val: boolean) {
-        this._buttonTemplate = val;
-    }
-
-    private _buttonTemplate = false;
 
     /**
      * Get the position and animation settings used by the snackbar.
