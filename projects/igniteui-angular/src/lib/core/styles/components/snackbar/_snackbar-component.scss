@@ -19,5 +19,9 @@
         @include e(message) {
             @extend %igx-snackbar-message !optional;
         }
+
+        @include e(button) {
+            @extend %igx-snackbar-button !optional;
+        }
     }
 }
