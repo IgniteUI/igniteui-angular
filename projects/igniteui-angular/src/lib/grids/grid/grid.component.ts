@@ -15,7 +15,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -53,6 +53,7 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
+import { Observable, Subject } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -426,6 +427,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private childDetailTemplates: Map<any, any> = new Map();
 
     /**
+     * @hidden @internal
+     */
+    public groupingPerformedSubject = new Subject<void>();
+
+    /**
+     * @hidden @internal
+     */
+    public groupingPerformed$: Observable<void> = this.groupingPerformedSubject.asObservable();
+
+    /**
      * Gets/Sets the group by state.
      *
      * @example
@@ -478,7 +489,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 groupedColumns: groupedCols,
                 ungroupedColumns: ungroupedCols
             };
-            this.groupingDone.emit(groupingDoneArgs);
+            this.groupingPerformed$.pipe(take(1)).subscribe(() => {
+                this.groupingDone.emit(groupingDoneArgs);
+            });
         }
     }
 
@@ -739,6 +752,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.clear_groupby(name);
         this.calculateGridSizes();
         this.notifyChanges(true);
+        this.groupingPerformedSubject.next();
     }
 
     /**
