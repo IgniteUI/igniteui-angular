@@ -14,6 +14,7 @@ import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
     PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 
 let NEXT_ID = 0;
 /**
@@ -25,7 +26,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="snackbar.show()">Send message</button>
+ * <button type="button" igxButton (click)="snackbar.show()">Send message</button>
  * <div>
  *   <igx-snackbar #snackbar>
  *      Message sent
@@ -37,7 +38,7 @@ let NEXT_ID = 0;
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
     standalone: true,
-    imports: [NgIf]
+    imports: [NgIf, IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {
@@ -102,7 +103,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      */
     @Output() public animationDone = new EventEmitter<ToggleViewEventArgs>();
 
-
     /**
      * Get the position and animation settings used by the snackbar.
      * ```typescript
@@ -160,7 +160,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             this.textMessage = message;
         }
 
-
         this.strategy = this.outlet ? new ContainerPositionStrategy(this.positionSettings)
             : new GlobalPositionStrategy(this.positionSettings);
         super.open();
@@ -203,4 +202,3 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
         });
     }
 }
-
