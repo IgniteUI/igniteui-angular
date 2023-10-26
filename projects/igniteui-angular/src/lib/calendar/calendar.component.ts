@@ -13,8 +13,9 @@ import {
     QueryList,
     OnDestroy
 } from '@angular/core';
+import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
+
 import { IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarScrollMonthDirective } from './calendar.directives';
 import { ICalendarDate, IgxCalendarView, ScrollMonth, monthRange } from './calendar';
 import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
@@ -26,7 +27,7 @@ import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 
@@ -121,7 +122,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar [vertical] = "true"></igx-calendar>
+     * <igx-calendar [vertical]="true"></igx-calendar>
      * ```
      */
     @Input()
@@ -283,7 +284,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
+     * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */
@@ -311,7 +312,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      *
      * @example
      * ```html
-     * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
+     * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */

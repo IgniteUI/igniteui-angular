@@ -80,7 +80,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**
      * Sets the month format option of the months view.
      * ```html
-     * <igx-months-view> [monthFormat] = "short'"</igx-months-view>
+     * <igx-months-view> [monthFormat]="short'"</igx-months-view>
      * ```
      *
      * @memberof IgxMonthsViewComponent

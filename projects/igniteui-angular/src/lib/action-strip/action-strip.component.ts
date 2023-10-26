@@ -17,8 +17,7 @@ import {
     ElementRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
@@ -29,6 +28,7 @@ import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive'
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -141,9 +141,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     public get resourceStrings(): IActionStripResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.ActionStripResourceStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -183,7 +180,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
     private _hidden = false;
-    private _resourceStrings;
+    private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
 
     constructor(
         private _viewContainer: ViewContainerRef,

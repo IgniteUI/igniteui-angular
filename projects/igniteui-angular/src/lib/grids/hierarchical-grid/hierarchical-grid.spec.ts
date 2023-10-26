@@ -459,7 +459,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should update already created child grid with new records added to the root data', () => {
-            let row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 

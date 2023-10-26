@@ -20,8 +20,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensity } from '../../core/density';
-import { CurrentResourceStrings } from '../../core/i18n/resources';
-import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
+import { ITreeResourceStrings, TreeResourceStringsEN } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
@@ -40,6 +39,7 @@ import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.c
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
+import { getCurrentResourceStrings } from '../../core/i18n/resources';
 
 // TODO: Implement aria functionality
 /**
@@ -226,9 +226,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITreeResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.TreeResStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -405,7 +402,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
     /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.TreeResStrings;
+    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
 
     private _tabIndex = null;
     private _disabled = false;

@@ -10,8 +10,7 @@ import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
@@ -37,6 +36,7 @@ import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -380,7 +380,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
-    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,

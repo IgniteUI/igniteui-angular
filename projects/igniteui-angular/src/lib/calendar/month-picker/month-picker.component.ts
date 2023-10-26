@@ -10,13 +10,13 @@ import { NgIf, NgStyle } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
 
-import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxCalendarView, ScrollMonth } from '../calendar';
+import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 @Component({
