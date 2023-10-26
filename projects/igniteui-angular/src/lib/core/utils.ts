@@ -573,7 +573,7 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
+    const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
 }
 

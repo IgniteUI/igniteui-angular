@@ -562,7 +562,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.open()">Open Dialog</button>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
      * ```
      */
     public open(settings?: OverlaySettings): void {
@@ -593,7 +593,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="picker.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(settings?: OverlaySettings): void {
@@ -611,7 +611,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="picker.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -642,7 +642,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.selectToday()">Select Today</button>
+     * <button type="button" igxButton (click)="picker.selectToday()">Select Today</button>
      * ```
      * */
     public selectToday(): void {

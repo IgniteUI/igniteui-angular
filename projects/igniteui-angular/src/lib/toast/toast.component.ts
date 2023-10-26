@@ -35,7 +35,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="toast.open()">Show notification</button>
+ * <button type="button" igxButton (click)="toast.open()">Show notification</button>
  * <igx-toast #toast displayTime="1000">
  *      Notification displayed
  * </igx-toast>

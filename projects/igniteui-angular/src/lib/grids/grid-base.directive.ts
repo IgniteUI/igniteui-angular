@@ -1357,8 +1357,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets the row edit actions template.
      *```html
      * <ng-template #template igxRowEditActions let-endRowEdit>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
      * </ng-template>
      * ```
      *```typescript
@@ -6067,7 +6067,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */

@@ -118,7 +118,7 @@ class NoFocusComponent { }
     <div>First</div>
     <div>Second</div>
     <div tabindex="0" [igxFocus]>Third</div>
-    <button (click)="focus()">Focus the third one</button>
+    <button type="button" (click)="focus()">Focus the third one</button>
     `,
     standalone: true,
     imports: [IgxFocusDirective]
