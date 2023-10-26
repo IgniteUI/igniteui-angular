@@ -86,22 +86,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "igniteui-dev-demos:build:production"
+              "buildTarget": "igniteui-dev-demos:build:production"
             },
             "hmr": {
               "hmr": true,
-              "browserTarget": "igniteui-dev-demos:build:hmr"
+              "buildTarget": "igniteui-dev-demos:build:hmr"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           }
         },
         "test": {
@@ -345,10 +345,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bundle-test:build:production"
+              "buildTarget": "bundle-test:build:production"
             },
             "development": {
-              "browserTarget": "bundle-test:build:development"
+              "buildTarget": "bundle-test:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -356,7 +356,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bundle-test:build"
+            "buildTarget": "bundle-test:build"
           }
         },
         "test": {
