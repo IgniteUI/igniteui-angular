@@ -109,7 +109,7 @@
     "hammer-simulator": "0.0.1",
     "ig-typedoc-theme": "^4.2.1",
     "igniteui-sassdoc-theme": "^1.1.6",
-    "igniteui-webcomponents": "^4.2.3",
+    "igniteui-webcomponents": "^4.5.0",
     "jasmine": "^4.6.0",
     "jasmine-core": "~4.6.0",
     "karma": "^6.4.2",
@@ -129,7 +129,7 @@
     "stylelint": "^15.1.0",
     "stylelint-scss": "^4.1.0",
     "ts-node": "^10.8.1",
-    "typedoc": "^0.23.21",
+    "typedoc": "^0.25.2",
     "typedoc-plugin-localization": "^3.0.1",
     "typescript": "5.2.2"
   }
