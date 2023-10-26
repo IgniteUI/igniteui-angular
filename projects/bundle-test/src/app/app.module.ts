@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { IgxChipsModule } from 'igniteui-angular';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +10,7 @@ import { IgxChipsModule } from 'igniteui-angular';
   ],
   imports: [
     BrowserModule,
-    IgxChipsModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -120,7 +120,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * @deprecated in version 16.1.0. Set/Use selectionMode property instead.
-     * 
+     *
      * Enables selecting multiple buttons. By default, multi-selection is false.
      */
     @Input()

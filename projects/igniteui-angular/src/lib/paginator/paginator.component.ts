@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
-import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
-import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
+import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -12,6 +11,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -107,7 +107,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
+    private _resourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
