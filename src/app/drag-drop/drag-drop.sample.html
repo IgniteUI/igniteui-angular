@@ -25,12 +25,12 @@
         <h4 class="sample-title">Ghost and base templating:</h4>
         <div class="dragRow">
             <div style="width: 500px; height: 300px;">
-                <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
+                <div [igxDrag]="{ id: 'customGhost'}" [ghostClass]="'customGhost'" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
                     [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                     (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                     <span *ngIf="!customDragged">Drag me</span>
                     <ng-template #dragGhost>
-                        <div class="customGhost">
+                        <div>
                             <span *ngIf="!ghostInDropArea">Weeeee</span>
                             <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
                             <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>

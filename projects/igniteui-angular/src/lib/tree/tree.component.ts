@@ -6,7 +6,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { growVerIn, growVerOut } from '../animations/grow';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
@@ -17,6 +16,7 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 /**
  * @hidden @internal

@@ -3,9 +3,11 @@ import { NgFor } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
     AbsolutePosition,
+    IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
+} from 'igniteui-angular';
+import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
     flipVerBck, flipVerFwd, growVerIn, growVerOut, heartbeat,
-    IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
     pulsateBck, pulsateFwd, rotateInBl,
     rotateInBottom, rotateInBr, rotateInCenter, rotateInDiagonal1, rotateInDiagonal2, rotateInHor,
     rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateInVer, rotateOutBl,
@@ -23,7 +25,7 @@ import {
     swingInBottomFwd, swingInLeftBck, swingInLeftFwd, swingInRightBck, swingInRightFwd,
     swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
-} from 'igniteui-angular';
+} from 'igniteui-angular/animations';
 
 @Component({
     selector: 'app-animations-sample',

@@ -4,10 +4,10 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
 import { isDate, PlatformUtil } from '../core/utils';
-import { CurrentResourceStrings } from '../core/i18n/resources';
-import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
+import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 /** @hidden @internal */
 @Directive({
@@ -19,7 +19,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
      * ```html
-     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
+     * <igx-calendar [hideOutsideDays]="true"></igx-calendar>
      * ```
      * ```typescript
      * let hideOutsideDays = this.calendar.hideOutsideDays;
@@ -192,8 +192,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+
     /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+    private _resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
      * @hidden
@@ -227,9 +228,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.CalendarResStrings;
-        }
         return this._resourceStrings;
     }
 

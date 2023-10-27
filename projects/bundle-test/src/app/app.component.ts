@@ -7,5 +7,5 @@ import { ChipResourceStringsBG } from 'igniteui-angular-i18n';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  protected chipStrings = ChipResourceStringsBG;
+    protected chipStrings = ChipResourceStringsBG;
 }

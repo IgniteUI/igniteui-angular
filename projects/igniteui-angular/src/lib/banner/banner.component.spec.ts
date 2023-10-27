@@ -488,7 +488,7 @@ describe('igxBanner', () => {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
@@ -502,7 +502,7 @@ export class IgxBannerEmptyComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px;">
+        <div id="wrapper" style="width:900px;">
             <igx-banner>
                 You have lost connection to the internet.
                 <igx-banner-actions>
@@ -522,7 +522,7 @@ export class IgxBannerOneButtonComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner>
                 <igx-icon>error</igx-icon>
                 Unfortunately, the credit card did not go through, please try again.
@@ -544,7 +544,7 @@ export class IgxBannerSampleComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner>
                 <igx-card>
                     <igx-card-header class="compact">
@@ -577,7 +577,7 @@ export class IgxBannerCustomTemplateComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,

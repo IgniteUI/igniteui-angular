@@ -3,6 +3,10 @@ import { TestBed, tick, fakeAsync, flush, waitForAsync } from '@angular/core/tes
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
 import {
     Calendar, IgxCalendarComponent, IgxCalendarView, isLeap,
     IViewDateChangeEventArgs,
@@ -16,6 +20,8 @@ import { IgxDayItemComponent } from './days-view/day-item.component';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 
 describe('IgxCalendar - ', () => {
+
+    registerLocaleData(localeFr);
 
     it('Should create proper calendar model', () => {
         const calendar = new Calendar();
