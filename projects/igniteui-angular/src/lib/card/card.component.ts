@@ -187,8 +187,8 @@ export class IgxCardFooterDirective {
  *     <h5 igxCardHeaderSubtitle>{{subtitle}}</h5>
  *   </igx-card-header>
  *   <igx-card-actions>
- *       <button igxButton igxRipple>Share</button>
- *       <button igxButton igxRipple>Play Album</button>
+ *       <button type="button" igxButton igxRipple>Share</button>
+ *       <button type="button" igxButton igxRipple>Play Album</button>
  *   </igx-card-actions>
  * </igx-card>
  * ```
@@ -212,7 +212,7 @@ export class IgxCardComponent {
      *
      * @example
      * ```html
-     * <igx-card id = "my-first-card"></igx-card>
+     * <igx-card id="my-first-card"></igx-card>
      * ```
      * ```typescript
      * let cardId =  this.card.id;

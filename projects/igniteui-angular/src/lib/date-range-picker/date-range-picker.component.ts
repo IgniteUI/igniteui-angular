@@ -13,12 +13,10 @@ import {
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -36,6 +34,8 @@ import {
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -270,10 +270,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Show/hide week numbers
-     * 
+     *
      * @remarks
      * Default is `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
@@ -407,7 +407,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
-    private _resourceStrings = CurrentResourceStrings.DateRangePickerResStrings;
+    private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
@@ -473,7 +473,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.open()">Open Dialog</button
+     * <button type="button" igxButton (click)="dateRange.open()">Open Dialog</button
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
@@ -499,7 +499,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -515,7 +515,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings): void {

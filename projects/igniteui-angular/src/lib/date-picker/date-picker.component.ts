@@ -43,11 +43,10 @@ import {
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { fadeIn, fadeOut } from '../animations/fade';
+
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -67,6 +66,8 @@ import {
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 
@@ -457,7 +458,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
-    private _resourceStrings = CurrentResourceStrings.DatePickerResourceStrings;
+    private _resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN);
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;
@@ -561,7 +562,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.open()">Open Dialog</button>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
      * ```
      */
     public open(settings?: OverlaySettings): void {
@@ -592,7 +593,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="picker.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(settings?: OverlaySettings): void {
@@ -610,7 +611,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="picker.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -641,7 +642,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.selectToday()">Select Today</button>
+     * <button type="button" igxButton (click)="picker.selectToday()">Select Today</button>
      * ```
      * */
     public selectToday(): void {

@@ -1,6 +1,10 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { getLocaleCurrencySymbol, NgFor, registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeJa from '@angular/common/locales/ja';
+
 import { IgxGridComponent } from './grid.component';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -17,7 +21,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { getLocaleCurrencySymbol, NgFor } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -27,6 +30,9 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
+
+    registerLocaleData(localeFr);
+    registerLocaleData(localeJa);
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
@@ -1428,7 +1434,7 @@ interface IColumnConfig {
     template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
         `
     <ng-template #customTemplate let-value>
-    <button igxButton="raised">{{value}}</button>
+        <button type="button" igxButton="raised">{{value}}</button>
     </ng-template>
     `,
     standalone: true,
