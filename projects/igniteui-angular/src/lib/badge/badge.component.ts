@@ -128,7 +128,7 @@ export class IgxBadgeComponent {
     public role = 'status';
 
     /**
-     * Sets/gets the the css class to use on the badge.
+     * Sets/gets the css class to use on the badge.
      *
      * @example
      * ```typescript
