@@ -9,7 +9,6 @@ import {
     Renderer2
 } from "@angular/core";
 import { first } from "rxjs/operators";
-import { fadeIn, fadeOut } from "../../animations/fade";
 import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
@@ -47,6 +46,7 @@ import { IgxInputDirective } from "../../directives/input/input.directive";
 import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
 import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 interface IDataSelectorPanel {
     name: string;

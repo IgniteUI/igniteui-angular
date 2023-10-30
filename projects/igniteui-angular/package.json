@@ -73,10 +73,10 @@
         "hammerjs": "^2.0.8",
         "fflate": "^0.7.3",
         "tslib": "^2.3.0",
-        "igniteui-trial-watermark": "^1.0.3",
+        "igniteui-trial-watermark": "^3.0.2",
         "lodash-es": "^4.17.21",
         "uuid": "^9.0.0",
-        "igniteui-theming": "^3.0.4",
+        "igniteui-theming": "^3.3.0",
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
@@ -92,9 +92,7 @@
         "migrations": "./migrations/migration-collection.json",
         "packageGroup": [
             "igniteui-angular",
-            "@infragistics/igniteui-angular",
-            "igniteui-angular-i18n",
-            "@igniteui/angular-schematics"
+            "igniteui-angular-i18n"
         ]
     },
     "schematics": "./schematics/collection.json",
@@ -114,5 +112,6 @@
         "./themes": {
             "sass": "./lib/core/styles/themes/_index.scss"
         }
-    }
+    },
+    "sideEffects": false
 }

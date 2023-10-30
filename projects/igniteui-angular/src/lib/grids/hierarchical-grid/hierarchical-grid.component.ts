@@ -111,7 +111,17 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     @Input()
-    public data: any = [];
+    public get data(): any {
+        return this._data || [];
+    }
+
+    public set data(value: any) {
+        this._data = value;
+        if (this.hGrid) {
+            this.hGrid.data = this._data.childGridsData[this.layout.key];
+        }
+    }
+    
     /**
      * The index of the row.
      *
@@ -177,6 +187,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     public expanded = false;
+
+    private _data: any;
 
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,

@@ -3045,7 +3045,7 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button type="button" igxButton="raised" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>

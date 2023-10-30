@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { useAnimation } from '@angular/animations';
-import { HorizontalAlignment, IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent, PositionSettings, slideInTop, slideOutBottom, VerticalAlignment } from 'igniteui-angular';
+import { HorizontalAlignment, IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent, PositionSettings, VerticalAlignment } from 'igniteui-angular';
+import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
 
 @Component({

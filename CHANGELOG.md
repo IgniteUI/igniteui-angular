@@ -2,6 +2,49 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.0.0
+### General
+- `IgxCard`
+    - **Breaking Change** The `type` attribute has been deprecated and will be removed in a future version. The default view of the card component is now `outlined`. Users can switch to `elevated` view by adding the newly created `elevated` property to a card.
+- `standalone components` support is now official
+    - added `IGX_RADIO_GROUP_DIRECTIVES` for `IgxRadioGroupDirective` and `IgxRadioComponent`
+- `animations` are now imported from `igniteui-angular/animations`/`@infragistics/igniteui-angular/animations`
+- Tree-shaking of the product has been improved
+    - `igniteui-angular-i18n` is now tree-shakeable
+    - `igniteui-angular/animations` is now tree-shakeable
+    - `igniteui-angular` components have improved tree-shaking
+- DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
+- We're working on reducing the library size
+    - IgxRadioComponent has been reduced in half
+    - IgxSwitchComponent has been reduced in half
+
+## 16.1.4
+### New Features
+- `Themes`:
+    - **Experimental** - Added the ability to configure the base font-size used to calculate the rem values in all component themes. This allows for proper scaling of components when a different document font-size is used.
+
+    - Code example:
+
+    ```scss
+    // Configure the base font-size
+    @use 'igniteui-theming/sass/config' as * with (
+        $base-font-size: 10px // <-- 10px == 1rem
+    );
+
+    // Standard imports and theme declarations
+    @use 'igniteui-angular/src/lib/core/styles/themes' as *;
+
+    // This change also adds a new CSS variable `--ig-base-font-size`
+    // that you can use to configure your own stylesheets:
+    html {
+        font-size: var(--ig-base-font-size); // 10px
+    }
+
+    @include core();
+    @include typography();
+    @include theme();
+    ``` 
+
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
@@ -37,20 +80,15 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`:
     - Exposed `comboIgnoreDiacriticsFilter` filter function which normalizes diacritics to their base representation.
     When the combo components are configured with it, filtering for **"resume"** will match both **"resume"** and **"résumé"**.
+- `IgxCombo`, `IgxSimpleCombo`
+    - Added new property `displayValue` that returns array of display keys.
 - `IgxButtonGroup`:
     - Added `owner` to the `IButtonGroupEventArgs` to identify the emitting button group instance.
+    - **Breaking Change** Added the `selectionMode` property that sets the selection mode of the buttons in the `IgxButtonGroup`. Selection modes are `single`, `singleRequired` and `multi` as default is `single`.
+    - **Breaking Change** Deprecated the `multiSelection` property and all references have been migrated to `selectionMode="multi"`.
 - `Themes`:
     - Include a standalone theme for the `igxLabel` directive to allow usage with components outside the Input Group.
-
-### General
-- `IgxStepper`:
-    - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
-    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
-- `IgxCombo`, `IgxSimpleCombo`:
-    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
-- **Deprecation** - The `DisplayDensityToken` injection token has been deprecated. Consequently, the `displayDensity` input for all components injecting the `DisplayDensityToken` is also deprecated. Changing the size of the component(s) should be done via a new custom CSS property - `--ig-size`;
+- Changing the size of Ignite UI components can now be done via a new custom CSS property - `--ig-size` . The `DisplayDensityToken` injection token and consequently, the `displayDensity` inputs for all components will be deprecated in the next major version and it is recommended that they no longer be used for sizing components.
     - Code example:
     ```typescript
     // *.component.ts
@@ -76,9 +114,17 @@ All notable changes for each version of this project will be documented in this 
     }
     ```
 
-### New Features
-- `IgxCombo`, `IgxSimpleCombo`
-    - Added new property `displayValue` that returns array of display keys.
+### General
+- `IgxStepper`:
+    - **Breaking Change** The `IgxStepSubTitleDirective` has been renamed to `IgxStepSubtitleDirective`. Automatic migrations are available and will be applied on `ng update`.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
+    - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
+- `IgxCombo`, `IgxSimpleCombo`:
+    - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+- Improved tree-shaking support for the `@igniteui/material-icons-extended` package.
+- Improved tree-shaking support for the `igniteui-angular-i18n` package.
+- Improved tree-shaking support for all grids.
 
 ## 16.0.0
 

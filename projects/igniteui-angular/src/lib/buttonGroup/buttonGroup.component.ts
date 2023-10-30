@@ -42,12 +42,12 @@ let NEXT_ID = 0;
  * **Ignite UI for Angular Button Group** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup.html)
  *
- * The Ignite UI Button Group displays a group of buttons either vertically or horizontally.  The group supports
- * single, multiple and toggle selection.
+ * The Ignite UI Button Group displays a group of buttons either vertically or horizontally. The group supports
+ * single, multi and singleRequired selection.
  *
  * Example:
  * ```html
- * <igx-buttongroup multiSelection="true" [values]="fontOptions">
+ * <igx-buttongroup selectionMode="multi" [values]="fontOptions">
  * </igx-buttongroup>
  * ```
  * The `fontOptions` value shown above is defined as:
@@ -75,7 +75,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
-     *  <igx-buttongroup [id]="'igx-dialog-56'" [multiSelection]="!multi" [values]="alignOptions">
+     *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
      * ```
      */
     @HostBinding('attr.id')
@@ -96,7 +96,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  //..
      * ```
      *  ```html
-     * <igx-buttongroup [itemContentCssClass]="style1" [multiSelection]="!multi" [values]="alignOptions">
+     * <igx-buttongroup [itemContentCssClass]="style1" [selectionMode]="'multi'" [values]="alignOptions">
      * ```
      */
     @Input()
@@ -119,12 +119,46 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that enables selecting multiple buttons. By default, multi-selection is false.
+     * @deprecated in version 16.1.0. Set/Use selectionMode property instead.
+     *
+     * Enables selecting multiple buttons. By default, multi-selection is false.
+     */
+    @Input()
+    public get multiSelection() {
+        if (this.selectionMode === 'multi') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public set multiSelection(selectionMode: boolean) {
+        if (selectionMode) {
+            this.selectionMode = 'multi';
+        } else {
+            this.selectionMode = 'single';
+        }
+    }
+
+    /**
+     * An @Input property that get/set the selection mode 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
-     * <igx-buttongroup [multiSelection]="false" [alignment]="alignment"></igx-buttongroup>
+     * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
      * ```
      */
-    @Input() public multiSelection = false;
+    @Input()
+    public get selectionMode() {
+        return this._selectionMode;
+    }
+    public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
+        if (this.viewButtons && selectionMode !== this._selectionMode) {
+            this.buttons.forEach((b,i) => {
+                this.deselectButton(i);
+            });
+            this._selectionMode = selectionMode;
+        } else {
+            this._selectionMode = selectionMode;
+        }
+    }
 
     /**
      * An @Input property that allows setting the buttons in the button group.
@@ -149,7 +183,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  //..
      * ```
      * ```html
-     *  <igx-buttongroup [multiSelection]="false" [values]="cities"></igx-buttongroup>
+     *  <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
      * ```
      */
     @Input() public values: any;
@@ -157,7 +191,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
      * ```html
-     * <igx-buttongroup [disabled]="true" [multiSelection]="multi" [values]="fontOptions"></igx-buttongroup>
+     * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
      * ```
      */
     @Input()
@@ -182,7 +216,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * //..
      * ```
      * ```html
-     * <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment"></igx-buttongroup>
+     * <igx-buttongroup [selectionMode]="'single'" [values]="cities" [alignment]="alignment"></igx-buttongroup>
      * ```
      */
     @Input()
@@ -214,7 +248,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  //...
      * ```
      * ```html
-     * <igx-buttongroup #MyChild [multiSelection]="!multi" (selected)="selectedHandler($event)"></igx-buttongroup>
+     * <igx-buttongroup #MyChild [selectionMode]="'multi'" (selected)="selectedHandler($event)"></igx-buttongroup>
      * <igx-toast #toast>You have made a selection!</igx-toast>
      * ```
      */
@@ -232,7 +266,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  //...
      * ```
      * ```html
-     * <igx-buttongroup> #MyChild [multiSelection]="multi" (deselected)="deselectedHandler($event)"></igx-buttongroup>
+     * <igx-buttongroup> #MyChild [selectionMode]="'multi'" (deselected)="deselectedHandler($event)"></igx-buttongroup>
      * <igx-toast #toast>You have deselected a button!</igx-toast>
      * ```
      */
@@ -273,6 +307,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     private _isVertical: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
+    private _selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
 
     constructor(
         private _cdr: ChangeDetectorRef,
@@ -338,8 +373,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.values[indexInViewButtons].selected = true;
         }
 
-        // deselect other buttons if multiSelection is not enabled
-        if (!this.multiSelection && this.selectedIndexes.length > 1) {
+        // deselect other buttons if selectionMode is not multi
+        if (this.selectionMode !== 'multi' && this.selectedIndexes.length > 1) {
             this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
@@ -448,7 +483,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { cancel: false, owner: this, button, index };
 
-        if (!this.multiSelection) {
+        if (this.selectionMode !== 'multi') {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselected.emit({ cancel: false, owner: this, button: b, index: i });
@@ -462,9 +497,11 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 this.selectButton(index);
             }
         } else {
-            this.deselected.emit(args);
-            if(!args.cancel){
-                this.deselectButton(index);
+            if (this.selectionMode !== 'singleRequired') {
+                this.deselected.emit(args);
+                if(!args.cancel){
+                    this.deselectButton(index);
+                }
             }
         }
     }

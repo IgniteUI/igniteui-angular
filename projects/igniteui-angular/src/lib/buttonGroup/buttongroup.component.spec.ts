@@ -71,7 +71,7 @@ describe('IgxButtonGroup', () => {
         expect(instance.buttonGroup.id).toContain('igx-buttongroup-');
         expect(buttongroup.disabled).toBeFalsy();
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.horizontal);
-        expect(buttongroup.multiSelection).toBeFalsy();
+        expect(buttongroup.selectionMode).toBe('single');
         expect(buttongroup.itemContentCssClass).toBeUndefined();
         expect(buttongroup.selectedIndexes.length).toEqual(1);
         expect(buttongroup.selectedButtons.length).toEqual(1);
@@ -88,7 +88,7 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
         expect(buttongroup.disabled).toBeFalsy();
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.vertical);
-        expect(buttongroup.multiSelection).toBeTruthy();
+        expect(buttongroup.selectionMode).toBe('multi');
         expect(buttongroup.itemContentCssClass).toEqual('customContentStyle');
         expect(buttongroup.selectedIndexes.length).toEqual(0);
         expect(buttongroup.selectedButtons.length).toEqual(0);
@@ -183,6 +183,28 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.buttons[0].selected).toBe(true);
     });
 
+    it('should should reset its current selection state on selectionMode runtime change', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const buttonGroup = fixture.componentInstance.buttonGroup;
+
+        buttonGroup.selectionMode = 'multi';
+        fixture.detectChanges();
+
+        buttonGroup.selectButton(0);
+        buttonGroup.selectButton(1);
+        buttonGroup.selectButton(2);
+        fixture.detectChanges();
+
+        expect(buttonGroup.selectedButtons.length).toBe(3);
+
+        buttonGroup.selectionMode = 'single';
+        fixture.detectChanges();
+
+        expect(buttonGroup.selectedButtons.length).toBe(0);
+    });
+
    it('Button Group single selection', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
@@ -198,12 +220,32 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
     });
 
+    it('Button Group single required selection', () => {
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
+        fixture.detectChanges();
+        
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        buttongroup.selectionMode = 'singleRequired';
+        spyOn(buttongroup.deselected, 'emit');
+        
+        buttongroup.selectButton(0);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
+        
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
+        expect(buttongroup.deselected.emit).not.toHaveBeenCalled();
+    });
+
    it('Button Group multiple selection', () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
         const buttongroup = fixture.componentInstance.buttonGroup;
-        expect(buttongroup.multiSelection).toBeTruthy();
+        expect(buttongroup.selectionMode).toBe('multi');
         buttongroup.selectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(1);
         buttongroup.selectButton(2);
@@ -222,7 +264,7 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const buttongroup = fixture.componentInstance.buttonGroup;
-        expect(buttongroup.multiSelection).toBeTruthy();
+        expect(buttongroup.selectionMode).toBe('multi');
 
         UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
         expect(buttongroup.selectedButtons.length).toBe(1);
@@ -244,7 +286,7 @@ describe('IgxButtonGroup', () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
         expect(buttongroup.buttons.length).toBe(4);
 
-        expect(buttongroup.multiSelection).toBeTruthy();
+        expect(buttongroup.selectionMode).toBe('multi');
         buttongroup.selectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(1);
         buttongroup.selectButton(2);
@@ -262,12 +304,12 @@ describe('IgxButtonGroup', () => {
 
     it('Button Group - templated buttons with single selection', () => {
         const fixture = TestBed.createComponent(TemplatedButtonGroupComponent);
-        fixture.componentInstance.multiselection = false;
         fixture.detectChanges();
 
         const buttongroup = fixture.componentInstance.buttonGroup;
+        buttongroup.selectionMode = 'single';
         expect(buttongroup.buttons.length).toBe(4);
-        expect(buttongroup.multiSelection).toBeFalsy();
+        expect(buttongroup.selectionMode).toBe('single');
 
         buttongroup.selectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(1);
@@ -392,7 +434,7 @@ class InitButtonGroupComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-buttongroup [multiSelection]="true" itemContentCssClass="customContentStyle"
+    <igx-buttongroup [selectionMode]="'multi'" itemContentCssClass="customContentStyle"
         [values]="cities" [alignment]="alignment">
     </igx-buttongroup>
     `,
@@ -439,7 +481,7 @@ class InitButtonGroupWithValuesComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-buttongroup [multiSelection]="multiselection" [alignment]="alignment">
+    <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment">
         <button igxButton>Sofia</button>
         <button igxButton>London</button>
         <button igxButton>New York</button>
@@ -453,12 +495,11 @@ class TemplatedButtonGroupComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 
     public alignment = ButtonGroupAlignment.vertical;
-    public multiselection = true;
 }
 
 @Component({
     template: `
-    <igx-buttongroup [multiSelection]="multiselection" displayDensity="cosy">
+    <igx-buttongroup [selectionMode]="'multi'" displayDensity="cosy">
         <button igxButton displayDensity="compact">Sofia</button>
         <button igxButton>London</button>
     </igx-buttongroup>
