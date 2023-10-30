@@ -1,13 +1,13 @@
 import {
-  AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-  EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
-  OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-  SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
+    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
+    EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
+    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
+    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
 import { NgTemplateOutlet, NgIf } from '@angular/common';
 import {
-  AbstractControl, ControlValueAccessor, NgControl,
-  NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
+    AbstractControl, ControlValueAccessor, NgControl,
+    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
 
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
@@ -24,12 +24,12 @@ import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-  IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+    IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE
 } from '../input-group/public_api';
 import {
-  AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
-  OverlaySettings, PositionSettings
+    AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
+    OverlaySettings, PositionSettings
 } from '../services/public_api';
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
@@ -107,7 +107,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [hideOutsideDays]="true"></igx-date-range-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
 
     /**
@@ -279,8 +279,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
      * ``
      */
-     @Input()
-     public showWeekNumbers = false;
+    @Input({ transform: booleanAttribute })
+    public showWeekNumbers = false;
 
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
@@ -849,7 +849,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private updateCalendar(): void {
         if (!this.calendar) {
-             return;
+            return;
         }
         this.calendar.disabledDates = [];
         const minValue = this.parseMinValue(this.minValue);

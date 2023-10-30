@@ -6,7 +6,7 @@ import {
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    OnDestroy, Optional, QueryList
+    OnDestroy, Optional, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
@@ -52,10 +52,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * Sets the resource strings.
      * By default it uses EN resources.
      */
-   @Input()
-   public set resourceStrings(value: IInputResourceStrings) {
-       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-   }
+    @Input()
+    public set resourceStrings(value: IInputResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
     /**
      * Returns the resource strings.
@@ -111,7 +111,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public suppressInputAutofocus = false;
 
     /** @hidden */
@@ -467,7 +467,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                 .getPropertyValue('--theme')
                 .trim();
 
-            if(cssProp !== '') {
+            if (cssProp !== '') {
                 Promise.resolve().then(() => {
                     this._theme$.next(cssProp);
                     this.cdr.markForCheck();
