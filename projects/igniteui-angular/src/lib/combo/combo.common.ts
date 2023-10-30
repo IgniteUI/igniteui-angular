@@ -43,8 +43,8 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
-import { IComboResourceStrings } from '../core/i18n/combo-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -150,7 +150,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
      * ```html
-     * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
+     * <igx-combo [overlaySettings]="customOverlaySettings"></igx-combo>
      * ```
      *
      * ```typescript
@@ -467,9 +467,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
-        }
         return this._resourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
@@ -650,7 +647,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button class="combo__add-button">
+     *          <button type="button" igxButton="raised" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>
@@ -942,7 +939,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings;
+    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
@@ -1032,7 +1029,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens/closes the combo.
      *
      * ```html
-     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1052,7 +1049,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens the combo.
      *
      * ```html
-     * <button (click)="combo.open()">Open Combo</button>
+     * <button type="button" (click)="combo.open()">Open Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1070,7 +1067,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that closes the combo.
      *
      * ```html
-     * <button (click)="combo.close()">Close Combo</button>
+     * <button type="button" (click)="combo.close()">Close Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */

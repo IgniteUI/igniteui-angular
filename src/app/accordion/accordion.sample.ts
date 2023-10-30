@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IGX_ACCORDION_DIRECTIVES, IgxAccordionComponent, IgxButtonDirective, IgxSwitchComponent, slideInLeft, slideOutRight } from 'igniteui-angular';
+import { IGX_ACCORDION_DIRECTIVES, IgxAccordionComponent, IgxButtonDirective, IgxSwitchComponent } from 'igniteui-angular';
+import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 
 @Component({
     selector: 'app-accordion-sample',

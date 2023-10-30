@@ -2,11 +2,11 @@ import { Inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { noop } from 'rxjs';
-import { growVerIn, growVerOut } from '../animations/main';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
     constructor(@Inject(IgxAngularAnimationService) animationService: AnimationService) {

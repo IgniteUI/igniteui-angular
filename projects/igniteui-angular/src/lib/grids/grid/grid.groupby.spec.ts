@@ -712,6 +712,30 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
     }));
 
+    it('should update groupsRecords when groupingDone is emitted', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        let groupsRecordsLength;
+
+        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        grid.groupingDone.subscribe(() => {
+            groupsRecordsLength = grid.groupsRecords.length;
+        });
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        expect(groupsRecordsLength).toEqual(5);
+
+        grid.clearGrouping();
+        tick();
+        fix.detectChanges();
+        expect(groupsRecordsLength).toEqual(0);
+    }));
+
     it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
         const grid = fix.componentInstance.instance;
@@ -3986,7 +4010,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             [data]='data'>
             <igx-column [width]='width' [groupable]="true">
                 <ng-template igxCell>
-                    <button>Dummy button</button>
+                    <button type="button">Dummy button</button>
                 </ng-template>
             </igx-column>
         </igx-grid>

@@ -19,10 +19,10 @@ import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.d
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
-import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxFocusTrapDirective } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let DIALOG_ID = 0;
 /**
@@ -35,7 +35,7 @@ let DIALOG_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="form.open()">Show Dialog</button>
+ * <button type="button" igxButton (click)="form.open()">Show Dialog</button>
  * <igx-dialog #form title="Sign In" rightButtonLabel="OK">
  *   <div>
  *     <igx-input-group>
@@ -505,7 +505,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -527,7 +527,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -542,7 +542,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */

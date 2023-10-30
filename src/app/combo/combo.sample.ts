@@ -5,7 +5,8 @@ import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
 import { RemoteNWindService } from './remote-nwind.service';
-import { ButtonGroupAlignment, ConnectedPositioningStrategy, DisplayDensity, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, IChangeSwitchEventArgs, IComboFilteringOptions, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IForOfState, ISimpleComboSelectionChangingEventArgs, IgxButtonDirective, IgxButtonGroupComponent, IgxComboAddItemDirective, IgxComboComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxHintDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSimpleComboComponent, IgxSwitchComponent, IgxToastComponent, OverlaySettings, VerticalAlignment, scaleInCenter, scaleOutCenter } from 'igniteui-angular';
+import { ButtonGroupAlignment, ConnectedPositioningStrategy, DisplayDensity, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, IChangeCheckboxEventArgs, IComboFilteringOptions, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IForOfState, ISimpleComboSelectionChangingEventArgs, IgxButtonDirective, IgxButtonGroupComponent, IgxComboAddItemDirective, IgxComboComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxHintDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSimpleComboComponent, IgxSwitchComponent, IgxToastComponent, OverlaySettings, VerticalAlignment } from 'igniteui-angular';
+import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
 
 
 @Component({
@@ -239,7 +240,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.densityCombo.displayDensity = density;
     }
 
-    public changeFiltering(e: IChangeSwitchEventArgs) {
+    public changeFiltering(e: IChangeCheckboxEventArgs) {
         if (e.checked) {
             this.igxCombo.filterFunction = this.customFilterFunction;
             this.simpleCombo.filterFunction = this.customFilterFunction;
@@ -249,7 +250,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public changeFilteringKey(e: IChangeSwitchEventArgs) {
+    public changeFilteringKey(e: IChangeCheckboxEventArgs) {
         if (e.checked) {
             this.igxCombo.filteringOptions.filteringKey = 'region';
             this.simpleCombo.filteringOptions.filteringKey = 'region';

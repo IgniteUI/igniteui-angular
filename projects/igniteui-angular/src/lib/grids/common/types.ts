@@ -34,12 +34,12 @@ export interface ISelectionNode {
      */
     column: number;
     /**
-     * (Optional) 
+     * (Optional)
      * Additional layout information for multi-row selection nodes.
      */
     layout?: IMultiRowLayoutNode;
     /**
-     * (Optional) 
+     * (Optional)
      * Indicates if the selected node is a summary row.
      * This property is true if the selected row is a summary row; otherwise, it is false.
      */
@@ -99,4 +99,4 @@ export type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
  * Injection token for accessing the grid transaction object.
  * This allows injecting the grid transaction object into components or services.
  */
-export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
+export const IgxGridTransaction = /*@__PURE__*/new InjectionToken<string>('IgxGridTransaction');
