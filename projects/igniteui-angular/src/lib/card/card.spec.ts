@@ -24,6 +24,7 @@ describe('Card', () => {
 
     const classes = {
         outlined: `${baseClass}--outlined`,
+        elevated: `${baseClass}--elevated`,
         horizontal: `${baseClass}--horizontal`,
         header: {
             base: `${baseClass}-header`,
@@ -86,7 +87,8 @@ describe('Card', () => {
         expect(card.getAttribute('role')).toEqual('group');
 
         expect(card).toHaveClass(`${baseClass}`);
-        expect(card).not.toHaveClass(classes.outlined);
+        expect(card).toHaveClass(classes.outlined);
+        expect(card).not.toHaveClass(classes.elevated);
         expect(card).not.toHaveClass(classes.horizontal);
         expect(card.id).toContain(`${baseClass}-`);
     });
