@@ -151,7 +151,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {
         const field = dim.memberName;
-        const header = rowData.dimensionValues.get(field);
+        const header = rowData?.dimensionValues.get(field);
         const col = this._createColComponent(field, header, dim);
         return col;
     }
