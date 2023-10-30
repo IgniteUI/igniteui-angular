@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { useAnimation } from '@angular/animations';
-import { IgxBannerActionsDirective, IgxBannerComponent, IgxButtonDirective, IgxFlexDirective, IgxIconComponent, IgxLayoutDirective, IgxRippleDirective, growVerIn, growVerOut } from 'igniteui-angular';
+import { IgxBannerActionsDirective, IgxBannerComponent, IgxButtonDirective, IgxFlexDirective, IgxIconComponent, IgxLayoutDirective, IgxRippleDirective } from 'igniteui-angular';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 @Component({
     selector: 'app-banner-sample',

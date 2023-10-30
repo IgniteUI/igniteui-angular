@@ -63,8 +63,7 @@ import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
 import { IgxGridHeaderGroupComponent } from './headers/grid-header-group.component';
-import { IGridResourceStrings } from '../core/i18n/grid-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
@@ -172,6 +171,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 IgcTrialWatermark.register();
 
@@ -1726,9 +1726,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.GridResStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -2816,11 +2813,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
-
-    /**
-     * @hidden @internal
-     */
     public calcWidth: number;
     /**
      * @hidden @internal
@@ -3047,7 +3039,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _resourceStrings;
+    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
@@ -5762,7 +5754,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public showSnackbarFor(index: number) {
-        this.addRowSnackbar.actionText = index === -1 ? '' : this.snackbarActionText;
+        this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }

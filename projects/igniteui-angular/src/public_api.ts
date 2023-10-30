@@ -4,8 +4,9 @@
 
 /**
  * Animations
+ * MOVED TO igniteui-angular/animations
  */
-export * from './lib/animations/main';
+//export * from './lib/animations/main';
 
 /**
  * Directives
@@ -21,7 +22,7 @@ export * from './lib/directives/focus-trap/focus-trap.directive';
 export * from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
-export * from './lib/directives/radio/radio-group.directive';
+export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
@@ -110,7 +111,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 /**
  * i18n
  */
-export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
+export { igxI18N, IResourceStrings, getCurrentResourceStrings, changei18n } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { IComboResourceStrings } from './lib/core/i18n/combo-resources';

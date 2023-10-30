@@ -12,7 +12,6 @@ import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
 import { OverlayCancelableEventArgs, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { fadeIn } from '../../animations/main';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
@@ -20,6 +19,7 @@ import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
+import { fadeIn } from 'igniteui-angular/animations';
 
 /**
  * @hidden
