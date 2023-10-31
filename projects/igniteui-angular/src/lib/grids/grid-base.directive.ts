@@ -188,7 +188,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 /* blazorIndirectRender
    blazorComponent
-   omitModule */
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
