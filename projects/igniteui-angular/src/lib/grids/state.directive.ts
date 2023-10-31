@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
+import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector, Component } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -109,7 +109,7 @@ export class IgxGridStateDirective {
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
     private currGrid: GridType;
-    private _options: IGridStateOptions = {
+    protected _options: IGridStateOptions = {
         columns: true,
         filtering: true,
         advancedFiltering: true,
@@ -722,3 +722,18 @@ export class IgxGridStateDirective {
         return feature;
     }
 }
+
+
+
+@Component({
+    selector: 'igx-grid-state',
+    template: ``,
+    standalone: true
+})
+export class IgxGridStateComponent extends IgxGridStateDirective {
+        @Input('options')
+        public override get options(): IGridStateOptions {
+           return this._options;
+        }
+}
+
