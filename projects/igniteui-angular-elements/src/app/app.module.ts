@@ -22,7 +22,8 @@ import {
     IgxPivotGridComponent,
     IgxRowIslandComponent,
     IgxTreeGridComponent,
-    IgxPivotDataSelectorComponent
+    IgxPivotDataSelectorComponent,
+    IgxGridStateComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
@@ -88,6 +89,10 @@ export class AppModule {
 
     const actionStrip = createIgxCustomElement(IgxActionStripComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-action-strip", actionStrip);
+
+    const statePersistance = createIgxCustomElement(IgxGridStateComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-state", statePersistance);
+
     const editingActions = createIgxCustomElement(IgxGridEditingActionsComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-editing-actions", editingActions);
     const pinningActions = createIgxCustomElement(IgxGridPinningActionsComponent, { injector: this.injector, registerConfig });

@@ -58,6 +58,7 @@
             <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
         </igc-grid-toolbar-actions>
         </igc-grid-toolbar>
+        <igc-grid-state id="state"></igc-grid-state>
 
         <igc-column-group header="Test">
         <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false"></igc-column>
@@ -74,6 +75,8 @@
         <igc-paginator per-page="10"></igc-paginator>
     </igc-grid>
 
+    <button id="saveState">Save state</button>
+    <button id="restoreState">Restore</button>
     <button onclick="changeColumns()">Change columns</button>
     <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
     <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
@@ -165,7 +168,25 @@
             <igc-input .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
             </igc-input>
         `;
+
+        document.getElementById("saveState").addEventListener("click", saveState);
+        document.getElementById("restoreState").addEventListener("click", restoreState)
     });
+
+    function saveState() {
+        const stateComponent = document.getElementById('state');
+        const stateData = stateComponent.getState(true);
+        const stringData = JSON.stringify(stateData);
+        window.localStorage.setItem(`grid1-state`, stringData);
+    }
+
+    function restoreState() {
+        const stateComponent = document.getElementById('state');
+        const stateData = window.localStorage.getItem(`grid1-state`);
+        if (stateData) {
+            stateComponent.setState(stateData);
+        }
+    }
 
     function changeColumns() {
         let columns = [

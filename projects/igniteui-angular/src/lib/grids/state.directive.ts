@@ -724,7 +724,16 @@ export class IgxGridStateDirective {
 }
 
 
-
+/* blazorElement */
+/* mustUseNGParentAnchor */
+/* wcElementTag: igc-grid-state */
+/* blazorIndirectRender */
+/* contentParent: GridBaseDirective */
+/* jsonAPIManageItemInMarkup */
+/**
+ * State component description
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
+ */
 @Component({
     selector: 'igx-grid-state',
     template: ``,
