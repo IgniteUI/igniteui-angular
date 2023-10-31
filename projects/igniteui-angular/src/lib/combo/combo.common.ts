@@ -1294,11 +1294,17 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             return keys;
         }
 
-        // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => isNaNvalue(key)
-            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
-            : this.data.find(entry => entry[this.valueKey] === key))
-        .filter(e => e !== undefined);
+        return keys.map(key => {
+            if (this.valueKey === null || this.valueKey === undefined) {
+                return key
+            }
+
+            const item = isNaNvalue(key)
+                ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
+                : this.data.find(entry => entry[this.valueKey] === key);
+
+            return item ?? { [this.valueKey]: key };
+        });
     }
 
     protected checkMatch(): void {

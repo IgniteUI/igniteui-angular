@@ -230,6 +230,8 @@ describe('IgxSimpleCombo', () => {
             combo.select(combo.data[1]);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue: undefined,
+                newValue: newSelection[0],
                 oldSelection,
                 newSelection: newSelection[0],
                 owner: combo,
@@ -242,6 +244,8 @@ describe('IgxSimpleCombo', () => {
             combo.select(combo.data[0]);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue: oldSelection[0],
+                newValue: newSelection[0],
                 oldSelection: oldSelection[0],
                 newSelection: newSelection[0],
                 owner: combo,
@@ -262,7 +266,9 @@ describe('IgxSimpleCombo', () => {
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             const selectionSpy = spyOn(combo.selectionChanging, 'emit');
             const expectedResults: ISimpleComboSelectionChangingEventArgs = {
-                newSelection: combo.data[0][combo.valueKey],
+                newValue: combo.data[0][combo.valueKey],
+                oldValue: undefined,
+                newSelection: combo.data[0],
                 oldSelection: undefined,
                 owner: combo,
                 displayText: `${combo.data[0][combo.displayKey]}`,
@@ -274,8 +280,10 @@ describe('IgxSimpleCombo', () => {
             combo.select(combo.data[0][combo.valueKey]);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             Object.assign(expectedResults, {
+                newValue: undefined,
+                oldValue: combo.data[0][combo.valueKey],
                 newSelection: undefined,
-                oldSelection: combo.data[0][combo.valueKey],
+                oldSelection: combo.data[0],
                 displayText: ''
             });
             combo.deselect();
