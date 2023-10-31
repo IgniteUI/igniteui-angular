@@ -299,7 +299,7 @@ describe('IgxSimpleCombo', () => {
             combo.data = data;
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
-            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.newSelection = []);
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.newValue = []);
             const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value']);
             combo.comboInput = comboInput;
             // No items are initially selected
@@ -1807,7 +1807,7 @@ describe('IgxSimpleCombo', () => {
 
                 expect(combo.displayValue).toEqual([]);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual([]);
+                expect(combo.value).toEqual(['']);
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
@@ -1902,7 +1902,7 @@ describe('IgxSimpleCombo', () => {
 
                 expect(combo.displayValue).toEqual([]);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual([]);
+                expect(combo.value).toEqual(['']);
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
@@ -2057,7 +2057,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect(combo.selection.length).toEqual(0);
+            expect(combo.selection.length).toEqual(1);
             expect(combo.value.length).toEqual(1);
             expect(combo.displayValue).toEqual([`${selectedItem[combo.displayKey]}`]);
             expect(combo.value).toEqual([selectedItem[combo.valueKey]]);
@@ -2071,7 +2071,7 @@ describe('IgxSimpleCombo', () => {
             // select item that is not present in the data source yet
             combo.select(15);
 
-            expect(combo.selection.length).toEqual(0);
+            expect(combo.selection.length).toEqual(1);
             expect(combo.value.length).toEqual(1);
             expect(combo.displayValue).toEqual([]);
 
