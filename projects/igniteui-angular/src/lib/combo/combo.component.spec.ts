@@ -61,7 +61,7 @@ const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -482,9 +482,11 @@ fdescribe('igxCombo', () => {
             combo.displayKey = 'city';
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+            const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+
             let oldSelection = [];
             let newSelection = [combo.data[0], combo.data[1], combo.data[2]];
-            const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+            combo.select(newSelection.map(e => e[combo.valueKey]));
             const expectedResults: IComboSelectionChangingEventArgs = {
                 newValue: newSelection.map(e => e[combo.valueKey]),
                 oldValue: [],
@@ -497,33 +499,34 @@ fdescribe('igxCombo', () => {
                 displayText: `${newSelection.map(entry => entry[combo.displayKey]).join(', ')}`,
                 cancel: false
             };
-            combo.select(newSelection.map(e => e[combo.valueKey]));
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+
             oldSelection = [...newSelection];
             newSelection = [combo.data[1], combo.data[2]];
             combo.deselect([combo.data[0][combo.valueKey]]);
             Object.assign(expectedResults, {
                 newValue: newSelection.map(e => e[combo.valueKey]),
                 oldValue: oldSelection.map(e => e[combo.valueKey]),
-                newSelection: newSelection,
+                newSelection,
                 oldSelection,
                 added: [],
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
                 removed: [combo.data[0][combo.valueKey]]
             });
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+
             oldSelection = [...newSelection];
             newSelection = [combo.data[4], combo.data[5], combo.data[6]];
-            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+            combo.select(newSelection.map(e => e[combo.valueKey]), true);
             Object.assign(expectedResults, {
                 newValue: newSelection.map(e => e[combo.valueKey]),
                 oldValue: oldSelection.map(e => e[combo.valueKey]),
-                newSelection: newSelection,
+                newSelection,
                 oldSelection,
                 added: newSelection.map(e => e[combo.valueKey]),
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
-                removed: oldSelection
+                removed: oldSelection.map(e => e[combo.valueKey])
             });
-            combo.select(newSelection.map(e => e[combo.valueKey]), true);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
         });
         it('should handle select/deselect ALL items', () => {
@@ -1366,9 +1369,9 @@ fdescribe('igxCombo', () => {
                 expect(combo.value).toEqual([]);
 
                 // current combo data - id: 0 - 9
-                // select item that is not present in the data source yet
+                // select item that is not present in the data source yet should be added as partial item
                 combo.select([9, 19]);
-                expect(combo.selection.length).toEqual(1);
+                expect(combo.selection.length).toEqual(2);
                 expect(combo.value.length).toEqual(2);
 
                 const firstItem = combo.data[combo.data.length - 1];
