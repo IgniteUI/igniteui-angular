@@ -183,18 +183,3 @@
 .scrollContainer{
     overflow: auto;
 }
-
-.dragGhost {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: rem(180px);
-    color: black;
-    background-color: yellow;
-    /*border-color: gray;*/
-    border: 1px solid gray;
-    font-size: rem(13px);
-    padding: rem(8px);
-    border-radius: rem(4px);
-}
