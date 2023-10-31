@@ -1022,6 +1022,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
+        if (!node) {
+            return;
+        }
         const document = node.getRootNode() as Document | ShadowRoot;
         const activeElement = document.activeElement as HTMLElement;
 
