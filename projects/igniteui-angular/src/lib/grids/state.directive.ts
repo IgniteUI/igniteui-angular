@@ -16,7 +16,7 @@ import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -465,7 +465,7 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        private viewRef: ViewContainerRef, private envInjector: EnvironmentInjector,  private injector: Injector) { }
+        protected viewRef: ViewContainerRef, protected envInjector: EnvironmentInjector,  protected injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
@@ -740,6 +740,16 @@ export class IgxGridStateDirective {
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateDirective {
+
+    constructor(
+        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
+        protected override viewRef: ViewContainerRef, protected  override envInjector: EnvironmentInjector,
+        protected override injector: Injector,
+        ) {
+            console.log(api.grid);
+            super(api.grid, viewRef, envInjector, injector);
+        }
+
         @Input('options')
         public override get options(): IGridStateOptions {
            return this._options;

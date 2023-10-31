@@ -184,7 +184,8 @@
         const stateComponent = document.getElementById('state');
         const stateData = window.localStorage.getItem(`grid1-state`);
         if (stateData) {
-            stateComponent.setState(stateData);
+            const obj = JSON.parse(stateData);
+            stateComponent.setState(obj);
         }
     }
 
