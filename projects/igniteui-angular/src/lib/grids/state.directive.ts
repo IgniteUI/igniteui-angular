@@ -99,6 +99,9 @@ interface Feature {
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule */
 @Directive({
     selector: '[igxGridState]',
     standalone: true

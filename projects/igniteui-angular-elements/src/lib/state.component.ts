@@ -1,5 +1,6 @@
 import { Input, Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
-import { GridServiceType, IGX_GRID_SERVICE_BASE, IGridStateOptions, IgxGridStateDirective } from 'igniteui-angular';
+import {IgxGridStateDirective, IGridStateOptions } from "../../../igniteui-angular/src/lib/grids/state.directive";
+import { IGX_GRID_SERVICE_BASE, GridServiceType}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 
 /* blazorElement */
 /* mustUseNGParentAnchor */
@@ -7,7 +8,6 @@ import { GridServiceType, IGX_GRID_SERVICE_BASE, IGridStateOptions, IgxGridState
 /* blazorIndirectRender */
 /* contentParent: GridBaseDirective */
 /* jsonAPIManageItemInMarkup */
-
 /**
  * State component description
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
