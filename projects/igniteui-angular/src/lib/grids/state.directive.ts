@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector, Component } from '@angular/core';
+import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -16,7 +16,7 @@ import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IPinningConfig } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -722,37 +722,3 @@ export class IgxGridStateDirective {
         return feature;
     }
 }
-
-
-/* blazorElement */
-/* mustUseNGParentAnchor */
-/* wcElementTag: igc-grid-state */
-/* blazorIndirectRender */
-/* contentParent: GridBaseDirective */
-/* jsonAPIManageItemInMarkup */
-/**
- * State component description
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
- */
-@Component({
-    selector: 'igx-grid-state',
-    template: ``,
-    standalone: true
-})
-export class IgxGridStateComponent extends IgxGridStateDirective {
-
-    constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
-        protected override viewRef: ViewContainerRef, protected  override envInjector: EnvironmentInjector,
-        protected override injector: Injector,
-        ) {
-            console.log(api.grid);
-            super(api.grid, viewRef, envInjector, injector);
-        }
-
-        @Input('options')
-        public override get options(): IGridStateOptions {
-           return this._options;
-        }
-}
-

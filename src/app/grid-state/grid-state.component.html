@@ -10,12 +10,11 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(grid)"></ng-container>
-                <igx-grid [id]="gridId" #grid columnSelection="multiple" displayDensity="cosy"
+                <igx-grid [id]="gridId" #grid columnSelection="multiple" [igxGridState]="options" displayDensity="cosy"
                     width="1200px" height="550px" [autoGenerate]="false" [data]="localData" primaryKey="EmployeeID"
                     [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
                     [filterMode]="'excelStyleFilter'" displayDensity="cosy" cellSelection="multiple"
                     rowSelection="multiple" (columnInit)="onColumnInit($event)">
-                    <igx-grid-state [options]="options"></igx-grid-state>
                     <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>

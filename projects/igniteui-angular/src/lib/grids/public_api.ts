@@ -10,7 +10,7 @@ import { IGX_GRID_HEADERS_DIRECTIVES } from './headers/public_api';
 import { IgxDragIndicatorIconDirective, IgxRowDragGhostDirective } from './row-drag.directive';
 import { IgxRowDirective } from './row.directive';
 import { IGX_GRID_SELECTION_DIRECTIVES } from './selection/public_api';
-import { IgxGridStateComponent, IgxGridStateDirective } from './state.directive';
+import { IgxGridStateDirective } from './state.directive';
 import { IGX_GRID_TOOLBAR_DIRECTIVES } from './toolbar/public_api';
 
 export { IgxRowDirective } from './row.directive';
@@ -82,7 +82,6 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,
-    IgxGridStateComponent,
     ...IGX_GRID_HEADERS_DIRECTIVES,
     ...IGX_GRID_COLUMN_DIRECTIVES,
     ...IGX_GRID_VALIDATION_DIRECTIVES,

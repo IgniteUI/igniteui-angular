@@ -16,7 +16,7 @@ import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/a
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
-import { IgxGridStateComponent } from '../../../igniteui-angular/src/lib/grids/state.directive';
+import { IgxGridStateComponent } from '../lib/state.component';
 
 export const registerComponents = [
     IgxGridComponent,

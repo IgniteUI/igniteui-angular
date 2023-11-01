@@ -22,8 +22,7 @@ import {
     IgxPivotGridComponent,
     IgxRowIslandComponent,
     IgxTreeGridComponent,
-    IgxPivotDataSelectorComponent,
-    IgxGridStateComponent
+    IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
@@ -33,6 +32,7 @@ import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.in
 
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
+import { IgxGridStateComponent } from '../lib/state.component';
 
 @NgModule({
   imports: [
