@@ -82,7 +82,7 @@
 
     %igx-avatar-display {
         @include sizable();
-        --component-size: var(--ig-size, var-get($theme, 'default-size'));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         position: relative;
         display: inline-flex;

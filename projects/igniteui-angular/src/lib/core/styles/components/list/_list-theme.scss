@@ -281,7 +281,7 @@
     %igx-list {
         @include sizable();
 
-        --component-size: var(--ig-size, var-get($theme, 'default-size'));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --list-size: var(--component-size);
         position: relative;
         display: flex;
