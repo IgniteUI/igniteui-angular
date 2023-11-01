@@ -456,7 +456,6 @@
 
     %igx-button-display {
         @include sizable();
-        --component-size: var(--ig-size, #{var-get($flat-theme, 'default-size')});
 
         position: relative;
         display: inline-flex;
@@ -526,6 +525,7 @@
     }
 
     %igx-button--flat {
+        --component-size: var(--ig-size, #{var-get($flat-theme, 'default-size')});
         background: var-get($flat-theme, 'background');
         color: var-get($flat-theme, 'foreground');
         border-radius: var-get($flat-theme, 'border-radius');
@@ -566,6 +566,7 @@
     }
 
     %igx-button--outlined {
+        --component-size: var(--ig-size, #{var-get($outlined-theme, 'default-size')});
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
@@ -668,6 +669,7 @@
     }
 
     %igx-button--raised {
+        --component-size: var(--ig-size, #{var-get($raised-theme, 'default-size')});
         color: var-get($raised-theme, 'foreground');
         background: var-get($raised-theme, 'background');
         box-shadow: $raised-shadow;
@@ -774,6 +776,7 @@
     }
 
     %igx-button--fab {
+        --component-size: var(--ig-size, #{var-get($fab-theme, 'default-size')});
         padding-block: pad-block(
             map.get($button-floating-padding-block, 'compact'),
             map.get($button-floating-padding-block, 'cosy'),
@@ -880,6 +883,7 @@
     }
 
     %igx-button--icon {
+        --component-size: var(--ig-size, #{var-get($icon-theme, 'default-size')});
         width: var-get($icon-theme, 'size');
         height: var-get($icon-theme, 'size');
         min-width: unset;
