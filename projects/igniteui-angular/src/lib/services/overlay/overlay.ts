@@ -436,7 +436,7 @@ export class IgxOverlayService implements OnDestroy {
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
-            document,
+            this._document,
             true,
             info.settings.target);
         this.addModalClasses(info);
