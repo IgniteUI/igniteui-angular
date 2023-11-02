@@ -804,7 +804,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent,
-                    IgxGridFixedContainerHeightComponent
+                    IgxGridFixedContainerHeightComponent,
+                    IgxGridColumnHeaderAutoSizeComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -2918,9 +2919,6 @@ export class IgxGridDefaultRenderingComponent {
       ></igx-column>
     </igx-grid>
     </div>`,
-    standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
-
 })
 export class IgxGridColumnHeaderAutoSizeComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
