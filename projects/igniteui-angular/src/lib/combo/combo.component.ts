@@ -431,19 +431,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = diffInSets(this.selectionService.get(this.id), newSelection);
-        const added = diffInSets(newSelection, this.selectionService.get(this.id));
-        const newValueAsArray = Array.from(newSelection);
-        const oldValueAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const newItems = this.convertKeysToItems(newValueAsArray);
-        const oldItems = this.convertKeysToItems(oldValueAsArray);
-        const displayText = this.createDisplayText(this.convertKeysToItems(newValueAsArray), oldValueAsArray);
+    protected setSelection(selection: Set<any>, event?: Event): void {
+        const currentSelection = this.selectionService.get(this.id);
+        const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
+        const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
+        const newValue = Array.from(selection);
+        const oldValue = Array.from(currentSelection || []);
+        const newSelection = this.convertKeysToItems(newValue);
+        const oldSelection = this.convertKeysToItems(oldValue);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newValue), oldValue);
         const args: IComboSelectionChangingEventArgs = {
-            newValue: newValueAsArray,
-            oldValue: oldValueAsArray,
-            newSelection: newItems,
-            oldSelection: oldItems,
+            newValue,
+            oldValue,
+            newSelection,
+            oldSelection,
             added,
             removed,
             event,
@@ -462,7 +463,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             }
             this._onChangeCallback(args.newValue);
         } else if (this.isRemote) {
-            this.registerRemoteEntries(args.added, false);
+            this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
     }
 

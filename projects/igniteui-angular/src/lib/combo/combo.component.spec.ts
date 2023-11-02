@@ -449,7 +449,7 @@ describe('igxCombo', () => {
                 oldValue: [],
                 newSelection: [combo.data[0]],
                 oldSelection: [],
-                added: [combo.data[0][combo.valueKey]],
+                added: [combo.data[0]],
                 removed: [],
                 event: undefined,
                 owner: combo,
@@ -465,7 +465,7 @@ describe('igxCombo', () => {
                 oldSelection: [combo.data[0]],
                 added: [],
                 displayText: '',
-                removed: [combo.data[0][combo.valueKey]]
+                removed: [combo.data[0]]
             });
             combo.deselect([combo.data[0][combo.valueKey]]);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
@@ -492,7 +492,7 @@ describe('igxCombo', () => {
                 oldValue: [],
                 newSelection: newSelection,
                 oldSelection,
-                added: newSelection.map(e => e[combo.valueKey]),
+                added: newSelection,
                 removed: [],
                 event: undefined,
                 owner: combo,
@@ -511,7 +511,7 @@ describe('igxCombo', () => {
                 oldSelection,
                 added: [],
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
-                removed: [combo.data[0][combo.valueKey]]
+                removed: [combo.data[0]]
             });
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
 
@@ -523,9 +523,9 @@ describe('igxCombo', () => {
                 oldValue: oldSelection.map(e => e[combo.valueKey]),
                 newSelection,
                 oldSelection,
-                added: newSelection.map(e => e[combo.valueKey]),
+                added: newSelection,
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
-                removed: oldSelection.map(e => e[combo.valueKey])
+                removed: oldSelection
             });
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
         });
@@ -2013,7 +2013,7 @@ describe('igxCombo', () => {
                         oldValue: [],
                         newSelection: [selectedItem_1.value],
                         oldSelection: [],
-                        added: [selectedItem_1.value[combo.valueKey]],
+                        added: [selectedItem_1.value],
                         removed: [],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
@@ -2034,7 +2034,7 @@ describe('igxCombo', () => {
                         oldValue: [selectedItem_1.value[combo.valueKey]],
                         newSelection: [selectedItem_1.value, selectedItem_2.value],
                         oldSelection: [selectedItem_1.value],
-                        added: [selectedItem_2.value[combo.valueKey]],
+                        added: [selectedItem_2.value],
                         removed: [],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
@@ -2056,7 +2056,7 @@ describe('igxCombo', () => {
                         newSelection: [selectedItem_2.value],
                         oldSelection: [selectedItem_1.value, selectedItem_2.value],
                         added: [],
-                        removed: [unselectedItem.value[combo.valueKey]],
+                        removed: [unselectedItem.value],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
                         displayText: selectedItem_2.value[combo.valueKey],
