@@ -19,7 +19,7 @@ All notable changes for each version of this project will be documented in this 
     - IgxSwitchComponent has been reduced in half
 - `IgxCombo`
     - `IComboSelectionChangingEventArgs` exposes two new properties - `newValue` and `oldValue`. When combo's `valueKey` is set the keys of the items are committed in both. When combo's `valueKey` is not set the entire items are committed. _Note: when combo is working with remote data and a primary key has been set for the selected items that are not currently part of the combo view, will be emitted a partial item data object_
-    - **Breaking Change** - `IComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection` and `newSelection` collections no longer consist of the keys of the selected items when the combo has set a primaryKey, but now in any case the item data is emitted.
+    - **Breaking Change** - `IComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection`, `newSelection`, `added` and `removed` collections no longer consist of the keys of the selected items when the combo has set a primaryKey, but now in any case the item data is emitted.
     When the combo is working with remote data and a primary key has been set for the selected items that are not currently part of the combo view, will be emitted a partial item data object.
 - `IgxSimpleCombo`
     - **Breaking Change** - `ISimpleComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection` and `newSelection` collections no longer consist of the key of the selected item when the combo has set a primaryKey, but now in any case the item data is emitted.
