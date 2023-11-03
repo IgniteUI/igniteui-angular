@@ -23,7 +23,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -238,6 +238,40 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
+     * An @Ouput property that emits an event before selecting a button.
+     * ```typescript
+     * @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public selectedHandler(buttongroup) {
+     *     this.toast.open()
+     * }
+     * ```
+     * ```html
+     * <igx-buttongroup #MyChild (selecting)="selectingHandler($event)"></igx-buttongroup>
+     * <igx-toast #toast>You are currently selecting a button.</igx-toast>
+     * ```
+     */
+    @Output()
+    public selecting = new EventEmitter<IButtonGroupBeforeEventArgs>();
+
+    /**
+     * An @Ouput property that emits an event before deselecting a button.
+     * ```typescript
+     * @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public selectedHandler(buttongroup) {
+     *     this.toast.open()
+     * }
+     * ```
+     * ```html
+     * <igx-buttongroup #MyChild (selecting)="deselectingHandler($event)"></igx-buttongroup>
+     * <igx-toast #toast>You are currently deselecting a button.</igx-toast>
+     * ```
+     */
+    @Output()
+    public deselecting = new EventEmitter<IButtonGroupBeforeEventArgs>();
+
+    /**
      * An @Ouput property that emits an event when a button is selected.
      * ```typescript
      * @ViewChild("toast")
@@ -253,7 +287,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public selected = new EventEmitter<IButtonGroupEventArgs>();
+    public selected = new EventEmitter<IButtonGroupAfterEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
@@ -271,7 +305,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public deselected = new EventEmitter<IButtonGroupEventArgs>();
+    public deselected = new EventEmitter<IButtonGroupAfterEventArgs>();
 
     @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
     @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
@@ -481,29 +515,43 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public _clickHandler(index: number) {
         const button = this.buttons[index];
-        const args: IButtonGroupEventArgs = { owner: this, button, index };
+        const beforeArgs: IButtonGroupBeforeEventArgs = { cancel: false, owner: this, button, index };
+        const afterArgs: IButtonGroupAfterEventArgs = { owner: this, button, index };
 
         if (this.selectionMode !== 'multi') {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
+                    this.deselecting.emit({ cancel: false, owner: this, button: b, index: i });
                     this.deselected.emit({ owner: this, button: b, index: i });
                 }
             });
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selectButton(index);
-            this.selected.emit(args);
+            this.selecting.emit(beforeArgs);
+            if (!beforeArgs.cancel) {
+                this.selectButton(index);
+                this.selected.emit(afterArgs);
+            }
         } else {
             if (this.selectionMode !== 'singleRequired') {
-                this.deselectButton(index);
-                this.deselected.emit(args);
+                this.deselecting.emit(beforeArgs);
+                if (!beforeArgs.cancel) {
+                    this.deselectButton(index);
+                    this.deselected.emit(afterArgs);
+                }
             }
         }
     }
 }
 
-export interface IButtonGroupEventArgs extends IBaseEventArgs {
+export interface IButtonGroupBeforeEventArgs extends IBaseEventArgs, CancelableEventArgs {
+    owner: IgxButtonGroupComponent;
+    button: IgxButtonDirective;
+    index: number;
+}
+
+export interface IButtonGroupAfterEventArgs extends IBaseEventArgs {
     owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;

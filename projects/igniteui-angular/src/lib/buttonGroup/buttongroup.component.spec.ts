@@ -44,7 +44,7 @@ class Button {
 }
 
 
-describe('IgxButtonGroup', () => {
+fdescribe('IgxButtonGroup', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -94,6 +94,54 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
+    it('should fire the selecting event when a button is being selected by user interaction, not on initial or programmatic selection', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        spyOn(btnGroupInstance.selecting, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selecting.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].select();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selecting.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.selecting.emit).toHaveBeenCalled();
+    });
+
+    it('should fire the deselecting event when a button is being deselected by user interaction, not on programmatic deselection', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        btnGroupInstance.buttons[0].select();
+        btnGroupInstance.buttons[1].select();
+        spyOn(btnGroupInstance.deselecting, 'emit');
+
+        btnGroupInstance.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselecting.emit).not.toHaveBeenCalled();
+
+        btnGroupInstance.buttons[1].deselect();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.deselecting.emit).not.toHaveBeenCalled();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+
+        expect(btnGroupInstance.deselecting.emit).toHaveBeenCalled();
+    });
+
     it('should fire the selected event when a button is selected by user interaction, not on initial or programmatic selection', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
@@ -140,6 +188,47 @@ describe('IgxButtonGroup', () => {
         button.click();
 
         expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
+    });
+
+    it('should not select the button on click if selecting event is canceled ', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        fixture.detectChanges();
+
+        btnGroupInstance.buttons[1].select();
+        fixture.detectChanges();
+
+        btnGroupInstance.selecting.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.buttons[0].selected).toBe(false);
+    });
+
+    it('should not deselect the button on click if deselecting event is canceled ', () => {
+        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        fixture.detectChanges();
+
+        btnGroupInstance.deselecting.subscribe((e) => {
+            e.cancel = true;
+        });
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.nativeElement.querySelector('button');
+        button.click();
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.buttons[0].selected).toBe(true);
     });
 
     it('should should reset its current selection state on selectionMode runtime change', () => {

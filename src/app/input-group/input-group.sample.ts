@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from
 import { NgIf, NgFor } from '@angular/common';
 
 import { defineComponents, IgcInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
-import { ButtonGroupAlignment, DisplayDensity, DisplayDensityToken, IButtonGroupEventArgs, IDisplayDensityOptions, IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxInputGroupType, IgxMaskDirective, IgxSwitchComponent } from 'igniteui-angular';
+import { ButtonGroupAlignment, DisplayDensity, DisplayDensityToken, IButtonGroupAfterEventArgs, IDisplayDensityOptions, IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxInputGroupType, IgxMaskDirective, IgxSwitchComponent } from 'igniteui-angular';
 
 defineComponents(IgcInputComponent, IgcIconComponent);
 
@@ -126,11 +126,11 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
         this.TOKEN);
     }
 
-    public selectDensity(event: IButtonGroupEventArgs) {
+    public selectDensity(event: IButtonGroupAfterEventArgs) {
         this.density = this.displayDensities[event.index].label as DisplayDensity;
     }
 
-    public selectInputType(event: IButtonGroupEventArgs) {
+    public selectInputType(event: IButtonGroupAfterEventArgs) {
         const currentType = this.inputTypes[event.index].type;
         this.inputType = currentType;
         this.igcInput.nativeElement.removeAttribute('outlined');

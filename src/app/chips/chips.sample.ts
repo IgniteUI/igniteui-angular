@@ -21,7 +21,7 @@ import {
     ButtonGroupAlignment,
     IDisplayDensityOptions,
     DisplayDensityToken,
-    IButtonGroupEventArgs
+    IButtonGroupAfterEventArgs
 } from 'igniteui-angular';
 
 interface Selection {
@@ -162,7 +162,7 @@ export class ChipsSampleComponent implements OnInit {
     constructor(public cdr: ChangeDetectorRef, @Inject(DisplayDensityToken)
     public displayDensityOptions: IDisplayDensityOptions,) { }
 
-    public selectDensity(event: IButtonGroupEventArgs) {
+    public selectDensity(event: IButtonGroupAfterEventArgs) {
         this.density = this.displayDensities[event.index].label as DisplayDensity;
     }
 
