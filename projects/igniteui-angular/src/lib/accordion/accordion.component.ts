@@ -281,7 +281,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 p.collapsed = true;
             }
         });
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 
     private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {

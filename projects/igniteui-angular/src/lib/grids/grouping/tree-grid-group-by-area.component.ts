@@ -42,7 +42,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     public set hideGroupedColumns(value: boolean) {
-        if (this.grid.columns && this.expressions) {
+        if (this.grid?.columns && this.expressions) {
             this.setColumnsVisibility(value);
         }
 
