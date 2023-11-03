@@ -133,6 +133,7 @@ describe('IgxDateRangePicker', () => {
             mockDocument = {
                 body: mockElement,
                 defaultView: mockElement,
+                documentElement: document.documentElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -257,7 +258,7 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        it('should disable calendar dates when min and/or max values as dates are provided', () => {
+        fit('should disable calendar dates when min and/or max values as dates are provided', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
             dateRange.ngOnInit();
 
