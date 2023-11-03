@@ -5439,6 +5439,56 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(applyButton);
         }));
 
+        it('Should be able to navigate inside the search list items', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+
+            // we expect only the first list item to be active when the list is focused
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on arrow down the second item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeFalse();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
+            
+            // on arrow up the first item should be active again
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on end the last item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
+            fix.detectChanges();
+            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
+
+            // on home the first item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('home', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+
+            // on space key on the first item (select all) all the checkbox should deselect
+            let checkboxes = list.querySelectorAll('igx-checkbox');
+            let checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
+            checkboxesStatus.forEach(status => {
+                expect(status).toBeTrue();
+            });
+            UIInteractions.triggerKeyDownEvtUponElem('space', list, true);
+            fix.detectChanges();
+            checkboxes = list.querySelectorAll('igx-checkbox');
+            checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
+            checkboxesStatus.forEach(status => {
+                expect(status).toBeFalse();
+            });
+        }));
+
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
             const totalListItems = [];
 
