@@ -437,7 +437,7 @@ export var registerConfig = [
     ],
     contentQueries: [],
     additionalProperties: [{ name: "grid", writable: true }],
-    methods: ["getState", "setState"],
+    methods: ["applyState", "getState"],
   },
   {
     component: IgxGridToolbarActionsComponent,

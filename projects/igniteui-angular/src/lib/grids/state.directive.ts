@@ -495,6 +495,7 @@ export class IgxGridStateDirective {
         return state;
     }
 
+    /* blazorSuppress */
     /**
      * Restores grid features' state based on the IGridState object passed as an argument.
      *
