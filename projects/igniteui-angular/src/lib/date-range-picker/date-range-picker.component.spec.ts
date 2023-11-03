@@ -256,7 +256,7 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        fit('should disable calendar dates when min and/or max values as dates are provided', () => {
+        it('should disable calendar dates when min and/or max values as dates are provided', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
             dateRange.ngOnInit();
 
