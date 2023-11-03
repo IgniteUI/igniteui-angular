@@ -408,7 +408,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input({ transform: booleanAttribute })
     public get isOpen() {
-        return !this.toggleRef?.collapsed;
+        return this.toggleRef ? !this.toggleRef.collapsed : false;
     }
     public set isOpen(value: boolean) {
         if (value !== this.isOpen) {
