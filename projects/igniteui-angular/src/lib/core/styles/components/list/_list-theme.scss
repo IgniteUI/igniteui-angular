@@ -280,6 +280,10 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
+        
+        &:focus-visible {
+            outline-style: none;
+        }
     }
 
     %igx-list--empty {
@@ -358,6 +362,12 @@
                     color: var-get($theme, 'item-thumbnail-color-hover')
                 }
             }
+        }
+    }
+
+    %igx-list-item-base--active {
+        %igx-list-item-content {
+            @extend %igx-list-item-content--active;
         }
     }
 

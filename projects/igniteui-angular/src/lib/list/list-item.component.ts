@@ -129,6 +129,8 @@ export class IgxListItemComponent implements IListChild {
      */
     private lastPanDir = IgxListPanState.NONE;
 
+    private _role: string = '';
+
     /**
      * Gets the `panState` of a `list item`.
      * ```typescript
@@ -259,7 +261,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     * Gets the `role` attribute of the `list item`.
+     * Gets/Sets the `role` attribute of the `list item`.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -267,8 +269,13 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.role')
+    @Input()
     public get role() {
-        return this.isHeader ? 'separator' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : 'listitem';
+    }
+
+    public set role(val: string) {
+        this._role = val;
     }
 
     /**
