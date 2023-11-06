@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollMonth, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -26,7 +26,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;
 
     /**
@@ -62,7 +62,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
     @Output()
-    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
+    public activeViewChanged = new EventEmitter<IgxCalendarView>();
 
     /**
      * @hidden
@@ -99,9 +99,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public shiftKey = false;
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public lastSelectedDate: Date;
 
     /**
@@ -483,10 +483,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public deselectMultipleInMonth(value: Date) {
         // deselect multiple dates from last clicked to shift clicked date (excluding)
         if (this.shiftKey) {
-            let start: Date;
-            let end: Date;
-
-            [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+            const [start, end] = this.lastSelectedDate.getTime() < value.getTime()
                 ? [this.lastSelectedDate, value]
                 : [value, this.lastSelectedDate];
 

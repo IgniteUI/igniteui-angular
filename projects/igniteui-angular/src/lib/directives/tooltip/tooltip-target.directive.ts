@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
@@ -35,7 +35,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
  * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
  * ```
  */
- @Directive({
+@Directive({
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]',
     standalone: true
@@ -91,7 +91,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input('tooltipDisabled')
+    @Input({ alias: 'tooltipDisabled', transform: booleanAttribute })
     public tooltipDisabled = false;
 
     /**
@@ -114,9 +114,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         return this._target;
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     @Input()
     public set tooltip(content: any) {
         if (!this.target && (typeof content === 'string' || content instanceof String)) {

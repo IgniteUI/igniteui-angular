@@ -14,7 +14,8 @@ import {
     Output,
     SimpleChange,
     ViewChild,
-    Renderer2
+    Renderer2,
+    booleanAttribute
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -114,7 +115,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [enableGestures]='true'></igx-nav-drawer>
      * ```
      */
-    @Input() public enableGestures = true;
+    @Input({ transform: booleanAttribute }) public enableGestures = true;
 
     /**
      * @hidden
@@ -151,7 +152,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
      * ```
      */
-    @Input() public pin = false;
+    @Input({ transform: booleanAttribute }) public pin = false;
 
     /**
      * Width of the drawer in its open state. Defaults to "280px".
@@ -175,8 +176,8 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
      * ````
      */
-    @HostBinding ('class.igx-nav-drawer--disable-animation')
-    @Input() public disableAnimation = false;
+    @HostBinding('class.igx-nav-drawer--disable-animation')
+    @Input({ transform: booleanAttribute }) public disableAnimation = false;
 
     /**
      * Width of the drawer in its mini state. Defaults to 68px.
@@ -265,7 +266,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isOpen() {
         return this._isOpen;
     }

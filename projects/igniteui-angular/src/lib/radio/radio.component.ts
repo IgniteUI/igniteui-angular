@@ -4,7 +4,8 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    Input
+    Input,
+    booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
@@ -64,7 +65,7 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--checked')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override set checked(value: boolean) {
         this._checked = value;
     }
@@ -85,13 +86,8 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--disabled')
-    @Input()
-    public override get disabled(): boolean {
-        return super.disabled
-    }
-    public override set disabled(value: boolean) {
-        super.disabled = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public override disabled = false;
 
     /**
      * Sets/gets whether the radio button is invalid.
@@ -106,13 +102,8 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--invalid')
-    @Input()
-    public override get invalid(): boolean {
-        return super.invalid;
-    }
-    public override set invalid(value: boolean) {
-        super.invalid = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public override invalid = false;
 
     /**
      * Sets/gets whether the radio component is on focus.
@@ -134,8 +125,8 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
      * @internal
      */
     @HostListener('change', ['$event'])
-    public _changed(event: Event){
-        if(event instanceof Event){
+    public _changed(event: Event) {
+        if (event instanceof Event) {
             event.preventDefault();
         }
     }

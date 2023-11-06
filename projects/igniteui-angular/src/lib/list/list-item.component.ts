@@ -6,7 +6,8 @@ import {
     HostListener,
     Input,
     Renderer2,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 
 import {
@@ -71,7 +72,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public isHeader: boolean;
 
     /**
@@ -86,7 +87,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hidden = false;
 
     /**
@@ -343,7 +344,7 @@ export class IgxListItemComponent implements IListChild {
     @HostListener('pancancel')
     public panCancel() {
         this.resetPanPosition();
-        this.list.endPan.emit({item: this, direction: this.lastPanDir, keepItem: false});
+        this.list.endPan.emit({ item: this, direction: this.lastPanDir, keepItem: false });
     }
 
     /**
@@ -390,7 +391,7 @@ export class IgxListItemComponent implements IListChild {
         const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
         this.lastPanDir = dir;
 
-        const args = { item: this, direction: dir, keepItem: false};
+        const args = { item: this, direction: dir, keepItem: false };
         this.list.endPan.emit(args);
 
         const oldPanState = this._panState;
