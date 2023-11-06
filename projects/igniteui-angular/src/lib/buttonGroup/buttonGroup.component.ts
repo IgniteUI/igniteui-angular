@@ -23,7 +23,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 
 /**
@@ -442,31 +442,26 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public _clickHandler(index: number) {
         const button = this.buttons[index];
-        const args: IButtonGroupEventArgs = { cancel: false, button, index };
 
         if (!this.multiSelection) {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselected.emit({ cancel: false, button: b, index: i });
+                    this.deselected.emit({ button: b, index: i });
                 }
             });
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selected.emit(args);
-            if(!args.cancel){
-                this.selectButton(index);
-            }
+            this.selectButton(index);
+            this.selected.emit({ button, index });
         } else {
-            this.deselected.emit(args);
-            if(!args.cancel){
-                this.deselectButton(index);
-            }
+            this.deselectButton(index);
+            this.deselected.emit({ button, index });
         }
     }
 }
 
-export interface IButtonGroupEventArgs extends IBaseEventArgs, CancelableEventArgs {
+export interface IButtonGroupEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
     index: number;
 }
