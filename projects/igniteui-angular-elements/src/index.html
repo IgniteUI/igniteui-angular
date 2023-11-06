@@ -170,7 +170,11 @@
         `;
 
         document.getElementById("saveState").addEventListener("click", saveState);
-        document.getElementById("restoreState").addEventListener("click", restoreState)
+        document.getElementById("restoreState").addEventListener("click", restoreState);
+        const stateComponent = document.getElementById('state');
+        stateComponent.options = {
+            paging: false
+        };
     });
 
     function saveState() {

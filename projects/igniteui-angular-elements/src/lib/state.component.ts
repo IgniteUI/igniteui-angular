@@ -1,6 +1,7 @@
 import { Input, Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
 import {IgxGridStateDirective, IGridStateOptions, IGridState, GridFeatures } from "../../../igniteui-angular/src/lib/grids/state.directive";
 import { IGX_GRID_SERVICE_BASE, GridServiceType}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
+import { IgxGridComponent } from '../../../igniteui-angular/src/lib/grids/grid/grid.component';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-state */
@@ -28,6 +29,15 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
         @Input()
         public override get options(): IGridStateOptions {
            return this._options;
+        }
+
+        public override set options(value: IGridStateOptions) {
+            Object.assign(this._options, value);
+            if (!(this.grid instanceof IgxGridComponent)) {
+                delete this._options.groupBy;
+            } else {
+                delete this._options.rowIslands;
+            }
         }
 
 
