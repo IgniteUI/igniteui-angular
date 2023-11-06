@@ -7,7 +7,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { editor } from '@igniteui/material-icons-extended';
-import { IButtonGroupAfterEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
+import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
@@ -785,7 +785,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-    public selectFilteringLogic(event: IButtonGroupAfterEventArgs) {
+    public selectFilteringLogic(event: IButtonGroupEventArgs) {
         this.contextualGroup.operator = event.index as FilteringLogic;
         this.commitOperandEdit();
     }

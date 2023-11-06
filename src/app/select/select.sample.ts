@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
-import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IButtonGroupAfterEventArgs } from 'igniteui-angular';
+import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
 import { scaleInTop, scaleOutBottom } from 'igniteui-angular/animations';
 
 
@@ -138,7 +138,7 @@ export class SelectSampleComponent implements OnInit {
         }
     }
 
-    public setDensity(event: IButtonGroupAfterEventArgs) {
+    public setDensity(event: IButtonGroupEventArgs) {
         this.selectDisplayDensity.displayDensity = event.button.nativeElement.value;
     }
 

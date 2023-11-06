@@ -253,7 +253,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public selecting = new EventEmitter<IButtonGroupBeforeEventArgs>();
+    public selecting = new EventEmitter<IButtonGroupCancellableEventArgs>();
 
     /**
      * An @Ouput property that emits an event before deselecting a button.
@@ -270,7 +270,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public deselecting = new EventEmitter<IButtonGroupBeforeEventArgs>();
+    public deselecting = new EventEmitter<IButtonGroupCancellableEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is selected.
@@ -288,7 +288,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public selected = new EventEmitter<IButtonGroupAfterEventArgs>();
+    public selected = new EventEmitter<IButtonGroupEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
@@ -306,7 +306,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Output()
-    public deselected = new EventEmitter<IButtonGroupAfterEventArgs>();
+    public deselected = new EventEmitter<IButtonGroupEventArgs>();
 
     @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
     @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
@@ -516,8 +516,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public _clickHandler(index: number) {
         const button = this.buttons[index];
-        const beforeArgs: IButtonGroupBeforeEventArgs = { cancel: false, owner: this, button, index };
-        const afterArgs: IButtonGroupAfterEventArgs = { owner: this, button, index };
+        const args: IButtonGroupEventArgs = { owner: this, button, index };
+        const cancellableArgs: IButtonGroupCancellableEventArgs = { cancel: false, owner: this, button, index };
 
         if (this.selectionMode !== 'multi') {
             this.buttons.forEach((b, i) => {
@@ -529,31 +529,27 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selecting.emit(beforeArgs);
-            if (!beforeArgs.cancel) {
+            this.selecting.emit(cancellableArgs);
+            if (!cancellableArgs.cancel) {
                 this.selectButton(index);
-                this.selected.emit(afterArgs);
+                this.selected.emit(args);
             }
         } else {
             if (this.selectionMode !== 'singleRequired') {
-                this.deselecting.emit(beforeArgs);
-                if (!beforeArgs.cancel) {
+                this.deselecting.emit(cancellableArgs);
+                if (!cancellableArgs.cancel) {
                     this.deselectButton(index);
-                    this.deselected.emit(afterArgs);
+                    this.deselected.emit(args);
                 }
             }
         }
     }
 }
 
-export interface IButtonGroupBeforeEventArgs extends IBaseEventArgs, CancelableEventArgs {
+export interface IButtonGroupEventArgs extends IBaseEventArgs {
     owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;
 }
 
-export interface IButtonGroupAfterEventArgs extends IBaseEventArgs {
-    owner: IgxButtonGroupComponent;
-    button: IgxButtonDirective;
-    index: number;
-}
+export interface IButtonGroupCancellableEventArgs extends IButtonGroupEventArgs, CancelableEventArgs {}
