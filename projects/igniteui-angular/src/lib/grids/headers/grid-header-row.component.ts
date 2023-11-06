@@ -9,7 +9,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    booleanAttribute
 } from '@angular/core';
 import { DisplayDensity } from '../../core/density';
 import { flatten } from '../../core/utils';
@@ -57,7 +58,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public activeDescendant: string;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hasMRL: boolean;
 
     @Input()

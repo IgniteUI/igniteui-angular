@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2, booleanAttribute } from '@angular/core';
 import { AnimationBuilder, style, animate } from '@angular/animations';
 
 @Directive({
@@ -66,7 +66,7 @@ export class IgxRippleDirective {
      *
      * @memberof IgxRippleDirective
      */
-    @Input('igxRippleCentered')
+    @Input({ alias: 'igxRippleCentered', transform: booleanAttribute })
     public set centered(value: boolean) {
         this._centered = value || this.centered;
     }
@@ -84,7 +84,7 @@ export class IgxRippleDirective {
      *
      * @memberof IgxRippleDirective
      */
-    @Input('igxRippleDisabled')
+    @Input({ alias: 'igxRippleDisabled', transform: booleanAttribute })
     public rippleDisabled = false;
 
     protected get nativeElement(): HTMLElement {

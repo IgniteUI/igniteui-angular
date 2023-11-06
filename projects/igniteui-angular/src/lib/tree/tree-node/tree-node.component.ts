@@ -16,7 +16,8 @@ import {
     QueryList,
     SkipSelf,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensity } from '../../core/density';
@@ -183,7 +184,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * @remarks
      * Loading nodes do not render children.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public loading = false;
 
     // TO DO: return different tab index depending on anchor child
@@ -234,7 +235,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @param value: boolean
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set active(value: boolean) {
         if (value) {
             this.navService.activeNode = this;
@@ -306,7 +307,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @param value: boolean
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-tree-node--disabled')
     public get disabled(): boolean {
         return this._disabled;
@@ -325,7 +326,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     @HostBinding('style.--component-size')
     public get size(): string {
-        switch(this.tree.displayDensity) {
+        switch (this.tree.displayDensity) {
             case DisplayDensity.compact:
                 return 'var(--ig-size, var(--ig-size-small))';
             case DisplayDensity.cosy:
@@ -471,7 +472,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * node.selected = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selected(): boolean {
         return this.selectionService.isNodeSelected(this);
     }
@@ -506,7 +507,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * node.expanded = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get expanded() {
         return this.treeService.isExpanded(this);
     }

@@ -8,7 +8,8 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    TemplateRef
+    TemplateRef,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
@@ -29,13 +30,13 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public value: any;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public continuous: boolean;
 
     @Input()
-    public thumbLabelVisibilityDuration;
+    public thumbLabelVisibilityDuration: number;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled: boolean;
 
     @Input()
@@ -56,7 +57,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public type: SliderHandle;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public deactiveState: boolean;
 
     @Output()

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, Optional, Inject, Self } from '@angular/core';
+import { Directive, ElementRef, Input, Optional, Inject, Self, booleanAttribute } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../../core/edit-provider';
 
@@ -21,7 +21,7 @@ export class IgxFocusDirective {
      *
      * @memberof IgxFocusDirective
      */
-    @Input('igxFocus')
+    @Input({ alias: 'igxFocus', transform: booleanAttribute })
     public get focused(): boolean {
         return this.focusState;
     }
@@ -81,7 +81,7 @@ export class IgxFocusDirective {
      */
     public trigger() {
         if (this.focusState) {
-            requestAnimationFrame(() => this.nativeElement.focus({ preventScroll: true}));
+            requestAnimationFrame(() => this.nativeElement.focus({ preventScroll: true }));
         }
     }
 }
