@@ -1364,7 +1364,7 @@ describe('igxCombo', () => {
                 combo.select([combo.data[7][combo.valueKey]]);
                 expect(combo.displayValue).toEqual([combo.data[7][combo.displayKey]]);
             });
-            it('should add selected items to the input when data is loaded', async() => {
+            it('should add selected items to the input when data is loaded', async () => {
                 expect(combo.selection.length).toEqual(0);
                 expect(combo.value).toEqual([]);
 
@@ -1386,6 +1386,47 @@ describe('igxCombo', () => {
 
                 const secondItem = combo.data[combo.data.length - 1];
                 expect(combo.displayValue).toEqual([`${firstItem[combo.displayKey]}`, `${secondItem[combo.displayKey]}`]);
+            });
+            it('should fire selectionChanging event with partial data for items out of view', async () => {
+                const selectionSpy = spyOn(combo.selectionChanging, 'emit').and.callThrough();
+                const valueKey = combo.valueKey;
+
+                combo.toggle();
+                combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
+
+                const expectedResults: IComboSelectionChangingEventArgs = {
+                    newValue: [combo.data[0][valueKey], combo.data[1][valueKey]],
+                    oldValue: [],
+                    newSelection: [combo.data[0], combo.data[1]],
+                    oldSelection: [],
+                    added: [combo.data[0], combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[0][combo.displayKey]}, ${combo.data[1][combo.displayKey]}`,
+                    cancel: false
+                };
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+
+                // Scroll selected items out of view
+                combo.virtualScrollContainer.scrollTo(40);
+                await wait();
+                fixture.detectChanges();
+                combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
+                Object.assign(expectedResults,  {
+                    newValue: [0, 1, 31, 32],
+                    oldValue: [0, 1],
+                    newSelection: [{[valueKey]: 0}, {[valueKey]: 1}, combo.data[0], combo.data[1]],
+                    oldSelection: [{[valueKey]: 0}, {[valueKey]: 1}],
+                    added: [combo.data[0], combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `Product 0, Product 1, Product 31, Product 32`,
+                    cancel: false
+                });
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
         });
         describe('Binding to ngModel tests: ', () => {
