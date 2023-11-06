@@ -70,6 +70,7 @@ async function main() {
 
     app.options.setValue("localize", localize ?? "en");
     app.options.setValue("product", product);
+    app.options.setValue('versioning', true);
 
     if (localize === "jp") {
         const jpTemplateStrings = path.resolve(
