@@ -25,8 +25,10 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `IComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection`, `newSelection`, `added` and `removed` collections no longer consist of the keys of the selected items when the combo has set a primaryKey, but now in any case the item data is emitted.
     When the combo is working with remote data and a primary key has been set for the selected items that are not currently part of the combo view, will be emitted a partial item data object.
 - `IgxSimpleCombo`
-    - **Breaking Change** - `ISimpleComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection` and `newSelection` collections no longer consist of the key of the selected item when the combo has set a primaryKey, but now in any case the item data is emitted.
-    - `ISimpleComboSelectionChangingEventArgs` exposes two new properties - `newValue` and `oldValue`. When combo's `valueKey` is set the key of the item is committed in both. When combo's `valueKey` is not set the entire item is committed.
+    - **Breaking Change** - `ISimpleComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property value or full data item depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
+    - `ISimpleComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
+
+      Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
 ## 16.1.4
 ### New Features
 - `Themes`:
