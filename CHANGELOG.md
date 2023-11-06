@@ -18,7 +18,10 @@ All notable changes for each version of this project will be documented in this 
     - IgxRadioComponent has been reduced in half
     - IgxSwitchComponent has been reduced in half
 - `IgxCombo`
-    - `IComboSelectionChangingEventArgs` exposes two new properties - `newValue` and `oldValue`. When combo's `valueKey` is set the keys of the items are committed in both. When combo's `valueKey` is not set the entire items are committed. _Note: when combo is working with remote data and a primary key has been set for the selected items that are not currently part of the combo view, will be emitted a partial item data object_
+    - **Breaking Change** `IComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property values or full data items depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
+    - `IComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
+      
+      Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
     - **Breaking Change** - `IComboSelectionChangingEventArgs` event arguments are changed. Now the `oldSelection`, `newSelection`, `added` and `removed` collections no longer consist of the keys of the selected items when the combo has set a primaryKey, but now in any case the item data is emitted.
     When the combo is working with remote data and a primary key has been set for the selected items that are not currently part of the combo view, will be emitted a partial item data object.
 - `IgxSimpleCombo`
