@@ -2,7 +2,8 @@ import {
     Component,
     HostBinding,
     Input,
-    AfterViewInit
+    AfterViewInit,
+    booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -80,13 +81,9 @@ export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlV
      * ```
      */
     @HostBinding('class.igx-switch--disabled')
-    @Input()
-    public override get disabled(): boolean {
-        return super.disabled
-    }
-    public override set disabled(value: boolean) {
-        super.disabled = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public override disabled = false;
+
     /**
      * Sets/gets whether the switch component is invalid.
      * Default value is `false`.
@@ -100,13 +97,9 @@ export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlV
      * ```
      */
     @HostBinding('class.igx-switch--invalid')
-    @Input()
-    public override get invalid(): boolean {
-        return super.invalid;
-    }
-    public override set invalid(value: boolean) {
-        super.invalid = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public override invalid = false;
+
     /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.

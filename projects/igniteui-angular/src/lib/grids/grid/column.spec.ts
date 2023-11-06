@@ -53,7 +53,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedInputColumnsComponent,
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
-                ResizableColumnsComponent
+                ResizableColumnsComponent,
+                DOMAttributesAsSettersComponent
             ]
         });
     }));
@@ -1406,6 +1407,63 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
     });
 
+
+    describe('DOM attributes as setters', () => {
+        it('successfully renders a grid with DOM attributes as setters', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DOMAttributesAsSettersComponent);
+            fixture.detectChanges();
+            tick();
+
+            const grid = fixture.componentInstance.instance;
+            const column = grid.getColumnByName('id');
+
+            const gridAttributes = `
+                moving
+                hideRowSelectors
+                rowDraggable
+                rowEditable
+                allowFiltering
+                allowAdvancedFiltering
+                showSummaryOnCollapse
+                batchEditing
+                selectRowOnClick
+                groupsExpanded
+                hideGroupedColumns
+                showGroupArea
+            `.split('\n')
+                .map(attr => attr.trim())
+                .filter(attr => Boolean(attr));
+
+            const columnAttributes = `
+                sortable
+                groupable
+                editable
+                filterable
+                resizable
+                autosizeHeader
+                hasSummary
+                hidden
+                disableHiding
+                disablePinning
+                movable
+                filteringIgnoreCase
+                sortingIgnoreCase
+                searchable
+                pinned
+                visibleWhenCollapsed
+            `.split('\n')
+                .map(attr => attr.trim())
+                .filter(attr => Boolean(attr));
+
+            for (const attr of gridAttributes) {
+                expect(grid[attr]).toBe(true, `Grid attribute: '${attr}' failed`);
+            }
+
+            for (const attr of columnAttributes) {
+                expect(column[attr]).toBe(true, `Column attribute: '${attr}' failed`);
+            }
+        }))
+    });
 });
 
 @Component({
@@ -1573,4 +1631,52 @@ export class ColumnHaederClassesComponent {
     public data = [
         { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" height="500px" width="400px"
+            moving
+            hideRowSelectors
+            rowDraggable
+            rowEditable
+            allowFiltering
+            allowAdvancedFiltering
+            showSummaryOnCollapse
+            batchEditing
+            selectRowOnClick
+            groupsExpanded
+            hideGroupedColumns
+            showGroupArea
+        >
+            <igx-column field="id"
+                sortable
+                groupable
+                editable
+                filterable
+                resizable
+                autosizeHeader
+                hasSummary
+                hidden
+                disableHiding
+                disablePinning
+                movable
+                filteringIgnoreCase
+                sortingIgnoreCase
+                searchable
+                pinned
+                visibleWhenCollapsed
+            >
+            </igx-column>
+            <igx-column field="value"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class DOMAttributesAsSettersComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public data = [{ id: 1, value: 1 }];
 }
