@@ -105,7 +105,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.1",
     "hammer-simulator": "0.0.1",
-    "ig-typedoc-theme": "^5.0.0-beta.2",
+    "ig-typedoc-theme": "^5.0.0",
     "igniteui-sassdoc-theme": "^1.2.0",
     "igniteui-webcomponents": "^4.2.3",
     "jasmine": "^4.6.0",
@@ -128,7 +128,7 @@
     "stylelint-scss": "^4.1.0",
     "ts-node": "^10.8.1",
     "typedoc": "^0.25.3",
-    "typedoc-plugin-localization": "^3.0.3-beta.1",
+    "typedoc-plugin-localization": "^3.0.3",
     "typescript": "4.9.5"
   }
 }
