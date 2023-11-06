@@ -18,7 +18,7 @@ All notable changes for each version of this project will be documented in this 
     - IgxRadioComponent has been reduced in half
     - IgxSwitchComponent has been reduced in half
 - `IgxButtonGroup`:
-    - Adding `selecting` and `deselecting` events that are fired before selecting or deselecting a button and they are also cancellable.
+    - Adding cancellable `selecting` and `deselecting` events that are fired before selecting or deselecting a button.
 
 ## 16.1.4
 ### New Features
@@ -46,8 +46,6 @@ All notable changes for each version of this project will be documented in this 
     @include typography();
     @include theme();
     ```
-- `IgxButtonGroup`:
-    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.0) as it was breaking firing order.
 
 ## 16.1.0
 ### New Features
@@ -261,8 +259,6 @@ All notable changes for each version of this project will be documented in this 
         </igx-card-actions>
     </igx-card>
     ```
-- `IgxButtonGroup`:
-    - The `selected` and `deselected` events are now cancellable.
 
 ### General
  - `IgxPivotGrid`
