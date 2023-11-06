@@ -97,6 +97,7 @@
     "autoprefixer": "^10.4.16",
     "del": "^6.0.0",
     "eslint": "^8.43.0",
+    "fs-extra": "^11.1.1",
     "globby": "^13.2.2",
     "gulp": "^4.0.2",
     "gulp-cached": "^1.1.1",
