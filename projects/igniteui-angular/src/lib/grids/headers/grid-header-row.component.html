@@ -1,4 +1,4 @@
-<div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
+<div role="rowgroup" class="igx-grid-thead__wrapper" (scroll)="scroll($event)" [style.width.px]="width"
     [class.igx-grid__tr--mrl]="hasMRL">
 
     <!-- Column headers area -->
