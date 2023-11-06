@@ -5,6 +5,7 @@ import { IGX_GRID_SERVICE_BASE, GridServiceType}  from '../../../igniteui-angula
 /* blazorElement */
 /* wcElementTag: igc-grid-state */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * State component description
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
