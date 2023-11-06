@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, booleanAttribute } from '@angular/core';
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -78,7 +78,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input('active')
+    @Input({ alias: 'active', transform: booleanAttribute })
     public active = true;
 
     /**

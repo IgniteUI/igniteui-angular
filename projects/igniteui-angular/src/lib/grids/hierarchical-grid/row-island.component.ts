@@ -1,6 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -162,7 +163,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *
      * @memberof IgxRowIslandComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {

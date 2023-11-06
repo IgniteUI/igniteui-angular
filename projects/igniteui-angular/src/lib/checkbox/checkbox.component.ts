@@ -11,7 +11,8 @@ import {
     ChangeDetectorRef,
     Renderer2,
     Optional,
-    Self
+    Self,
+    booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -67,8 +68,6 @@ let nextId = 0;
     imports: [IgxRippleDirective]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
-    private static ngAcceptInputType_required: boolean | '';
-    private static ngAcceptInputType_disabled: boolean | '';
 
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -224,7 +223,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * let isRippleDisabled = this.checkbox.desableRipple;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disableRipple = false;
 
     /**
@@ -239,12 +238,12 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * let isRequired = this.checkbox.required;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get required(): boolean {
         return this._required || this.nativeElement.hasAttribute('required');
     }
-    public set required (value: boolean) {
-        this._required = (value as any === '') || value;
+    public set required(value: boolean) {
+        this._required = value;
     }
 
     /**
@@ -315,7 +314,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     @HostBinding('class.igx-checkbox--indeterminate')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public indeterminate = false;
 
     /**
@@ -331,12 +330,12 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     @HostBinding('class.igx-checkbox--checked')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get checked() {
         return this._checked;
     }
     public set checked(value: boolean) {
-        if(this._checked !== value) {
+        if (this._checked !== value) {
             this._checked = value;
             this._onChangeCallback(this._checked);
         }
@@ -355,13 +354,8 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     @HostBinding('class.igx-checkbox--disabled')
-    @Input()
-    public get disabled(): boolean {
-        return this._disabled;
-    }
-    public set disabled(value: boolean) {
-        this._disabled = (value as any === '') || value;
-    }
+    @Input({ transform: booleanAttribute })
+    public disabled = false;
 
     /**
      * Sets/gets whether the checkbox is invalid.
@@ -376,13 +370,8 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     @HostBinding('class.igx-checkbox--invalid')
-    @Input()
-    public get invalid(): boolean {
-        return this._invalid || false;
-    }
-    public set invalid(value: boolean) {
-        this._invalid = !!value;
-    }
+    @Input({ transform: booleanAttribute })
+    public invalid = false
 
     /**
      * Sets/gets whether the checkbox is readonly.
@@ -396,7 +385,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * let readonly = this.checkbox.readonly;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public readonly = false;
 
     /**
@@ -412,7 +401,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * ```
      */
     @HostBinding('class.igx-checkbox--plain')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disableTransitions = false;
 
     /**
@@ -438,16 +427,6 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     private _required = false;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _disabled = false;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _invalid = false;
 
     constructor(
         protected cdr: ChangeDetectorRef,
@@ -515,11 +494,11 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     public get ariaChecked() {
-       if (this.indeterminate) {
-           return 'mixed';
-       } else {
-           return this.checked;
-       }
+        if (this.indeterminate) {
+            return 'mixed';
+        } else {
+            return this.checked;
+        }
     }
 
     /** @hidden @internal */
@@ -582,11 +561,11 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
             if (!this.disabled && !this.readonly &&
                 (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                 // the control is not disabled and is touched or dirty
-                this._invalid = this.ngControl.invalid;
+                this.invalid = this.ngControl.invalid;
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the checkbox or when the form/control is reset
-                this._invalid = false;
+                this.invalid = false;
             }
         } else {
             this.checkNativeValidity();
@@ -602,9 +581,9 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      */
     private checkNativeValidity() {
         if (!this.disabled && this._required && !this.checked && !this.readonly) {
-            this._invalid = true;
+            this.invalid = true;
         } else {
-            this._invalid = false;
+            this.invalid = false;
         }
     }
 }

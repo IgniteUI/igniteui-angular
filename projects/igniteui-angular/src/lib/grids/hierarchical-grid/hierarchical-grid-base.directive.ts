@@ -1,4 +1,5 @@
 import {
+    booleanAttribute,
     ChangeDetectorRef,
     createComponent,
     Directive,
@@ -72,7 +73,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * </igx-hierarchical-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showExpandAll = false;
 
     /**

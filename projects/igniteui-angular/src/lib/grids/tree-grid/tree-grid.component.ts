@@ -20,7 +20,8 @@ import {
     LOCALE_ID,
     Injector,
     EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA
+    CUSTOM_ELEMENTS_SCHEMA,
+    booleanAttribute
 } from '@angular/core';
 import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 
@@ -155,7 +156,7 @@ let NEXT_ID = 0;
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe
     ],
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
@@ -206,7 +207,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
 
     /**

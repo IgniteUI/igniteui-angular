@@ -1,6 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -121,7 +122,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this.hGrid.data = this._data.childGridsData[this.layout.key];
         }
     }
-    
+
     /**
      * The index of the row.
      *
@@ -133,7 +134,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('container', {read: ViewContainerRef, static: true})
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     /**
@@ -481,7 +482,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /** @hidden @internal */
-    public override get excelStyleFilteringComponent() : IgxGridExcelStyleFilteringComponent {
+    public override get excelStyleFilteringComponent(): IgxGridExcelStyleFilteringComponent {
         return this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents.first :
             super.excelStyleFilteringComponent;
@@ -509,14 +510,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Sets if all immediate children of the `IgxHierarchicalGridComponent` should be expanded/collapsed.
-     * Defult value is false.
+     * Default value is false.
      * ```html
      * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
      * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.expansionStates = new Map<any, boolean>();
@@ -1116,7 +1117,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             return topCols;
         } else {
-           return this.columnList.toArray()
+            return this.columnList.toArray()
         }
     }
 
