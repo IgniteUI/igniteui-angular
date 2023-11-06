@@ -18,6 +18,16 @@ All notable changes for each version of this project will be documented in this 
     - IgxRadioComponent has been reduced in half
     - IgxSwitchComponent has been reduced in half
 
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Changes**
+        - The events `cellEditEnter`and `cellEdit` no longer emit `IGridEditEventArgs` as arguments now emits `ICellEditEventArgs`.
+        - The events `rowEditEnter`and `rowEdit` no longer emit `IGridEditEventArgs` as arguments now emits `IRowEditEventArgs`.
+        - The events `cellEditExit`and `cellEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `ICellEditDoneEventArgs`.
+        - The events `rowEditExit`and `rowEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `IRowEditDoneEventArgs`.
+        - The events `rowAdd`and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
+        - The events `rowAdd`and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
+        - `rowID` property has been deprecated in the following interfaces: `IRowEditEventArgs`, `IRowEditDoneEventArgs`, `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IPathSegment`, `HierarchicalStateRecord`, `ICellEditEventArgs`, `ICellEditDoneEventArgs` and will be removed in a future version, so please use `key` property instead and for `ICellEditEventArgs` and `ICellEditDoneEventArgs` use `rowKey` property instead.
+        - `rowData` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IRowEditEventArgs`, `IRowDataCancelableEventArgs` and will be removed in a future version, so please use `data` property instead.
 ## 16.1.4
 ### New Features
 - `Themes`:
@@ -43,7 +53,7 @@ All notable changes for each version of this project will be documented in this 
     @include core();
     @include typography();
     @include theme();
-    ``` 
+    ```
 
 ## 16.1.0
 ### New Features
@@ -59,7 +69,7 @@ All notable changes for each version of this project will be documented in this 
      ```
 - `IgxBadge`:
     - Material icons extended along with any other custom icon set can now be used inside the badge component.
-    - Code example: 
+    - Code example:
 
      ```typescript
      import { IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
@@ -102,7 +112,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 
     ```css
-    /* 
+    /*
     Add --ig-size to a component or global file.
     Available values are:
     compact: --ig-size-small
