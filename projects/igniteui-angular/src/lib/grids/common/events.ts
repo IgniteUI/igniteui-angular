@@ -416,7 +416,6 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
      */
-     // TODO shall data record be emitted?
     readonly rowID: any;
     readonly key: any;
     row?: RowType;
