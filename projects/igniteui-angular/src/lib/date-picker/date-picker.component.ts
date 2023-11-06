@@ -22,7 +22,8 @@ import {
     QueryList,
     Renderer2,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    booleanAttribute
 } from '@angular/core';
 import { NgIf } from '@angular/common';
 import {
@@ -56,12 +57,12 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  AbsoluteScrollStrategy,
-  AutoPositionStrategy,
-  IgxOverlayService,
-  OverlayCancelableEventArgs,
-  OverlayEventArgs,
-  OverlaySettings
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    IgxOverlayService,
+    OverlayCancelableEventArgs,
+    OverlayEventArgs,
+    OverlaySettings
 } from '../services/public_api';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -121,7 +122,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * let hideOutsideDays = this.datePicker.hideOutsideDays;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
 
     /**
@@ -150,7 +151,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [showWeekNumbers]="true"></igx-date-picker>
      * ``
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
 
     /**
@@ -205,7 +206,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [spinLoop]="false"></igx-date-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public spinLoop = true;
 
     /**
@@ -374,7 +375,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public resourceStrings: IDatePickerResourceStrings;
 
     /** @hidden @internal */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public readOnly = false;
 
     /**
@@ -784,10 +785,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this._ngControl) {
             this._statusChanges$ =
                 this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
-                if (this._ngControl.control.validator) {
-                    this.inputGroup.isRequired = this.required;
-                    this.cdr.detectChanges();
-                }
+            if (this._ngControl.control.validator) {
+                this.inputGroup.isRequired = this.required;
+                this.cdr.detectChanges();
+            }
         }
     }
 

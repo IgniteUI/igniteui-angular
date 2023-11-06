@@ -2,6 +2,7 @@ import {
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -139,7 +140,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
      */
-    @Input() public disabled = false;
+    @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
      * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
@@ -317,8 +318,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public get type(): IgxInputGroupType {
-            return this._type || this._inputGroupType || 'line';
-        }
+        return this._type || this._inputGroupType || 'line';
+    }
 
     public set type(val: IgxInputGroupType) {
         this._type = val;
@@ -390,7 +391,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             return;
         }
 
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
         this.selectionChanging.emit(args);
 
         if (args.cancel) {
@@ -438,7 +439,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             return;
         }
         this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
-}
+    }
 
     /** @hidden @internal */
     public ngAfterContentInit() {
@@ -466,7 +467,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public handleOpening(e: ToggleViewCancelableEventArgs) {
-        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.opening.emit(args);
 
         e.cancel = args.cancel;
@@ -492,7 +493,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public handleClosing(e: ToggleViewCancelableEventArgs) {
-        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.closing.emit(args);
         e.cancel = args.cancel;
     }
@@ -604,8 +605,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.inputGroup.isRequired = error && error.required;
             this.cdr.markForCheck();
 
-        // If validator is dynamically cleared and no required HTML attribute is set,
-        // reset label's required class(asterisk) and IgxInputState #6896
+            // If validator is dynamically cleared and no required HTML attribute is set,
+            // reset label's required class(asterisk) and IgxInputState #6896
         } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
             this.input.valid = IgxInputState.INITIAL;
             this.inputGroup.isRequired = false;

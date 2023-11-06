@@ -2,6 +2,7 @@ import {
     AfterContentChecked,
     AfterViewChecked,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,
@@ -143,7 +144,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
 
     /**
@@ -212,7 +213,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [allowCustomValues]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public allowCustomValues = false;
 
     /**
@@ -418,8 +419,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
      * ```
      */
-     @Input()
-     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
+    @Input()
+    public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
      * An @Input property that set aria-labelledby attribute
@@ -440,7 +441,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [disabled]="'true'">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -924,13 +925,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
 
-     @Input()
-     public get filteringOptions(): IComboFilteringOptions {
-         return this._filteringOptions || this._defaultFilteringOptions;
-     }
-     public set filteringOptions(value: IComboFilteringOptions) {
-         this._filteringOptions = value;
-     }
+    @Input()
+    public get filteringOptions(): IComboFilteringOptions {
+        return this._filteringOptions || this._defaultFilteringOptions;
+    }
+    public set filteringOptions(value: IComboFilteringOptions) {
+        this._filteringOptions = value;
+    }
     protected _data = [];
     protected _value = [];
     protected _displayValue = '';
@@ -1040,7 +1041,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
-        if (!this.collapsed){
+        if (!this.collapsed) {
             this.setActiveDescendant();
         }
     }
@@ -1257,7 +1258,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public setActiveDescendant() : void  {
+    public setActiveDescendant(): void {
         this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
@@ -1298,7 +1299,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         return keys.map(key => isNaNvalue(key)
             ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
             : this.data.find(entry => entry[this.valueKey] === key))
-        .filter(e => e !== undefined);
+            .filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
