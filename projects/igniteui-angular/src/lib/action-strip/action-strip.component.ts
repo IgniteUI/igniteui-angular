@@ -14,7 +14,8 @@ import {
     AfterContentInit,
     ChangeDetectorRef,
     AfterViewInit,
-    ElementRef
+    ElementRef,
+    booleanAttribute
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
@@ -120,14 +121,9 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      *  <igx-action-strip [hidden]="false">
      * ```
      */
-    @Input()
-    public set hidden(value) {
-        this._hidden = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public hidden = false;
 
-    public get hidden() {
-        return this._hidden;
-    }
 
     /**
      * Gets/Sets the resource strings.
@@ -150,13 +146,13 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * @hidden
      * @internal
      */
-     public get hideOnRowLeave(): boolean{
-        if(this.menu.items.length === 0){
+    public get hideOnRowLeave(): boolean {
+        if (this.menu.items.length === 0) {
             return true;
-        }else if(this.menu.items.length > 0){
-            if(this.menu.collapsed){
+        } else if (this.menu.items.length > 0) {
+            if (this.menu.collapsed) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -215,14 +211,14 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     /**
      * Getter for the 'display' property of the current `IgxActionStrip`
      */
-     @HostBinding('style.display')
-     private get display(): string {
-         return this._hidden ? 'none' : 'flex';
-     }
+    @HostBinding('style.display')
+    private get display(): string {
+        return this.hidden ? 'none' : 'flex';
+    }
 
-     /**
-      * Host `attr.class` binding.
-      */
+    /**
+     * Host `attr.class` binding.
+     */
     @HostBinding('class.igx-action-strip')
     protected hostClass = 'igx-action-strip';
 

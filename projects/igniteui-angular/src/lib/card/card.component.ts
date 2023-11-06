@@ -7,7 +7,8 @@ import {
     Input,
     OnInit,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    booleanAttribute
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
@@ -86,7 +87,7 @@ export class IgxCardHeaderComponent {
      * ```
      */
     @HostBinding('class.igx-card-header--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 }
 
@@ -313,7 +314,7 @@ export class IgxCardComponent {
      * ```
      */
     @HostBinding('class.igx-card--horizontal')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public horizontal = false;
 
     /**
@@ -359,7 +360,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * When set to `true` the actions will be layed out vertically.
      */
     @HostBinding('class.igx-card-actions--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 
     /**
@@ -382,7 +383,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * ```
      */
     @HostBinding('class.igx-card-actions--reverse')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public reverse = false;
 
     private isVerticalSet = false;

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, booleanAttribute } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 import { NgFor, NgClass, NgTemplateOutlet } from '@angular/common';
 
@@ -18,10 +18,10 @@ export class IgxTicksComponent {
     @Input()
     public secondaryTicks: number;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public primaryTickLabels: boolean;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public secondaryTickLabels: boolean;
 
     @Input()
@@ -36,7 +36,7 @@ export class IgxTicksComponent {
     @Input()
     public minValue: number;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public labelsViewEnabled: boolean;
 
     @Input()
@@ -112,8 +112,8 @@ export class IgxTicksComponent {
      */
     public get ticksLength() {
         return this.primaryTicks > 0 ?
-                ((this.primaryTicks - 1) * this.secondaryTicks) + this.primaryTicks :
-                this.secondaryTicks > 0 ? this.secondaryTicks : 0;
+            ((this.primaryTicks - 1) * this.secondaryTicks) + this.primaryTicks :
+            this.secondaryTicks > 0 ? this.secondaryTicks : 0;
     }
 
     public hiddenTickLabels(idx: number) {

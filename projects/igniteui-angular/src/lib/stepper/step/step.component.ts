@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -90,7 +91,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].disabled = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set disabled(value: boolean) {
         this._disabled = value;
         if (this.stepper.linear) {
@@ -120,7 +121,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].completed = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-stepper__step--completed')
     public completed = false;
 
@@ -137,7 +138,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * </igx-step>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isValid(): boolean {
         return this._valid;
     }
@@ -163,7 +164,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].optional = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public optional = false;
 
     /**
@@ -180,7 +181,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * @param value: boolean
      */
     @HostBinding('attr.aria-selected')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set active(value: boolean) {
         if (value) {
             this.stepperService.expandThroughApi(this);

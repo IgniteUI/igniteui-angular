@@ -11,7 +11,8 @@ import {
     ContentChild,
     AfterViewInit,
     AfterContentInit,
-    Directive
+    Directive,
+    booleanAttribute
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -70,7 +71,7 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public indeterminate = false;
 
     /**
@@ -141,7 +142,7 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [animate]="false" [max]="200" [value]="50"></igx-circular-bar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set animate(animate: boolean) {
         this._animate = animate;
         if (animate) {
@@ -342,7 +343,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      * ```
      */
     @HostBinding('class.igx-linear-bar--striped')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public striped = false;
 
     /**
@@ -397,7 +398,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      *  <igx-linear-bar type="default" [textVisibility]="false"></igx-linear-bar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public textVisibility = true;
 
     /**
@@ -406,7 +407,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      *  <igx-linear-bar type="error" [textTop]="true"></igx-linear-bar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public textTop = false;
 
     /**
@@ -427,7 +428,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @Input()
     public type = 'default';
 
-    @ViewChild('indicator', {static: true})
+    @ViewChild('indicator', { static: true })
     private _progressIndicator: ElementRef;
 
     private animationState = {
@@ -533,7 +534,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
      * <igx-circular-bar [textVisibility]="false"></igx-circular-bar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public textVisibility = true;
 
     /**
@@ -614,7 +615,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         const valueInPercent = this.max <= 0 ? 0 : toPercent(value, this.max);
 
         const FRAMES = [];
-        FRAMES[0] = {...this.animationState};
+        FRAMES[0] = { ...this.animationState };
 
         this.animationState.strokeDashoffset = this.getProgress(valueInPercent);
         this.animationState.strokeOpacity = toPercent(value, this.max) / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION;
@@ -639,7 +640,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
 export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export const toPercent = (value: number, max: number) =>  !max ? 0 : Math.floor(100 * value / max);
+export const toPercent = (value: number, max: number) => !max ? 0 : Math.floor(100 * value / max);
 
 export const toValue = (value: number, max: number) => max * value / 100;
 

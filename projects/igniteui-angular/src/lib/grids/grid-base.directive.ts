@@ -2,6 +2,7 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,
@@ -214,7 +215,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
     /**
@@ -238,7 +239,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Controls whether columns moving is enabled in the grid.
      *
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public moving = false;
 
     /**
@@ -1892,7 +1893,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  By default row selectors are shown
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hideRowSelectors() {
         return this._hideRowSelectors;
     }
@@ -1910,7 +1911,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [rowDraggable]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get rowDraggable(): boolean {
         return this._rowDrag && this.hasVisibleColumns;
     }
@@ -1951,7 +1952,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get rowEditable(): boolean {
         return this._rowEditable;
     }
@@ -2087,7 +2088,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
@@ -2166,7 +2167,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get allowFiltering() {
         return this._allowFiltering;
     }
@@ -2195,7 +2196,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get allowAdvancedFiltering() {
         return this._allowAdvancedFiltering;
     }
@@ -2297,7 +2298,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * By default showSummaryOnCollapse is set to 'false' which means that the summary row is not visible
      * when the groupBy/parent row is collapsed.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get showSummaryOnCollapse() {
         return this._showSummaryOnCollapse;
     }
@@ -2686,7 +2687,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * </igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get batchEditing(): boolean {
         return this._batchEditing;
     }
@@ -5371,7 +5372,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param enabled: boolean
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selectRowOnClick() {
         return this._selectRowOnClick;
     }
@@ -6874,7 +6875,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
+            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
@@ -7025,7 +7026,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                         const key = !this.isPivot && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
                         const value = this.isPivot ? rowData.aggregationValues.get(col.field)
-                        : resolveNestedPath(rowData, col.field);
+                            : resolveNestedPath(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7338,7 +7339,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+        if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
         }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
