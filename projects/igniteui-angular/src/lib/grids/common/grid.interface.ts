@@ -45,7 +45,7 @@ export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridService
 export interface IPathSegment {
     /**
      * The unique identifier of the row within the segment.
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use `key` instead
      */
     rowID: any;
@@ -337,8 +337,8 @@ export interface ColumnType extends FieldType {
      /** Represents custom CSS styles applied to the header group. When added, they take different styling */
     headerGroupStyles: any;
 
-    /** 
-     * Custom CSS styling, appplied to every column 
+    /**
+     * Custom CSS styling, appplied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;

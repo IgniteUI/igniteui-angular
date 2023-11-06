@@ -20,7 +20,7 @@ export class IgxEditRow {
     public createRowEditEventArgs(includeNewValue = true, event?: Event): IRowEditEventArgs {
         const args: IRowEditEventArgs = {
             /**
-             * @deprecated since version 16.1.0
+             * @deprecated since version 17.0.0
              * Use `key` instead
              */
             rowID: this.id,
@@ -60,7 +60,7 @@ export class IgxEditRow {
         const rowData = updatedData ?? this.grid.gridAPI.getRowData(this.id);
         const args: IRowEditDoneEventArgs = {
             /**
-             * @deprecated since version 16.1.0
+             * @deprecated since version 17.0.0
              * Use `key` instead
              */
             rowID: this.id,
@@ -110,7 +110,7 @@ export class IgxAddRow extends IgxEditRow {
 
 export interface IgxAddRowParent {
     /**
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use `key` instead
      */
     rowID: string;
@@ -168,7 +168,7 @@ export class IgxCell {
         const args: ICellEditEventArgs = {
 
             /**
-             * @deprecated since version 16.1.0
+             * @deprecated since version 17.0.0
              * Use `rowKey` instead
              */
             rowID: this.id.rowID,
@@ -196,7 +196,7 @@ export class IgxCell {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: ICellEditDoneEventArgs = {
             /**
-             * @deprecated since version 16.1.0
+             * @deprecated since version 17.0.0
              * Use `rowKey` instead
              */
             rowID: this.id.rowID,

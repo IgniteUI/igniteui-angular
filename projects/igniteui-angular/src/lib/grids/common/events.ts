@@ -31,13 +31,13 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 }
 
 /**
- * @deprecated since version 16.0.0. Stop exporting this interface in version 19
+ * @deprecated since version 17.0.0. Stop exporting this interface in version 19
  * Use ICellEditDoneEventArgs property for cellEditDone and cellEditExit events
  * Use IRowEditDoneEventArgs property for rowEditDone and rowEditExit events
  */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
      * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
      */
@@ -50,7 +50,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * `rowData` represents the updated/committed data of the row after the edit (newValue)
      * The only case rowData (of the current object) is used directly, is when there is no rowEditing or transactions enabled
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use `data` instead
      */
     rowData: any;
@@ -160,7 +160,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 export interface IBaseRowDataEventArgs extends IBaseEventArgs {
     data: any;
     /**
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
      */
@@ -382,7 +382,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     /**
      * Represents the ID of the row that emitted the event (which state is changed)
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use `key` instead
      */
     rowID: any;
@@ -411,7 +411,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
-     * @deprecated since version 16.1.0
+     * @deprecated since version 17.0.0
      * Use `key` instead
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
