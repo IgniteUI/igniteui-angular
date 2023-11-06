@@ -15,7 +15,8 @@ import {
     Renderer2,
     ViewChildren,
     OnDestroy,
-    ElementRef
+    ElementRef,
+    booleanAttribute
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -194,7 +195,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get disabled(): boolean {
         return this._disabled;
     }
@@ -493,13 +494,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         if (this.selectedIndexes.indexOf(index) === -1) {
             this.selected.emit(args);
-            if(!args.cancel){
+            if (!args.cancel) {
                 this.selectButton(index);
             }
         } else {
             if (this.selectionMode !== 'singleRequired') {
                 this.deselected.emit(args);
-                if(!args.cancel){
+                if (!args.cancel) {
                     this.deselectButton(index);
                 }
             }

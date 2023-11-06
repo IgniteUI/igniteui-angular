@@ -8,7 +8,8 @@ import {
     ElementRef,
     Injectable,
     ViewChildren,
-    QueryList
+    QueryList,
+    booleanAttribute
 } from '@angular/core';
 import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -46,7 +47,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * Gets/sets whether the view should be rendered
      * according to the locale and yearFormat, if any.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public formatView: boolean;
 
     /**

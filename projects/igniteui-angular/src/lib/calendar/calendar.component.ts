@@ -11,7 +11,8 @@ import {
     AfterViewInit,
     ViewChildren,
     QueryList,
-    OnDestroy
+    OnDestroy,
+    booleanAttribute
 } from '@angular/core';
 import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -113,7 +114,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * <igx-calendar [hasHeader]="false"></igx-calendar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hasHeader = true;
 
     /**
@@ -125,7 +126,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * <igx-calendar [vertical]="true"></igx-calendar>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 
     /**
@@ -143,7 +144,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     public set monthsViewNumber(val: number) {
-        if (val < 1 ) {
+        if (val < 1) {
             return;
         }
 
@@ -158,7 +159,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * <igx-calendar [showWeekNumbers]="true"></igx-calendar>
      * ``
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
 
     /**
@@ -361,7 +362,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true  })
+    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
     /**
@@ -369,7 +370,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     // eslint-disable-next-line max-len
-    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true  })
+    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
     /**
@@ -613,7 +614,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                     default:
                         break;
                 }
-        });
+            });
     }
 
     /**
@@ -905,7 +906,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     public animationDone(event) {
         if ((event.fromState === ScrollMonth.NONE && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT)) ||
-             (event.fromState === 'void' && event.toState === ScrollMonth.NONE)) {
+            (event.fromState === 'void' && event.toState === ScrollMonth.NONE)) {
             this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
         if (!this.isKeydownTrigger) {
@@ -1035,7 +1036,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     private getMonthView(index: number): IgxDaysViewComponent {
-        if (index === -1 || index === this.monthViews.length ) {
+        if (index === -1 || index === this.monthViews.length) {
             return null;
         } else {
             return this.monthViews.toArray()[index];
@@ -1052,7 +1053,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     private deselectDateInMonthViews(value: Date) {
         this.monthViews.forEach(m => {
             m.deselectMultipleInMonth(value);
-         });
+        });
     }
 
     private focusMonth() {

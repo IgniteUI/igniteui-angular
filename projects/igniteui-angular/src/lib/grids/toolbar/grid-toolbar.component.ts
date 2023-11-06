@@ -6,7 +6,8 @@ import {
     Inject,
     Input,
     OnDestroy,
-    Optional
+    Optional,
+    booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/density';
@@ -42,7 +43,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
      * By default this will be toggled, when the default exporter component is present
      * and an exporting is in progress.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showProgress = false;
 
     /**
