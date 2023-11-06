@@ -196,6 +196,13 @@ export class IgxGridHeaderRowComponent implements DoCheck {
         this.cdr.markForCheck();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public scroll(event: Event) {
+        this.grid.preventHeaderScroll(event);
+    }
+
     public headerRowSelection(event: MouseEvent) {
         if (!this.grid.isMultiRowSelectionEnabled) {
             return;
