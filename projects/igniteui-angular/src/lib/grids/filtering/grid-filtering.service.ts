@@ -45,7 +45,7 @@ export class IgxFilteringService implements OnDestroy {
         modal: false,
         positionStrategy: new ExcelStylePositionStrategy({
             verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
             closeAnimation: null
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
@@ -131,7 +131,7 @@ export class IgxFilteringService implements OnDestroy {
      * Close filtering row if a column is hidden.
      */
     public hideFilteringRowOnColumnVisibilityChange(col: ColumnType) {
-        const filteringRow = this.grid.filteringRow;
+        const filteringRow = this.grid?.filteringRow;
 
         if (filteringRow && filteringRow.column && filteringRow.column === col) {
             filteringRow.close();
@@ -178,7 +178,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
-            filteringIgnoreCase, fieldFilterIndex, true);
+                filteringIgnoreCase, fieldFilterIndex, true);
 
         const eventArgs: IFilteringEventArgs = {
             owner: grid,
