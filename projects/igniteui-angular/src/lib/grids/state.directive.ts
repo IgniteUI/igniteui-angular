@@ -99,9 +99,11 @@ interface Feature {
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
-/* blazorIndirectRender
-   blazorComponent
-   omitModule */
+/* blazorElement */
+/* contentParent: GridBaseDirective */
+/* wcElementTag: igc-grid-state-directive */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 @Directive({
     selector: '[igxGridState]',
     standalone: true

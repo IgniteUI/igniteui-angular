@@ -3,11 +3,8 @@ import {IgxGridStateDirective, IGridStateOptions, IGridState, GridFeatures } fro
 import { IGX_GRID_SERVICE_BASE, GridServiceType}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 
 /* blazorElement */
-/* mustUseNGParentAnchor */
 /* wcElementTag: igc-grid-state */
 /* blazorIndirectRender */
-/* contentParent: GridBaseDirective */
-/* jsonAPIManageItemInMarkup */
 /**
  * State component description
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
