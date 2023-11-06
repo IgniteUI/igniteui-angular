@@ -1,7 +1,7 @@
 import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
     Inject,
-    Input, OnDestroy, Output, QueryList
+    Input, OnDestroy, Output, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
@@ -64,14 +64,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     /**
      * Enables/disables the transition animation of the contents.
      */
-    @Input()
-    public get disableAnimation() {
-        return this._disableAnimation;
-    }
-
-    public set disableAnimation(value: boolean) {
-        this._disableAnimation = value;
-    }
+    @Input({ transform: booleanAttribute })
+    public disableAnimation = false;
 
     /**
      * Output to enable support for two-way binding on [(selectedIndex)]
@@ -109,8 +103,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     @ContentChildren(IgxTabContentBase, { descendants: true })
     public panels: QueryList<IgxTabContentBase>;
 
-    /** @hidden */
-    protected _disableAnimation = false;
     /** @hidden */
     protected override currentItem: IgxTabItemDirective;
     /** @hidden */

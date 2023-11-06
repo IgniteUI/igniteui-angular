@@ -8,7 +8,8 @@ import {
     HostBinding,
     Inject,
     Input,
-    Output
+    Output,
+    booleanAttribute
 } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
@@ -124,7 +125,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * <igx-expansion-panel [(collapsed)]="model.isCollapsed"></igx-expansion-panel>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public collapsed = true;
 
     /**
@@ -144,8 +145,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  </igx-expansion-panel>
      * ```
      */
-     @Output()
-     public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+    @Output()
+    public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes collapsing
@@ -172,8 +173,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  </igx-expansion-panel>
      * ```
      */
-     @Output()
-     public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+    @Output()
+    public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding

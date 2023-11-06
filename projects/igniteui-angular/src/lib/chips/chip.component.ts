@@ -12,7 +12,8 @@ import {
     TemplateRef,
     Inject,
     Optional,
-    OnDestroy
+    OnDestroy,
+    booleanAttribute
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
@@ -165,7 +166,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public draggable = false;
 
     /**
@@ -177,7 +178,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [animateOnRelease]="false"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public animateOnRelease = true;
 
     /**
@@ -189,7 +190,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [hideBaseOnDrag]="false"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideBaseOnDrag = true;
 
     /**
@@ -201,7 +202,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public removable = false;
 
     /**
@@ -225,7 +226,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public selectable = false;
 
     /**
@@ -258,7 +259,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * ```
      */
     @HostBinding('class.igx-chip--disabled')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -275,7 +276,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * ```
      */
     @HostBinding('attr.aria-selected')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
     }
@@ -470,8 +471,8 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragOver)="chipOver($event)">
      * ```
      */
-     @Output()
-     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
+    @Output()
+    public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
@@ -565,7 +566,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get removeButtonTemplate() {
-        if(!this.disabled) {
+        if (!this.disabled) {
             return this.removeIcon || this.defaultRemoveIcon;
         }
     }
@@ -583,7 +584,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get ghostStyles() {
-        switch(this.displayDensity) {
+        switch (this.displayDensity) {
             case DisplayDensity.compact:
                 return {
                     '--component-size': 'var(--ig-size, var(--ig-size-small))',

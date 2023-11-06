@@ -70,8 +70,8 @@ export class IgxStepperService {
         this.activeStep.tabIndex = 0;
         this.visitedSteps.add(this.activeStep);
 
-        this.activeStep.cdr.detectChanges();
-        this.previousActiveStep?.cdr.detectChanges();
+        this.activeStep.cdr.markForCheck();
+        this.previousActiveStep?.cdr.markForCheck();
 
         this.activeStep.activeChange.emit(true);
         this.previousActiveStep?.activeChange.emit(false);

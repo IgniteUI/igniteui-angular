@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute } from '@angular/core';
 import {
     IgxSummaryOperand,
     IgxSummaryResult
@@ -26,7 +26,7 @@ export class IgxSummaryCellComponent {
     @Input()
     public firstCellIndentation = 0;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hasSummary = false;
 
     @Input()
@@ -122,7 +122,7 @@ export class IgxSummaryCellComponent {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
-    /** 
+    /**
      * @hidden @internal
      */
     public formatSummaryResult(summary: IgxSummaryResult): string {
