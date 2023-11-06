@@ -262,7 +262,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.navDrawer.enableGestures).toBe(false);
 
-            fixture.componentInstance.enableGestures = 'true';
+            fixture.componentInstance.enableGestures = true;
             fixture.detectChanges();
             expect(fixture.componentInstance.navDrawer.enableGestures).toBeTruthy();
 
@@ -631,7 +631,7 @@ class TestComponentDIComponent {
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
-    public enableGestures = '';
+    public enableGestures = false;
     public pinThreshold = 1024;
 }
 

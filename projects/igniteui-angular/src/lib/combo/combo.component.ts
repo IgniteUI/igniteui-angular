@@ -1,7 +1,7 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -131,7 +131,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * should be focused after the `opened` event is called
      * When `false`, the combo's list item container will be focused instead
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
     /**
@@ -142,7 +142,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * <igx-combo [filterable]="false">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get filterable(): boolean {
         return this.filteringOptions.filterable;
     }

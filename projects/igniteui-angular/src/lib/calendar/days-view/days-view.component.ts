@@ -9,7 +9,7 @@ import {
     HostBinding,
     DoCheck,
     OnInit,
-    Inject, LOCALE_ID
+    Inject, LOCALE_ID, booleanAttribute
 } from '@angular/core';
 import { CalendarSelection, ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -55,7 +55,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public changeDaysView = false;
 
     /**
@@ -66,7 +66,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * <igx-days-view [showWeekNumbers]="true"></igx-days-view>
      * ``
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
 
     /**

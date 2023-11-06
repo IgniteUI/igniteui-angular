@@ -19,7 +19,8 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
@@ -153,7 +154,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public loop = true;
+    @Input({ transform: booleanAttribute }) public loop = true;
 
     /**
      * Sets whether the carousel will `pause` the slide transitions on user interactions.
@@ -164,7 +165,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public pause = true;
+    @Input({ transform: booleanAttribute }) public pause = true;
 
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
@@ -175,7 +176,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public navigation = true;
+    @Input({ transform: booleanAttribute }) public navigation = true;
 
     /**
      * Controls whether the carousel should support keyboard navigation.
@@ -186,7 +187,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public keyboardSupport = true;
+    @Input({ transform: booleanAttribute }) public keyboardSupport = true;
 
     /**
      * Controls whether the carousel should support gestures.
@@ -197,7 +198,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public gesturesSupport = true;
+    @Input({ transform: booleanAttribute }) public gesturesSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
@@ -1015,8 +1016,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.leaveAnimationPlayer.animationEnd
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                this.slides.find(s => s.active).nativeElement.focus();
-            });
+                    this.slides.find(s => s.active).nativeElement.focus();
+                });
         } else {
             requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }

@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input, TemplateRef } from '@angular/core';
+import { Directive, HostBinding, Input, TemplateRef, booleanAttribute } from '@angular/core';
 
 @Directive({
     selector: '[igxDrawerItem]',
@@ -10,12 +10,12 @@ export class IgxNavDrawerItemDirective {
     /**
      * @hidden
      */
-    @Input('active') public active = false;
+    @Input({ alias: 'active', transform: booleanAttribute }) public active = false;
 
     /**
      * @hidden
      */
-    @Input('isHeader') public isHeader = false;
+    @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
 
     /**
      * @hidden
@@ -54,7 +54,7 @@ export class IgxNavDrawerItemDirective {
 export class IgxNavDrawerTemplateDirective {
 
     constructor(public template: TemplateRef<any>) {
-     }
+    }
 }
 
 @Directive({
@@ -64,5 +64,5 @@ export class IgxNavDrawerTemplateDirective {
 export class IgxNavDrawerMiniTemplateDirective {
 
     constructor(public template: TemplateRef<any>) {
-     }
+    }
 }
