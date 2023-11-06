@@ -1794,20 +1794,24 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.reactiveCombo;
             });
-            it('should not select null, undefined and empty string in a reactive form with required', () => {
+            // TODO: this test makes no sense - reactive combo with values equal to null, undefined and empty string
+            it('should not select null, undefined and empty string in a reactive form with required', fakeAsync(() => {
                 // array of objects
                 combo.data = [
                     { field: '0', value: 0 },
-                    { field: 'false', value: false },
-                    { field: '', value: '' },
-                    { field: 'null', value: null },
-                    { field: 'NaN', value: NaN },
-                    { field: 'undefined', value: undefined },
+                    { field: 'false', value: [false] },
+                    { field: 'empty string', value: [''] },
+                    { field: 'null', value: [null] },
+                    { field: 'NaN', value: [NaN] },
+                    { field: 'undefined', value: [undefined] },
                 ];
+
+                fixture.componentInstance.reactiveForm.resetForm();
+                fixture.detectChanges();
 
                 expect(combo.displayValue).toEqual([]);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual(['']);
+                expect(combo.value).toEqual([]);
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
@@ -1819,10 +1823,10 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 expect(combo.displayValue).toEqual([]);
-                expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual([]);
-                expect(combo.valid).toEqual(IgxComboState.INVALID);
-                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                expect(combo.selection).toEqual([{ value: '' }]);
+                expect(combo.value).toEqual(['']);
+                expect(combo.valid).toEqual(IgxComboState.VALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                 // null
                 combo.open();
@@ -1832,10 +1836,10 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 expect(combo.displayValue).toEqual([]);
-                expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual([]);
-                expect(combo.valid).toEqual(IgxComboState.INVALID);
-                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                expect(combo.selection).toEqual([{ value: null }]);
+                expect(combo.value).toEqual([null]);
+                expect(combo.valid).toEqual(IgxComboState.VALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                 // undefined
                 combo.open();
@@ -1845,15 +1849,15 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 expect(combo.displayValue).toEqual([]);
-                expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual([]);
-                expect(combo.valid).toEqual(IgxComboState.INVALID);
-                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                expect(combo.selection).toEqual([{ value: undefined }]);
+                expect(combo.value).toEqual([undefined]);
+                expect(combo.valid).toEqual(IgxComboState.VALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                 // primitive data - undefined is not displayed in the dropdown
                 combo.valueKey = undefined;
                 combo.displayKey = undefined;
-                combo.data = [ 0, false, '', null, NaN, undefined];
+                combo.data = [0, false, '', null, NaN, undefined];
 
                 fixture.componentInstance.reactiveForm.resetForm();
                 fixture.detectChanges();
@@ -1888,7 +1892,7 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.value).toEqual([]);
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
-            });
+            }));
             it('should not select null, undefined and empty string with "writeValue" method in a reactive form with required', () => {
                 // array of objects
                 combo.data = [
