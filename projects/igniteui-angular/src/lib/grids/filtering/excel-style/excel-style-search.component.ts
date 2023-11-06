@@ -298,7 +298,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 selectAllBtn.indeterminate = true;
             }
         }
-        eventArgs.owner.nativeCheckbox.nativeElement.blur();
+        eventArgs.owner.nativeInput.nativeElement.blur();
     }
 
     /**

@@ -6,7 +6,8 @@ import {
     Input,
     Output,
     Directive,
-    ContentChild
+    ContentChild,
+    booleanAttribute
 } from '@angular/core';
 
 import { IgxIconComponent } from '../icon/icon.component';
@@ -143,7 +144,7 @@ export class IgxNavbarComponent {
      * }
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isActionButtonVisible(): boolean {
         if (this.actionIconTemplate || !this.actionButtonIcon) {
             return false;
