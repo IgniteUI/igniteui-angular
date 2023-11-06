@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, HostBinding, Input, booleanAttribute } from '@angular/core';
 
 @Directive({
     selector: '[igxLayout]',
@@ -37,7 +37,7 @@ export class IgxLayoutDirective {
      * </div>
      * ```
      */
-    @Input('igxLayoutReverse') public reverse = false;
+    @Input({ alias: 'igxLayoutReverse', transform: booleanAttribute }) public reverse = false;
 
     /**
      * By default the immediate children will all try to fit onto one line.

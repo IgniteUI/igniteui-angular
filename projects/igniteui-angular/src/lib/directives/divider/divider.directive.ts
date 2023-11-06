@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, HostBinding, Input, booleanAttribute } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxDividerType = mkenum({
@@ -62,7 +62,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('class.igx-divider--inset')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public middle = false;
 
     /**
@@ -72,7 +72,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('class.igx-divider--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 
     /**
@@ -96,7 +96,7 @@ export class IgxDividerDirective {
      * ```
      */
     public get inset() {
-		return this._inset;
+        return this._inset;
     }
 
     /**

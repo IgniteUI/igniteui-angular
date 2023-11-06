@@ -15,7 +15,7 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener
+    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener, booleanAttribute
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -226,7 +226,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * <igx-time-picker [spinLoop]="false"></igx-time-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public spinLoop = true;
 
     /**
@@ -254,7 +254,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /** @hidden @internal */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public readOnly = false;
 
     /**
