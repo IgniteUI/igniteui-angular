@@ -23,7 +23,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -481,34 +481,26 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public _clickHandler(index: number) {
         const button = this.buttons[index];
-        const args: IButtonGroupEventArgs = { cancel: false, owner: this, button, index };
 
         if (this.selectionMode !== 'multi') {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselected.emit({ cancel: false, owner: this, button: b, index: i });
+                    this.deselected.emit({ button: b, index: i });
                 }
             });
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selected.emit(args);
-            if(!args.cancel){
-                this.selectButton(index);
-            }
+            this.selectButton(index);
+            this.selected.emit({ button, index });
         } else {
-            if (this.selectionMode !== 'singleRequired') {
-                this.deselected.emit(args);
-                if(!args.cancel){
-                    this.deselectButton(index);
-                }
-            }
+            this.deselectButton(index);
+            this.deselected.emit({ button, index });
         }
     }
 }
 
-export interface IButtonGroupEventArgs extends IBaseEventArgs, CancelableEventArgs {
-    owner: IgxButtonGroupComponent;
+export interface IButtonGroupEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
     index: number;
 }

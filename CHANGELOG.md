@@ -241,8 +241,6 @@ All notable changes for each version of this project will be documented in this 
         </igx-card-actions>
     </igx-card>
     ```
-- `IgxButtonGroup`:
-    - The `selected` and `deselected` events are now cancellable.
 
 ### General
  - `IgxPivotGrid`
