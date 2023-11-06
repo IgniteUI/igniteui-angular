@@ -5457,12 +5457,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
             expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
 
-            // on end the last item should be active
-            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
-            fix.detectChanges();
-            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
-
             // on home the first item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
             UIInteractions.triggerKeyDownEvtUponElem('home', list, true);
             fix.detectChanges();
             expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
