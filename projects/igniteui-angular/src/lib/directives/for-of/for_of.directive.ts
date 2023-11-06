@@ -21,7 +21,8 @@ import {
     TrackByFunction,
     ViewContainerRef,
     AfterViewInit,
-    Inject
+    Inject,
+    booleanAttribute
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -93,7 +94,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * ```
      */
     @Input()
-    public igxForOf: U&T[] | null;
+    public igxForOf: U & T[] | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
@@ -492,8 +493,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxForOf` structural directive renders its template with a specific context type.
      */
-    public static  ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
-            ctx is IgxForOfContext<T, U> {
+    public static ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
+        ctx is IgxForOfContext<T, U> {
         return true;
     }
 
@@ -762,8 +763,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      */
     public isIndexOutsideView(index: number) {
         const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
-        this._embeddedViews.map(view =>
-            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
+            this._embeddedViews.map(view =>
+                view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
         const rowHeight = this.getSizeAt(index);
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
@@ -1234,7 +1235,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             this.igxForSizePropName : 'height';
         const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         for (i; i < this.igxForOf.length; i++) {
-            let item: T | { value: T, height: number} = this.igxForOf[i];
+            let item: T | { value: T, height: number } = this.igxForOf[i];
             if (dimension === 'height') {
                 item = { value: this.igxForOf[i], height: this.heightCache[i] };
             }
@@ -1459,8 +1460,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
             const offset = this.igxForScrollOrientation === 'horizontal' ?
-             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
-             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
+                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize;
             if (this.scrollPosition !== newSize) {
@@ -1499,7 +1500,7 @@ export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext
         count: number
     ) {
         super($implicit, igxGridForOf, index, count);
-     }
+    }
 }
 
 @Directive({
@@ -1508,7 +1509,7 @@ export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext
 })
 export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
     @Input()
-    public set igxGridForOf(value: U&T[] | null) {
+    public set igxGridForOf(value: U & T[] | null) {
         this.igxForOf = value;
     }
 
@@ -1516,10 +1517,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         return this.igxForOf;
     }
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public igxGridForOfUniqueSizeCache = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public igxGridForOfVariableSizes = true;
 
     /**
@@ -1582,7 +1583,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
      */
     public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
-            ctx is IgxGridForOfContext<T, U> {
+        ctx is IgxGridForOfContext<T, U> {
         return true;
     }
 
@@ -1700,9 +1701,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     protected getItemSize(item) {
         let size = 0;
-        const dimension = this.igxForSizePropName  || 'height';
+        const dimension = this.igxForSizePropName || 'height';
         if (this.igxForScrollOrientation === 'vertical') {
-            size =  this._getItemSize(item, dimension);
+            size = this._getItemSize(item, dimension);
             if (item && item.summaries) {
                 size = item.max;
             } else if (item && item.groups && item.height) {

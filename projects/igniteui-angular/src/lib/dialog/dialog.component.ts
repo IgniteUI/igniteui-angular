@@ -10,7 +10,8 @@ import {
     Optional,
     Output,
     ViewChild,
-    AfterContentInit
+    AfterContentInit,
+    booleanAttribute
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -85,7 +86,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [isModal]="false" ></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isModal() {
         return this._isModal;
     }
@@ -101,7 +102,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [closeOnEscape]="false" ></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get closeOnEscape() {
         return this._closeOnEscape;
     }
@@ -118,7 +119,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog focusTrap="false""></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public focusTrap = true;
 
     /**
@@ -245,7 +246,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * </igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get closeOnOutsideSelect() {
         return this._closeOnOutsideSelect;
     }
@@ -405,9 +406,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [(isOpen)]='model.isOpen'></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isOpen() {
-        return !this.toggleRef.collapsed;
+        return this.toggleRef ? !this.toggleRef.collapsed : false;
     }
     public set isOpen(value: boolean) {
         if (value !== this.isOpen) {
@@ -533,7 +534,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     public close() {
         // `closing` will emit from `toggleRef.closing` subscription
-        this.toggleRef.close();
+        this.toggleRef?.close();
     }
 
 

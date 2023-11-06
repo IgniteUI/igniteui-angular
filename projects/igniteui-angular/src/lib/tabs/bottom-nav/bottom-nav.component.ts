@@ -47,7 +47,7 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
     /** @hidden */
-    protected override _disableAnimation = true;
+    public override disableAnimation = true;
     /** @hidden */
     protected override componentName = 'igx-bottom-nav';
 
