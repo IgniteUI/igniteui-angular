@@ -44,7 +44,7 @@ class Button {
 }
 
 
-fdescribe('IgxButtonGroup', () => {
+describe('IgxButtonGroup', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
