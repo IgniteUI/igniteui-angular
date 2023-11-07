@@ -22,7 +22,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IComboFilteringOptions, IgxComboState } from './combo.common';
+import { IComboFilteringOptions } from './combo.common';
 import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
@@ -3019,26 +3019,26 @@ describe('igxCombo', () => {
                     expect(combo.value).toEqual(comboFormReference.value);
                     expect(combo.selection.length).toEqual(1);
                     expect(combo.selection[0].field).toEqual('Connecticut');
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
-                    expect(combo.valid).toEqual(IgxComboState.VALID);
+                    expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
                 it('should properly initialize when used as a form control - without validators', () => {
@@ -3051,26 +3051,26 @@ describe('igxCombo', () => {
                     expect(combo.value).toEqual(comboFormReference.value);
                     expect(combo.selection.length).toEqual(1);
                     expect(combo.selection[0].field).toEqual('Connecticut');
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
                 it('should be possible to be enabled/disabled when used as a form control', () => {
@@ -3198,24 +3198,24 @@ describe('igxCombo', () => {
                     inputGroupRequired = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_REQUIRED}`));
                 }));
                 it('should properly initialize when used in a template form control', () => {
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(inputGroupRequired).toBeDefined();
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     input.triggerEventHandler('focus', {});
                     combo.selectAllItems();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.VALID);
+                    expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                 });
                 it('should properly init with empty array and handle consecutive model changes', fakeAsync(() => {
@@ -3223,7 +3223,7 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = [];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(model.valid).toBeFalse();
                     expect(model.dirty).toBeFalse();
@@ -3232,7 +3232,7 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = ['Missouri'];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
                     expect(combo.value).toEqual(['Missouri']);
@@ -3242,7 +3242,7 @@ describe('igxCombo', () => {
 
                     fixture.componentInstance.values = ['Missouri', 'Missouri'];
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
                     expect(combo.value).toEqual(['Missouri']);
@@ -3253,7 +3253,7 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = null;
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.selection).toEqual([]);
                     expect(combo.value).toEqual([]);
@@ -3264,7 +3264,7 @@ describe('igxCombo', () => {
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                     expect(model.valid).toBeFalse();
                     expect(model.touched).toBeTrue();
@@ -3273,7 +3273,7 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = ['New Jersey'];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.selection).toEqual([{ field: 'New Jersey', region: 'Mid-Atlan' }]);
                     expect(combo.value).toEqual(['New Jersey']);
@@ -3292,12 +3292,12 @@ describe('igxCombo', () => {
                 it('should set validity to initial when the form is reset', fakeAsync(() => {
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     fixture.componentInstance.form.resetForm();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
             });

@@ -28,6 +28,9 @@ All notable changes for each version of this project will be documented in this 
     - `ISimpleComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
 
       Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
+- `IgxCombo`,`IgxSimpleCombo`
+    - **Breaking Change** The `valid` property now accepts and returns the same `IgxInputState` enumeration as `IgxInput`.
+
 ## 16.1.4
 ### New Features
 - `Themes`:
