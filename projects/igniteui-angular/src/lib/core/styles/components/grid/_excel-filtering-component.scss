@@ -164,5 +164,9 @@
         @include m(inline) {
             @extend %grid-excel-filter--inline !optional;
         }
+
+        @include e(filter-results) {
+            @extend %grid-excel-menu__filter-results !optional;
+        }
     }
 }
