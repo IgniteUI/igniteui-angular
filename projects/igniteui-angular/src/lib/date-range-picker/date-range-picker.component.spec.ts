@@ -131,6 +131,7 @@ describe('IgxDateRangePicker', () => {
             mockDocument = {
                 body: mockElement,
                 defaultView: mockElement,
+                documentElement: document.documentElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
