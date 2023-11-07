@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
-    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.0) as it was breaking firing order.
+    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
 
 ## 16.1.4
 ### New Features
@@ -33,8 +33,6 @@ All notable changes for each version of this project will be documented in this 
     @include typography();
     @include theme();
     ``` 
-- `IgxButtonGroup`:
-    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.0) as it was breaking firing order.
 
 ## 16.1.0
 ### New Features
