@@ -84,7 +84,7 @@ export const getImportModulePositions = (sourceText: string, startsWith: string)
 };
 
 /** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
-const namedImportFilter = (statement: ts.Statement) => {
+export const namedImportFilter = (statement: ts.Statement) => {
     if (statement.kind === ts.SyntaxKind.ImportDeclaration &&
         ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text.endsWith(IG_PACKAGE_NAME)) {
 
@@ -349,7 +349,7 @@ export const getTypeDefinitionAtPosition =
  */
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
-        const content = langServ.getProgram().getSourceFile(entryPath).getText();
+        const content = langServ.getProgram().getSourceFile(entryPath).getFullText();
         matchPosition = shiftMatchPosition(matchPosition, content);
         const prevChar = content.substr(matchPosition - 1, 1);
         if (prevChar === SyntaxTokens.ClosingParenthesis) {
