@@ -52,3 +52,6 @@ src/**/*.css.map
 extras/docs/themes/typedoc/bin
 extras/docs/themes/sassdoc/node_modules
 extras/docs/themes/sassdoc/sassdoc/*
+
+# Localization sources
+i18nRepo
