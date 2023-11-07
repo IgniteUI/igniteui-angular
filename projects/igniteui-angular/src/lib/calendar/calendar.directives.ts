@@ -104,7 +104,7 @@ export class IgxCalendarMonthDirective {
         return this.date.getMonth() === this.value.getMonth();
     }
 
-    public get nativeElement() {
+	public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 

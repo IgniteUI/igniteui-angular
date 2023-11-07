@@ -5,6 +5,9 @@ export interface ICalendarResourceStrings {
  igx_calendar_select_year?: string;
  igx_calendar_range_start?: string;
  igx_calendar_range_end?: string;
+ igx_calendar_range_label_start?: string;
+ igx_calendar_range_label_end?: string;
+ igx_calendar_range_placeholder?: string;
  igx_calendar_selected_month_is?: string;
  igx_calendar_first_picker_of?: string;
  igx_calendar_multi_selection?: string;
@@ -22,6 +25,9 @@ export const CalendarResourceStringsEN: ICalendarResourceStrings = {
  igx_calendar_select_year: 'Select Year',
  igx_calendar_range_start: 'Range start',
  igx_calendar_range_end: 'Range end',
+ igx_calendar_range_label_start: 'Start',
+ igx_calendar_range_label_end: 'End',
+ igx_calendar_range_placeholder: 'Select Range',
  igx_calendar_selected_month_is: 'Selected month is ',
  igx_calendar_first_picker_of: 'First picker of {0} starts from',
  igx_calendar_multi_selection: 'Multi selection calendar with {0} date pickers',

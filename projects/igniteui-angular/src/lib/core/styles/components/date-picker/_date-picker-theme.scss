@@ -92,6 +92,7 @@
             color: var-get($theme, 'year-hover-text-color');
         }
 
+        %cal-value--month-focus,
         %cal-value--month-hover {
             color: var-get($theme, 'month-hover-text-color');
         }

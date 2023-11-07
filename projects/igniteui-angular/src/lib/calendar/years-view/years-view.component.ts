@@ -111,6 +111,11 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     private _onChangeCallback: (_: Date) => void = noop;
 
+	/**
+	 * @hidden
+	 */
+	private isMonthView: boolean = false;
+
     /**
      * Gets/sets the selected date of the years view.
      * By default it is the current date.
@@ -198,8 +203,8 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     public get decade() {
         const result: Date[] = [];
-        const start = this.date.getFullYear() - 3;
-        const end = this.date.getFullYear() + 4;
+        const start = this.date.getFullYear() - 13;
+        const end = this.date.getFullYear() + 2;
 
         for (const year of range(start, end)) {
             result.push(new Date(year, this.date.getMonth(), this.date.getDate()));
@@ -261,7 +266,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public selectYear(event) {
+    public selectYear(event: Date) {
         this.date = event;
 
         this.selected.emit(this.date);

@@ -16,12 +16,9 @@
 
         @extend %cal-display !optional;
 
+        // HEADER
         @include e(header) {
             @extend %cal-header-display !optional;
-        }
-
-        @include e(aria-off-screen) {
-            @extend %calendar__aria-off-screen !optional;
         }
 
         @include e(header-year) {
@@ -32,8 +29,13 @@
             @extend %cal-header-date !optional;
         }
 
+        // BODY
         @include e(body) {
             @extend %cal-body-display !optional;
+        }
+
+        @include e(body-inner) {
+            @extend %cal-body-inner !optional;
         }
 
         @include e(body-row) {
@@ -48,6 +50,11 @@
             @extend %cal-column-year !optional;
         }
 
+        @include e(body-grid) {
+            @extend %cal-grid !optional;
+        }
+
+        // LABEL
         @include e(label) {
             @extend %cal-value !optional;
             @extend %cal-value--label !optional;
@@ -57,6 +64,7 @@
             @extend %label--week-number !optional;
         }
 
+        // DATE
         @include e(date) {
             @extend %cal-value !optional;
 
@@ -118,13 +126,51 @@
                 @extend %cal-value--selected--current--focus !optional;
             }
         }
-
         @include e(date, 'hidden') {
             @extend %cal-value--hidden !optional;
         }
 
         @include e(date, 'range') {
             @extend %cal-value--range !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected')) {
+            &focus,
+            &:hover {
+                @extend %cal-value--range-selected-hover !optional;
+            }
+        }
+
+        @include e(date, 'range', $mods: ('selected', 'first')) {
+            @extend %cal-value--range-first !optional;
+        }
+
+        @include e(date, 'range', $mods: ('selected', 'last')) {
+            @extend %cal-value--range-last !optional;
+        }
+
+        @include e(date, 'range',  $mods: ('first', 'last')) {
+            @extend %cal-value--range-first-last !optional;
+        }
+
+        @include e(date, 'range',  $mods: ('inactive', 'selected')) {
+            @extend %cal-value--range-inactive-selected !optional;
+        }
+
+        @include e(date, 'range',  $mods: ('inactive', 'selected', single)) {
+            @extend %cal-value--range-inactive-selected-single !optional;
+        }
+
+        @include e(date, 'range', $mods: ('selected', 'current')) {
+            @extend %cal-value--selected--current-range !optional;
+
+            &:hover {
+                @extend %cal-value--selected--current-range-hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--selected--current-range-focus !optional;
+            }
         }
 
         @include e(date, 'weekend') {
@@ -186,14 +232,21 @@
             @extend %cal-value-content--week-number !optional;
         }
 
+        // year/month view
         @include e(year) {
-            @extend %cal-value !optional;
             @extend %cal-value--year !optional;
 
-            &:hover,
+            &:hover {
+                @extend %cal-value--year-focus !optional;
+            }
+
             &:focus {
                 @extend %cal-value--year-hover !optional;
             }
+        }
+
+        @include e(year-inner) {
+            @extend %cal-value--year-inner !optional;
         }
 
         @include e(year, 'current') {
@@ -204,20 +257,45 @@
         @include e(month) {
             @extend %cal-value--month !optional;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 @extend %cal-value--month-hover !optional;
             }
+
+            &:focus {
+                @extend %cal-value--month-focus !optional;
+            }
+        }
+
+        @include e(month-inner) {
+            @extend %cal-value--month-inner !optional;
         }
 
         @include e(month, 'current') {
             @extend %cal-value--month-current !optional;
 
-            &:hover,
-            &:focus {
+            &:hover{
                 @extend %cal-value--month-hover !optional;
                 @extend %cal-value--month-current-hover !optional;
             }
+
+            &:focus {
+                @extend %cal-value--month-focus !optional;
+                @extend %cal-value--month-current-focus !optional;
+            }
+        }
+
+        // days view
+        @include m(days-view) {
+            @extend %cal--days-view !optional;
+        }
+
+        // days view
+        @include e(days-views) {
+            @extend %cal__days-views !optional;
+        }
+
+        @include e(aria-off-screen) {
+            @extend %calendar__aria-off-screen !optional;
         }
 
         @include m(vertical) {
@@ -238,18 +316,20 @@
             @extend %cal-picker-dates !optional;
         }
 
+        @include e(nav) {
+            @extend %cal-picker__nav !optional;
+        }
+
         @include e(date) {
             @extend %cal-picker-date !optional;
         }
 
         @include e(prev) {
             @extend %cal-picker-arrow !optional;
-            @extend %cal-picker-arrow__prev !optional;
         }
 
         @include e(next) {
             @extend %cal-picker-arrow !optional;
-            @extend %cal-picker-arrow__next !optional;
         }
     }
 }

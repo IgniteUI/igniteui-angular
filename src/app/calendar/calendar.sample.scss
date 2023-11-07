@@ -1,21 +1,113 @@
-.calendar-sample {
-    height: 100vh;
-}
+$padding: 2rem;
 
-.calendar-sample + .calendar-sample {
-    height: 100vh;
-    margin-top: 48px;
-}
+small {
+    font-size: .8rem;
 
-.calendar-sample-buttons {
-    margin-bottom: 16px;
-
-    button {
-        margin-right: 8px;
-        margin-bottom: 8px;
+    &:not(:first-child) {
+        margin-block-start: 1rem;
     }
 }
 
-button.submit {
-    margin-top: 16px;
+.calendar-wrapper {
+    flex-basis: 100px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    strong {
+        color: hsla(var(--ig-secondary-500));
+        display: block;
+        text-align: center;
+        padding: 10px;
+    }
+}
+
+.preview {
+    display: flex;
+    border: 1px solid hsla(var(--ig-gray-300));
+
+    &__sample {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: $padding;
+        gap: $padding;
+        overflow: auto;
+        flex: 1;
+    }
+
+    &__settings {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: hsla(var(--ig-gray-50));
+        border-left: 1px solid hsla(var(--ig-gray-300));
+        padding: $padding;
+    }
+
+    &__comp-size {
+        margin-block-end: 16px;
+    }
+
+    &__variant-select {
+        margin-block-end: 16px;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-self: flex-start;
+        margin-block-start: 1rem;
+        gap: .5rem;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+        color: hsla(var(--ig-secondary-600));
+        outline: none;
+
+        &:focus,
+        &:hover {
+            color: hsla(var(--ig-secondary-300));
+        }
+    }
+}
+
+igx-input-group {
+    --ig-size: 1;
+}
+
+.row {
+    display: flex;
+
+    > * {
+        align-self: center;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    margin-block-end: 1rem;
+}
+
+.gap {
+    gap: 1rem;
+}
+
+
+// TODO UPDATE THE WEB COKMPONENRTS STYLES
+igc-calendar {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    min-width: 18.125rem;
+    background: var(--content-background);
+    outline: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 0 solid var(--border-color);
 }

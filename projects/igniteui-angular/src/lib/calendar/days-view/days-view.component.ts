@@ -52,6 +52,9 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     @Input()
     public id = `igx-days-view-${NEXT_ID++}`;
 
+	@HostBinding('class.igx-calendar--days-view')
+	public readonly viewClass = true;
+
     /**
      * @hidden
      */

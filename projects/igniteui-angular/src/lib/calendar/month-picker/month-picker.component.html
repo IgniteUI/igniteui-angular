@@ -7,17 +7,6 @@
     (swipeleft)="nextYear()">
 
     <div role="rowheader" class="igx-calendar-picker">
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__prev"
-            (click)="previousYear()"
-            (keydown)="changeYearKB($event, false)"
-            [ngStyle]="{'min-width.%': 25, 'left': 0}"
-            role="button"
-            [attr.aria-label]="'Previous Year ' + getPreviousYear()"
-            data-action="prev">
-            <igx-icon>keyboard_arrow_left</igx-icon>
-        </div>
         <div [style.width.%]="100">
             <span
                 tabindex="0"
@@ -29,17 +18,29 @@
                 {{ formattedYear(viewDate) }}
             </span>
         </div>
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__next"
-            (click)="nextYear()"
-            (keydown)="changeYearKB($event)"
-            [ngStyle]="{'min-width.%': 25,'right': 0}"
-            role="button"
-            [attr.aria-label]="'Next Year ' + getNextYear()"
-            data-action="next">
-
-            <igx-icon>keyboard_arrow_right</igx-icon>
+        <div class="igx-calendar-picker-nav">
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                (click)="previousYear()"
+                (keydown)="changeYearKB($event, false)"
+                [ngStyle]="{'min-width.%': 25, 'left': 0}"
+                role="button"
+                [attr.aria-label]="'Previous Year ' + getPreviousYear()"
+                data-action="prev">
+                <igx-icon>keyboard_arrow_left</igx-icon>
+            </div>
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                (click)="nextYear()"
+                (keydown)="changeYearKB($event)"
+                [ngStyle]="{'min-width.%': 25,'right': 0}"
+                role="button"
+                [attr.aria-label]="'Next Year ' + getNextYear()"
+                data-action="next">
+                <igx-icon>keyboard_arrow_right</igx-icon>
+            </div>
         </div>
     </div>
 

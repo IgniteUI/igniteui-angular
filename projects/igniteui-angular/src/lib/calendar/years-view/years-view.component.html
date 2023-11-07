@@ -1,12 +1,14 @@
 <div class="igx-calendar__body">
-    <div class="igx-calendar__body-column" (wheel)="scroll($event)" (pan)="pan($event)">
+    <div class="igx-calendar__body-grid">
         <span class="igx-calendar__year"
             [igxCalendarYear]="year"
             [date]="date"
             (yearSelection)="selectYear($event)"
             *ngFor="let year of decade; trackBy: yearTracker">
 
-            {{ formattedYear(year) }}
+            <span class="igx-calendar__year-inner">
+                {{ formattedYear(year) }}
+            </span>
         </span>
     </div>
 </div>

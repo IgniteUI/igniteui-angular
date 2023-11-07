@@ -132,6 +132,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    protected formatterRangeday;
+
+    /**
+     * @hidden
+     */
     protected calendarModel: Calendar;
 
     /**
@@ -201,7 +206,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _formatOptions: IFormattingOptions = {
         day: 'numeric',
-        month: 'short',
+        month: 'long',
         weekday: 'short',
         year: 'numeric'
     };
@@ -611,6 +616,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
         this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
         this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+		this.formatterRangeday = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day, month: 'short' });
     }
 
     /**

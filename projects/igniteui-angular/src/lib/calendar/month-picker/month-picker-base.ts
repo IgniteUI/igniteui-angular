@@ -106,10 +106,20 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      *
      * @hidden
      */
-    public formattedYear(value: Date): string {
+    public formattedYear(value: Date | Date[]): string {
+		if (Array.isArray(value)) {
+			return;
+		}
+
         if (this.formatViews.year) {
             return this.formatterYear.format(value);
         }
-        return `${value.getFullYear()}`;
+
+	    return `${value.getFullYear()}`;
     }
+
+	public formattedYears(value: Date) {
+		const dates = value as unknown as Date[];
+		return dates.map(date => this.formattedYear(date)).join(' - ');
+	}
 }
