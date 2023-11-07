@@ -27,7 +27,7 @@ jobs:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
       - name: Install packages
-        run: npm ci --legacy-peer-deps
+        run: npm ci
       - name: Lint Lib
         run: npm run lint:lib
         env:
@@ -36,10 +36,10 @@ jobs:
         run: npm run lint:i18n
       - name: Build Lib
         run: npm run build:lib
-    #   - name: Build TypeDoc & SassDoc
-    #     run: |
-    #         npm run build:typedoc:en:production
-    #         npm run build:sassdoc:en:production
+      - name: Build TypeDoc & SassDoc
+        run: |
+            npm run build:typedoc:en:production
+            npm run build:sassdoc:en:production
       - name: Test
         run: |
             npm run test:lib
