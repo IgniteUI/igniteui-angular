@@ -19,10 +19,10 @@ All notable changes for each version of this project will be documented in this 
     - `IgxSwitchComponent` size has been reduced in half
 - `IgxRadioComponent` 
     - **Breaking Change** `IChangeRadioEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
-    - **Breaking Change** `RadioLabelPosition` is now `CheckboxLabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `RadioLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
 - `IgxSwitchComponent`
     - **Breaking Change** `IChangeSwitchEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
-    - **Breaking Change** `SwitchLabelPosition` is now `CheckboxLabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `SwitchLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
 
 ## 16.1.4
 ### New Features
