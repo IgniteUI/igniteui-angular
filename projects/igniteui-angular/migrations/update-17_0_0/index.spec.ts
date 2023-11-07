@@ -205,4 +205,27 @@ describe(`Update to ${version}`, () => {
         `
         );
     });
+
+    for (const igPackage of ['igniteui-angular', '@infragistics/igniteui-angular']) {
+        it('should move animation imports from igniteui-angular to igniteui-angular/animations', async () => {
+            appTree.create(`/testSrc/appPrefix/component/test.component.ts`,
+`import { IgxButtonModule, flipRight, IgxIconModule, slideInBr, scaleOutHorLeft, IgxRippleModule, EaseOut } from '${igPackage}';
+import { Component, ViewChild } from '@angular/core';
+
+import { swingOutLeftBck, growVerIn, growVerOut, shakeHor, IgxCardModule } from '${igPackage}';
+`
+            );
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
+`import { IgxButtonModule, IgxIconModule, IgxRippleModule } from '${igPackage}';
+import { Component, ViewChild } from '@angular/core';
+
+import { IgxCardModule } from '${igPackage}';
+import { EaseOut, flipRight, growVerIn, growVerOut, scaleOutHorLeft, shakeHor, slideInBr, swingOutLeftBck } from '${igPackage}/animations';
+`
+            );
+        });
+    }
 });
