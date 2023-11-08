@@ -45,7 +45,7 @@ All notable changes for each version of this project will be documented in this 
         - The events `cellEditExit`and `cellEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `ICellEditDoneEventArgs`.
         - The events `rowEditExit`and `rowEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `IRowEditDoneEventArgs`.
         - The events `rowAdd`and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
-        - The events `rowAdd`and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
+        - The events `rowAdd` and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
         - `rowID` property has been deprecated in the following interfaces: `IRowEditEventArgs`, `IRowEditDoneEventArgs`, `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IPathSegment`, `HierarchicalStateRecord`, `ICellEditEventArgs`, `ICellEditDoneEventArgs` and will be removed in a future version, so please use `key` property instead and for `ICellEditEventArgs` and `ICellEditDoneEventArgs` use `rowKey` property instead.
         - `rowData` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IRowEditEventArgs`, `IRowDataCancelableEventArgs` and will be removed in a future version, so please use `data` property instead.
 ## 16.1.4
