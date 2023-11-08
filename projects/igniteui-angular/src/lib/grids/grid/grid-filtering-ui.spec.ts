@@ -6608,7 +6608,7 @@ const checkUIForType = (type: string, elem: DebugElement) => {
 };
 
 const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
-    let size = getSize(expectedDisplayDensity);
+    const size = getSize(expectedDisplayDensity);
 
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
