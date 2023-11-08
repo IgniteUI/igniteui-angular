@@ -103,21 +103,6 @@ export enum DataTypes {
     PRIMARYKEY = 'valueKey'
 }
 
-export enum IgxComboState {
-    /**
-     * Combo with initial state.
-     */
-    INITIAL = IgxInputState.INITIAL,
-    /**
-     * Combo with valid state.
-     */
-    VALID = IgxInputState.VALID,
-    /**
-     * Combo with invalid state.
-     */
-    INVALID = IgxInputState.INVALID
-}
-
 /** The filtering criteria to be applied on data search */
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
@@ -792,7 +777,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let valid = this.combo.valid;
      * ```
      */
-    public get valid(): IgxComboState {
+    public get valid(): IgxInputState {
         return this._valid;
     }
 
@@ -801,16 +786,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * ```typescript
      * // set
-     * this.combo.valid = IgxComboState.INVALID;
+     * this.combo.valid = IgxInputState.INVALID;
      * ```
      */
-    public set valid(valid: IgxComboState) {
+    public set valid(valid: IgxInputState) {
         this._valid = valid;
-        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
+        this.comboInput.valid = valid;
     }
 
     /**
-     * The value of the selected item in the combo
+     * The value of the combo
      *
      * ```typescript
      * // get
@@ -829,8 +814,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let comboDisplayValue = this.combo.displayValue;
      * ```
      */
-    public get displayValue(): string[] {
-        return this._displayValue ? this._displayValue.split(', ') : [];
+    public get displayValue(): string {
+        return this._displayValue;
     }
 
     /**
@@ -941,7 +926,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _displayKey: string;
     protected _remoteSelection = {};
     protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
-    protected _valid = IgxComboState.INITIAL;
+    protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
     protected _onTouchedCallback: () => void = noop;
@@ -1091,7 +1076,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let mySelection = this.combo.selection;
      * ```
      */
-    public get selection() {
+    public get selection(): any[] {
         const items = Array.from(this.selectionService.get(this.id));
         return this.convertKeysToItems(items);
     }
@@ -1250,9 +1235,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.collapsed) {
             this._onTouchedCallback();
             if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxComboState.INVALID;
+                this.valid = IgxInputState.INVALID;
             } else {
-                this.valid = IgxComboState.INITIAL;
+                this.valid = IgxInputState.INITIAL;
             }
         }
     }
@@ -1270,13 +1255,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected onStatusChanged = () => {
         if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
             if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-            this.valid = IgxComboState.INITIAL;
+            this.valid = IgxInputState.INITIAL;
         }
         this.manageRequiredAsterisk();
     };

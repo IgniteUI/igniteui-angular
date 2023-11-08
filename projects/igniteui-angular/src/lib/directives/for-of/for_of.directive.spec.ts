@@ -1465,6 +1465,7 @@ export class VirtualComponent {
         </div>
     `,
     standalone: true,
+    selector: 'igx-vertical-virtual',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VerticalVirtualComponent extends VirtualComponent {
@@ -1628,6 +1629,7 @@ export class VirtualVariableSizeComponent {
         </div>
     `,
     standalone: true,
+    selector: 'igx-vertical-virtual-no-data',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {

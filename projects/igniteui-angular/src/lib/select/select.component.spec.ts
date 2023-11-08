@@ -2814,6 +2814,7 @@ class IgxSelectMiddleComponent {
         </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-top',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2840,6 +2841,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-bottom',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectBottomComponent {

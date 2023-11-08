@@ -75,7 +75,7 @@ export class UpdateChanges {
 
 
             try {
-                const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
+                const project = this._projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
                 project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
             } catch (err) {
                 this.context.logger.warn(
@@ -830,7 +830,7 @@ export class UpdateChanges {
             return null;
         }
         this.projectService.openClientFile(scriptInfo.fileName);
-        const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        const project = this.projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
     }
