@@ -6,7 +6,7 @@ import {
     IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, ICellEditDoneEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs, ICellEditEventArgs, IRowDataCancelableEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IGridEditDoneEventArgs, IRowDataCancelableEventArgs, IGridEditEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -1051,14 +1051,14 @@ export interface GridType extends IGridDataBindable {
     rowDelete: EventEmitter<IRowDataCancelableEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
-    cellEditEnter: EventEmitter<ICellEditEventArgs>;
-    cellEdit: EventEmitter<ICellEditEventArgs>;
-    cellEditDone: EventEmitter<ICellEditDoneEventArgs>;
-    cellEditExit: EventEmitter<ICellEditDoneEventArgs>;
-    rowEditEnter: EventEmitter<IRowEditEventArgs>;
-    rowEdit: EventEmitter<IRowEditEventArgs>;
-    rowEditDone: EventEmitter<IRowEditDoneEventArgs>;
-    rowEditExit: EventEmitter<IRowEditDoneEventArgs>;
+    cellEditEnter: EventEmitter<IGridEditEventArgs>;
+    cellEdit: EventEmitter<IGridEditEventArgs>;
+    cellEditDone: EventEmitter<IGridEditDoneEventArgs>;
+    cellEditExit: EventEmitter<IGridEditDoneEventArgs>;
+    rowEditEnter: EventEmitter<IGridEditEventArgs>;
+    rowEdit: EventEmitter<IGridEditEventArgs>;
+    rowEditDone: EventEmitter<IGridEditDoneEventArgs>;
+    rowEditExit: EventEmitter<IGridEditDoneEventArgs>;
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;

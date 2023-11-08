@@ -45,8 +45,8 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
-    ICellEditDoneEventArgs,
-    ICellEditEventArgs,
+    IGridEditDoneEventArgs,
+    IGridEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs,
@@ -477,25 +477,25 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEdit = new EventEmitter<ICellEditEventArgs>();
+    public override cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
+    public override cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditEnter = new EventEmitter<ICellEditEventArgs>();
+    public override cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
+    public override cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal

@@ -31,17 +31,20 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 }
 
 /**
- * @deprecated since version 17.0.0. Stop exporting this interface in version 19
  * Use ICellEditDoneEventArgs property for cellEditDone and cellEditExit events
  * Use IRowEditDoneEventArgs property for rowEditDone and rowEditExit events
  */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 17.0.0
-     * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
-     * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
+     * Use IGridEditDoneEventArgs.rowKey property
      */
     rowID: any;
+    /**
+     * @deprecated since version 17.0.0
+     * Use IGridEditDoneEventArgs.rowKey property
+     */
+    primaryKey: any;
     cellID?: {
         rowID: any;
         columnID: any;
@@ -50,11 +53,8 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * `rowData` represents the updated/committed data of the row after the edit (newValue)
      * The only case rowData (of the current object) is used directly, is when there is no rowEditing or transactions enabled
-     * @deprecated since version 17.0.0
-     * Use `data` instead
      */
     rowData: any;
-    data: any;
     oldValue: any;
     /**
      * Optional
@@ -90,39 +90,16 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     valid?: boolean;
 }
 
-/**
- * `ICellEditDoneEventArgs` object is emitted by `cellEditDone` and `cellEditExit` events
+
+/** 
+ * Represents event arguments related to grid editing.
+ * The event is cancelable
+ * It contains information about the row and the column, as well as the old and nwe value of the element/cell
  */
-export interface ICellEditDoneEventArgs extends IGridEditDoneEventArgs {
-    /**
-    * The primaryKey value of the row, which contains the edited cell
-    */
-    rowKey: any;
+export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
-/**
- * `IRowEditDoneEventArgs` is emitted by `rowEditDone` and `rowEditExit` events
- */
-export interface IRowEditDoneEventArgs extends IGridEditDoneEventArgs {
-    /**
-     * The primaryKey value of the row
-     */
-    key: any;
-}
-
-/**
- * `ICellEditEventArgs` is emitted by `cellEditEnter` and `cellEdit` events
- */
-export interface ICellEditEventArgs extends CancelableEventArgs, ICellEditDoneEventArgs {
-}
-
-/**
- * `IRowEditEventArgs` is emitted by `rowEditEnter` and `rowEdit` events
- */
-export interface IRowEditEventArgs extends CancelableEventArgs, IRowEditDoneEventArgs {
-}
-
-export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IRowEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
+export interface IRowDataCancelableEventArgs extends IGridEditEventArgs, Omit<IGridEditEventArgs, 'rowID' | 'primaryKey' | 'oldValue' | 'newValue' | 'cellId'> {}
 
 /**
  * The event arguments after a column's pin state is changed.

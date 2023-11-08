@@ -117,10 +117,8 @@ import {
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
-    ICellEditDoneEventArgs,
-    IRowEditDoneEventArgs,
-    IRowEditEventArgs,
-    ICellEditEventArgs,
+    IGridEditDoneEventArgs,
+    IGridEditEventArgs,
     IRowDataCancelableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
@@ -581,7 +579,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditEnter = new EventEmitter<ICellEditEventArgs>();
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when cell exits edit mode.
@@ -593,7 +591,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -608,7 +606,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEdit = new EventEmitter<ICellEditEventArgs>();
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -620,7 +618,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.
@@ -635,7 +633,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditEnter = new EventEmitter<IRowEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -653,7 +651,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEdit = new EventEmitter<IRowEditEventArgs>();
+    public rowEdit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.
@@ -670,7 +668,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditDone = new EventEmitter<IRowEditDoneEventArgs>();
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -686,7 +684,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditExit = new EventEmitter<IRowEditDoneEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -4584,7 +4582,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             key: rowId,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
-            owner: this,
+            owner: this as any as GridType,
             isAddRow: false,
             cancel: false
         };
