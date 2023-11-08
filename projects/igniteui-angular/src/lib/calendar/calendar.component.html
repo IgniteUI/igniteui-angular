@@ -217,7 +217,11 @@
 
     <ng-container *ngTemplateOutlet="calendarPickerMonth"></ng-container>
 
-    <section class="igx-calendar__days-views">
+    <section
+        class="igx-calendar__days-views"
+        [@animateChange]="animationAction"
+        (@animateChange.done)="animationDone($event)"
+    >
         <igx-days-view role="grid" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
            [changeDaysView]="true" #days
            [selection]="selection"

@@ -887,12 +887,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.animationAction = args.monthAction;
 		this.isKeydownTrigger = true;
 		this.nextDate = args.nextDate;
+
 		this.callback = (next) => {
-			const day = this.daysView.dates.find((item) => item.date.date.getTime()===next.getTime());
+			const day = this.daysView.dates.find(
+                (item) => item.date.date.getTime() === next.getTime()
+            );
+
 			if (day) {
 				this.daysView.daysNavService.focusNextDate(day.nativeElement, args.key, true);
 			}
-		};
+		}
+
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.nextDate;
 	}

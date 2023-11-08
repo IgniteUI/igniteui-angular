@@ -25,13 +25,18 @@ export class IgxDaysViewNavigationService {
         if (target.childElementCount === 0) {
             target = target.parentElement;
         }
+
         if (key.indexOf('Arrow') === -1) {
             key = ARROW.concat(key);
         }
+
         const monthView = this.monthView;
         const node = monthView.dates.find((date) => date.nativeElement === target);
         let dates = monthView.dates.toArray();
-            let day: IgxDayItemComponent; let step; let i; let nextDate: Date;
+        let day: IgxDayItemComponent;
+        let step;
+        let i;
+        let nextDate: Date;
         const index = dates.indexOf(node);
 
         if (!node) {
@@ -43,12 +48,15 @@ export class IgxDaysViewNavigationService {
             case Direction.Left: {
                 step = -1;
                 nextDate = this.timedelta(node.date.date, step);
+
                 for (i = index; i > 0; i--) {
                     day = nextView ? dates[i] : dates[i - 1];
                     nextDate = day.date.date;
+
                     if (day.date.isPrevMonth) {
                         break;
                     }
+
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
                         return;
@@ -59,12 +67,15 @@ export class IgxDaysViewNavigationService {
             case Direction.Right: {
                 step = 1;
                 nextDate = this.timedelta(node.date.date, step);
+
                 for (i = index; i < dates.length - 1; i++) {
                     day = nextView ? dates[i] : dates[i + 1];
                     nextDate = day.date.date;
+
                     if (day.date.isNextMonth) {
                         break;
                     }
+
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
                         return;
@@ -72,6 +83,7 @@ export class IgxDaysViewNavigationService {
                 }
                 break;
             }
+
             case Direction.Up: {
                 step = -7;
                 nextDate = this.timedelta(node.date.date, step);
@@ -130,10 +142,13 @@ export class IgxDaysViewNavigationService {
 
         // focus item in prev/next month, which is currently out of view
         let dayIsNextMonth: boolean; // determine what we need to check for next date - if it belongs to prev or next month
+
         if (day) {
             dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth;
         }
+
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
+            console.log('should change month');
             const monthAction = step > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
             monthView.viewChanging.emit({monthAction, key, nextDate});
         }
