@@ -142,7 +142,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             return;
         }
         const args = cell.createCellEditEventArgs(true);
-        if (!this.grid.crudService.row) {
+        if (!this.grid.crudService.row) { // should not recalculate summaries when there is row in edit mode
             this.grid.summaryService.clearSummaryCache(args);
         }
         const data = this.getRowData(cell.id.rowID);
