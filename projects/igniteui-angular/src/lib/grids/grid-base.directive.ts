@@ -7382,13 +7382,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const header = this.headerCellList.find(x => x.column === col);
+                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 const max = Math.max(...cellsContentWidths);
                 if (max === 0) {
                     // cells not in DOM yet...
                     continue;
                 }
-                const header = this.headerCellList.find(x => x.column === col);
-                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
