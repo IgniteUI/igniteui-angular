@@ -342,7 +342,7 @@ export const getTypeDefinitionAtPosition =
  */
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
-        const content = langServ.getProgram().getSourceFile(entryPath).getText();
+        const content = langServ.getProgram().getSourceFile(entryPath).getFullText();
         matchPosition = shiftMatchPosition(matchPosition, content);
         const prevChar = content.substr(matchPosition - 1, 1);
         if (prevChar === SyntaxTokens.ClosingParenthesis) {
