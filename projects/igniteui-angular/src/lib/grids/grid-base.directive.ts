@@ -117,11 +117,10 @@ import {
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
-    ICellEditDoneEventArgs,
-    IRowEditDoneEventArgs,
     IRowEditEventArgs,
     ICellEditEventArgs,
-    IRowDataCancelableEventArgs
+    IRowDataCancelableEventArgs,
+    IGridEditDoneEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -593,7 +592,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -620,7 +619,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.
@@ -670,7 +669,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditDone = new EventEmitter<IRowEditDoneEventArgs>();
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -686,7 +685,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditExit = new EventEmitter<IRowEditDoneEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -4581,7 +4580,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden */
     public deleteRowById(rowId: any): any {
         const args: IRowDataCancelableEventArgs = {
-            key: rowId,
+            primaryKey: rowId,
+            rowKey: rowId,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
             owner: this,

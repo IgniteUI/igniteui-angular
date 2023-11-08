@@ -30,18 +30,18 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
-/**
- * @deprecated since version 17.0.0. Stop exporting this interface in version 19
- * Use ICellEditDoneEventArgs property for cellEditDone and cellEditExit events
- * Use IRowEditDoneEventArgs property for rowEditDone and rowEditExit events
- */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 17.0.0
-     * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
-     * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
+     * Use rowKey instead
      */
     rowID: any;
+    /**
+     * @deprecated since version 17.0.0
+     * Use rowKey instead
+     */
+    primaryKey: any;
+    rowKey: any;
     cellID?: {
         rowID: any;
         columnID: any;
@@ -90,39 +90,20 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     valid?: boolean;
 }
 
-/**
- * `ICellEditDoneEventArgs` object is emitted by `cellEditDone` and `cellEditExit` events
- */
-export interface ICellEditDoneEventArgs extends IGridEditDoneEventArgs {
-    /**
-    * The primaryKey value of the row, which contains the edited cell
-    */
-    rowKey: any;
-}
-
-/**
- * `IRowEditDoneEventArgs` is emitted by `rowEditDone` and `rowEditExit` events
- */
-export interface IRowEditDoneEventArgs extends IGridEditDoneEventArgs {
-    /**
-     * The primaryKey value of the row
-     */
-    key: any;
-}
 
 /**
  * `ICellEditEventArgs` is emitted by `cellEditEnter` and `cellEdit` events
  */
-export interface ICellEditEventArgs extends CancelableEventArgs, ICellEditDoneEventArgs {
+export interface ICellEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
 /**
  * `IRowEditEventArgs` is emitted by `rowEditEnter` and `rowEdit` events
  */
-export interface IRowEditEventArgs extends CancelableEventArgs, IRowEditDoneEventArgs {
+export interface IRowEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
-export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IRowEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
+export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IGridEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
 
 /**
  * The event arguments after a column's pin state is changed.

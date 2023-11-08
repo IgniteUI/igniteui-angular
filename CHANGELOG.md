@@ -17,7 +17,7 @@ All notable changes for each version of this project will be documented in this 
 - We're working on reducing the library size
     - `IgxRadioComponent` size has been reduced in half
     - `IgxSwitchComponent` size has been reduced in half
-- `IgxRadioComponent` 
+- `IgxRadioComponent`
     - **Breaking Change** `IChangeRadioEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
     - **Breaking Change** `RadioLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
 - `IgxSwitchComponent`
@@ -26,7 +26,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`
     - **Breaking Change** `IComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property values or full data items depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
     - `IComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
-      
+
       Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
     - **Breaking Change** - `IComboSelectionChangingEventArgs` properties `added` and `removed` now always contain data items, regardless of `valueKey` being set. This aligns them with the updated `newSelection` and `oldSelection` properties, including the same limitation for remote data as described above.
 - `IgxSimpleCombo`
@@ -44,7 +44,6 @@ All notable changes for each version of this project will be documented in this 
         - The events `rowEditEnter`and `rowEdit` no longer emit `IGridEditEventArgs` as arguments now emits `IRowEditEventArgs`.
         - The events `cellEditExit`and `cellEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `ICellEditDoneEventArgs`.
         - The events `rowEditExit`and `rowEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `IRowEditDoneEventArgs`.
-        - The events `rowAdd`and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
         - The events `rowAdd` and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
         - `rowID` property has been deprecated in the following interfaces: `IRowEditEventArgs`, `IRowEditDoneEventArgs`, `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IPathSegment`, `HierarchicalStateRecord`, `ICellEditEventArgs`, `ICellEditDoneEventArgs` and will be removed in a future version, so please use `key` property instead and for `ICellEditEventArgs` and `ICellEditDoneEventArgs` use `rowKey` property instead.
         - `rowData` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IRowEditEventArgs`, `IRowDataCancelableEventArgs` and will be removed in a future version, so please use `data` property instead.

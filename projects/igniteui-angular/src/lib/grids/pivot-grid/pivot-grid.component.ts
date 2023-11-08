@@ -45,13 +45,13 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
-    ICellEditDoneEventArgs,
     ICellEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs,
+    IGridEditDoneEventArgs,
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -483,7 +483,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
+    public override cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal
@@ -495,7 +495,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
+    public override cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal
@@ -579,13 +579,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowEditDone = new EventEmitter<IRowEditDoneEventArgs>();
+    public override rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override rowEditExit = new EventEmitter<IRowEditDoneEventArgs>();
+    public override rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * @hidden @internal
