@@ -37,8 +37,7 @@ describe('Update 6.0.1', () => {
             `import { } from 'igniteui-angular';` +
             `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular/grid';`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-02', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-02', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
             `import { IgxGridComponent } from 'igniteui-angular';` +
             `import { IgxCsvExporterService } from 'igniteui-angular';` +

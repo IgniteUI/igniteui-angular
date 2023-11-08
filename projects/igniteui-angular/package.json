@@ -80,13 +80,13 @@
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
-        "@angular/common": "^16.0.0",
-        "@angular/core": "^16.0.0",
-        "@angular/animations": "^16.0.0",
-        "@angular/forms": "^16.0.0"
+        "@angular/common": "^17.0.0-rc.1",
+        "@angular/core": "^17.0.0-rc.1",
+        "@angular/animations": "^17.0.0-rc.1",
+        "@angular/forms": "^17.0.0-rc.1"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~16.0.1200"
+        "@igniteui/angular-schematics": "~17.0.1300-beta.1"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

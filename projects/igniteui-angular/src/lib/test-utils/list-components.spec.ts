@@ -151,6 +151,7 @@ export class ListCustomLoadingComponent extends ListLoadingComponent {
         </igx-list>
     </div>`,
     standalone: true,
+    selector: 'igx-list-with-headers',
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class TwoHeadersListComponent extends ListWithPanningComponent {
@@ -168,6 +169,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
         </igx-list>
     </div>`,
     standalone: true,
+    selector: 'igx-list-with-headers-no-panning',
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
