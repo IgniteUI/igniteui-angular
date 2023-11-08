@@ -14,7 +14,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
+import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -1368,7 +1368,7 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <button>Delete</button>
+                <button type="button">Delete</button>
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -1438,8 +1438,8 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>
@@ -1733,7 +1733,7 @@ export class CellEditingTestComponent extends BasicGridComponent {
             <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
             <igx-column field="fullName" [editable]="true"></igx-column>
         </igx-grid>
-        <button class="btnTest">Test</button>
+        <button type="button" class="btnTest">Test</button>
     `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -2056,7 +2056,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
             <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
             <igx-column field="fullName" [editable]="false"></igx-column>
         </igx-grid>
-        <button class="btnTest">Test</button>
+        <button type="button" class="btnTest">Test</button>
     `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -2141,6 +2141,24 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
         const a = obj1[key].toLowerCase();
         const b = obj2[key].toLowerCase();
         return a > b ? 1 : a < b ? -1 : 0;
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '[sortingOptions]="sortingOptions"',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        ''),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
+   public sortingOptions: ISortingOptions = { mode: 'single' };
+   public ngOnInit(): void {
+        this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
     }
 }
 
@@ -2296,7 +2314,7 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
     <igx-grid #grid1 [data]="data">
         <igx-column>
             <ng-template igxCell>
-                <button>SimpleBtn</button>
+                <button type="button">SimpleBtn</button>
             </ng-template>
         </igx-column>
         <igx-column header="" field="ID"></igx-column>

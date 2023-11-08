@@ -75,7 +75,7 @@ export class UpdateChanges {
 
 
             try {
-                const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
+                const project = this._projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
                 project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
             } catch (err) {
                 this.context.logger.warn(
@@ -478,7 +478,7 @@ export class UpdateChanges {
     protected updateSassVariables(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        const allowedStartCharacters = new RegExp('(\:|\,)\s?', 'g');
+        const allowedStartCharacters = new RegExp(/(:|,)\s?/, 'g');
         // eslint-disable-next-line no-control-regex
         const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
         for (const change of this.themeChanges.changes) {
@@ -830,7 +830,7 @@ export class UpdateChanges {
             return null;
         }
         this.projectService.openClientFile(scriptInfo.fileName);
-        const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        const project = this.projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
     }

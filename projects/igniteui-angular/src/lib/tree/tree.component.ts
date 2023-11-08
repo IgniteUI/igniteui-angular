@@ -1,12 +1,11 @@
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject
+    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject, booleanAttribute
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { growVerIn, growVerOut } from '../animations/grow';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
@@ -17,6 +16,7 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 /**
  * @hidden @internal
@@ -116,7 +116,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
      * this.tree.singleBranchExpand = false;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public singleBranchExpand = false;
 
     /** Get/Set the animation settings that branches should use when expanding/collpasing.
@@ -497,7 +497,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         if (shouldScroll && this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
             // this.nativeElement.scrollTop = nodeRect.y - treeRect.y - nodeRect.height;
             this.nativeElement.scrollTop =
-            this.nativeElement.scrollTop + bottomOffset + topOffset + (topOffset ? -1 : +1) * nodeRect.height;
+                this.nativeElement.scrollTop + bottomOffset + topOffset + (topOffset ? -1 : +1) * nodeRect.height;
         }
     }
 

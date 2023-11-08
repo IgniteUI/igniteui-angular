@@ -1,10 +1,11 @@
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from '../services/overlay/utilities';
 import { IPositionStrategy } from '../services/overlay/position';
-import { fadeOut, fadeIn } from '../animations/main';
+
 import { IgxSelectBase } from './select.common';
 import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
 import { PlatformUtil } from '../core/utils';
 import { Optional } from '@angular/core';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {

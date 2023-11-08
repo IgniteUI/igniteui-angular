@@ -86,29 +86,32 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "igniteui-dev-demos:build:production"
+              "buildTarget": "igniteui-dev-demos:build:production"
             },
             "hmr": {
               "hmr": true,
-              "browserTarget": "igniteui-dev-demos:build:hmr"
+              "buildTarget": "igniteui-dev-demos:build:hmr"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
@@ -163,54 +166,6 @@
         }
       }
     },
-    "igniteui-dev-demos-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "watch": true,
-            "headless": false
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "e2e/**/*.ts",
-              "e2e/**/*.html"
-            ]
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "configFile": "e2e//cypress.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "e2e//cypress.json"
-          }
-        }
-      }
-    },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
       "sourceRoot": "projects/igniteui-angular/src",
@@ -233,7 +188,11 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/igniteui-angular/src/test.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "hammerjs"
+            ],
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js"
           }
@@ -328,7 +287,8 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": true
             },
             "development": {
               "buildOptimizer": false,
@@ -345,10 +305,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bundle-test:build:production"
+              "buildTarget": "bundle-test:build:production"
             },
             "development": {
-              "browserTarget": "bundle-test:build:development"
+              "buildTarget": "bundle-test:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -356,7 +316,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bundle-test:build"
+            "buildTarget": "bundle-test:build"
           }
         },
         "test": {

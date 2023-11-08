@@ -3,13 +3,14 @@ import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    DisplayDensity, growVerIn, growVerOut,
+    DisplayDensity,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
     ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective, IgxTreeExpandIndicatorDirective
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 interface CompanyData {
     ID: string;

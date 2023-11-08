@@ -2,6 +2,7 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,
@@ -63,8 +64,7 @@ import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
 import { IgxGridHeaderGroupComponent } from './headers/grid-header-group.component';
-import { IGridResourceStrings } from '../core/i18n/grid-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
@@ -171,6 +171,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 IgcTrialWatermark.register();
 
@@ -214,7 +215,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
     /**
@@ -238,7 +239,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Controls whether columns moving is enabled in the grid.
      *
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public moving = false;
 
     /**
@@ -1357,8 +1358,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets the row edit actions template.
      *```html
      * <ng-template #template igxRowEditActions let-endRowEdit>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
      * </ng-template>
      * ```
      *```typescript
@@ -1725,9 +1726,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.GridResStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -1895,7 +1893,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  By default row selectors are shown
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hideRowSelectors() {
         return this._hideRowSelectors;
     }
@@ -1913,7 +1911,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [rowDraggable]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get rowDraggable(): boolean {
         return this._rowDrag && this.hasVisibleColumns;
     }
@@ -1954,7 +1952,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get rowEditable(): boolean {
         return this._rowEditable;
     }
@@ -2090,7 +2088,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
@@ -2169,7 +2167,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get allowFiltering() {
         return this._allowFiltering;
     }
@@ -2198,7 +2196,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get allowAdvancedFiltering() {
         return this._allowAdvancedFiltering;
     }
@@ -2300,7 +2298,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * By default showSummaryOnCollapse is set to 'false' which means that the summary row is not visible
      * when the groupBy/parent row is collapsed.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get showSummaryOnCollapse() {
         return this._showSummaryOnCollapse;
     }
@@ -2359,7 +2357,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set sortingOptions(value: ISortingOptions) {
-        this.clearSort();
+        if (!this._init) {
+            // clear sort only if option is changed runtime. No need to clear on initial load.
+            this.clearSort();
+        }
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
 
@@ -2686,7 +2687,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * </igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get batchEditing(): boolean {
         return this._batchEditing;
     }
@@ -2811,11 +2812,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public rowEditMessage;
-
-    /**
-     * @hidden @internal
-     */
-    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
 
     /**
      * @hidden @internal
@@ -3046,7 +3042,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _resourceStrings;
+    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
@@ -5376,7 +5372,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param enabled: boolean
      */
     @WatchChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selectRowOnClick() {
         return this._selectRowOnClick;
     }
@@ -5761,7 +5757,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public showSnackbarFor(index: number) {
-        this.addRowSnackbar.actionText = index === -1 ? '' : this.snackbarActionText;
+        this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }
@@ -6075,7 +6071,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */
@@ -6879,7 +6875,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
+            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
@@ -7030,7 +7026,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                         const key = !this.isPivot && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
                         const value = this.isPivot ? rowData.aggregationValues.get(col.field)
-                        : resolveNestedPath(rowData, col.field);
+                            : resolveNestedPath(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7102,13 +7098,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const header = this.headerCellList.find(x => x.column === col);
+                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 const max = Math.max(...cellsContentWidths);
                 if (max === 0) {
                     // cells not in DOM yet...
                     continue;
                 }
-                const header = this.headerCellList.find(x => x.column === col);
-                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
@@ -7343,7 +7339,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+        if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
         }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };

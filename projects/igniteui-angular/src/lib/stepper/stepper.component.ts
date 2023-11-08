@@ -3,12 +3,10 @@ import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
     ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy,
-    OnInit, Output, QueryList, SimpleChanges,TemplateRef
+    OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { growVerIn, growVerOut } from '../animations/grow';
-import { fadeIn } from '../animations/main';
 import { HorizontalAnimationType, IgxCarouselComponentBase } from '../carousel/carousel-base';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
@@ -25,6 +23,7 @@ import {
     IgxStepInvalidIndicatorDirective
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
+import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
@@ -164,7 +163,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * <igx-stepper [linear]="true"></igx-stepper>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get linear(): boolean {
         return this._linear;
     }
@@ -226,7 +225,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * this.stepper.contentTop = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public contentTop = false;
 
     /**

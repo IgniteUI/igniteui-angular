@@ -269,7 +269,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        const selectedIndex = this.displayedListData.indexOf(eventArgs.checkbox.value);
+        const selectedIndex = this.displayedListData.indexOf(eventArgs.owner.value);
         const selectAllBtn = this.displayedListData[0];
 
         if (selectedIndex === 0) {
@@ -282,7 +282,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
             selectAllBtn.indeterminate = false;
         } else {
-            eventArgs.checkbox.value.isSelected = eventArgs.checked;
+            eventArgs.owner.value.isSelected = eventArgs.checked;
             const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilterItem) > -1 ? 2 : 1;
 
             const slicedArray =
@@ -298,7 +298,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 selectAllBtn.indeterminate = true;
             }
         }
-        eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
+        eventArgs.owner.nativeInput.nativeElement.blur();
     }
 
     /**

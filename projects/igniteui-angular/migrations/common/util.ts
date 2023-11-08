@@ -6,7 +6,6 @@ import { execSync } from 'child_process';
 import {
     Attribute,
     Block,
-    BlockGroup,
     BlockParameter,
     Comment,
     Element,
@@ -283,9 +282,6 @@ class SerializerVisitor implements Visitor {
     public visitBlockParameter(parameter: BlockParameter, _context: any) {
         return parameter.expression;
     }
-
-    // XXX: This **HAS** to be removed in the next major release of Angular (v17) as it will error out again
-    public visitBlockGroup(_group: BlockGroup, _context: any) { }
 
     private _visitAll(nodes: Node[], separator = '', prefix = ''): string {
         return nodes.length > 0 ? prefix + nodes.map(a => a.visit(this, null)).join(separator) : '';

@@ -129,13 +129,13 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         ghost.style.width = gridRect.width + 'px';
         ghost.style.height = rowRect.height + 'px';
 
-        this.renderer.addClass(ghost, ghostBackgroundClass);
-        this.renderer.removeClass(ghost, rowSelectedClass);
+        ghost.classList.add(ghostBackgroundClass);
+        ghost.classList.remove(rowSelectedClass);
 
         const ghostCells = ghost.getElementsByClassName(gridCellClass);
         for (const cell of ghostCells) {
-            this.renderer.removeClass(cell, cellSelectedClass);
-            this.renderer.removeClass(cell, cellActiveClass);
+            cell.classList.remove(cellSelectedClass);
+            cell.classList.remove(cellActiveClass);
         }
     }
 

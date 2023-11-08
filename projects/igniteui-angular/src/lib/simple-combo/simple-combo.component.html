@@ -12,7 +12,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="displayValue[0]" role="combobox"
+    <input #comboInput igxInput [value]="displayValue" role="combobox"
         aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
@@ -24,7 +24,7 @@
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="hasSelectedItem" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -109,7 +109,7 @@
     <span>{{resourceStrings.igx_combo_empty_message}}</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
-    <button igxButton="flat" igxRipple>Add item</button>
+    <button type="button" igxButton="flat" igxRipple>Add item</button>
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}

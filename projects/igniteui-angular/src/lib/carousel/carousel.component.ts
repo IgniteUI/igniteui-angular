@@ -19,13 +19,13 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
 
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
@@ -34,6 +34,7 @@ import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -153,7 +154,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public loop = true;
+    @Input({ transform: booleanAttribute }) public loop = true;
 
     /**
      * Sets whether the carousel will `pause` the slide transitions on user interactions.
@@ -164,46 +165,46 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public pause = true;
+    @Input({ transform: booleanAttribute }) public pause = true;
 
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [navigation] = "false"></igx-carousel>
+     * <igx-carousel [navigation]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public navigation = true;
+    @Input({ transform: booleanAttribute }) public navigation = true;
 
     /**
      * Controls whether the carousel should support keyboard navigation.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
+     * <igx-carousel [keyboardSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public keyboardSupport = true;
+    @Input({ transform: booleanAttribute }) public keyboardSupport = true;
 
     /**
      * Controls whether the carousel should support gestures.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+     * <igx-carousel [gesturesSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public gesturesSupport = true;
+    @Input({ transform: booleanAttribute }) public gesturesSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
      * Default value is `5`.
      * ```html
-     * <igx-carousel [maximumIndicatorsCount] = "10"></igx-carousel>
+     * <igx-carousel [maximumIndicatorsCount]="10"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -269,9 +270,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>add</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>add</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -292,9 +293,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>remove</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>remove</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -385,7 +386,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
+    private _resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;
@@ -529,7 +530,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Sets the time `interval` in milliseconds before the slide changes.
      * If not set, the carousel will not change `slides` automatically.
      * ```html
-     * <igx-carousel [interval] = "1000"></igx-carousel>
+     * <igx-carousel [interval]="1000"></igx-carousel>
      * ```
      *
      * @memberof IgxCarouselComponent
@@ -1015,8 +1016,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.leaveAnimationPlayer.animationEnd
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                this.slides.find(s => s.active).nativeElement.focus();
-            });
+                    this.slides.find(s => s.active).nativeElement.focus();
+                });
         } else {
             requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }

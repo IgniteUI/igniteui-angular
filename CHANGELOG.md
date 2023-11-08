@@ -2,6 +2,69 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.0.0
+### General
+- `IgxCard`
+    - **Breaking Change** The `type` attribute has been deprecated and will be removed in a future version. The default view of the card component is now `outlined`. Users can switch to `elevated` view by adding the newly created `elevated` property to a card.
+- `standalone components` support is now official
+    - added `IGX_RADIO_GROUP_DIRECTIVES` for `IgxRadioGroupDirective` and `IgxRadioComponent`
+- `animations` are now imported from `igniteui-angular/animations`/`@infragistics/igniteui-angular/animations`
+- Tree-shaking of the product has been improved
+    - `igniteui-angular-i18n` is now tree-shakeable
+    - `igniteui-angular/animations` is now tree-shakeable
+    - `igniteui-angular` components have improved tree-shaking
+- DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
+- We're working on reducing the library size
+    - `IgxRadioComponent` size has been reduced in half
+    - `IgxSwitchComponent` size has been reduced in half
+- `IgxRadioComponent` 
+    - **Breaking Change** `IChangeRadioEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `RadioLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
+- `IgxSwitchComponent`
+    - **Breaking Change** `IChangeSwitchEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `SwitchLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
+- `IgxCombo`
+    - **Breaking Change** `IComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property values or full data items depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
+    - `IComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
+      
+      Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
+    - **Breaking Change** - `IComboSelectionChangingEventArgs` properties `added` and `removed` now always contain data items, regardless of `valueKey` being set. This aligns them with the updated `newSelection` and `oldSelection` properties, including the same limitation for remote data as described above.
+- `IgxSimpleCombo`
+    - **Breaking Change** - `ISimpleComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property value or full data item depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
+    - `ISimpleComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
+
+      Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
+    - **Breaking Change** The `value` and `selection` properties now correctly return a single value or data item instead of the same wrapped in array and `undefined` instead of empty array, matching the values emitted from selection event and when working with `formControlName`/`ngModel` directives.
+- `IgxCombo`,`IgxSimpleCombo`
+    - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
+
+## 16.1.4
+### New Features
+- `Themes`:
+    - **Experimental** - Added the ability to configure the base font-size used to calculate the rem values in all component themes. This allows for proper scaling of components when a different document font-size is used.
+
+    - Code example:
+
+    ```scss
+    // Configure the base font-size
+    @use 'igniteui-theming/sass/config' as * with (
+        $base-font-size: 10px // <-- 10px == 1rem
+    );
+
+    // Standard imports and theme declarations
+    @use 'igniteui-angular/src/lib/core/styles/themes' as *;
+
+    // This change also adds a new CSS variable `--ig-base-font-size`
+    // that you can use to configure your own stylesheets:
+    html {
+        font-size: var(--ig-base-font-size); // 10px
+    }
+
+    @include core();
+    @include typography();
+    @include theme();
+    ``` 
+
 ## 16.1.0
 ### New Features
 - `IgxSelect`:
@@ -79,6 +142,9 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** When there are already grouped columns, the group drop area now shows after dragging of a column starts and not when only click actions are performed.
 - `IgxCombo`, `IgxSimpleCombo`:
     - **Breaking Change**  The `selection` property returns an array of the selected items even when a value key is provided and the `value` property returns an array of value keys instead of display keys. Automatic migrations are available and will be applied on `ng update`.
+- Improved tree-shaking support for the `@igniteui/material-icons-extended` package.
+- Improved tree-shaking support for the `igniteui-angular-i18n` package.
+- Improved tree-shaking support for all grids.
 
 ## 16.0.0
 

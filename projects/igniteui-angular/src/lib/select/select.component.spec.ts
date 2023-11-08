@@ -2814,6 +2814,7 @@ class IgxSelectMiddleComponent {
         </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-top',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2840,6 +2841,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-bottom',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectBottomComponent {
@@ -3045,7 +3047,7 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button type="button" igxButton="raised" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>

@@ -6,14 +6,13 @@ import {
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    OnDestroy, Optional, QueryList
+    OnDestroy, Optional, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
     DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
 } from '../core/density';
-import { IInputResourceStrings } from '../core/i18n/input-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { mkenum, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
@@ -27,6 +26,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -52,10 +52,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * Sets the resource strings.
      * By default it uses EN resources.
      */
-   @Input()
-   public set resourceStrings(value: IInputResourceStrings) {
-       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-   }
+    @Input()
+    public set resourceStrings(value: IInputResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
     /**
      * Returns the resource strings.
@@ -111,7 +111,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public suppressInputAutofocus = false;
 
     /** @hidden */
@@ -137,7 +137,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _theme: IgxInputGroupTheme;
     private _theme$ = new Subject();
     private _subscription: Subscription;
-    private _resourceStrings = CurrentResourceStrings.InputResStrings;
+    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
@@ -467,7 +467,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                 .getPropertyValue('--theme')
                 .trim();
 
-            if(cssProp !== '') {
+            if (cssProp !== '') {
                 Promise.resolve().then(() => {
                     this._theme$.next(cssProp);
                     this.cdr.markForCheck();

@@ -8,7 +8,8 @@ import {
     Renderer2,
     HostListener,
     Optional,
-    Inject
+    Inject,
+    booleanAttribute
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
@@ -43,7 +44,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
  *
  * @example
  * ```html
- * <button igxButton="outlined">A Button</button>
+ * <button type="button" igxButton="outlined">A Button</button>
  * ```
  */
 @Directive({
@@ -52,7 +53,6 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 })
 export class IgxButtonDirective extends DisplayDensityBase {
     private static ngAcceptInputType_type: IgxButtonType | '';
-    private static ngAcceptInputType_disabled: boolean | '';
 
     /**
      * Called when the button is clicked.
@@ -84,12 +84,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @HostBinding('class.igx-button')
     public _cssClass = 'igx-button';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public _disabled = false;
 
     /**
      * @hidden
@@ -127,13 +121,13 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
+     * <button type="button" igxButton="flat" [selected]="button.selected"></button>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
-        if(this._selected !== value) {
-            if(!this._selected) {
+        if (this._selected !== value) {
+            if (!this._selected) {
                 this.buttonSelected.emit({
                     button: this
                 });
@@ -176,7 +170,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="icon"></button>
+     * <button type="button" igxButton="icon"></button>
      * ```
      */
     @Input('igxButton')
@@ -192,7 +186,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton igxButtonColor="orange"></button>
+     * <button type="button" igxButton igxButtonColor="orange"></button>
      * ```
      */
     @Input('igxButtonColor')
@@ -206,7 +200,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton igxButtonBackground="red"></button>
+     * <button type="button" igxButton igxButtonBackground="red"></button>
      * ```
      */
     @Input('igxButtonBackground')
@@ -220,7 +214,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton="flat" igxLabel="Label"></button>
+     * <button type="button" igxButton="flat" igxLabel="Label"></button>
      * ```
      */
     @Input('igxLabel')
@@ -230,30 +224,16 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-     * Get the disabled state of the button;
-     *
-     * @example
-     * ```typescript
-     * const disabled = this.button.disabled;
-     * ```
-     */
-    @Input()
+      * Enables/disables the button.
+      *
+      * @example
+      * ```html
+      * <button igxButton="fab" disabled></button>
+      * ```
+      */
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-button--disabled')
-    public get disabled(): boolean {
-        return this._disabled;
-    }
-
-    /**
-     * Enables/disables the button.
-     *
-     * @example
-     * ```html
-     * <button igxButton= "fab" [disabled]="true"></button>
-     * ```
-     */
-    public set disabled(val: boolean) {
-        this._disabled = (val as any === '') || val;
-    }
+    public disabled = false;
 
     /**
      * @hidden
@@ -315,7 +295,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
-        return this._disabled ? this._disabled : null;
+        return this.disabled ? this.disabled : null;
     }
 
     /**
