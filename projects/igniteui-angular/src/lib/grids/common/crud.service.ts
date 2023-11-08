@@ -584,7 +584,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
                 const rowAddedEventArgs: IRowDataEventArgs = {
                     data: args.data,
                     owner: this.grid,
-                    primaryKey: args.data[this.grid.primaryKey], // TODO to add it or not ?
+                    primaryKey: args.data[this.grid.primaryKey],
                     key: args.data[this.grid.primaryKey]
                 }
                 this.grid.rowAddedNotifier.next(rowAddedEventArgs);

@@ -784,7 +784,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IRowDataEventArgs` object.
+     * Returns an `IRowDataCancelableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -798,7 +798,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IRowDataEventArgs` object.
+     * Returns an `IRowDataCancelableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -4580,8 +4580,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any): any {
-        const args = {
-            rowID: rowId,
+        const args: IRowDataCancelableEventArgs = {
             key: rowId,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
