@@ -30,8 +30,12 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /** An object which represents the value that is currently selected */
-    oldSelection: any;
+    oldValue: any;
     /** An object which represents the value that will be selected after this event */
+    newValue: any;
+    /** An object which represents the item that is currently selected */
+    oldSelection: any;
+    /** An object which represents the item that will be selected after this event */
     newSelection: any;
     /** The text that will be displayed in the combo text box */
     displayText: string;
@@ -443,12 +447,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     };
 
     protected setSelection(newSelection: any): void {
-        const newSelectionAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
-        const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(this.convertKeysToItems(newSelectionAsArray), oldSelectionAsArray);
+        const newValueAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
+        const oldValueAsArray = Array.from(this.selectionService.get(this.id) || []);
+        const newItems = this.convertKeysToItems(newValueAsArray);
+        const oldItems = this.convertKeysToItems(oldValueAsArray);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newValueAsArray), oldValueAsArray);
         const args: ISimpleComboSelectionChangingEventArgs = {
-            newSelection: newSelectionAsArray[0],
-            oldSelection: oldSelectionAsArray[0],
+            newValue: newValueAsArray[0],
+            oldValue: oldValueAsArray[0],
+            newSelection: newItems[0],
+            oldSelection: oldItems[0],
             displayText,
             owner: this,
             cancel: false
@@ -458,8 +466,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = this.isValid(args.newSelection)
-                ? args.newSelection
+            let argsSelection = this.isValid(args.newValue)
+                ? args.newValue
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
@@ -467,12 +475,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this._updateInput) {
                 this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText(this.selection, [args.oldSelection]);
+                    : this.createDisplayText(this.selection, [args.oldValue]);
             }
-            this._onChangeCallback(args.newSelection);
+            this._onChangeCallback(args.newValue);
             this._updateInput = true;
         } else if (this.isRemote) {
-            this.registerRemoteEntries(newSelectionAsArray, false);
+            this.registerRemoteEntries(newValueAsArray, false);
         }
     }
 

@@ -4,7 +4,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent } from '../../test-utils/grid-samples.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { CellType } from '../common/grid.interface';
@@ -701,6 +701,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(GridFunctions.getColumnSortingIndex(headerLastName)).toBeNull();
+            expect(grid.sortingExpressions.length).toBe(1);
+        }));
+
+        it('should not clear sortingExpressions when setting sortingOptions on init. ', fakeAsync(() => {
+            fixture = TestBed.createComponent(SortOnInitComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
             expect(grid.sortingExpressions.length).toBe(1);
         }));
     });
