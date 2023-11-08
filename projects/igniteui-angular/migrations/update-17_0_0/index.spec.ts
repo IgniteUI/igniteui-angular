@@ -206,6 +206,66 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('Should properly rename newSelection and oldSelection property to newValue and oldValue in Combo', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
+                const newSelection = e.newSelection;
+                const oldSelection = e.oldSelection;
+            }
+        }
+        `);
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
+                const newSelection = e.newValue;
+                const oldSelection = e.oldValue;
+            }
+        }
+        `
+        );
+    });
+
+    it('Should properly rename newSelection and oldSelection property to newValue and oldValue SimpleCombo', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public handleSelectionChanging(e: ISimpleComboSelectionChangingEventArgs) {
+                const newSelection = e.newSelection;
+                const oldSelection = e.oldSelection;
+            }
+        }
+        `);
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
+                const newSelection = e.newValue;
+                const oldSelection = e.oldValue;
+            }
+        }
+        `
+        );
+    });
+
     for (const igPackage of ['igniteui-angular', '@infragistics/igniteui-angular']) {
         it('should move animation imports from igniteui-angular to igniteui-angular/animations', async () => {
             appTree.create(`/testSrc/appPrefix/component/test.component.ts`,
