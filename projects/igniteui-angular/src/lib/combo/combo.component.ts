@@ -180,13 +180,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
 
-    /**
-     * @hidden @internal
-     */
-    public get inputEmpty(): boolean {
-        return this.displayValue.length === 0 && !this.placeholder;
-    }
-
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this.filteringOptions.filterable ? this._filteredData : this.data;

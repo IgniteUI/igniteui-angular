@@ -433,7 +433,7 @@ describe('IgxSimpleCombo', () => {
             const item = combo.data.slice(0, 1);
             combo.select(item);
             combo.handleClear(spyObj);
-            expect(combo.displayValue).toEqual([item[0]]);
+            expect(combo.displayValue).toEqual(item[0]);
         });
     });
 
@@ -756,7 +756,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual('Three');
             combo.handleClear(new MouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
         }));
 
         it('should properly bind to values w/o valueKey', fakeAsync(() => {
@@ -786,17 +786,17 @@ describe('IgxSimpleCombo', () => {
             combo.toggle();
 
             combo.select(combo.data[1][combo.valueKey]);
-            expect(combo.displayValue).toEqual([`${selectedItem[combo.displayKey]}`]);
+            expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.selection).toEqual(selectedItem);
             expect(combo.value).toEqual(selectedItem[combo.valueKey]);
             // Clear items while they are in view
             combo.handleClear(spyObj);
             expect(combo.selection).toEqual(undefined);
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
             expect(combo.value).toEqual(undefined);
             selectedItem = combo.data[2];
             combo.select(combo.data[2][combo.valueKey]);
-            expect(combo.displayValue).toEqual([`${selectedItem[combo.displayKey]}`]);
+            expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
 
             // Scroll selected items out of view
             combo.virtualScrollContainer.scrollTo(40);
@@ -804,10 +804,10 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo.handleClear(spyObj);
             expect(combo.selection).toEqual(undefined);
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
             expect(combo.value).toEqual(undefined);
             combo.select(combo.data[7][combo.valueKey]);
-            expect(combo.displayValue).toEqual([combo.data[7][combo.displayKey]]);
+            expect(combo.displayValue).toEqual(combo.data[7][combo.displayKey]);
         }));
     });
 
@@ -926,12 +926,12 @@ describe('IgxSimpleCombo', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
             expect(combo.selection).toBeDefined()
-            expect(combo.displayValue).toEqual(['Wisconsin']);
+            expect(combo.displayValue).toEqual('Wisconsin');
 
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
             expect(combo.selection).toBeDefined()
-            expect(combo.displayValue).toEqual(['Wisconsin']);
+            expect(combo.displayValue).toEqual('Wisconsin');
         });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
@@ -1123,7 +1123,7 @@ describe('IgxSimpleCombo', () => {
 
             expect((combo as any).clearSelection).toHaveBeenCalledOnceWith(true);
             expect(combo.dropdown.closing.emit).toHaveBeenCalledTimes(1);
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
         });
 
         it('should not clear the selection and input on blur with a match', () => {
@@ -1146,7 +1146,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect(combo.displayValue).toEqual(['Apple']);
+            expect(combo.displayValue).toEqual('Apple');
             expect(combo.selection).toBeDefined()
         });
 
@@ -1163,7 +1163,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
             expect(combo.selection).not.toBeDefined()
         });
 
@@ -1215,7 +1215,7 @@ describe('IgxSimpleCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
 
             combo.open();
             fixture.detectChanges();
@@ -1224,7 +1224,7 @@ describe('IgxSimpleCombo', () => {
 
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['val2']);
+            expect(combo.displayValue).toEqual('val2');
 
             combo.open();
             fixture.detectChanges();
@@ -1233,7 +1233,7 @@ describe('IgxSimpleCombo', () => {
 
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
 
             combo.open();
             fixture.detectChanges();
@@ -1242,7 +1242,7 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
         });
 
         it('should select falsy values except "undefined"', () => {
@@ -1264,7 +1264,7 @@ describe('IgxSimpleCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['0']);
+            expect(combo.displayValue).toEqual('0');
             expect(combo.value).toEqual(0);
             expect(combo.selection).toEqual({ field: '0', value: 0 });
 
@@ -1275,7 +1275,7 @@ describe('IgxSimpleCombo', () => {
 
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['false']);
+            expect(combo.displayValue).toEqual('false');
             expect(combo.value).toEqual(false);
             expect(combo.selection).toEqual({ field: 'false', value: false });
 
@@ -1286,7 +1286,7 @@ describe('IgxSimpleCombo', () => {
 
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
             expect(combo.value).toEqual('');
             expect(combo.selection).toEqual({ field: '', value: '' });
 
@@ -1297,7 +1297,7 @@ describe('IgxSimpleCombo', () => {
 
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['null']);
+            expect(combo.displayValue).toEqual('null');
             expect(combo.value).toEqual(null);
             expect(combo.selection).toEqual({ field: 'null', value: null });
 
@@ -1308,7 +1308,7 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['NaN']);
+            expect(combo.displayValue).toEqual('NaN');
             expect(combo.value).toEqual(NaN);
             expect(combo.selection).toEqual({ field: 'NaN', value: NaN });
 
@@ -1321,7 +1321,7 @@ describe('IgxSimpleCombo', () => {
 
             item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['NaN']);
+            expect(combo.displayValue).toEqual('NaN');
             expect(combo.value).toEqual(NaN);
             expect(combo.selection).toEqual({ field: 'NaN', value: NaN });
         });
@@ -1341,33 +1341,33 @@ describe('IgxSimpleCombo', () => {
             combo.writeValue(0);
             expect(combo.value).toEqual(0);
             expect(combo.selection).toEqual({ field: '0', value: 0 });
-            expect(combo.displayValue).toEqual(['0']);
+            expect(combo.displayValue).toEqual('0');
 
             combo.writeValue(false);
             expect(combo.value).toEqual(false);
             expect(combo.selection).toEqual({ field: 'false', value: false });
-            expect(combo.displayValue).toEqual(['false']);
+            expect(combo.displayValue).toEqual('false');
 
             combo.writeValue('');
             expect(combo.value).toEqual('');
             expect(combo.selection).toEqual({ field: 'empty', value: '' });
-            expect(combo.displayValue).toEqual(['empty']);
+            expect(combo.displayValue).toEqual('empty');
 
             combo.writeValue(null);
             expect(combo.value).toEqual(null);
             expect(combo.selection).toEqual({ field: 'null', value: null });
-            expect(combo.displayValue).toEqual(['null']);
+            expect(combo.displayValue).toEqual('null');
 
             combo.writeValue(NaN);
             expect(combo.value).toEqual(NaN);
             expect(combo.selection).toEqual({ field: 'NaN', value: NaN });
-            expect(combo.displayValue).toEqual(['NaN']);
+            expect(combo.displayValue).toEqual('NaN');
 
             // should not select undefined
             combo.writeValue(undefined);
             expect(combo.value).toEqual(undefined);
             expect(combo.selection).toEqual(undefined);
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
         });
 
         it('should toggle dropdown list on clicking a templated toggle icon', fakeAsync(() => {
@@ -1486,7 +1486,7 @@ describe('IgxSimpleCombo', () => {
             combo.onBlur();
             tick();
             fixture.detectChanges();
-            expect(combo.displayValue).toEqual(['Ohio ']);
+            expect(combo.displayValue).toEqual('Ohio ');
         }));
     });
 
@@ -1627,7 +1627,7 @@ describe('IgxSimpleCombo', () => {
                 item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1640,7 +1640,7 @@ describe('IgxSimpleCombo', () => {
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1653,7 +1653,7 @@ describe('IgxSimpleCombo', () => {
                 item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1677,7 +1677,7 @@ describe('IgxSimpleCombo', () => {
                 item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1690,7 +1690,7 @@ describe('IgxSimpleCombo', () => {
                 item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1717,21 +1717,21 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 combo.writeValue(null);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                 combo.writeValue('');
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                 combo.writeValue(undefined);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1752,21 +1752,21 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 combo.writeValue(null);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                 combo.writeValue('');
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                 combo.writeValue(undefined);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1805,7 +1805,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm.resetForm();
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
@@ -1820,7 +1820,7 @@ describe('IgxSimpleCombo', () => {
                 item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1835,7 +1835,7 @@ describe('IgxSimpleCombo', () => {
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1850,7 +1850,7 @@ describe('IgxSimpleCombo', () => {
                 item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1865,7 +1865,7 @@ describe('IgxSimpleCombo', () => {
 
                 reactiveForm.resetForm();
                 fixture.detectChanges();
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
@@ -1880,7 +1880,7 @@ describe('IgxSimpleCombo', () => {
                 item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1895,7 +1895,7 @@ describe('IgxSimpleCombo', () => {
                 item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1917,7 +1917,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm.resetForm();
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
@@ -1929,7 +1929,7 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 combo.writeValue(null);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1938,7 +1938,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveControl.status).toEqual('INVALID');
 
                 combo.writeValue('');
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1947,7 +1947,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveControl.status).toEqual('INVALID');
 
                 combo.writeValue(undefined);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1963,7 +1963,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm.resetForm();
                 fixture.detectChanges();
 
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
@@ -1975,7 +1975,7 @@ describe('IgxSimpleCombo', () => {
                 fixture.detectChanges();
 
                 combo.writeValue(null);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1984,7 +1984,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveControl.status).toEqual('INVALID');
 
                 combo.writeValue('');
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -1993,7 +1993,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveControl.status).toEqual('INVALID');
 
                 combo.writeValue(undefined);
-                expect(combo.displayValue).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 expect(combo.selection).toEqual(undefined);
                 expect(combo.value).toEqual(undefined);
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -2092,7 +2092,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(combo.selection).toBeDefined()
-            expect(combo.displayValue).toEqual([`${selectedItem[combo.displayKey]}`]);
+            expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.value).toEqual(selectedItem[combo.valueKey]);
         }));
         it('should set combo.displayValue to empty string when bound to remote data and selected item\'s data is not present', (async () => {
@@ -2105,7 +2105,7 @@ describe('IgxSimpleCombo', () => {
             combo.select(15);
 
             expect(combo.selection).toBeDefined()
-            expect(combo.displayValue).toEqual([]);
+            expect(combo.displayValue).toEqual('');
 
             combo.toggle();
 
@@ -2115,7 +2115,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             const selectedItem = combo.data[combo.data.length - 1];
-            expect(combo.displayValue).toEqual([`${selectedItem[combo.displayKey]}`]);
+            expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
         }));
         it('should clear input on blur when bound to remote data and no item is selected', () => {
             input.triggerEventHandler('focus', {});
