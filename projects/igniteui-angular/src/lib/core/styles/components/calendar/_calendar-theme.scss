@@ -506,6 +506,10 @@
     }
 
     %cal-header-display {
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
         background: var-get($theme, 'header-background');
         color: var-get($theme, 'header-text-color');
         padding: $cal-header-padding;
@@ -900,7 +904,7 @@
         }
     }
 
-    cal-value--month-current-selected {
+    %cal-value--month-current-selected {
         %cal-value--month-inner {
             color: var-get($theme, 'month-selected-current-text-color');
             background: var-get($theme, 'date-selected-current-background');

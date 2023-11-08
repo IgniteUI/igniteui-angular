@@ -207,7 +207,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private _formatOptions: IFormattingOptions = {
         day: 'numeric',
         month: 'long',
-        weekday: 'short',
+        weekday: 'narrow',
         year: 'numeric'
     };
 
