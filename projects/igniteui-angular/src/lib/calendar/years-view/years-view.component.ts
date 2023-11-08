@@ -202,15 +202,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     public get decade() {
-        const result: Date[] = [];
-        const start = this.date.getFullYear() - 13;
-        const end = this.date.getFullYear() + 2;
-
-        for (const year of range(start, end)) {
-            result.push(new Date(year, this.date.getMonth(), this.date.getDate()));
-        }
-
-        return result;
+		return this._calendarModel.decadedates(this.date);
     }
 
     constructor(public el: ElementRef) {
@@ -334,6 +326,9 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     private generateYearRange(delta: number) {
         const currentYear = new Date().getFullYear();
+
+		const test = this._calendarModel.timedelta(this.date, 'year', 15);
+		console.log(test);
 
         if ((delta > 0 && this.date.getFullYear() - currentYear >= 95) ||
             (delta < 0 && currentYear - this.date.getFullYear() >= 95)) {

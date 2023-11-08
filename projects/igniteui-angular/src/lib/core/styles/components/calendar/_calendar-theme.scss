@@ -453,7 +453,6 @@
         background: var-get($theme, 'content-background');
         outline: none;
         border-radius: var-get($theme, 'border-radius');
-        overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
 
         %cal-display {
@@ -461,6 +460,13 @@
                 border: none;
                 border-radius: 0;
             }
+        }
+
+        igx-days-view,
+        igx-months-view,
+        igx-years-view {
+            padding-block-end: pad-block(rem(16px));
+            padding-inline: pad-inline(rem(12px));
         }
     }
 
@@ -560,7 +566,6 @@
     %cal--days-view {
         display: flex;
         gap: rem(6px);
-        padding: 0 rem(12px) $cal-picker-padding rem(12px)
     }
 
     %cal__days-views {
@@ -616,7 +621,6 @@
 
     %cal-body-display {
         flex: 1 1 auto;
-        overflow: hidden;
     }
 
     %cal-body-inner {
@@ -674,7 +678,6 @@
         display: grid;
         grid-template-columns: repeat(3, minmax($cal-value-w, 1fr));
         row-gap: rem(4px);
-        padding: 0 rem(12px) rem(16px) rem(12px);
         justify-items: center;
     }
 
@@ -709,6 +712,8 @@
 
     %cal-value--focus,
     %cal-value--hover {
+        cursor: pointer;
+
         @if $bootstrap-theme {
             color: var-get($theme, 'date-selected-text-color');
         }

@@ -1,18 +1,18 @@
 import { transition, trigger, useAnimation } from '@angular/animations';
 import {
-    Component,
-    ContentChild,
-    forwardRef,
-    HostBinding,
-    HostListener,
-    Input,
-    ViewChild,
-    ElementRef,
-    AfterViewInit,
-    ViewChildren,
-    QueryList,
-    OnDestroy,
-    booleanAttribute
+	Component,
+	ContentChild,
+	forwardRef,
+	HostBinding,
+	HostListener,
+	Input,
+	ViewChild,
+	ElementRef,
+	AfterViewInit,
+	ViewChildren,
+	QueryList,
+	OnDestroy,
+	booleanAttribute,
 } from '@angular/core';
 import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -906,6 +906,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public getViewDate(i: number): Date {
 		const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
 		return date;
+	}
+
+	protected getDecadeRange(): { start: string; end: string } {
+		const dates = this.calendarModel.decadedates(this.viewDate);
+
+		return {
+			start: this.formatterYear.format(dates[0]),
+			end: this.formatterYear.format(dates.at(-1))
+		}
 	}
 
 	/**

@@ -32,6 +32,7 @@ export class CalendarViewsSampleComponent implements OnInit {
     public locale = 'en';
     public localeFr = 'fr';
     public localeDe = 'de';
+	public isActive = true;
 
     public formatOptions = {
         day: '2-digit',
@@ -98,11 +99,13 @@ export class CalendarViewsSampleComponent implements OnInit {
 
     public selectDV() {
         this.daysView.selectDate(new Date(2019, 1, 13));
+		this.isActive = false;
         // this.daysView.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
     public deselectDV() {
         this.daysView.deselectDate(new Date(2019, 1, 13));
+	    this.isActive = true;
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 }

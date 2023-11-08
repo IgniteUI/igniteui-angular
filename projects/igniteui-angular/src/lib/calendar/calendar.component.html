@@ -50,6 +50,11 @@
             {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
 </ng-template>
+<ng-template #defaultDecade>
+    <span>{{getDecadeRange().start}}</span>
+    <span>&nbsp;-&nbsp;</span>
+    <span>{{getDecadeRange().end}}</span>
+</ng-template>
 
 <!-- Month Year -->
 <ng-template let-result #defaultMonthYear let-obj>
@@ -81,7 +86,7 @@
     </span>
 </ng-template>
 
-<ng-template #calendarPickerDays>
+<ng-template #calendarPickerMonth>
     <section class="igx-calendar-picker">
         <span tabindex="0" class="igx-calendar__aria-off-screen">
             <ng-container *ngIf="selection === 'multi'">
@@ -139,14 +144,14 @@
     </section>
 </ng-template>
 
-<ng-template #calendarMonthPicker>
+<ng-template #calendarYearPicker>
     <section class="igx-calendar-picker">
         <div class="igx-calendar-picker__dates"
              *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
              [style.width.%]="100/monthsViewNumber"
              [attr.data-month]="i | IgxGetViewDate:viewDate:false">
             <ng-container
-                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)"></ng-container>
+                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(i)"></ng-container>
         </div>
         <div class="igx-calendar-picker__nav">
             <div
@@ -179,14 +184,14 @@
     </section>
 </ng-template>
 
-<ng-template #calendarYearPicker>
+<ng-template #calendarDecadePicker>
     <section class="igx-calendar-picker">
         <div class="igx-calendar-picker__dates"
              *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
              [style.width.%]="100/monthsViewNumber"
              [attr.data-month]="i | IgxGetViewDate:viewDate:false">
             <ng-container
-                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(i)">
+                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultDecade; context: getContext(i)">
             </ng-container>
         </div>
         <div class="igx-calendar-picker__nav">
@@ -247,7 +252,7 @@
      (swipeleft)="nextMonth()"
      (pointerdown)="suppressBlur()">
 
-    <ng-container *ngTemplateOutlet="calendarPickerDays"></ng-container>
+    <ng-container *ngTemplateOutlet="calendarPickerMonth"></ng-container>
 
     <section class="igx-calendar__days-views">
         <igx-days-view role="grid" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
@@ -271,9 +276,8 @@
     </section>
 </div>
 
-
 <div *ngIf="isYearView">
-    <ng-container *ngTemplateOutlet="calendarMonthPicker"></ng-container>
+    <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
     <igx-months-view
             [@animateView]="activeView"
             #months
@@ -286,9 +290,8 @@
     </igx-months-view>
 </div>
 
-
 <div *ngIf="isDecadeView">
-    <ng-container *ngTemplateOutlet="calendarPickerDays"></ng-container>
+    <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
     <igx-years-view
             [@animateView]="activeView"
             #decade

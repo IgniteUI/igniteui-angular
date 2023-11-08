@@ -264,6 +264,30 @@ export class Calendar {
         return res;
     }
 
+	public decadedates(date: Date, range = 15) {
+		const result: Date[] = [];
+		const yearsPerRow = 3;
+		const year = date.getFullYear();
+		const month = date.getMonth();
+		const start = Math.floor(year / range) * range;
+		const rows = range / yearsPerRow;
+
+		for (let i = 0; i < rows; i++) {
+			const row: Date[] = [];
+			for (let j = 0; j < yearsPerRow; j++) {
+				const year = start + i * yearsPerRow + j;
+				const date = new Date(year, month, 1);
+				// fix year since values between 0 and 100 results in 1900s
+				date.setFullYear(year);
+				row.push(date);
+			}
+
+			result.push(...row);
+		}
+
+		return result;
+	}
+
     /**
      * Returns a matrix (array of arrays) representing a month's calendar.
      * Each row represents a full week; week entries are ICalendarDate objects.
@@ -396,10 +420,10 @@ export class Calendar {
         firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
         const dayInMilSeconds = 86400000;
         // day number in the year
-        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - 
+        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() -
         (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
         let weekNumber;
-        // if 01 Jan is Monday to Thursday, is considered 1st week of the year 
+        // if 01 Jan is Monday to Thursday, is considered 1st week of the year
         // if 01 Jan starts Friday to Sunday, is considered last week of previous year
         if (firstDayOfTheYear < 4) {
             // when calculating the week number we add 1 for the 1st week
@@ -415,7 +439,7 @@ export class Calendar {
             // first day of the next year
             let nextYearFirstDay = nextYear.getDay() - weekStart;
             nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
-            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year 
+            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year
             // if 01 Jan is Friday to Sunday, is considered 53rd week of the current year
             weekNumber = nextYearFirstDay < 4 ? 1 : 53;
         }
