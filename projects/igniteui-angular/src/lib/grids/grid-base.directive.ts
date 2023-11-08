@@ -2357,7 +2357,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set sortingOptions(value: ISortingOptions) {
-        this.clearSort();
+        if (!this._init) {
+            // clear sort only if option is changed runtime. No need to clear on initial load.
+            this.clearSort();
+        }
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
 
