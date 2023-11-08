@@ -163,54 +163,6 @@
         }
       }
     },
-    "igniteui-dev-demos-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "watch": true,
-            "headless": false
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "e2e/**/*.ts",
-              "e2e/**/*.html"
-            ]
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "configFile": "e2e//cypress.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "e2e//cypress.json"
-          }
-        }
-      }
-    },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
       "sourceRoot": "projects/igniteui-angular/src",
