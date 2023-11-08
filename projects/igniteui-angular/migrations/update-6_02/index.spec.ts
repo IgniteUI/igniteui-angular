@@ -41,8 +41,7 @@ describe('Update 6.0.2', () => {
             '/testSrc/testSrc/styles.scss',
             `@import "~igniteui-angular/core/styles/themes/_index.scss";`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-03', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-03', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `// Import the IgniteUI themes library first` +
             `@import "~igniteui-angular/lib/core/styles/themes/index";` +

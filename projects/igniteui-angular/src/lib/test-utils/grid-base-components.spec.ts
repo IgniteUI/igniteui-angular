@@ -24,6 +24,7 @@ import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinnin
         </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-basic-grid',
     imports: [IgxGridComponent]
 })
 export class BasicGridComponent {
@@ -41,6 +42,7 @@ export class BasicGridComponent {
         </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-auto-generate-grid',
     imports: [IgxGridComponent]
 })
 export class GridAutoGenerateComponent extends BasicGridComponent {

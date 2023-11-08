@@ -476,6 +476,7 @@ class IgxActionStripTestingComponent implements OnInit {
     </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-action-strip-pin-edit-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
@@ -495,6 +496,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-action-strip-edit-menu-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
@@ -515,6 +517,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-action-strip-one-row-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
@@ -534,6 +537,7 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     standalone: true,
+    selector: 'igx-action-strip-menu-one-row-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
