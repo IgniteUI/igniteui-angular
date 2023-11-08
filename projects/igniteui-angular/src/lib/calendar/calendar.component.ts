@@ -20,9 +20,9 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
 	IgxCalendarHeaderTemplateDirective,
 	IgxCalendarSubheaderTemplateDirective,
-	IgxCalendarScrollMonthDirective,
+    IgxCalendarScrollPageDirective,
 } from './calendar.directives';
-import { ICalendarDate, IgxCalendarView, ScrollMonth, monthRange } from './calendar';
+import { ICalendarDate, IgxCalendarView, monthRange, ScrollDirection } from './calendar';
 import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
@@ -90,7 +90,7 @@ let NEXT_ID = 0;
 	selector: 'igx-calendar',
 	templateUrl: 'calendar.component.html',
 	standalone: true,
-	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollMonthDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
+	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
 })
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
 	/**
@@ -246,8 +246,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	@ViewChild('prevMonthBtn')
-	public prevMonthBtn: ElementRef;
+	@ViewChild('prevPageBtn')
+	public prevPageBtn: ElementRef;
 
 	/**
 	 * Button for next month.
@@ -255,8 +255,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	@ViewChild('nextMonthBtn')
-	public nextMonthBtn: ElementRef;
+	@ViewChild('nextPageBtn')
+	public nextPageBtn: ElementRef;
 
 	/**
 	 * Denote if the year view is active.
@@ -440,7 +440,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		let activeDate;
 
 		while (!activeDate && monthView) {
-			activeDate = monthView.dates.find((date) => date.nativeElement===document.activeElement);
+			activeDate = monthView.dates.find((date) => date.nativeElement === document.activeElement);
 			monthView = monthView.nextMonthView;
 		}
 
@@ -488,15 +488,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
 		if (isPageDown) {
 			if (event.repeat) {
-				requestAnimationFrame(() => this.nextMonth(true));
+				requestAnimationFrame(() => this.nextPage(true));
 			} else {
-				this.nextMonth(true);
+				this.nextPage(true);
 			}
 		} else {
 			if (event.repeat) {
-				requestAnimationFrame(() => this.previousMonth(true));
+				requestAnimationFrame(() => this.previousPage(true));
 			} else {
-				this.previousMonth(true);
+				this.previousPage(true);
 			}
 		}
 	}
@@ -521,7 +521,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
 
-		this.animationAction = isPageDown ? ScrollMonth.NEXT: ScrollMonth.PREV;
+		this.animationAction = isPageDown ? ScrollDirection.NEXT: ScrollDirection.PREV;
 		this.isKeydownTrigger = true;
 
 		let monthView = this.daysView as IgxDaysViewComponent;
@@ -595,8 +595,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	@HostListener('document:mouseup', ['$event'])
 	public onMouseUp(event: KeyboardEvent) {
-		if (this.monthScrollDirection!==ScrollMonth.NONE) {
-			this.stopMonthScroll(event);
+		if (this.pageScrollDirection !== ScrollDirection.NONE) {
+			this.stopPageScroll(event);
 		}
 	}
 
@@ -606,21 +606,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 			this.setSiblingMonths(c);
 		});
 
-        this.startMonthScroll$.pipe(
-            takeUntil(this.stopMonthScroll$),
-            switchMap(() => this.scrollMonth$.pipe(
+        this.startPageScroll$.pipe(
+            takeUntil(this.stopPageScroll$),
+            switchMap(() => this.scrollPage$.pipe(
                 skipLast(1),
                 debounce(() => interval(300)),
-                takeUntil(this.stopMonthScroll$)
+                takeUntil(this.stopPageScroll$)
             ))).subscribe(() => {
-                switch (this.monthScrollDirection) {
-                    case ScrollMonth.PREV:
-                        this.previousMonth();
+                switch (this.pageScrollDirection) {
+                    case ScrollDirection.PREV:
+                        this.previousPage();
                         break;
-                    case ScrollMonth.NEXT:
-                        this.nextMonth();
+                    case ScrollDirection.NEXT:
+                        this.nextPage();
                         break;
-                    case ScrollMonth.NONE:
+                    case ScrollDirection.NONE:
                     default:
                         break;
                 }
@@ -642,26 +642,130 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	}
 
 	/**
+	 * Change to previous page
+	 *
+	 * @hidden
+	 * @internal
+	 */
+	public previousPage(isKeydownTrigger = false) {
+		if (isKeydownTrigger && this.animationAction === ScrollDirection.NEXT) {
+			return;
+		}
+
+		this.previousViewDate = this.viewDate;
+		this.isKeydownTrigger = isKeydownTrigger;
+		this.animationAction = ScrollDirection.PREV;
+
+        switch(this.activeView) {
+            case 'month':
+		        this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
+                break;
+            case 'year':
+		        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
+                break;
+            case 'decade':
+		        this.viewDate = this.calendarModel.getPrevYears(this.viewDate);
+                break;
+        }
+	}
+
+	/**
+	 * Change to next page
+	 *
+	 * @hidden
+	 * @internal
+	 */
+	public nextPage(isKeydownTrigger = false) {
+		if (isKeydownTrigger && this.animationAction === ScrollDirection.PREV) {
+			return;
+		}
+
+		this.previousViewDate = this.viewDate;
+		this.isKeydownTrigger = isKeydownTrigger;
+        this.animationAction = ScrollDirection.NEXT;
+
+        switch(this.activeView) {
+            case 'month':
+		        this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
+                break;
+            case 'year':
+		        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
+                break;
+            case 'decade':
+		        this.viewDate = this.calendarModel.getNextYears(this.viewDate);
+                break;
+        }
+	}
+
+	/**
+	 * Continious navigation through the previous pages
+	 *
+	 * @hidden
+	 * @internal
+	 */
+	public startPrevPageScroll = (isKeydownTrigger = false) => {
+		this.startPageScroll$.next();
+		this.pageScrollDirection = ScrollDirection.PREV;
+        this.animationAction = ScrollDirection.PREV;
+		this.previousPage(isKeydownTrigger);
+	}
+
+	/**
+	 * Continious navigation through the next pages
+	 *
+	 * @hidden
+	 * @internal
+	 */
+	public startNextPageScroll = (isKeydownTrigger = false) => {
+		this.startPageScroll$.next();
+		this.pageScrollDirection = ScrollDirection.NEXT;
+        this.animationAction = ScrollDirection.NEXT;
+		this.nextPage(isKeydownTrigger);
+	}
+
+	/**
+	 * Stop continuous navigation
+	 *
+	 * @hidden
+	 * @internal
+	 */
+	public stopPageScroll = (event: KeyboardEvent) => {
+		event.stopPropagation();
+
+        // We call the stopPageScroll on the view instead of directly on the calendar as otherwise a
+		// strange bug is introduced --> after changing number of months, continuous scrolling on mouse click stops working
+		this.stopPageScroll$.next(true);
+		this.stopPageScroll$.complete();
+
+
+		if (this.pageScrollDirection === ScrollDirection.PREV) {
+			this.prevPageBtn.nativeElement.focus();
+		} else if (this.pageScrollDirection === ScrollDirection.NEXT) {
+			this.nextPageBtn.nativeElement.focus();
+		}
+
+		if (this.platform.isActivationKey(event)) {
+			this.resetActiveDate();
+		}
+
+		this.pageScrollDirection = ScrollDirection.NONE;
+	}
+
+	/**
 	 * Change to previous month
 	 *
 	 * @hidden
 	 * @internal
 	 */
 	public previousMonth(isKeydownTrigger = false) {
-		if (isKeydownTrigger && this.animationAction===ScrollMonth.NEXT) {
+		if (isKeydownTrigger && this.animationAction === ScrollDirection.NEXT) {
 			return;
 		}
+
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
-		this.animationAction = ScrollMonth.PREV;
+		this.animationAction = ScrollDirection.PREV;
 		this.isKeydownTrigger = isKeydownTrigger;
-	}
-
-	public suppressBlur() {
-		this.monthViews?.forEach(d => d.shouldResetDate = false);
-		if (this.daysView) {
-			this.daysView.shouldResetDate = false;
-		}
 	}
 
 	/**
@@ -674,66 +778,19 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		if (isKeydownTrigger && this.animationAction==='prev') {
 			return;
 		}
+
 		this.isKeydownTrigger = isKeydownTrigger;
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
-		this.animationAction = ScrollMonth.NEXT;
+		this.animationAction = ScrollDirection.NEXT;
 	}
 
-	/**
-	 * Continious navigation through the previous months
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public startPrevMonthScroll = (isKeydownTrigger = false) => {
-		this.startMonthScroll$.next();
-		this.monthScrollDirection = ScrollMonth.PREV;
-		this.animationAction = ScrollMonth.PREV;
-		this.previousMonth(isKeydownTrigger);
-	};
-
-	/**
-	 * Continious navigation through the next months
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public startNextMonthScroll = (isKeydownTrigger = false) => {
-		this.startMonthScroll$.next();
-		this.monthScrollDirection = ScrollMonth.NEXT;
-		this.animationAction = ScrollMonth.NEXT;
-		this.nextMonth(isKeydownTrigger);
-	};
-
-	/**
-	 * Stop continuous navigation
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public stopMonthScroll = (event: KeyboardEvent) => {
-		event.stopPropagation();
-
-		// generally the scrolling is built on the calendar component
-		// and all start/stop scrolling methods are called on the calendar
-		// if we change below lines to call stopMonthScroll$ on the calendar instead of on the views,
-		// strange bug is introduced --> after changing number of months, continuous scrolling on mouse click does not happen
-		this.daysView.stopMonthScroll$.next(true);
-		this.daysView.stopMonthScroll$.complete();
-
-
-		if (this.monthScrollDirection===ScrollMonth.PREV) {
-			this.prevMonthBtn.nativeElement.focus();
-		} else if (this.monthScrollDirection===ScrollMonth.NEXT) {
-			this.nextMonthBtn.nativeElement.focus();
+	public suppressBlur() {
+		this.monthViews?.forEach(d => d.shouldResetDate = false);
+		if (this.daysView) {
+			this.daysView.shouldResetDate = false;
 		}
-		if (this.platform.isActivationKey(event)) {
-			this.resetActiveDate();
-		}
-
-		this.monthScrollDirection = ScrollMonth.NONE;
-	};
+	}
 
 	/**
 	 * @hidden
@@ -794,11 +851,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	public childClicked(instance: ICalendarDate) {
 		if (instance.isPrevMonth) {
-			this.previousMonth();
+			this.previousPage();
 		}
 
 		if (instance.isNextMonth) {
-			this.nextMonth();
+			this.nextPage();
 		}
 
 		// selectDateFromClient is called both here and in days-view.component
@@ -933,16 +990,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public animationDone(event) {
-        if ((event.fromState === ScrollMonth.NONE && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT)) ||
-            (event.fromState === 'void' && event.toState === ScrollMonth.NONE)) {
+        if ((event.fromState === ScrollDirection.NONE && (event.toState === ScrollDirection.PREV || event.toState === ScrollDirection.NEXT)) ||
+            (event.fromState === 'void' && event.toState === ScrollDirection.NONE)) {
             this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
+
         if (!this.isKeydownTrigger) {
             this.resetActiveDate();
         }
 
-        if (this.monthScrollDirection !== ScrollMonth.NONE) {
-            this.scrollMonth$.next();
+        if (this.pageScrollDirection !== ScrollDirection.NONE) {
+            this.scrollPage$.next();
         }
 
         if (!this.isDefaultView) {
@@ -956,14 +1014,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             monthView = monthView.nextMonthView;
             date = monthView.dates.find((d) => d.selected);
         }
+
         if (date && date.isFocusable && !this.isKeydownTrigger) {
             setTimeout(() => {
                 date.nativeElement.focus();
             }, parseInt(slideInRight.options.params.duration, 10));
-        } else if (this.callback && (event.toState === ScrollMonth.NEXT || event.toState === ScrollMonth.PREV)) {
+        } else if (this.callback && (event.toState === ScrollDirection.NEXT || event.toState === ScrollDirection.PREV)) {
             this.callback(this.nextDate);
         }
-        this.animationAction = ScrollMonth.NONE;
+
+        this.animationAction = ScrollDirection.NONE;
     }
 
 	/**
@@ -987,12 +1047,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		if (!this.monthViews) {
 			return;
 		}
+
 		let dates = [];
 		this.monthViews.map(mv => mv.dates).forEach(days => {
 			dates = dates.concat(days.toArray());
 		});
 		const date = dates.find(day => day.selected && day.isCurrentMonth) || dates.find(day => day.isToday && day.isCurrentMonth)
 			|| dates.find(d => d.isFocusable);
+
 		if (date) {
 			this.activeDate = date.date.date.toLocaleDateString();
 		}

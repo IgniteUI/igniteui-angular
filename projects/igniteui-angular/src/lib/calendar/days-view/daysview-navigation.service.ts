@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IgxDayItemComponent } from './day-item.component';
 import { IgxDaysViewComponent } from './days-view.component';
-import { ScrollMonth } from '../calendar';
+import { ScrollDirection } from '../calendar';
 
 enum Direction {
     Up = 'ArrowUp',
@@ -134,7 +134,7 @@ export class IgxDaysViewNavigationService {
             dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth;
         }
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
-            const monthAction = step > 0 ? ScrollMonth.NEXT : ScrollMonth.PREV;
+            const monthAction = step > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
             monthView.viewChanging.emit({monthAction, key, nextDate});
         }
     }

@@ -1,5 +1,5 @@
 import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
-import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollMonth, IgxCalendarView, CalendarSelection } from './calendar';
+import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
@@ -72,22 +72,22 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public monthScrollDirection = ScrollMonth.NONE;
+    public pageScrollDirection = ScrollDirection.NONE;
 
     /**
      * @hidden
      */
-    public scrollMonth$ = new Subject();
+    public scrollPage$ = new Subject();
 
     /**
      * @hidden
      */
-    public stopMonthScroll$ = new Subject<boolean>();
+    public stopPageScroll$ = new Subject<boolean>();
 
     /**
      * @hidden
      */
-    public startMonthScroll$ = new Subject();
+    public startPageScroll$ = new Subject();
 
     /**
      * @hidden

@@ -15,7 +15,7 @@ import { IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxCalendarView, ScrollMonth } from '../calendar';
+import { IgxCalendarView, ScrollDirection } from '../calendar';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
@@ -156,7 +156,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public animationDone(event) {
         if ((event.fromState === 'void' && event.toState === '') ||
-        (event.fromState === '' && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT))) {
+        (event.fromState === '' && (event.toState === ScrollDirection.PREV || event.toState === ScrollDirection.NEXT))) {
             this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
         this.yearAction = '';

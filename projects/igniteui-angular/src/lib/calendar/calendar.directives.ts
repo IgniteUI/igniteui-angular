@@ -125,7 +125,6 @@ export class IgxCalendarMonthDirective {
     standalone: true
 })
 export class IgxCalendarHeaderTemplateDirective {
-
     constructor(public template: TemplateRef<any>) { }
 }
 
@@ -144,13 +143,12 @@ export class IgxCalendarSubheaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarScrollMonth]',
+    selector: '[igxCalendarScrollPage]',
     standalone: true
 })
-export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
-
+export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy {
     /**
-     * A callback function to be invoked when month increment/decrement starts.
+     * A callback function to be invoked when increment/decrement page is triggered.
      *
      * @hidden
      */
@@ -158,7 +156,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     public startScroll: (keydown?: boolean) => void;
 
     /**
-     * A callback function to be invoked when month increment/decrement stops.
+     * A callback function to be invoked when increment/decrement page stops.
      *
      * @hidden
      */
@@ -192,7 +190,6 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
      * @hidden
      */
     public ngAfterViewInit() {
-
         fromEvent(this.element.nativeElement, 'keyup').pipe(
             debounce(() => interval(100)),
             takeUntil(this.destroy$)
@@ -216,7 +213,6 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
                 }
             });
         });
-
     }
 
     /**

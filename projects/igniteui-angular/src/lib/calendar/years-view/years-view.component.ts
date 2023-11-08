@@ -218,7 +218,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        this.generateYearRange(1);
+        this.generateYearRange(15);
         this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
     }
 
@@ -230,7 +230,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        this.generateYearRange(-1);
+        this.generateYearRange(-15);
         this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
     }
 
@@ -326,9 +326,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     private generateYearRange(delta: number) {
         const currentYear = new Date().getFullYear();
-
-		const test = this._calendarModel.timedelta(this.date, 'year', 15);
-		console.log(test);
 
         if ((delta > 0 && this.date.getFullYear() - currentYear >= 95) ||
             (delta < 0 && currentYear - this.date.getFullYear() >= 95)) {

@@ -11,7 +11,7 @@ export const CalendarSelection = mkenum({
 });
 export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
 
-export enum ScrollMonth {
+export enum ScrollDirection {
     PREV = 'prev',
     NEXT = 'next',
     NONE = 'none'
@@ -43,6 +43,9 @@ enum TimeDeltaInterval {
 
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
+
+const YEARS_PER_PAGE = 15;
+const YEARS_PER_ROW = 3;
 
 export const range = (start = 0, stop, step = 1) => {
     const res = [];
@@ -264,22 +267,21 @@ export class Calendar {
         return res;
     }
 
-	public decadedates(date: Date, range = 15) {
+	public decadedates(date: Date) {
 		const result: Date[] = [];
-		const yearsPerRow = 3;
 		const year = date.getFullYear();
 		const month = date.getMonth();
-		const start = Math.floor(year / range) * range;
-		const rows = range / yearsPerRow;
+		const start = Math.floor(year / YEARS_PER_PAGE) * YEARS_PER_PAGE;
+		const rows = YEARS_PER_PAGE / YEARS_PER_ROW;
 
 		for (let i = 0; i < rows; i++) {
 			const row: Date[] = [];
-			for (let j = 0; j < yearsPerRow; j++) {
-				const year = start + i * yearsPerRow + j;
-				const date = new Date(year, month, 1);
-				// fix year since values between 0 and 100 results in 1900s
-				date.setFullYear(year);
-				row.push(date);
+
+			for (let j = 0; j < YEARS_PER_ROW; j++) {
+				const _year = start + i * YEARS_PER_ROW + j;
+				const _date = new Date(_year, month, 1);
+				_date.setFullYear(_year);
+				row.push(_date);
 			}
 
 			result.push(...row);
@@ -410,6 +412,14 @@ export class Calendar {
 
     public getPrevYear(date: Date) {
         return this.timedelta(date, TimeDeltaInterval.Year, -1);
+    }
+
+    public getNextYears(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Year, 15);
+    }
+
+    public getPrevYears(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Year, -15);
     }
 
     public getWeekNumber(date: Date, weekStart: WEEKDAYS | number) {
