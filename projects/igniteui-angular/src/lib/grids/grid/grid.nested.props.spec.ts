@@ -532,6 +532,7 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         const cellArgs: ICellEditEventArgs = {
+            primaryKey: cell.row.key,
             rowID: cell.row.key,
             rowKey: cell.row.key,
             cellID: cell.id,
@@ -597,6 +598,7 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         const cellArgs: ICellEditEventArgs = {
+            primaryKey: cell.row.key,
             rowID: cell.row.key,
             rowKey: cell.row.key,
             cellID: cell.id,
@@ -669,8 +671,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IRowEditEventArgs = {
+            primaryKey: row.key,
             rowID: row.key,
-            key: cell.row.key,
+            rowKey: cell.row.key,
             rowData: initialRowData,
             data: initialRowData,
             oldValue: row.data,
@@ -735,8 +738,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IRowEditEventArgs = {
+            primaryKey: row.key,
             rowID: row.key,
-            key: cell.row.key,
+            rowKey: cell.row.key,
             rowData: initialRowData,
             data: initialRowData,
             oldValue: row.data,

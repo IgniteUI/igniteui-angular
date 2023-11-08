@@ -358,7 +358,8 @@ describe('igxGridEditingActions #grid ', () => {
             const deleteChildBtn = editActions[3].componentInstance;
 
             const rowDeleteArgs: IRowDataCancelableEventArgs = {
-                key: row.key,
+                primaryKey: row.key,
+                rowKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 data: treeGrid.getRowData(row.key),

@@ -15,7 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { ICellEditDoneEventArgs, ICellEditEventArgs, IgxColumnComponent } from '../public_api';
+import { IGridEditDoneEventArgs, ICellEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -592,6 +592,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             let cellArgs: ICellEditEventArgs = {
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowKey: cell.row.key,
                 cellID: cell.cellID,
@@ -618,6 +619,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell2.id,
                 rowID: cell2.row.key,
+                primaryKey: cell2.row.key,
                 rowKey: cell2.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -649,6 +651,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey:  cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
                 oldValue: 'John Brown',
@@ -675,6 +678,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
                 oldValue: 20,
@@ -702,9 +706,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            let cellArgs: ICellEditDoneEventArgs = {
+            let cellArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
                 rowKey: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -730,6 +735,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
                 newValue: 20,
@@ -765,6 +771,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data,
                 data: cell.row.data,
                 oldValue: 'John Brown',
@@ -793,6 +800,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data,
                 data: cell.row.data,
                 oldValue: 20,
@@ -832,6 +840,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: ICellEditEventArgs = {
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
@@ -974,9 +983,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(cell.value).toBe(newValue);
 
-            const cellArgs: ICellEditDoneEventArgs = {
+            const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowKey: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 data: updatedRowData,
@@ -1007,9 +1017,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fixture.detectChanges();
 
-            const cellArgs: ICellEditDoneEventArgs = {
+            const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowKey: cell.row.key,
                 rowData: initialRowData,
                 data: initialRowData,
@@ -1029,7 +1040,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it(`Should properly emit 'cellEditDone' event`, () => {
             const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
-            let cellArgs: ICellEditDoneEventArgs;
+            let cellArgs: IGridEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
             const firstNewValue = 'New Name';
             const secondNewValue = 1;
@@ -1051,6 +1062,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
                 data: updatedRowData,
                 oldValue: 'John Brown',
@@ -1078,6 +1090,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.id,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
                 data: cell.row.data,
                 oldValue: 20,
@@ -1090,7 +1103,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
-            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as ICellEditDoneEventArgs;
+            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
             expect(spyDoneArgs.data).toBe(grid.data[0]);
         });
 
