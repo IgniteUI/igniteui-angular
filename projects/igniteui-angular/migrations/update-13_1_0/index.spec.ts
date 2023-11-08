@@ -41,8 +41,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -68,8 +67,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -90,8 +88,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss').replace(/\n|\r\n/g, '')
@@ -125,8 +122,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -171,8 +167,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent('/testSrc/appPrefix/component/test1.component.html')
         ).toEqual(
@@ -221,8 +216,7 @@ export class TestComponent {
 `
         );
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
             expect(
                 tree.readContent('/testSrc/appPrefix/component/test.component.html')

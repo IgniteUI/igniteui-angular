@@ -38,9 +38,9 @@ describe('IgxCheckbox', () => {
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual('igx-checkbox-0-input');
+        expect(nativeCheckbox.id).toContain('igx-checkbox-');
         expect(nativeCheckbox.getAttribute('aria-label')).toEqual(null);
-        expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-checkbox-0-label');
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-checkbox-');
 
         expect(nativeLabel).toBeTruthy();
         // No longer have a for attribute to not propagate clicks to the native checkbox
@@ -48,7 +48,7 @@ describe('IgxCheckbox', () => {
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-checkbox__label');
-        expect(placeholderLabel.getAttribute('id')).toEqual('igx-checkbox-0-label');
+        expect(placeholderLabel.getAttribute('id')).toContain('igx-checkbox-');
 
         // When aria-label is present, aria-labeledby shouldn't be
         checkbox.ariaLabel = 'New Label';

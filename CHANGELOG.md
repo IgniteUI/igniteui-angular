@@ -15,8 +15,14 @@ All notable changes for each version of this project will be documented in this 
     - `igniteui-angular` components have improved tree-shaking
 - DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
 - We're working on reducing the library size
-    - IgxRadioComponent has been reduced in half
-    - IgxSwitchComponent has been reduced in half
+    - `IgxRadioComponent` size has been reduced in half
+    - `IgxSwitchComponent` size has been reduced in half
+- `IgxRadioComponent` 
+    - **Breaking Change** `IChangeRadioEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `RadioLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
+- `IgxSwitchComponent`
+    - **Breaking Change** `IChangeSwitchEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
+    - **Breaking Change** `SwitchLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
 - `IgxCombo`
     - **Breaking Change** `IComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property values or full data items depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
     - `IComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.

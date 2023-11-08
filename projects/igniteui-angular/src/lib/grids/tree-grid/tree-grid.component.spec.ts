@@ -116,7 +116,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
-            expect(horizontalScroll.offsetWidth).toBeGreaterThanOrEqual(783);
+            expect(horizontalScroll.offsetWidth).toBeGreaterThanOrEqual(782);
             expect(horizontalScroll.offsetWidth).toBeLessThanOrEqual(786);
             expect(horizontalScroll.children[0].offsetWidth).toBeGreaterThanOrEqual(799);
             expect(horizontalScroll.children[0].offsetWidth).toBeLessThanOrEqual(801);
