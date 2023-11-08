@@ -183,6 +183,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public matchesCount: number;
+
+    /**
+     * @hidden @internal
+     */
     public get valuesLoadingTemplate() {
         if (this.esf.grid?.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
@@ -437,6 +442,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 }
             }
             selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
+            this.matchesCount = this.displayedListData.length - 1;
             this.cdr.detectChanges();
 
             return;
@@ -467,6 +473,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             if (this.displayedListData.length === 2) {
                 this.displayedListData = [];
             }
+        }
+
+        if (this.displayedListData.length > 2) {
+            this.matchesCount = this.displayedListData.length - 2;
+        } else {
+            this.matchesCount = 0;
         }
 
         selectAllBtn.indeterminate = false;
