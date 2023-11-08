@@ -678,6 +678,7 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
         </div>
     `,
     standalone: true,
+    selector: 'igx-toggle-service-inject',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxToggleServiceInjectComponent {
@@ -716,6 +717,7 @@ export class IgxOverlayServiceComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
+    selector: 'igx-test-with-on-push',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithOnPushComponent {
