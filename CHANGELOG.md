@@ -35,6 +35,8 @@ All notable changes for each version of this project will be documented in this 
 
       Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
     - **Breaking Change** The `value` and `selection` properties now correctly return a single value or data item instead of the same wrapped in array and `undefined` instead of empty array, matching the values emitted from selection event and when working with `formControlName`/`ngModel` directives.
+- `IgxCombo`,`IgxSimpleCombo`
+    - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
 ## 16.1.4
 ### New Features
