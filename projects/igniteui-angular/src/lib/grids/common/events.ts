@@ -50,11 +50,8 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * `rowData` represents the updated/committed data of the row after the edit (newValue)
      * The only case rowData (of the current object) is used directly, is when there is no rowEditing or transactions enabled
-     * @deprecated since version 17.0.0
-     * Use `data` instead
      */
     rowData: any;
-    data: any;
     oldValue: any;
     /**
      * Optional

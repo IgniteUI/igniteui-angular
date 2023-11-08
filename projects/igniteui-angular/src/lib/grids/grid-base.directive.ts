@@ -4583,7 +4583,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             primaryKey: rowId,
             rowKey: rowId,
             rowData: this.getRowData(rowId),
-            data: this.getRowData(rowId),
             owner: this,
             isAddRow: false,
             cancel: false

@@ -198,8 +198,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         it('should have correct foreignKey value for the data record in rowAdd event arguments', () => {
             let newRowId = null;
             treeGrid.rowAdd.pipe(first()).subscribe((args: IRowDataCancelableEventArgs) => {
-                expect(args.data[treeGrid.foreignKey]).toBe(2);
-                newRowId = args.data[treeGrid.primaryKey];
+                expect(args.rowData[treeGrid.foreignKey]).toBe(2);
+                newRowId = args.rowData[treeGrid.primaryKey];
             });
 
             treeGrid.beginAddRowById(2, true);

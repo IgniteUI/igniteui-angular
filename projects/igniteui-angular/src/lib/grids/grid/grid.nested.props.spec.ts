@@ -537,7 +537,6 @@ describe('Edit cell with data of type Array #grid', () => {
             rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
-            data: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
@@ -603,7 +602,6 @@ describe('Edit cell with data of type Array #grid', () => {
             rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
-            data: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
@@ -632,7 +630,6 @@ describe('Edit cell with data of type Array #grid', () => {
 
         initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
-        cellArgs.data = initialRowData;
         cellArgs.newValue = initialRowData.locations;
 
         expect(cellArgs.newValue.length).toEqual(1);
@@ -675,7 +672,6 @@ describe('Edit cell with data of type Array #grid', () => {
             rowID: row.key,
             rowKey: cell.row.key,
             rowData: initialRowData,
-            data: initialRowData,
             oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
@@ -742,7 +738,6 @@ describe('Edit cell with data of type Array #grid', () => {
             rowID: row.key,
             rowKey: cell.row.key,
             rowData: initialRowData,
-            data: initialRowData,
             oldValue: row.data,
             owner: grid,
             isAddRow: row.addRowUI,
@@ -782,7 +777,6 @@ describe('Edit cell with data of type Array #grid', () => {
 
         delete rowArgs.cancel;
         rowArgs.rowData = initialRowData;
-        rowArgs.data = initialRowData;
         expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowArgs);
 

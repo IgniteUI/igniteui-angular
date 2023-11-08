@@ -31,7 +31,6 @@ export class IgxEditRow {
             rowID: this.id,
             rowKey: this.id,
             rowData: this.data,
-            data: this.data,
             oldValue: this.data,
             cancel: false,
             owner: this.grid,
@@ -50,7 +49,6 @@ export class IgxEditRow {
             primaryKey: this.id,
             rowKey: this.id,
             rowData: this.data,
-            data: this.data,
             cancel: false,
             owner: this.grid,
             isAddRow: true,
@@ -77,7 +75,6 @@ export class IgxEditRow {
             rowID: this.id,
             rowKey: this.id,
             rowData,
-            data: rowData,
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
@@ -190,7 +187,6 @@ export class IgxCell {
             rowKey: this.id.rowID,
             cellID: this.id,
             rowData: this.rowData,
-            data: this.rowData,
             oldValue: this.value,
             cancel: false,
             column: this.column,
@@ -225,7 +221,6 @@ export class IgxCell {
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
-            data: rowData,
             oldValue: this.value,
             valid: formControl ? formControl.valid : true,
             newValue: value,
@@ -602,10 +597,10 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
             this.endAddRow();
             if (commit) {
                 const rowAddedEventArgs: IRowDataEventArgs = {
-                    data: args.data,
+                    data: args.rowData,
                     owner: this.grid,
-                    primaryKey: args.data[this.grid.primaryKey],
-                    key: args.data[this.grid.primaryKey]
+                    primaryKey: args.rowData[this.grid.primaryKey],
+                    key: args.rowData[this.grid.primaryKey]
                 }
                 this.grid.rowAddedNotifier.next(rowAddedEventArgs);
                 this.grid.rowAdded.emit(rowAddedEventArgs);

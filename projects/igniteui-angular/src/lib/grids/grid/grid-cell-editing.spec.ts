@@ -597,7 +597,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: 'John Brown',
                 cancel: false,
                 valid: true,
@@ -622,7 +621,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 primaryKey: cell2.row.key,
                 rowKey: cell2.row.key,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: 20,
                 valid: true,
                 cancel: false,
@@ -653,7 +651,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey:  cell.row.key,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: 'John Brown',
                 cancel: true,
                 valid: true,
@@ -680,7 +677,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: 20,
                 cancel: true,
                 column: cell.column,
@@ -712,7 +708,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 primaryKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
-                data: initialRowData,
                 newValue: 'John Brown',
                 valid: true,
                 oldValue: 'John Brown',
@@ -737,7 +732,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: initialRowData,
-                data: initialRowData,
                 newValue: 20,
                 oldValue: 20,
                 valid: true,
@@ -773,7 +767,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: cell.row.data,
-                data: cell.row.data,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
@@ -802,7 +795,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: cell.row.data,
-                data: cell.row.data,
                 oldValue: 20,
                 newValue: 1,
                 cancel: false,
@@ -844,7 +836,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowKey: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: cellValue,
                 newValue,
                 cancel: true,
@@ -989,7 +980,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 primaryKey: cell.row.key,
                 rowKey: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
-                data: updatedRowData,
                 oldValue: initialValue,
                 newValue,
                 column: cell.column,
@@ -1023,7 +1013,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 primaryKey: cell.row.key,
                 rowKey: cell.row.key,
                 rowData: initialRowData,
-                data: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 column: cell.column,
@@ -1064,7 +1053,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
-                data: updatedRowData,
                 oldValue: 'John Brown',
                 newValue: firstNewValue,
                 column: cell.column,
@@ -1092,7 +1080,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
-                data: cell.row.data,
                 oldValue: 20,
                 newValue: secondNewValue,
                 column: cell.column,
@@ -1104,7 +1091,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
             const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-            expect(spyDoneArgs.data).toBe(grid.data[0]);
+            expect(spyDoneArgs.rowData).toBe(grid.data[0]);
         });
 
         it('Should not enter cell edit when cellEditEnter is canceled', () => {
