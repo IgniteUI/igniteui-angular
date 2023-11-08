@@ -35,7 +35,6 @@
     },
     "exclude": [
         "dist",
-        "e2e",
         "projects/igniteui-angular/migrations/",
         "projects/igniteui-angular/schematics/",
         "projects/igniteui-angular/cypress/",
