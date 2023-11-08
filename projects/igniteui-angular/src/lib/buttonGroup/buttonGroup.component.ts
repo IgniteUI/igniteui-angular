@@ -24,7 +24,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -237,40 +237,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
-
-    /**
-     * An @Ouput property that emits an event before selecting a button.
-     * ```typescript
-     * @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public selectedHandler(buttongroup) {
-     *     this.toast.open()
-     * }
-     * ```
-     * ```html
-     * <igx-buttongroup #MyChild (selecting)="selectingHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast>You are currently selecting a button.</igx-toast>
-     * ```
-     */
-    @Output()
-    public selecting = new EventEmitter<IButtonGroupCancellableEventArgs>();
-
-    /**
-     * An @Ouput property that emits an event before deselecting a button.
-     * ```typescript
-     * @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public selectedHandler(buttongroup) {
-     *     this.toast.open()
-     * }
-     * ```
-     * ```html
-     * <igx-buttongroup #MyChild (selecting)="deselectingHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast>You are currently deselecting a button.</igx-toast>
-     * ```
-     */
-    @Output()
-    public deselecting = new EventEmitter<IButtonGroupCancellableEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is selected.
@@ -517,30 +483,22 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public _clickHandler(index: number) {
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { owner: this, button, index };
-        const cancellableArgs: IButtonGroupCancellableEventArgs = { cancel: false, owner: this, button, index };
 
         if (this.selectionMode !== 'multi') {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselecting.emit({ cancel: false, owner: this, button: b, index: i });
                     this.deselected.emit({ owner: this, button: b, index: i });
                 }
             });
         }
 
         if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selecting.emit(cancellableArgs);
-            if (!cancellableArgs.cancel) {
-                this.selectButton(index);
-                this.selected.emit(args);
-            }
+            this.selectButton(index);
+            this.selected.emit(args);
         } else {
             if (this.selectionMode !== 'singleRequired') {
-                this.deselecting.emit(cancellableArgs);
-                if (!cancellableArgs.cancel) {
-                    this.deselectButton(index);
-                    this.deselected.emit(args);
-                }
+                this.deselectButton(index);
+                this.deselected.emit(args);
             }
         }
     }
@@ -551,5 +509,3 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
     index: number;
 }
-
-export interface IButtonGroupCancellableEventArgs extends IButtonGroupEventArgs, CancelableEventArgs {}
