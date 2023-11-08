@@ -586,6 +586,13 @@
         }
     }
 
+    %grid-excel-menu__filter-results {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+
     igx-excel-style-filter-operations,
     [igxExcelStyleFilterOperations] {
         display: flex;
