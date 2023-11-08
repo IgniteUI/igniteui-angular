@@ -272,8 +272,9 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | Name                     | Description                                       | Type                        |
 |--------------------------|---------------------------------------------------|-----------------------------|
 | `id`                    | The combo's id.                                          | `string`              |
-| `data`                  | The combo's data source.                                 | `any`                  |
-| `value`                 | The combo's value.                                       | `string`                |
+| `data`                  | The combo's data source.                                 | `any[]`                  |
+| `value`                 | The combo's value.                                       | `any`                |
+| `selection`             | The combo's selected item.                               | `any`                |
 | `allowCustomValue`      | Enables/disables combo custom value.                | `boolean`                     |
 | `valueKey`              | Determines which column in the data source is used to determine the value. | `string` |
 | `displayKey`            | Determines which column in the data source is used to determine the display value. | `string` |

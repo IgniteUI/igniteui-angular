@@ -93,6 +93,22 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
 
+    public override get value(): any {
+        return this._value[0];
+    }
+
+    /**
+     * Get current selection state
+     *
+     * @returns The selected item, if any
+     * ```typescript
+     * let mySelection = this.combo.selection;
+     * ```
+     */
+    public override get selection(): any {
+        return super.selection[0];
+    }
+
     /** @hidden @internal */
     public composing = false;
 
@@ -125,6 +141,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return this.selectionService.get(this.id).values().next().value;
     }
 
+    protected get hasSelectedItem(): boolean {
+        return !!this.selectionService.get(this.id).size;
+    }
+
     constructor(elementRef: ElementRef,
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
@@ -148,7 +168,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.stopPropagation();
             this.open();
         } else {
-            if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
+            if (this.virtDir.igxForOf.length > 0 && !this.hasSelectedItem) {
                 this.dropdown.navigateNext();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
@@ -186,24 +206,24 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public writeValue(value: any): void {
-        const oldSelection = this.selection;
+        const oldSelection = super.selection;
         this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        this._displayValue = this.createDisplayText(super.selection, oldSelection);
+        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
         this.filterValue = this._internalFilter = this._displayValue?.toString();
     }
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.selection.length > 0) {
+            if (super.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
                     let current = e? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
-                    return current === this.selection[0];
+                    return current === super.selection[0];
                 });
                 if (!this.isRemote) {
                     // navigate to item only if we have local data
@@ -259,9 +279,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._displayValue) {
-            this._displayValue = this.createDisplayText(this.selection, []);
-            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        if (this.data?.length && super.selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(super.selection, []);
+            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
         }
         super.ngDoCheck();
     }
@@ -275,13 +295,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && this.selection.length) {
+        if (!this.comboInput.value.trim() && super.selection.length) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
             this.filterValue = '';
         }
-        if (this.selection.length) {
+        if (super.selection.length) {
             this.selectionService.clear(this.id);
         }
         // when filtering the focused item should be the first item or the currently selected item
@@ -332,9 +352,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleKeyUp(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ARROW_DOWN) {
-            const firstItem = this.selectionService.first_item(this.id);
-            this.dropdown.focusedItem = firstItem && this.filteredData.length > 0
-                ? this.dropdown.items.find(i => i.itemID === firstItem)
+            this.dropdown.focusedItem = this.hasSelectedItem && this.filteredData.length > 0
+                ? this.dropdown.items.find(i => i.itemID === this.selectedItem)
                 : this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
         }
@@ -475,7 +494,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this._updateInput) {
                 this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText(this.selection, [args.oldValue]);
+                    : this.createDisplayText(super.selection, [args.oldValue]);
             }
             this._onChangeCallback(args.newValue);
             this._updateInput = true;
@@ -541,7 +560,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         const filtered = this.filteredData.find(this.findMatch);
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
-        if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
+        if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
             this.clear();
         }
     }

@@ -795,7 +795,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * The value of the selected item in the combo
+     * The value of the combo
      *
      * ```typescript
      * // get
