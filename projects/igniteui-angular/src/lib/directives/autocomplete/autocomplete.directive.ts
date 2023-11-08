@@ -12,7 +12,8 @@ import {
     Output,
     Self,
     AfterViewInit,
-    OnInit
+    OnInit,
+    booleanAttribute
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -145,7 +146,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * public disabled = true;
      * ```
      */
-    @Input('igxAutocompleteDisabled')
+    @Input({ alias: 'igxAutocompleteDisabled', transform: booleanAttribute })
     public disabled = false;
 
     /**
