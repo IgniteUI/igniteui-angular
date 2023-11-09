@@ -88,17 +88,14 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 }
 
 
-/**
- * `ICellEditEventArgs` is emitted by `cellEditEnter` and `cellEdit` events
+/** 
+ * Represents event arguments related to grid editing.
+ * The event is cancelable
+ * It contains information about the row and the column, as well as the old and nwe value of the element/cell
  */
-export interface ICellEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
+export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
-/**
- * `IRowEditEventArgs` is emitted by `rowEditEnter` and `rowEdit` events
- */
-export interface IRowEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
-}
 
 export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IGridEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
 

@@ -6,7 +6,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
-import { ICellEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
+import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
@@ -137,7 +137,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
     }
 
-    public update_cell(cell: IgxCell): ICellEditEventArgs {
+    public update_cell(cell: IgxCell): IGridEditEventArgs {
         if (!cell) {
             return;
         }

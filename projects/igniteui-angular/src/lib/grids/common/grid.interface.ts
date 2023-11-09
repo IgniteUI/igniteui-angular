@@ -6,7 +6,7 @@ import {
     IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IRowEditEventArgs, ICellEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -638,8 +638,8 @@ export interface GridServiceType {
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
-    update_cell(cell: IgxCell): ICellEditEventArgs;
-    update_row(row: IgxEditRow, value: any, event?: Event): IRowEditEventArgs;
+    update_cell(cell: IgxCell): IGridEditEventArgs;
+    update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
 
     expand_path_to_record?(record: ITreeGridRecord): void;
     get_selected_children?(record: ITreeGridRecord, selectedRowIDs: any[]): void;
@@ -1051,12 +1051,12 @@ export interface GridType extends IGridDataBindable {
     rowDelete: EventEmitter<IRowDataCancelableEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
-    cellEditEnter: EventEmitter<ICellEditEventArgs>;
-    cellEdit: EventEmitter<ICellEditEventArgs>;
+    cellEditEnter: EventEmitter<IGridEditEventArgs>;
+    cellEdit: EventEmitter<IGridEditEventArgs>;
     cellEditDone: EventEmitter<IGridEditDoneEventArgs>;
     cellEditExit: EventEmitter<IGridEditDoneEventArgs>;
-    rowEditEnter: EventEmitter<IRowEditEventArgs>;
-    rowEdit: EventEmitter<IRowEditEventArgs>;
+    rowEditEnter: EventEmitter<IGridEditEventArgs>;
+    rowEdit: EventEmitter<IGridEditEventArgs>;
     rowEditDone: EventEmitter<IGridEditDoneEventArgs>;
     rowEditExit: EventEmitter<IGridEditDoneEventArgs>;
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;

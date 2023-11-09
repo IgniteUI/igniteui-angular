@@ -117,8 +117,7 @@ import {
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
-    IRowEditEventArgs,
-    ICellEditEventArgs,
+    IGridEditEventArgs,
     IRowDataCancelableEventArgs,
     IGridEditDoneEventArgs
 } from './common/events';
@@ -580,7 +579,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditEnter = new EventEmitter<ICellEditEventArgs>();
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when cell exits edit mode.
@@ -607,7 +606,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEdit = new EventEmitter<ICellEditEventArgs>();
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -634,7 +633,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditEnter = new EventEmitter<IRowEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -652,7 +651,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEdit = new EventEmitter<IRowEditEventArgs>();
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.

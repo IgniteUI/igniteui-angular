@@ -45,13 +45,13 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
-    ICellEditEventArgs,
+    IGridEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs,
     IGridEditDoneEventArgs,
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditEventArgs
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -477,7 +477,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEdit = new EventEmitter<ICellEditEventArgs>();
+    public override cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
@@ -489,7 +489,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEditEnter = new EventEmitter<ICellEditEventArgs>();
+    public override cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
@@ -567,13 +567,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowEditEnter = new EventEmitter<IRowEditEventArgs>();
+    public override rowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override rowEdit = new EventEmitter<IRowEditEventArgs>();
+    public override rowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * @hidden @internal
