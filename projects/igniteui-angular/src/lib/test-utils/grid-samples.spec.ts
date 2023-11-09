@@ -12,7 +12,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { CellType, IgxGridComponent } from '../grids/grid/public_api';
+import { ISortingOptions, CellType, IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -2401,6 +2401,23 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
         const a = obj1[key].toLowerCase();
         const b = obj2[key].toLowerCase();
         return a > b ? 1 : a < b ? -1 : 0;
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '[sortingOptions]="sortingOptions"',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        ''
+    )
+})
+export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
+   public sortingOptions: ISortingOptions = { mode: 'single' };
+   public ngOnInit(): void {
+        this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
     }
 }
 
