@@ -47,6 +47,11 @@ All notable changes for each version of this project will be documented in this 
         - The events `rowAdd` and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
         - `rowID` property has been deprecated in the following interfaces: `IRowEditEventArgs`, `IRowEditDoneEventArgs`, `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IPathSegment`, `HierarchicalStateRecord`, `ICellEditEventArgs`, `ICellEditDoneEventArgs` and will be removed in a future version, so please use `key` property instead and for `ICellEditEventArgs` and `ICellEditDoneEventArgs` use `rowKey` property instead.
         - `rowData` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IRowEditEventArgs`, `IRowDataCancelableEventArgs` and will be removed in a future version, so please use `data` property instead.
+=======
+## 16.1.5
+### General
+- `IgxButtonGroup`:
+    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
 ## 16.1.4
 ### New Features
 - `Themes`:

@@ -142,47 +142,6 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
     });
 
-    it('should not select the button on click if event is canceled ', () => {
-        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
-        fixture.detectChanges();
-
-        const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        fixture.detectChanges();
-
-        btnGroupInstance.buttons[1].select();
-        fixture.detectChanges();
-
-        btnGroupInstance.selected.subscribe((e) => {
-            e.cancel = true;
-        });
-        fixture.detectChanges();
-
-        const button = fixture.debugElement.nativeElement.querySelector('button');
-        button.click();
-        fixture.detectChanges();
-
-        expect(btnGroupInstance.buttons[0].selected).toBe(false);
-    });
-
-    it('should not deselect the button on click if event is canceled ', () => {
-        const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
-        fixture.detectChanges();
-
-        const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        fixture.detectChanges();
-
-        btnGroupInstance.deselected.subscribe((e) => {
-            e.cancel = true;
-        });
-        fixture.detectChanges();
-
-        const button = fixture.debugElement.nativeElement.querySelector('button');
-        button.click();
-        fixture.detectChanges();
-
-        expect(btnGroupInstance.buttons[0].selected).toBe(true);
-    });
-
     it('should should reset its current selection state on selectionMode runtime change', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
