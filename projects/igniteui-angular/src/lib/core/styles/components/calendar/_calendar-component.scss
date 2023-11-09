@@ -116,16 +116,29 @@
         }
 
         @include e(date, $mods: ('selected', 'current')) {
-            @extend %cal-value--selected--current !optional;
+            @extend %selected--current !optional;
 
             &:hover {
-                @extend %cal-value--selected--current--hover !optional;
+                @extend %selected--current--hover !optional;
             }
 
             &:focus {
-                @extend %cal-value--selected--current--focus !optional;
+                @extend %selected--current--focus !optional;
             }
         }
+
+        @include e(date, $mods: ('range', 'selected', 'current')) {
+            @extend %cal-value--selected--current-range !optional;
+
+            &:hover {
+                @extend %cal-value--selected--current-range-hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--selected--current-range-focus !optional;
+            }
+        }
+
         @include e(date, 'hidden') {
             @extend %cal-value--hidden !optional;
         }
@@ -135,9 +148,23 @@
         }
 
         @include e(date, $mods: ('range', 'selected')) {
-            &focus,
+            &:focus,
             &:hover {
                 @extend %cal-value--range-selected-hover !optional;
+            }
+        }
+
+        @include e(date, $mods: ('range', 'selected', first)) {
+            &:focus,
+            &:hover {
+                @extend %cal-value--selected--hover !optional;
+            }
+        }
+
+        @include e(date, $mods: ('range', 'selected', last)) {
+            &:focus,
+            &:hover {
+                @extend %cal-value--selected--hover !optional;
             }
         }
 
@@ -149,28 +176,12 @@
             @extend %cal-value--range-last !optional;
         }
 
-        @include e(date, 'range',  $mods: ('first', 'last')) {
+        @include e(date, 'range', $mods: ('first', 'last')) {
             @extend %cal-value--range-first-last !optional;
         }
 
-        @include e(date, 'range',  $mods: ('inactive', 'selected')) {
-            @extend %cal-value--range-inactive-selected !optional;
-        }
-
-        @include e(date, 'range',  $mods: ('inactive', 'selected', single)) {
+        @include e(date, 'range', $mods: ('inactive', 'selected', single)) {
             @extend %cal-value--range-inactive-selected-single !optional;
-        }
-
-        @include e(date, 'range', $mods: ('selected', 'current')) {
-            @extend %cal-value--selected--current-range !optional;
-
-            &:hover {
-                @extend %cal-value--selected--current-range-hover !optional;
-            }
-
-            &:focus {
-                @extend %cal-value--selected--current-range-focus !optional;
-            }
         }
 
         @include e(date, 'weekend') {
@@ -232,16 +243,16 @@
             @extend %cal-value-content--week-number !optional;
         }
 
-        // year/month view
+        // YEAR VIEW
         @include e(year) {
             @extend %cal-value--year !optional;
 
             &:hover {
-                @extend %cal-value--year-focus !optional;
+                @extend %cal-value--year-hover !optional;
             }
 
             &:focus {
-                @extend %cal-value--year-hover !optional;
+                @extend %cal-value--year-focus !optional;
             }
         }
 
@@ -250,10 +261,14 @@
         }
 
         @include e(year, 'current') {
-            @extend %cal-value--year !optional;
             @extend %cal-value--year-current !optional;
+
+            &:focus {
+                @extend %cal-value--year-current-focus !optional;
+            }
         }
 
+        // MONTH VIEW
         @include e(month) {
             @extend %cal-value--month !optional;
 
@@ -273,23 +288,16 @@
         @include e(month, 'current') {
             @extend %cal-value--month-current !optional;
 
-            &:hover{
-                @extend %cal-value--month-hover !optional;
-                @extend %cal-value--month-current-hover !optional;
-            }
-
             &:focus {
-                @extend %cal-value--month-focus !optional;
                 @extend %cal-value--month-current-focus !optional;
             }
         }
 
-        // days view
+        // DAY VIEW
         @include m(days-view) {
             @extend %cal--days-view !optional;
         }
 
-        // days view
         @include e(days-views) {
             @extend %cal__days-views !optional;
         }
