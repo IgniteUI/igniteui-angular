@@ -133,11 +133,17 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  * Example for events: adding, deleting, selection, transaction, etc.
  */
 export interface IBaseRowDataEventArgs extends IBaseEventArgs {
+    /**
+     * @deprecated since version 17.0.0
+     * Use`rowData` instead
+     */
     data: any;
+    rowData: any
     /**
      * @deprecated since version 17.0.0
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
+     * use rowKey instead
      */
     primaryKey: any;
     /** Represents the grid instance that owns the edit event. */
@@ -146,7 +152,7 @@ export interface IBaseRowDataEventArgs extends IBaseEventArgs {
 
 
 export interface IRowDataEventArgs extends IBaseRowDataEventArgs {
-    key: any;
+    rowKey: any;
  }
 // to extend in a new interface
 

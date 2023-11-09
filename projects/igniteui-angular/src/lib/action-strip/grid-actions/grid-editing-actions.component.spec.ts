@@ -367,8 +367,9 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
+                rowData: treeGrid.getRowData(row.key),
                 primaryKey: row.key,
-                key: row.key,
+                rowKey: row.key,
                 owner: treeGrid
             };
 

@@ -955,9 +955,10 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 const rowDeletedArgs = {
                     data: treeGrid.getRowData(someRow.key),
+                    rowData: treeGrid.getRowData(someRow.key),
                     primaryKey: someRow.key,
                     owner: treeGrid,
-                    key: someRow.key
+                    rowKey: someRow.key
                 };
 
                 treeGrid.deleteRow(someRow.key);
