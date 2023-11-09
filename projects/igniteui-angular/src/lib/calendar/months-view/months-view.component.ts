@@ -140,6 +140,19 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     public selected = new EventEmitter<Date>();
 
     /**
+     * Emits an event when a page changes in the months view.
+     * Provides reference the `date` property in the `IgxMonthsViewComponent`.
+     * ```html
+     * <igx-months-view (pageChanged)="onPageChanged($event)"></igx-months-view>
+     * ```
+     *
+     * @memberof IgxMonthsViewComponent
+     * @hidden @internal
+     */
+    @Output()
+    public pageChanged = new EventEmitter<Date>();
+
+    /**
      * The default css class applied to the component.
      *
      * @hidden
@@ -264,8 +277,12 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         if (!node) return;
 
         const months = this.monthsRef.toArray();
-        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _date = new Date(this.date.getFullYear(), this.activeMonth, this.date.getDate());
         const _delta = this._calendarModel.timedelta(_date, 'month', 1);
+
+        if (_delta.getFullYear() !== this.date.getFullYear()) {
+            this.pageChanged.emit(_delta);
+        }
 
         months[_delta.getMonth()].nativeElement.focus();
         this.activeMonth = _delta.getMonth();
@@ -285,6 +302,10 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const months = this.monthsRef.toArray();
         const _date = new Date(this.date.getFullYear(), this.activeMonth);
         const _delta = this._calendarModel.timedelta(_date, 'month', -1);
+
+        if (_delta.getFullYear() !== this.date.getFullYear()) {
+            this.pageChanged.emit(_delta);
+        }
 
         months[_delta.getMonth()].nativeElement.focus();
         this.activeMonth = _delta.getMonth();

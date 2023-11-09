@@ -101,7 +101,12 @@ export class IgxCalendarMonthDirective {
     }
 
     public get isCurrentMonth(): boolean {
-        return this.date.getMonth() === this.value.getMonth();
+        const today = new Date(Date.now());
+        const date = this.value;
+
+        return (date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth()
+        );
     }
 
 	public get nativeElement() {

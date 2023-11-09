@@ -194,7 +194,7 @@
 <header
         aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
         class="igx-calendar__header"
-        *ngIf="selection === 'single' || selection === 'range' && hasHeader">
+        *ngIf="selection === 'single' && hasHeader || selection === 'range' && hasHeader">
 
     <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
 <!--        TODO Make sure to localize the 'End' string-->
@@ -253,6 +253,7 @@
             [locale]="locale"
             [formatView]="formatViews.month"
             [monthFormat]="formatOptions.month"
+            (pageChanged)="updateYear($event)"
             (selected)="changeMonth($event)">
     </igx-months-view>
 </div>

@@ -914,11 +914,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.activeView = IgxCalendarView.Month;
 
 		requestAnimationFrame(() => {
-			const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx===this.activeViewIdx);
+			const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
 			if (elem) {
 				elem.nativeElement.focus();
 			}
 		});
+	}
+
+	/**
+	 * @hidden
+	 * @intenal
+	 */
+	public updateYear(event: Date) {
+		this.previousViewDate = this.viewDate;
+		this.viewDate = this.calendarModel.getFirstViewDate(event, 'year', this.activeViewIdx);
 	}
 
 	/**
@@ -999,9 +1008,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public animationDone(event) {
         if ((event.fromState === ScrollDirection.NONE && (event.toState === ScrollDirection.PREV || event.toState === ScrollDirection.NEXT)) ||
             (event.fromState === 'void' && event.toState === ScrollDirection.NONE)) {
-            this.viewDateChanged.emit({ 
-                previousValue: this.previousViewDate, 
-                currentValue: this.viewDate 
+            this.viewDateChanged.emit({
+                previousValue: this.previousViewDate,
+                currentValue: this.viewDate
             });
         }
 
