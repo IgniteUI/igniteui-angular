@@ -3,7 +3,8 @@ import {
     Component,
     ChangeDetectionStrategy,
     forwardRef,
-    Input
+    Input,
+    booleanAttribute
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
@@ -87,7 +88,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override get hidden() {
         return this._hidden;
     }

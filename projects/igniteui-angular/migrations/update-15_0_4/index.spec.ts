@@ -50,16 +50,14 @@ describe(`Update to ${version}`, () => {
 
     it(`should add igniteui-theming to pacakage json and configure it`, async () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).toContain("stylePreprocessorOptions");
     });
 
     it(`should not add igniteui-theming to library pacakage json and configure it`, async () => {
         appTree.create('/angular.json', JSON.stringify(configJsonLib));
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).not.toContain("stylePreprocessorOptions");
     });

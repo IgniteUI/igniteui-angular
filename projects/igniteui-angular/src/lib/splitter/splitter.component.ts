@@ -217,16 +217,8 @@ export class IgxSplitterComponent implements AfterContentInit {
      * @param delta - The difference along the X (or Y) axis between the initial and the current point when dragging the bar.
      */
     public onMoving(delta: number) {
-        const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const [ paneSize, siblingSize ] = this.calcNewSizes(delta);
 
-        const paneSize = this.initialPaneSize - delta;
-        const siblingSize = this.initialSiblingSize + delta;
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
         this.pane.dragSize = paneSize + 'px';
         this.sibling.dragSize = siblingSize + 'px';
 
@@ -235,17 +227,8 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
-        const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const [ paneSize, siblingSize ] = this.calcNewSizes(delta);
 
-        const paneSize = this.initialPaneSize - delta;
-        const siblingSize = this.initialSiblingSize + delta;
-
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
         if (this.pane.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
@@ -337,6 +320,32 @@ export class IgxSplitterComponent implements AfterContentInit {
             pane.order = k;
             k += 2;
         });
+    }
+
+    /**
+     * @hidden @internal
+     * Calculates new sizes for the panes based on move delta and initial sizes
+     */
+    private calcNewSizes(delta: number): [number, number] {
+        const min = parseInt(this.pane.minSize, 10) || 0;
+        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - minSibling;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - min;
+
+        if (delta < 0) {
+            const maxPossibleDelta = Math.min(
+                max - this.initialPaneSize,
+                this.initialSiblingSize - minSibling,
+            )
+            delta = Math.min(maxPossibleDelta, Math.abs(delta)) * -1;
+        } else {
+            const maxPossibleDelta = Math.min(
+                this.initialPaneSize - min,
+                maxSibling - this.initialSiblingSize
+            )
+            delta = Math.min(maxPossibleDelta, Math.abs(delta));
+        }
+        return [this.initialPaneSize - delta, this.initialSiblingSize + delta];
     }
 }
 

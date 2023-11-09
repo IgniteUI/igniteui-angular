@@ -34,8 +34,7 @@ describe('Update 8.2.3', () => {
                 $button-hover-background: white
               );`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-11', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-11', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(
             `$my-carousel-theme: igx-carousel-theme(

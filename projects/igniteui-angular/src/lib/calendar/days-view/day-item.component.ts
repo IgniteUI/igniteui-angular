@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener, booleanAttribute } from '@angular/core';
 import { CalendarSelection, ICalendarDate, isDateInRanges } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
 
@@ -42,18 +42,18 @@ export class IgxDayItemComponent {
     @Input()
     public specialDates: DateRangeDescriptor[];
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-calendar__date--last')
     public isLastInRange = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-calendar__date--first')
     public isFirstInRange = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public isWithinRange = false;
 
     @Output()

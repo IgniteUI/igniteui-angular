@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Renderer2, ChangeDetectorRef } from '@angular/core';
+import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
@@ -42,6 +42,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         _platformUtil: PlatformUtil,
     ) {
         super(cdr, element, viewContainer, zone, renderer, _platformUtil);
+        this.ghostClass = this._ghostClass;
     }
 
     public override ngOnDestroy() {
@@ -59,32 +60,28 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             return;
         }
 
-        event.preventDefault();
-        event.stopPropagation();
-
-        this._removeOnDestroy = false;
-        this.cms.column = this.column;
-        this.ghostClass = this._ghostClass;
-
         super.onPointerDown(event);
-        this.column.grid.cdr.detectChanges();
-
-        const args = {
-            source: this.column
-        };
-        this.column.grid.columnMovingStart.emit(args);
-
-        this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                this.onEscape(ev);
-            }
-        });
     }
 
     public override onPointerMove(event: Event) {
-        event.preventDefault();
-        super.onPointerMove(event);
+        if (this._clicked && !this._dragStarted) {
+            this._removeOnDestroy = false;
+            this.cms.column = this.column;
+            this.column.grid.cdr.detectChanges();
 
+            const movingStartArgs = {
+                source: this.column
+            };
+            this.column.grid.columnMovingStart.emit(movingStartArgs);
+
+            this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+                if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
+                    this.onEscape(ev);
+                }
+            });
+        }
+
+        super.onPointerMove(event);
         if (this._dragStarted && this.ghostElement && !this.cms.column) {
             this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();
@@ -122,7 +119,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.ghostElement.style.flexBasis = null;
         this.ghostElement.style.position = null;
 
-        this.renderer.removeClass( this.ghostElement, this.columnSelectedClass);
+        this.ghostElement.classList.remove(this.columnSelectedClass);
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -132,7 +129,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.cms.icon = icon;
 
         if (!this.column.columnGroup) {
-            this.renderer.addClass(icon, this.ghostImgIconClass);
+            icon.classList.add(this.ghostImgIconClass);
 
             this.ghostElement.insertBefore(icon, this.ghostElement.firstElementChild);
 
@@ -141,7 +138,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         } else {
             this.ghostElement.insertBefore(icon, this.ghostElement.childNodes[0]);
 
-            this.renderer.addClass(icon, this.ghostImgIconGroupClass);
+            icon.classList.add(this.ghostImgIconGroupClass);
             this.ghostElement.children[0].style.paddingLeft = '0px';
 
             this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);

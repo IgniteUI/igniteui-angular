@@ -128,6 +128,7 @@
     $input-suffix-background--filled: null,
     $input-suffix-color--focused: null,
     $input-suffix-background--focused: null,
+    $size: null,
 ) {
     $name: 'igx-input-group';
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
@@ -205,15 +206,15 @@
     }
 
     @if not($box-border-radius) {
-        $box-border-radius: border-radius(map.get($theme, 'box-border-radius')...);
+        $box-border-radius: map.get($theme, 'box-border-radius');
     }
 
     @if not($border-border-radius) {
-        $border-border-radius: border-radius(map.get($theme, 'border-border-radius')...);
+        $border-border-radius: map.get($theme, 'border-border-radius');
     }
 
     @if not($search-border-radius) {
-        $search-border-radius: border-radius(map.get($theme, 'search-border-radius')...);
+        $search-border-radius: map.get($theme, 'search-border-radius');
     }
 
     @return extend($theme, (
@@ -270,6 +271,7 @@
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
         variant: map.get($schema, '_meta', 'theme'),
+        size: $size,
     ));
 }
 
@@ -306,7 +308,7 @@
 
     $bootstrap-inline-padding: (
         'comfortable': rem(16px),
-        'cosy':rem(12px),
+        'cosy': rem(12px),
         'compact': rem(8px)
     );
 
@@ -396,8 +398,9 @@
     }
 
     %form-group-display {
-        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
+        @include sizable();
         --component-size: var(--ig-size, var(--ig-size-large));
+        --input-size: var(--component-size);
 
         position: relative;
         display: block;
@@ -444,25 +447,11 @@
         input[type='search']::-webkit-search-decoration {
             -webkit-appearance: none;
         }
-    }
-
-    %form-group-display--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
 
         igx-icon,
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-        }
-    }
-
-    %form-group-display--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-icon,
-        igx-icon[igxPrefix],
-        igx-icon[igxSuffix] {
-            --component-size: var(--ig-size, var(--ig-size-small));
+            --component-size: var(--input-size);
         }
     }
 
@@ -533,7 +522,7 @@
         display: grid;
         grid-template-columns: auto 1fr auto;
         grid-area: 1 / 2 / span 1 / span 2;
-        height: var(--size);
+        height: var-get($theme, 'size');
         position: relative;
         max-width: 100%;
         font-size: rem(16px);
@@ -643,9 +632,9 @@
     }
 
     @if $material-theme {
-        %form-group-bundle-main--box,
-        %form-group-notch--box {
-            padding-inline-start: rem(4px)
+        %form-group-bundle-main,
+        %igx-input-group__notch {
+            padding-inline: rem(4px);
         }
     }
 
@@ -682,15 +671,7 @@
 
         @if $variant == 'material' {
             overflow: hidden;
-        }
-    }
-
-    %form-group-bundle-start--border,
-    %form-group-bundle-end--border,
-    %form-group-bundle-start--box,
-    %form-group-bundle-end--box {
-        @if $material-theme {
-            min-width: rem(12px);
+            min-width: pad(rem(10px), rem(12px), rem(14px));
         }
     }
 
@@ -761,7 +742,6 @@
             flex-grow: 1;
             height: 100%;
             grid-area: 1 / 4;
-            min-width: rem(12px);
 
             border: {
                 color: var-get($theme, 'border-color');
@@ -814,33 +794,22 @@
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-start: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else {
-            padding-inline-start: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline-start: pad-inline(rem(14px), rem(16px), rem(18px));
         }
     }
 
     %igx-input-group__notch--search,
     %form-group-bundle-main--search {
         @if $material-theme {
-            padding-inline-end: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else {
-            padding-inline-end: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline-end: pad-inline(rem(14px), rem(16px), rem(18px));
         }
     }
     /* stylelint-enable */
 
-    %form-group-display--search.igx-input-group--prefixed {
+    %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            padding-inline-start: 0;
-        }
-    }
-
-    %form-group-display--search.igx-input-group--suffixed {
-        %igx-input-group__notch--search,
-        %form-group-bundle-main--search {
-            padding-inline-end: 0;
+            padding-inline: rem(4px);
         }
     }
 
@@ -888,24 +857,15 @@
         background: transparent;
         padding: 0 rem(4px);
         font-size: rem(16px);
-        min-height: var(--size);
     }
 
     %form-group-label {
-        @include ellipsis();
-        max-width: 100%;
         padding-inline-end: rem(4px);
-        line-height: normal;
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
         transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
-        color: var-get($theme, 'idle-secondary-color');
-
-        [dir='rtl'] & {
-            transform-origin: top right;
-        }
     }
 
     %form-group-label--border {
@@ -997,12 +957,12 @@
 
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --size: #{sizable(
+        --textarea-size: #{sizable(
             rem(82px, map.get($base-scale-size, 'compact')),
             rem(82px, map.get($base-scale-size, 'cosy')),
             rem(82px, map.get($base-scale-size, 'comfortable'))
         )};
-        min-height: var(--size) !important;
+        min-height: var(--textarea-size) !important;
         height: auto !important;
 
         %form-group-label {
@@ -1064,8 +1024,8 @@
         border: none;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        padding-inline-start: 0;
-        height: calc(var(--size) - 2px);
+        padding-inline: 0;
+        height: calc(var-get($theme, 'size') - 2px);
         width: 100%;
         min-width: 0;
         background: transparent;
@@ -1102,7 +1062,7 @@
         overflow: hidden;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        height: calc(var(--size) - 2px);
+        height: calc(var-get($theme, 'size') - 2px);
         color: var-get($theme, 'filled-text-color');
 
         span {
@@ -1172,13 +1132,13 @@
     }
 
     %form-group-textarea {
-        --size: #{sizable(
+        --textarea-size: #{sizable(
             rem(82px, map.get($base-scale-size, 'compact')),
             rem(82px, map.get($base-scale-size, 'cosy')),
             rem(82px, map.get($base-scale-size, 'comfortable'))
         )};
 
-        min-height: var(--size);
+        min-height: var(--textarea-size);
         height: auto;
         resize: vertical;
         overflow: hidden;
@@ -1197,13 +1157,8 @@
         }
     }
 
-    %form-group-notch--box-textarea {
-        padding-inline-start: 0;
-    }
-
     %form-group-textarea-group-bundle-main {
         overflow: hidden;
-        padding-inline-start: 0 !important;
 
         @if $material-theme or $indigo-theme {
             height: calc(100% - #{rem(2px)});
@@ -1404,6 +1359,22 @@
     // ==============================================
 
     // INDIGO START
+    @if $variant == 'indigo-design' {
+        %form-group-display.igx-input-group--prefixed {
+            input,
+            textarea {
+                padding-inline-start: rem(4px);
+            }
+        }
+
+        %form-group-display.igx-input-group--suffixed {
+            input,
+            textarea {
+                padding-inline-end: rem(4px);
+            }
+        }
+    }
+
     %form-group-bundle--indigo {
         border-radius: var-get($theme, 'box-border-radius') var-get($theme, 'box-border-radius') 0 0;
         transition: background $transition-timing;
@@ -1427,13 +1398,9 @@
         color: var-get($theme, 'success-secondary-color');
     }
 
-    %form-group-bundle--indigo-start {
-        min-width: rem(12px);
-    }
-
     %form-group-input--indigo {
         padding-block: rem(8px);
-        padding-inline-end: rem(12px);
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
 
     %indigo--box-focused {
@@ -1529,10 +1496,9 @@
     }
 
     %form-group-bundle--fluent {
-        --size: #{sizable(rem(32px), rem(40px), rem(48px))};
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
 
-        min-height: var(--size);
+        min-height: var-get($theme, 'size');
         padding: 0;
         border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
@@ -1596,7 +1562,6 @@
     }
 
     %form-group-bundle-main--fluent {
-        padding-inline-start: rem(8px);
         align-self: center;
         cursor: default;
     }
@@ -1632,14 +1597,19 @@
     // Native input
     %fluent-input {
         font-size: rem(14px);
-        padding: 0;
+        padding-block: 0;
+        padding-inline: rem(8px);
         margin: 0;
         border: none;
     }
 
-    %indigo-textarea,
+    %indigo-textarea {
+        padding-block: rem(8px);
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
     %fluent-textarea {
-        padding: pad(rem(4px), rem(6px), rem(8px));
+        padding: rem(8px);
     }
 
     %fluent-input-disabled {
@@ -1792,13 +1762,12 @@
 
     // Bundle
     %form-group-bundle--bootstrap {
-        --size: #{sizable(rem(31px), rem(38px), rem(48px))};
-
         padding: 0;
         box-shadow: none;
         z-index: 0;
     }
 
+    %form-group-bundle--bootstrap-focused,
     %form-group-bundle--bootstrap-hover {
         border: none;
         box-shadow: none;

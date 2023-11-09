@@ -47,26 +47,6 @@
             @extend %grid-thead-thumb !optional;
         }
 
-        @include m(compact) {
-            @include e(wrapper) {
-                @extend %grid-thead--compact !optional;
-            }
-
-            @include e(title) {
-                @extend %grid-thead-title--compact !optional;
-            }
-        }
-
-        @include m(cosy) {
-            @include e(wrapper) {
-                @extend %grid-thead--cosy !optional;
-            }
-
-            @include e(title) {
-                @extend %grid-thead-title--cosy !optional;
-            }
-        }
-
         @include m(pivot) {
             @extend %grid-thead--pivot !optional;
         }
@@ -174,14 +154,6 @@
 
         @include e(drop-indicator, $m: active) {
             @extend %igx-grid-th__drop-indicator--active !optional;
-        }
-
-        @include m(cosy) {
-            @extend %grid-cell-header--cosy !optional;
-        }
-
-        @include m(compact) {
-            @extend %grid-cell-header--compact !optional;
         }
     }
 }

@@ -5,7 +5,9 @@
         (click)="onTextFilterClick($event)"
         [igxDropDownItemNavigation]="subMenu"
         role="menuitem"
-        aria-haspopup="true">
+        aria-haspopup="true"
+        [attr.aria-controls]="this.subMenu.listId"
+        [attr.aria-activedescendant]="!this.subMenu.collapsed ? this.subMenu.focusedItem?.id : null">
         <span>{{ subMenuText }}</span>
         <igx-icon>keyboard_arrow_right</igx-icon>
     </div>
@@ -13,10 +15,9 @@
     <igx-drop-down
         #subMenu
         [maxHeight]="'397px'"
-        [displayDensity]="esf.grid.displayDensity"
+        [displayDensity]="esf.displayDensity"
         (selectionChanging)="onSubMenuSelection($event)"
-        (closed)="onSubMenuClosed()"
-        [allowItemsFocus]="true">
+        (closed)="onSubMenuClosed()">
         <div>
             <igx-drop-down-item
             *ngFor="let condition of conditions"
@@ -40,6 +41,6 @@
         [column]="esf.column"
         [filteringService]="esf.grid.filteringService"
         [overlayComponentId]="esf.overlayComponentId"
-        [displayDensity]="esf.grid.displayDensity">
+        [displayDensity]="esf.displayDensity">
     </igx-excel-style-custom-dialog>
 </ng-container>

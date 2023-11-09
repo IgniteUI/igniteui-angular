@@ -71,10 +71,6 @@
         $body-color: text-contrast($body-background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         header-background: $header-background,
@@ -194,6 +190,7 @@
         color: var-get($theme, 'header-icon-color');
 
         igx-icon {
+            --component-size: 3;
             color: var-get($theme, 'header-icon-color');
         }
     }

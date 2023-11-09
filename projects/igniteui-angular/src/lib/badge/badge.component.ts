@@ -1,6 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, HostBinding, Input } from '@angular/core';
-
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -109,6 +108,12 @@ export class IgxBadgeComponent {
     public icon: string;
 
     /**
+     * The name of the icon set. Used in case the icon is from a different icon set.
+     */
+    @Input()
+    public iconSet: string;
+
+    /**
      * Sets/gets the role attribute value.
      *
      * @example
@@ -123,7 +128,7 @@ export class IgxBadgeComponent {
     public role = 'status';
 
     /**
-     * Sets/gets the the css class to use on the badge.
+     * Sets/gets the css class to use on the badge.
      *
      * @example
      * ```typescript

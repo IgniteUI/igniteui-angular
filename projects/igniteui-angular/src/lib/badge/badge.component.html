@@ -1,2 +1,4 @@
-<span *ngIf="!icon" class="igx-badge__value">{{value}}</span>
-<igx-icon *ngIf="icon">{{icon}}</igx-icon>
+<span *ngIf="value || value === 0 && !icon" class="igx-badge__value">{{value}}</span>
+<igx-icon *ngIf="icon && !iconSet">{{icon}}</igx-icon>
+<igx-icon *ngIf="icon && iconSet" [family]="iconSet" [name]="icon">{{icon}}</igx-icon>
+<ng-content></ng-content>

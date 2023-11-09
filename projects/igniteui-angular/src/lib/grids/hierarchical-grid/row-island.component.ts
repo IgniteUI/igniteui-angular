@@ -1,7 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
-    ApplicationRef,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -163,7 +163,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *
      * @memberof IgxRowIslandComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
@@ -232,7 +232,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        appRef: ApplicationRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -253,7 +252,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             cdr,
             differs,
             viewRef,
-            appRef,
             injector,
             envInjector,
             navigation,

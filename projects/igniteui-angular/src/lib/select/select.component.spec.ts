@@ -18,6 +18,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
+import { getComponentSize } from '../core/utils';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -35,9 +36,6 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
-const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
-const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_GROUP_COMPACT = 'igx-input-group--compact';
 
 const arrowDownKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 const arrowUpKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
@@ -489,13 +487,13 @@ describe('igxSelect', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             // Default display density is 'comfortable'
             expect(select.displayDensity).toEqual('comfortable');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMFORTABLE)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('3');
             select.displayDensity = 'cosy';
             fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COSY)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('2');
             select.displayDensity = 'compact';
             fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
+            expect(getComponentSize(inputGroup.nativeElement)).toEqual('1');
         });
 
         it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
@@ -2227,7 +2225,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultTextIdent = 8;
         const defItemFontSize = 14;
         const defInputFontSize = 16;
         let selectedItemIndex: number;
@@ -2450,44 +2447,7 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
             }));
         });
-        describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = () => {
-                let prefixesWidth = 0;
-                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
-                Array.from(prefixes).forEach((prefix: DebugElement) => {
-                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
-                    prefixesWidth += prefixRect.width;
-                });
-                return prefixesWidth;
-            };
 
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxSelectAffixComponent);
-                select = fixture.componentInstance.select;
-                fixture.detectChanges();
-                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-            });
-
-            it('should ident option text to the input text',
-                fakeAsync(() => {
-                    selectedItemIndex = 0;
-                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
-                    select.items[selectedItemIndex].selected = true;
-                    fixture.detectChanges();
-                    select.toggle();
-                    tick();
-                    fixture.detectChanges();
-                    getBoundingRectangles();
-                    // bc of the difference of 2px between the font size of the text in the input and the text in the selected item
-                    // we need to take into account that the item list will be slightly to the left of the input to make sure
-                    // that the text in the list is positioned exactly on top of the text in the input
-                    expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
-                        - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
-                        .toBeLessThanOrEqual(2);
-                }));
-        });
         describe('Document bigger than the visible viewport tests: ', () => {
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
@@ -2854,6 +2814,7 @@ class IgxSelectMiddleComponent {
         </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-top',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2880,6 +2841,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-bottom',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectBottomComponent {
@@ -3085,7 +3047,7 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button type="button" igxButton="raised" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>

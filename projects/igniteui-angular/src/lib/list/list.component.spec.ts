@@ -30,10 +30,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
-
-const LIST_CSS_CLASS = 'igx-list';
-const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
-const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
+import { getComponentSize } from '../core/utils';
 
 describe('List', () => {
     configureTestSuite(() => {
@@ -852,33 +849,23 @@ describe('List', () => {
      * the list DebugElement and the expected DisplayDensity enumeration value.
      */
     const verifyDisplayDensity = (listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) => {
-        let expectedListDensityClass;
+        let expectedListSize;
 
         switch (expectedDisplayDensity) {
-            case DisplayDensity.compact: expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS; break;
-            case DisplayDensity.cosy: expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS; break;
-            default: expectedListDensityClass = LIST_CSS_CLASS; break;
+            case DisplayDensity.compact:
+                expectedListSize = '1';
+                break;
+            case DisplayDensity.cosy:
+                expectedListSize = '2';
+                break;
+            case DisplayDensity.comfortable:
+            default:
+                expectedListSize = '3';
+                break;
         }
 
         // Verify list display density.
-        expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
+        expect(getComponentSize(listDebugEl.nativeElement)).toBe(expectedListSize);
         expect(listComp.displayDensity).toBe(expectedDisplayDensity);
-        switch (expectedDisplayDensity) {
-            case DisplayDensity.compact: {
-                expect(listComp.cssClass).toBe(false);
-                expect(listComp.cssClassCompact).toBe(true);
-                expect(listComp.cssClassCosy).toBe(false);
-            } break;
-            case DisplayDensity.cosy: {
-                expect(listComp.cssClass).toBe(false);
-                expect(listComp.cssClassCompact).toBe(false);
-                expect(listComp.cssClassCosy).toBe(true);
-            } break;
-            default: {
-                expect(listComp.cssClass).toBe(true);
-                expect(listComp.cssClassCompact).toBe(false);
-                expect(listComp.cssClassCosy).toBe(false);
-            } break;
-        }
     };
 });

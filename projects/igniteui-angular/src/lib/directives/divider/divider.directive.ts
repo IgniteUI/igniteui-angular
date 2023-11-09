@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, HostBinding, Input, booleanAttribute } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxDividerType = mkenum({
@@ -62,7 +62,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('class.igx-divider--inset')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public middle = false;
 
     /**
@@ -72,7 +72,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('class.igx-divider--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 
     /**
@@ -83,34 +83,21 @@ export class IgxDividerDirective {
      * this.divider.inset = '32px';
      * ```
      */
-    @HostBinding('style.--_inset')
+    @HostBinding('style.--inset')
     public set inset(value: string) {
         this._inset = value;
     }
 
     /**
      * Gets the current divider inset in terms of
-     * margin representation as applied to the divider.
+     * inset-inline-start representation as applied to the divider.
      * ```typescript
      * const inset = this.divider.inset;
      * ```
      */
     public get inset() {
-        const baseMargin = '0';
-
-        if (this.middle) {
-            if (this.vertical) {
-                return `${this._inset} ${baseMargin}`;
-            }
-            return `${baseMargin} ${this._inset}`;
-        } else {
-            if (this.vertical) {
-                return `${this._inset} ${baseMargin} 0 ${baseMargin}`;
-            }
-            return `${baseMargin} 0 ${baseMargin} ${this._inset}`;
-        }
+        return this._inset;
     }
-
 
     /**
      * An @Input property that sets the value of the `inset` attribute.
@@ -131,6 +118,7 @@ export class IgxDividerDirective {
     public get isSolid() {
         return this.type === IgxDividerType.SOLID;
     }
+
 }
 
 

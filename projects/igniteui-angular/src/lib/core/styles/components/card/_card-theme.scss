@@ -88,10 +88,6 @@
         $hover-shadow: elevation($hover-elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         background: $background,
@@ -127,28 +123,27 @@
     %igx-card-display {
         display: flex;
         flex-direction: column;
-        box-shadow: var-get($theme, 'resting-shadow');
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
-
-        @if $not-material-theme {
-            border: rem(1px) solid var-get($theme, 'outline-color');
-        }
-
-        &:hover {
-            box-shadow: var-get($theme, 'hover-shadow');
-        }
-    }
-
-    %igx-card--outlined {
-        box-shadow: none;
         border: rem(1px) solid var-get($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;
+        }
+    }
+
+    %igx-card--elevated {
+        box-shadow: var-get($theme, 'resting-shadow');
+
+        &:hover {
+            box-shadow: var-get($theme, 'hover-shadow');
+        }
+
+        @if $not-material-theme {
+            border: rem(1px) solid var-get($theme, 'outline-color');
         }
     }
 

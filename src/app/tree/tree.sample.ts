@@ -3,13 +3,14 @@ import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    DisplayDensity, growVerIn, growVerOut,
+    DisplayDensity,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
-    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective
+    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective, IgxTreeExpandIndicatorDirective
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 interface CompanyData {
     ID: string;
@@ -35,7 +36,15 @@ interface CompanyData {
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss'],
     standalone: true,
-    imports: [IgxLayoutDirective, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxLabelDirective, FormsModule, IgxSwitchComponent, IgxButtonGroupComponent, IgxTreeComponent, IgxTreeNodeComponent, NgFor, IgxTreeNodeLinkDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
+    imports: [
+        IgxLayoutDirective,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxButtonDirective,
+        IgxLabelDirective,
+        FormsModule,
+        IgxSwitchComponent,
+        IgxButtonGroupComponent, IgxTreeComponent, IgxTreeNodeComponent, NgFor, IgxTreeNodeLinkDirective, IgxTreeExpandIndicatorDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
 })
 export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { static: true })
