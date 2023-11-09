@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { registerLocaleData, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -22,8 +22,7 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IResourceStrings, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, changei18n } from 'igniteui-angular';
-import { GridResourceStringsEN } from 'igniteui-angular/src/lib/core/i18n/grid-resources';
+import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-localization',
@@ -33,12 +32,12 @@ import { GridResourceStringsEN } from 'igniteui-angular/src/lib/core/i18n/grid-r
     imports: [IgxGridComponent, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 
-export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
+export class GridLocalizationSampleComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public data: any[];
     public locale: string;
-    public locales: { type: string, resource: object }[];
+    public locales: { type: string, resource: IResourceStrings }[];
     public selectLocales = ['HI', 'BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'];
     public cashedLocalizationEN: IResourceStrings;
     public partialCustomHindi: IResourceStrings;
@@ -87,11 +86,6 @@ export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
 
     public updateLocale() {
         const newLocale = this.locales.find(x => x.type === this.locale).resource;
-        changei18n(newLocale);
-    }
-
-    // Required only for Infragistics documentation page
-    public ngOnDestroy(): void {
-        changei18n(this.cashedLocalizationEN);
+        this.grid.resourceStrings = newLocale;
     }
 }
