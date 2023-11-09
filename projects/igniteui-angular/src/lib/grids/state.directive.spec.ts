@@ -772,7 +772,7 @@ class HelperFunctions {
                 [dataType]="c.dataType"
                 [pinned]="c.pinned"
                 [hidden]="c.hidden"
-                [disablePinning]="c.disablePinning"]>
+                [disablePinning]="c.disablePinning">
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
