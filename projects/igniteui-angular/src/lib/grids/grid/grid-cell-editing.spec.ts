@@ -15,7 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IGridEditDoneEventArgs, ICellEditEventArgs, IgxColumnComponent } from '../public_api';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -591,7 +591,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: ICellEditEventArgs = {
+            let cellArgs: IGridEditEventArgs = {
                 primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowKey: cell.row.key,
@@ -635,7 +635,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should be able to cancel 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            grid.cellEditEnter.subscribe((e: ICellEditEventArgs) => {
+            grid.cellEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -645,7 +645,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: ICellEditEventArgs = {
+            let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowKey: cell.row.key,
                 rowID: cell.row.key,
@@ -745,7 +745,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should properly emit 'cellEdit' event`, () => {
             spyOn(grid.cellEdit, 'emit').and.callThrough();
-            let cellArgs: ICellEditEventArgs;
+            let cellArgs: IGridEditEventArgs;
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -809,7 +809,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
             const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
-            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -830,7 +830,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
 
-            const cellArgs: ICellEditEventArgs = {
+            const cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
                 rowKey: cell.row.key,
@@ -887,7 +887,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             spyOn(grid.cellEdit, 'emit').and.callThrough();
-            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 if (e.cellID.columnID === 0) {
                     grid.updateCell(1, e.rowID, 'age');
                 }
@@ -929,7 +929,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // update the cell value via updateRow and cancel the event
-            grid.cellEdit.subscribe((e: ICellEditEventArgs) => {
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.gridAPI.get_row_by_index(rowIndex);
                 grid.updateRow({[(row as any).columns[e.cellID.columnID].field]: e.newValue}, row.key);

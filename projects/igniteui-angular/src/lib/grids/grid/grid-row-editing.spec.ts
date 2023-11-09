@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditDoneEventArgs, ICellEditEventArgs, IRowEditEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -161,7 +161,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
-            const cellEditArgs: ICellEditEventArgs = {
+            const cellEditArgs: IGridEditEventArgs = {
                 rowKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
@@ -174,7 +174,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 valid: true,
                 event: jasmine.anything() as any
             };
-            let rowEditArgs: IRowEditEventArgs = {
+            let rowEditArgs: IGridEditEventArgs = {
                 rowID: row.key,
                 primaryKey: row.key,
                 rowKey: cell.row.key,
@@ -1807,7 +1807,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should be able to cancel 'rowEdit' event `, () => {
             spyOn(grid.rowEdit, 'emit').and.callThrough();
 
-            grid.rowEdit.subscribe((e: IRowEditEventArgs) => {
+            grid.rowEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1937,7 +1937,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should be able to cancel 'rowEditEnter' event `, () => {
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
 
-            grid.rowEditEnter.subscribe((e: IRowEditEventArgs) => {
+            grid.rowEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
 
@@ -2040,7 +2040,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();
             // TODO: cellEdit should emit updated rowData - issue #7304
-            const cellArgs: ICellEditEventArgs = {
+            const cellArgs: IGridEditEventArgs = {
                 cellID: cell.id,
                 primaryKey: cell.row.key,
                 rowID: cell.row.key,

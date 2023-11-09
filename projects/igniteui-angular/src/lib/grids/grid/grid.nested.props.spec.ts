@@ -8,9 +8,8 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxComboComponent } from '../../combo/public_api';
-import { ICellEditEventArgs, IRowEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxColumnComponent } from '../public_api';
+import { IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { FormsModule } from '@angular/forms';
 
@@ -531,7 +530,7 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const cellArgs: ICellEditEventArgs = {
+        const cellArgs: IGridEditEventArgs = {
             primaryKey: cell.row.key,
             rowID: cell.row.key,
             rowKey: cell.row.key,
@@ -596,7 +595,7 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const cellArgs: ICellEditEventArgs = {
+        const cellArgs: IGridEditEventArgs = {
             primaryKey: cell.row.key,
             rowID: cell.row.key,
             rowKey: cell.row.key,
@@ -667,7 +666,7 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         // TODO ROW addRow
-        const rowArgs: IRowEditEventArgs = {
+        const rowArgs: IGridEditEventArgs = {
             primaryKey: row.key,
             rowID: row.key,
             rowKey: cell.row.key,
@@ -733,7 +732,7 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         // TODO ROW addRow
-        const rowArgs: IRowEditEventArgs = {
+        const rowArgs: IGridEditEventArgs = {
             primaryKey: row.key,
             rowID: row.key,
             rowKey: cell.row.key,
