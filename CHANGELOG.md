@@ -41,15 +41,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - **Breaking Changes**
-        - The events `cellEditEnter`and `cellEdit` no longer emit `IGridEditEventArgs` as arguments now emits `ICellEditEventArgs`.
-        - The events `rowEditEnter`and `rowEdit` no longer emit `IGridEditEventArgs` as arguments now emits `IRowEditEventArgs`.
-        - The events `cellEditExit`and `cellEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `ICellEditDoneEventArgs`.
-        - The events `rowEditExit`and `rowEditDone` no longer emit `IGridEditDoneEventArgs` as arguments now emits `IRowEditDoneEventArgs`.
-        - The events `rowAdd` and `rowDelete` no longer emit `IGridEditEventArgs` as arguments now emits `IRowDataCancelableEventArgs`.
-        - `rowID` property has been deprecated in the following interfaces: `IRowEditEventArgs`, `IRowEditDoneEventArgs`, `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IPathSegment`, `HierarchicalStateRecord`, `ICellEditEventArgs`, `ICellEditDoneEventArgs` and will be removed in a future version, so please use `key` property instead and for `ICellEditEventArgs` and `ICellEditDoneEventArgs` use `rowKey` property instead.
-        - `rowData` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IRowEditEventArgs`, `IRowDataCancelableEventArgs` and will be removed in a future version, so please use `data` property instead.
+        - `rowAdd` and `rowDelete` events no longer emit event argument of type `IGridEditEventArgs`, but argument of type `IRowDataCancelableEventArgs`. The two interfaces `IGridEditEventArgs` and `IRowDataCancelableEventArgs` are compatible. Only case there would be issues is if your application was reading `IGridEditEventArgs.oldValue`, `IGridEditEventArgs.newValue`. These properties return always undefined when in `rowAdd` or `rowDelete` event handlers, so they can be safely removed.
+        - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
+        - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
+        - `key` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowKey` instead.
+        - `primaryKey` has been deprecated in the following interfaces: `IGridEditDoneEventArgs`. Use `rowKey` instead.
 =======
 ## 16.1.5
 ### General
