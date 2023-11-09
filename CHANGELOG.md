@@ -13,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
     - `igniteui-angular-i18n` is now tree-shakeable
     - `igniteui-angular/animations` is now tree-shakeable
     - `igniteui-angular` components have improved tree-shaking
+    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead. 
+        - E.g. EN strings come from `igniteui-angular`: `import { GridResourceStringsEN } from 'igniteui-angular';`
+        - E.g. DE or other language strings come from `igniteui-angular-i18n`: `import { GridResourceStringsDE } from 'igniteui-angular-i18n';`
 - DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
 - We're working on reducing the library size
     - `IgxRadioComponent` size has been reduced in half
@@ -37,6 +40,11 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `value` and `selection` properties now correctly return a single value or data item instead of the same wrapped in array and `undefined` instead of empty array, matching the values emitted from selection event and when working with `formControlName`/`ngModel` directives.
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
+
+## 16.1.5
+### General
+- `IgxButtonGroup`:
+    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
 
 ## 16.1.4
 ### New Features
@@ -63,7 +71,7 @@ All notable changes for each version of this project will be documented in this 
     @include core();
     @include typography();
     @include theme();
-    ``` 
+    ```
 
 ## 16.1.0
 ### New Features
