@@ -2411,9 +2411,8 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
         ColumnDefinitions.idFirstLastNameSortable,
         '',
         '',
-        ''),
-    standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+        ''
+    )
 })
 export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
    public sortingOptions: ISortingOptions = { mode: 'single' };
