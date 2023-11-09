@@ -152,6 +152,11 @@ export interface IBaseRowDataEventArgs extends IBaseEventArgs {
 
 
 export interface IRowDataEventArgs extends IBaseRowDataEventArgs {
+    /**
+     * @deprecated since version 17.0.0
+     * Use`rowKey` instead
+     */
+    key: any;
     rowKey: any;
  }
 // to extend in a new interface

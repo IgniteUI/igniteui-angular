@@ -958,7 +958,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowData: treeGrid.getRowData(someRow.key),
                     primaryKey: someRow.key,
                     owner: treeGrid,
-                    rowKey: someRow.key
+                    rowKey: someRow.key,
+                    key: someRow.key
                 };
 
                 treeGrid.deleteRow(someRow.key);

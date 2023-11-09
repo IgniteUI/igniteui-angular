@@ -612,8 +612,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data: data, rowData: data, owner: this,
-            primaryKey: data[this.primaryKey], rowKey: data[this.primaryKey] });
+        this.rowAddedNotifier.next({ data: data,
+            rowData: data, owner: this,
+            primaryKey: data[this.primaryKey],
+            key: data[this.primaryKey],
+            rowKey: data[this.primaryKey]
+        });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -746,9 +750,16 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         const record = this.gridAPI.deleteRowById(rowId);
+        const key = record[this.primaryKey];
         if (record !== null && record !== undefined) {
-            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, rowData: record, owner: this,
-                primaryKey: record[this.primaryKey], rowKey: record[this.primaryKey] };
+            const rowDeletedEventArgs: IRowDataEventArgs = {
+                data: record,
+                rowData: record,
+                owner: this,
+                primaryKey: key, 
+                key,
+                rowKey: key
+            };
             this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
