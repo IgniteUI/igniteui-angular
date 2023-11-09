@@ -69,7 +69,7 @@ let NEXT_ID = 0;
 			transition('void => 0', useAnimation(fadeIn)),
 			transition('void => *', useAnimation(scaleInCenter, {
 				params: {
-					duration: '.2s',
+					duration: '0s',
 					fromScale: .9,
 				},
 			})),
@@ -78,11 +78,13 @@ let NEXT_ID = 0;
 			transition('* => prev', useAnimation(slideInLeft, {
 				params: {
 					fromPosition: 'translateX(-30%)',
+                    duration: '0s'
 				},
 			})),
 			transition('* => next', useAnimation(slideInRight, {
 				params: {
 					fromPosition: 'translateX(30%)',
+                    duration: '0s'
 				},
 			})),
 		]),
@@ -997,7 +999,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public animationDone(event) {
         if ((event.fromState === ScrollDirection.NONE && (event.toState === ScrollDirection.PREV || event.toState === ScrollDirection.NEXT)) ||
             (event.fromState === 'void' && event.toState === ScrollDirection.NONE)) {
-            this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
+            this.viewDateChanged.emit({ 
+                previousValue: this.previousViewDate, 
+                currentValue: this.viewDate 
+            });
         }
 
         if (!this.isKeydownTrigger) {

@@ -223,23 +223,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) {
-            return;
-        }
+        if (!node) return;
 
         const months = this.monthsRef.toArray();
-        const nodeRect = node.nativeElement.getBoundingClientRect();
+        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _delta = this._calendarModel.timedelta(_date, 'month', -3);
 
-        for (let index = months.indexOf(node) - 1; index >= 0; index--) {
-            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
-            const tolerance = 6;
-            if (nodeRect.top !== nextNodeRect.top && (nextNodeRect.left - nodeRect.left) < tolerance) {
-                const month = months[index];
-                month.nativeElement.focus();
-                this.activeMonth = month.value.getMonth();
-                break;
-            }
-        }
+        months[_delta.getMonth()].nativeElement.focus();
+        this.activeMonth = _delta.getMonth();
     }
 
     /**
@@ -251,23 +242,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) {
-            return;
-        }
+        if (!node) return;
 
         const months = this.monthsRef.toArray();
-        const nodeRect = node.nativeElement.getBoundingClientRect();
+        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _delta = this._calendarModel.timedelta(_date, 'month', 3);
 
-        for (let index = months.indexOf(node) + 1; index < months.length; index++) {
-            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
-            const tolerance = 6;
-            if (nextNodeRect.top !== nodeRect.top && (nodeRect.left - nextNodeRect.left) < tolerance) {
-                const month = months[index];
-                month.nativeElement.focus();
-                this.activeMonth = month.value.getMonth();
-                break;
-            }
-        }
+        months[_delta.getMonth()].nativeElement.focus();
+        this.activeMonth = _delta.getMonth();
     }
 
     /**
@@ -279,16 +261,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) {
-            return;
-        }
+        if (!node) return;
 
         const months = this.monthsRef.toArray();
-        if (months.indexOf(node) + 1 < months.length) {
-            const month = months[months.indexOf(node) + 1];
-            this.activeMonth = month.value.getMonth();
-            month.nativeElement.focus();
-        }
+        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _delta = this._calendarModel.timedelta(_date, 'month', 1);
+
+        months[_delta.getMonth()].nativeElement.focus();
+        this.activeMonth = _delta.getMonth();
     }
 
     /**
@@ -300,16 +280,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) {
-            return;
-        }
+        if (!node) return;
 
         const months = this.monthsRef.toArray();
-        if (months.indexOf(node) - 1 >= 0) {
-            const month = months[months.indexOf(node) - 1];
-            this.activeMonth = month.value.getMonth();
-            month.nativeElement.focus();
-        }
+        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _delta = this._calendarModel.timedelta(_date, 'month', -1);
+
+        months[_delta.getMonth()].nativeElement.focus();
+        this.activeMonth = _delta.getMonth();
     }
 
     /**
