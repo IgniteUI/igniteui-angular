@@ -4554,7 +4554,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.addRowToData(data);
 
         this.pipeTrigger++;
-        this.rowAddedNotifier.next({ data: data, rowData: data, owner: this, primaryKey: data[this.primaryKey], rowKey: data[this.primaryKey], key: data[this.primaryKey] });
+        this.rowAddedNotifier.next({ data: data, rowData: data, owner: this, primaryKey: data[this.primaryKey], rowKey: data[this.primaryKey] });
         this.notifyChanges();
     }
 
@@ -4593,14 +4593,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            const key = record[this.primaryKey];
             const rowDeletedEventArgs: IRowDataEventArgs = {
                 data: record,
                 rowData: record,
                 owner: this,
-                primaryKey: key,
-                rowKey: key,
-                key
+                primaryKey: record[this.primaryKey],
+                rowKey: record[this.primaryKey]
             };
             this.rowDeleted.emit(rowDeletedEventArgs);
         }

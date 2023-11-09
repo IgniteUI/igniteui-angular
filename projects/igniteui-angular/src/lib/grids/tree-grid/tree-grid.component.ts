@@ -612,10 +612,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data: data,
+        this.rowAddedNotifier.next({
+            data: data,
             rowData: data, owner: this,
             primaryKey: data[this.primaryKey],
-            key: data[this.primaryKey],
             rowKey: data[this.primaryKey]
         });
         this.pipeTrigger++;
@@ -756,8 +756,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 data: record,
                 rowData: record,
                 owner: this,
-                primaryKey: key, 
-                key,
+                primaryKey: key,
                 rowKey: key
             };
             this.rowDeleted.emit(rowDeletedEventArgs);

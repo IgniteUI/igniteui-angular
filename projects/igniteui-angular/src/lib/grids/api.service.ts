@@ -339,7 +339,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public deleteRowById(rowId: any): any {
         let index: number;
         const grid = this.grid;
-        const data = this.get_all_data();
+        const data = this.get_all_data(grid.transactions.enabled);
         if (grid.primaryKey) {
             // eslint-disable-next-line @typescript-eslint/no-shadow
             index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
@@ -361,14 +361,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         const record = data[index];
         const key = record ? record[grid.primaryKey] : undefined;
-        grid.rowDeletedNotifier.next({
-            data: record,
-            rowData: record,
-            owner: grid,
-            primaryKey: key,
-            rowKey: key,
-            key
-        });
+        grid.rowDeletedNotifier.next({ data: record, rowData: record, owner: grid, primaryKey: key, rowKey: key });
 
         this.deleteRowFromData(rowId, index);
 
