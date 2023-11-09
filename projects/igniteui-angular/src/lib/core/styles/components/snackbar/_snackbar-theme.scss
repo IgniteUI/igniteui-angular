@@ -59,10 +59,6 @@
         $shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         border-radius: $border-radius,
@@ -85,8 +81,6 @@
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
-    $snackbar-button-left-margin: rem(24px);
-    $snackbar-button-line-height: rem(16px);
     $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
@@ -98,38 +92,30 @@
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
         margin: rem(8px);
+        gap: rem(24px);
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
         box-shadow: var-get($theme, 'shadow');
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
-    }
 
-    %igx-snackbar-message {
-        @include animation('fade-in' .35s ease-out);
+        [igxButton] {
+            @include animation(fade-in .35s ease-out);
+            --ig-size: 1;
+            background: transparent;
+            color: var-get($theme, 'button-color');
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: none;
+        }
     }
 
     %igx-snackbar-button {
-        background: transparent;
-        color: var-get($theme, 'button-color');
-        border: 0;
-        line-height: $snackbar-button-line-height;
-        margin-inline-start: $snackbar-button-left-margin;
-        text-transform: uppercase;
-        user-select: none;
-        font-weight: $snackbar-button-font-weight;
-        -webkit-tap-highlight-color: transparent;
-        outline: none;
-        transition: color .2s ease;
-        font-size: inherit;
-        font-family: inherit;
-        cursor: pointer;
-        @include animation('fade-in' .35s ease-out);
+        display: contents;
+    }
 
-        &:hover {
-            color: var-get($theme, 'button-color');
-        }
+    %igx-snackbar-message {
+        @include animation(fade-in .35s ease-out);
     }
 }
 

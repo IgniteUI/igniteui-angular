@@ -158,7 +158,7 @@
     $week-number-background: null,
 ) {
     $name: 'igx-calendar';
-    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
+    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view, .igx-date-picker';
     $calendar-schema: ();
 
     @if map.has-key($schema, 'calendar') {
@@ -176,6 +176,12 @@
     @if not($content-text-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
             $content-text-color: text-contrast($content-background);
+        }
+    }
+
+    @if not($picker-background-color) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $picker-background-color: $content-background;
         }
     }
 
@@ -315,18 +321,6 @@
 
     @if not($week-number-color) and $week-number-background {
         $week-number-color: text-contrast($week-number-background);
-    }
-
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($month-border-radius) {
-        $month-border-radius: border-radius(map.get($theme, 'month-border-radius')...);
-    }
-
-    @if not($date-border-radius) {
-        $date-border-radius: border-radius(map.get($theme, 'date-border-radius')...);
     }
 
     @return extend($theme, (
@@ -607,6 +601,10 @@
 
         [dir='rtl'] & {
             transform: scaleX(-1);
+        }
+
+        igx-icon {
+            --component-size: 3;
         }
     }
 

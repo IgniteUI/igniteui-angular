@@ -15,6 +15,7 @@ import {
     Inject,
     Optional,
     Self,
+    booleanAttribute,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -145,7 +146,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public sortable = false;
     /**
      * Returns if the column is selectable.
@@ -188,7 +189,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get groupable(): boolean {
         return this._groupable;
     }
@@ -206,7 +207,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get editable(): boolean {
         // Updating the primary key when grid has transactions (incl. row edit)
         // should not be allowed, as that can corrupt transaction state.
@@ -251,7 +252,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
@@ -266,7 +267,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public resizable = false;
 
     /**
@@ -283,7 +284,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autosizeHeader = true;
 
     /**
@@ -296,7 +297,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hasSummary() {
         return this._hasSummary;
     }
@@ -326,7 +327,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hidden(): boolean {
         return this._hidden;
     }
@@ -425,7 +426,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disableHiding = false;
     /**
      * Gets whether the pinning is disabled.
@@ -437,7 +438,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disablePinning = false;
     /**
      * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
@@ -454,7 +455,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public movable = false;
     /**
      * Gets the `width` of the column.
@@ -730,7 +731,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public filteringIgnoreCase = true;
     /**
      * Sets/gets whether the column sorting should be case sensitive.
@@ -745,7 +746,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public sortingIgnoreCase = true;
     /**
      * Sets/gets whether the column is `searchable`.
@@ -761,7 +762,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public searchable = true;
     /**
      * Sets/gets the data type of the column values.
@@ -973,6 +974,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
     }
 
+    /** @hidden @internal **/
+    public get resolvedWidth(): string {
+        if (this.columnLayoutChild) {
+            return '';
+        }
+        const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
+        return isAutoWidth ? this.width : this.calcPixelWidth + 'px';
+    }
+
     /**
      * Gets the column index.
      * ```typescript
@@ -994,7 +1004,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get pinned(): boolean {
         return this._pinned;
     }
@@ -1368,7 +1378,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
                     this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
-                    const cell = new IgxGridCell(this.grid as any, index, this.field);
+                    const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }
             }).filter(cell => cell);
@@ -1526,7 +1536,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set visibleWhenCollapsed(value: boolean) {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
@@ -1772,8 +1782,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
     ) {
-        this.validators  = _validators;
-     }
+        this.validators = _validators;
+    }
 
     /**
      * @hidden
@@ -2118,7 +2128,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            index === grid._pinnedColumns.length - 1 ?
+                grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {
@@ -2493,14 +2504,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseFloat(this._calcWidth);
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
 
     /**

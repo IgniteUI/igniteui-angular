@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef, booleanAttribute } from '@angular/core';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
@@ -38,7 +38,7 @@ export class IgxGridActionButtonComponent {
     /**
      * Whether button action is rendered in menu and should container text label.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public asMenuItem = false;
 
     /**
@@ -75,7 +75,7 @@ export class IgxGridActionButtonComponent {
      * @internal
      */
     public handleClick(event) {
-       this.actionClick.emit(event);
+        this.actionClick.emit(event);
     }
 
     /**

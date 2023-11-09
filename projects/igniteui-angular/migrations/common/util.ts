@@ -5,6 +5,8 @@ import { WorkspaceSchema, WorkspaceProject } from '@schematics/angular/utility/w
 import { execSync } from 'child_process';
 import {
     Attribute,
+    Block,
+    BlockParameter,
     Comment,
     Element,
     Expansion,
@@ -245,10 +247,10 @@ class SerializerVisitor implements Visitor {
 
     public visitElement(element: Element, _context: any): any {
         if (this.getHtmlTagDefinition(element.name).isVoid) {
-            return `<${element.name}${this._visitAll(element.attrs, ' ')}/>`;
+            return `<${element.name}${this._visitAll(element.attrs, ' ', ' ')}/>`;
         }
 
-        return `<${element.name}${this._visitAll(element.attrs, ' ')}>${this._visitAll(element.children)}</${element.name}>`;
+        return `<${element.name}${this._visitAll(element.attrs, ' ', ' ')}>${this._visitAll(element.children)}</${element.name}>`;
     }
 
     public visitAttribute(attribute: Attribute, _context: any): any {
@@ -271,11 +273,18 @@ class SerializerVisitor implements Visitor {
         return ` ${expansionCase.value} {${this._visitAll(expansionCase.expression)}}`;
     }
 
-    private _visitAll(nodes: Node[], join = ''): string {
-        if (nodes.length === 0) {
-            return '';
-        }
-        return join + nodes.map(a => a.visit(this, null)).join(join);
+    public visitBlock(block: Block, _context: any) {
+        const params =
+            block.parameters.length === 0 ? ' ' : ` (${this._visitAll(block.parameters, ';', ' ')}) `;
+        return `@${block.name}${params}{${this._visitAll(block.children)}}`;
+    }
+
+    public visitBlockParameter(parameter: BlockParameter, _context: any) {
+        return parameter.expression;
+    }
+
+    private _visitAll(nodes: Node[], separator = '', prefix = ''): string {
+        return nodes.length > 0 ? prefix + nodes.map(a => a.visit(this, null)).join(separator) : '';
     }
 }
 
@@ -286,7 +295,7 @@ export const serializeNodes = (nodes: Node[], getHtmlTagDefinition: (tagName: st
 
 export const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
 
-export const stringifyAttriutes = (attributes: Attribute[]) => {
+export const stringifyAttributes = (attributes: Attribute[]) => {
     let stringAttributes = '';
     attributes.forEach(element => {
         // eslint-disable-next-line max-len

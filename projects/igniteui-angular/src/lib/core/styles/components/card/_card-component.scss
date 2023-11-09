@@ -28,8 +28,8 @@
             @extend %igx-card-media--right !optional;
         }
 
-        @include m(outlined) {
-            @extend %igx-card--outlined !optional;
+        @include m(elevated) {
+            @extend %igx-card--elevated !optional;
         }
 
         @include m(horizontal) {

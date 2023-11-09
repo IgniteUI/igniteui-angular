@@ -3,8 +3,7 @@
 </ng-template>
 
 <ng-template #defaultCollapseIndicator>
-    <igx-icon [attr.draggable]="false" >
-            {{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
+    <igx-icon>{{column.expanded ? 'expand_more' : 'chevron_right'}}</igx-icon>
 </ng-template>
 
 <ng-container *ngIf="!column.columnGroup">

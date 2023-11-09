@@ -7,7 +7,8 @@ import {
     HostListener,
     ViewChildren,
     QueryList,
-    ElementRef
+    ElementRef,
+    booleanAttribute
 } from '@angular/core';
 import { Calendar } from '../calendar';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -80,7 +81,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**
      * Sets the month format option of the months view.
      * ```html
-     * <igx-months-view> [monthFormat] = "short'"</igx-months-view>
+     * <igx-months-view> [monthFormat]="short'"</igx-months-view>
      * ```
      *
      * @memberof IgxMonthsViewComponent
@@ -123,7 +124,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * Gets/sets whether the view should be rendered
      * according to the locale and monthFormat, if any.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public formatView = true;
 
     /**
@@ -260,7 +261,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         for (let index = months.indexOf(node) + 1; index < months.length; index++) {
             const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
             const tolerance = 6;
-            if (nextNodeRect.top !== nodeRect.top && (nodeRect.left - nextNodeRect.left) < tolerance ) {
+            if (nextNodeRect.top !== nodeRect.top && (nodeRect.left - nextNodeRect.left) < tolerance) {
                 const month = months[index];
                 month.nativeElement.focus();
                 this.activeMonth = month.value.getMonth();

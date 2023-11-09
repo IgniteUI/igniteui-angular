@@ -19,7 +19,8 @@
             <igx-icon [hidden]="(last && !dropAreaVisible)">arrow_forward</igx-icon>
         </span>
     </ng-container>
-    <div igxGroupAreaDrop class="igx-drop-area{{ density !== 'comfortable' ? '--' + density : ''}}"
+    <div igxGroupAreaDrop
+        class="igx-drop-area"
         [attr.gridId]="grid.id"
         [hidden]="!dropAreaVisible"
         (igxDrop)="onDragDrop($event)"

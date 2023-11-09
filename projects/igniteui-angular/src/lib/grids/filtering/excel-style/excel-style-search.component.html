@@ -47,6 +47,10 @@
     <ng-template igxEmptyList>
         <ng-container *ngTemplateOutlet="emptySearch"></ng-container>
     </ng-template>
+
+    <div class="igx-excel-filter__filter-results" aria-live="polite" aria-atomic="true">
+        {{ esf.grid?.resourceStrings.igx_grid_excel_matches_count.replace('{0}', matchesCount) }}
+    </div>
 </igx-list>
 
 <div class="igx-excel-filter__tree" *ngIf="isHierarchical()">
@@ -132,7 +136,7 @@
 
 <footer class="igx-excel-filter__menu-footer">
     <div class="igx-excel-filter__cancel">
-        <button
+        <button type="button"
             igxButton="flat"
             [displayDensity]="esf.displayDensity"
             (click)="esf.cancel()">
@@ -140,7 +144,7 @@
         </button>
     </div>
     <div class="igx-excel-filter__apply">
-        <button
+        <button type="button"
             igxButton="raised"
             [displayDensity]="esf.displayDensity"
             [disabled]="applyButtonDisabled"

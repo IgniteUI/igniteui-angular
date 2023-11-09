@@ -25,12 +25,12 @@
         <h4 class="sample-title">Ghost and base templating:</h4>
         <div class="dragRow">
             <div style="width: 500px; height: 300px;">
-                <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
+                <div [igxDrag]="{ id: 'customGhost'}" [ghostClass]="'customGhost'" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
                     [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                     (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                     <span *ngIf="!customDragged">Drag me</span>
                     <ng-template #dragGhost>
-                        <div class="customGhost">
+                        <div>
                             <span *ngIf="!ghostInDropArea">Weeeee</span>
                             <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
                             <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
@@ -224,6 +224,41 @@
             </div>
         </div>
     </article>
+</section>
+<hr [style.width]="'100%'">
+<section>
+    <div>
+        <h4 class="sample-title">Multi selection row drag with custom ghost:</h4>
+        <span>From</span><br/>
+        <div id="fromDiv" class="rowsContainer scrollContainer">
+            <div igxDrag
+                *ngFor="let item of sourceRows"
+                [id]="item.name"
+                [ngClass]="{'lightblue' : item.selected, 'white': !item.selected}"
+                (click)="rowClicked($event)"
+                (dragStart)="dragStartHandler($event)"
+                [ghostTemplate]="customGhost">
+                    <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <span>To</span><br/>
+        <div id="toDiv" class="rowsContainer scrollContainer" igxDrop (dropped)="onSelectRowDropped()">
+            <div *ngFor="let item of targetRows">
+                <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #customGhost>
+        <div class="dragGhost">
+            <span *ngFor="let row of selectedRows">
+                {{ row.name }}
+            </span>
+        </div>
+    </ng-template>
 </section>
 <hr [style.width]="'100%'">
 <section class="sample-content">

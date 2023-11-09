@@ -7,7 +7,8 @@ import {
     Input,
     OnInit,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    booleanAttribute
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
@@ -86,7 +87,7 @@ export class IgxCardHeaderComponent {
      * ```
      */
     @HostBinding('class.igx-card-header--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 }
 
@@ -187,13 +188,17 @@ export class IgxCardFooterDirective {
  *     <h5 igxCardHeaderSubtitle>{{subtitle}}</h5>
  *   </igx-card-header>
  *   <igx-card-actions>
- *       <button igxButton igxRipple>Share</button>
- *       <button igxButton igxRipple>Play Album</button>
+ *       <button type="button" igxButton igxRipple>Share</button>
+ *       <button type="button" igxButton igxRipple>Play Album</button>
  *   </igx-card-actions>
  * </igx-card>
  * ```
  */
 
+/**
+ * @deprecated in 17.0.0. To switch betweet `outlined` and `elevated` card use the `elevated` property.
+ * Since version 17.0.0 the card component is `outlined` by default.
+ */
 export const IgxCardType = mkenum({
     ELEVATED: 'elevated',
     OUTLINED: 'outlined'
@@ -206,13 +211,15 @@ export type IgxCardType = (typeof IgxCardType)[keyof typeof IgxCardType];
     standalone: true
 })
 export class IgxCardComponent {
+    private static ngAcceptInputType_elevated: boolean | '';
+
     /**
      * Sets/gets the `id` of the card.
      * If not set, `id` will have value `"igx-card-0"`;
      *
      * @example
      * ```html
-     * <igx-card id = "my-first-card"></igx-card>
+     * <igx-card id="my-first-card"></igx-card>
      * ```
      * ```typescript
      * let cardId =  this.card.id;
@@ -221,6 +228,15 @@ export class IgxCardComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-card-${NEXT_ID++}`;
+
+    /**
+     * Sets the `igx-card` css class to the card component.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-card')
+    public cssClass = 'igx-card';
 
     /**
      * An @Input property that sets the value of the `role` attribute of the card.
@@ -236,18 +252,19 @@ export class IgxCardComponent {
     public role = 'group';
 
     /**
+     * @deprecated in version 17.0.0. Use `elevated` property instead.
+     * 
      * An @Input property that sets the value of the `type` attribute of the card.
-     * By default the value is set to `elevated`. You can make the card use the
-     * outlined style by setting the value to `outlined`.
+     * By default the value is set to `outlined`. You can make the card use the
+     * elevated style by setting the value to `elevated`.
      *
      * @example
      * ```html
-     * <igx-card type="outlined"></igx-card>
+     * <igx-card type="elevated"></igx-card>
      * ```
      */
-    @HostBinding('class.igx-card')
     @Input()
-    public type: IgxCardType | string = IgxCardType.ELEVATED;
+    public type: IgxCardType | string = IgxCardType.OUTLINED;
 
     /**
      * A getter which will return true if the card type is `outlined`.
@@ -255,6 +272,35 @@ export class IgxCardComponent {
     @HostBinding('class.igx-card--outlined')
     public get isOutlinedCard() {
         return this.type === IgxCardType.OUTLINED;
+    }
+
+    /**
+     * A getter which will return true if the card type is `elevated`.
+     */
+    @HostBinding('class.igx-card--elevated')
+    protected get isElevatedCard() {
+        return this.type === IgxCardType.ELEVATED;
+    }
+
+    /**
+     * An @Input property that sets/gets whether the card is elevated.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-card elevated></igx-card>
+     * ```
+     * ```typescript
+     * let cardElevation = this.card.elevated;
+     * ```
+     */
+    @Input()
+    public get elevated(): boolean {
+        return this._elevated;
+    }
+    public set elevated(value: boolean) {
+        this._elevated = (value as any === '') || value;
+        this.type = IgxCardType.ELEVATED;
     }
 
     /**
@@ -268,8 +314,14 @@ export class IgxCardComponent {
      * ```
      */
     @HostBinding('class.igx-card--horizontal')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public horizontal = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _elevated = false;
 }
 
 export const IgxCardActionsLayout = mkenum({
@@ -308,7 +360,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * When set to `true` the actions will be layed out vertically.
      */
     @HostBinding('class.igx-card-actions--vertical')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public vertical = false;
 
     /**
@@ -331,7 +383,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * ```
      */
     @HostBinding('class.igx-card-actions--reverse')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public reverse = false;
 
     private isVerticalSet = false;
@@ -360,4 +412,3 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         }
     }
 }
-

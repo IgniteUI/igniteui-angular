@@ -61,7 +61,7 @@ The **IgxCarousel** supports templating indicators and navigation buttons
 <igx-carousel #carousel>
         ...
     <ng-template igxCarouselNextButton let-disabled>
-        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+        <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
             <igx-icon>add</igx-icon>
         </button>
     </ng-template>
@@ -73,7 +73,7 @@ The **IgxCarousel** supports templating indicators and navigation buttons
 <igx-carousel #carousel>
         ...
     <ng-template igxCarouselPrevButton let-disabled>
-        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+        <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
             <igx-icon>remove</igx-icon>
         </button>
     </ng-template>

@@ -15,7 +15,7 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener
+    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener, booleanAttribute
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -45,8 +45,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
@@ -60,6 +59,7 @@ import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -226,7 +226,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * <igx-time-picker [spinLoop]="false"></igx-time-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public spinLoop = true;
 
     /**
@@ -254,7 +254,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /** @hidden @internal */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public readOnly = false;
 
     /**
@@ -452,7 +452,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    private _resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> = { hours: 1, minutes: 1, seconds: 1 };
@@ -761,7 +761,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * @param settings OverlaySettings - the overlay settings to use for positioning the drop down or dialog container according to
      * ```html
      * <igx-time-picker #picker [value]="date"></igx-time-picker>
-     * <button (click)="picker.open()">Open Dialog</button>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
      * ```
      */
     public open(settings?: OverlaySettings): void {
@@ -889,7 +889,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public onItemClick(item: string, dateType: string): void {
         let date = new Date(this._selectedDate);
         switch (dateType) {
-            case 'hourList':
+            case 'hourList': {
                 let ampm: string;
                 const selectedHour = parseInt(item, 10);
                 let hours = selectedHour;
@@ -911,6 +911,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     this.setSelectedValue(date);
                 }
                 break;
+            }
             case 'minuteList': {
                 const minutes = parseInt(item, 10);
                 date.setMinutes(minutes);

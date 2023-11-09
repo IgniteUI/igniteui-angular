@@ -22,8 +22,10 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
-import { DatePipe } from '@angular/common';
+import { igxI18N } from '../../core/i18n/resources';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeFr from '@angular/common/locales/fr';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -47,8 +49,9 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate } from '../../core/utils';
+import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -56,6 +59,10 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
+
+    registerLocaleData(localeDe);
+    registerLocaleData(localeFr);
+
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -1080,10 +1087,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = getCurrentResourceStrings();
+            const strings = GridResourceStringsEN;
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
-            changei18n(strings);
+            igxI18N.instance().changei18n(strings);
             fix.detectChanges();
 
             const initialChips = GridFunctions.getFilteringChips(fix);
@@ -1101,7 +1108,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
-            changei18n({
+            igxI18N.instance().changei18n({
                 igx_grid_filter: 'Filter',
                 igx_grid_filter_row_close: 'Close'
             });
@@ -1844,7 +1851,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(300);
 
             verifyMultipleChipsVisibility(fix, [true, true, false, false]);
 
@@ -3903,7 +3910,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
             const columnSelectionIcon = headerIcons.find((bi: any) => bi.innerText === 'done');
 
-            expect(columnSelectionContainer.tagName).toEqual('BUTTON');
+            expect(columnSelectionContainer.tagName).toEqual('DIV');
             expect(columnSelectionIcon).not.toBeNull();
 
         }));
@@ -6608,6 +6615,8 @@ const checkUIForType = (type: string, elem: DebugElement) => {
 };
 
 const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+    const size = getSize(expectedDisplayDensity);
+
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -6615,26 +6624,15 @@ const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, exp
     const excelSearch = excelMenu.querySelector('igx-excel-style-search');
     const inputGroup = excelSearch.querySelector('igx-input-group');
     const list = excelSearch.querySelector('igx-list');
-    expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
-        'incorrect inputGroup density');
-    expect(list.classList.contains(getListDensityClass(expectedDisplayDensity))).toBe(true,
-        'incorrect list density');
+    expect(getComponentSize(inputGroup)).toBe(size);
+    expect(getComponentSize(list)).toBe(size);
 
     // Verify display density of all flat and raised buttons in excel stlye dialog.
     const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
     const raisedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--raised');
     const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(raisedButtons));
     buttons.forEach((button) => {
-        if (expectedDisplayDensity === DisplayDensity.comfortable) {
-            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
-                'incorrect button density');
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
-                'incorrect button density');
-        } else {
-            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
-                'incorrect button density');
-        }
+        expect(getComponentSize(button)).toBe(size);
     });
 
     // Verify column pinning and column hiding elements in header area and actions area
@@ -6732,6 +6730,7 @@ const verifySortMoveDisplayDensity = (fix: ComponentFixture<any>, expectedDispla
 };
 
 const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+    const size = getSize(expectedDisplayDensity);
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
 
@@ -6740,79 +6739,42 @@ const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expec
     const raisedButtons = customFilterMenu.querySelectorAll('.igx-button--raised');
     const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
     buttons.forEach((button) => {
-        if (expectedDisplayDensity === DisplayDensity.comfortable) {
-            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
-                'incorrect button density in custom filter dialog');
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
-                'incorrect button density in custom filter dialog');
-        } else {
-            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
-                'incorrect button density in custom filter dialog');
-        }
+        expect(getComponentSize(button)).toBe(size);
     });
 
     // Verify display density of all input groups in custom filter dialog.
     const inputGroups = customFilterMenu.querySelectorAll('igx-input-group');
     inputGroups.forEach((inputGroup) => {
-        expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
-            'incorrect inputGroup density in custom filter dialog');
+        expect(getComponentSize(inputGroup)).toBe(size, 'incorrect inputGroup density in custom filter dialog');
     });
 };
 
 const verifyGridSubmenuDisplayDensity = (gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) => {
+    const size = getSize(expectedDisplayDensity);
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
     const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
+
     dropdownItems.forEach((dropdownItem) => {
-        expect(dropdownItem.classList.contains(getDropdownItemDensityClass(expectedDisplayDensity))).toBe(true,
-            'incorrect dropdown item density');
+        expect(getComponentSize(dropdownItem)).toBe(size, 'incorrect dropdown item density');
     });
 };
 
-const getListDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
+const getSize = (displayDensity: DisplayDensity) => {
+    let size: string;
     switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-list--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-list--cosy'; break;
-        default: densityClass = 'igx-list'; break;
+        case DisplayDensity.compact:
+            size = '1';
+            break;
+        case DisplayDensity.cosy:
+            size = '2';
+            break;
+        case DisplayDensity.comfortable:
+        default:
+            size = '3';
     }
-    return densityClass;
-};
-
-const getInputGroupDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-input-group--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-input-group--cosy'; break;
-        default: densityClass = 'igx-input-group--comfortable'; break;
-    }
-    return densityClass;
-};
-
-/**
- * Gets the corresponding class that a flat/raised/outlined button
- * has added to it additionally based on displayDensity input.
- */
-const getButtonDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-button--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-button--cosy'; break;
-        default: densityClass = ''; break;
-    }
-    return densityClass;
-};
-
-const getDropdownItemDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-drop-down__item--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-drop-down__item--cosy'; break;
-        default: densityClass = 'igx-drop-down__item'; break;
-    }
-    return densityClass;
+    return size;
 };
 
 const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {

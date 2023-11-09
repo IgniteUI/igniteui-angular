@@ -72,29 +72,14 @@ describe('Divider', () => {
         expect(divider.nativeElement).toHaveClass(classes.inset);
     });
 
-    it('should set in the divider by the specified inset amount', () => {
+    it('should inset the divider by the specified amount', () => {
         const inset = '16px';
         const divider = fixture.debugElement.query(By.css('igx-divider'));
-        const insetVar = () => window.getComputedStyle(divider.nativeElement).getPropertyValue('--_inset');
+        const insetVar = () => window.getComputedStyle(divider.nativeElement).getPropertyValue('--inset');
         fixture.componentInstance.inset = inset;
         fixture.detectChanges();
 
-        expect(insetVar()).toEqual(`0 0 0 ${inset}`);
-
-        fixture.componentInstance.middle = true;
-        fixture.detectChanges();
-
-        expect(insetVar()).toEqual(`0 ${inset}`);
-
-        fixture.componentInstance.vertical = true;
-        fixture.detectChanges();
-
-        expect(insetVar()).toEqual(`${inset} 0`);
-
-        fixture.componentInstance.middle = false;
-        fixture.detectChanges();
-
-        expect(insetVar()).toEqual(`${inset} 0 0 0`);
+        expect(insetVar()).toEqual(`${inset}`);
     });
 
     it('should change the role of the divider to the specified value', () => {

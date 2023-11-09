@@ -18,10 +18,10 @@ import {
     ViewContainerRef,
     Optional,
     LOCALE_ID,
-    ApplicationRef,
     Injector,
     EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA
+    CUSTOM_ELEMENTS_SCHEMA,
+    booleanAttribute
 } from '@angular/core';
 import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 
@@ -156,7 +156,7 @@ let NEXT_ID = 0;
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe
     ],
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
@@ -207,7 +207,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
 
     /**
@@ -434,7 +434,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        appRef: ApplicationRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
@@ -448,7 +447,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation, filteringService,
+            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
@@ -834,7 +833,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, columnField);
+            return new IgxGridCell(this as any, rowIndex, column);
         }
     }
 
@@ -854,7 +853,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this as any, row.index, columnField);
+            return new IgxGridCell(this as any, row.index, column);
         }
     }
 

@@ -164,3 +164,22 @@
     box-shadow: 0 2px 6px 0 gray;
     background-color: rgba(232, 232, 232, .5);
 }
+
+.white {
+    background-color: white;
+}
+
+.lightblue {
+    background-color: lightblue;
+}
+
+.rowsContainer {
+    margin: 1em;
+    height: 100px;
+    width: 50%;
+    border: 1px solid gray;
+}
+
+.scrollContainer{
+    overflow: auto;
+}

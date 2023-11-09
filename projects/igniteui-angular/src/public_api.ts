@@ -4,8 +4,9 @@
 
 /**
  * Animations
+ * MOVED TO igniteui-angular/animations
  */
-export * from './lib/animations/main';
+//export * from './lib/animations/main';
 
 /**
  * Directives
@@ -21,7 +22,7 @@ export * from './lib/directives/focus-trap/focus-trap.directive';
 export * from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
-export * from './lib/directives/radio/radio-group.directive';
+export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
@@ -52,8 +53,8 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
-export * from './lib/action-strip/public_api';
 export * from './lib/accordion/public_api';
+export * from './lib/action-strip/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/public_api';
@@ -69,16 +70,10 @@ export * from './lib/date-picker/public_api';
 export * from './lib/dialog/public_api';
 export * from './lib/drop-down/public_api';
 export * from './lib/grids/public_api';
-export * from './lib/grids/common/enums';
-export * from './lib/grids/common/events';
-export * from './lib/grids/filtering/excel-style/public_api';
-export * from './lib/grids/headers/public_api';
-export * from './lib/grids/selection/public_api';
-export * from './lib/grids/toolbar/public_api';
 export * from './lib/grids/grid/public_api';
+export * from './lib/grids/pivot-grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
-export * from './lib/grids/columns/public_api';
 export * from './lib/icon/public_api';
 export * from './lib/input-group/public_api';
 export * from './lib/list/public_api';
@@ -100,10 +95,7 @@ export * from './lib/splitter/public_api';
 export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
-export * from './lib/grids/column-actions/column-actions-base.directive';
-export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
-export * from './lib/grids/pivot-grid/public_api';
 export * from './lib/query-builder/public_api';
 
 /**
@@ -119,7 +111,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 /**
  * i18n
  */
-export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
+export { igxI18N, IResourceStrings, getCurrentResourceStrings, changei18n } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { IComboResourceStrings } from './lib/core/i18n/combo-resources';
