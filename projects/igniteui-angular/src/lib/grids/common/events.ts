@@ -88,7 +88,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 }
 
 
-/** 
+/**
  * Represents event arguments related to grid editing.
  * The event is cancelable
  * It contains information about the row and the column, as well as the old and nwe value of the element/cell
@@ -97,7 +97,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEv
 }
 
 
-export interface IRowDataCancelableEventArgs extends CancelableEventArgs, Omit<IGridEditDoneEventArgs, 'rowID' | 'oldValue' | 'newValue'> {}
+export interface IRowDataCancelableEventArgs extends Omit<IGridEditEventArgs, 'rowID' | 'oldValue' | 'newValue' | 'cellID' | 'column'> {}
 
 /**
  * The event arguments after a column's pin state is changed.
