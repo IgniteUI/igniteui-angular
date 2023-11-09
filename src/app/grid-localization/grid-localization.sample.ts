@@ -22,14 +22,14 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
+import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 
 export class GridLocalizationSampleComponent implements OnInit {
