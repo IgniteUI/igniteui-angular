@@ -46,10 +46,10 @@ export interface IPathSegment {
     /**
      * The unique identifier of the row within the segment.
      * @deprecated since version 17.0.0
-     * Use `key` instead
+     * Use `rowKey` instead
      */
     rowID: any;
-    key: any;
+    rowKey: any;
     /** The key representing the row's 'hierarchical level. */
     rowIslandKey: string;
 }

@@ -119,10 +119,10 @@ export class IgxAddRow extends IgxEditRow {
 export interface IgxAddRowParent {
     /**
      * @deprecated since version 17.0.0
-     * Use `key` instead
+     * Use `rowKey` instead
      */
     rowID: string;
-    key: any;
+    rowKey: any;
     index: number;
     asChild: boolean;
     isPinned: boolean;
@@ -563,7 +563,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
         const unpinIndex = this.grid.getUnpinnedIndexById(rowId);
         this.addRowParent = {
-            rowID: rowId, key: rowId,
+            rowID: rowId, rowKey: rowId,
             index: isInPinnedArea ? pinIndex : unpinIndex,
             asChild: newRowAsChild,
             isPinned: isInPinnedArea

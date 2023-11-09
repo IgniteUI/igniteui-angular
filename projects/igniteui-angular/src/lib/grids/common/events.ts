@@ -360,10 +360,10 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
     /**
      * Represents the ID of the row that emitted the event (which state is changed)
      * @deprecated since version 17.0.0
-     * Use `key` instead
+     * Use `rowKey` instead
      */
     rowID: any;
-    key: any;
+    rowKey: any;
     /**
      * Returns the state of the row after the operation has ended
      * Indicating whether the row is being expanded (true) or collapsed (false)
@@ -389,12 +389,12 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * @deprecated since version 17.0.0
-     * Use `key` instead
+     * Use `rowKey` instead
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
      */
     readonly rowID: any;
-    readonly key: any;
+    readonly rowKey: any;
     row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;

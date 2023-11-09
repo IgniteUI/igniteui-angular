@@ -203,7 +203,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 rowID : row.key,
-                key: row.key,
+                rowKey: row.key,
                 insertAtIndex: 0,
                 isPinned: true,
                 row,
@@ -221,7 +221,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 rowID : row5.key,
-                key: row5.key,
+                rowKey: row5.key,
                 insertAtIndex: 1,
                 isPinned: true,
                 row: row5,

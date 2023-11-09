@@ -425,7 +425,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         const args: IRowToggleEventArgs = {
-            rowID, key: rowID,
+            rowID, rowKey: rowID,
             expanded,
             event,
             cancel: false
@@ -586,7 +586,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public get_pin_row_event_args(rowID: any, index?: number, row?: RowType, pinned?: boolean) {
         const eventArgs: IPinRowEventArgs = {
             isPinned: pinned ? true : false,
-            rowID, key: rowID,
+            rowID, rowKey: rowID,
             row,
             cancel: false
         }
