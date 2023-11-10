@@ -19,15 +19,7 @@ export class IgxEditRow {
 
     public createRowEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             primaryKey: this.id,
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             rowID: this.id,
             rowKey: this.id,
             rowData: this.data,
@@ -63,15 +55,7 @@ export class IgxEditRow {
             this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData ?? this.grid.gridAPI.getRowData(this.id);
         const args: IGridEditDoneEventArgs = {
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             primaryKey: this.id,
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             rowID: this.id,
             rowKey: this.id,
             rowData,
@@ -206,15 +190,7 @@ export class IgxCell {
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             primaryKey: this.id.rowID,
-            /**
-             * @deprecated since version 17.0.0
-             * Use `rowKey` instead
-             */
             rowID: this.id.rowID,
             rowKey: this.id.rowID,
             cellID: this.id,
