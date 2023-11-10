@@ -26,7 +26,7 @@
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
 /// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
+/// @param {List} $border-radius [null] - The border radius used for carousel component.
 ///
 /// @requires $light-material-schema
 ///
@@ -87,10 +87,6 @@
         @if meta.type-of($button-disabled-background) == 'color' {
             $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
         }
-    }
-
-    @if not($border-radius){
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (
@@ -161,6 +157,10 @@
         color: var-get($theme, 'button-arrow-color');
         background: var-get($theme, 'button-background');
         box-shadow: var-get($theme, 'button-shadow');
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-nav-arrow--disabled {

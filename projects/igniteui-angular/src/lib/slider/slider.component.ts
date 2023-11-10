@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import {
     AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren
+    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, noop, Observable, Subject, timer } from 'rxjs';
@@ -285,7 +285,7 @@ export class IgxSliderComponent implements
      * }
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get disabled(): boolean {
         return this._disabled;
     }
@@ -314,7 +314,7 @@ export class IgxSliderComponent implements
      * }
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get continuous(): boolean {
         return this._continuous;
     }
@@ -617,7 +617,7 @@ export class IgxSliderComponent implements
      * <igx-slier [showTicks]="true" [primaryTicks]="5"></igx-slier>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showTicks = false;
 
     /**
@@ -626,7 +626,7 @@ export class IgxSliderComponent implements
      * <igx-slider [primaryTicks]="5" [primaryTickLabels]="false"></igx-slider>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public primaryTickLabels = true;
 
     /**
@@ -635,7 +635,7 @@ export class IgxSliderComponent implements
      * <igx-slider [secondaryTicks]="5" [secondaryTickLabels]="false"></igx-slider>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public secondaryTickLabels = true;
 
     /**
@@ -695,22 +695,22 @@ export class IgxSliderComponent implements
      * <igx-slider [(lowerValue)]="model.lowervalue" (lowerValueChange)="change($event)" [step]="5">
      * ```
      */
-     @Output()
-     public lowerValueChange = new EventEmitter<number>();
+    @Output()
+    public lowerValueChange = new EventEmitter<number>();
 
-     /**
-      * This event is emitted every time the upper value of a range slider is changed.
-      * ```typescript
-      * public change(value){
-      *    alert(`The upper value has been changed to ${value}`);
-      * }
-      * ```
-      * ```html
-      * <igx-slider [(upperValue)]="model.uppervalue" (upperValueChange)="change($event)" [step]="5">
-      * ```
-      */
-      @Output()
-      public upperValueChange = new EventEmitter<number>();
+    /**
+     * This event is emitted every time the upper value of a range slider is changed.
+     * ```typescript
+     * public change(value){
+     *    alert(`The upper value has been changed to ${value}`);
+     * }
+     * ```
+     * ```html
+     * <igx-slider [(upperValue)]="model.uppervalue" (upperValueChange)="change($event)" [step]="5">
+     * ```
+     */
+    @Output()
+    public upperValueChange = new EventEmitter<number>();
 
     /**
      * This event is emitted at the end of every slide interaction.
@@ -786,10 +786,10 @@ export class IgxSliderComponent implements
     private _onTouchedCallback: () => void = noop;
 
     constructor(private renderer: Renderer2,
-                private _el: ElementRef,
-                private _cdr: ChangeDetectorRef,
-                private _ngZone: NgZone,
-                private _dir: IgxDirectionality) {
+        private _el: ElementRef,
+        private _cdr: ChangeDetectorRef,
+        private _ngZone: NgZone,
+        private _dir: IgxDirectionality) {
         this.stepDistance = this._step;
     }
 
@@ -891,6 +891,7 @@ export class IgxSliderComponent implements
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._lowerValue !== adjustedValue) {
             this._lowerValue = adjustedValue;
+            this.lowerValueChange.emit(this._lowerValue);
             this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
@@ -929,6 +930,7 @@ export class IgxSliderComponent implements
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._upperValue !== adjustedValue) {
             this._upperValue = adjustedValue;
+            this.upperValueChange.emit(this._upperValue);
             this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
@@ -1124,28 +1126,26 @@ export class IgxSliderComponent implements
 
         if (this.isRange) {
             if (thumbType === SliderHandle.FROM) {
-                const newLower = this.lowerValue + value;
-                if (newLower >= this.lowerBound && newLower <= this.upperValue) {
-                    this._lowerValue = newLower;
-                    this.lowerValueChange.emit(this._lowerValue);
+                if (this.lowerValue + value > this.upperValue) {
+                    this.upperValue = this.lowerValue + value;
                 }
+                this.lowerValue += value;
             } else {
-                const newUpper = this.upperValue + value;
-                if (newUpper <= this.upperBound && newUpper >= this.lowerValue) {
-                    this._upperValue = newUpper;
-                    this.upperValueChange.emit(this._upperValue);
+                if (this.upperValue + value < this.lowerValue) {
+                    this.lowerValue = this.upperValue + value;
                 }
+                this.upperValue += value;
             }
 
             const newVal: IRangeSliderValue = {
-                lower: this._lowerValue,
-                upper: this._upperValue
+                lower: this.lowerValue,
+                upper: this.upperValue
             }
 
             // Swap the thumbs if a collision appears.
-            if (newVal.lower == newVal.upper) {
-                this.toggleThumb();
-            }
+            // if (newVal.lower == newVal.upper) {
+            //     this.toggleThumb();
+            // }
 
             this.value = newVal;
 
@@ -1237,11 +1237,11 @@ export class IgxSliderComponent implements
         return this._el.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
-    private toggleThumb() {
-        return this.thumbFrom.isActive ?
-            this.thumbTo.nativeElement.focus() :
-            this.thumbFrom.nativeElement.focus();
-    }
+    // private toggleThumb() {
+    //     return this.thumbFrom.isActive ?
+    //         this.thumbTo.nativeElement.focus() :
+    //         this.thumbFrom.nativeElement.focus();
+    // }
 
     private valueInRange(value, min = 0, max = 100) {
         return Math.max(Math.min(value, max), min);

@@ -39,16 +39,6 @@ export abstract class IgxGroupByAreaDirective {
     @HostBinding('class.igx-grid-grouparea')
     public defaultClass = true;
 
-    @HostBinding('class.igx-grid-grouparea--cosy')
-    public get cosyStyle() {
-        return this.density === 'cosy';
-    }
-
-    @HostBinding('class.igx-grid-grouparea--compact')
-    public get compactStyle() {
-        return this.density === 'compact';
-    }
-
     /** The parent grid containing the component. */
     @Input()
     public grid: FlatGridType | GridType;
@@ -193,7 +183,7 @@ export abstract class IgxGroupByAreaDirective {
 })
 export class IgxGroupByMetaPipe implements PipeTransform {
 
-    public transform(key: string, grid: GridType) {
+    public transform(key: string, grid: GridType, _pipeTrigger?: number) {
         const column = grid.getColumnByName(key);
         return { groupable: !!column?.groupable, title: column?.header || key };
     }

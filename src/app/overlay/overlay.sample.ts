@@ -14,7 +14,6 @@ import {
     ElasticPositionStrategy,
     IgxDragDirective,
     ContainerPositionStrategy,
-    IAnimationParams,
     IgxRadioComponent,
     IgxSwitchComponent,
     IgxInputGroupComponent,
@@ -24,6 +23,7 @@ import {
     IgxRippleDirective,
     IgxDropDownItemComponent
 } from 'igniteui-angular';
+import { IAnimationParams } from 'igniteui-angular/animations';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector

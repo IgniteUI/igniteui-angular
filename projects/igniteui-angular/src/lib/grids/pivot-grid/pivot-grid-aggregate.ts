@@ -1,25 +1,8 @@
-import { IGridResourceStrings } from '../../core/i18n/grid-resources';
-import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxTimeSummaryOperand } from '../summaries/grid-summary';
 import { IPivotAggregator } from './pivot-grid.interface';
 
 
 export class IgxPivotAggregate {
-    private static _resourceStrings = CurrentResourceStrings.GridResStrings;
-    /**
-     * Gets/Sets the resource strings.
-     *
-     * @remarks
-     * By default it uses EN resources.
-     */
-     public static set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    public static get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings;
-    }
-
     /**
      * Gets array with default aggregator function for base aggregation.
      * ```typescript
@@ -31,7 +14,7 @@ export class IgxPivotAggregate {
     public static aggregators(): Array<IPivotAggregator> {
         return [{
             key: 'COUNT',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_count,
+            label: 'Count',
             aggregator: IgxPivotAggregate.count
         }];
     }
@@ -64,24 +47,24 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'MIN',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_min,
+            label: 'Minimum',
             aggregator: IgxPivotNumericAggregate.min
         });
         result.push({
             key: 'MAX',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_max,
+            label: 'Maximum',
             aggregator: IgxPivotNumericAggregate.max
         });
 
         result.push({
             key: 'SUM',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_sum,
+            label: 'Sum',
             aggregator: IgxPivotNumericAggregate.sum
         });
 
         result.push({
             key: 'AVG',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_avg,
+            label: 'Average',
             aggregator: IgxPivotNumericAggregate.average
         });
         return result;
@@ -154,12 +137,12 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'LATEST',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_date_latest,
+            label: 'Latest Date',
             aggregator: IgxPivotDateAggregate.latest
         });
         result.push({
             key: 'EARLIEST',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_date_earliest,
+            label: 'Earliest Date',
             aggregator: IgxPivotDateAggregate.earliest
         });
         return result;
@@ -205,12 +188,12 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
         result = result.concat(super.aggregators());
         result.push({
             key: 'LATEST',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_time_latest,
+            label: 'Latest Time',
             aggregator: IgxPivotTimeAggregate.latestTime
         });
         result.push({
             key: 'EARLIEST',
-            label: this.resourceStrings.igx_grid_pivot_aggregate_time_earliest,
+            label: 'Earliest Time',
             aggregator: IgxPivotTimeAggregate.earliestTime
         });
         return result;

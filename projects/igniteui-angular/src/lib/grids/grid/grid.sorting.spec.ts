@@ -4,7 +4,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent } from '../../test-utils/grid-samples.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { CellType } from '../common/grid.interface';
@@ -153,7 +153,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual(new Date('2017-06-19T11:43:07.714Z').getTime());
         });
 
-        it('Should sort grid by date column', () => {
+        it('Should sort grid by datetime column', () => {
             fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
             fixture.componentInstance.data = SampleTestData.personJobDataFull().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
@@ -189,6 +189,25 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(5, currentColumn).value.toISOString()).toEqual('2008-12-18T11:23:17.714Z');
             expect(grid.getCellByColumn(4, currentColumn).value.toISOString()).toEqual('2011-11-28T11:23:17.714Z');
             expect(grid.getCellByColumn(0, currentColumn).value.toISOString()).toEqual('2017-06-19T11:43:07.714Z');
+        });
+
+        it('Should not mutate original data when sorting date column', () => {
+            fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
+            fixture.componentInstance.data = SampleTestData.personJobDataFull().map(rec => {
+                return Object.assign({}, { ...rec, HireDate: new Date(rec.HireDate) });
+            });
+            fixture.detectChanges();
+
+            grid = fixture.componentInstance.grid;
+            const hireDateCol = grid.columns.findIndex(col => col.field === "HireDate");
+            grid.columns[hireDateCol].dataType = 'date';
+            fixture.detectChanges();
+
+            grid.sort({ fieldName: 'HireDate', dir: SortingDirection.Asc });
+            fixture.detectChanges();
+
+            const timeParts = (date: Date) => date.getHours() + date.getMinutes() + date.getSeconds() + date.getMinutes();
+            expect(grid.data.every(rec => timeParts(rec.HireDate) === 0)).toEqual(false);
         });
 
         it('Should not sort grid when trying to sort by invalid column', () => {
@@ -372,16 +391,16 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
             grid.sortingExpressions = [
                 {
-                  dir: SortingDirection.Asc,
-                  fieldName: 'ID',
-                  strategy: new SortByAnotherColumnComponent,
+                    dir: SortingDirection.Asc,
+                    fieldName: 'ID',
+                    strategy: new SortByAnotherColumnComponent,
                 },
                 {
-                  dir: SortingDirection.Asc,
-                  fieldName: 'LastName',
-                  strategy: DefaultSortingStrategy.instance(),
+                    dir: SortingDirection.Asc,
+                    fieldName: 'LastName',
+                    strategy: DefaultSortingStrategy.instance(),
                 },
-              ];
+            ];
             fixture.detectChanges();
             expect(grid.getCellByKey(6, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(7, 'LastName').row.index);
             expect(grid.getCellByKey(4, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
@@ -636,7 +655,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const headerLastName = GridFunctions.getColumnHeader(fieldLastName, fixture, grid);
             let icon = GridFunctions.getHeaderSortIcon(header);
 
-            grid.sortingOptions = {mode: 'single'};
+            grid.sortingOptions = { mode: 'single' };
             fixture.detectChanges();
 
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
@@ -668,7 +687,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const header = GridFunctions.getColumnHeader(fieldName, fixture, grid);
             const headerLastName = GridFunctions.getColumnHeader(fieldLastName, fixture, grid);
 
-            grid.sortingOptions = {mode: 'single'};
+            grid.sortingOptions = { mode: 'single' };
             fixture.detectChanges();
 
             GridFunctions.clickHeaderSortIcon(header);
@@ -682,6 +701,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(GridFunctions.getColumnSortingIndex(headerLastName)).toBeNull();
+            expect(grid.sortingExpressions.length).toBe(1);
+        }));
+
+        it('should not clear sortingExpressions when setting sortingOptions on init. ', fakeAsync(() => {
+            fixture = TestBed.createComponent(SortOnInitComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
             expect(grid.sortingExpressions.length).toBe(1);
         }));
     });

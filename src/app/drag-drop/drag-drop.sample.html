@@ -1,5 +1,5 @@
 <section class="sample-content">
-    <article class="sample-column">
+    <article class="sample-row">
         <h4 class="sample-title">No ghost dragging:</h4>
         <div class="dragRow">
             <div style="width: 500px; height: 300px;">
@@ -25,12 +25,12 @@
         <h4 class="sample-title">Ghost and base templating:</h4>
         <div class="dragRow">
             <div style="width: 500px; height: 300px;">
-                <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
+                <div [igxDrag]="{ id: 'customGhost'}" [ghostClass]="'customGhost'" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
                     [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                     (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                     <span *ngIf="!customDragged">Drag me</span>
                     <ng-template #dragGhost>
-                        <div class="customGhost">
+                        <div>
                             <span *ngIf="!ghostInDropArea">Weeeee</span>
                             <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
                             <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
@@ -84,6 +84,26 @@
                 <div class="igx-dialog__window-actions">
                     <button igxButton="flat" type="button" igxRipple (click)="toggleForm.close()"> Cancel </button>
                     <button igxButton="flat" type="button" igxRipple> Sign In </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h4 class="sample-title">Nested Drag Handle:</h4>
+        <div class="rootList movieListItem" [igxDrag]="{ dragged: false }" [ghost]="true" (dragClick)="dragClick()" (dragEnd)="dragGhostAnimOrigin($event)">
+            <div>
+                <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                <span>Movies list</span>
+            </div>
+            <div class="categoryList movieListItem" *ngFor="let category of categoriesNotes" [igxDrag]="{ dragged: false }" [ghost]="true" (dragEnd)="dragGhostAnimOrigin($event)">
+                <div>
+                    <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                    <span>{{category.text}}</span>
+                </div>
+                <div class="movieListItem" *ngFor="let note of getCategoryMovies(category.text)" [igxDrag]="{ dragged: false }" [ghost]="true" (dragEnd)="dragGhostAnimOrigin($event)">
+                    <div>
+                        <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                        <span>{{note.text}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,6 +193,21 @@
             <button igxButton="raised" igxRipple (click)="toOriginGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
             <button igxButton="raised" igxRipple (click)="toLocationGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
         </div>
+
+        <p>Ghost dragging with host - transition to location:</p>
+        <div [style.height.px]="100">
+            <div #dragGhostAnimHost [igxDrag]="{ id: 'customGhostAnimHostXY'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate" [ghostHost]="fixedHost"
+                [ngClass]="customDraggedAnimHostXY ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                (dragStart)="customDraggedAnimHostXY = true" (dragEnd)="dragGhostAnimXY()" (transitioned)="customDraggedAnimHostXY = false">
+                <span *ngIf="!customDraggedAnimHostXY">Drag me</span>
+            </div>
+        </div>
+        <div>
+            <button igxButton="raised" igxRipple (click)="toOriginGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+            <button igxButton="raised" igxRipple (click)="toLocationGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+        </div>
+        <!-- In order to test the ghostHost with window scroll position, set scroll to the body as well -->
+        <div #fixedHost style="position: fixed; padding-top: 100px;"></div>
     </article>
 </section>
 <hr [style.width]="'100%'">
@@ -189,6 +224,41 @@
             </div>
         </div>
     </article>
+</section>
+<hr [style.width]="'100%'">
+<section>
+    <div>
+        <h4 class="sample-title">Multi selection row drag with custom ghost:</h4>
+        <span>From</span><br/>
+        <div id="fromDiv" class="rowsContainer scrollContainer">
+            <div igxDrag
+                *ngFor="let item of sourceRows"
+                [id]="item.name"
+                [ngClass]="{'lightblue' : item.selected, 'white': !item.selected}"
+                (click)="rowClicked($event)"
+                (dragStart)="dragStartHandler($event)"
+                [ghostTemplate]="customGhost">
+                    <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <span>To</span><br/>
+        <div id="toDiv" class="rowsContainer scrollContainer" igxDrop (dropped)="onSelectRowDropped()">
+            <div *ngFor="let item of targetRows">
+                <span>{{ item.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #customGhost>
+        <div class="dragGhost">
+            <span *ngFor="let row of selectedRows">
+                {{ row.name }}
+            </span>
+        </div>
+    </ng-template>
 </section>
 <hr [style.width]="'100%'">
 <section class="sample-content">

@@ -211,6 +211,46 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('あんｓ');
     }));
 
+    it('Should move the cursor to the next character if the same character is typed', fakeAsync(() => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.componentInstance.mask = '00/00/0000';
+        fixture.detectChanges();
+        tick();
+
+        const input = fixture.componentInstance.input;
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        tick();
+
+        input.nativeElement.value = '22222222';
+        fixture.detectChanges();
+        input.nativeElement.dispatchEvent(new Event('input'));
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        tick();
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('22/22/2222');
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        tick();
+
+        const target = fixture.debugElement.query(By.css('input'));
+        target.triggerEventHandler('focus', {});
+        fixture.detectChanges();
+
+        UIInteractions.simulatePaste('2', target, 0, 1);
+        fixture.detectChanges();
+        tick();
+
+        target.triggerEventHandler('blur', { target: input.nativeElement });
+        tick();
+        fixture.detectChanges();
+
+        expect(input.nativeElement.selectionEnd).toEqual(1);
+    }));
+
     it('Should handle the input of invalid values', fakeAsync(() => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
@@ -628,6 +668,7 @@ export class DisplayFormatPipe implements PipeTransform {
     </igx-input-group>
     `,
     standalone: true,
+    selector: 'igx-def-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DefMaskComponent {
@@ -646,6 +687,7 @@ class DefMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-mask-test',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskComponent {
@@ -664,6 +706,7 @@ class MaskComponent {
                     <input #input1 igxInput [ngModel]="value"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-incl-literals',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class IncludeLiteralsComponent {
@@ -682,6 +725,7 @@ class IncludeLiteralsComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-digit-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitSpaceMaskComponent {
@@ -697,6 +741,7 @@ class DigitSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-digital-plus-minus-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitPlusMinusMaskComponent {
@@ -712,6 +757,7 @@ class DigitPlusMinusMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-letter-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class LetterSpaceMaskComponent {
@@ -727,6 +773,7 @@ class LetterSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-alphanum-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AlphanumSpaceMaskComponent {
@@ -744,6 +791,7 @@ class AlphanumSpaceMaskComponent {
     </igx-input-group>
     `,
     standalone: true,
+    selector: 'igx-any-char-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AnyCharMaskComponent {

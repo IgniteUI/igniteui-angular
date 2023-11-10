@@ -9,7 +9,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    booleanAttribute
 } from '@angular/core';
 import { DisplayDensity } from '../../core/density';
 import { flatten } from '../../core/utils';
@@ -57,7 +58,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public activeDescendant: string;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hasMRL: boolean;
 
     @Input()
@@ -118,7 +119,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
-    public headerContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
+    public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     public get headerForOf() {
         return this.headerContainer;
@@ -201,6 +202,13 @@ export class IgxGridHeaderRowComponent implements DoCheck {
      */
     public ngDoCheck() {
         this.cdr.markForCheck();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public scroll(event: Event) {
+        this.grid.preventHeaderScroll(event);
     }
 
     public headerRowSelection(event: MouseEvent) {

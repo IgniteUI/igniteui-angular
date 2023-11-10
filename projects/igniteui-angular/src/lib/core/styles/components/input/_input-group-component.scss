@@ -5,7 +5,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-input-group) {
-        @include sizable();
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -312,14 +311,6 @@
             @include e(file-input) {
                 @extend %form-group-input--disabled !optional;
             }
-        }
-
-        @include m(cosy) {
-            @extend %form-group-display--cosy !optional;
-        }
-
-        @include m(compact) {
-            @extend %form-group-display--compact !optional;
         }
 
         // Type box START
@@ -630,6 +621,12 @@
             }
         }
 
+        @include mx(fluent, textarea-group) {
+            @include e(bundle) {
+                @extend %form-group-bundle-fluent--textarea !optional;
+            }
+        }
+
         @include mx(fluent, focused) {
             @include e(bundle-start) {
                 @extend %form-group-bundle-start--fluent--focused !optional;
@@ -651,6 +648,18 @@
         @include mx(fluent, focused, textarea-group) {
             @include e(hint) {
                 @extend %form-group-helper--textarea--fluent--focused !optional;
+            }
+        }
+
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-start) {
+                @extend %form-group-bundle-textarea-start--fluent !optional;
+            }
+        }
+
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-end) {
+                @extend %form-group-bundle-textarea-end--fluent !optional;
             }
         }
 
@@ -872,6 +881,10 @@
         }
 
         @include mx(bootstrap, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle--bootstrap-focused !optional;
+            }
+
             @include e(input) {
                 @extend %bootstrap-input--focus !optional;
             }
@@ -948,6 +961,12 @@
                 &:hover {
                     @extend %bootstrap-input--error !optional;
                 }
+            }
+        }
+
+        @include mx(bootstrap, textarea-group) {
+            @include e(bundle) {
+                @extend %form-group-bundle-bootstrap--textarea !optional;
             }
         }
 

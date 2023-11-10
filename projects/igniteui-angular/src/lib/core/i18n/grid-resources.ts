@@ -87,6 +87,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_currency_filter?: string;
     igx_grid_excel_custom_filter?: string;
     igx_grid_excel_no_matches?: string;
+    igx_grid_excel_matches_count?: string;
     igx_grid_advanced_filter_title?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
@@ -162,7 +163,6 @@ export interface IGridResourceStrings {
     igx_grid_max_length_validation_error?: string;
     igx_grid_email_validation_error?: string;
     igx_grid_pattern_validation_error?: string;
-    igx_grid_pivot_no_aggregator?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -254,6 +254,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_currency_filter: 'Currency filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
     igx_grid_excel_no_matches: 'No matches',
+    igx_grid_excel_matches_count: '{0} matches.',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',
@@ -328,6 +329,5 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_min_length_validation_error: 'Entry should be at least {0} character(s) long',
     igx_grid_max_length_validation_error: 'Entry should be no more than {0} character(s) long',
     igx_grid_email_validation_error: 'A valid email address should be entered',
-    igx_grid_pattern_validation_error: 'Entry does not match the required pattern',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_pattern_validation_error: 'Entry does not match the required pattern'
 };

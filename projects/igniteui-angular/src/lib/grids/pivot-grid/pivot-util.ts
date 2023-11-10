@@ -1,4 +1,3 @@
-import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -185,11 +184,13 @@ export class PivotUtil {
 
     public static flatten(arr, lvl = 0) {
         const newArr = arr.reduce((acc, item) => {
-            item.level = lvl;
-            acc.push(item);
-            if (item.childLevel) {
-                item.expandable = true;
-                acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+            if (item) {
+                item.level = lvl;
+                acc.push(item);
+                if (item.childLevel) {
+                    item.expandable = true;
+                    acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+                }
             }
             return acc;
         }, []);
@@ -235,7 +236,7 @@ export class PivotUtil {
         for (const pivotValue of values) {
             const aggregator = PivotUtil.getAggregatorForType(pivotValue.aggregate, pivotValue.dataType);
             if (!aggregator) {
-                throw CurrentResourceStrings.GridResStrings.igx_grid_pivot_no_aggregator.replace("{0}", pivotValue.member);
+                throw `No valid aggregator found for ${pivotValue.member}. Please set either a valid aggregatorName or aggregator`;
             }
             result[pivotValue.member] = aggregator(records.map(r => r[pivotValue.member]), records);
         }

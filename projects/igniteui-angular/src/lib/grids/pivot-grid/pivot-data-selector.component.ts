@@ -6,10 +6,10 @@ import {
     HostBinding,
     Input,
     Output,
-    Renderer2
+    Renderer2,
+    booleanAttribute
 } from "@angular/core";
 import { first } from "rxjs/operators";
-import { fadeIn, fadeOut } from "../../animations/fade";
 import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
@@ -47,6 +47,7 @@ import { IgxInputDirective } from "../../directives/input/input.directive";
 import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
 import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 interface IDataSelectorPanel {
     name: string;
@@ -102,7 +103,7 @@ export class IgxPivotDataSelectorComponent {
      * <igx-pivot-data-selector [grid]="grid1" [(columnsExpanded)]="columnsPanelState"></igx-pivot-data-selector>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public columnsExpanded = true;
 
     /**
@@ -127,7 +128,7 @@ export class IgxPivotDataSelectorComponent {
      * <igx-pivot-data-selector [grid]="grid1" [(rowsExpanded)]="rowsPanelState"></igx-pivot-data-selector>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public rowsExpanded = true;
 
     /**
@@ -152,7 +153,7 @@ export class IgxPivotDataSelectorComponent {
      * <igx-pivot-data-selector [grid]="grid1" [(filtersExpanded)]="filtersPanelState"></igx-pivot-data-selector>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public filtersExpanded = true;
 
     /**
@@ -177,7 +178,7 @@ export class IgxPivotDataSelectorComponent {
      * <igx-pivot-data-selector [grid]="grid1" [(valuesExpanded)]="valuesPanelState"></igx-pivot-data-selector>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public valuesExpanded = true;
 
     /**
@@ -232,7 +233,7 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public dropAllowed: boolean;
     /** @hidden @internal */
-    public get dims() : IPivotDimension[] {
+    public get dims(): IPivotDimension[] {
         return this._grid?.allDimensions || [];
     }
     /** @hidden @internal */
@@ -240,7 +241,7 @@ export class IgxPivotDataSelectorComponent {
         return this._grid?.pivotConfiguration.values || [];
     }
 
-    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
+    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal
@@ -628,7 +629,7 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public getPanelCollapsed(panelType: PivotDimensionType): boolean {
-        switch(panelType) {
+        switch (panelType) {
             case PivotDimensionType.Column:
                 return !this.columnsExpanded;
             case PivotDimensionType.Filter:
@@ -645,7 +646,7 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onCollapseChange(value: boolean, panelType: PivotDimensionType): void {
-        switch(panelType) {
+        switch (panelType) {
             case PivotDimensionType.Column:
                 this.columnsExpanded = !value;
                 this.columnsExpandedChange.emit(this.columnsExpanded);

@@ -10,7 +10,8 @@ import {
     Optional,
     Output,
     ViewChild,
-    AfterContentInit
+    AfterContentInit,
+    booleanAttribute
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,10 +20,10 @@ import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.d
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
-import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxFocusTrapDirective } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let DIALOG_ID = 0;
 /**
@@ -35,7 +36,7 @@ let DIALOG_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="form.open()">Show Dialog</button>
+ * <button type="button" igxButton (click)="form.open()">Show Dialog</button>
  * <igx-dialog #form title="Sign In" rightButtonLabel="OK">
  *   <div>
  *     <igx-input-group>
@@ -85,7 +86,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [isModal]="false" ></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isModal() {
         return this._isModal;
     }
@@ -101,7 +102,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [closeOnEscape]="false" ></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get closeOnEscape() {
         return this._closeOnEscape;
     }
@@ -118,7 +119,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog focusTrap="false""></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public focusTrap = true;
 
     /**
@@ -245,7 +246,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * </igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get closeOnOutsideSelect() {
         return this._closeOnOutsideSelect;
     }
@@ -405,9 +406,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [(isOpen)]='model.isOpen'></igx-dialog>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isOpen() {
-        return !this.toggleRef.collapsed;
+        return this.toggleRef ? !this.toggleRef.collapsed : false;
     }
     public set isOpen(value: boolean) {
         if (value !== this.isOpen) {
@@ -505,7 +506,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -527,13 +528,13 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
     public close() {
         // `closing` will emit from `toggleRef.closing` subscription
-        this.toggleRef.close();
+        this.toggleRef?.close();
     }
 
 
@@ -542,7 +543,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */

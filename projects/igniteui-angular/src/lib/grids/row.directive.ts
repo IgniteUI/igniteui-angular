@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     DoCheck,
@@ -85,7 +86,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * this.grid.selectedRows[0].pinned = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-grid__tr--disabled')
     public disabled = false;
@@ -166,9 +167,9 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * @hidden
      */
     @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
-    public _virtDirRow: QueryList<IgxGridForOfDirective<any>>;
+    public _virtDirRow: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
-    public get virtDirRow(): IgxGridForOfDirective<any> {
+    public get virtDirRow(): IgxGridForOfDirective<ColumnType, ColumnType[]> {
         return this._virtDirRow ? this._virtDirRow.first : null;
     }
 
@@ -226,7 +227,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-     public get columns(): ColumnType[] {
+    public get columns(): ColumnType[] {
         return this.grid.visibleColumns;
     }
 

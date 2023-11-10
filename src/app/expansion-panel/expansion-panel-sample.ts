@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ExpansionPanelHeaderIconPosition, growVerIn, growVerOut, IExpansionPanelEventArgs, IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective } from 'igniteui-angular';
+import { ExpansionPanelHeaderIconPosition, IExpansionPanelEventArgs, IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective } from 'igniteui-angular';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 
 

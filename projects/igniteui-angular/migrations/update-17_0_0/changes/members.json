@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "newSelection",
+            "replaceWith": "newValue",
+            "definedIn": [
+                "IComboSelectionChangingEventArgs",
+                "ISimpleComboSelectionChangingEventArgs"
+            ]
+        },
+        {
+            "member": "oldSelection",
+            "replaceWith": "oldValue",
+            "definedIn": [
+                "IComboSelectionChangingEventArgs",
+                "ISimpleComboSelectionChangingEventArgs"
+            ]
+        }
+    ]
+}

@@ -4,9 +4,9 @@
             [id]="expression.fieldName"
             [title]="(expression.fieldName | igxGroupByMeta:grid).title"
             [displayDensity]="grid.displayDensity"
-            [removable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
-            [draggable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
-            [disabled]="!(expression.fieldName | igxGroupByMeta:grid).groupable"
+            [removable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
+            [draggable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
+            [disabled]="!(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             (keyDown)="handleKeyDown($event.owner.id, $event.originalEvent)"
             (remove)="clearGrouping($event.owner.id)"
             (chipClick)="handleClick(expression.fieldName)"
@@ -19,7 +19,8 @@
             <igx-icon [hidden]="(last && !dropAreaVisible)">arrow_forward</igx-icon>
         </span>
     </ng-container>
-    <div igxGroupAreaDrop class="igx-drop-area{{ density !== 'comfortable' ? '--' + density : ''}}"
+    <div igxGroupAreaDrop
+        class="igx-drop-area"
         [attr.gridId]="grid.id"
         [hidden]="!dropAreaVisible"
         (igxDrop)="onDragDrop($event)"

@@ -150,3 +150,36 @@
     width: 2000px;
     background-color: grey
 }
+
+.rootList {
+    width: 300px;
+    height: auto;
+}
+
+.movieListItem {
+    padding: 5px;
+    margin-top: 5px;
+    margin-left: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px 0 gray;
+    background-color: rgba(232, 232, 232, .5);
+}
+
+.white {
+    background-color: white;
+}
+
+.lightblue {
+    background-color: lightblue;
+}
+
+.rowsContainer {
+    margin: 1em;
+    height: 100px;
+    width: 50%;
+    border: 1px solid gray;
+}
+
+.scrollContainer{
+    overflow: auto;
+}

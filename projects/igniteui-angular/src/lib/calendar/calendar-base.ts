@@ -1,13 +1,13 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollMonth, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
 import { isDate, PlatformUtil } from '../core/utils';
-import { CurrentResourceStrings } from '../core/i18n/resources';
-import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
+import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 /** @hidden @internal */
 @Directive({
@@ -19,14 +19,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
      * ```html
-     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
+     * <igx-calendar [hideOutsideDays]="true"></igx-calendar>
      * ```
      * ```typescript
      * let hideOutsideDays = this.calendar.hideOutsideDays;
      * ```
      */
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;
 
     /**
@@ -62,7 +62,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
     @Output()
-    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
+    public activeViewChanged = new EventEmitter<IgxCalendarView>();
 
     /**
      * @hidden
@@ -99,9 +99,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public shiftKey = false;
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public lastSelectedDate: Date;
 
     /**
@@ -192,8 +192,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+
     /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+    private _resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
      * @hidden
@@ -227,9 +228,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.CalendarResStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -485,10 +483,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public deselectMultipleInMonth(value: Date) {
         // deselect multiple dates from last clicked to shift clicked date (excluding)
         if (this.shiftKey) {
-            let start: Date;
-            let end: Date;
-
-            [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+            const [start, end] = this.lastSelectedDate.getTime() < value.getTime()
                 ? [this.lastSelectedDate, value]
                 : [value, this.lastSelectedDate];
 

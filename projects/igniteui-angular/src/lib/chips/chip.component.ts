@@ -12,16 +12,17 @@ import {
     TemplateRef,
     Inject,
     Optional,
-    OnDestroy
+    OnDestroy,
+    booleanAttribute
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
-import { IChipResourceStrings } from '../core/i18n/chip-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 export const IgxChipTypeVariant = mkenum({
     PRIMARY: 'primary',
@@ -165,7 +166,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public draggable = false;
 
     /**
@@ -177,7 +178,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [animateOnRelease]="false"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public animateOnRelease = true;
 
     /**
@@ -189,7 +190,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [hideBaseOnDrag]="false"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideBaseOnDrag = true;
 
     /**
@@ -201,7 +202,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public removable = false;
 
     /**
@@ -225,7 +226,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public selectable = false;
 
     /**
@@ -258,7 +259,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * ```
      */
     @HostBinding('class.igx-chip--disabled')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -275,7 +276,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * ```
      */
     @HostBinding('attr.aria-selected')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
     }
@@ -470,8 +471,8 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragOver)="chipOver($event)">
      * ```
      */
-     @Output()
-     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
+    @Output()
+    public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
@@ -514,14 +515,13 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
         return this.variant === IgxChipTypeVariant.DANGER;
     }
 
-    @HostBinding('class.igx-chip--cosy')
-    protected get isCosy() {
-        return this.displayDensity === 'cosy';
-    }
-
-    @HostBinding('class.igx-chip--compact')
-    protected get isCompact() {
-        return this.displayDensity === 'compact';
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('style.--component-size')
+    public get componentSize(): string {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -566,7 +566,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get removeButtonTemplate() {
-        if(!this.disabled) {
+        if (!this.disabled) {
             return this.removeIcon || this.defaultRemoveIcon;
         }
     }
@@ -583,8 +583,22 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @hidden
      * @internal
      */
-    public get ghostClass(): string {
-        return this.getComponentDensityClass('igx-chip__ghost');
+    public get ghostStyles() {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-small))',
+                };
+            case DisplayDensity.cosy:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-medium))',
+                };
+            case DisplayDensity.comfortable:
+            default:
+                return {
+                    '--component-size': 'var(--ig-size, var(--ig-size-large))',
+                };
+        }
     }
 
     /** @hidden @internal */
@@ -608,11 +622,11 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    private _resourceStrings = CurrentResourceStrings.ChipResStrings;
+    private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, ref);
     }
 
     /**

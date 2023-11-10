@@ -10,7 +10,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
+import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
@@ -22,6 +22,7 @@ import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-st
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { getComponentSize } from '../../core/utils';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -396,19 +397,19 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid']));
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
             hierarchicalGrid.displayDensity = DisplayDensity.cosy;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
             hierarchicalGrid.displayDensity = DisplayDensity.compact;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 
         it('should update child grid data when root grid data is changed.', () => {
@@ -455,6 +456,28 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(childGrid.data).toBe(newData2[0].childData);
+        });
+
+        it('should update already created child grid with new records added to the root data', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            let childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            fixture.componentInstance.data[0].childData = [...hierarchicalGrid.data[0].childData ?? [], { ID: 10, ProductName: 'New child' }];
+            fixture.componentInstance.data = [...fixture.componentInstance.data];
+            fixture.detectChanges();
+
+            childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            const length = fixture.componentInstance.data[0].childData.length;
+            const newRow = childGrid.gridAPI.get_row_by_index(length - 1) as IgxHierarchicalRowComponent;
+
+            expect(newRow).not.toBeUndefined();
+            expect(childGrid.data).toBe(fixture.componentInstance.data[0].childData);
         });
 
         it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {

@@ -1,7 +1,7 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -32,12 +32,16 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
-    oldSelection: any[];
+    oldValue: any[];
     /** An array containing the values that will be selected after this event */
+    newValue: any[];
+    /** An array containing the items that are currently selected */
+    oldSelection: any[];
+    /** An array containing the items that will be selected after this event */
     newSelection: any[];
-    /** An array containing the values that will be added to the selection (if any) */
+    /** An array containing the items that will be added to the selection (if any) */
     added: any[];
-    /** An array containing the values that will be removed from the selection (if any) */
+    /** An array containing the items that will be removed from the selection (if any) */
     removed: any[];
     /** The text that will be displayed in the combo text box */
     displayText: string;
@@ -121,13 +125,13 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+    OnDestroy, DoCheck, EditorProvider {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
      * When `false`, the combo's list item container will be focused instead
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
     /**
@@ -138,7 +142,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * <igx-combo [filterable]="false">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get filterable(): boolean {
         return this.filteringOptions.filterable;
     }
@@ -176,13 +180,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
 
-    /**
-     * @hidden @internal
-     */
-    public get inputEmpty(): boolean {
-        return !this.value && !this.placeholder;
-    }
-
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this.filteringOptions.filterable ? this._filteredData : this.data;
@@ -201,6 +198,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _prevInputValue = '';
+
+    private _displayText: string;
 
     constructor(
         elementRef: ElementRef,
@@ -260,7 +259,17 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, selection, true);
         this.cdr.markForCheck();
-        this._value = this.createDisplayText(this.selection, oldSelection);
+        this._displayValue = this.createDisplayText(this.selection, oldSelection);
+        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length) {
+            this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        }
+        super.ngDoCheck();
     }
 
     /**
@@ -415,15 +424,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = diffInSets(this.selectionService.get(this.id), newSelection);
-        const added = diffInSets(newSelection, this.selectionService.get(this.id));
-        const newSelectionAsArray = Array.from(newSelection);
-        const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
+    protected setSelection(selection: Set<any>, event?: Event): void {
+        const currentSelection = this.selectionService.get(this.id);
+        const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
+        const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
+        const newValue = Array.from(selection);
+        const oldValue = Array.from(currentSelection || []);
+        const newSelection = this.convertKeysToItems(newValue);
+        const oldSelection = this.convertKeysToItems(oldValue);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newValue), oldValue);
         const args: IComboSelectionChangingEventArgs = {
-            newSelection: newSelectionAsArray,
-            oldSelection: oldSelectionAsArray,
+            newValue,
+            oldValue,
+            newSelection,
+            oldSelection,
             added,
             removed,
             event,
@@ -433,28 +447,30 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         };
         this.selectionChanging.emit(args);
         if (!args.cancel) {
-            this.selectionService.select_items(this.id, args.newSelection, true);
+            this.selectionService.select_items(this.id, args.newValue, true);
+            this._value = args.newValue;
             if (displayText !== args.displayText) {
-                this._value = args.displayText;
+                this._displayValue = this._displayText = args.displayText;
             } else {
-                this._value = this.createDisplayText(args.newSelection, args.oldSelection);
+                this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newSelection);
+            this._onChangeCallback(args.newValue);
         } else if (this.isRemote) {
-            this.registerRemoteEntries(args.added, false);
+            this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
     }
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]) {
+        const selection = this.valueKey ? newSelection.map(item => item[this.valueKey]) : newSelection;
         return this.isRemote
-            ? this.getRemoteSelection(newSelection, oldSelection)
+            ? this.getRemoteSelection(selection, oldSelection)
             : this.concatDisplayText(newSelection);
     }
 
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
-            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.map(entry => entry[this.displayKey]).join(', ') :
             selection.join(', ');
         return value;
     }

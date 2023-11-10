@@ -1,6 +1,6 @@
 import {
     AfterContentChecked,
-    AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
+    AfterViewInit, booleanAttribute, ContentChildren, Directive, ElementRef, EventEmitter,
     Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
 } from '@angular/core';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
@@ -99,7 +99,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
      * <igx-date-picker [disabled]="'true'"></igx-date-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -284,7 +284,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
-        super(_displayDensityOptions || { displayDensity: 'comfortable' });
+        super(_displayDensityOptions || { displayDensity: 'comfortable' }, element);
         this.locale = this.locale || this._localeId;
     }
 

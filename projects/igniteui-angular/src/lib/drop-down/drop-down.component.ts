@@ -15,7 +15,8 @@ import {
     EventEmitter,
     Optional,
     Inject,
-    SimpleChanges
+    SimpleChanges,
+    booleanAttribute
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -122,7 +123,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public allowItemsFocus = false;
 
     /**
@@ -368,7 +369,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public onToggleContentAppended(_event: ToggleViewEventArgs) {
         if (!this.virtDir && this.selectedItem) {
-           this.scrollToItem(this.selectedItem);
+            this.scrollToItem(this.selectedItem);
         }
     }
 
@@ -524,7 +525,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 index: newSelection.index
             } as IgxDropDownItemBaseDirective;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
         this.selectionChanging.emit(args);
 
         if (!args.cancel) {
@@ -572,8 +573,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     protected isSelectionValid(selection: any): boolean {
         return selection === null
-        || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
-        || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
+            || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+            || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 
     protected scrollToItem(item: IgxDropDownItemBaseDirective) {
