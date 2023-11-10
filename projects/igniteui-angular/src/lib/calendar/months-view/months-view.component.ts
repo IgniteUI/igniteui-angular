@@ -8,7 +8,8 @@ import {
     ViewChildren,
     QueryList,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    AfterViewChecked
 } from '@angular/core';
 import { Calendar } from '../calendar';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -30,7 +31,7 @@ enum Direction {
     standalone: true,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
 })
-export class IgxMonthsViewComponent implements ControlValueAccessor {
+export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewChecked {
     /**
      * Sets/gets the `id` of the months view.
      * If not set, the `id` will have value `"igx-months-view-0"`.
@@ -303,11 +304,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         this._onChangeCallback(this.date);
     }
 
-    @HostListener('focusout')
-    public resetActiveMonth() {
-        this.activeMonth = this.date.getMonth();
-    }
-
     /**
      * Returns the locale representation of the month in the months view.
      *
@@ -368,7 +364,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
         if (!node) return;
 
-        const months = this.monthsRef.toArray();
         const _date = new Date(this.date.getFullYear(), this.activeMonth);
         const _delta = this._calendarModel.timedelta(_date, 'month', direction * delta);
 
@@ -376,8 +371,16 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             this.pageChanged.emit(_delta);
         }
 
-        months[_delta.getMonth()].nativeElement.focus();
         this.activeMonth = _delta.getMonth();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewChecked() {
+        const months = this.monthsRef.toArray();
+        const idx = months.findIndex((month) => month.value.getMonth() === this.activeMonth);
+        months[idx].nativeElement.focus();
     }
 
     /**
