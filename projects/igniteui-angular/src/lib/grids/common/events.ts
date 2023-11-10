@@ -30,6 +30,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
+/** Represents event arguments related to grid editing completion. */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 17.0.0
@@ -52,6 +53,10 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * The only case rowData (of the current object) is used directly, is when there is no rowEditing or transactions enabled
      */
     rowData: any;
+    /**
+     * Represents the previous (before editing) value of the edited cell.
+     * It's used when the event has been stoped/exited.
+     */
     oldValue: any;
     /**
      * Optional
