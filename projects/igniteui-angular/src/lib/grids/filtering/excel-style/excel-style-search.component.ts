@@ -788,7 +788,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const dataItem = this.displayedListData[this.focusedItem.index];
         const args: IChangeCheckboxEventArgs = {
             checked: !dataItem.isSelected,
-            checkbox: this.checkboxes.find((x,id) => id === this.focusedItem.index)
+            checkbox: this.checkboxes.find(x => x.value === dataItem)
         }
         this.onCheckboxChange(args);
     }
