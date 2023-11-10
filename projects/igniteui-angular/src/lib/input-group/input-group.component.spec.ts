@@ -434,6 +434,7 @@ class InputGroupDisabledByDefaultComponent {
                 </igx-input-group>`,
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }],
     standalone: true,
+    selector: 'igx-input-group-cosy-display-density',
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupCosyDisplayDensityComponent {
@@ -446,6 +447,7 @@ class InputGroupCosyDisplayDensityComponent {
                 </igx-input-group>`,
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     standalone: true,
+    selector: 'igx-input-group-compact-display-density',
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupCompactDisplayDensityComponent {

@@ -2,6 +2,7 @@ import {
     AfterContentChecked,
     AfterViewChecked,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,
@@ -102,21 +103,6 @@ export enum DataTypes {
     PRIMARYKEY = 'valueKey'
 }
 
-export enum IgxComboState {
-    /**
-     * Combo with initial state.
-     */
-    INITIAL = IgxInputState.INITIAL,
-    /**
-     * Combo with valid state.
-     */
-    VALID = IgxInputState.VALID,
-    /**
-     * Combo with invalid state.
-     */
-    INVALID = IgxInputState.INVALID
-}
-
 /** The filtering criteria to be applied on data search */
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
@@ -143,7 +129,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
 
     /**
@@ -212,7 +198,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [allowCustomValues]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public allowCustomValues = false;
 
     /**
@@ -418,8 +404,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
      * ```
      */
-     @Input()
-     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
+    @Input()
+    public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
      * An @Input property that set aria-labelledby attribute
@@ -440,7 +426,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [disabled]="'true'">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -791,7 +777,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let valid = this.combo.valid;
      * ```
      */
-    public get valid(): IgxComboState {
+    public get valid(): IgxInputState {
         return this._valid;
     }
 
@@ -800,16 +786,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * ```typescript
      * // set
-     * this.combo.valid = IgxComboState.INVALID;
+     * this.combo.valid = IgxInputState.INVALID;
      * ```
      */
-    public set valid(valid: IgxComboState) {
+    public set valid(valid: IgxInputState) {
         this._valid = valid;
-        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
+        this.comboInput.valid = valid;
     }
 
     /**
-     * The value of the selected item in the combo
+     * The value of the combo
      *
      * ```typescript
      * // get
@@ -828,8 +814,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let comboDisplayValue = this.combo.displayValue;
      * ```
      */
-    public get displayValue(): string[] {
-        return this._displayValue ? this._displayValue.split(', ') : [];
+    public get displayValue(): string {
+        return this._displayValue;
     }
 
     /**
@@ -924,13 +910,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
 
-     @Input()
-     public get filteringOptions(): IComboFilteringOptions {
-         return this._filteringOptions || this._defaultFilteringOptions;
-     }
-     public set filteringOptions(value: IComboFilteringOptions) {
-         this._filteringOptions = value;
-     }
+    @Input()
+    public get filteringOptions(): IComboFilteringOptions {
+        return this._filteringOptions || this._defaultFilteringOptions;
+    }
+    public set filteringOptions(value: IComboFilteringOptions) {
+        this._filteringOptions = value;
+    }
     protected _data = [];
     protected _value = [];
     protected _displayValue = '';
@@ -940,7 +926,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _displayKey: string;
     protected _remoteSelection = {};
     protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
-    protected _valid = IgxComboState.INITIAL;
+    protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
     protected _onTouchedCallback: () => void = noop;
@@ -1040,7 +1026,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
-        if (!this.collapsed){
+        if (!this.collapsed) {
             this.setActiveDescendant();
         }
     }
@@ -1090,7 +1076,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let mySelection = this.combo.selection;
      * ```
      */
-    public get selection() {
+    public get selection(): any[] {
         const items = Array.from(this.selectionService.get(this.id));
         return this.convertKeysToItems(items);
     }
@@ -1249,15 +1235,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.collapsed) {
             this._onTouchedCallback();
             if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxComboState.INVALID;
+                this.valid = IgxInputState.INVALID;
             } else {
-                this.valid = IgxComboState.INITIAL;
+                this.valid = IgxInputState.INITIAL;
             }
         }
     }
 
     /** @hidden @internal */
-    public setActiveDescendant() : void  {
+    public setActiveDescendant(): void {
         this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
@@ -1269,13 +1255,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected onStatusChanged = () => {
         if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
             if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-            this.valid = IgxComboState.INITIAL;
+            this.valid = IgxInputState.INITIAL;
         }
         this.manageRequiredAsterisk();
     };
@@ -1294,11 +1280,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             return keys;
         }
 
-        // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => isNaNvalue(key)
-            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
-            : this.data.find(entry => entry[this.valueKey] === key))
-        .filter(e => e !== undefined);
+        return keys.map(key => {
+            const item = isNaNvalue(key)
+                ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
+                : this.data.find(entry => entry[this.valueKey] === key);
+
+            return item !== undefined ? item : { [this.valueKey]: key };
+        });
     }
 
     protected checkMatch(): void {

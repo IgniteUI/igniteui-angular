@@ -1,7 +1,7 @@
 import {
     Directive, ElementRef, EventEmitter, HostListener,
     Output, PipeTransform, Renderer2,
-    Input, OnInit, AfterViewChecked,
+    Input, OnInit, AfterViewChecked, booleanAttribute,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
@@ -52,7 +52,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * <input [includeLiterals] = "true">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public includeLiterals: boolean;
 
     /**

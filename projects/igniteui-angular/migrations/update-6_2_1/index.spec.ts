@@ -37,8 +37,7 @@ describe('Update 6.2.1', () => {
     $selected-chip-hover-background: gray
 );`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-06', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-06', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/style.scss'))
             .toEqual(
 `$dark-chip-theme: igx-chip-theme(

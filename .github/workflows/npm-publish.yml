@@ -18,7 +18,6 @@ jobs:
       - run: echo ${VERSION}
 
       - run: echo "NG_CLI_ANALYTICS=false" >> $GITHUB_ENV
-      - run: echo "NODE_OPTIONS='--max_old_space_size=4096'" >> $GITHUB_ENV
       - run: npm ci
 
       - name: Build igniteui-angular

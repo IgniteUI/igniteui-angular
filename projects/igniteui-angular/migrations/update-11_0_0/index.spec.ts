@@ -74,8 +74,7 @@ describe('Update to 11.0.0', () => {
         appTree.create(makeTemplate('toolbar'), basicTemplate);
 
         const tree = await runner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent(makeTemplate('toolbar'))
         ).toEqual(`<igx-grid>\n<igx-grid-toolbar></igx-grid-toolbar>\nLook, some content</igx-grid>`);
@@ -85,8 +84,7 @@ describe('Update to 11.0.0', () => {
         appTree.create(makeTemplate('toolbar'), bindingTemplate);
 
         const tree = await runner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent(makeTemplate('toolbar'))
         ).toEqual(`<igx-grid>\n<igx-grid-toolbar *ngIf="condition"></igx-grid-toolbar>\n</igx-grid>`);
@@ -96,8 +94,7 @@ describe('Update to 11.0.0', () => {
         appTree.create(makeTemplate('toolbar'), directiveTemplate);
 
         const tree = await runner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
         ).toEqual(`
@@ -119,8 +116,7 @@ describe('Update to 11.0.0', () => {
         appTree.create(makeTemplate('toolbar'), hierachicalBase);
 
         const tree = await runner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
         ).toEqual(`
@@ -139,8 +135,7 @@ describe('Update to 11.0.0', () => {
         appTree.create(makeTemplate('toolbar'), hierachicalBaseTemplate);
 
         const tree = await runner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
         expect(
             tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
         ).toEqual(`

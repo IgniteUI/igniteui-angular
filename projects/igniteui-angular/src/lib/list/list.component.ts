@@ -13,7 +13,7 @@ import {
     TemplateRef,
     ViewChild,
     Optional,
-    Inject, Directive
+    Inject, Directive, booleanAttribute
 } from '@angular/core';
 
 
@@ -70,7 +70,7 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
     selector: '[igxListThumbnail]',
     standalone: true
 })
-export class IgxListThumbnailDirective {}
+export class IgxListThumbnailDirective { }
 
 /**
  * igxListAction is container for the List action
@@ -81,7 +81,7 @@ export class IgxListThumbnailDirective {}
     selector: '[igxListAction]',
     standalone: true
 })
-export class IgxListActionDirective {}
+export class IgxListActionDirective { }
 
 /**
  * igxListLine is container for the List text content
@@ -92,7 +92,7 @@ export class IgxListActionDirective {}
     selector: '[igxListLine]',
     standalone: true
 })
-export class IgxListLineDirective {}
+export class IgxListLineDirective { }
 
 /**
  * igxListLineTitle is a directive that add class to the target element
@@ -298,7 +298,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isLeftPanningAllowed = this.list.allowLeftPanning;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override allowLeftPanning = false;
 
     /**
@@ -315,7 +315,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isRightPanningAllowed = this.list.allowRightPanning;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override allowRightPanning = false;
 
     /**
@@ -333,7 +333,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isLoading = this.list.isLoading;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public isLoading = false;
 
     /**
@@ -403,8 +403,8 @@ export class IgxListComponent extends IgxListBaseDirective {
      * <igx-list (resetPan)="resetPan($event)"></igx-list>
      * ```
      */
-     @Output()
-     public override resetPan = new EventEmitter<IgxListComponent>();
+    @Output()
+    public override resetPan = new EventEmitter<IgxListComponent>();
 
     /**
      *
@@ -484,8 +484,10 @@ export class IgxListComponent extends IgxListBaseDirective {
         return null;
     }
 
+    private _role = 'list';
+
     /**
-     * Gets the `role` attribute value.
+     * Gets/Sets the `role` attribute value.
      *
      * @example
      * ```typescript
@@ -493,8 +495,13 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
     public get role() {
-        return 'list';
+        return this._role;
+    }
+
+    public set role(val: string) {
+        this._role = val;
     }
 
     /**
