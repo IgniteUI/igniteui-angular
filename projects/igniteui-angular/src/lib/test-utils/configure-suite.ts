@@ -1,5 +1,4 @@
 import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
@@ -25,7 +24,6 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     beforeAll(() => {
         testBed.resetTestingModule();
         testBed.resetTestingModule = () => testBed;
-        _resizerSub = resizeObserverIgnoreError();
     });
 
     if (configureAction) {
