@@ -39,8 +39,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-tabs: tabs-theme(

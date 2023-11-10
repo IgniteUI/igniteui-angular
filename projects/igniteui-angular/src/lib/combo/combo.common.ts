@@ -795,7 +795,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * The value of the selected item in the combo
+     * The value of the combo
      *
      * ```typescript
      * // get
@@ -814,8 +814,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let comboDisplayValue = this.combo.displayValue;
      * ```
      */
-    public get displayValue(): string[] {
-        return this._displayValue ? this._displayValue.split(', ') : [];
+    public get displayValue(): string {
+        return this._displayValue;
     }
 
     /**
@@ -1076,7 +1076,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let mySelection = this.combo.selection;
      * ```
      */
-    public get selection() {
+    public get selection(): any[] {
         const items = Array.from(this.selectionService.get(this.id));
         return this.convertKeysToItems(items);
     }

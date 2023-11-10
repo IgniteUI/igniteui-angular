@@ -32,8 +32,7 @@ describe('Update 6.0.0', () => {
             '<igx-tab-bar> <content> </igx-tab-bar>'
         );
 
-        const tree = await schematicRunner.runSchematicAsync('migration-01', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-01', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual('<igx-bottom-nav> <content> </igx-bottom-nav>');
     });
@@ -44,8 +43,7 @@ describe('Update 6.0.0', () => {
             `<tag attr igxForRemote="true" attr2><tag attr [igxForRemote]="true">`
         );
 
-        const tree = await schematicRunner.runSchematicAsync('migration-01', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-01', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual('<tag attr attr2><tag attr>');
     });
