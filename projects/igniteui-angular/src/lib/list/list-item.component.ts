@@ -132,7 +132,7 @@ export class IgxListItemComponent implements IListChild {
      */
     private lastPanDir = IgxListPanState.NONE;
 
-    private _role: string = '';
+    private _role: string;
 
     /**
      * Gets the `panState` of a `list item`.

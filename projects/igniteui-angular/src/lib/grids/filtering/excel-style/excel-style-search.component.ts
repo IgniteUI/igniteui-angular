@@ -7,7 +7,9 @@ import {
     Directive,
     OnDestroy,
     HostBinding,
-    Input
+    Input,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
@@ -117,6 +119,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
+    @ViewChildren(IgxCheckboxComponent)
+    protected checkboxes: QueryList<IgxCheckboxComponent>;
+    
     /**
      * @hidden @internal
      */
@@ -797,9 +802,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const dataItem = this.displayedListData[this.focusedItem.index];
         const args: IChangeCheckboxEventArgs = {
             checked: !dataItem.isSelected,
-            owner: {
-                value: dataItem
-            }
+            checkbox: this.checkboxes.find(x => x.value === dataItem)
         }
         this.onCheckboxChange(args);
     }
