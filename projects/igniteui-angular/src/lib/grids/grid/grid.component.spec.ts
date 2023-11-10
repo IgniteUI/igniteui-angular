@@ -804,7 +804,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent,
-                    IgxGridFixedContainerHeightComponent
+                    IgxGridFixedContainerHeightComponent,
+                    IgxGridColumnHeaderAutoSizeComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -1865,6 +1866,23 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(grid.columnList.get(0).width).toBe('50%');
         });
+
+        it('should correctly autosize column headers when the grid container has no data and is initially hidden and then shown', async () => {
+            const fix = TestBed.createComponent(IgxGridColumnHeaderAutoSizeComponent);
+            const grid = fix.componentInstance.grid;
+
+            //waiting for reqeustAnimationFrame to finish
+            await wait(17);
+            fix.detectChanges();
+
+            fix.componentInstance.gridContainerHidden = false;
+            await wait(17)
+            fix.detectChanges()
+
+            const calcWidth = parseInt(grid.columnList.first.calcWidth, 10)
+
+            expect(calcWidth).not.toBe(80);
+        });
     });
 
     describe('IgxGrid - API methods', () => {
@@ -2878,6 +2896,36 @@ export class IgxGridDefaultRenderingComponent {
             }
         }
     }
+}
+
+@Component({
+    template: `
+    <div [hidden]="gridContainerHidden">
+    <igx-grid #grid>
+      <igx-column
+        field="field1"
+        header="Field 1 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field2"
+        header="Field 2 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field3"
+        header="Field 3 Header"
+        width="auto"
+      ></igx-column>
+    </igx-grid>
+    </div>`,
+})
+export class IgxGridColumnHeaderAutoSizeComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public gridContainerHidden = true;
+
 }
 
 @Component({
