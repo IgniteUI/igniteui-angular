@@ -411,7 +411,7 @@ export class Calendar {
         // if the week number is greater than week 52
         if (weekNumber > 52) {
             // next year
-            let nextYear = new Date(date.getFullYear() + 1, 0, 1);
+            const nextYear = new Date(date.getFullYear() + 1, 0, 1);
             // first day of the next year
             let nextYearFirstDay = nextYear.getDay() - weekStart;
             nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
