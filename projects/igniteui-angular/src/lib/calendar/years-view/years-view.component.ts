@@ -9,14 +9,20 @@ import {
     Injectable,
     ViewChildren,
     QueryList,
-    booleanAttribute
+    booleanAttribute,
+    AfterViewChecked
 } from '@angular/core';
-import { range, Calendar } from '../calendar';
+import { Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
 import { noop } from 'rxjs';
 import { NgFor } from '@angular/common';
+
+enum Direction {
+    NEXT = 1,
+    PREV = -1
+}
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
@@ -42,7 +48,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     standalone: true,
     imports: [NgFor, IgxCalendarYearDirective]
 })
-export class IgxYearsViewComponent implements ControlValueAccessor {
+export class IgxYearsViewComponent implements ControlValueAccessor, AfterViewChecked {
     /**
      * Gets/sets whether the view should be rendered
      * according to the locale and yearFormat, if any.
@@ -61,6 +67,19 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     @Output()
     public selected = new EventEmitter<Date>();
+
+    /**
+     * Emits an event when a page changes in the years view.
+     * Provides reference the `date` property in the `IgxMonthsViewComponent`.
+     * ```html
+     * <igx-months-view (pageChanged)="onPageChanged($event)"></igx-months-view>
+     * ```
+     *
+     * @memberof IgxMonthsViewComponent
+     * @hidden @internal
+     */
+    @Output()
+    public pageChanged = new EventEmitter<Date>();
 
     /**
      * The default css class applied to the component.
@@ -96,6 +115,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     private _calendarModel: Calendar;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected activeYear: number;
+    
     /**
      * @hidden
      */
@@ -129,15 +155,16 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @memberof IgxYearsViewComponent
      */
     @Input()
-    public get date() {
-        return this._date;
-    }
-
     public set date(value: Date) {
         if (!(value instanceof Date)) {
             return;
         }
         this._date = value;
+        this.activeYear = this.date.getFullYear();
+    }
+
+    public get date() {
+        return this._date;
     }
 
     /**
@@ -215,11 +242,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(15);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
+        this.navigateToYear(event, Direction.NEXT, 3);
     }
 
     /**
@@ -227,18 +250,33 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(-15);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
+        this.navigateToYear(event, Direction.PREV, 3);
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.enter')
-    public onKeydownEnter() {
+    @HostListener('keydown.arrowright', ['$event'])
+    public onKeydownArrowRight(event: KeyboardEvent) {
+        this.navigateToYear(event, Direction.NEXT, 1);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowleft', ['$event'])
+    public onKeydownArrowLeft(event: KeyboardEvent) {
+        this.navigateToYear(event, Direction.PREV, 1);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.enter', ['$event'])
+    public onKeydownEnter(event) {
+        const value = this.calendarDir.find((date) => date.nativeElement === event.target).value;
+        this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
+        this.activeYear = this.date.getFullYear();
         this.selected.emit(this.date);
         this._onChangeCallback(this.date);
     }
@@ -260,6 +298,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     public selectYear(event: Date) {
         this.date = event;
+        this.activeYear = this.date.getFullYear();
 
         this.selected.emit(this.date);
         this._onChangeCallback(this.date);
@@ -312,6 +351,37 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         if (value) {
             this.date = value;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    private navigateToYear(event: KeyboardEvent, direction: Direction, delta: number) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const node = this.calendarDir.find((date) => date.nativeElement === event.target);
+        if (!node) return;
+
+        const _date = new Date(this.activeYear, this.date.getMonth());
+        const _delta = this._calendarModel.timedelta(_date, 'year', direction * delta);
+        const years = this._calendarModel.decadedates(_delta);
+        const hasNextYear = years.find((year) => year.getFullYear() === this.activeYear);
+        
+        if (!hasNextYear) {
+            this.pageChanged.emit(_delta);
+        }
+
+        this.activeYear = _delta.getFullYear();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewChecked() {
+        const years = this.calendarDir.toArray();
+        const idx = years.findIndex((year) => year.value.getFullYear() === this.activeYear);
+        years[idx].nativeElement.focus();
     }
 
     /**

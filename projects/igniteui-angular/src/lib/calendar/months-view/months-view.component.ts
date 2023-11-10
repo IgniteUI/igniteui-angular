@@ -18,6 +18,11 @@ import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
 
 let NEXT_ID = 0;
 
+enum Direction {
+    NEXT = 1,
+    PREV = -1
+}
+
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMonthsViewComponent, multi: true }],
     selector: 'igx-months-view',
@@ -232,18 +237,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) return;
-
-        const months = this.monthsRef.toArray();
-        const _date = new Date(this.date.getFullYear(), this.activeMonth);
-        const _delta = this._calendarModel.timedelta(_date, 'month', -3);
-
-        months[_delta.getMonth()].nativeElement.focus();
-        this.activeMonth = _delta.getMonth();
+        this.navigateToMonth(event, Direction.PREV, 3);
     }
 
     /**
@@ -251,18 +245,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) return;
-
-        const months = this.monthsRef.toArray();
-        const _date = new Date(this.date.getFullYear(), this.activeMonth);
-        const _delta = this._calendarModel.timedelta(_date, 'month', 3);
-
-        months[_delta.getMonth()].nativeElement.focus();
-        this.activeMonth = _delta.getMonth();
+        this.navigateToMonth(event, Direction.NEXT, 3);
     }
 
     /**
@@ -270,22 +253,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) return;
-
-        const months = this.monthsRef.toArray();
-        const _date = new Date(this.date.getFullYear(), this.activeMonth, this.date.getDate());
-        const _delta = this._calendarModel.timedelta(_date, 'month', 1);
-
-        if (_delta.getFullYear() !== this.date.getFullYear()) {
-            this.pageChanged.emit(_delta);
-        }
-
-        months[_delta.getMonth()].nativeElement.focus();
-        this.activeMonth = _delta.getMonth();
+        this.navigateToMonth(event, Direction.NEXT, 1);
     }
 
     /**
@@ -293,22 +261,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) return;
-
-        const months = this.monthsRef.toArray();
-        const _date = new Date(this.date.getFullYear(), this.activeMonth);
-        const _delta = this._calendarModel.timedelta(_date, 'month', -1);
-
-        if (_delta.getFullYear() !== this.date.getFullYear()) {
-            this.pageChanged.emit(_delta);
-        }
-
-        months[_delta.getMonth()].nativeElement.focus();
-        this.activeMonth = _delta.getMonth();
+        this.navigateToMonth(event, Direction.PREV, 1);
     }
 
     /**
@@ -404,8 +357,27 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public monthTracker(index, item): string {
+    public monthTracker(index, item: Date): string {
         return `${item.getMonth()}}`;
+    }
+    
+    private navigateToMonth(event: KeyboardEvent, direction: Direction, delta: number) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
+        if (!node) return;
+
+        const months = this.monthsRef.toArray();
+        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _delta = this._calendarModel.timedelta(_date, 'month', direction * delta);
+
+        if (_delta.getFullYear() !== this.date.getFullYear()) {
+            this.pageChanged.emit(_delta);
+        }
+
+        months[_delta.getMonth()].nativeElement.focus();
+        this.activeMonth = _delta.getMonth();
     }
 
     /**

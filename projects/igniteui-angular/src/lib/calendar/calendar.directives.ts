@@ -30,7 +30,6 @@ import { PlatformUtil } from '../core/utils';
     standalone: true
 })
 export class IgxCalendarYearDirective {
-
     @Input('igxCalendarYear')
     public value: Date;
 
@@ -62,7 +61,12 @@ export class IgxCalendarYearDirective {
 
 
     public get isCurrentYear(): boolean {
-        return this.date.getFullYear() === this.value.getFullYear();
+        const today = new Date(Date.now());
+        const date = this.value;
+
+        return (date.getFullYear() === today.getFullYear() &&
+            date.getFullYear() === today.getFullYear()
+        );
     }
 
     public get nativeElement() {

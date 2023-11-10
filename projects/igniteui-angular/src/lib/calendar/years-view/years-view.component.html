@@ -3,9 +3,9 @@
         <span class="igx-calendar__year"
             [igxCalendarYear]="year"
             [date]="date"
+            [attr.tabindex]="activeYear === year.getFullYear() ? 0 : -1"
             (yearSelection)="selectYear($event)"
             *ngFor="let year of decade; trackBy: yearTracker">
-
             <span class="igx-calendar__year-inner">
                 {{ formattedYear(year) }}
             </span>
