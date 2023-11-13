@@ -478,8 +478,10 @@ export class IgxListComponent extends IgxListBaseDirective {
         return null;
     }
 
+    private _role = 'list';
+
     /**
-     * Gets the `role` attribute value.
+     * Gets/Sets the `role` attribute value.
      *
      * @example
      * ```typescript
@@ -487,8 +489,13 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
     public get role() {
-        return 'list';
+        return this._role;
+    }
+
+    public set role(val: string) {
+        this._role = val;
     }
 
     /**
