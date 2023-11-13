@@ -83,7 +83,17 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     @Input()
-    public data: any = [];
+    public get data(): any {
+        return this._data || [];
+    }
+
+    public set data(value: any) {
+        this._data = value;
+        if (this.hGrid) {
+            this.hGrid.data = this._data.childGridsData[this.layout.key];
+        }
+    }
+    
     /**
      * The index of the row.
      *
@@ -95,7 +105,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    @ViewChild('container', {read: ViewContainerRef, static: true})
     public container: ViewContainerRef;
 
     /**
@@ -149,6 +159,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     public expanded = false;
+
+    private _data: any;
 
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
@@ -337,7 +349,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     private _data;
-    private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
@@ -374,6 +385,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
             this.reflow();
@@ -409,33 +423,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents.first :
             super.excelStyleFilteringComponent;
-    }
-
-    /**
-     * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
-    }
-
-    /**
-     * Returns an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
     }
 
     /**
@@ -502,7 +489,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
+            return new IgxGridCell(this, rowIndex, column);
         }
     }
 
@@ -749,7 +736,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            return new IgxGridCell(this, rowIndex, column);
         }
     }
 
@@ -769,7 +756,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 

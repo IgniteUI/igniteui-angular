@@ -2,9 +2,10 @@
 <header>
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
 </header>
-<igx-buttongroup #sortButtonGroup [multiSelection]="false">
-    <button igxButton
-        [displayDensity]="esf.grid.displayDensity"
+<igx-buttongroup #sortButtonGroup>
+    <button type="button"
+        igxButton
+        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (click)="onSortButtonClicked(1)"
         >
@@ -16,8 +17,9 @@
         </span>
     </button>
 
-    <button igxButton
-        [displayDensity]="esf.grid.displayDensity"
+    <button type="button"
+        igxButton
+        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (click)="onSortButtonClicked(2)"
         >

@@ -23,7 +23,7 @@
 /// @prop {Map} item-selected-hover-background [color: ('gray', 500, 8)] - The background color for a selected item in hover or focus state in the button group.
 /// @prop {Map} idle-shadow-color [transparent] - The outline color of button group items.
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the button group shadow.
-/// @prop {Number} border-radius [4px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(4px), rem(0), rem(20px))] - The border radius used for button-group component.
 /// @requires {Map} $default-elevation-button-group
 $light-button-group: extend(
     $default-elevation-button-group,
@@ -80,7 +80,11 @@ $light-button-group: extend(
             color: ('gray', 400),
         ),
 
-        border-radius: rem(4px)
+        border-radius: (
+            rem(4px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -95,7 +99,7 @@ $light-button-group: extend(
 /// @prop {Map} item-selected-text-color [color: ('primary', 200)]- The text color for a selected item in the button group.
 /// @prop {Color} disabled-background-color [color: ('gray', 50)] - The background color for a disabled item in the button group.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the button group shadow.
-/// @prop {Number} border-radius [2px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(2px), rem(0), rem(20px))] - The border radius used for button-group component.
 /// @requires {Map} $light-button-group
 /// @requires {Map} $fluent-elevation-button-group
 $fluent-button-group: extend(
@@ -132,7 +136,11 @@ $fluent-button-group: extend(
             color: ('gray', 50)
         ),
 
-        border-radius: rem(2px)
+        border-radius: (
+            rem(2px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );
 
@@ -151,7 +159,6 @@ $fluent-button-group: extend(
 /// @prop {Map} disabled-text-color [color: ('primary', 200)]- The text/icon color for a disabled item in the button group.
 /// @prop {Map} item-disabled-border [color: ('primary', 500)] - The border color for a disabled item in the button group.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the button group shadow.
-/// @prop {Number} border-radius [4px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $light-button-group
 /// @requires {Map} $bootstrap-elevation-button-group
 $bootstrap-button-group: extend(
@@ -227,7 +234,7 @@ $bootstrap-button-group: extend(
 /// @prop {Map} disabled-text-color [color: ('gray', 400)]- The text/icon color for a disabled item in the button group.
 /// @prop {Map} item-disabled-border [color: ('gray', 300)] - The border color for a disabled item in the button group.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the button group shadow.
-/// @prop {Number} border-radius [8px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {List} border-radius [(rem(8px), rem(0), rem(20px))] - The border radius used for button-group component.
 /// @requires {Map} $light-button-group
 /// @requires {Map} $indigo-elevation-button-group
 $indigo-button-group: extend(
@@ -292,6 +299,10 @@ $indigo-button-group: extend(
             color: ('gray', 300)
         ),
 
-        border-radius: rem(8px)
+        border-radius: (
+            rem(8px),
+            rem(0),
+            rem(20px),
+        ),
     )
 );

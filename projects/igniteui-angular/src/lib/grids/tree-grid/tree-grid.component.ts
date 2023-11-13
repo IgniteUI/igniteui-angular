@@ -271,7 +271,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
-    private _filteredData = null;
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -289,37 +288,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
         }
         this.cdr.markForCheck();
-    }
-
-    /**
-     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    /**
-     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
@@ -430,7 +405,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, column.field);
+            return new IgxGridCell(this as any, rowIndex, column);
         }
     }
 
@@ -693,7 +668,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = treeRowRec.data[key];
+                row.data[key] = treeRowRec.data[this.crudService.addRowParent?.asChild ? this.primaryKey : key];
             } else {
                 row.data[key] = undefined;
             }
@@ -816,7 +791,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, columnField);
+            return new IgxGridCell(this as any, rowIndex, column);
         }
     }
 
@@ -836,7 +811,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this as any, row.index, columnField);
+            return new IgxGridCell(this as any, row.index, column);
         }
     }
 

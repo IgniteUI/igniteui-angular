@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
+import { ColumnType, GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -29,12 +29,7 @@ export class IgxGridValidationService {
         if (!formGroup) {
             formGroup = new FormGroup({});
             for (const col of this.grid.columns) {
-                const value = resolveNestedPath(data || {}, col.field);
-                const field = this.getFieldKey(col.field);
-                const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
-                control.setValue(value);
-                control.addValidators(col.validators);
-                formGroup.addControl(field, control);
+                this.addFormControl(formGroup, data, col);
             }
             const args: IGridFormGroupCreatedEventArgs = {
                 formGroup,
@@ -48,11 +43,26 @@ export class IgxGridValidationService {
                 const formControl = formGroup.get(col.field);
                 if (formControl) {
                     formControl.markAsPristine();
+                } else {
+                    this.addFormControl(formGroup, data, col);
                 }
             }
         }
 
         return formGroup;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    private addFormControl(formGroup: FormGroup, data: any, column: ColumnType) {
+        const value = resolveNestedPath(data || {}, column.field);
+        const field = this.getFieldKey(column.field);
+        const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
+        control.addValidators(column.validators);
+        formGroup.addControl(field, control);
+        control.setValue(value);
     }
 
     /**
@@ -129,12 +139,28 @@ export class IgxGridValidationService {
         for (const key of keys) {
             const colKey = this.getFieldKey(key);
             const control = rowGroup?.get(colKey);
-            if (control) {
+            if (control && control.value !== rowData[key]) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
         }
 
         this.updateStatus();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Update validity based on new data.
+     */
+    public updateAll(newData: any) {
+        if (!newData || this._validityStates.size === 0) return;
+        for (const rec of newData) {
+            const rowId = rec[this.grid.primaryKey] || rec;
+            if (this.getFormGroup(rowId)) {
+                const recAggregatedData = this.grid.transactions.getAggregatedValue(rowId, true) || rec;
+                this.update(rowId, recAggregatedData);
+            }
+        }
     }
 
     /** Marks the associated record or field as touched.

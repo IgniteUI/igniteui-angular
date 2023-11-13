@@ -101,9 +101,9 @@ export class IgxSorting implements IGridSortingStrategy {
         if (date && isDate && isTime) {
             resolvedValue = date;
         } else if (date && isDate && !isTime) {
-            resolvedValue = new Date(date.setHours(0, 0, 0, 0));
+            resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
         } else if (date && isTime && !isDate) {
-            resolvedValue = new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
         }
         return resolvedValue;
     }
@@ -192,6 +192,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
         groupsRecords?: any[], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
         const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
+        grid?.groupingPerformedSubject.next();
         return {
             data: grouping,
             metadata

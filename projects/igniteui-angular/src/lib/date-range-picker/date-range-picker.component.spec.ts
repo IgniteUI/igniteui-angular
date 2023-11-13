@@ -35,6 +35,8 @@ const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
 const CSS_CLASS_INPUT_END = '.igx-input-group__bundle-end'
 const CSS_CLASS_INPUT = '.igx-input-group__input';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
@@ -131,6 +133,7 @@ describe('IgxDateRangePicker', () => {
             mockDocument = {
                 body: mockElement,
                 defaultView: mockElement,
+                documentElement: document.documentElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -794,6 +797,39 @@ describe('IgxDateRangePicker', () => {
                 fix.detectChanges();
                 expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INITIAL);
             });
+
+            it('should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+                const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+                tick(500);
+                fix.detectChanges();
+                const dateRangePicker = fix.componentInstance.dateRange;
+                const form = fix.componentInstance.form;
+
+                // the form control has validators
+                form.markAllAsTouched();
+                form.get('range').setErrors({ error: true });
+                tick();
+                fix.detectChanges();
+
+                expect((dateRangePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((dateRangePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((dateRangePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+                expect((dateRangePicker as any).required).toBe(true);
+
+                // remove the validators and set errors
+                form.controls['range'].clearValidators();
+                form.controls['range'].updateValueAndValidity();
+
+                form.markAllAsTouched();
+                form.get('range').setErrors({ error: true });
+                tick(500);
+                fix.detectChanges();
+                tick();
+
+                expect((dateRangePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+                expect((dateRangePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+                expect((dateRangePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+            }));
         });
 
         describe('Two Inputs', () => {

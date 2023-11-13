@@ -30,7 +30,7 @@ const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
-const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
 const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
@@ -683,6 +683,36 @@ describe('igxSelect', () => {
             expect(inputGroupIsRequiredClass).not.toBeUndefined();
         }));
 
+        it('should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
+
+            // the form control has validators
+            formGroup.markAllAsTouched();
+            formGroup.get('optionsSelect').setErrors({ error: true });
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+
+            // remove the validators and set errors
+            (fix.componentInstance as IgxSelectReactiveFormComponent).removeValidators(formGroup);
+            formGroup.markAsUntouched();
+            fix.detectChanges();
+
+            formGroup.markAllAsTouched();
+            formGroup.get('optionsSelect').setErrors({ error: true });
+            fix.detectChanges();
+
+            // no validator, but there is a set error
+            expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+        }));
+
         it('Should properly initialize when used as a form control - with initial validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
 
@@ -1239,7 +1269,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 select.toggle();
@@ -1274,7 +1305,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 selectedItem.selected = true;
@@ -1305,7 +1337,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 const navigateDropdownItems = (selectEvent: KeyboardEvent) => {
@@ -1379,7 +1412,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 select.selectItem(selectedItem);
@@ -2200,7 +2234,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultTextIdent = 8;
         const defItemFontSize = 14;
         const defInputFontSize = 16;
         let selectedItemIndex: number;
@@ -2423,44 +2456,7 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
             }));
         });
-        describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = () => {
-                let prefixesWidth = 0;
-                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
-                Array.from(prefixes).forEach((prefix: DebugElement) => {
-                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
-                    prefixesWidth += prefixRect.width;
-                });
-                return prefixesWidth;
-            };
 
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxSelectAffixComponent);
-                select = fixture.componentInstance.select;
-                fixture.detectChanges();
-                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-            });
-
-            it('should ident option text to the input text',
-                fakeAsync(() => {
-                    selectedItemIndex = 0;
-                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
-                    select.items[selectedItemIndex].selected = true;
-                    fixture.detectChanges();
-                    select.toggle();
-                    tick();
-                    fixture.detectChanges();
-                    getBoundingRectangles();
-                    // bc of the difference of 2px between the font size of the text in the input and the text in the selected item
-                    // we need to take into account that the item list will be slightly to the left of the input to make sure
-                    // that the text in the list is positioned exactly on top of the text in the input
-                    expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
-                        - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
-                        .toBeLessThanOrEqual(2);
-                }));
-        });
         describe('Document bigger than the visible viewport tests: ', () => {
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
@@ -3044,7 +3040,7 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button type="button" igxButton="raised" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>

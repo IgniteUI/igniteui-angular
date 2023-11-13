@@ -650,7 +650,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button class="combo__add-button">
+     *          <button type="button" igxButton="raised" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>
@@ -1008,14 +1008,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._value) {
-            this._value = this.createDisplayText(this.selection, []);
-        }
-        super.ngDoCheck();
-    }
-
-    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
@@ -1027,7 +1019,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens/closes the combo.
      *
      * ```html
-     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1047,7 +1039,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens the combo.
      *
      * ```html
-     * <button (click)="combo.open()">Open Combo</button>
+     * <button type="button" (click)="combo.open()">Open Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1065,7 +1057,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that closes the combo.
      *
      * ```html
-     * <button (click)="combo.close()">Close Combo</button>
+     * <button type="button" (click)="combo.close()">Close Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1265,12 +1257,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     protected onStatusChanged = () => {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (!this.collapsed || this.inputGroup.isFocused) {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
+        if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
+            if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
             } else {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
@@ -1278,6 +1269,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         this.manageRequiredAsterisk();
     };
+
+    private get isTouchedOrDirty(): boolean {
+        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+    }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
@@ -1300,7 +1299,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
         const searchValue = this.searchValue || this.comboInput?.value;
-        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
+        return value?.toString().trim().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {

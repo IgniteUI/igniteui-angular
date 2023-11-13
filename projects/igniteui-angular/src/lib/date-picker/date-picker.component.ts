@@ -556,7 +556,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.open()">Open Dialog</button>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
      * ```
      */
     public open(settings?: OverlaySettings): void {
@@ -587,7 +587,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="picker.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(settings?: OverlaySettings): void {
@@ -605,7 +605,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="picker.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -636,7 +636,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```html
      * <igx-date-picker #picker></igx-date-picker>
      *
-     * <button (click)="picker.selectToday()">Select Today</button>
+     * <button type="button" igxButton (click)="picker.selectToday()">Select Today</button>
      * ```
      * */
     public selectToday(): void {
@@ -830,14 +830,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private updateValidity() {
         // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
         if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
-            if (this.inputGroup.isFocused) {
-                this.inputDirective.valid = this._ngControl.valid
-                    ? IgxInputState.VALID
-                    : IgxInputState.INVALID;
+            if (this.hasValidators && this.inputGroup.isFocused) {
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.inputDirective.valid = this._ngControl.valid
-                    ? IgxInputState.INITIAL
-                    : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             this.inputDirective.valid = IgxInputState.INITIAL;
@@ -845,8 +841,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control.touched || this._ngControl.control.dirty)
-            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+        return (this._ngControl.control.touched || this._ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private onStatusChanged = () => {
@@ -987,15 +986,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private setCalendarViewDate() {
         const { minValue, maxValue } = this.getMinMaxDates();
-        this._dateValue = this.dateValue || new Date();
-        if (minValue && DateTimeUtil.lessThanMinValue(this.dateValue, minValue)) {
+        const dateValue = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue : new Date();
+        if (minValue && DateTimeUtil.lessThanMinValue(dateValue, minValue)) {
             this._calendar.viewDate = this._targetViewDate = minValue;
             return;
         }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(this.dateValue, maxValue)) {
+        if (maxValue && DateTimeUtil.greaterThanMaxValue(dateValue, maxValue)) {
             this._calendar.viewDate = this._targetViewDate = maxValue;
             return;
         }
-        this._calendar.viewDate = this._targetViewDate = this.dateValue;
+        this._calendar.viewDate = this._targetViewDate = dateValue;
     }
 }

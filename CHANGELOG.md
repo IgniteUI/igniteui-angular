@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.1.33
+
+### General
+- `IgxButtonGroup`:
+    - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
+
 ## 15.1.0
 
 ### New Features
@@ -38,6 +44,8 @@ All notable changes for each version of this project will be documented in this 
         </igx-card-actions>
     </igx-card>
     ```
+- `IgxButtonGroup`:
+    - The `selected` and `deselected` events are now cancellable.
 
 ### General
  - `IgxPivotGrid`

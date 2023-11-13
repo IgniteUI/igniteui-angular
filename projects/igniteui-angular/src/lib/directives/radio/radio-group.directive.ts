@@ -198,7 +198,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     @HostListener('click', ['$event'])
     protected handleClick(event: MouseEvent) {
         event.stopPropagation();
-        this.selected.nativeElement.focus();
+
+        if (this.selected) {
+            this.selected.nativeElement.focus();
+        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -336,6 +339,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
             this.queryChange$.next();
             setTimeout(() => this._initRadioButtons());
         });
+
+
+        if (this.ngControl) {
+            this.radioButtons.forEach((button) => {
+                if (this.ngControl.disabled) {
+                    button.disabled = this.ngControl.disabled;
+                }
+            });
+        }
     }
 
     /**
@@ -355,17 +367,17 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
 
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
-                fromEvent(button.nativeElement, 'blur')
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => {
-                    this.updateValidityOnBlur()
-                });
+                button.blurRadio
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe(() => {
+                        this.updateValidityOnBlur()
+                    });
 
                 fromEvent(button.nativeElement, 'keyup')
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((event: KeyboardEvent) => {
-                    this.updateOnKeyUp(event)
-                });
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe((event: KeyboardEvent) => {
+                        this.updateOnKeyUp(event)
+                    });
             });
         }
     }
@@ -377,12 +389,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     private updateValidityOnBlur() {
         this.radioButtons.forEach((button) => {
             button.focused = false;
-        });
 
-        if (this.required) {
-            const checked = this.radioButtons.find(x => x.checked);
-            this.invalid = !checked;
-        }
+            if (button.invalid) {
+                this.invalid = true;
+            }
+        });
     }
 
     /**
@@ -513,7 +524,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
         this.radioButtons.forEach((button) => {
             button.checked = button.id === args.radio.id;
-            if (button.checked) {
+            if (button.checked && button.ngControl) {
+                this.invalid = button.ngControl.invalid;
+            } else if (button.checked) {
                 this.invalid = false;
             }
         });
@@ -559,7 +572,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
                         }
 
                         if (!button.checked) {
-                            button.select();
+                            button.checked = true;
                         }
                     } else {
                         // non-selected button

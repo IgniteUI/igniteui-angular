@@ -2,8 +2,9 @@
 <header>
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_moving_header }}
 </header>
-<igx-buttongroup [multiSelection]="false">
-    <button [displayDensity]="esf.grid.displayDensity"
+<igx-buttongroup>
+    <button [displayDensity]="esf.displayDensity"
+        type="button"
         igxButton
         [disabled]="canNotMoveLeft"
         (click)="onMoveButtonClicked(0)">
@@ -14,7 +15,8 @@
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_left }}
         </span>
     </button>
-    <button [displayDensity]="esf.grid.displayDensity"
+    <button [displayDensity]="esf.displayDensity"
+        type="button"
         igxButton
         [disabled]="canNotMoveRight"
         (click)="onMoveButtonClicked(1)">

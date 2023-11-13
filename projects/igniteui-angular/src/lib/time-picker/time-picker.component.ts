@@ -761,7 +761,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * @param settings OverlaySettings - the overlay settings to use for positioning the drop down or dialog container according to
      * ```html
      * <igx-time-picker #picker [value]="date"></igx-time-picker>
-     * <button (click)="picker.open()">Open Dialog</button>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
      * ```
      */
     public open(settings?: OverlaySettings): void {
@@ -889,7 +889,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public onItemClick(item: string, dateType: string): void {
         let date = new Date(this._selectedDate);
         switch (dateType) {
-            case 'hourList':
+            case 'hourList': {
                 let ampm: string;
                 const selectedHour = parseInt(item, 10);
                 let hours = selectedHour;
@@ -911,6 +911,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     this.setSelectedValue(date);
                 }
                 break;
+            }
             case 'minuteList': {
                 const minutes = parseInt(item, 10);
                 date.setMinutes(minutes);
@@ -1061,10 +1062,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     protected onStatusChanged() {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator) &&
-            !this._ngControl.disabled) {
-            if (this._inputGroup.isFocused) {
+        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
+            if (this.hasValidators && this._inputGroup.isFocused) {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
@@ -1077,6 +1076,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private setMinMaxDropdownValue(type: string, time: Date): Date {

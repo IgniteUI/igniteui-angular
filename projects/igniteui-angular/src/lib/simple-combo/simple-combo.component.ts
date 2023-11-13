@@ -3,6 +3,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostListener,
@@ -75,7 +76,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ]
 })
-export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
+export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -258,6 +259,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
 
         super.ngAfterViewInit();
+    }
+
+    /** @hidden @internal */
+    public override ngDoCheck(): void {
+        if (this.data?.length && this.selection.length && !this._value) {
+            this._value = this.createDisplayText(this.selection, []);
+        }
+        super.ngDoCheck();
     }
 
     /** @hidden @internal */
@@ -495,7 +504,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.registerRemoteEntries(oldSelection, false);
         this.registerRemoteEntries(newSelection);
-        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
@@ -520,8 +529,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private clearOnBlur(): void {
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
-            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
-            if (remoteValue && searchValue !== remoteValue) {
+            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
+            if (searchValue !== remoteValue) {
                 this.clear();
             }
             return;

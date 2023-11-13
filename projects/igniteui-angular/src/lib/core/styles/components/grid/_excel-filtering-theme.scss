@@ -537,6 +537,7 @@
     }
 
     %grid-excel-menu__secondary-footer {
+        padding: rem(8px) rem(16px);
         @if $bootstrap-theme {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         } @else {
@@ -583,6 +584,13 @@
             height: var(--igx-icon-size, #{rem(18px)});
             font-size: var(--igx-icon-size, #{rem(18px)});
         }
+    }
+
+    %grid-excel-menu__filter-results {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
     }
 
     igx-excel-style-filter-operations,

@@ -71,6 +71,8 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public onTextFilterKeyDown(eventArgs: KeyboardEvent) {
         if (eventArgs.key === this.platform.KEYMAP.ENTER) {
             this.onTextFilterClick(eventArgs);
+        } else if (eventArgs.key === this.platform.KEYMAP.TAB) {
+            this.subMenu.close();
         }
     }
 

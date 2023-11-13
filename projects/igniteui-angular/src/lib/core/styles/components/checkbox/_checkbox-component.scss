@@ -95,6 +95,16 @@
             @include e(composite) {
                 @extend %cbx-composite--x--invalid !optional;
             }
+
+            &:hover {
+                @include e(composite) {
+                    @extend %cbx-composite--x--invalid--fluent !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--x--fluent !optional;
+                }
+            }
         }
 
         @include m(focused) {
@@ -152,6 +162,10 @@
                     @extend %cbx-ripple--pressed !optional;
                 }
             }
+        }
+
+        @include mx(invalid, indeterminate) {
+            @extend %igx-checkbox--indeterminate--invalid !optional;
         }
 
         @include mx(focused, indeterminate) {

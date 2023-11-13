@@ -804,7 +804,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent,
-                    IgxGridFixedContainerHeightComponent
+                    IgxGridFixedContainerHeightComponent,
+                    IgxGridColumnHeaderAutoSizeComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -1803,6 +1804,29 @@ describe('IgxGrid Component Tests #grid', () => {
 
         });
 
+        it('cells and columns widths should be equal. column widths in percentages', () => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 6);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.grid.height = "250px";
+            fix.detectChanges();
+            const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
+            fix.detectChanges();
+            const percentageWidths = ['5%', '12%', '10%', '12%', '5%', '11%'];
+            for (let i = 0; i < grid.columnList.length; i++) {
+                grid.columnList.get(i).width = percentageWidths[i];
+            }
+            fix.detectChanges();
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            for (let i = 0; i < grid.columnList.length; i++) {
+                const header = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[i];
+                const cell = fix.debugElement.queryAll(By.css('igx-grid-cell'))[i];
+                expect(header.nativeElement.offsetWidth).toEqual(cell.nativeElement.offsetWidth);
+                expect(Number.isInteger(header.nativeElement.offsetWidth)).toBe(true);
+            }
+        });
+
         it('should render all columns if grid width is set to null.', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 30);
@@ -1841,6 +1865,23 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.reflow();
 
             expect(grid.columnList.get(0).width).toBe('50%');
+        });
+
+        it('should correctly autosize column headers when the grid container has no data and is initially hidden and then shown', async () => {
+            const fix = TestBed.createComponent(IgxGridColumnHeaderAutoSizeComponent);
+            const grid = fix.componentInstance.grid;
+
+            //waiting for reqeustAnimationFrame to finish
+            await wait(17);
+            fix.detectChanges();
+
+            fix.componentInstance.gridContainerHidden = false;
+            await wait(17)
+            fix.detectChanges()
+
+            const calcWidth = parseInt(grid.columnList.first.calcWidth, 10)
+
+            expect(calcWidth).not.toBe(80);
         });
     });
 
@@ -2855,6 +2896,36 @@ export class IgxGridDefaultRenderingComponent {
             }
         }
     }
+}
+
+@Component({
+    template: `
+    <div [hidden]="gridContainerHidden">
+    <igx-grid #grid>
+      <igx-column
+        field="field1"
+        header="Field 1 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field2"
+        header="Field 2 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field3"
+        header="Field 3 Header"
+        width="auto"
+      ></igx-column>
+    </igx-grid>
+    </div>`,
+})
+export class IgxGridColumnHeaderAutoSizeComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public gridContainerHidden = true;
+
 }
 
 @Component({

@@ -36,7 +36,7 @@
 /// @param {Color} $selected-shadow-color [null] - The outline color of focused/selected button group items.
 /// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
+/// @param {List} $border-radius [null] - The border radius used for button-group component.
 ///
 /// @requires $light-schema
 ///
@@ -133,7 +133,7 @@
     }
 
     @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius'));
+        $border-radius: border-radius(map.get($theme, 'border-radius')...);
     }
 
     @return extend($theme, (
@@ -212,18 +212,18 @@
             }
         }
 
-        &:not(:nth-child(0)) {
+        &:not(:nth-child(1)) {
             margin-inline-start: rem(-1px);
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-end-start-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-end-start-radius: inherit;
         }
 
         &:last-of-type {
-            border-start-end-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: inherit;
+            border-end-end-radius: inherit;
         }
 
         &[igxButton][disabled='true'] {
@@ -250,14 +250,14 @@
     }
 
     %igx-group-item-vertical {
-        &:not(:nth-child(0)) {
+        &:not(:nth-child(1)) {
             margin-top: rem(-1px);
             margin-inline-start: 0;
         }
 
         &:first-of-type {
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
+            border-start-start-radius: inherit;
+            border-start-end-radius: inherit;
             border-end-start-radius: 0;
             border-end-end-radius: 0;
         }
@@ -265,8 +265,8 @@
         &:last-of-type {
             border-start-start-radius: 0;
             border-start-end-radius: 0;
-            border-end-start-radius: var-get($theme, 'border-radius');
-            border-end-end-radius: var-get($theme, 'border-radius');
+            border-end-start-radius: inherit;
+            border-end-end-radius: inherit;
         }
     }
 
@@ -276,6 +276,10 @@
         border-color: var-get($theme, 'item-selected-border-color');
         position: relative;
         z-index: 1;
+
+        &[igxButton] {
+            border-color: var-get($theme, 'item-selected-border-color');
+        }
 
         &:hover,
         &:focus {

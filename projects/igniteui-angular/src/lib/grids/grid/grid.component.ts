@@ -13,7 +13,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -30,6 +30,7 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { Observable, Subject } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -242,6 +243,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -250,7 +252,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -318,6 +322,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -329,23 +337,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
             this.recalculateAutoSizes();
         }
-    }
-
-    /**
-     * Gets/Sets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
@@ -371,9 +362,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
+
+    /**
+     * @hidden @internal
+     */
+    public groupingPerformedSubject = new Subject<void>();
+
+    /**
+     * @hidden @internal
+     */
+    public groupingPerformed$: Observable<void> = this.groupingPerformedSubject.asObservable();
 
     /**
      * Gets/Sets the group by state.
@@ -428,7 +428,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 groupedColumns: groupedCols,
                 ungroupedColumns: ungroupedCols
             };
-            this.groupingDone.emit(groupingDoneArgs);
+            this.groupingPerformed$.pipe(take(1)).subscribe(() => {
+                this.groupingDone.emit(groupingDoneArgs);
+            });
         }
     }
 
@@ -544,7 +546,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
+            return new IgxGridCell(this, rowIndex, column);
         }
     }
 
@@ -572,7 +574,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     @Input()
     public get groupByRowSelectorTemplate(): TemplateRef <IgxGroupByRowSelectorTemplateContext> {
-        return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates.first;
+        return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates?.first;
     }
 
     /**
@@ -733,6 +735,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.clear_groupby(name);
         this.calculateGridSizes();
         this.notifyChanges(true);
+        this.groupingPerformedSubject.next();
     }
 
     /**
@@ -1185,7 +1188,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (this.pagingMode === 1 && this.page !== 0) {
                 row.index = rowIndex + this.perPage * this.page;
             }
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
@@ -1205,7 +1208,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByKey(rowSelector);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
@@ -1257,6 +1260,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override getGroupAreaHeight(): number {
         return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected override onColumnsAddedOrRemoved() {
+        // update grouping states
+        this.groupablePipeTrigger++;
+        if (this.groupingExpressions && this.hideGroupedColumns) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
+        super.onColumnsAddedOrRemoved();
     }
 
     /**

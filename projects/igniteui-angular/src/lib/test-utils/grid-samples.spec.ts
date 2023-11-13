@@ -12,7 +12,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { CellType, IgxGridComponent } from '../grids/grid/public_api';
+import { ISortingOptions, CellType, IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -1679,7 +1679,7 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <button>Delete</button>
+                <button type="button">Delete</button>
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -1745,8 +1745,8 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>
@@ -2405,6 +2405,23 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
 }
 
 @Component({
+    template: GridTemplateStrings.declareGrid(
+        '[sortingOptions]="sortingOptions"',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        ''
+    )
+})
+export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
+   public sortingOptions: ISortingOptions = { mode: 'single' };
+   public ngOnInit(): void {
+        this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
+    }
+}
+
+@Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
@@ -2546,7 +2563,7 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
     <igx-grid #grid1 [data]="data">
         <igx-column>
             <ng-template igxCell>
-                <button>SimpleBtn</button>
+                <button type="button">SimpleBtn</button>
             </ng-template>
         </igx-column>
         <igx-column header="" field="ID"></igx-column>
@@ -2560,6 +2577,15 @@ export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="" [width]="'100%'" [height]="'700px'">
+    </igx-grid>`
+})
+export class EmptyGridComponent {
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 }
 
 /** Issue 9872 */

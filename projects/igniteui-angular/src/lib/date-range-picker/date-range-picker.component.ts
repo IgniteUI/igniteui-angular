@@ -447,7 +447,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.open()">Open Dialog</button
+     * <button type="button" igxButton (click)="dateRange.open()">Open Dialog</button
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
@@ -473,7 +473,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -489,7 +489,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings): void {
@@ -648,23 +648,34 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     protected onStatusChanged = () => {
         if (this.inputGroup) {
-            this.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
-                ? this.getInputState(this.inputGroup.isFocused)
-                : IgxInputState.INITIAL;
+            this.setValidityState(this.inputDirective, this.inputGroup.isFocused);
         } else if (this.hasProjectedInputs) {
             this.projectedInputs
-                .forEach(i => {
-                    i.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
-                        ? this.getInputState(i.isFocused)
-                        : IgxInputState.INITIAL;;
+                .forEach((i) => {
+                    this.setValidityState(i.inputDirective, i.isFocused);
                 });
         }
         this.setRequiredToInputs();
     };
 
+    private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
+        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
+            if (this.hasValidators && isFocused) {
+                inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        } else {
+            inputDirective.valid = IgxInputState.INITIAL;
+        }
+    }
+
     private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control.touched || this._ngControl.control.dirty)
-            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+        return (this._ngControl.control.touched || this._ngControl.control.dirty);
+    }
+
+    private get hasValidators(): boolean {
+        return (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private handleSelection(selectionData: Date[]): void {
@@ -771,14 +782,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             start.inputDirective.disabled = this.disabled;
             end.inputDirective.disabled = this.disabled;
             return;
-        }
-    }
-
-    private getInputState(focused: boolean): IgxInputState {
-        if (focused) {
-            return this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-        } else {
-            return this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
         }
     }
 

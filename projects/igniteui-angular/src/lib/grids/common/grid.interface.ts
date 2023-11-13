@@ -49,7 +49,7 @@ export interface IPathSegment {
 
 export interface IGridDataBindable {
     data: any[] | null;
-    filteredData: any[];
+    get filteredData(): any[];
 }
 
 export interface CellType {
@@ -154,6 +154,10 @@ export interface ColumnType extends FieldType {
     headerGroupClasses: any;
     headerGroupStyles: any;
 
+    /** 
+     * Custom CSS styling, appplied to every column 
+     * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
+     */
     calcWidth: any;
     minWidthPx: number;
     maxWidthPx: number;
@@ -161,6 +165,7 @@ export interface ColumnType extends FieldType {
     maxWidth: string;
     minWidthPercent: number;
     maxWidthPercent: number;
+    resolvedWidth: string;
 
     header?: string;
     index: number;
@@ -324,6 +329,8 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     pipeTrigger: number;
     summaryPipeTrigger: number;
+    /** @hidden @internal */
+    groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     hasColumnLayouts: boolean;
     moving: boolean;
@@ -565,7 +572,7 @@ export interface GridType extends IGridDataBindable {
     groupingExpressions?: IGroupingExpression[];
     groupingExpressionsChange?: EventEmitter<IGroupingExpression[]>;
     groupsExpanded?: boolean;
-    groupsRecords?: IGroupByRecord[];
+    readonly groupsRecords?: IGroupByRecord[];
     groupingFlatResult?: any[];
     groupingResult?: any[];
     groupingMetadata?: any[];
@@ -633,10 +640,12 @@ export interface GridType extends IGridDataBindable {
     deselectAllRows(onlyFilterData?: boolean): void;
     setUpPaginator(): void;
     createFilterDropdown(column: ColumnType, options: OverlaySettings): any;
+    updateCell(value: any, rowSelector: any, column: string): void;
     // Type to RowType
     createRow?(index: number, data?: any): RowType;
     deleteRow(id: any): any;
     deleteRowById(id: any): any;
+    updateRow(value: any, rowSelector: any): void;
     collapseRow(id: any): void;
     notifyChanges(repaint?: boolean): void;
     resetColumnCollections(): void;

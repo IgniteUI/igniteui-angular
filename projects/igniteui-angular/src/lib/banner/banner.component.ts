@@ -44,8 +44,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  * <igx-banner #banner>
  *   Our privacy settings have changed.
  *  <igx-banner-actions>
- *      <button igxButton="raised">Read More</button>
- *      <button igxButton="raised">Accept and Continue</button>
+ *      <button type="button" igxButton="raised">Read More</button>
+ *      <button type="button" igxButton="raised">Accept and Continue</button>
  *  </igx-banner-actions>
  * </igx-banner>
  * ```
@@ -218,7 +218,7 @@ export class IgxBannerComponent implements IToggleView {
      * <igx-banner #banner>
      * ...
      * </igx-banner>
-     * <button (click)="banner.open()">Open Banner</button>
+     * <button type="button" (click)="banner.open()">Open Banner</button>
      * ```
      */
     public open(event?: Event) {
@@ -247,7 +247,7 @@ export class IgxBannerComponent implements IToggleView {
      * <igx-banner #banner>
      * ...
      * </igx-banner>
-     * <button (click)="banner.close()">Close Banner</button>
+     * <button type="button" (click)="banner.close()">Close Banner</button>
      * ```
      */
     public close(event?: Event) {
@@ -276,7 +276,7 @@ export class IgxBannerComponent implements IToggleView {
      * <igx-banner #banner>
      * ...
      * </igx-banner>
-     * <button (click)="banner.toggle()">Toggle Banner</button>
+     * <button type="button" (click)="banner.toggle()">Toggle Banner</button>
      * ```
      */
     public toggle(event?: Event) {

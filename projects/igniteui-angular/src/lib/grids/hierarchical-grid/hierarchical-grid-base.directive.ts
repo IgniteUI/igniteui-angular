@@ -203,6 +203,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.updateColumns(result);
         this.initPinning();
 
+        result.forEach(col => {
+            this.columnInit.emit(col);
+        });
+
         const mirror = reflectComponentType(IgxColumnComponent);
         const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {

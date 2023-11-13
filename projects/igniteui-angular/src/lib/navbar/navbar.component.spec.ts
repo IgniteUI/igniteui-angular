@@ -216,7 +216,7 @@ class NavbarIntializeTestComponent {
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <button>custom action</button>
+                        <button type="button">custom action</button>
                     </igx-navbar-action>
                </igx-navbar>`
 })
