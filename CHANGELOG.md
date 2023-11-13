@@ -13,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
     - `igniteui-angular-i18n` is now tree-shakeable
     - `igniteui-angular/animations` is now tree-shakeable
     - `igniteui-angular` components have improved tree-shaking
+    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead. 
+        - E.g. EN strings come from `igniteui-angular`: `import { GridResourceStringsEN } from 'igniteui-angular';`
+        - E.g. DE or other language strings come from `igniteui-angular-i18n`: `import { GridResourceStringsDE } from 'igniteui-angular-i18n';`
 - DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
 - We're working on reducing the library size
     - `IgxRadioComponent` size has been reduced in half
