@@ -55,6 +55,9 @@ export class CalendarSampleComponent implements OnInit {
 	private calendarHeader: boolean;
 	private outsideDays: boolean;
 	private webComponentSelection = 'single';
+	private visibleMonths: number;
+	private headerOrientation: string;
+	private orientation: string;
 
 	public range = [];
 	public today = new Date();
@@ -127,6 +130,7 @@ export class CalendarSampleComponent implements OnInit {
 
 	public setMonthsViewNumber(args: HTMLInputElement) {
 		this.calendar.monthsViewNumber = parseInt(args.value, 10);
+		this.visibleMonths = parseInt(args.value, 10);
 	}
 
 	public select() {
@@ -150,6 +154,26 @@ export class CalendarSampleComponent implements OnInit {
 	public hideHeader() {
 		this.calendar.hasHeader = !this.calendar.hasHeader;
 		this.calendarHeader = !this.calendarHeader;
+	}
+
+	public setHeaderOrientation(args: string) {
+		if (this.calendar.hasHeader) {
+			if (args === 'vertical') {
+				this.calendar.vertical = this.calendar.hasHeader;
+				this.headerOrientation = 'vertical';
+			} else {
+				this.calendar.vertical = !this.calendar.hasHeader;
+				this.headerOrientation = 'horizontal';
+			}
+		}
+	}
+
+	public setOrientation(args: string) {
+		if (args === 'vertical') {
+			this.orientation = 'vertical';
+		} else {
+			this.orientation = 'horizontal';
+		}
 	}
 
 	public hideWeekNumber() {

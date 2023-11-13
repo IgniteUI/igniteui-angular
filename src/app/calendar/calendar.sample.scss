@@ -1,5 +1,22 @@
 $padding: 2rem;
 
+::ng-deep {
+    #igniteui-demo-app .sample-wrapper {
+        padding: 0
+    }
+
+    #igniteui-demo-app .content {
+        overflow: hidden;
+    }
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    overflow: hidden;
+}
+
 small {
     font-size: .8rem;
 
@@ -25,10 +42,10 @@ small {
 .preview {
     display: flex;
     border: 1px solid hsla(var(--ig-gray-300));
+    overflow: hidden;
 
     &__sample {
         display: flex;
-        align-items: center;
         flex-wrap: wrap;
         padding: $padding;
         gap: $padding;
@@ -43,6 +60,7 @@ small {
         background: hsla(var(--ig-gray-50));
         border-left: 1px solid hsla(var(--ig-gray-300));
         padding: $padding;
+        overflow-x: auto;
     }
 
     &__comp-size {
@@ -96,18 +114,4 @@ igx-input-group {
 
 .gap {
     gap: 1rem;
-}
-
-
-// TODO UPDATE THE WEB COKMPONENRTS STYLES
-igc-calendar {
-    display: flex;
-    flex-flow: column nowrap;
-    width: 100%;
-    min-width: 18.125rem;
-    background: var(--content-background);
-    outline: none;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    border: 0 solid var(--border-color);
 }
