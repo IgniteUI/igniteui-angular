@@ -148,7 +148,6 @@ export class IgxDaysViewNavigationService {
         }
 
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
-            console.log('should change month');
             const monthAction = step > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
             monthView.viewChanging.emit({monthAction, key, nextDate});
         }

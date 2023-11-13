@@ -154,24 +154,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      * @internal
      */
-    @HostListener('focusout')
-    public resetActiveMonth() {
-        if (this.shouldResetDate) {
-            const date = this.dates.find(day => day.selected && day.isCurrentMonth) ||
-                this.dates.find(day => day.isToday && day.isCurrentMonth) ||
-                this.dates.find(d => d.isFocusable);
-            if (date) {
-                this.activeDate = date.date.date.toLocaleDateString();
-            }
-            this.monthsViewBlur.emit();
-        }
-        this.shouldResetDate = true;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     @HostListener('keydown.pagedown')
     @HostListener('keydown.pageup')
     @HostListener('keydown.shift.pagedown')

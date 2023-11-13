@@ -33,6 +33,7 @@ import { IViewChangingEventArgs } from './days-view/days-view.interface';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from '../icon/icon.component';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from 'igniteui-angular/animations';
+import { IgxDayItemComponent } from './days-view/day-item.component';
 
 let NEXT_ID = 0;
 
@@ -267,7 +268,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	public get isYearView(): boolean {
-		return this.activeView===IgxCalendarView.Year;
+		return this.activeView === IgxCalendarView.Year;
 	}
 
 	/**
@@ -912,13 +913,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
 		this.activeView = IgxCalendarView.Month;
-
-		requestAnimationFrame(() => {
-			const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
-			if (elem) {
-				elem.nativeElement.focus();
-			}
-		});
 	}
 
 	/**
@@ -937,6 +931,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public onActiveViewYear(args: Date, activeViewIdx: number): void {
 		this.activeView = IgxCalendarView.Year;
 		this.activeViewIdx = activeViewIdx;
+
 		requestAnimationFrame(() => {
 			this.monthsView.date = args;
 			this.focusMonth();
@@ -1050,10 +1045,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	public viewRendered(event) {
-		if (event.fromState!=='void') {
+		if (event.fromState !== 'void') {
 			this.activeViewChanged.emit(this.activeView);
+
 			if (this.isDefaultView) {
 				this.resetActiveDate();
+                this.focusDay();
 			}
 		}
 	}
@@ -1063,20 +1060,25 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	public resetActiveDate() {
-		if (!this.monthViews) {
+		if (this.activeView !== IgxCalendarView.Month) {
 			return;
 		}
 
-		let dates = [];
-		this.monthViews.map(mv => mv.dates).forEach(days => {
-			dates = dates.concat(days.toArray());
-		});
-		const date = dates.find(day => day.selected && day.isCurrentMonth) || dates.find(day => day.isToday && day.isCurrentMonth)
-			|| dates.find(d => d.isFocusable);
+        let idx = 0;
+		const dates = this.getMonthDays();
 
-		if (date) {
-			this.activeDate = date.date.date.toLocaleDateString();
-		}
+        for (let i = 0; i < dates.length - 1; i++) {
+            const date = dates[i].date.date.getDate();
+            const activeDate = new Date(this.activeDate).getDate();
+
+            if (activeDate === date) {
+                idx = i;
+            }
+        }
+
+        if (dates[idx]) {
+            this.activeDate = dates[idx].date.date.toLocaleDateString();
+        }
 	}
 
 	/**
@@ -1167,6 +1169,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
+    private getMonthDays(): IgxDayItemComponent[] {
+		let dates = [];
+
+		this.monthViews.map(mv => mv.dates).forEach(days => {
+			dates = dates.concat(days.toArray()).filter(
+                day => day.isCurrentMonth && day.isFocusable
+            )
+		});
+
+        return dates;
+    }
+
     /**
      * Helper method that does deselection for all month views when selection is "multi"
      * If not called, selection in other month views stays
@@ -1181,10 +1195,22 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     private focusMonth() {
-        const month = this.monthsView.monthsRef.find((e) =>
-            e.index === this.monthsView.date.getMonth());
+        const month = this.monthsView.monthsRef.find(
+            (e) => e.index === this.monthsView.date.getMonth()
+        );
+
         if (month) {
             month.nativeElement.focus();
+        }
+    }
+
+    private focusDay() {
+        const day = this.getMonthDays().find(
+            d => d.date.date.toLocaleDateString() === this.activeDate
+        );
+
+        if (day) {
+            day.nativeElement.focus();
         }
     }
 }

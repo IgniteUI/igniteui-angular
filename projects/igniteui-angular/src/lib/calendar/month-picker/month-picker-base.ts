@@ -74,12 +74,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
         this.activeView = IgxCalendarView.Month;
-
-        requestAnimationFrame(() => {
-            if (this.yearsBtns && this.yearsBtns.length) {
-                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx).nativeElement.focus();
-            }
-        });
     }
 
     /**

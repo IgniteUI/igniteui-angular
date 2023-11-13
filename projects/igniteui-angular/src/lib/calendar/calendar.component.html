@@ -14,10 +14,10 @@
 <!-- Month -->
 <ng-template #defaultMonth let-obj>
     <span
+        #monthsBtn
         tabindex="0"
         role="button"
         [attr.aria-label]="(getViewDate(obj.index) | date: 'LLLL') + ' ' + resourceStrings.igx_calendar_select_month"
-        #monthsBtn
         (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
         (click)="onActiveViewYear(getViewDate(obj.index), obj.index)"
         class="igx-calendar-picker__date">
@@ -28,10 +28,10 @@
 <!-- Year -->
 <ng-template #defaultYear let-obj>
     <span
+        #yearsBtn
         tabindex="0"
         role="button"
         [attr.aria-label]="(getViewDate(obj.index) | date: 'yyyy') + ' ' + resourceStrings.igx_calendar_select_year"
-        #yearsBtn
         (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)"
         (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
         class="igx-calendar-picker__date">
@@ -223,7 +223,8 @@
         (@animateChange.done)="animationDone($event)"
     >
         <igx-days-view role="grid" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
-           [changeDaysView]="true" #days
+           #days
+           [changeDaysView]="true"
            [selection]="selection"
            [locale]="locale"
            [value]="value"
