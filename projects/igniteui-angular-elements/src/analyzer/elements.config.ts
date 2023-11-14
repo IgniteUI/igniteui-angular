@@ -22,6 +22,7 @@ import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/a
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
+import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
   IgxGridComponent,
@@ -425,6 +426,18 @@ export var registerConfig = [
     methods: ["pin", "unpin", "scrollToRow"],
     boolProps: ["asMenuItems"],
     provideAs: IgxGridActionsBaseDirective,
+  },
+  {
+    component: IgxGridStateComponent,
+    parents: [
+      IgxGridComponent,
+      IgxTreeGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxPivotGridComponent,
+    ],
+    contentQueries: [],
+    additionalProperties: [{ name: "grid", writable: true }],
+    methods: ["applyState", "getState"],
   },
   {
     component: IgxGridToolbarActionsComponent,

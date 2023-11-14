@@ -99,6 +99,11 @@ interface Feature {
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
+/* blazorElement */
+/* contentParent: GridBaseDirective */
+/* wcElementTag: igc-grid-state-directive */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 @Directive({
     selector: '[igxGridState]',
     standalone: true
@@ -109,7 +114,7 @@ export class IgxGridStateDirective {
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
     private currGrid: GridType;
-    private _options: IGridStateOptions = {
+    protected _options: IGridStateOptions = {
         columns: true,
         filtering: true,
         advancedFiltering: true,
@@ -465,7 +470,7 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        private viewRef: ViewContainerRef, private envInjector: EnvironmentInjector,  private injector: Injector) { }
+        protected viewRef: ViewContainerRef, protected envInjector: EnvironmentInjector,  protected injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
@@ -492,6 +497,7 @@ export class IgxGridStateDirective {
         return state;
     }
 
+    /* blazorSuppress */
     /**
      * Restores grid features' state based on the IGridState object passed as an argument.
      *

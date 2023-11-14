@@ -32,6 +32,7 @@ import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.in
 
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
+import { IgxGridStateComponent } from '../lib/state.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,10 @@ export class AppModule {
 
     const actionStrip = createIgxCustomElement(IgxActionStripComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-action-strip", actionStrip);
+
+    const statePersistance = createIgxCustomElement(IgxGridStateComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-state", statePersistance);
+
     const editingActions = createIgxCustomElement(IgxGridEditingActionsComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-editing-actions", editingActions);
     const pinningActions = createIgxCustomElement(IgxGridPinningActionsComponent, { injector: this.injector, registerConfig });
