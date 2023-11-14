@@ -56,6 +56,7 @@
 @use '../components/grid-toolbar/grid-toolbar-component' as grid-toolbar;
 @use '../components/highlight/highlight-component' as highlight;
 @use '../components/icon/icon-component' as icon;
+@use '../components/icon-button/icon-button-component' as icon-button;
 @use '../components/input/input-group-component' as input-group;
 @use '../components/label/label-component' as label;
 @use '../components/list/list-component' as list;
@@ -152,6 +153,7 @@
     @include pivot-data-selector.component();
     @include highlight.component();
     @include icon.component();
+    @include icon-button.component();
     @include input-group.component();
     @include label.component();
     @include list.component();

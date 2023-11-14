@@ -6,18 +6,18 @@ import {
     Input,
     Output,
     Renderer2,
-    HostListener,
     Optional,
     Inject,
     booleanAttribute
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
+import { IgxButtonBaseDirective } from './button-base';
 
 const IgxButtonType = mkenum({
     Flat: 'flat',
-    Raised: 'raised',
+    Contained: 'contained',
     Outlined: 'outlined',
     Icon: 'icon',
     FAB: 'fab'
@@ -51,32 +51,14 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends DisplayDensityBase {
+export class IgxButtonDirective extends IgxButtonBaseDirective {
     private static ngAcceptInputType_type: IgxButtonType | '';
-
-    /**
-     * Called when the button is clicked.
-     */
-    @Output()
-    public buttonClick = new EventEmitter<any>();
 
     /**
      * Called when the button is selected.
      */
     @Output()
     public buttonSelected = new EventEmitter<IButtonEventArgs>();
-
-    /**
-     * Sets/gets the `role` attribute.
-     *
-     * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'button';
 
     /**
      * @hidden
@@ -150,15 +132,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(ev: MouseEvent) {
-        this.buttonClick.emit(ev);
-    }
-
-    /**
      * Returns the underlying DOM element.
      */
     public get nativeElement() {
@@ -182,6 +155,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
+     * @deprecated in version 17.1.0.
      * Sets the button text color.
      *
      * @example
@@ -196,6 +170,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
+     * @deprecated in version 17.1.0.
      * Sets the background color of the button.
      *
      * @example
@@ -224,18 +199,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-      * Enables/disables the button.
-      *
-      * @example
-      * ```html
-      * <button igxButton="fab" disabled></button>
-      * ```
-      */
-    @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-button--disabled')
-    public disabled = false;
-
-    /**
      * @hidden
      * @internal
      */
@@ -248,9 +211,9 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-button--raised')
-    public get raised(): boolean {
-        return this._type === IgxButtonType.Raised;
+    @HostBinding('class.igx-button--contained')
+    public get contained(): boolean {
+        return this._type === IgxButtonType.Contained;
     }
 
     /**
@@ -287,15 +250,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     @HostBinding('style.--component-size')
     public get componentSize() {
         return this.getComponentSizeStyles();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.disabled')
-    public get disabledAttribute() {
-        return this.disabled ? this.disabled : null;
     }
 
     /**
