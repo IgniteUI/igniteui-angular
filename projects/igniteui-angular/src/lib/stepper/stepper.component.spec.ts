@@ -56,13 +56,13 @@ const getStepperPositions = (): string[] => {
 const testAnimationBehvior = (
     val: any,
     fix: ComponentFixture<IgxStepperSampleTestComponent>,
+    activeChangeSpy: jasmine.Spy,
     isHorAnimTypeInvalidTest: boolean
 ): void => {
     const stepper = fix.componentInstance.stepper;
     stepper.steps[0].active = true;
     fix.detectChanges();
     const previousActiveStep = stepper.steps[0];
-    const activeChangeSpy = spyOn(previousActiveStep.activeChange, 'emit');
     activeChangeSpy.calls.reset();
     stepper.next();
     fix.detectChanges();
@@ -79,6 +79,7 @@ describe('Rendering Tests', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
+    let activeChangeSpy;
 
     beforeAll(
         waitForAsync(() => {
@@ -95,7 +96,13 @@ describe('Rendering Tests', () => {
         fix = TestBed.createComponent(IgxStepperSampleTestComponent);
         fix.detectChanges();
         stepper = fix.componentInstance.stepper;
+        activeChangeSpy = spyOn(stepper.steps[0].activeChange, 'emit');
     });
+
+    afterEach(() => {
+        activeChangeSpy.calls.reset();
+    });
+
 
     describe('General', () => {
         it('should render a stepper containing a sequence of steps', () => {
@@ -573,7 +580,7 @@ describe('Rendering Tests', () => {
 
             for (const val of numericTestValues) {
                 fix.componentInstance.animationDuration = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehvior(val, fix, activeChangeSpy, false);
             }
 
             const fallbackToDefaultValues = [-1, 0, null, undefined, 'sampleString', [], {}];
@@ -582,7 +589,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
                 expect(stepper.animationDuration)
                     .toBe((stepper as any)._defaultAnimationDuration);
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehvior(val, fix, activeChangeSpy, false);
             }
 
             fix.componentInstance.animationDuration = 300;
@@ -592,13 +599,13 @@ describe('Rendering Tests', () => {
             const horAnimTypeValidValues = ['slide', 'fade', 'none'];
             for (const val of horAnimTypeValidValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehvior(val, fix, activeChangeSpy, false);
             }
 
             const horAnimTypeTestValues = ['sampleString', null, undefined, 0, [], {}];
             for (const val of horAnimTypeTestValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehvior(val, fix, true);
+                testAnimationBehvior(val, fix, activeChangeSpy, true);
             }
 
             stepper.orientation = IgxStepperOrientation.Vertical;
@@ -607,7 +614,7 @@ describe('Rendering Tests', () => {
             const vertAnimTypeTestValues = ['fade', 'grow', 'none', 'sampleString', null, undefined, 0, [], {}];
             for (const val of vertAnimTypeTestValues) {
                 fix.componentInstance.verticalAnimationType = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehvior(val, fix, activeChangeSpy, false);
             }
         }));
 
@@ -713,7 +720,7 @@ describe('Rendering Tests', () => {
         it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', fakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';
-            testAnimationBehvior('fade', fix, false);
+            testAnimationBehvior('fade', fix, activeChangeSpy, false);
         }));
     });
 
