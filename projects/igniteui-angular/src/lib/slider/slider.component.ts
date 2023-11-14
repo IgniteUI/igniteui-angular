@@ -1050,7 +1050,7 @@ export class IgxSliderComponent implements
 
         this._ngZone.runOutsideAngular(() => {
             resizeObservable(this._el.nativeElement).pipe(
-                throttleTime(40),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run(() => {
                     this.stepDistance = this.calculateStepDistance();
                 }));
