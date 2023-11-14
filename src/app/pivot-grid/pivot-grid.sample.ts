@@ -83,11 +83,13 @@ export class PivotGridSampleComponent {
     public dimensions: IPivotDimension[] = [
         {
             memberName: 'Country',
+            displayName: 'Country',
             enabled: true
         },
         new IgxPivotDateDimension(
             {
                 memberName: 'Date',
+                displayName: 'Date',
                 enabled: true
             },
             {
@@ -98,20 +100,23 @@ export class PivotGridSampleComponent {
         {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
+            displayName: "All Products",
             enabled: true,
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
+                displayName: 'Product Category',
                 enabled: true
             }
         },
         {
             memberName: 'AllSeller',
-            memberFunction: () => 'All Sellers',
+            displayName: 'All Sellers',
             enabled: true,
             childLevel: {
                 enabled: true,
-                memberName: 'SellerName'
+                memberName: 'SellerName',
+                displayName: 'Seller Name'
             }
         },
     ];
@@ -122,6 +127,7 @@ export class PivotGridSampleComponent {
         columns: [
             {
                 memberName: 'City',
+                displayName: 'City',
                 enabled: true,
                 width: '100px'
             },
@@ -129,6 +135,7 @@ export class PivotGridSampleComponent {
         rows: [
             {
                 memberName: 'SellerName',
+                displayName: 'Seller Name',
                 enabled: true,
                 //filter: this.filterExpTree
             }
@@ -136,6 +143,7 @@ export class PivotGridSampleComponent {
         values: [
             {
                 member: 'UnitsSold',
+                displayName: 'Units Sold',
                 aggregate: {
                     key: 'SUM',
                     aggregatorName: 'SUM',
@@ -313,6 +321,7 @@ export class PivotGridSampleComponent {
     public insert() {
         this.grid1.insertDimensionAt({
             memberName: 'Country',
+            displayName: 'Country',
             enabled: true
         }, PivotDimensionType.Filter, 0);
     }
@@ -370,12 +379,14 @@ export class PivotGridSampleComponent {
             columns: [
                 {
                     memberName: 'City',
+                    displayName: 'City',
                     enabled: true,
                 },
             ],
             rows: [
                 {
                     memberName: 'SellerName',
+                    displayName: 'Seller Name',
                     enabled: true,
                     filter: this.filterExpTree
                 }
@@ -383,6 +394,7 @@ export class PivotGridSampleComponent {
             values: [
                 {
                     member: 'UnitsSold',
+                    displayName: 'Units Sold',
                     aggregate: {
                         key: 'SUM',
                         aggregatorName: 'SUM',
