@@ -94,9 +94,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private _updateInput = true;
 
-    // stores the last filtered value - move to common?
-    private _internalFilter = '';
-
     private _collapsing = false;
 
     /** @hidden @internal */
@@ -185,9 +182,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
-        this.filterValue = this._internalFilter = this._displayValue?.toString();
+        this._displayValue = this.createDisplayText(super.selection, oldSelection);
+        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+        this.filterValue = this._displayValue?.toString() || '';
     }
 
     /** @hidden @internal */
@@ -225,7 +222,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (this.composing) {
                 this.comboInput.focus();
             }
-            this._internalFilter = this.comboInput.value;
         });
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             if (args.cancel) {
@@ -238,9 +234,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this._onTouchedCallback();
             }
             this.comboInput.focus();
-        });
-        this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.filterValue = this._internalFilter = this.comboInput.value;
         });
 
         // in reactive form the control is not present initially
@@ -265,7 +258,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public override handleInputChange(event?: any): void {
         if (event !== undefined) {
-            this.filterValue = this._internalFilter = this.searchValue = typeof event === 'string' ? event : event.target.value;
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
@@ -303,15 +296,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (filtered === null || filtered === undefined) {
                 return;
             }
-            if (!this.dropdown.collapsed) {
-                this.select(this.dropdown.focusedItem.itemID);
-                event.preventDefault();
-                event.stopPropagation();
-                this.close();
-            }
+            this.select(this.dropdown.focusedItem.itemID);
+            event.preventDefault();
+            event.stopPropagation();
+            this.close();
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
-            this.filterValue = this.getElementVal(filtered);
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
@@ -364,11 +354,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearOnBlur();
         }
         super.onBlur();
-    }
-
-    /** @hidden @internal */
-    public onFocus(): void {
-        this._internalFilter = this.comboInput.value || '';
     }
 
     /** @hidden @internal */
@@ -467,7 +452,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.selectionService.select_items(this.id, argsSelection, true);
             this._value = argsSelection;
             if (this._updateInput) {
-                this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = displayText !== args.displayText
+                this.comboInput.value = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText(this.selection, [args.oldSelection]);
             }
@@ -547,7 +532,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this.comboInput.value = this._internalFilter = this._displayValue = this.searchValue = '';
+        this.comboInput.value = this._displayValue = this.searchValue = '';
     }
 
     private isValid(value: any): boolean {
