@@ -48,6 +48,5 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     afterAll(() => {
         testBed.resetTestingModule = originReset;
         testBed.resetTestingModule();
-        _resizerSub = null;
     });
 };
