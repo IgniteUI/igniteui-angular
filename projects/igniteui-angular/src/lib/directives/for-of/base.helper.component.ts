@@ -9,7 +9,7 @@ import {
     NgZone
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Subject, asyncScheduler } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
 
