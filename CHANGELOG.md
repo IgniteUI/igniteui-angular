@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.1.0
+### New Features
+- `IgxPivotGrid`
+    - `IPivotDimension` interface now exposes a property called `displayName` similar to the one in the `IPivotValue` interface. This property is optional and will be displayed inside the chips for rows and columns in the `IgxPivotGrid`. If the `displayName` proeprty is not set, `memberName` will be used as a fallback.
+
 ## 17.0.0
 ### General
 - `IgxCard`
