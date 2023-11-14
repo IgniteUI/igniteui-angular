@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent } from 'igniteui-angular';
+import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-button-sample',
@@ -7,7 +7,7 @@ import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxIconCom
     templateUrl: 'button.sample.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent]
+    imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent, IgxIconButtonDirective]
 })
 export class ButtonSampleComponent implements OnInit {
     public density: DisplayDensity = 'comfortable';

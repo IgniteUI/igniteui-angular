@@ -18,9 +18,9 @@
             @extend %igx-button--flat !optional;
         }
 
-        // RAISED BUTTON
-        @include m(raised) {
-            @extend %igx-button--raised !optional;
+        // CONTAINED BUTTON
+        @include m(contained) {
+            @extend %igx-button--contained !optional;
         }
 
         // OUTLINED BUTTON
