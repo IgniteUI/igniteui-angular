@@ -22,6 +22,7 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     beforeAll(() => {
         testBed.resetTestingModule();
         testBed.resetTestingModule = () => testBed;
+        jasmine.getEnv().allowRespy(true);
     });
 
     if (configureAction) {
