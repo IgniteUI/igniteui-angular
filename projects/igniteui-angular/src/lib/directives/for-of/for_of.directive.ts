@@ -547,6 +547,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         }
     }
 
+
     /**
      * Shifts the scroll thumb position.
      * ```typescript
@@ -554,6 +555,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * ```
      *
      * @param addTop negative value to scroll up and positive to scroll down;
+     */
+    public addScrollTop(add: number): boolean {
+        return this.addScroll(add);
+    }
+
+    /**
+     * Shifts the scroll thumb position.
+     * ```typescript
+     * this.parentVirtDir.addScroll(5);
+     * ```
+     *
+     * @param add negative value to scroll previous and positive to scroll next;
      */
     public addScroll(add: number): boolean {
         if (add === 0) {
