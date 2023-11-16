@@ -89,6 +89,7 @@ export interface IColumnState {
     columnGroup: boolean;
     parent: any;
     disableHiding: boolean;
+    disablePinning: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -200,7 +201,8 @@ export class IgxGridStateDirective {
                     selectable: c.selectable,
                     parent: c.parent ? c.parent.header : null,
                     columnGroup: c.columnGroup,
-                    disableHiding: c.disableHiding
+                    disableHiding: c.disableHiding,
+                    disablePinning: c.disablePinning
                 }));
                 return { columns: gridColumns };
             },
