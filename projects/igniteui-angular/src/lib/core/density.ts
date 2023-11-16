@@ -118,7 +118,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     }
 
     public get size() {
-        return document.defaultView
+        return globalThis.document.defaultView
             .getComputedStyle(this._host.nativeElement)
             .getPropertyValue('--ig-size')
             .trim();
