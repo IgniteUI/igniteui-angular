@@ -159,7 +159,8 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID, rowKey: rowID,
+                rowID,
+                rowKey: rowID,
                 insertAtIndex: 0,
                 isPinned: true,
                 row,
@@ -183,7 +184,8 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID, rowKey: rowID,
+                rowID,
+                rowKey: rowID,
                 insertAtIndex: 0,
                 isPinned: true,
                 row,
@@ -196,7 +198,8 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID: rowID2, rowKey: rowID2,
+                rowID: rowID2,
+                rowKey: rowID2,
                 insertAtIndex: 1,
                 isPinned: true,
                 row: row2,
@@ -240,7 +243,8 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.rowPinned.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinned.emit).toHaveBeenCalledWith({
-                rowID, rowKey: rowID,
+                rowID,
+                rowKey: rowID,
                 insertAtIndex: 0,
                 isPinned: true,
                 row,

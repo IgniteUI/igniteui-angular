@@ -539,7 +539,8 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
         const unpinIndex = this.grid.getUnpinnedIndexById(rowId);
         this.addRowParent = {
-            rowID: rowId, rowKey: rowId,
+            rowID: rowId,
+            rowKey: rowId,
             index: isInPinnedArea ? pinIndex : unpinIndex,
             asChild: newRowAsChild,
             isPinned: isInPinnedArea

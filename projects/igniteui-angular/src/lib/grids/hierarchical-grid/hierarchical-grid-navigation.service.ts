@@ -190,7 +190,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
          this.grid.childLayoutList.first : this.grid.childLayoutList.toArray()[childLayoutIndex];
         const rowId = this.grid.dataView[parentRowIndex].rowID;
         const pathSegment: IPathSegment = {
-            rowID: rowId, rowKey: rowId,
+            rowID: rowId,
+            rowKey: rowId,
             rowIslandKey: ri.key
         };
         const childGrid =  this.grid.gridAPI.getChildGrid([pathSegment]);
