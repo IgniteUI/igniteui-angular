@@ -920,6 +920,7 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not clear selection on tab/blur after filtering and selecting a value', () => {
+            combo.focusSearchInput();
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
@@ -1037,6 +1038,7 @@ describe('IgxSimpleCombo', () => {
         }));
 
         it('should select the first filtered item with Enter', () => {
+            combo.focusSearchInput();
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
