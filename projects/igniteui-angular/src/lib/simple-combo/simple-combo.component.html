@@ -17,7 +17,7 @@
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
-        (focus)="onFocus()" (input)="handleInputChange($event)" (click)="handleInputClick()"
+        (input)="handleInputChange($event)" (click)="handleInputClick()"
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
 
     <ng-container ngProjectAs="igx-suffix">
@@ -62,7 +62,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item  [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
+        <igx-combo-item [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
                 | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
                 | comboGrouping:groupKey:valueKey:groupSortingDirection;
