@@ -335,7 +335,7 @@ describe('IgxForOf directive -', () => {
             ];
             fix.detectChanges();
             await wait(200);
-            const cache = (fix.componentInstance.parentVirtDir as any).heightCache;
+            const cache = (fix.componentInstance.parentVirtDir as any).individualSizeCache;
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 100, 100, 100]);
             fix.componentInstance.scrollTop(400);
             fix.detectChanges();

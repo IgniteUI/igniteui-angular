@@ -796,11 +796,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
                 const margin = this.getMargin(rNode, dimension);
                 const oldVal = dimension === 'height' ? this.individualSizeCache[index] : this.igxForOf[index][dimension];
                 const newVal = (dimension === 'height' ? h : rNode.clientWidth) + margin;
-                if (dimension === 'height') {
-                    this.individualSizeCache[index] = newVal;
-                } else {
-                    this.igxForOf[index][dimension] = newVal;
-                }
+                this.individualSizeCache[index] = newVal;
                 const currDiff = newVal - oldVal;
                 diffs.push(currDiff);
                 totalDiff += currDiff;
@@ -1063,7 +1059,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         const prevStartIndex = this.state.startIndex;
         const scrLeft = event.target.scrollLeft;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(this._virtScrollPosition));
         if (scrLeft < 0) {
             // RTL
             this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
@@ -1159,7 +1155,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     protected _calculateChunkSize(): number {
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
-            if (!this.sizesCache) {
+            if (!this.sizesCache || this.sizesCache.length === 0) {
                 this.initSizesCache(this.igxForOf);
             }
             chunkSize = this._calcMaxChunkSize();
@@ -1196,9 +1192,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
             size = this._getItemSize(items[i], dimension);
-            if (this.igxForScrollOrientation === 'vertical') {
-                this.individualSizeCache.push(size);
-            }
+            this.individualSizeCache.push(size);
             totalSize += size;
             this.sizesCache.push(totalSize);
         }
