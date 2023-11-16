@@ -10,9 +10,29 @@ import {
     Inject,
     ElementRef,
     inject,
+    runInInjectionContext,
+    Injector,
 } from '@angular/core';
 import { IBaseEventArgs, mkenum } from './utils';
 import { DOCUMENT } from '@angular/common';
+
+/** Create a document factory **/
+function _document(): Document {
+  return document;
+}
+
+/** 
+ * Construct a provider object to be used when creating an Injector context 
+ */
+const documentProviders = [
+  { provide: DOCUMENT, useFactory: _document }
+];
+
+/** 
+ * A custom Injector context used when injecting DOCUMENT using
+ * the `inject` function.
+ */
+const documentInjector = Injector.create({ providers: documentProviders });
 
 /**
  * Defines the possible values of the components' display density.
@@ -66,7 +86,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
-    private _document = inject(DOCUMENT);
+    private _document: Document;
 
     @Output()
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
@@ -145,6 +165,10 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         protected _host: ElementRef
     ) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
+
+        runInInjectionContext(documentInjector, () => {
+            this._document = inject(DOCUMENT);
+        });
     }
 
     /**
