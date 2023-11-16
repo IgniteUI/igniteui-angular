@@ -160,6 +160,11 @@
             "version": "17.0.0",
             "description": "Updates Ignite UI for Angular from v16.1.x to v17.0.0",
             "factory": "./update-17_0_0"
+        },
+        "migration-33": {
+            "version": "17.1.0",
+            "description": "Updates Ignite UI for Angular from v17.0.x to v17.1.0",
+            "factory": "./update-17_1_0"
         }
     }
 }
