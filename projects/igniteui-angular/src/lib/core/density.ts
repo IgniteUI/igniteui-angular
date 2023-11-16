@@ -9,8 +9,10 @@ import {
     Optional,
     Inject,
     ElementRef,
+    inject,
 } from '@angular/core';
 import { IBaseEventArgs, mkenum } from './utils';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * Defines the possible values of the components' display density.
@@ -64,6 +66,8 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
+    private _document = inject(DOCUMENT);
+
     @Output()
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
@@ -118,7 +122,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     }
 
     public get size() {
-        return document.defaultView
+        return this._document.defaultView
             .getComputedStyle(this._host.nativeElement)
             .getPropertyValue('--ig-size')
             .trim();
