@@ -1729,22 +1729,15 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected override _updateSizeCache(changes: IterableChanges<T> = null) {
-        if (this.igxForScrollOrientation === 'horizontal') {
-            const oldSize = this.sizesCache[this.sizesCache.length - 1];
-            const newSize = this.initSizesCache(this.igxForOf);
-            const diff = oldSize - newSize;
-            return diff;
-        }
-
-        const oldHeight = this.individualSizeCache.length > 0 ? this.individualSizeCache.reduce((acc, val) => acc + val) : 0;
-        let newHeight = oldHeight;
+        const oldSize = this.individualSizeCache.length > 0 ? this.individualSizeCache.reduce((acc, val) => acc + val) : 0;
+        let newSize = oldSize;
         if (changes && !this.isRemote) {
-            newHeight = this.handleCacheChanges(changes);
+            newSize = this.handleCacheChanges(changes);
         } else {
             return;
         }
 
-        const diff = oldHeight - newHeight;
+        const diff = oldSize - newSize;
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
@@ -1753,7 +1746,8 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             // So leaving as is for the moment.
             requestAnimationFrame(() => {
                 this.recalcUpdateSizes();
-                const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                const dir = this.igxForScrollOrientation === "vertical" ? "top" : "left";
+                const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style[dir], 10);
                 if (this.scrollPosition !== 0) {
                     this.scrollPosition = this.sizesCache[this.state.startIndex] - offset;
                 } else {
