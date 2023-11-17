@@ -253,11 +253,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
-            "main": "projects/bundle-test/src/main.ts",
+            "browser": "projects/bundle-test/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -291,9 +291,7 @@
               "sourceMap": true
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
