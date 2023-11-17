@@ -946,10 +946,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
                 const rowDeleteArgs = {
+                    rowID: someRow.key,
                     primaryKey: someRow.key,
                     rowKey: someRow.key,
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
+                    oldValue: treeGrid.getRowData(someRow.key),
                     owner: treeGrid
                 };
 
@@ -990,10 +993,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 const rowDeleteArgs = {
+                    rowID: someRow.key,
                     primaryKey: someRow.key,
                     rowKey: someRow.key,
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
+                    oldValue: treeGrid.getRowData(someRow.key),
                     owner: treeGrid,
                 };
 

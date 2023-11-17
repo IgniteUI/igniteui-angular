@@ -1,10 +1,11 @@
 <div>
+    <button (click)="add()">ADD</button>
     <igx-grid
         #grid
         [data]="data"
         [width]="'800px'"
         [height]="'500px'"
-        [primaryKey]="'ID'"
+
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
         [rowEditable]="true"

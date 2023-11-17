@@ -4579,9 +4579,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden */
     public deleteRowById(rowId: any): any {
         const args: IRowDataCancelableEventArgs = {
+            rowID: rowId,
             primaryKey: rowId,
             rowKey: rowId,
             rowData: this.getRowData(rowId),
+            data: this.getRowData(rowId),
+            oldValue: this.getRowData(rowId),
             owner: this,
             isAddRow: false,
             cancel: false

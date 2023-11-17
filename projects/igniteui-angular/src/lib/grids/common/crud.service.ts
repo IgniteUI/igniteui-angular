@@ -38,9 +38,12 @@ export class IgxEditRow {
 
     public createRowDataEventArgs(event?: Event): IRowDataCancelableEventArgs {
         const args: IRowDataCancelableEventArgs = {
+            rowID: this.id,
             primaryKey: this.id,
             rowKey: this.id,
             rowData: this.data,
+            data: this.data,
+            oldValue: this.data,
             cancel: false,
             owner: this.grid,
             isAddRow: true,

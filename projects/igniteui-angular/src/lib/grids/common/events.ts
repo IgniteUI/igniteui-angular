@@ -101,8 +101,29 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
-
-export interface IRowDataCancelableEventArgs extends Omit<IGridEditEventArgs, 'rowID' | 'oldValue' | 'newValue' | 'cellID' | 'column'> {}
+export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
+    /**
+     * @deprecated
+     */
+    cellID?: {
+        rowID: any;
+        columnID: any;
+        rowIndex: number;
+    };
+    /**
+     * @deprecated
+     */
+    oldValue: any;
+    /**
+     * @deprecated
+     */
+    newValue?: any;
+    /**
+     * @deprecated
+     */
+    isAddRow?: boolean;
+    owner: GridType;
+}
 
 /**
  * The event arguments after a column's pin state is changed.

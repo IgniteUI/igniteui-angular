@@ -79,6 +79,10 @@ export class GridAddRowSampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
+    public add() {
+        this.grid.addRow({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'});
+    }
+
     public beginAddRowAtIndex(index: string) {
         const numeric = parseInt(index, 10);
         this.grid.beginAddRowByIndex(numeric);

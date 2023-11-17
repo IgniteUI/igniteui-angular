@@ -738,10 +738,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
         const args: IRowDataCancelableEventArgs = {
+            rowID: rowId,
             primaryKey: rowId,
             rowKey: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
+            data: this.getRowData(rowId),
+            oldValue: this.getRowData(rowId),
             owner: this
         };
         this.rowDelete.emit(args);
