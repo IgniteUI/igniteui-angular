@@ -1755,15 +1755,17 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
         // Get the identity changes to determine later if those that have changed their indexes should be assigned default item size.
         changes.forEachIdentityChange((item) => {
-            identityChanges[item.currentIndex] = item;
+            if (item.currentIndex !== item.previousIndex) {
+                // Filter out ones that have not changed their index.
+                identityChanges[item.currentIndex] = item;
+            }
         });
 
         // Processing each item that is passed to the igxForOf so far seem to be most reliable. We parse the updated list of items.
         changes.forEachItem((item) => {
-            const identityChange = identityChanges[item.currentIndex];
             if (item.previousIndex !== null &&
-                (numRemovedItems < 2 || !identityChanges.length || identityChange) &&
-                identityChange?.currentIndex !== identityChange?.previousIndex) {
+                (numRemovedItems < 2 || !identityChanges.length || identityChanges[item.currentIndex])
+                && this.igxForScrollOrientation !== "horizontal") {
                 // Reuse cache on those who have previousIndex.
                 // When there are more than one removed items currently the changes are not readable so ones with identity change
                 // should be racalculated.
