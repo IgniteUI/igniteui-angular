@@ -12,7 +12,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
@@ -117,9 +117,11 @@ describe('IgxHierarchicalGrid Navigation', () => {
         });
 
         it('should allow navigating up in child grid when child grid selected cell moves outside the parent view port.',  async () => {
-            hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-            fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+            hierarchicalGrid.verticalScrollContainer.scrollTo(2);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const childCell =  childGrid.dataRowList.toArray()[4].cells.first;
@@ -157,6 +159,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         });
 
         it('should allow navigating to start in child grid when child grid target row moves outside the parent view port.', async () => {
+            hierarchicalGrid.navigateTo(2);
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
             fixture.detectChanges();
             await wait();
