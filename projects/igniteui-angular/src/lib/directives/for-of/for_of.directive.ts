@@ -1717,6 +1717,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         let size = 0;
         let i = 0;
         this.sizesCache = [];
+        this.individualSizeCache = [];
         this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
