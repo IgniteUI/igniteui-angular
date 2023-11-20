@@ -923,3 +923,25 @@ export interface IPinningConfig {
     columns?: ColumnPinningPosition;
     rows?: RowPinningPosition;
 }
+
+/**
+ * An interface describing settings for clipboard options
+ */
+export interface IClipboardOptions {
+    /**
+     * Enables/disables the copy behavior
+     */
+    enabled: boolean;
+    /**
+     * Include the columns headers in the clipboard output.
+     */
+    copyHeaders: boolean;
+    /**
+     * Apply the columns formatters (if any) on the data in the clipboard output.
+     */
+    copyFormatters: boolean;
+    /**
+     * The separator used for formatting the copy output. Defaults to `\t`.
+     */
+    separator: string;
+}
