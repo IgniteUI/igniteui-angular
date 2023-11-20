@@ -193,6 +193,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should not lose scroll position after expanding a row when there are already expanded rows above.', async () => {
         // Expand two rows at the top
+        await wait(50);
+        fixture.detectChanges();
         (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
         await wait();
         fixture.detectChanges();
