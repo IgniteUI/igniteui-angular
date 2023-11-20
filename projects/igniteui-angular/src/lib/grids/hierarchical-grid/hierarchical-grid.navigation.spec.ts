@@ -369,6 +369,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
         });
 
         it('if next child cell is not in view should scroll parent so that it is in view.', async () => {
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(4);
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
@@ -654,6 +656,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
         // complex tests
         it('in case prev cell is not in view port should scroll the closest scrollable parent so that cell comes in view.', async () => {
             // scroll parent so that child top is not in view
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.addScrollTop(300);
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
