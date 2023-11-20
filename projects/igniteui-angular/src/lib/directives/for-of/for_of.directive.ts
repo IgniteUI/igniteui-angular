@@ -1738,23 +1738,6 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
 
         const diff = oldSize - newSize;
-
-        // if data has been changed while container is scrolled
-        // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && this.platformUtil.isBrowser) {
-            // TODO: This code can be removed. However tests need to be rewritten in a way that they wait for ResizeObserved to complete.
-            // So leaving as is for the moment.
-            requestAnimationFrame(() => {
-                this.recalcUpdateSizes();
-                const dir = this.igxForScrollOrientation === "vertical" ? "top" : "left";
-                const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style[dir], 10);
-                if (this.scrollPosition !== 0) {
-                    this.scrollPosition = this.sizesCache[this.state.startIndex] - offset;
-                } else {
-                    this._updateScrollOffset();
-                }
-            });
-        }
         return diff;
     }
 
