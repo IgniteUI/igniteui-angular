@@ -419,11 +419,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public ngAfterContentInit() {
-        this.templateButtons.forEach((button) => {
-            if (!button.initialDensity) {
-                button.displayDensity = this.displayDensity;
-            }
-        });
+        if (typeof window !== "undefined") {
+            this.templateButtons.forEach((button) => {
+                if (!button.initialDensity) {
+                    button.displayDensity = this.displayDensity;
+                }
+            });
+        }
     }
 
     /**
