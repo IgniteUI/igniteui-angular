@@ -15,7 +15,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
-    const tags = ['button', 'span', 'a']
+    const tags = ['button', 'span', 'a', 'div']
     const type = ['igxButton'];
 
     const applyChanges = () => {

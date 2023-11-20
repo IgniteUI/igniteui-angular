@@ -155,7 +155,6 @@ export * from './lib/directives/focus/focus.module';
 export * from './lib/directives/focus-trap/focus-trap.module';
 export * from './lib/directives/for-of/for_of.module';
 export * from './lib/directives/form-control/form-control.module';
-export * from './lib/directives/button/icon-button.module';
 export * from './lib/directives/layout/layout.module';
 export * from './lib/directives/mask/mask.module';
 export * from './lib/directives/radio/radio-group.module';

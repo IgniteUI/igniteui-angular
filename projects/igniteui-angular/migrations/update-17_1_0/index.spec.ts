@@ -39,6 +39,9 @@ fdescribe(`Update to ${version}`, () => {
         <span igxButton="raised">
             Go Back
         </span>
+        <div igxButton="raised">
+            Button
+        </div>
         `
         );
 
@@ -52,6 +55,9 @@ fdescribe(`Update to ${version}`, () => {
         <span igxButton="contained">
             Go Back
         </span>
+        <div igxButton="contained">
+            Button
+        </div>
         `
         );
     });
