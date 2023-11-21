@@ -13,10 +13,10 @@
                 </ng-template>
             </igx-date-picker>
             <div class="date-picker-sample-buttons">
-                <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-                <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
-                <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+                <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+                <button igxButton="contained" igxRipple (click)="changeLocale('en')">Change locale to English</button>
+                <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
             </div>
         </div>
 <!-- <section class="sample-content">
@@ -82,10 +82,10 @@
                 </ng-template>
             </igx-date-picker>
             <div class="date-picker-sample-buttons">
-                <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-                <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
-                <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+                <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+                <button igxButton="contained" igxRipple (click)="changeLocale('en')">Change locale to English</button>
+                <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
             </div>
         </div>
     </article>
@@ -105,7 +105,7 @@
         <div class="preview">
             <igx-date-picker #dp7 mode="dialog" cancelButtonLabel="close" todayButtonLabel="today" [(ngModel)]="date7">
             </igx-date-picker>
-            <button igxButton igxRipple type="raised" (click)="dp7.clear()">
+            <button igxButton igxRipple type="contained" (click)="dp7.clear()">
                 Deselect date
             </button>
         </div>

@@ -229,13 +229,13 @@
         </div>
         <div class="switches" style="min-width: inherit">
             <div class="control-item">
-                <button igxButton="raised" (click)="restoreGridState(state)">Restore All</button>
+                <button igxButton="contained" (click)="restoreGridState(state)">Restore All</button>
             </div>
             <div class="control-item">
-                <button igxButton="raised" (click)="saveGridState(state)">Save</button>
+                <button igxButton="contained" (click)="saveGridState(state)">Save</button>
             </div>
             <div class="control-item" *ngFor="let f of features">
-                <button igxButton="raised" (click)="restoreFeature(state, f.key)">{{ f.shortName }}</button>
+                <button igxButton="contained" (click)="restoreFeature(state, f.key)">{{ f.shortName }}</button>
             </div>
         </div>
     </div>

@@ -150,13 +150,13 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonLabel = '';
 
     /**
-     * An @Input property to set the left button `type`. The types are `flat`, `raised` and `fab`.
+     * An @Input property to set the left button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
-     * The `raised` type button is also a rectangle but has a shadow. <br>
+     * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
      * The default value is `flat`.
      * ```html
-     * <igx-dialog leftButtonType="raised" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
+     * <igx-dialog leftButtonType="contained" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
      */
     @Input()
@@ -199,9 +199,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonLabel = '';
 
     /**
-     * An @Input property to set the right button `type`. The types are `flat`, `raised` and `fab`.
+     * An @Input property to set the right button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
-     * The `raised` type button is also a rectangle but has a shadow. <br>
+     * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
      * The default value is `flat`.
      * ```html
@@ -506,7 +506,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.open() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -528,7 +528,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.close() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -543,7 +543,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.toggle() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */

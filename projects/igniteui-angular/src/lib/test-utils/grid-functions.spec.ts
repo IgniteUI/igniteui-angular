@@ -738,8 +738,8 @@ export class GridFunctions {
 
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
-        const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-        const applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        const containedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--contained'));
+        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'apply');
         return applyButton;
     }
 
@@ -771,8 +771,8 @@ export class GridFunctions {
 
     public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--raised'));
-        const applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--contained'));
+        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'apply');
         return applyButton as HTMLElement;
     }
 
@@ -784,8 +784,8 @@ export class GridFunctions {
 
     public static clickClearFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
-        const button: any = raisedButtons.find((rb: any) => rb.innerText === 'Clear filter');
+        const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
+        const button: any = containedButtons.find((rb: any) => rb.innerText === 'Clear filter');
         button.click();
         fix.detectChanges();
     }
