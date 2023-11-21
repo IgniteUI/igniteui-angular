@@ -1,15 +1,52 @@
 <h4 class="sample-title">Grid with primary key ProductID</h4>
 
 <div class="density-chooser">
-    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    <igx-buttongroup
+        [values]="sizes"
+        (selected)="selectSize($event)"
+    ></igx-buttongroup>
 </div>
-<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
+
+<br>
+
+<igx-grid
+    (cellEdit)="cellEdit($event)"
+    #grid1
+    [filterMode]="'excelStyleFilter'"
+    [moving]="true"
+    locale="fr-FR"
+    [data]="data"
+    [primaryKey]="'ProductID'"
+    [rowEditable]="true"
+    width="1500px"
+    height="550px"
+    [rowSelection]="selectionMode"
+>
+    <igx-column
+        field="OrderDate"
+        width="200px"
+        [dataType]="'date'"
+        [hidden]="orderDateHidden"
+        [filterable]="true"
+        [hasSummary]="true"
+        [summaries]="earliest"
+        [editable]="true"
+        [resizable]="true"
+    >
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
                 </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2" required width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column
+        field="OrderDate2"
+        required
+        width="200px"
+        [dataType]="'date'"
+        [filterable]="true"
+        [hasSummary]="true"
+        [editable]="true"
+        [resizable]="true"
+    >
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
@@ -22,50 +59,159 @@
     </igx-column>
     <!--     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
     </igx-column> -->
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
+    <igx-column
+        field="ReorderLevel"
+        width="200px"
+        [sortable]="true"
+        [filterable]="true"
+        [editable]="true"
+        [dataType]="'number'"
+        [hasSummary]="false"
+    >
     </igx-column>
-    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column
+        field="ProductName"
+        width="200px"
+        [groupable]="kk"
+        [header]="pname"
+        [sortable]="true"
+        [dataType]="'string'"
+        [editable]="true"
+        [resizable]="true"
+    >
     </igx-column>
-    <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
-      </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column
+        required
+        field="UnitsInStock"
+        header="UnitsInStock"
+        width="200px"
+        [dataType]="'number'"
+        [editable]="true"
+        [sortable]="true"
+        [hasSummary]="false"
+    >
+    </igx-column>
+    <igx-column
+        field="Discontinued"
+        header="Discontinued"
+        [dataType]="'boolean'"
+        width="200px"
+        [hasSummary]="true"
+        [editable]="true"
+        [resizable]="true"
+    >
     </igx-column>
     <igx-paginator></igx-paginator>
 </igx-grid>
-<input igxButton="raised" id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
+<input
+    igxButton="raised"
+    id="updBtn"
+    type="button"
+    (click)="updRecord()"
+    value="Update cell/record"
+/>
 <button igxButton="raised" (click)="addRow()">Add Row</button>
 <button igxButton="raised" (click)="updateCell()">Update Cell</button>
 <button igxButton="raised" (click)="pin()">Pin/Unpin</button>
 <button igxButton="raised" (click)="hideColumn()">Hide/Show OrderDate</button>
-<button igxButton="raised" (click)="updateSpecificRow()">Update Row by ID</button>
-<button igxButton="raised" (click)="enDisSummaries()">Enable/DisableSummaries</button>
+<button igxButton="raised" (click)="updateSpecificRow()">
+    Update Row by ID
+</button>
+<button igxButton="raised" (click)="enDisSummaries()">
+    Enable/DisableSummaries
+</button>
 <button igxButton="raised" (click)="kk = !kk">groupable</button>
-<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
-<input type="text" [(ngModel)]="pname">
+<button igxButton="raised" (click)="changeFormatOptions()">
+    Change formatting
+</button>
+<input type="text" [(ngModel)]="pname" />
 <h4 class="sample-title">Grid without PK</h4>
-<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
+<igx-grid
+    (cellEdit)="cellEdit($event)"
+    #grid
+    [data]="dataWithoutPK"
+    [displayDensity]="'compact'"
+    width="800px"
+    height="550px"
+    [moving]="true"
+    [rowSelection]="selectionMode"
+>
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.id.rowIndex)">Delete</button>
             <button (click)="updateRowbyIndex(cell.id.rowIndex)">Update</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
+    <igx-column
+        field="ProductID"
+        header="Product ID"
+        width="200px"
+        [headerClasses]="'prodId'"
+        [hasSummary]="true"
+        [editable]="true"
+    >
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="true">
+    <igx-column
+        field="ReorderLevel"
+        width="200px"
+        [sortable]="true"
+        [filterable]="true"
+        [editable]="true"
+        [dataType]="'number'"
+        [hasSummary]="true"
+    >
     </igx-column>
-    <igx-column required field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column
+        required
+        field="ProductName"
+        width="200px"
+        header="ProductName"
+        [sortable]="true"
+        [dataType]="'string'"
+        [editable]="true"
+        [resizable]="true"
+    >
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="true">
+    <igx-column
+        field="UnitsInStock"
+        header="UnitsInStock"
+        width="200px"
+        [dataType]="'number'"
+        [editable]="true"
+        [sortable]="true"
+        [hasSummary]="true"
+    >
         <ng-template igxCellEditor let-cell="cell">
             <input name="units" [(ngModel)]="cell.value" />
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [sortable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column
+        field="OrderDate"
+        width="200px"
+        [dataType]="'date'"
+        [filterable]="true"
+        [sortable]="true"
+        [hasSummary]="true"
+        [editable]="true"
+        [resizable]="true"
+    >
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [filterable]="true" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column
+        field="Discontinued"
+        header="Discontinued"
+        [filterable]="true"
+        [dataType]="'boolean'"
+        width="200px"
+        [hasSummary]="true"
+        [editable]="true"
+        [resizable]="true"
+    >
     </igx-column>
     <igx-paginator [perPage]="10"></igx-paginator>
 </igx-grid>
-<button igxButton="raised" (click)="moveColumns()">Move OrderDate and ProductName</button>
-<button igxButton="raised" (click)="updateSelectedCell()">Update Selected Cell</button>
+<button igxButton="raised" (click)="moveColumns()">
+    Move OrderDate and ProductName
+</button>
+<button igxButton="raised" (click)="updateSelectedCell()">
+    Update Selected Cell
+</button>
