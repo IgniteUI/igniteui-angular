@@ -52,7 +52,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         const delayTime = 0;
         this._zone.runOutsideAngular(() => {
             resizeObservable(this.nativeElement).pipe(
-                throttleTime(delayTime, undefined, { leading: false, trailing: true }),
+                throttleTime(delayTime),
                 takeUntil(this.destroy$)).subscribe((event) => this.handleMutations(event));
         });
     }

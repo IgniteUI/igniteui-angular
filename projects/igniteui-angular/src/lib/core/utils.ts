@@ -448,7 +448,6 @@ export const resizeObservable = (target: HTMLElement): Observable<ResizeObserver
     const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
         observer.next(entries);
     });
-    instance.disconnect();
     instance.observe(target);
     const unsubscribe = () => instance.disconnect();
     return unsubscribe;
