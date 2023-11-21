@@ -153,162 +153,150 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            TestBed.runInInjectionContext(() => {
-                const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
-                // dateRange.calendar = calendar;
-                let startDate = new Date(2020, 3, 7);
-                const endDate = new Date(2020, 6, 27);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
+            // dateRange.calendar = calendar;
+            let startDate = new Date(2020, 3, 7);
+            const endDate = new Date(2020, 6, 27);
 
-                // select range
-                dateRange.select(startDate, endDate);
-                expect(dateRange.value.start).toEqual(startDate);
-                expect(dateRange.value.end).toEqual(endDate);
+            // select range
+            dateRange.select(startDate, endDate);
+            expect(dateRange.value.start).toEqual(startDate);
+            expect(dateRange.value.end).toEqual(endDate);
 
-                // select startDate only
-                startDate = new Date(2023, 2, 11);
-                dateRange.select(startDate);
-                expect(dateRange.value.start).toEqual(startDate);
-                expect(dateRange.value.end).toEqual(startDate);
-            });
+            // select startDate only
+            startDate = new Date(2023, 2, 11);
+            dateRange.select(startDate);
+            expect(dateRange.value.start).toEqual(startDate);
+            expect(dateRange.value.end).toEqual(startDate);
         });
 
         it('should emit valueChange on selection', () => {
-            TestBed.runInInjectionContext(() => {
-                const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
-                // dateRange.calendar = calendar;
-                spyOn(dateRange.valueChange, 'emit');
-                let startDate = new Date(2017, 4, 5);
-                const endDate = new Date(2017, 11, 22);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
+            // dateRange.calendar = calendar;
+            spyOn(dateRange.valueChange, 'emit');
+            let startDate = new Date(2017, 4, 5);
+            const endDate = new Date(2017, 11, 22);
 
-                // select range
-                dateRange.select(startDate, endDate);
-                expect(dateRange.value.start).toEqual(startDate);
-                expect(dateRange.value.end).toEqual(endDate);
-                expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(1);
-                expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
+            // select range
+            dateRange.select(startDate, endDate);
+            expect(dateRange.value.start).toEqual(startDate);
+            expect(dateRange.value.end).toEqual(endDate);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(1);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
 
-                // select startDate only
-                startDate = new Date(2024, 12, 15);
-                dateRange.select(startDate);
-                expect(dateRange.value.start).toEqual(startDate);
-                expect(dateRange.value.end).toEqual(startDate);
-                expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(2);
-                expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
-            });
+            // select startDate only
+            startDate = new Date(2024, 12, 15);
+            dateRange.select(startDate);
+            expect(dateRange.value.start).toEqual(startDate);
+            expect(dateRange.value.end).toEqual(startDate);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(2);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
         it('should correctly implement interface methods - ControlValueAccessor', () => {
             const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28) };
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
-            TestBed.runInInjectionContext(() => {
-                // init
-                const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', platform, null, null, null, null);
-                dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
-                dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-                spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
+            // init
+            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', platform, null, null, null, null);
+            dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
+            spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
 
-                // writeValue
-                expect(dateRangePicker.value).toBeUndefined();
-                expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-                dateRangePicker.writeValue(range);
-                expect(dateRangePicker.value).toBe(range);
+            // writeValue
+            expect(dateRangePicker.value).toBeUndefined();
+            expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
+            dateRangePicker.writeValue(range);
+            expect(dateRangePicker.value).toBe(range);
 
-                // set value & handleSelection call _onChangeCallback
-                dateRangePicker.value = rangeUpdate;
-                expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
+            // set value & handleSelection call _onChangeCallback
+            dateRangePicker.value = rangeUpdate;
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
 
-                (dateRangePicker as any).handleSelection([range.start]);
-                expect((dateRangePicker as any).handleSelection).toHaveBeenCalledWith([range.start]);
-                expect((dateRangePicker as any).handleSelection).toHaveBeenCalledTimes(1);
-                expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
+            (dateRangePicker as any).handleSelection([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledWith([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledTimes(1);
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
-                // awaiting implementation - OnTouched callback
-                // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
-                // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-                (dateRangePicker as any).handleSelection([range.start]);
-                (dateRangePicker as any).updateValidityOnBlur();
-                expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+            // awaiting implementation - OnTouched callback
+            // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
+            // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
+            (dateRangePicker as any).handleSelection([range.start]);
+            (dateRangePicker as any).updateValidityOnBlur();
+            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
-                dateRangePicker.setDisabledState(true);
-                expect(dateRangePicker.disabled).toBe(true);
-                dateRangePicker.setDisabledState(false);
-                expect(dateRangePicker.disabled).toBe(false);
-            });
+            dateRangePicker.setDisabledState(true);
+            expect(dateRangePicker.disabled).toBe(true);
+            dateRangePicker.setDisabledState(false);
+            expect(dateRangePicker.disabled).toBe(false);
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            TestBed.runInInjectionContext(() => {
-                const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
-                dateRange.ngOnInit();
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
+            dateRange.ngOnInit();
 
-                // dateRange.calendar = calendar;
-                dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
-                dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
+            // dateRange.calendar = calendar;
+            dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
 
-                dateRange.minValue = new Date(2020, 4, 7);
-                expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(1);
-                dateRange.maxValue = new Date(2020, 8, 7);
-                expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(2);
+            dateRange.minValue = new Date(2020, 4, 7);
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(1);
+            dateRange.maxValue = new Date(2020, 8, 7);
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(2);
 
-                const range = { start: new Date(2020, 4, 18), end: new Date(2020, 6, 28) };
-                dateRange.writeValue(range);
-                const mockFormControl = new UntypedFormControl(dateRange.value);
-                expect(dateRange.validate(mockFormControl)).toBeNull();
+            const range = { start: new Date(2020, 4, 18), end: new Date(2020, 6, 28) };
+            dateRange.writeValue(range);
+            const mockFormControl = new UntypedFormControl(dateRange.value);
+            expect(dateRange.validate(mockFormControl)).toBeNull();
 
-                range.start.setMonth(2);
-                expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true });
+            range.start.setMonth(2);
+            expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true });
 
-                range.end.setMonth(10);
-                expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
-            });
+            range.end.setMonth(10);
+            expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            TestBed.runInInjectionContext(() => {
-                const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
-                dateRange.ngOnInit();
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
+            dateRange.ngOnInit();
 
-                spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
-                dateRange.minValue = new Date(2000, 10, 1);
-                dateRange.maxValue = new Date(2000, 10, 20);
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+            dateRange.minValue = new Date(2000, 10, 1);
+            dateRange.maxValue = new Date(2000, 10, 20);
 
-                dateRange.open({
-                    closeOnOutsideClick: true,
-                    modal: false,
-                    target: dateRange.element.nativeElement,
-                    positionStrategy: new AutoPositionStrategy({
-                        openAnimation: null,
-                        closeAnimation: null
-                    })
-                });
-                (dateRange as any).updateCalendar();
-                expect(mockCalendar.disabledDates.length).toEqual(2);
-                expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-                expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
-                expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
-                expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
-                expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
+            dateRange.open({
+                closeOnOutsideClick: true,
+                modal: false,
+                target: dateRange.element.nativeElement,
+                positionStrategy: new AutoPositionStrategy({
+                    openAnimation: null,
+                    closeAnimation: null
+                })
             });
+            (dateRange as any).updateCalendar();
+            expect(mockCalendar.disabledDates.length).toEqual(2);
+            expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
+            expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
+            expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            TestBed.runInInjectionContext(() => {
-                const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
-                dateRange.ngOnInit();
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
+            dateRange.ngOnInit();
 
-                spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
-                dateRange.minValue = '2000/10/1';
-                dateRange.maxValue = '2000/10/30';
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+            dateRange.minValue = '2000/10/1';
+            dateRange.maxValue = '2000/10/30';
 
-                spyOn((dateRange as any).calendar, 'deselectDate').and.returnValue(null);
-                (dateRange as any).updateCalendar();
-                expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
-                expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-                expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
-                expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-                expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
-            });
+            spyOn((dateRange as any).calendar, 'deselectDate').and.returnValue(null);
+            (dateRange as any).updateCalendar();
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
+            expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
         }));
     });
 
