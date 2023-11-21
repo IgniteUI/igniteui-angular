@@ -34,12 +34,6 @@
             @extend %igx-button--fab !optional;
         }
 
-        // ICON BUTTON
-        @include m(icon) {
-            @extend %igx-button--round !optional;
-            @extend %igx-button--icon !optional;
-        }
-
         // DISABLED BUTTON
         @include m(disabled) {
             @extend %igx-button--disabled !optional;

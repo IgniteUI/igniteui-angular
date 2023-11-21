@@ -19,7 +19,6 @@ const IgxButtonType = mkenum({
     Flat: 'flat',
     Contained: 'contained',
     Outlined: 'outlined',
-    Icon: 'icon',
     FAB: 'fab'
 });
 
@@ -136,7 +135,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      *
      * @example
      * ```html
-     * <button type="button" igxButton="icon"></button>
+     * <button type="button" igxButton="outlined"></button>
      * ```
      */
     @Input('igxButton')
@@ -216,15 +215,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     @HostBinding('class.igx-button--outlined')
     public get outlined(): boolean {
         return this._type === IgxButtonType.Outlined;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--icon')
-    public get icon(): boolean {
-        return this._type === IgxButtonType.Icon;
     }
 
     /**

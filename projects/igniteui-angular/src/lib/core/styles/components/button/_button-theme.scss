@@ -247,15 +247,6 @@
     $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
 
-    $button-icon-width: map.get((
-        material: rem(36px, 16px),
-        fluent: rem(32px, 16px),
-        bootstrap: rem(36px, 16px),
-        indigo-design: rem(36px, 16px),
-    ), $variant);
-
-    $button-icon-height: $button-icon-width;
-
     $button-padding-material-inline: (
         comfortable: rem(16px, 16px),
         cosy: rem(16px, 16px),
