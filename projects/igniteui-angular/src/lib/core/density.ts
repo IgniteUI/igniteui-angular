@@ -9,30 +9,10 @@ import {
     Optional,
     Inject,
     ElementRef,
-    inject,
-    runInInjectionContext,
-    Injector,
 } from '@angular/core';
 import { IBaseEventArgs, mkenum } from './utils';
+import { inject } from './inject';
 import { DOCUMENT } from '@angular/common';
-
-/** Create a document factory **/
-function _document(): Document {
-  return document;
-}
-
-/** 
- * Construct a provider object to be used when creating an Injector context 
- */
-const documentProviders = [
-  { provide: DOCUMENT, useFactory: _document }
-];
-
-/** 
- * A custom Injector context used when injecting DOCUMENT using
- * the `inject` function.
- */
-const documentInjector = Injector.create({ providers: documentProviders });
 
 /**
  * Defines the possible values of the components' display density.
@@ -165,10 +145,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         protected _host: ElementRef
     ) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
-
-        runInInjectionContext(documentInjector, () => {
-            this._document = inject(DOCUMENT);
-        });
+        this._document = inject(DOCUMENT);
     }
 
     /**
