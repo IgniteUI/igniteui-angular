@@ -376,7 +376,6 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        flex: 1 1 auto;
         height: var-get($theme, 'size');
         padding-inline: sizable(
             map.get($chip-padding, 'compact'),
@@ -411,9 +410,9 @@
 
         igx-avatar,
         igx-circular-bar {
-            max-width: 100%;
             max-height: 100%;
             width: sizable(rem(14px), rem(18px), rem(24px));
+            max-width: sizable(rem(14px), rem(18px), rem(24px));
             height: sizable(rem(14px), rem(18px), rem(24px));
         }
 
@@ -655,19 +654,39 @@
     }
 
     %igx-chip__start {
-        igx-avatar,
-        igx-circular-bar {
+        > igx-avatar,
+        > igx-circular-bar {
             &:first-child {
                 margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+            }
+        }
+
+        [igxPrefix],
+        igx-prefix {
+            &:first-of-type {
+                igx-avatar,
+                igx-circular-bar {
+                    margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                }
             }
         }
     }
 
     %igx-chip__end {
-        igx-avatar,
-        igx-circular-bar {
+        > igx-avatar,
+        > igx-circular-bar {
             &:last-child {
                 margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+            }
+        }
+
+        [igxPrefix],
+        igx-prefix {
+            &:first-of-type {
+                igx-avatar,
+                igx-circular-bar {
+                    margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                }
             }
         }
     }
@@ -694,8 +713,7 @@
 
     %igx-chip__prefix,
     %igx-chip__suffix {
-        @include ellipsis();
-        display: inline-block;
+        display: inline-flex;
         vertical-align: middle;
         max-width: $chip-max-width;
 
