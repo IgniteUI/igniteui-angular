@@ -3,7 +3,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { NgIf, NgClass } from '@angular/common';
-import { IgxIconButtonDirective } from 'igniteui-angular';
+import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
 /**
  * A component used for presenting Excel style header UI.
