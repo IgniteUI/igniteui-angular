@@ -124,18 +124,11 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     }
 
     constructor(
-        public element: ElementRef,
+        public override element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected override _displayDensityOptions: IDisplayDensityOptions,
         private _renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
-        super(_displayDensityOptions, element);
-    }
-
-    /**
-     * Returns the underlying DOM element.
-     */
-    public get nativeElement() {
-        return this.element.nativeElement;
+        super(element, _displayDensityOptions);
     }
 
     /**

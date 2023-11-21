@@ -1,5 +1,5 @@
-import { Directive, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
-import { DisplayDensityBase } from '../../core/density';
+import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Optional, Output, booleanAttribute } from '@angular/core';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 
 @Directive()
 export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
@@ -49,5 +49,19 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
         return this.disabled ? this.disabled : null;
+    }
+
+    constructor(
+        public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
+    ) { 
+        super(_displayDensityOptions, element);
+    }
+
+    /**
+     * Returns the underlying DOM element.
+     */
+    public get nativeElement() {
+        return this.element.nativeElement;
     }
 }
