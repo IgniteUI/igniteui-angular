@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.1.0
+
+### General
+- `IgxForOf`
+    - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
+    - Addded new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
+
 ## 17.0.0
 ### General
 - `IgxCard`
