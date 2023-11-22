@@ -55,7 +55,7 @@
     // this approach effectively enables us to eliminate any potential style conflicts without the need of !important
     %igx-icon-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         display: inline-flex;
         font-size: $size;
