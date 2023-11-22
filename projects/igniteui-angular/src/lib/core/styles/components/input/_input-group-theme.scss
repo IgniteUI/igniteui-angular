@@ -399,7 +399,7 @@
 
     %form-group-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
 
         position: relative;
