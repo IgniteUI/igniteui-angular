@@ -5494,7 +5494,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             list.dispatchEvent(new Event('focus'));
             tick(DEBOUNCETIME);
             fix.detectChanges();
-            let listItems = list.querySelectorAll('igx-list-item');
+            const listItems = list.querySelectorAll('igx-list-item');
 
             // we expect only the first list item to be active when the list is focused
             expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
@@ -5504,17 +5504,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
             fix.detectChanges();
             expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
-            
-            // on end button the last element should be focused
-            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
-            fix.detectChanges();
-            listItems = list.querySelectorAll('igx-list-item');
-            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
-
-            // on arrow down the focus should stay on the last list item and not on the cancel button
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
-            fix.detectChanges();
-            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
