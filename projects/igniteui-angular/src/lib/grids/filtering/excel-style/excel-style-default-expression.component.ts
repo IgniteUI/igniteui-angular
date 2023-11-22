@@ -61,6 +61,18 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
     public displayDensity: DisplayDensity;
 
+    protected getIconBtnSize() {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
+    }
+
     @Output()
     public expressionRemoved = new EventEmitter<ExpressionUI>();
 

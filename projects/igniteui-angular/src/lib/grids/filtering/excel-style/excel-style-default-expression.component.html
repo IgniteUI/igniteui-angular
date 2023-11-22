@@ -30,7 +30,7 @@
     />
 </igx-input-group>
 
-<button type="button" (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle">
+<button type="button" (click)="onRemoveButtonClick()" igxIconButton="flat" [style.--component-size]="getIconBtnSize()" *ngIf="!isSingle">
     <igx-icon>cancel</igx-icon>
 </button>
 
