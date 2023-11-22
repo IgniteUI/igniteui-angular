@@ -472,6 +472,7 @@ export class IgxGridStateDirective {
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
         protected viewRef: ViewContainerRef, protected envInjector: EnvironmentInjector,  protected injector: Injector) { }
 
+    /* blazorSuppress */
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *

@@ -64,4 +64,33 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
     public applyState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
         super.setState(state, features);
     }
+
+    /** @hidden @internal */
+    public override getState(serialize = true, features?: GridFeatures | GridFeatures[]): IGridState | string  {
+        return super.getState(serialize, features);
+    }
+
+    /**
+     * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
+     *
+     * @param `feature` string or array of strings determining the features to be added in the state. If skipped, all features are added.
+     * @returns Returns the serialized to JSON string IGridState object.
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
+     * ```typescript
+     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
+     * let state = this.state.extractState(); // returns string
+     * ```
+     */
+    public extractState(features: GridFeatures | GridFeatures[] = []): string {
+        /** Due to return type in getState being union type and having no support for union type in the translators
+         * hiding getState in favor of a simpler extractState method that omits the serialize property and always returns just a string. */
+        if(features.length === 0) {
+            features = null;
+        }
+        return super.getState(true, features) as string;
+    }
+
+
 }
