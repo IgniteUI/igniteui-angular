@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 17.1.0
+### New Features
+- `IgxTree`
+    - Added new property `toggleNodeOnClick` that determines whether clicking over a node will change its expanded state or not. Set to `false` by default.
+
 ## 17.0.0
 ### General
 - `IgxCard`
