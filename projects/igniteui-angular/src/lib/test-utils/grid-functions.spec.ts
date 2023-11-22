@@ -1,4 +1,3 @@
-
 import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
@@ -24,7 +23,6 @@ import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -1143,7 +1141,7 @@ export class GridFunctions {
     public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
-        return Array.from(headerArea.querySelectorAll('.igx-button--icon'));
+        return Array.from(headerArea.querySelectorAll('.igx-icon-button'));
     }
 
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
