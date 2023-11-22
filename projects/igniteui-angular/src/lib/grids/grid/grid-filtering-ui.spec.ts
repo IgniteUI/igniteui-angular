@@ -5487,6 +5487,36 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
         }));
 
+        it('Should not lose focus with arrowUp/arrowDown when navigating inside search list', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+            let listItems = list.querySelectorAll('igx-list-item');
+
+            // we expect only the first list item to be active when the list is focused
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on arrow up the focus should stay on the first element and not on the search input
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            
+            // on end button the last element should be focused
+            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
+            fix.detectChanges();
+            listItems = list.querySelectorAll('igx-list-item');
+            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
+
+            // on arrow down the focus should stay on the last list item and not on the cancel button
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(listItems[listItems.length - 1].classList.contains("igx-list__item-base--active")).toBeTrue();
+        }));
+
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
             const totalListItems = [];
 
