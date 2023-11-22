@@ -159,7 +159,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
         });
 
         it('should allow navigating to start in child grid when child grid target row moves outside the parent view port.', async () => {
-            hierarchicalGrid.navigateTo(2);
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
             fixture.detectChanges();
             await wait();
