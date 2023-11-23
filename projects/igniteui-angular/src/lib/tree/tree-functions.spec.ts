@@ -28,6 +28,10 @@ export class TreeTestFunctions {
         return TreeTestFunctions.getNodeCheckboxDiv(nodeDOM).querySelector(CHECKBOX_INPUT_CSS_CLASS);
     }
 
+    public static getNodeWrapperDiv(nodeDOM: HTMLElement): HTMLInputElement {
+        return nodeDOM.querySelector(`.${TREE_NODE_WRAPPER_CSS_CLASS}`);
+    }
+
     public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): Event {
         const checkboxElement = TreeTestFunctions.getNodeCheckboxDiv(node.nativeElement);
         const event = new Event('click', {});
@@ -43,8 +47,8 @@ export class TreeTestFunctions {
     }
 
     public static clickOnTreeNode(nodeDOM: HTMLElement): Event {
-        const nodeWrapperElement = nodeDOM.querySelector(`.${TREE_NODE_WRAPPER_CSS_CLASS}`);
-        const event = new Event('click', {});
+        const nodeWrapperElement = this.getNodeWrapperDiv(nodeDOM);
+        const event = new MouseEvent('pointerdown', { button: 0 });
         nodeWrapperElement.dispatchEvent(event);
         return event;
     }

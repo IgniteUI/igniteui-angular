@@ -332,9 +332,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 const firstNode = tree.nodes.first;
                 expect(firstNode.expanded).toBeFalsy();
 
-                //TreeTestFunctions.clickOnTreeNode(firstNode.nativeElement);
-
-                UIInteractions.simulateClickEvent(firstNode.nativeElement);
+                TreeTestFunctions.clickOnTreeNode(firstNode.nativeElement);
 
                 fix.detectChanges();
 
@@ -348,7 +346,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 const firstNode = tree.nodes.first;
                 expect(firstNode.expanded).toBeFalsy();
 
-                UIInteractions.simulateNonPrimaryClick(firstNode.nativeElement);
+                const nodeWrapperElement = TreeTestFunctions.getNodeWrapperDiv(firstNode.nativeElement);
+                UIInteractions.simulateNonPrimaryClick(nodeWrapperElement);
                 fix.detectChanges();
 
                 expect(firstNode.expanded).toBeFalsy();
