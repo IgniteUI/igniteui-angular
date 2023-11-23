@@ -794,7 +794,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
                     continue;
                 }
                 const margin = this.getMargin(rNode, dimension);
-                const oldVal = dimension === 'height' ? this.individualSizeCache[index] : this.igxForOf[index][dimension];
+                const oldVal = this.individualSizeCache[index];
                 const newVal = (dimension === 'height' ? h : rNode.clientWidth) + margin;
                 this.individualSizeCache[index] = newVal;
                 const currDiff = newVal - oldVal;
