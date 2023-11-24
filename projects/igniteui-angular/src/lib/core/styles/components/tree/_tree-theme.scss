@@ -23,6 +23,8 @@
 /// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
+/// @param {Color} hover-color [null] - The background color used for the tree node on hover.
+/// @param {Color} hover-selected-color [null] - The background color used for the selected tree node on hover.
 /// @requires $light-material-schema
 ///
 /// @example scss Change the tree background
@@ -43,6 +45,8 @@
     $foreground-disabled: null,
     $drop-area-color: null,
     $border-color: null,
+    $hover-color: null,
+    $hover-selected-color: null,
     $size: null,
 ) {
     $name: 'igx-tree';
@@ -89,6 +93,8 @@
         foreground-disabled: $foreground-disabled,
         drop-area-color: $drop-area-color,
         border-color: $border-color,
+        hover-color: $hover-color,
+        hover-selected-color: $hover-selected-color,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -219,6 +225,12 @@
     %node-wrapper--selected {
         background: var-get($theme, 'background-selected');
         color: var-get($theme, 'foreground-selected');
+
+        &:hover {
+            &::after {
+                background: var-get($theme, 'hover-selected-color');
+            }
+        }
     }
 
     %node-wrapper--active {
