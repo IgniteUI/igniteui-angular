@@ -852,7 +852,7 @@ export interface IgxGridRowEditTextTemplateContext {
 
 export interface IgxGridRowEditActionsTemplateContext {
     /* blazorCSSuppress */
-    /* alternateType: RowEditActionsImplicit */
+    /* blazorAlternateType: RowEditActionsImplicit */
     $implicit: (commit: boolean, event?: Event) => void
 }
 
