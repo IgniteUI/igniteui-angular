@@ -769,8 +769,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private onArrowUpKeyDown() {
         if (this.focusedItem && this.focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
-            this.searchInput.focus();
-            this.onFocusOut();
+            // on ArrowUp the focus stays on the same element if it is the first focused
+            return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index - 1 : 0);
         }
@@ -780,8 +780,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private onArrowDownKeyDown() {
         const lastIndex = this.virtDir.igxForOf.length - 1;
         if (this.focusedItem && this.focusedItem.index === lastIndex) {
-            this.cancelButton.nativeElement.focus();
-            this.onFocusOut();
+            // on ArrowDown the focus stays on the same element if it is the last focused
+            return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index + 1 : 0);
         }
