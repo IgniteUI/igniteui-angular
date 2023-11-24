@@ -1,10 +1,17 @@
 import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Optional, Output, booleanAttribute } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
+import { mkenum } from '../../core/utils';
+
+export const IgxBaseButtonType = mkenum({
+    Flat: 'flat',
+    Contained: 'contained',
+    Outlined: 'outlined'
+});
 
 @Directive()
 export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
     /**
-     * Called when the button is clicked.
+     * Emitted when the button is clicked.
      */
     @Output()
     public buttonClick = new EventEmitter<any>();
@@ -48,12 +55,13 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
      */
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
-        return this.disabled ? this.disabled : null;
+        return this.disabled || null;
     }
 
     constructor(
         public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
+        @Optional() @Inject(DisplayDensityToken)
+        protected _displayDensityOptions: IDisplayDensityOptions
     ) { 
         super(_displayDensityOptions, element);
     }

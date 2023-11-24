@@ -13,12 +13,10 @@ import {
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
-import { IgxButtonBaseDirective } from './button-base';
+import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
 const IgxButtonType = mkenum({
-    Flat: 'flat',
-    Contained: 'contained',
-    Outlined: 'outlined',
+    ...IgxBaseButtonType,
     FAB: 'fab'
 });
 
@@ -124,7 +122,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     constructor(
         public override element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected override _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(DisplayDensityToken)
+        protected override _displayDensityOptions: IDisplayDensityOptions,
         private _renderer: Renderer2,
     ) {
         super(element, _displayDensityOptions);
