@@ -179,7 +179,7 @@
 
     function saveState() {
         const stateComponent = document.getElementById('state');
-        const stringData = stateComponent.extractState();
+        const stringData = stateComponent.extractStateAsString();
         window.localStorage.setItem(`grid1-state`, stringData);
     }
 

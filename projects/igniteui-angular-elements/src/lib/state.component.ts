@@ -61,7 +61,7 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
      * this.state.applyState(gridState);
      * ```
      */
-    public applyState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
+    public applyState(state: IGridState , features?: GridFeatures | GridFeatures[]) {
         super.setState(state, features);
     }
 
@@ -71,22 +71,59 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
     }
 
     /**
+     * Restores grid features' state based on the serialized IGridState object passed as an argument.
+     *
+     * @param serialized IGridState object to restore state from.
+     * @returns
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
+     * ```typescript
+     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
+     * this.state.setState(gridState);
+     * ```
+     */
+    public applyStateFromString(state: string, features?: GridFeatures | GridFeatures[]) {
+        super.setState(state, features);
+    }
+
+    /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *
      * @param `feature` string or array of strings determining the features to be added in the state. If skipped, all features are added.
+    * @returns Returns the non-serialized IGridState object.
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
+     * ```typescript
+     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
+     * let state = this.state.extractState(); // returns `IGridState` object
+     * ```
+     */
+    public extractState(features: GridFeatures | GridFeatures[] = []): IGridState {
+        /** Due to return type in getState being union type and having no support for union type in the translators
+         * hiding getState in favor of a simpler extractState method that omits the serialize property and always returns just a string. */
+        if (features.length === 0) {
+            features = null;
+        }
+        return super.getState(false, features) as IGridState;
+    }
+
+    /**
+     * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
+     *
+     * @param `feature` array of strings determining the features to be added in the state. If skipped, all features are added.
      * @returns Returns the serialized to JSON string IGridState object.
      * ```html
      * <igx-grid [igxGridState]="options"></igx-grid>
      * ```
      * ```typescript
      * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * let state = this.state.extractState(); // returns string
+     * let state = this.state.extractStateAsString(); // returns string
      * ```
      */
-    public extractState(features: GridFeatures | GridFeatures[] = []): string {
-        /** Due to return type in getState being union type and having no support for union type in the translators
-         * hiding getState in favor of a simpler extractState method that omits the serialize property and always returns just a string. */
-        if(features.length === 0) {
+    public extractStateAsString(features: GridFeatures | GridFeatures[] = []): string {
+        if (features.length === 0) {
             features = null;
         }
         return super.getState(true, features) as string;
