@@ -1,5 +1,5 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -138,7 +138,7 @@ import { GridValidationSampleComponent } from './grid-validation/grid-validation
 import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
@@ -661,5 +661,3 @@ const appRoutes: Routes = [
         component: StepperSampleComponent
     }
 ];
-
-export const routing = RouterModule.forRoot(appRoutes, {});
