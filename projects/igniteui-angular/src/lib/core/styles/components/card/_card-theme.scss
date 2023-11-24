@@ -348,7 +348,7 @@
         display: flex;
         flex-flow: row nowrap;
 
-        %igx-button--icon {
+        %igx-icon-button-display {
             color: var-get($theme, 'actions-text-color');
         }
     }
