@@ -61,7 +61,10 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
      * this.state.applyState(gridState);
      * ```
      */
-    public applyState(state: IGridState , features?: GridFeatures | GridFeatures[]) {
+    public applyState(state: IGridState , features: GridFeatures | GridFeatures[] = []) {
+        if (features.length === 0) {
+            features = null;
+        }
         super.setState(state, features);
     }
 
@@ -83,7 +86,10 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
      * this.state.setState(gridState);
      * ```
      */
-    public applyStateFromString(state: string, features?: GridFeatures | GridFeatures[]) {
+    public applyStateFromString(state: string, features: GridFeatures | GridFeatures[] = []) {
+        if (features.length === 0) {
+            features = null;
+        }
         super.setState(state, features);
     }
 
