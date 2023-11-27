@@ -1,9 +1,9 @@
-import {
+import type {
   Rule,
   SchematicContext,
   Tree
 } from '@angular-devkit/schematics';
-import { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler';
 import { nativeImport } from '../common/import-helper.js';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';

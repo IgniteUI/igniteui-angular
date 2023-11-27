@@ -1,9 +1,9 @@
-import {
+import type {
     Rule,
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
-import { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler';
 import * as ts from 'typescript';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { nativeImport } from '../common/import-helper.js';

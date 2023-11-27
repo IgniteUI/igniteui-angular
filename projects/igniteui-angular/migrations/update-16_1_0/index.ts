@@ -1,4 +1,4 @@
-import {
+import type {
     Rule,
     SchematicContext,
     Tree
@@ -6,7 +6,7 @@ import {
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from '../common/import-helper.js';
-import { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler';
 
 const version = '16.1.0';
 

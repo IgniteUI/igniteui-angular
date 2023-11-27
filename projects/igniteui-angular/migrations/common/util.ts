@@ -1,9 +1,9 @@
 import { normalize } from '@angular-devkit/core';
 import * as path from 'path';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { WorkspaceSchema, WorkspaceProject } from '@schematics/angular/utility/workspace-models';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { WorkspaceSchema, WorkspaceProject } from '@schematics/angular/utility/workspace-models';
 import { execSync } from 'child_process';
-import {
+import type {
     Attribute,
     Block,
     BlockParameter,

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
