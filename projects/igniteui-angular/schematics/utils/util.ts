@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 import { workspaces } from '@angular-devkit/core';
 
 // from '@schematics/angular/utility/workspace-models'
