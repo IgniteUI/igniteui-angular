@@ -9,11 +9,11 @@ import {
     SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
+    getLanguageService, getRenamePositions, getIdentifierPositions,
     createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
-    getProjectPaths, getWorkspace, getProjects, escapeRegExp,
+    getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
