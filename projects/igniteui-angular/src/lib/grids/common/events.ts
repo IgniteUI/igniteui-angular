@@ -144,7 +144,9 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
 }
 
 export interface ICellPosition {
+    /* doNotStringify */
     rowIndex: number;
+    /* doNotStringify */
     visibleColumnIndex: number;
 }
 
