@@ -1,7 +1,34 @@
 import { Input, Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
-import {IgxGridStateDirective, IGridStateOptions, IGridState, GridFeatures } from "../../../igniteui-angular/src/lib/grids/state.directive";
-import { IGX_GRID_SERVICE_BASE, GridServiceType}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
+import {IgxGridStateDirective, IGridStateOptions, IGridState, GridFeatures, IColumnState, IGridStateCollection } from "../../../igniteui-angular/src/lib/grids/state.directive";
+import { IGX_GRID_SERVICE_BASE, GridServiceType, IPinningConfig}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 import { IgxGridComponent } from '../../../igniteui-angular/src/lib/grids/grid/grid.component';
+import { IFilteringExpressionsTree } from '../../../igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
+import { IPagingState } from '../../../igniteui-angular/src/lib/data-operations/paging-state.interface';
+import { ISortingExpression } from '../../../igniteui-angular/src/lib/data-operations/sorting-strategy';
+import { IGroupingState } from '../../../igniteui-angular/src/lib/data-operations/groupby-state.interface';
+import { GridSelectionRange } from '../../../igniteui-angular/src/lib/grids/common/types';
+import { IPivotConfiguration } from '../../../igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface'
+
+/* tsPlainInterface */
+/* marshalByValue */
+export interface IState {
+    columns?: IColumnState[];
+    filtering?: IFilteringExpressionsTree;
+    advancedFiltering?: IFilteringExpressionsTree;
+    paging?: IPagingState;
+    moving?: boolean;
+    sorting?: ISortingExpression[];
+    groupBy?: IGroupingState;
+    cellSelection?: GridSelectionRange[];
+    rowSelection?: any[];
+    columnSelection?: string[];
+    rowPinning?: any[];
+    pinningConfig?: IPinningConfig;
+    expansion?: any[];
+    rowIslands?: IGridStateCollection[];
+    id?: string;
+    pivotConfiguration?: IPivotConfiguration;
+}
 
 /* blazorElement */
 /* wcElementTag: igc-grid-state */
@@ -61,7 +88,7 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
      * this.state.applyState(gridState);
      * ```
      */
-    public applyState(state: IGridState , features: GridFeatures | GridFeatures[] = []) {
+    public applyState(state: IState , features: GridFeatures | GridFeatures[] = []) {
         if (features.length === 0) {
             features = null;
         }
@@ -106,7 +133,7 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
      * let state = this.state.extractState(); // returns `IGridState` object
      * ```
      */
-    public extractState(features: GridFeatures | GridFeatures[] = []): IGridState {
+    public extractState(features: GridFeatures | GridFeatures[] = []): IState {
         /** Due to return type in getState being union type and having no support for union type in the translators
          * hiding getState in favor of a simpler extractState method that omits the serialize property and always returns just a string. */
         if (features.length === 0) {
