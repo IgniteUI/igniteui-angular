@@ -144,11 +144,6 @@ export const findMatches = (content: string, toFind: string): number[] => {
     return matchesPositions;
 };
 
-export const replaceMatch = (content: string, toReplace: string, replaceWith: string, index: number): string =>
-    content.substring(0, index) +
-    replaceWith +
-    content.substring(index + toReplace.length, content.length);
-
 //#region Language Service
 
 /**

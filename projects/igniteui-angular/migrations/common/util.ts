@@ -17,7 +17,6 @@ import type {
     Text,
     Visitor
 } from '@angular/compiler';
-import { replaceMatch } from './tsUtils';
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
@@ -57,6 +56,11 @@ export const getProjects = (config: WorkspaceSchema): WorkspaceProject[] => {
 };
 
 export const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+
+export const replaceMatch = (content: string, toReplace: string, replaceWith: string, index: number): string =>
+    content.substring(0, index) +
+    replaceWith +
+    content.substring(index + toReplace.length, content.length);
 
 export const supports = (name: string): boolean => {
     try {
