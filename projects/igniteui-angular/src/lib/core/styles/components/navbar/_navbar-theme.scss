@@ -133,7 +133,7 @@
 
     %igx-navbar-icon-display {
         > igx-icon,
-        [igxButton='icon'] {
+        [igxIconButton] {
             --component-size: 3;
 
             cursor: pointer;

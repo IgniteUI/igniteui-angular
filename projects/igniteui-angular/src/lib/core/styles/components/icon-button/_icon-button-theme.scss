@@ -121,8 +121,8 @@
     @include css-vars($contained-theme);
 
     $time: map.get((
-        material: .1s,
-        fluent: .1s,
+        material: 0s,
+        fluent: .15s,
         bootstrap: .15s,
         indigo-design: .15s
     ), $variant);
@@ -132,14 +132,7 @@
         border-color $time ease-in-out,
         box-shadow $time ease-in-out;
     
-    $icon-sizes: map.get((
-        material: rem(18px),
-        fluent: rem(16px),
-        bootstrap: rem(18px),
-        indigo-design: rem(18px),
-    ), $variant);
-
-    $icon-in-button-size: $icon-sizes;
+    $icon-in-button-size: rem(18px);
 
     $items-gap: (
         comfortable: rem(12px),
@@ -151,7 +144,6 @@
 
     %igx-icon-button-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
 
         position: relative;
         display: inline-flex;
@@ -198,6 +190,7 @@
     }
 
     %igx-icon-button--flat {
+        --component-size: var(--ig-size, #{var-get($flat-theme, 'default-size')});
         width: var-get($flat-theme, 'size');
         height: var-get($flat-theme, 'size');
         background: var-get($flat-theme, 'background');
@@ -243,6 +236,7 @@
     }
 
     %igx-icon-button--contained {
+        --component-size: var(--ig-size, #{var-get($contained-theme, 'default-size')});
         width: var-get($contained-theme, 'size');
         height: var-get($contained-theme, 'size');
         background: var-get($contained-theme, 'background');
@@ -297,6 +291,7 @@
     }
 
     %igx-icon-button--outlined {
+        --component-size: var(--ig-size, #{var-get($outlined-theme, 'default-size')});
         width: var-get($outlined-theme, 'size');
         height: var-get($outlined-theme, 'size');
         background: var-get($outlined-theme, 'background');
