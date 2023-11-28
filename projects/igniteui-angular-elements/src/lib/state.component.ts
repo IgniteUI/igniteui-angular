@@ -139,7 +139,7 @@ export class IgxGridStateComponent extends IgxGridStateDirective {
         if (features.length === 0) {
             features = null;
         }
-        return super.getState(false, features) as IGridState;
+        return super.getState(false, features) as IState;
     }
 
     /**
