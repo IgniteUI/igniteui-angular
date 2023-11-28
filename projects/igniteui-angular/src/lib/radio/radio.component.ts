@@ -150,7 +150,7 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
     public select() {
         if (!this.checked) {
             this.checked = true;
-            this.change.emit({ value: this.value, owner: this });
+            this.change.emit({ value: this.value, owner: this, checked: this.checked });
             this._onChangeCallback(this.value);
         }
     }
