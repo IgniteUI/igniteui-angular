@@ -16,7 +16,7 @@ import {
 } from '../expansion-panel/public_api';
 
 /* Accordion directives collection for ease-of-use import in standalone components scenario */
-export const IGX_ACCORDION_DIRECTIVES = /*@__PURE__*/[
+export const IGX_ACCORDION_DIRECTIVES = [
     IgxAccordionComponent,
     IgxExpansionPanelComponent,
     IgxExpansionPanelHeaderComponent,
