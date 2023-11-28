@@ -68,7 +68,7 @@
     "@types/hammerjs": "^2.0.40",
     "@types/source-map": "0.5.2",
     "express": "^4.18.2",
-    "fflate": "^0.7.3",
+    "fflate": "^0.8.1",
     "hammerjs": "^2.0.8",
     "igniteui-theming": "^3.3.3",
     "igniteui-trial-watermark": "^3.0.2",
