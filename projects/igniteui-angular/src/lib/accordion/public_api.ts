@@ -1,4 +1,3 @@
-import { IGX_EXPANSION_PANEL_DIRECTIVES } from '../expansion-panel/public_api';
 import { IgxAccordionComponent } from './accordion.component';
 
 export * from './accordion.component';
@@ -17,7 +16,12 @@ import {
 } from '../expansion-panel/public_api';
 
 /* Accordion directives collection for ease-of-use import in standalone components scenario */
-export const IGX_ACCORDION_DIRECTIVES = [
+export const IGX_ACCORDION_DIRECTIVES = /*@__PURE__*/[
     IgxAccordionComponent,
-    ...IGX_EXPANSION_PANEL_DIRECTIVES
+    IgxExpansionPanelComponent,
+    IgxExpansionPanelHeaderComponent,
+    IgxExpansionPanelBodyComponent,
+    IgxExpansionPanelDescriptionDirective,
+    IgxExpansionPanelTitleDirective,
+    IgxExpansionPanelIconDirective
 ] as const;
