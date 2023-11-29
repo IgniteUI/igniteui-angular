@@ -28,7 +28,7 @@ import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -135,8 +135,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @Input()
     public labelledBy: string;
 
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
-    protected virtDir: IgxForOfDirective<any>;
+    @ContentChild(IgxForOfToken)
+    protected virtDir: IgxForOfToken<any>;
 
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
@@ -343,6 +343,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return;
         }
         let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
+        // TODO: This logic _cannot_ be right, those are optional user-provided inputs that can be strings with units, refactor:
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
         this.virtDir.getScroll().scrollTop = targetScroll;

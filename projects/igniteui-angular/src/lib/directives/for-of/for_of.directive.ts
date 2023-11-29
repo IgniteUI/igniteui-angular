@@ -79,13 +79,36 @@ export class IgxForOfContext<T, U extends T[] = T[]> {
 
 }
 
+/** @hidden @internal */
+export abstract class IgxForOfToken<T, U extends T[] = T[]> {
+    public abstract igxForOf: U & T[] | null;
+    public abstract state: IForOfState;
+    public abstract totalItemCount: number;
+    public abstract scrollPosition: number;
+
+    public abstract chunkLoad: EventEmitter<IForOfState>;
+    public abstract chunkPreload: EventEmitter<IForOfState>;
+
+    public abstract scrollTo(index: number): void;
+    public abstract getScrollForIndex(index: number, bottom?: boolean): number;
+    public abstract getScroll(): HTMLElement | undefined;
+
+    // TODO: Re-evaluate use for this internally, better expose through separate API
+    public abstract igxForItemSize: any;
+    public abstract igxForContainerSize: any;
+    /** @hidden */
+    public abstract dc: ComponentRef<any>
+}
+
 @Directive({
     selector: '[igxFor][igxForOf]',
-    providers: [IgxForOfScrollSyncService],
+    providers: [
+        IgxForOfScrollSyncService,
+        { provide: IgxForOfToken, useExisting: IgxForOfDirective }
+    ],
     standalone: true
 })
-// eslint-disable @angular-eslint/no-conflicting-lifecycle
-export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
+export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
      * An @Input property that sets the data to be rendered.
@@ -383,7 +406,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         protected platformUtil: PlatformUtil,
         @Inject(DOCUMENT)
         protected document: any,
-    ) { }
+    ) {
+        super();
+    }
 
     public verticalScrollHandler(event) {
         this.onScroll(event);
@@ -439,7 +464,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true }),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
@@ -604,7 +629,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      *
      * @param index
      */
-    public scrollTo(index) {
+    public scrollTo(index: number) {
         if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
             return;
         }
