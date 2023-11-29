@@ -120,18 +120,6 @@
     @include css-vars($outlined-theme);
     @include css-vars($contained-theme);
 
-    $time: map.get((
-        material: 0s,
-        fluent: .15s,
-        bootstrap: .15s,
-        indigo-design: .15s
-    ), $variant);
-
-    $button-transition: color $time ease-in-out,
-        background-color $time ease-in-out,
-        border-color $time ease-in-out,
-        box-shadow $time ease-in-out;
-    
     $icon-in-button-size: rem(18px);
 
     $items-gap: (
@@ -155,7 +143,8 @@
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         white-space: nowrap;
-        transition: $button-transition;
+        transition: box-shadow .2s ease-in, background .15s ease-out;
+        transition-delay: .05s;
         min-width: unset;
         min-height: unset;
         font-size: rem(24px, 24px);
@@ -176,6 +165,8 @@
         }
 
         @if ($variant == 'fluent') {
+            transition: color .15s ease-out, background .15s ease-out;
+
             &::after {
                 position: absolute;
                 content: '';
@@ -186,6 +177,14 @@
                 height: calc(100% - (#{$outline-btn-indent * 2}));
                 border-radius: calc(#{var-get($flat-theme, 'border-radius')} - #{$outline-btn-indent * 2});
             }
+        }
+
+        @if ($variant == 'bootstrap') {
+            transition: box-shadow .15s ease-out, color .15s ease-out, background .15s ease-out;
+        }
+
+        @if ($variant == 'indigo-design') {
+            transition: color .15s ease-in-out, box-shadow .15s ease-in-out, background .15s ease-in-out;
         }
     }
 
