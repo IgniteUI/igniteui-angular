@@ -6,7 +6,8 @@ import type {
 import type { Element } from '@angular/compiler';
 import * as ts from 'typescript';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { nativeImport } from '../common/import-helper.js';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import { namedImportFilter } from '../common/tsUtils';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 

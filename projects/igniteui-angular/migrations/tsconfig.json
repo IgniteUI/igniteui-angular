@@ -8,6 +8,14 @@
         "typeRoots": [
             "../../../node_modules/@types"
         ],
+        "paths": {
+            "igniteui-angular/*": [
+                "../*"
+            ],
+            "@infragistics/igniteui-angular/*": [
+                "../*"
+            ],
+        }
     },
     "exclude": [
         "../../../node_modules",
