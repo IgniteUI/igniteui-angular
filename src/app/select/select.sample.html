@@ -9,7 +9,7 @@
         </igx-buttongroup>
 
         <div class="select-sample__row">
-            <button igxButton="raised" (click)="handleOpen()">Open</button>
+            <button igxButton="contained" (click)="handleOpen()">Open</button>
             <button igxButton="outlined" (click)="handleClose()">Close</button>
             <button igxButton (click)="isDisabled = !isDisabled">toggle Disable</button>
             <button igxButton (click)="openCustomOverlaySettings()">open Custom Overlay</button>
@@ -48,7 +48,7 @@
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer" (click)="headerFootedClick($event);">
                     <div>Footer content</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button igxButton="contained" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>
@@ -152,15 +152,15 @@
                     {{ city }}
                 </igx-select-item>
             </igx-select>
-            <button type="submit" igxButton="raised" [disabled]="!reactiveForm.valid">Submit</button>
+            <button type="submit" igxButton="contained" [disabled]="!reactiveForm.valid">Submit</button>
         </form>
     </section>
 
     <section class="select-sample__section">
         <h1 class="select-sample__title">Select - dynamically change required</h1>
         <div class="select-sample__row">
-            <button igxButton="raised" (click)="selectBanana()">Select Banana</button>
-            <button igxButton="raised" (click)="setToNull()">Set To Null</button>
+            <button igxButton="contained" (click)="selectBanana()">Select Banana</button>
+            <button igxButton="contained" (click)="setToNull()">Set To Null</button>
         </div>
         <igx-switch [(ngModel)]="selectRequired" [ngModelOptions]="{standalone: true}">Required</igx-switch>
 

@@ -136,7 +136,7 @@
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
-<button igxButton="icon" type="button" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
+<button igxIconButton="flat" type="button" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
     <igx-icon>navigate_before</igx-icon>
 </button>
 
@@ -176,17 +176,27 @@
     </div>
 </div>
 
-<button igxButton="icon" type="button" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
+<button igxIconButton="flat" type="button" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
     <igx-icon>navigate_next</igx-icon>
 </button>
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
-    <button [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
-        <igx-icon>refresh</igx-icon>
-        <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</span>
-    </button>
-    <button #closeButton [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" type="button" igxRipple (click)="close()">
-        <igx-icon>close</igx-icon>
-        <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</span>
-    </button>
+    <ng-container *ngIf="!isNarrowWidth">
+        <button [displayDensity]="displayDensity" igxButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+            <igx-icon>refresh</igx-icon>
+            <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_reset }}</span>
+        </button>
+        <button #closeButton [displayDensity]="displayDensity" igxButton="flat" type="button" igxRipple (click)="close()">
+            <igx-icon>close</igx-icon>
+            <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_close }}</span>
+        </button>
+    </ng-container>
+    <ng-container *ngIf="isNarrowWidth">
+        <button igxIconButton="flat" type="button" [style.--component-size]="getIconBtnSize()" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+            <igx-icon>refresh</igx-icon>
+        </button>
+        <button #closeButton igxIconButton="flat" type="button" [style.--component-size]="getIconBtnSize()" igxRipple (click)="close()">
+            <igx-icon>close</igx-icon>
+        </button>
+    </ng-container>
 </div>

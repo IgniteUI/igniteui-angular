@@ -33,7 +33,7 @@
     <section class="sample-content">
         <article class="sample-column">
             <h4 class="sample-title">Snackbar with positionSettings</h4>
-            <button igxButton="raised" (click)="snackbar1.open()">Send message</button>
+            <button igxButton="contained" (click)="snackbar1.open()">Send message</button>
             <div>
                 <igx-snackbar #snackbar1 [autoHide]="false" [positionSettings]="newPositionSettings" actionText="Close" (clicked)="close(snackbar1)">Message sent
                 </igx-snackbar>

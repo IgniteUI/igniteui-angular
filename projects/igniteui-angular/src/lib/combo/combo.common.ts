@@ -633,7 +633,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button type="button" igxButton="raised" class="combo__add-button">
+     *          <button type="button" igxButton="contained" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>

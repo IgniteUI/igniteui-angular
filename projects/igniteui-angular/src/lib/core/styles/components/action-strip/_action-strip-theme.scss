@@ -97,7 +97,7 @@
         padding-block: 0;
         z-index: 9999;
 
-        [igxButton='icon'] {
+        [igxIconButton] {
             --component-size: var(--action-strip-size) !important;
 
             width: $button-size;
@@ -172,7 +172,7 @@
             color: var-get($theme, 'icon-color');
         }
 
-        [igxButton='icon'] {
+        [igxIconButton] {
             igx-icon {
                 color: var-get($theme, 'icon-color');
             }

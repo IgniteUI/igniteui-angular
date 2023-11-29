@@ -30,7 +30,7 @@
             </igx-action-strip>
         </igx-grid>
 
-        <button igxButton="raised"(click)="clearValidity()">Clear validity</button>
+        <button igxButton="contained"(click)="clearValidity()">Clear validity</button>
     </article>
 
     <article class="grid-row-edit-wrapper">
@@ -55,11 +55,11 @@
                 <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
-        <button igxButton="raised" (click)="updateRow(1)">Update row</button>
-        <button igxButton="raised" (click)="updateCell(1)">Update cell</button>
-        <button igxButton="raised" (click)="commitWithTransactions()">Commit</button>
-        <button igxButton="raised" (click)="undo()">Undo</button>
-        <button igxButton="raised" (click)="redo()">Redo</button>
+        <button igxButton="contained" (click)="updateRow(1)">Update row</button>
+        <button igxButton="contained" (click)="updateCell(1)">Update cell</button>
+        <button igxButton="contained" (click)="commitWithTransactions()">Commit</button>
+        <button igxButton="contained" (click)="undo()">Undo</button>
+        <button igxButton="contained" (click)="redo()">Redo</button>
     </article>
 
 

@@ -31,7 +31,7 @@ class Button {
     private icon: string;
 
     constructor(obj?: IButton) {
-        this.type = obj.type || 'raised';
+        this.type = obj.type || 'contained';
         this.ripple = obj.ripple || 'orange';
         this.label = obj.label || 'Button label';
         this.selected = obj.selected || false;
