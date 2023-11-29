@@ -19,7 +19,9 @@ export * from './lib/directives/drag-drop/public_api';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/focus-trap/focus-trap.directive';
-export * from './lib/directives/for-of/for_of.directive';
+export {
+    IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
+} from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
