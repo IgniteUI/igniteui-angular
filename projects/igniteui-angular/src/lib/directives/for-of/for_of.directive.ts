@@ -863,7 +863,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     public resetScrollPosition() {
         this.scrollPosition = 0;
         this.scrollComponent.scrollAmount = 0;
-        this.state.startIndex = 0;
     }
 
     /**
