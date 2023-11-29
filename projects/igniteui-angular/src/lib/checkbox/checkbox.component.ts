@@ -28,7 +28,7 @@ export const LabelPosition = mkenum({
 export type LabelPosition = typeof LabelPosition[keyof typeof LabelPosition];
 
 export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
-    checked?: boolean;
+    checked: boolean;
     value?: any;
 }
 
