@@ -37,7 +37,7 @@ this.button.displayDensity = "compact";
 |:----------|:-------------:|
 | `flat` | The default button type. Uses transparent background and the secondary theme color from the palette color for the text. |
 | `outlined` |  Very similar to the flat button type but with a thin outline around the edges of the button. |
-| `raised` | As the name implies, this button type features a subtle shadow. Uses the secondary theme color from the palette for background. |
+| `contained` | As the name implies, this button type features a subtle shadow. Uses the secondary theme color from the palette for background. |
 | `fab` | Floating action button type. Circular with secondary theme color for background. |
 | `icon` | This is the simplest of button types. Use it whenever you need to use an icon as button. |
 

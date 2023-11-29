@@ -12,6 +12,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -364,7 +365,7 @@ export class IgxPageSizeSelectorComponent {
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {
     /**

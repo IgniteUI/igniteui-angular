@@ -6694,10 +6694,10 @@ const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, exp
     expect(getComponentSize(inputGroup)).toBe(size);
     expect(getComponentSize(list)).toBe(size);
 
-    // Verify display density of all flat and raised buttons in excel stlye dialog.
+    // Verify display density of all flat and contained buttons in excel stlye dialog.
     const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--raised');
-    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained');
+    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(size);
     });
@@ -6801,10 +6801,10 @@ const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expec
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
 
-    // Verify display density of all flat and raised buttons in custom filter dialog.
+    // Verify display density of all flat and contained buttons in custom filter dialog.
     const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons = customFilterMenu.querySelectorAll('.igx-button--raised');
-    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons = customFilterMenu.querySelectorAll('.igx-button--contained');
+    const buttons = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(size);
     });

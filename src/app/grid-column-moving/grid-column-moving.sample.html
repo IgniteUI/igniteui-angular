@@ -7,15 +7,15 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-buttons">
-                <button igxButton="raised" (click)="moveColumn()">Move Column API</button>
+                <button igxButton="contained" (click)="moveColumn()">Move Column API</button>
                 <igx-input-group>
                     <input igxInput name="newIndex" type="number" [(ngModel)]="newIndex" />
                     <label igxLabel for="newIndex">New index</label>
                 </igx-input-group>
             </div>
             <div class="sample-buttons">
-                <button igxButton="raised" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
-                <button igxButton="raised" (click)='reverseColumn()'>Reverse</button>
+                <button igxButton="contained" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
+                <button igxButton="contained" (click)='reverseColumn()'>Reverse</button>
             </div>
             <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
                 [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
@@ -43,8 +43,8 @@
         </div>
     </div>
     <div class="sample-buttons">
-        <button igxButton="raised" (click)="moveColumn()">Move Column API</button>
-        <button igxButton="raised" (click)='reverseColumn()'>Reverse</button>
+        <button igxButton="contained" (click)="moveColumn()">Move Column API</button>
+        <button igxButton="contained" (click)='reverseColumn()'>Reverse</button>
         <igx-input-group type="border" >
             <input igxInput name="newIndex" id="newIndex" type="number" [(ngModel)]="newIndex" />
             <label igxLabel for="newIndex">New index</label>
@@ -54,15 +54,15 @@
     <div>
         <p>Drag mode: {{ grid1.selectionService.dragMode }}</p>
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-            <button igxButton="raised" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
+            <button igxButton="contained" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
+            <button igxButton="contained" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
 
             <button igxButton
                     (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select
                 💯 cells</button>
-            <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
-            <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
-            <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
+            <button igxButton="contained" (click)="grid1.clearCellSelection()">Clear Selection</button>
+            <button igxButton="contained" (click)="grid1.getSelectedData()">Get Selected Data</button>
+            <button igxButton="contained" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
         </div>
     </div>
 
@@ -94,7 +94,7 @@
     <h4>Sample 2 - Grid with MCH</h4>
 
     <div class="sample-buttons">
-        <button igxButton="raised" (click)="moveColumnMCH()">Move Column API</button>
+        <button igxButton="contained" (click)="moveColumnMCH()">Move Column API</button>
         <igx-input-group>
             <input igxInput name="newIndex" id="newIndex2" type="number" [(ngModel)]="gridMCHNewIndex" />
             <label igxLabel for="newIndex2">New index</label>

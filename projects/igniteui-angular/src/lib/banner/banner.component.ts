@@ -44,8 +44,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  * <igx-banner #banner>
  *   Our privacy settings have changed.
  *  <igx-banner-actions>
- *      <button type="button" igxButton="raised">Read More</button>
- *      <button type="button" igxButton="raised">Accept and Continue</button>
+ *      <button type="button" igxButton="contained">Read More</button>
+ *      <button type="button" igxButton="contained">Accept and Continue</button>
  *  </igx-banner-actions>
  * </igx-banner>
  * ```

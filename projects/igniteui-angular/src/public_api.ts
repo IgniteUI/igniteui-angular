@@ -22,6 +22,7 @@ export * from './lib/directives/focus-trap/focus-trap.directive';
 export {
     IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
 } from './lib/directives/for-of/for_of.directive';
+export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
 export * from './lib/directives/radio/public_api';

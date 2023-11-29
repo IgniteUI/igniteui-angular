@@ -2293,7 +2293,7 @@
             background: transparent;
         }
 
-        %igx-button--icon {
+        %igx-icon-button-display {
             width: rem(28px);
             height: rem(28px);
             color: var-get($theme, 'expand-all-icon-color');
@@ -2301,7 +2301,7 @@
 
         &:focus,
         &:hover {
-            %igx-button--icon {
+            %igx-icon-button-display {
                 color: var-get($theme, 'expand-all-icon-hover-color');
             }
         }
@@ -2653,6 +2653,10 @@
                     margin-inline-start: rem(4px);
                 }
             }
+        }
+
+        [igxIconButton] {
+            --ig-size: 1;
         }
     }
 
