@@ -338,7 +338,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             return;
         }
         if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
-            this.scrollComponent.nativeElement.scrollLeft = val;
+            this.scrollComponent.nativeElement.scrollLeft = this.isRTL ? -val : val;
         } else if (this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollTop = val;
         }
@@ -459,7 +459,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
                     this.dc.instance.scrollContainer = this.scrollComponent.nativeElement;
                 });
             }
-            this._updateHScrollOffset();
+            this._updateScrollOffset();
         }
     }
 
@@ -1399,14 +1399,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         }
     }
 
-    protected _updateScrollOffset() {
-        if (this.igxForScrollOrientation === 'horizontal') {
-            this._updateHScrollOffset();
-        } else {
-            this._updateVScrollOffset();
-        }
-    }
-
     protected _calcVirtualScrollPosition(scrollPosition: number) {
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollPosition = this.scrollComponent.size - containerSize;
@@ -1420,32 +1412,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
     }
 
-    private _updateVScrollOffset() {
+    protected _updateScrollOffset() {
         let scrollOffset = 0;
-        let currentScrollTop = this.scrollPosition;
+        let currentScroll = this.scrollPosition;
         if (this._virtRatio !== 1) {
             this._calcVirtualScrollPosition(this.scrollPosition);
-            currentScrollTop = this._virtScrollPosition;
+            currentScroll = this._virtScrollPosition;
         }
-        const vScroll = this.scrollComponent.nativeElement;
-        scrollOffset = vScroll && this.scrollComponent.size ?
-            currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+        const scroll = this.scrollComponent.nativeElement;
+        scrollOffset = scroll && this.scrollComponent.size ?
+        currentScroll - this.sizesCache[this.state.startIndex] : 0;
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
+        this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
     }
-
-    private _updateHScrollOffset() {
-        let scrollOffset = 0;
-        let currentScrollTop = this.scrollPosition;
-        if (this._virtRatio !== 1) {
-            this._calcVirtualScrollPosition(this.scrollPosition);
-            currentScrollTop = this._virtScrollPosition;
-        }
-        const vScroll = this.scrollComponent.nativeElement;
-        scrollOffset = vScroll && this.scrollComponent.size ?
-            currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
-    }
-
 
     protected _adjustScrollPositionAfterSizeChange(sizeDiff) {
         // if data has been changed while container is scrolled
