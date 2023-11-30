@@ -1,6 +1,5 @@
 import { Directive, Input } from '@angular/core';
 import { GridFeatures, IGridState, IGridStateOptions, IgxGridStateBaseDirective } from './state-base.directive';
-import { IgxGridComponent } from './grid/grid.component';
 
 /* blazorElement */
 /* contentParent: GridBaseDirective */

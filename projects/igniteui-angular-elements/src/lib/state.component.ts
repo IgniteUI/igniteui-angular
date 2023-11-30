@@ -1,13 +1,12 @@
-import { Input, Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
+import { Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
 import { IGX_GRID_SERVICE_BASE, GridServiceType, IPinningConfig}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
-import { IgxGridComponent } from '../../../igniteui-angular/src/lib/grids/grid/grid.component';
 import { IFilteringExpressionsTree } from '../../../igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../igniteui-angular/src/lib/data-operations/paging-state.interface';
 import { ISortingExpression } from '../../../igniteui-angular/src/lib/data-operations/sorting-strategy';
 import { IGroupingState } from '../../../igniteui-angular/src/lib/data-operations/groupby-state.interface';
 import { GridSelectionRange } from '../../../igniteui-angular/src/lib/grids/common/types';
 import { IPivotConfiguration } from '../../../igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface'
-import { GridFeatures, IColumnState, IGridStateCollection, IgxGridStateBaseDirective } from 'projects/igniteui-angular/src/lib/grids/state-base.directive';
+import { GridFeatures, IColumnState, IGridStateCollection, IgxGridStateBaseDirective } from '../../../igniteui-angular/src/lib/grids/state-base.directive';
 
 /* tsPlainInterface */
 /* marshalByValue */
