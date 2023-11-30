@@ -440,8 +440,8 @@ export var registerConfig = [
     methods: [
       "applyState",
       "applyStateFromString",
-      "extractState",
-      "extractStateAsString",
+      "getState",
+      "getStateAsString",
     ],
   },
   {
