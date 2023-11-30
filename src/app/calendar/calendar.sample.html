@@ -1,21 +1,21 @@
             <div class="calendar-sample">
                 <h4 class="sample-title">Default Calendar</h4>
                 <div class="calendar-sample-buttons">
-                    <button igxButton="raised" igxRipple (click)="changeLocale('fr-FR')">Change locale to France</button>
-                    <button igxButton="raised" igxRipple (click)="changeLocale('en-US')">Change locale to English</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+                    <button igxButton="contained" igxRipple (click)="changeLocale('fr-FR')">Change locale to France</button>
+                    <button igxButton="contained" igxRipple (click)="changeLocale('en-US')">Change locale to English</button>
+                    <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                    <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
 
-                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
+                    <button igxButton="contained" igxRipple (click)="select()">Select</button>
                     <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
                     <br>
-                <button igxButton="raised" igxRipple (click)="showHide()">Hide days</button>
-                    <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
+                <button igxButton="contained" igxRipple (click)="showHide()">Hide days</button>
+                    <button igxButton="contained" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
                     <input type="number" #monthsviewnumber style="margin-right: 10px;"/>
                     <br>
-                    <button igxButton="raised" igxRipple (click)="setSelection('single')">Single</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('multi')">Multi</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('range')">Range</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('single')">Single</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('multi')">Multi</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('range')">Range</button>
                     {{calendar.activeDate}}
                 </div>
                 <igx-card>
@@ -36,21 +36,21 @@
             <div class="calendar-sample">
                 <h4 class="sample-title">Default Calendar</h4>
                 <div class="calendar-sample-buttons">
-                    <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-                    <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+                    <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+                    <button igxButton="contained" igxRipple (click)="changeLocale('en')">Change locale to English</button>
+                    <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                    <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
 
-                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
+                    <button igxButton="contained" igxRipple (click)="select()">Select</button>
                     <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
                     <br>
-                    <button igxButton="raised" igxRipple (click)="showHide()">Hide days</button>
-                    <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
+                    <button igxButton="contained" igxRipple (click)="showHide()">Hide days</button>
+                    <button igxButton="contained" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
                     <input type="number" #monthsviewnumber style="margin-right: 10px;"/>
                     <br>
-                    <button igxButton="raised" igxRipple (click)="setSelection('single')">Single</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('multi')">Multi</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('range')">Range</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('single')">Single</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('multi')">Multi</button>
+                    <button igxButton="contained" igxRipple (click)="setSelection('range')">Range</button>
                     {{calendar.activeDate}}
                 </div>
                 <igx-card>
@@ -72,7 +72,7 @@
                     </igx-calendar>
                     <igx-dialog #alert title="Request Time Off" leftButtonLabel="OK" (leftButtonSelect)="alert.close()">
                     </igx-dialog>
-                    <button igxButton="raised" class="submit" (click)="submitPTOdays()">Submit Request</button>
+                    <button igxButton="contained" class="submit" (click)="submitPTOdays()">Submit Request</button>
                 </article>
             </div>
         </article>

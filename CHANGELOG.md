@@ -3,8 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 17.1.0
+### New Features
+- New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 
 ### General
+- `igxButton`:
+    - **Breaking Change** The `raised` type of the `igxButton` directive has been renamed to `contained`. Automatic migrations are available and will be applied on `ng update`.
+    - The `igxButtonColor` and `igxButtonBackground` input properties have been deprecated and will be removed in a future version.
 - `IgxForOf`
     - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
     - Addded new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.

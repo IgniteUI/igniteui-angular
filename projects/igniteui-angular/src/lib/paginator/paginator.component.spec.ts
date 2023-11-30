@@ -152,7 +152,7 @@ describe('IgxPaginator with default settings', () => {
 
         spyOn(paginator.paging, 'emit').and.callThrough();
         spyOn(paginator.pagingDone, 'emit').and.callThrough();
-        const allBtns = fix.debugElement.queryAll(By.css('.igx-button '));
+        const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button'));
 
         const prevBtn = allBtns[1];
         const nextBtn = allBtns[2];
@@ -186,7 +186,7 @@ describe('IgxPaginator with default settings', () => {
 
         const paginator = fix.componentInstance.paginator;
         spyOn(paginator.pageChange, 'emit').and.callThrough();
-        const allBtns = fix.debugElement.queryAll(By.css('.igx-button '));
+        const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button '));
         const nextBtn = allBtns[2];
 
         nextBtn.nativeElement.click();

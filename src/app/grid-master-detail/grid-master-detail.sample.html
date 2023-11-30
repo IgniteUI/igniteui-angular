@@ -1,6 +1,6 @@
 <div class="wrapper">
     <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
-    <button igxButton="raised" (click)="restoreState()">RESTORE STATE</button>
+    <button igxButton="contained" (click)="restoreState()">RESTORE STATE</button>
     <igx-grid igxGridState #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' [moving]="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
@@ -35,9 +35,9 @@
             <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
         </div>
     </ng-template>
-    <button igxButton="raised" (click)="grid1.expandAll()">Expand All</button>
-    <button igxButton="raised" (click)="grid1.collapseAll()">Collapse All</button>
-    <button igxButton="raised" (click)="expandFirstRow()">Expand first</button>
-    <button igxButton="raised" (click)="collapseFirstRow()">Collapse first</button>
-    <button igxButton="raised" (click)="toggleFirstRow()">Toggle first</button>
+    <button igxButton="contained" (click)="grid1.expandAll()">Expand All</button>
+    <button igxButton="contained" (click)="grid1.collapseAll()">Collapse All</button>
+    <button igxButton="contained" (click)="expandFirstRow()">Expand first</button>
+    <button igxButton="contained" (click)="collapseFirstRow()">Collapse first</button>
+    <button igxButton="contained" (click)="toggleFirstRow()">Toggle first</button>
 </div>

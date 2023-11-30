@@ -30,6 +30,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -71,6 +72,7 @@ export class IgxActionStripMenuItemDirective {
         NgFor,
         NgTemplateOutlet,
         IgxButtonDirective,
+        IgxIconButtonDirective,
         IgxRippleDirective,
         IgxToggleActionDirective,
         IgxDropDownItemNavigationDirective,

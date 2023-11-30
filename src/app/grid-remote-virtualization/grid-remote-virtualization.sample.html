@@ -2,8 +2,8 @@
     <igx-grid #grid1 [isLoading]="loading" [autoGenerate]="true" [data]="remoteData | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'">
     </igx-grid>
 
-    <button igxButton="raised" (click)="loadData()">loadData</button>
-    <button igxButton="raised" (click)="loadNullData()">null Data</button>
-    <button igxButton="raised" (click)="loadUndefinedData()">undefined Data</button>
-    <button igxButton="raised" (click)="toggleLoading()">toggle loading</button>
+    <button igxButton="contained" (click)="loadData()">loadData</button>
+    <button igxButton="contained" (click)="loadNullData()">null Data</button>
+    <button igxButton="contained" (click)="loadUndefinedData()">undefined Data</button>
+    <button igxButton="contained" (click)="toggleLoading()">toggle loading</button>
 </div>

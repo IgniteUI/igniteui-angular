@@ -295,11 +295,11 @@
         margin: 0 rem(8px);
         align-items: center;
 
-        [igxButton] {
+        [igxIconButton] {
             transition: none;
         }
 
-        [igxButton] + [igxButton] {
+        [igxIconButton] + [igxIconButton] {
             margin-inline-start: rem(8px);
         }
     }

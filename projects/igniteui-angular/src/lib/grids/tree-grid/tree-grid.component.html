@@ -158,7 +158,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button type="button" igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="contained" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
