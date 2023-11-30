@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
 
 import { FilteringExpressionsTree, FilteringLogic,
-  IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective, IgxGridStateComponent,
+  IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent,
   IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridType, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonDirective, IgxCellTemplateDirective } from 'igniteui-angular';
 
