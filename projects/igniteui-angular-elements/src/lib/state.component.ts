@@ -34,8 +34,7 @@ export interface IGridStateInfo {
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
 /**
- * State component description
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
+ * State component allows saving and restoring the state of the grid features.
  */
 @Component({
     selector: 'igx-grid-state',
@@ -54,16 +53,8 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
 
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.
-     *
-     * @param IGridState object to restore state from.
-     * @returns
-     * ```html
-     * <igx-grid [igxGridState]="options"></igx-grid>
-     * ```
-     * ```typescript
-     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * this.state.applyState(gridState);
-     * ```
+     * @param state object to restore state from.
+     * @param feature string or array of strings determining the features to be added in the state. If skipped, all features are added.
      */
     public applyState(state: IGridStateInfo , features: GridFeatures | GridFeatures[] = []) {
         if (features.length === 0) {
@@ -74,15 +65,8 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
 
     /**
      * Restores grid features' state based on the serialized IGridState object passed as an argument.
-     *
-     * @returns
-     * ```html
-     * <igx-grid [igxGridState]="options"></igx-grid>
-     * ```
-     * ```typescript
-     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * this.state.setStateFromString(gridState);
-     * ```
+     * @param state string to restore state from.
+     * @param feature string or array of strings determining the features to be added in the state. If skipped, all features are added.
      */
     public applyStateFromString(state: string, features: GridFeatures | GridFeatures[] = []) {
         if (features.length === 0) {
@@ -94,15 +78,8 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *
-     * @param `feature` string or array of strings determining the features to be added in the state. If skipped, all features are added.
-    * @returns Returns the non-serialized IGridStateInfo object.
-     * ```html
-     * <igx-grid [igxGridState]="options"></igx-grid>
-     * ```
-     * ```typescript
-     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * let state = this.state.getState(); // returns `IGridStateInfo` object
-     * ```
+     * @param feature string or array of strings determining the features to be added in the state. If skipped, all features are added.
+     * @returns The state object.
      */
     public getState(features: GridFeatures | GridFeatures[] = []): IGridStateInfo {
         /** Due to return type in getState being union type and having no support for union type in the translators
@@ -116,15 +93,8 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *
-     * @param `feature` array of strings determining the features to be added in the state. If skipped, all features are added.
-     * @returns Returns the serialized to JSON string IGridState object.
-     * ```html
-     * <igx-grid [igxGridState]="options"></igx-grid>
-     * ```
-     * ```typescript
-     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * let state = this.state.getStateAsString(); // returns string
-     * ```
+     * @param feature array of strings determining the features to be added in the state. If skipped, all features are added.
+     * @returns Returns the serialized to JSON string IGridStateInfo object.
      */
     public getStateAsString(features: GridFeatures | GridFeatures[] = []): string {
         if (features.length === 0) {
