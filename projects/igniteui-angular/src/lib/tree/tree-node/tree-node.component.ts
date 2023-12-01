@@ -588,6 +588,14 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /**
      * @hidden @internal
      */
+    public onSelectorPointerDown(event) {
+        event.preventDefault();
+        event.stopPropagation()
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onSelectorClick(event) {
         // event.stopPropagation();
         event.preventDefault();
@@ -628,8 +636,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public indicatorClick() {
-        this.toggle();
-        this.navService.setFocusedAndActiveNode(this);
+        if(!this.tree.toggleNodeOnClick) {
+            this.toggle();
+            this.navService.setFocusedAndActiveNode(this);
+        }
     }
 
     /**
@@ -637,6 +647,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     public onPointerDown(event) {
         event.stopPropagation();
+
+        //Toggle the node only on left mouse click - https://w3c.github.io/pointerevents/#button-states
+        if(this.tree.toggleNodeOnClick && event.button === 0) {
+            this.toggle();
+        }
+
         this.navService.setFocusedAndActiveNode(this);
     }
 

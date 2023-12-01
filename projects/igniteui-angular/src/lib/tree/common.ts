@@ -14,6 +14,7 @@ export interface IgxTree {
     /** @hidden @internal */
     rootNodes: IgxTreeNode<any>[];
     singleBranchExpand: boolean;
+    toggleNodeOnClick: boolean;
     selection: IgxTreeSelectionType;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
