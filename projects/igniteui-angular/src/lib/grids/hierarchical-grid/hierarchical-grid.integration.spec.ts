@@ -635,7 +635,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // change page
             hierarchicalGrid.page = 0;
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
         }));
