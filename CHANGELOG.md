@@ -4,6 +4,9 @@ All notable changes for each version of this project will be documented in this 
 
 ## 17.1.0
 ### New Features
+- `IgxTree`
+    - Added new property `toggleNodeOnClick` that determines whether clicking over a node will change its expanded state or not. Set to `false` by default.
+
 - New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 
 ### General
