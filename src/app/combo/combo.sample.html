@@ -54,7 +54,7 @@
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Combo Template Form</h1>
         <div class="combo-sample__row">
-            <button igxButton="raised" (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
+            <button igxButton="contained" (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
             <button igxButton="outlined" (click)="values1 = []">
                 <span><igx-icon>clear</igx-icon></span>
                 <span>Clear values</span>
@@ -143,8 +143,8 @@
         <h1 class="combo-sample__title">Template items</h1>
 
         <div class="combo-sample__row combo-sample__row--buttons">
-            <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
-            <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
+            <button igxButton="contained" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+            <button igxButton="contained" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
         </div>
 
         <div class="combo-sample__row">

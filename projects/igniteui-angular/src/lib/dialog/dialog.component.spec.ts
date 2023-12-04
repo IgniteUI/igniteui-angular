@@ -201,13 +201,13 @@ describe('Dialog', () => {
 
         dialog.open();
         expect(dialog.leftButtonLabel).toEqual('left button');
-        expect(dialog.leftButtonType).toEqual('raised');
+        expect(dialog.leftButtonType).toEqual('contained');
         expect(dialog.leftButtonColor).toEqual('black');
         expect(dialog.leftButtonBackgroundColor).toEqual('darkblue');
         expect(dialog.leftButtonRipple).toEqual('pink');
 
         expect(dialog.rightButtonLabel).toEqual('right button');
-        expect(dialog.rightButtonType).toEqual('raised');
+        expect(dialog.rightButtonType).toEqual('contained');
         expect(dialog.rightButtonColor).toEqual('orange');
         expect(dialog.rightButtonBackgroundColor).toEqual('lightblue');
         expect(dialog.rightButtonRipple).toEqual('white');
@@ -543,12 +543,12 @@ class AlertComponent {
     <div #wrapper>
         <igx-dialog #dialog title="dialog" message="message"
             leftButtonLabel="left button"
-            leftButtonType="raised"
+            leftButtonType="contained"
             leftButtonColor="black"
             leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
+            rightButtonType="contained"
             rightButtonColor="orange"
             rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
@@ -567,12 +567,12 @@ class DialogComponent {
         <igx-dialog #dialog title="dialog" message="message"
             [(isOpen)]="myDialog"
             leftButtonLabel="left button"
-            leftButtonType="raised"
+            leftButtonType="contained"
             leftButtonColor="black"
             leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
+            rightButtonType="contained"
             rightButtonColor="orange"
             rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
@@ -591,12 +591,12 @@ class DialogTwoWayDataBindingComponent {
     <div #wrapper>
         <igx-dialog #dialog
             leftButtonLabel="left button"
-            leftButtonType="raised"
+            leftButtonType="contained"
             leftButtonColor="black"
             leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
+            rightButtonType="contained"
             rightButtonColor="orange"
             rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">

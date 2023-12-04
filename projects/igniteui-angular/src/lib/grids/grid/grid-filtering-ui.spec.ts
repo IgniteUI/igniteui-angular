@@ -5487,6 +5487,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
         }));
 
+        it('Should not lose focus with arrowUp/arrowDown when navigating inside search list', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+
+            // we expect only the first list item to be active when the list is focused
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on arrow up the focus should stay on the first element and not on the search input
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+        }));
+
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
             const totalListItems = [];
 
@@ -6675,10 +6694,10 @@ const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, exp
     expect(getComponentSize(inputGroup)).toBe(size);
     expect(getComponentSize(list)).toBe(size);
 
-    // Verify display density of all flat and raised buttons in excel stlye dialog.
+    // Verify display density of all flat and contained buttons in excel stlye dialog.
     const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--raised');
-    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained');
+    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(size);
     });
@@ -6782,10 +6801,10 @@ const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expec
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
 
-    // Verify display density of all flat and raised buttons in custom filter dialog.
+    // Verify display density of all flat and contained buttons in custom filter dialog.
     const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons = customFilterMenu.querySelectorAll('.igx-button--raised');
-    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons = customFilterMenu.querySelectorAll('.igx-button--contained');
+    const buttons = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(size);
     });

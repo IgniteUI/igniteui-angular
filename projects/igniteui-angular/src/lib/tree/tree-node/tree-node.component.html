@@ -71,7 +71,7 @@
         <!-- Item selection -->
         <div *ngIf="showSelectors"
             class="igx-tree-node__select"
-            (pointerdown)="$event.preventDefault()"
+            (pointerdown)="onSelectorPointerDown($event)"
             (click)="onSelectorClick($event)">
             <ng-container *ngTemplateOutlet="selectMarkerTemplate">
             </ng-container>

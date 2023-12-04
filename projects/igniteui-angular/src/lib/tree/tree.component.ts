@@ -119,6 +119,23 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     @Input({ transform: booleanAttribute })
     public singleBranchExpand = false;
 
+    /** Get/Set if nodes should be expanded/collapsed when clicking over them.
+     * 
+     * ```html
+     * <igx-tree [toggleNodeOnClick]="true">
+     * ...
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const tree: IgxTree = this.tree;
+     * this.tree.toggleNodeOnClick = false;
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public toggleNodeOnClick = false;
+    
+
     /** Get/Set the animation settings that branches should use when expanding/collpasing.
      *
      * ```html

@@ -2,7 +2,7 @@
     <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
         <igx-switch *ngIf="groupArea" [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
-        <button igxButton="raised" (click)="print()" >Show Expressions</button>
+        <button igxButton="contained" (click)="print()" >Show Expressions</button>
     </div>
 
     <igx-tree-grid #grid1

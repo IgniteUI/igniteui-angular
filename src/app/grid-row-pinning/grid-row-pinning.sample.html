@@ -1,15 +1,15 @@
 <div class="wrapper">
-    <button igxButton="raised" (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
-    <button igxButton="raised"(click)="exportButtonHandler()">Export</button>
+    <button igxButton="contained" (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
+    <button igxButton="contained"(click)="exportButtonHandler()">Export</button>
     <div class="sample-column">
         <h4 class="sample-title">igxGrid</h4>
         <div>
-            <input igxButton="raised" type="button" name="Density" (click)="toggleDensity()" value="Density" />
+            <input igxButton="contained" type="button" name="Density" (click)="toggleDensity()" value="Density" />
             <span> Current: {{displayDensityOptions.displayDensity}}</span>
         </div>
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="saveGridState()">Save state</button>
-            <button igxButton="raised" (click)="restoreGridState()">Restore state</button>
+            <button igxButton="contained" (click)="saveGridState()">Save state</button>
+            <button igxButton="contained" (click)="restoreGridState()">Restore state</button>
         </div>
         <div class="sample-switches">
             <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
