@@ -888,7 +888,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public resetScrollPosition() {
         this.scrollPosition = 0;
         this.scrollComponent.scrollAmount = 0;
-        this.state.startIndex = 0;
     }
 
     /**
