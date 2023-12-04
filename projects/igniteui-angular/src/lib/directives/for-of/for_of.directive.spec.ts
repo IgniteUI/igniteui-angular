@@ -189,6 +189,38 @@ describe('IgxForOf directive -', () => {
             expect(state.startIndex).toBe(1);
         });
 
+        it('should display the correct chunk items on resizing the container', () => {
+            // initially the container's width is narrow enough to be scrollable
+            fix.componentInstance.width = '200px';
+            fix.componentInstance.cols = [
+                { field: '1', width: 100 },
+                { field: '2', width: 100 },
+                { field: '3', width: 100 },
+                { field: '4', width: 100 },
+                { field: '5', width: 100 }
+            ];
+            fix.detectChanges();
+
+            expect(displayContainer).not.toBeNull();
+
+            // scroll the container so that at least the first col is out of view
+            fix.componentInstance.scrollLeft(displayContainer.clientWidth);
+            fix.detectChanges();
+
+            fix.componentInstance.childVirtDirs.toArray().forEach(element => {
+                expect(element.state.startIndex).not.toBe(0);
+            });
+
+            // the container's width is assigned as wide as to display all cols
+            fix.componentInstance.width = '600px';
+            fix.detectChanges();
+
+            const secondRecChildren = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1].children;
+            for (let i = 0; i < secondRecChildren.length; i++) {
+                expect(secondRecChildren[i].textContent)
+                    .toBe(fix.componentInstance.data[1][i + 1].toString());
+            }
+        });
     });
 
     describe('vertical virtual component', () => {
