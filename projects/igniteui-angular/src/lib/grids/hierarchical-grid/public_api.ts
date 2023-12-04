@@ -1,4 +1,3 @@
-import { IGX_GRID_COMMON_DIRECTIVES, IGX_GRID_VALIDATION_DIRECTIVES } from '../public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 
@@ -97,7 +96,82 @@ export const IGX_HIERARCHICAL_GRID_DIRECTIVES = [
     IgxRowEditActionsDirective,
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective,
-    ...IGX_GRID_COMMON_DIRECTIVES,
-    ...IGX_GRID_VALIDATION_DIRECTIVES,
-    ...IGX_PAGINATOR_DIRECTIVES
+    // IGX_GRID_COMMON_DIRECTIVES:
+    IgxRowDirective,
+    IgxGridFooterComponent,
+    IgxAdvancedFilteringDialogComponent,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective,
+    IgxExcelStyleHeaderIconDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    IgxDragIndicatorIconDirective,
+    IgxRowDragGhostDirective,
+    IgxGridStateDirective,
+    // IGX_GRID_HEADERS_DIRECTIVES:
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    // IGX_GRID_COLUMN_DIRECTIVES:
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellFooterTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    // IGX_GRID_COLUMN_ACTIONS_DIRECTIVES:
+    IgxColumnActionsComponent,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective,
+    // IGX_GRID_SELECTION_DIRECTIVES:
+    IgxRowSelectorDirective,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    // IGX_GRID_TOOLBAR_DIRECTIVES:
+    IgxCSVTextDirective,
+    IgxExcelTextDirective,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarDirective,
+    // IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES:
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleHeaderComponent,
+    IgxExcelStyleSortingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleHidingComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxExcelStyleClearFiltersComponent,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    // IGX_GRID_VALIDATION_DIRECTIVES:
+    IgxColumnRequiredValidatorDirective,
+    IgxColumnMinValidatorDirective,
+    IgxColumnMaxValidatorDirective,
+    IgxColumnEmailValidatorDirective,
+    IgxColumnMinLengthValidatorDirective,
+    IgxColumnMaxLengthValidatorDirective,
+    IgxColumPatternValidatorDirective,
+    // IGX_PAGINATOR_DIRECTIVES:
+    IgxPaginatorComponent,
+    IgxPageNavigationComponent,
+    IgxPageSizeSelectorComponent,
+    IgxPaginatorContentDirective,
+    IgxPaginatorDirective
 ] as const;
