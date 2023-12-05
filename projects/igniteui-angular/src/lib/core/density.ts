@@ -64,6 +64,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
+
     @Output()
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
@@ -81,14 +82,6 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      */
     @Input()
     public get displayDensity(): DisplayDensity {
-        if (!this.size) {
-            return (
-                this._displayDensity ??
-                this.displayDensityOptions?.displayDensity ??
-                DisplayDensity.comfortable
-            );
-        }
-
         switch (this.size) {
             case '1':
                 return DisplayDensity.compact;
@@ -96,7 +89,11 @@ export class DisplayDensityBase implements DoCheck, OnInit {
                 return DisplayDensity.cosy;
             case '3':
             default:
-                return DisplayDensity.comfortable;
+                return (
+                    this._displayDensity ??
+                    this.displayDensityOptions?.displayDensity ??
+                    DisplayDensity.comfortable
+                );
         }
     }
 
@@ -118,7 +115,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     }
 
     public get size() {
-        return document.defaultView
+        return globalThis.document?.defaultView
             .getComputedStyle(this._host.nativeElement)
             .getPropertyValue('--ig-size')
             .trim();
@@ -131,7 +128,8 @@ export class DisplayDensityBase implements DoCheck, OnInit {
 
     protected oldDisplayDensityOptions: IDisplayDensityOptions = {
         displayDensity: DisplayDensity.comfortable,
-    };
+    }
+
     protected _displayDensity: DisplayDensity;
 
     constructor(

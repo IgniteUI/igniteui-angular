@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxChipComponent, IgxDividerDirective, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxIconComponent, IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxRippleDirective, IgxSliderComponent } from 'igniteui-angular';
+import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxChipComponent, IgxDividerDirective, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxIconButtonDirective, IgxIconComponent, IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxRippleDirective, IgxSliderComponent } from 'igniteui-angular';
 
 export interface ICard {
     title: string;
@@ -82,7 +82,8 @@ const detailsFactory = (params: any): Idetails => ({
         IgxListLineTitleDirective,
         IgxAvatarComponent,
         IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubtitleDirective
+        IgxCardHeaderSubtitleDirective,
+        IgxIconButtonDirective
     ]
 })
 export class CardSampleComponent {

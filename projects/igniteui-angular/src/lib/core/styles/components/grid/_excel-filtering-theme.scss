@@ -447,7 +447,8 @@
             min-width: 30%;
         }
 
-        [igxButton='icon'] {
+        [igxIconButton] {
+            --component-size: var(--grid-size);
             margin-inline-start: rem(16px);
         }
     }

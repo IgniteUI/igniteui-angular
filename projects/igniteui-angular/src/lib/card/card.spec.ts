@@ -16,6 +16,7 @@ import {
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
 describe('Card', () => {
     configureTestSuite();
@@ -302,7 +303,7 @@ class CardWithHeaderComponent { }
 
         <igx-card-actions>
             <button igxButton igxStart>Test</button>
-            <button igxButton="icon" igxEnd>
+            <button igxIconButton="flat" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
@@ -318,7 +319,8 @@ class CardWithHeaderComponent { }
         IgxCardContentDirective,
         IgxCardActionsComponent,
         IgxButtonDirective,
-        IgxIconComponent
+        IgxIconComponent,
+        IgxIconButtonDirective
     ]
 })
 class VerticalCardComponent {
@@ -330,13 +332,13 @@ class VerticalCardComponent {
     <igx-card [horizontal]="true">
         <igx-card-actions>
             <button igxButton igxStart>Test</button>
-            <button igxButton="icon" igxEnd>
+            <button igxIconButton="flat" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
     </igx-card>`,
     standalone: true,
-    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent]
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 class HorizontalCardComponent {
     @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;

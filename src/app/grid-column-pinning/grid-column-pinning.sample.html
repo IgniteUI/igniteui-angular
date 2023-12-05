@@ -2,11 +2,11 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-buttons">
-                <button igxButton="raised" (click)="grid1.pinRow({})">Pin non-existent rec</button>
-                <button igxButton="raised" (click)="grid1.unpinRow({})">Unpin non-existent rec</button>
-                <button igxButton="raised" (click)="togglePinRow(0)">Pin/Unpin first row</button>
-                <button igxButton="raised" (click)="togglePinRow(1)">Pin/Unpin second row'</button>
-                <button igxButton="raised" (click)="togglePinRow(2)">Pin/Unpin third row'</button>
+                <button igxButton="contained" (click)="grid1.pinRow({})">Pin non-existent rec</button>
+                <button igxButton="contained" (click)="grid1.unpinRow({})">Unpin non-existent rec</button>
+                <button igxButton="contained" (click)="togglePinRow(0)">Pin/Unpin first row</button>
+                <button igxButton="contained" (click)="togglePinRow(1)">Pin/Unpin second row'</button>
+                <button igxButton="contained" (click)="togglePinRow(2)">Pin/Unpin third row'</button>
             </div>
         <igx-grid [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="selectionMode">
             <igx-grid-toolbar *ngIf="showToolbar">
@@ -20,15 +20,15 @@
             </igx-column>
         </igx-grid>
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
-            <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-            <button igxButton="raised" (click)="toggleColumn('CompanyName')">Pin/Unpin 'CompanyName'</button>
-            <button igxButton="raised" (click)="toggleColumn('City')">Pin/Unpin 'City'</button>
-            <button igxButton="raised" (click)="toggleColumn('Region')">Pin/Unpin 'Region'</button>
-            <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
-            <button igxButton="raised" (click)="toggleVisibility('ID')">Visibility 'ID'</button>
-            <button igxButton="raised" (click)="toggleVisibility('ContactName')">Visibility 'ContactName'</button>
-            <button igxButton="raised" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
+            <button igxButton="contained" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
+            <button igxButton="contained" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
+            <button igxButton="contained" (click)="toggleColumn('CompanyName')">Pin/Unpin 'CompanyName'</button>
+            <button igxButton="contained" (click)="toggleColumn('City')">Pin/Unpin 'City'</button>
+            <button igxButton="contained" (click)="toggleColumn('Region')">Pin/Unpin 'Region'</button>
+            <button igxButton="contained" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
+            <button igxButton="contained" (click)="toggleVisibility('ID')">Visibility 'ID'</button>
+            <button igxButton="contained" (click)="toggleVisibility('ContactName')">Visibility 'ContactName'</button>
+            <button igxButton="contained" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
         </div>
         <div class="sample-switches">
             <igx-switch [(ngModel)]="showToolbar">Toolbar</igx-switch>

@@ -361,16 +361,16 @@
 
             <div class="igx-filter-tree__inputs-actions">
                 <button type="button"
-                    igxButton="icon"
-                    [displayDensity]="this.displayDensity"
+                    igxIconButton="flat"
+                    [style.--component-size]="getComponentSizeStyles()"
                     [disabled]="!operandCanBeCommitted()"
                     (click)="commitOperandEdit()"
                 >
                     <igx-icon>check</igx-icon>
                 </button>
                 <button type="button"
-                    igxButton="icon"
-                    [displayDensity]="this.displayDensity"
+                    igxIconButton="flat"
+                    [style.--component-size]="getComponentSizeStyles()"
                     (click)="cancelOperandEdit()"
                 >
                     <igx-icon>close</igx-icon>
@@ -391,8 +391,8 @@
             >
             </ng-container>
             <button type="button"
-                igxButton="icon"
-                [displayDensity]="this.displayDensity"
+                igxIconButton="flat"
+                [style.--component-size]="getComponentSizeStyles()"
                 (click)="cancelOperandAdd()"
             >
                 <igx-icon>close</igx-icon>
@@ -477,7 +477,7 @@
         }"
     >
         <button type="button"
-            igxButton="icon"
+            igxIconButton="flat"
             class="igx-filter-contextual-menu__close-btn"
             (click)="clearSelection()"
         >

@@ -506,7 +506,7 @@ export class IgxBannerEmptyComponent {
             <igx-banner>
                 You have lost connection to the internet.
                 <igx-banner-actions>
-                    <button igxButton="raised">TURN ON WIFI</button>
+                    <button igxButton="contained">TURN ON WIFI</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
@@ -527,8 +527,8 @@ export class IgxBannerOneButtonComponent {
                 <igx-icon>error</igx-icon>
                 Unfortunately, the credit card did not go through, please try again.
                 <igx-banner-actions>
-                    <button igxButton="raised" (click)="banner.close()">UPDATE</button>
-                    <button igxButton="raised" (click)="banner.close()">DISMISS</button>
+                    <button igxButton="contained" (click)="banner.close()">UPDATE</button>
+                    <button igxButton="contained" (click)="banner.close()">DISMISS</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
