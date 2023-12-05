@@ -189,7 +189,7 @@ describe('IgxForOf directive -', () => {
             expect(state.startIndex).toBe(1);
         });
 
-        it('should display the correct chunk items on resizing the container', () => {
+        it('should display the correct chunk items on resizing the container', async() => {
             // initially the container's width is narrow enough to be scrollable
             fix.componentInstance.width = '200px';
             fix.componentInstance.cols = [
@@ -214,7 +214,8 @@ describe('IgxForOf directive -', () => {
             // the container's width is assigned as wide as to display all cols
             fix.componentInstance.width = '600px';
             fix.detectChanges();
-
+            await wait(100);
+            fix.detectChanges();
             const secondRecChildren = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1].children;
             for (let i = 0; i < secondRecChildren.length; i++) {
                 expect(secondRecChildren[i].textContent)
