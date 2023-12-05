@@ -131,8 +131,9 @@
         }
     }
 
-    %igx-navbar-icon-display {
-        > igx-icon,
+    %igx-navbar-icon-display,
+    %igx-navbar-part {
+        igx-icon,
         [igxButton='icon'] {
             --component-size: 3;
 
