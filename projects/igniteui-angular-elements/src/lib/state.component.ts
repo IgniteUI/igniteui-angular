@@ -33,6 +33,8 @@ export interface IGridStateInfo {
 /* wcElementTag: igc-grid-state */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* jsonAPIManageCollectionInMarkup */
 /**
  * State component allows saving and restoring the state of the grid features.
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *

@@ -1,11 +1,6 @@
 import { Directive, Input } from '@angular/core';
 import { GridFeatures, IGridState, IGridStateOptions, IgxGridStateBaseDirective } from './state-base.directive';
 
-/* blazorElement */
-/* contentParent: GridBaseDirective */
-/* wcElementTag: igc-grid-state-directive */
-/* jsonAPIManageCollectionInMarkup */
-/* blazorIndirectRender */
 @Directive({
     selector: '[igxGridState]',
     standalone: true
