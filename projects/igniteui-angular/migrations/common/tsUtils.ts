@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import { Tree } from '@angular-devkit/schematics';
-import { MemberChange } from './schema';
+import type { Tree } from '@angular-devkit/schematics';
+import type { MemberChange } from './schema';
 import { escapeRegExp } from './util';
 import { Logger } from './tsLogger';
 import { TSLanguageService } from './tsPlugin/TSLanguageService';
@@ -143,11 +143,6 @@ export const findMatches = (content: string, toFind: string): number[] => {
 
     return matchesPositions;
 };
-
-export const replaceMatch = (content: string, toReplace: string, replaceWith: string, index: number): string =>
-    content.substring(0, index) +
-    replaceWith +
-    content.substring(index + toReplace.length, content.length);
 
 //#region Language Service
 
