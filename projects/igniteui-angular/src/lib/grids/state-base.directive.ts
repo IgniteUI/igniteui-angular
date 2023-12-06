@@ -99,11 +99,13 @@ interface Feature {
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
-/* blazorIndirectRender
-   blazorComponent
-   omitModule */
+/* blazorElement */
+/* contentParent: GridBaseDirective */
+/* wcElementTag: igc-grid-state-base-directive */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 @Directive()
-export abstract class IgxGridStateBaseDirective {
+export class IgxGridStateBaseDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
 
     private featureKeys: GridFeatures[] = [];
