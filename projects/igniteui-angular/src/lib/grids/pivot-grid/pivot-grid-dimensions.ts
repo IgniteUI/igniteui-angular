@@ -196,6 +196,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             this.memberName = yearsDimension.memberName;
             this.memberFunction = yearsDimension.memberFunction;
             this.childLevel = yearsDimension.childLevel;
+            this.displayName = yearsDimension.displayName;
         }
     }
 
