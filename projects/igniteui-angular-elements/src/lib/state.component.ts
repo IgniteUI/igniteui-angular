@@ -106,5 +106,15 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         return super.getStateInternal(true, features) as string;
     }
 
+    protected override stringifyCallback(key: string, val: any){
+        if (key === 'searchVal' && val instanceof Set) {
+            return Array.from(val);
+        }
+        // Workaround for Blazor, since its wrappers inject this externalObject that cannot serialize.
+        if (key === 'externalObject') {
+            return undefined;
+        }
+        return val;
+    };
 
 }
