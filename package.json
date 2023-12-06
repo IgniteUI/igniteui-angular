@@ -39,6 +39,8 @@
     "build:typedoc:ja:staging": "set NODE_ENV=staging && node ./scripts/build-typedoc.mjs --localize=jp",
     "build:typedoc:en:production": "set NODE_ENV=production && node ./scripts/build-typedoc.mjs --localize=en",
     "build:typedoc:en:staging": "set NODE_ENV=staging && node ./scripts/build-typedoc.mjs --localize=en",
+    "build:sassdoc:export": "gulp sassdocBuildJson --convert true --exportDir ./extras/sassdoc && gulp sassdocCleanOutputDir",
+    "build:sassdoc:import": "gulp sassdocImportJson --render true --importDir ./extras/sassdoc",
     "build:sassdoc:en:production": "set NODE_ENV=production && set SASSDOC_LANG=en && gulp sassdocBuildEN",
     "build:sassdoc:en:staging": "set NODE_ENV=staging && set SASSDOC_LANG=en && gulp sassdocBuildEN",
     "build:sassdoc:ja:production": "set NODE_ENV=production && set SASSDOC_LANG=jp && gulp sassdocBuildJA --render true",
