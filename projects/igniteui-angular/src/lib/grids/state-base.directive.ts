@@ -99,11 +99,13 @@ interface Feature {
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
-/* blazorIndirectRender
-   blazorComponent
-   omitModule */
+/* blazorElement */
+/* contentParent: GridBaseDirective */
+/* wcElementTag: igc-grid-state-base-directive */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 @Directive()
-export abstract class IgxGridStateBaseDirective {
+export class IgxGridStateBaseDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
 
     private featureKeys: GridFeatures[] = [];
@@ -711,7 +713,7 @@ export abstract class IgxGridStateBaseDirective {
         return filters.condition(name);
     }
 
-    private stringifyCallback(key: string, val: any) {
+    protected stringifyCallback(key: string, val: any) {
         if (key === 'searchVal' && val instanceof Set) {
             return Array.from(val);
         }
