@@ -1,11 +1,12 @@
-import {
+import type {
     Rule,
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
-import { Element } from '@angular/compiler';
-import { nativeImport } from '../common/import-helper.js';
-import { Options } from '../../schematics/interfaces/options';
+import type { Element } from '@angular/compiler';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
+import type { Options } from '../../schematics/interfaces/options';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile, hasAttribute } from '../common/util';
 
