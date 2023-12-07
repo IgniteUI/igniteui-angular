@@ -13,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
 - `igxButton`:
     - **Breaking Change** The `raised` type of the `igxButton` directive has been renamed to `contained`. Automatic migrations are available and will be applied on `ng update`.
     - The `igxButtonColor` and `igxButtonBackground` input properties have been deprecated and will be removed in a future version.
+- `IgxForOf`
+    - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
+    - Addded new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
 
 ## 17.0.0
 ### General
