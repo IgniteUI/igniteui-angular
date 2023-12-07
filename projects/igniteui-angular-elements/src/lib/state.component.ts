@@ -52,6 +52,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
             super(api.grid, viewRef, envInjector, injector);
         }
 
+    /* blazorCSSuppress */
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.
      * @param state object to restore state from.
@@ -76,6 +77,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         super.setStateInternal(state, features);
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *
