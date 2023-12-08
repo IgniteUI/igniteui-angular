@@ -648,11 +648,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     protected onFocus() {
         const firstIndexInView = this.virtDir.state.startIndex;
-        this.focusedItem = {
-            id: this.getItemId(firstIndexInView),
-            index: firstIndexInView,
-            checked: this.virtDir.igxForOf[firstIndexInView].isSelected
-        };
+        if (this.virtDir.igxForOf.length != 0) {
+            this.focusedItem = {
+                id: this.getItemId(firstIndexInView),
+                index: firstIndexInView,
+                checked: this.virtDir.igxForOf[firstIndexInView].isSelected
+            };
+        }
         this.setActiveDescendant();
     }
 
