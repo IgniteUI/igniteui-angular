@@ -866,7 +866,7 @@ export interface IFilteringOperation {
     iconName: string;
     hidden?: boolean;
     /* blazorCSSuppress */
-    /* alternateType: FilteringOperationLogicHandler */
+    /* blazorAlternateType: FilteringOperationLogicHandler */
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 
