@@ -292,11 +292,6 @@
         background: var-get($theme, 'focused-item-background');
         color: var-get($theme, 'focused-item-text-color');
 
-        &:hover {
-            color: var-get($theme, 'focused-item-text-color');
-            background: var-get($theme, 'focused-item-background');
-        }
-
         @if $variant == 'fluent' {
             outline: rem(1px) solid var-get($theme, 'border-color');
             outline-offset: rem(-1px);
