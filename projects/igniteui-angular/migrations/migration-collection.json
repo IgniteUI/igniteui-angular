@@ -1,5 +1,6 @@
 {
     "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "encapsulation": true,
     "schematics": {
         "migration-01": {
             "version": "6.0.0",

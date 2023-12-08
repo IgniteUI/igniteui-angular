@@ -2,18 +2,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
+    getLanguageService, getRenamePositions, getIdentifierPositions,
     createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
-    getProjectPaths, getWorkspace, getProjects, escapeRegExp,
+    getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
