@@ -254,6 +254,7 @@ export class IgxPivotDataSelectorComponent {
             dataKey: "filterDimensions",
             icon: "filter_list",
             itemKey: "memberName",
+            displayKey: 'displayName',
             sortable: false,
             dragChannels: ["Filters", "Columns", "Rows"]
         },
@@ -264,6 +265,7 @@ export class IgxPivotDataSelectorComponent {
             dataKey: "columnDimensions",
             icon: "view_column",
             itemKey: "memberName",
+            displayKey: 'displayName',
             sortable: true,
             dragChannels: ["Filters", "Columns", "Rows"]
         },
@@ -274,6 +276,7 @@ export class IgxPivotDataSelectorComponent {
             dataKey: "rowDimensions",
             icon: "table_rows",
             itemKey: "memberName",
+            displayKey: 'displayName',
             sortable: true,
             dragChannels: ["Filters", "Columns", "Rows"]
         },

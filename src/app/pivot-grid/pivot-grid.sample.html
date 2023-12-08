@@ -5,7 +5,7 @@
         [itemsMaxHeight]="250"
         (selectionChanging)="handleChange($event)"
         [data]="dimensions"
-        [displayKey]="'memberName'"
+        [displayKey]="'displayName'"
         [(ngModel)]="selected"
         placeholder="Dimension(s)"
         searchPlaceholder="Search..."
@@ -73,7 +73,7 @@
             (dimensionsChange)="dimensionChange()"
         >
         <ng-template igxPivotValueChip let-value>
-            {{ value.member }}
+            {{ value.displayName }}
        </ng-template>
     </igx-pivot-grid>
     </div>
