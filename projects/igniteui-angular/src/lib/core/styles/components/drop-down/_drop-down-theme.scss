@@ -186,7 +186,6 @@
 @mixin drop-down($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
-    $outline-indent: rem(1px);
 
     %igx-drop-down {
         position: absolute;
