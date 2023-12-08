@@ -25,7 +25,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
-    const DEBOUNCE_TIME = 30;
+    // Setting a DEBOUNCE_TIME that is bigger than the resize observer's throttleTime.
+    const DEBOUNCE_TIME = 50;
 
     const FILTERING_ROW_CLASS = 'igx-grid-filtering-row';
     const FILTERING_CELL_CLASS = 'igx-grid-filtering-cell';
@@ -634,7 +635,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // change page
             hierarchicalGrid.page = 0;
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
         }));

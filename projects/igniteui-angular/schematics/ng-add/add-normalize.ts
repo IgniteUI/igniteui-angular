@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 import { addPackageToPkgJson } from '../utils/dependency-handler';
 import { JsonArray, workspaces } from '@angular-devkit/core';
 import { ProjectType } from '../utils/util';

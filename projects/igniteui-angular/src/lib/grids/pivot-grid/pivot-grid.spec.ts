@@ -651,6 +651,88 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.rowList.first.cells.toArray().map(x => x.value)).toEqual([2127, 774, 829, 524]);
         });
 
+        it('should display displayName when provided for a pivot column and/or row', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        enabled: true,
+                        memberName: 'ColumnMember',
+                        displayName: 'ColumnDisplay'
+                    }
+                ],
+                rows: [
+                    {
+                        enabled: true,
+                        memberName: 'RowMember',
+                        displayName: 'RowDisplay'
+                    }
+                ],
+                values: [
+                    {
+                        enabled: true,
+                        member: 'ValueMember',
+                        displayName: 'ValueDisplay',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum',
+                        }
+                    }
+                ]
+            }
+
+            fixture.detectChanges();
+
+            const displayedColumn = fixture.nativeElement.querySelector(`#${pivotGrid.pivotConfiguration.columns[0].memberName} .igx-chip__content`).textContent;
+            expect(displayedColumn).toContain('ColumnDisplay');
+            expect(displayedColumn).not.toContain('ColumnMember');
+
+            const displayedRow = fixture.nativeElement.querySelector(`#${pivotGrid.pivotConfiguration.rows[0].memberName} .igx-chip__content`).textContent;
+            expect(displayedRow).toContain('RowDisplay');
+            expect(displayedRow).not.toContain('RowMember');
+        });
+
+        it('should should dallback to using memberName for columns and rows if displayName is not provided', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        enabled: true,
+                        memberName: 'ColumnMember',
+                        displayName: undefined
+                    }
+                ],
+                rows: [
+                    {
+                        enabled: true,
+                        memberName: 'RowMember',
+                        displayName: undefined
+                    }
+                ],
+                values: [
+                    {
+                        enabled: true,
+                        member: 'ValueMember',
+                        displayName: 'ValueDisplay',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum',
+                        }
+                    }
+                ]
+            }
+
+            fixture.detectChanges();
+
+            const displayedColumn = fixture.nativeElement.querySelector(`#${pivotGrid.pivotConfiguration.columns[0].memberName} .igx-chip__content`).textContent;
+            expect(displayedColumn).toContain('ColumnMember');
+
+            const displayedRow = fixture.nativeElement.querySelector(`#${pivotGrid.pivotConfiguration.rows[0].memberName} .igx-chip__content`).textContent;
+            expect(displayedRow).toContain('RowMember');
+        });
+
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {

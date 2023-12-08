@@ -1,6 +1,6 @@
 import { workspaces } from '@angular-devkit/core';
-import { SchematicContext, Rule, Tree } from '@angular-devkit/schematics';
-import { Options } from '../interfaces/options';
+import type { SchematicContext, Rule, Tree } from '@angular-devkit/schematics';
+import type { Options } from '../interfaces/options';
 import { createHost, ProjectType } from './util';
 
 export enum PackageTarget {
