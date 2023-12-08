@@ -63,8 +63,8 @@ export class CalendarSampleComponent implements OnInit {
 	public today = new Date();
 	public ppNovember = new Date(this.today.getFullYear(), this.today.getMonth() + 1, 10);
 	public rangeDisabled = [
-		new Date(this.today.getFullYear(), this.today.getMonth(), 22),
-		new Date(this.today.getFullYear(), this.today.getMonth(), 24),
+		new Date(this.today.getFullYear(), this.today.getMonth(), 20),
+		new Date(this.today.getFullYear(), this.today.getMonth(), 21),
 	];
 	public specialDates = [
 		new Date(this.today.getFullYear(), this.today.getMonth(), 2),
@@ -78,6 +78,7 @@ export class CalendarSampleComponent implements OnInit {
 		this.calendar.selectDate([new Date(this.today.getFullYear(), this.today.getMonth(), 10),
 			new Date(this.today.getFullYear(), this.today.getMonth(), 17),
 			new Date(this.today.getFullYear(), this.today.getMonth(), 27)]);
+        this.setOrientation('horizontal');
 	}
 
 	public selectPTOdays(dates: Date | Date[]) {
@@ -154,6 +155,7 @@ export class CalendarSampleComponent implements OnInit {
 	public hideHeader() {
 		this.calendar.hasHeader = !this.calendar.hasHeader;
 		this.calendarHeader = !this.calendarHeader;
+
 	}
 
 	public setHeaderOrientation(args: string) {

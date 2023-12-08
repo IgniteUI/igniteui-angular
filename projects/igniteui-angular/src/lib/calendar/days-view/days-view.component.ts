@@ -52,7 +52,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     @Input()
     public id = `igx-days-view-${NEXT_ID++}`;
 
-	@HostBinding('class.igx-calendar--days-view')
+	@HostBinding('class.igx-days-view')
 	public readonly viewClass = true;
 
     /**
@@ -115,14 +115,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
-
-    /**
-     * The default css class applied to the component.
-     *
-     * @hidden
-     */
-    @HostBinding('class.igx-calendar')
-    public styleClass = true;
 
     /**
      * @hidden

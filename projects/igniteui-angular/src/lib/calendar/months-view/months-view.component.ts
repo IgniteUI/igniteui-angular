@@ -49,6 +49,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
     public id = `igx-months-view-${NEXT_ID++}`;
 
     /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     */
+    @HostBinding('class.igx-months-view')
+    public readonly viewClass = true;
+
+    /**
      * Gets/sets the selected date of the months view.
      * By default it is the current date.
      * ```html
@@ -356,7 +364,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
     public monthTracker(index, item: Date): string {
         return `${item.getMonth()}}`;
     }
-    
+
     private navigateToMonth(event: KeyboardEvent, direction: Direction, delta: number) {
         event.preventDefault();
         event.stopPropagation();

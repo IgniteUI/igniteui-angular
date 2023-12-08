@@ -86,8 +86,8 @@ export class IgxYearsViewComponent implements ControlValueAccessor, AfterViewChe
      *
      * @hidden
      */
-    @HostBinding('class.igx-calendar')
-    public styleClass = true;
+    @HostBinding('class.igx-years-view')
+    public readonly viewClass = true;
 
     /**
      * @hidden
@@ -121,7 +121,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor, AfterViewChe
      * @internal
      */
     protected activeYear: number;
-    
+
     /**
      * @hidden
      */
@@ -367,7 +367,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor, AfterViewChe
         const _delta = this._calendarModel.timedelta(_date, 'year', direction * delta);
         const years = this._calendarModel.decadedates(_delta);
         const hasNextYear = years.find((year) => year.getFullYear() === this.activeYear);
-        
+
         if (!hasNextYear) {
             this.pageChanged.emit(_delta);
         }

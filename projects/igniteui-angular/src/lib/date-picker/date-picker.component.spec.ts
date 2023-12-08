@@ -25,7 +25,7 @@ import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_DATE_SELECTED = 'igx-calendar__date--selected';
+const CSS_CLASS_DATE_SELECTED = 'igx-days-view__date--selected';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'today';

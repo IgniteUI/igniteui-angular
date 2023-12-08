@@ -17,104 +17,108 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
+        // move the shadow in the schemas
         box-shadow: elevation(24);
-        border-radius: var-get($theme, 'border-radius');
-        background: var-get($theme, 'content-background');
+        border-radius: var-get($theme, 'calendar-border-radius');
+        background: var-get($theme, 'calendar-background');
         overflow: hidden;
 
-        %cal-display {
-            background: var-get($theme, 'content-background');
+        %display {
+            background: var-get($theme, 'calendar-background');
         }
 
-        %cal-header-display {
+        %header-display {
             background: var-get($theme, 'header-background');
-            color: var-get($theme, 'header-text-color');
+            color: var-get($theme, 'header-foreground');
         }
 
-        %cal-picker-arrow {
-            color: var-get($theme, 'picker-arrow-color');
+        %picker-arrow {
+            color: var-get($theme, 'month-nav-arrow-color');
 
             &:hover {
-                color: var-get($theme, 'picker-arrow-hover-color');
+                color: var-get($theme, 'month-nav-arrow-hover-color');
             }
         }
 
-        %cal-picker-date {
-            color: var-get($theme, 'picker-text-color');
+        %picker-date {
+            color: var-get($theme, 'picker-foreground');
 
-            &:hover,
+            &:hover {
+                color: var-get($theme, 'picker-hover-foreground');
+            }
+
             &:focus {
-                color: var-get($theme, 'picker-text-hover-color');
+                color: var-get($theme, 'picker-focus-foreground');
             }
         }
 
-        %cal-value {
-            color: var-get($theme, 'content-text-color');
+        %value {
+            color: var-get($theme, 'calendar-foreground');
             min-width: 14.28%;
 
             @if $bootstrap-theme {
                 &:hover,
                 &:focus {
-                    color: var-get($theme, 'date-selected-text-color');
+                    color: var-get($theme, 'date-selected-foreground');
                 }
             }
         }
 
-        %cal-value--label {
-            color: var-get($theme, 'label-color');
+        %value--label {
+            color: var-get($theme, 'weekday-color');
 
             &:hover,
             &:focus {
-                color: var-get($theme, 'label-color');
+                color: var-get($theme, 'weekday-color');
             }
         }
 
-        %cal-value--weekend {
-            color: var-get($theme, 'weekend-text-color');
+        %value--weekend {
+            color: var-get($theme, 'weekend-color');
         }
 
-        %cal-value--disabled {
-            color: var-get($theme, 'date-disabled-text-color');
+        %value--disabled {
+            color: var-get($theme, 'date-disabled-foreground');
         }
 
-        %cal-value--year-current {
-            color: var-get($theme, 'year-current-text-color');
+        %value--year-current {
+            color: var-get($theme, 'year-current-foreground');
 
             @if $bootstrap-theme {
                 &:hover,
                 &:focus {
-                    color: var-get($theme, 'year-hover-text-color');
+                    color: var-get($theme, 'year-hover-foreground');
                 }
             }
         }
 
-        %cal-value--year-hover {
-            color: var-get($theme, 'year-hover-text-color');
+        %value--year-hover {
+            color: var-get($theme, 'year-hover-foreground');
         }
 
-        %cal-value--month-focus,
-        %cal-value--month-hover {
-            color: var-get($theme, 'month-hover-text-color');
+        %value--month-focus,
+        %value--month-hover {
+            color: var-get($theme, 'month-hover-foreground');
         }
 
-        %cal-value--month-current {
-            color: var-get($theme, 'month-current-text-color');
+        %value--month-current {
+            color: var-get($theme, 'month-current-foreground');
         }
 
-        %cal-value--inactive {
-            color: var-get($theme, 'inactive-text-color');
+        %value--inactive {
+            color: var-get($theme, 'inactive-color');
 
             &:hover {
-                color: var-get($theme, 'inactive-text-color');
+                color: var-get($theme, 'inactive-color');
             }
         }
 
-        %cal-value--selected {
-            color: var-get($theme, 'date-selected-text-color');
+        %value--selected {
+            color: var-get($theme, 'date-selected-foreground');
         }
 
-        %cal-value--current {
-            color: var-get($theme, 'date-current-text-color');
+        %value--current {
+            color: var-get($theme, 'date-current-foreground');
         }
     }
 

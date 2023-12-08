@@ -45,7 +45,7 @@ describe('IgxMonthPicker', () => {
         const dom = fixture.debugElement;
 
         const months = dom.queryAll(By.css('.igx-calendar__month'));
-        const current = dom.query(By.css('.igx-calendar__month--current'));
+        const current = dom.query(By.css('.igx-months-view__month--current'));
 
         expect(months.length).toEqual(12);
         expect(current.nativeElement.textContent.trim()).toMatch('Feb');
@@ -54,7 +54,7 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const years = dom.queryAll(By.css('.igx-calendar__year'));
-        const currentYear = dom.query(By.css('.igx-calendar__year--current'));
+        const currentYear = dom.query(By.css('.igx-years-view__year--current'));
 
         expect(years.length).toEqual(7);
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2019');
@@ -189,7 +189,7 @@ describe('IgxMonthPicker', () => {
         months[2].nativeElement.click();
         fixture.detectChanges();
 
-        const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+        const currentMonth = dom.query(By.css('.igx-months-view__month--current'));
 
         expect(monthPicker.selected.emit).toHaveBeenCalled();
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Mar');
@@ -210,7 +210,7 @@ describe('IgxMonthPicker', () => {
         monthPicker.selectDate(nextDay);
         fixture.detectChanges();
 
-        const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+        const currentMonth = dom.query(By.css('.igx-months-view__month--current'));
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
 
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Apr');
@@ -392,19 +392,19 @@ describe('IgxMonthPicker', () => {
         UIInteractions.triggerKeyDownEvtUponElem('Enter' , document.activeElement );
         fixture.detectChanges();
 
-        let currentYear = dom.query(By.css('.igx-calendar__year--current'));
+        let currentYear = dom.query(By.css('.igx-years-view__year--current'));
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowDown' , currentYear.nativeElement );
         fixture.detectChanges();
 
-        currentYear = dom.query(By.css('.igx-calendar__year--current'));
+        currentYear = dom.query(By.css('.igx-years-view__year--current'));
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2020');
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp' , currentYear.nativeElement );
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp' , currentYear.nativeElement );
         fixture.detectChanges();
 
-        currentYear = dom.query(By.css('.igx-calendar__year--current'));
+        currentYear = dom.query(By.css('.igx-years-view__year--current'));
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2018');
 
         UIInteractions.triggerKeyDownEvtUponElem('Enter' , currentYear.nativeElement );
@@ -424,7 +424,7 @@ describe('IgxMonthPicker', () => {
         const monthPicker = fixture.componentInstance.monthPicker;
 
         const months = dom.queryAll(By.css('.igx-calendar__month'));
-        const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+        const currentMonth = dom.query(By.css('.igx-months-view__month--current'));
 
         expect(months.length).toEqual(12);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');

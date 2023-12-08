@@ -657,7 +657,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Click on 'today' item in calendar.
             const calendar = GridFunctions.getAdvancedFilteringCalendar(fix);
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
             todayItem.click();
             tick(100);
             fix.detectChanges();

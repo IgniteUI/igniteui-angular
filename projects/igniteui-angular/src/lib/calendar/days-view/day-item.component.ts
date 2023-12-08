@@ -46,11 +46,11 @@ export class IgxDayItemComponent {
     public hideOutsideDays = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-calendar__date--last')
+    @HostBinding('class.igx-days-view__date--last')
     public isLastInRange = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-calendar__date--first')
+    @HostBinding('class.igx-days-view__date--first')
     public isFirstInRange = false;
 
     @Input({ transform: booleanAttribute })
@@ -75,22 +75,22 @@ export class IgxDayItemComponent {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding('class.igx-calendar__date--selected')
+    @HostBinding('class.igx-days-view__date--selected')
     public get isSelectedCSS(): boolean {
         return (!this.isDisabled && this.selected);
     }
 
-    @HostBinding('class.igx-calendar__date--inactive')
+    @HostBinding('class.igx-days-view__date--inactive')
     public get isInactive(): boolean {
         return this.date.isNextMonth || this.date.isPrevMonth;
     }
 
-    @HostBinding('class.igx-calendar__date--hidden')
+    @HostBinding('class.igx-days-view__date--hidden')
     public get isHidden(): boolean {
         return this.hideOutsideDays && this.isInactive;
     }
 
-    @HostBinding('class.igx-calendar__date--current')
+    @HostBinding('class.igx-days-view__date--current')
     public get isToday(): boolean {
         const today = new Date(Date.now());
         const date = this.date.date;
@@ -105,7 +105,7 @@ export class IgxDayItemComponent {
         );
     }
 
-    @HostBinding('class.igx-calendar__date--weekend')
+    @HostBinding('class.igx-days-view__date--weekend')
     public get isWeekend(): boolean {
         const day = this.date.date.getDay();
         return day === 0 || day === 6;
@@ -131,12 +131,12 @@ export class IgxDayItemComponent {
         return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
     }
 
-    @HostBinding('class.igx-calendar__date--range')
+    @HostBinding('class.igx-days-view__date--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
     }
 
-    @HostBinding('class.igx-calendar__date--special')
+    @HostBinding('class.igx-days-view__date--special')
     public get isSpecial(): boolean {
         if (this.specialDates === null) {
             return false;
@@ -145,12 +145,12 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.specialDates);
     }
 
-    @HostBinding('class.igx-calendar__date--disabled')
+    @HostBinding('class.igx-days-view__date--disabled')
     public get isDisabledCSS(): boolean {
         return this.isHidden || this.isDisabled || this.isOutOfRange;
     }
 
-    @HostBinding('class.igx-calendar__date--single')
+    @HostBinding('class.igx-days-view__date--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
     }

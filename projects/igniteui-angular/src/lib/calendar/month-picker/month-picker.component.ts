@@ -69,7 +69,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      *
      * @hidden
      */
-    @HostBinding('class.igx-calendar')
+    @HostBinding('class.igx-month-picker')
     public styleClass = true;
 
     /**

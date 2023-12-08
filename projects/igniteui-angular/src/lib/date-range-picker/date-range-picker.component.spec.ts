@@ -41,8 +41,8 @@ const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
-const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
-const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
+const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
+const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {

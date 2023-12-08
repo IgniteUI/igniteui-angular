@@ -1,7 +1,6 @@
-<div class="igx-calendar__body">
-    <div class="igx-calendar__body-grid">
+<div class="igx-months-view__grid">
         <span
-            class="igx-calendar__month"
+            class="igx-months-view__month"
             role="button"
             [attr.aria-label]="month | date: 'LLLL'"
             [igxCalendarMonth]="month"
@@ -9,8 +8,7 @@
             [attr.tabindex]="activeMonth === month.getMonth() ? 0 : -1"
             (monthSelection)="selectMonth($event)" [index]="i"
             *ngFor="let month of months; index as i; trackBy: monthTracker">
-            <span class="igx-calendar__month-inner">{{ formattedMonth(month) | titlecase }}</span>
+            <span class="igx-months-view__month-inner">{{ formattedMonth(month) | titlecase }}</span>
         </span>
-    </div>
 </div>
 
