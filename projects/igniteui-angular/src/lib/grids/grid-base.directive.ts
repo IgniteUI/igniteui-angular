@@ -3698,6 +3698,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resetCaches(recalcFeatureWidth = true) {
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
+            this.summaryService.summaryHeight = 0;
         }
         this.resetForOfCache();
         this.resetColumnsCaches();
