@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --configuration hmr",
+    "start": "ng serve --open --hmr",
     "build": "ng build --configuration production",
     "test": "ng test igniteui-angular",
     "lint": "ng lint",
