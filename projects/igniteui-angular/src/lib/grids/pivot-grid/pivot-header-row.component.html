@@ -20,7 +20,7 @@
                                       (moveStart)='onDimDragStart($event, filterArea)' (moveEnd)='onDimDragEnd()'>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
-                                {{filter.memberName}}
+                                {{filter.displayName || filter.memberName}}
                             </igx-chip>
                             <ng-container *ngIf='last'>
                             <span class="igx-grid__tr-pivot--chip_drop_indicator"
@@ -61,7 +61,7 @@
                                 <igx-icon igxPrefix>view_column</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
-                                {{col.memberName}}
+                                {{col.displayName || col.memberName}}
                                 <igx-icon *ngIf="col.sortDirection" igxSuffix> {{ col.sortDirection < 2 ? 'arrow_upward'
                                     : 'arrow_downward' }}</igx-icon>
                             </igx-chip>
@@ -138,7 +138,7 @@
                                 <igx-icon igxPrefix>table_rows</igx-icon>
                                 <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
                                           (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
-                                {{ row.memberName}}
+                                {{ row.displayName || row.memberName}}
                                 <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward'
                                     : 'arrow_downward' }}</igx-icon>
                             </igx-chip>
@@ -216,7 +216,7 @@
                 <igx-chip *ngFor="let filter of this.filterDropdownDimensions" [id]="filter.memberName"
                 [displayDensity]="grid.displayDensity" [removable]="true" (remove)="filterRemoved($event)"
                 (chipClick)='onFiltersSelectionChanged($event)' [selectable]='true' [selected]='filter === this.filterDropdownDimensions.values().next().value'>
-                {{filter.memberName}}
+                {{filter.displayName || filter.memberName}}
             </igx-chip>
         </igx-chips-area>
         </div>
@@ -231,7 +231,7 @@
         <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.memberName" [draggable]="true"
             [displayDensity]="grid.displayDensity" [removable]="true" (remove)="filterRemoved($event)">
             <igx-icon igxPrefix>filter_list</igx-icon>
-            {{filter.memberName}}
+            {{filter.displayName || filter.memberName}}
         </igx-chip>
     </igx-chips-area>
 </div>
