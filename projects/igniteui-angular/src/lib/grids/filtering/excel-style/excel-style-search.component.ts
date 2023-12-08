@@ -648,7 +648,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     protected onFocus() {
         const firstIndexInView = this.virtDir.state.startIndex;
-        if (this.virtDir.igxForOf.length != 0) {
+        if (this.virtDir.igxForOf.length > 0) {
             this.focusedItem = {
                 id: this.getItemId(firstIndexInView),
                 index: firstIndexInView,
