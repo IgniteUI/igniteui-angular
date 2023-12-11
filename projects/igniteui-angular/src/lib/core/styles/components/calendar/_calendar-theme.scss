@@ -1358,6 +1358,11 @@
     }
 
     // MONTHS VIEW
+    %months-view__month-inner-hover {
+        color: var-get($theme, 'month-hover-foreground');
+        background: var-get($theme, 'month-hover-background');
+    }
+
     %months-view__month-inner-current-hover {
         color: var-get($theme, 'month-hover-foreground');
         background: var-get($theme, 'month-hover-background');
