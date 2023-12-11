@@ -531,7 +531,7 @@ export class IgxGridStateBaseDirective {
                     return;
                 }
                 const feature = this.getFeature(f);
-                const featureState: IGridState = feature.getFeatureState(this);
+                const featureState: IGridState = feature?.getFeatureState(this);
                 gridState = Object.assign(gridState, featureState);
             }
         });
