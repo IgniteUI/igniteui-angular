@@ -14,7 +14,7 @@
             )
         );
 
-        @extend %display !optional;
+        @extend %calendar !optional;
 
         @include e(header) {
             @extend %header-display !optional;
@@ -33,16 +33,16 @@
         }
 
         @include m(vertical) {
-            @extend %display !optional;
-            @extend %display--vertical !optional;
+            @extend %calendar !optional;
+            @extend %calendar-vertical !optional;
 
             @include e(header-date) {
                 @extend %header-date !optional;
-                @extend %header-date--vertical !optional;
+                @extend %header-date-vertical !optional;
             }
 
             @include e(body) {
-                @extend %body-display--vertical !optional;
+                @extend %body-display-vertical !optional;
             }
         }
 
@@ -52,7 +52,7 @@
     }
 
     @include b(igx-calendar-picker) {
-        @extend %picker-display !optional;
+        @extend %views-navigation !optional;
 
         @include e(dates) {
             @extend %picker-dates !optional;
@@ -76,7 +76,7 @@
     }
 
     @include b(igx-days-view) {
-        @extend %display !optional;
+        @extend %calendar !optional;
         @extend %days-view !optional;
 
         @include e(grid) {
@@ -85,10 +85,6 @@
 
         @include e(row) {
             @extend %days-view-row !optional;
-        }
-
-        @include e(row, 'wrap') {
-            @extend %days-view-row--wrap !optional;
         }
 
         @include e(body-inner) {
@@ -108,7 +104,7 @@
         }
 
         @include e(date, 'week-number') {
-            @extend %date-date--week-number !optional;
+            @extend %date-week-number !optional;
         }
 
         @include e(date, 'inactive') {
@@ -117,7 +113,7 @@
 
         @include e(date, $mods: ('inactive', 'single')) {
             &:hover {
-                @extend %date-inactive--single-hover !optional;
+                @extend %date-inactive-single-hover !optional;
             }
         }
 
@@ -146,14 +142,14 @@
         }
 
         @include e(date, $mods: ('selected', 'current')) {
-            @extend %selected--current !optional;
+            @extend %selected-current !optional;
 
             &:hover {
-                @extend %selected--current-hover !optional;
+                @extend %selected-current-hover !optional;
             }
 
             &:focus {
-                @extend %selected--current-focus !optional;
+                @extend %selected-current-focus !optional;
             }
         }
 
@@ -222,10 +218,6 @@
             @extend %date-special !optional;
         }
 
-        @include e(date, 'disabled') {
-            @extend %date-disabled !optional;
-        }
-
         @include e(date, 'single') {
             @extend %date-single !optional;
         }
@@ -252,7 +244,7 @@
         }
 
         @include e(label, 'week-number') {
-            @extend %label--week-number !optional;
+            @extend %label-week-number !optional;
         }
 
         @include e(date-inner) {
@@ -268,7 +260,15 @@
         }
 
         @include e(date-inner, 'week-number') {
-            @extend %date-inner--week-number !optional;
+            @extend %date-inner-week-number !optional;
+        }
+
+        @include e(date, 'disabled') {
+            @extend %date-disabled !optional;
+        }
+
+        @include e(date, $mods: ('range', 'disabled')) {
+            @extend %date-range-disabled !optional;
         }
     }
 
@@ -295,6 +295,30 @@
 
             &:focus {
                 @extend %years-view__year-current-focus !optional;
+            }
+        }
+
+        @include e(year, 'selected') {
+            @extend %years-view__year-selected !optional;
+
+            &:hover {
+                @extend %years-view__year-selected-hover !optional;
+            }
+
+            &:focus {
+                @extend %years-view__year-selected-focus !optional;
+            }
+        }
+
+        @include e(year, $mods: ('selected', 'current')) {
+            @extend %years-view__year-selected-selected !optional;
+
+            &:hover {
+                @extend %years-view__year-selected-current-hover !optional;
+            }
+
+            &:focus {
+                @extend %years-view__year-selected-current-focus !optional;
             }
         }
 
@@ -330,6 +354,30 @@
 
             &:focus {
                 @extend %months-view__month-current-focus !optional;
+            }
+        }
+
+        @include e(month, 'selected') {
+            @extend %months-view__month-selected !optional;
+
+            &:hover {
+                @extend %months-view__month-selected-hover !optional;
+            }
+
+            &:focus {
+                @extend %months-view__month-selected-focus !optional;
+            }
+        }
+
+        @include e(month, $mods: ('selected', 'current')) {
+            @extend %months-view__month-selected-current !optional;
+
+            &:hover {
+                @extend %months-view__month-selected-current-hover !optional;
+            }
+
+            &:focus {
+                @extend %months-view__month-selected-current-focus !optional;
             }
         }
 
