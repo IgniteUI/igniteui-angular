@@ -87,10 +87,6 @@
             @extend %days-view-row !optional;
         }
 
-        @include e(body-inner) {
-            @extend %body-inner !optional;
-        }
-
         @include e(date) {
             @extend %date !optional;
 
@@ -311,7 +307,7 @@
         }
 
         @include e(year, $mods: ('selected', 'current')) {
-            @extend %years-view__year-selected-selected !optional;
+            @extend %years-view__year-selected-current !optional;
 
             &:hover {
                 @extend %years-view__year-selected-current-hover !optional;
