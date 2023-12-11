@@ -23,7 +23,7 @@
                 [checked]="item.enabled"
                 (click)="toggleItem(item)"
             ></igx-checkbox>
-            <span>{{ item.memberName }}</span>
+            <span>{{ item.displayName || item.memberName }}</span>
         </igx-list-item>
         <igx-list-item
             *ngFor="
