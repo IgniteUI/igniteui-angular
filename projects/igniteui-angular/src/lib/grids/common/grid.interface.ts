@@ -45,7 +45,7 @@ export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridService
 export interface IPathSegment {
     /**
      * The unique identifier of the row within the segment.
-     * @deprecated since version 17.0.0
+     * @deprecated since version 17.1.0
      * Use `rowKey` instead
      */
     rowID: any;

@@ -105,7 +105,7 @@ export class IgxAddRow extends IgxEditRow {
 
 export interface IgxAddRowParent {
     /**
-     * @deprecated since version 17.0.0
+     * @deprecated since version 17.1.0
      * Use `rowKey` instead
      */
     rowID: string;
@@ -162,12 +162,12 @@ export class IgxCell {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
             /**
-             * @deprecated since version 17.0.0
+             * @deprecated since version 17.1.0
              * Use `rowKey` instead
              */
             primaryKey: this.id.rowID,
             /**
-             * @deprecated since version 17.0.0
+             * @deprecated since version 17.1.0
              * Use `rowKey` instead
              */
             rowID: this.id.rowID,

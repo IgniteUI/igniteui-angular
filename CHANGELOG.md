@@ -18,6 +18,15 @@ All notable changes for each version of this project will be documented in this 
     - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
     - Addded new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
 
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Breaking Changes**
+        - `rowAdd` and `rowDelete` events no longer emit event argument of type `IGridEditEventArgs`, but argument of type `IRowDataCancelableEventArgs`. The two interfaces `IGridEditEventArgs` and `IRowDataCancelableEventArgs` are compatible. Only case there would be issues is if your application was reading `IGridEditEventArgs.oldValue`, `IGridEditEventArgs.newValue`. These properties return always undefined when in `rowAdd` or `rowDelete` event handlers, so they can be safely removed.
+        - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
+        - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
+        - `key` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowKey` instead.
+        - `primaryKey` has been deprecated in the following interfaces: `IGridEditDoneEventArgs`. Use `rowKey` instead.
+
 ## 17.0.0
 ### General
 - `IgxCard`
@@ -29,7 +38,7 @@ All notable changes for each version of this project will be documented in this 
     - `igniteui-angular-i18n` is now tree-shakeable
     - `igniteui-angular/animations` is now tree-shakeable
     - `igniteui-angular` components have improved tree-shaking
-    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead. 
+    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead.
         - E.g. EN strings come from `igniteui-angular`: `import { GridResourceStringsEN } from 'igniteui-angular';`
         - E.g. DE or other language strings come from `igniteui-angular-i18n`: `import { GridResourceStringsDE } from 'igniteui-angular-i18n';`
 - DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
@@ -57,13 +66,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
-    - **Breaking Changes**
-        - `rowAdd` and `rowDelete` events no longer emit event argument of type `IGridEditEventArgs`, but argument of type `IRowDataCancelableEventArgs`. The two interfaces `IGridEditEventArgs` and `IRowDataCancelableEventArgs` are compatible. Only case there would be issues is if your application was reading `IGridEditEventArgs.oldValue`, `IGridEditEventArgs.newValue`. These properties return always undefined when in `rowAdd` or `rowDelete` event handlers, so they can be safely removed.
-        - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
-        - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
-        - `key` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowKey` instead.
-        - `primaryKey` has been deprecated in the following interfaces: `IGridEditDoneEventArgs`. Use `rowKey` instead.
 =======
 ## 16.1.5
 ### General
