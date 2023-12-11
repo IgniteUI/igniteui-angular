@@ -9,6 +9,7 @@ import {
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
+    IgxIconButtonDirective,
     IgxIconComponent,
     IgxRippleDirective,
     IgxSliderComponent,
@@ -22,7 +23,7 @@ import {
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
     standalone: true,
-    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TooltipSampleComponent implements OnInit {
 

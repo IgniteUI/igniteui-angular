@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '10.2.0';

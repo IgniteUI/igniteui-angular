@@ -18,9 +18,9 @@
             @extend %igx-button--flat !optional;
         }
 
-        // RAISED BUTTON
-        @include m(raised) {
-            @extend %igx-button--raised !optional;
+        // CONTAINED BUTTON
+        @include m(contained) {
+            @extend %igx-button--contained !optional;
         }
 
         // OUTLINED BUTTON
@@ -32,12 +32,6 @@
         @include m(fab) {
             @extend %igx-button--round !optional;
             @extend %igx-button--fab !optional;
-        }
-
-        // ICON BUTTON
-        @include m(icon) {
-            @extend %igx-button--round !optional;
-            @extend %igx-button--icon !optional;
         }
 
         // DISABLED BUTTON

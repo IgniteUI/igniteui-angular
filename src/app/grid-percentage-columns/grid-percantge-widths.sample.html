@@ -45,7 +45,7 @@
                 <label igxLabel>Locale</label>
                 <igx-select-item *ngFor="let cur of locales" [value]="cur">{{cur}}</igx-select-item>
             </igx-select>
-            <button igxButton="raised" (click)="changePipeArgs()">Apply Changes</button>
+            <button igxButton="contained" (click)="changePipeArgs()">Apply Changes</button>
         </igx-card-content>
     </igx-card>
     <igx-input-group class="sample-column">

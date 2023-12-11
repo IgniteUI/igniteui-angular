@@ -2,7 +2,7 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-buttons">
-                <button igxButton="raised" [igxToggleAction]="dropDownComfortable"
+                <button igxButton="contained" [igxToggleAction]="dropDownComfortable"
                     [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">
                     Column Selection: {{grid1.columnSelection}}</button>
                 <igx-drop-down #dropDownComfortable (selected)="selected($event)" displayDensity="comfortable">
@@ -90,12 +90,12 @@
             <div class="sample-buttons">
                 <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
                 <br>
-                <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
-                <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
-                <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>
-                <button igxButton="raised" (click)="deselectCol()">Deselect ID</button>
-                <button igxButton="raised" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
-                <button igxButton="raised" (click)="getGenInfoState()">get gen info state</button>
+                <button igxButton="contained" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
+                <button igxButton="contained" (click)="getGridSelectedColumns()">Get Selected Columns</button>
+                <button igxButton="contained" (click)="selectedColumns()">Select Columns</button>
+                <button igxButton="contained" (click)="deselectCol()">Deselect ID</button>
+                <button igxButton="contained" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
+                <button igxButton="contained" (click)="getGenInfoState()">get gen info state</button>
             </div>
         </div>
     </div>

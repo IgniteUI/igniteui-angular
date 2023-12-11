@@ -123,10 +123,12 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
+    public displayName: string;
     private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
     private _monthIntl = new Intl.DateTimeFormat('default', { month: 'long' });
+
 
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
@@ -152,6 +154,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
 
         this.dataType = GridColumnDataType.Date;
         inBaseDimension.dataType = GridColumnDataType.Date;
+
+        this.displayName = inBaseDimension.displayName || this.resourceStrings.igx_grid_pivot_date_dimension_total;
 
         const baseDimension = options.fullDate ? inBaseDimension : null;
         const monthDimensionDef: IPivotDimension = {
@@ -192,6 +196,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             this.memberName = yearsDimension.memberName;
             this.memberFunction = yearsDimension.memberFunction;
             this.childLevel = yearsDimension.childLevel;
+            this.displayName = yearsDimension.displayName;
         }
     }
 

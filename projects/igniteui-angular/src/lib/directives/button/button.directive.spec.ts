@@ -18,10 +18,9 @@ describe('IgxButton', () => {
     const baseClass = BUTTON_COMFORTABLE;
     const classes = {
         flat: `${baseClass}--flat`,
-        raised: `${baseClass}--raised`,
+        contained: `${baseClass}--contained`,
         outlined: `${baseClass}--outlined`,
         fab: `${baseClass}--fab`,
-        icon: `${baseClass}--icon`
     };
 
     beforeAll(waitForAsync(() => {
@@ -50,7 +49,7 @@ describe('IgxButton', () => {
         const button = fixture.debugElement.query(By.css('span')).nativeElement;
 
         expect(button).toBeTruthy();
-        expect(button.classList.contains('igx-button--raised')).toBe(true);
+        expect(button.classList.contains('igx-button--contained')).toBe(true);
         expect(button.classList.contains('igx-button--disabled')).toBe(true);
 
         fixture.componentInstance.disabled = false;
@@ -75,42 +74,36 @@ describe('IgxButton', () => {
         // Get flat button
         const flatButton = fixture.componentInstance.flatButton;
         const flatButtonDOM = fixture.debugElement.query(By.css('.flatBtn'));
-        // Get raised button
-        const raisedButton = fixture.componentInstance.raisedButton;
-        const raisedButtonDOM = fixture.debugElement.query(By.css('.raisedBtn'));
+        // Get contained button
+        const containedButton = fixture.componentInstance.containedButton;
+        const containedButtonDOM = fixture.debugElement.query(By.css('.containedBtn'));
         // Get outlined button
         const outlinedButton = fixture.componentInstance.outlinedButton;
         const outlinedButtonDOM = fixture.debugElement.query(By.css('.outlinedBtn'));
         // Get fab button
         const fabButton = fixture.componentInstance.fabButton;
         const fabButtonDOM = fixture.debugElement.query(By.css('.fabBtn'));
-        // Get icon button
-        const iconButton = fixture.componentInstance.iconButton;
-        const iconButtonDOM = fixture.debugElement.query(By.css('.iconBtn'));
 
         verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.comfortable);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.comfortable);
+        verifyDisplayDensity(containedButton, containedButtonDOM, DisplayDensity.comfortable);
         verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.comfortable);
         verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.comfortable);
-        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.comfortable);
 
         fixture.componentInstance.density = DisplayDensity.compact;
         fixture.detectChanges();
 
         verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.compact);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.compact);
+        verifyDisplayDensity(containedButton, containedButtonDOM, DisplayDensity.compact);
         verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.compact);
         verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.compact);
-        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.compact);
 
         fixture.componentInstance.density = DisplayDensity.cosy;
         fixture.detectChanges();
 
         verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.cosy);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.cosy);
+        verifyDisplayDensity(containedButton, containedButtonDOM, DisplayDensity.cosy);
         verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.cosy);
         verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.cosy);
-        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.cosy);
     });
 
     it('Should set the correct CSS class on the element using the "type" input', () => {
@@ -121,10 +114,10 @@ describe('IgxButton', () => {
         expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
 
-        theButton.type = 'raised';
+        theButton.type = 'contained';
         fixture.detectChanges();
         expect(theButtonNativeEl.classList.length).toEqual(2);
-        expect(theButtonNativeEl.classList).toContain(classes.raised);
+        expect(theButtonNativeEl.classList).toContain(classes.contained);
 
         theButton.type = 'outlined';
         fixture.detectChanges();
@@ -135,11 +128,6 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.fab);
-
-        theButton.type = 'icon';
-        fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(2);
-        expect(theButtonNativeEl.classList).toContain(classes.icon);
 
         theButton.type = 'flat';
         fixture.detectChanges();
@@ -161,7 +149,7 @@ class InitButtonComponent {
 }
 
 @Component({
-    template: `<span igxButton="raised"
+    template: `<span igxButton="contained"
         [igxButtonColor]="foreground"
         [igxButtonBackground]="background"
         [disabled]="disabled">Test</span>`,
@@ -177,13 +165,10 @@ class ButtonWithAttribsComponent {
 @Component({
     template: `
     <button #flat class="flatBtn" igxButton="flat" [displayDensity]="density">Flat</button>
-    <button #raised class="raisedBtn" igxButton="raised" [displayDensity]="density">Raised</button>
+    <button #contained class="containedBtn" igxButton="contained" [displayDensity]="density">contained</button>
     <button #outlined class="outlinedBtn" igxButton="outlined" [displayDensity]="density">Outlined</button>
     <button #fab class="fabBtn" igxButton="fab" [displayDensity]="density">
         <igx-icon>favorite</igx-icon>
-    </button>
-    <button #icon class="iconBtn" igxButton="icon" [displayDensity]="density">
-        <igx-icon>search</igx-icon>
     </button>
     `,
     standalone: true,
@@ -192,14 +177,12 @@ class ButtonWithAttribsComponent {
 class ButtonsWithDisplayDensityComponent {
     @ViewChild('flat', { read: IgxButtonDirective, static: true })
     public flatButton: IgxButtonDirective;
-    @ViewChild('raised', { read: IgxButtonDirective, static: true })
-    public raisedButton: IgxButtonDirective;
+    @ViewChild('contained', { read: IgxButtonDirective, static: true })
+    public containedButton: IgxButtonDirective;
     @ViewChild('outlined', { read: IgxButtonDirective, static: true })
     public outlinedButton: IgxButtonDirective;
     @ViewChild('fab', { read: IgxButtonDirective, static: true })
     public fabButton: IgxButtonDirective;
-    @ViewChild('icon', { read: IgxButtonDirective, static: true })
-    public iconButton: IgxButtonDirective;
 
     public density: DisplayDensity = DisplayDensity.comfortable;
 }

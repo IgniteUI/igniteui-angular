@@ -1,6 +1,6 @@
 <h4 class="sample-title">Grid with local data</h4>
-<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
-<button igxButton="raised" (click)="addFormatter()">Use formatter function for OrderDate col</button>
+<button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
+<button igxButton="contained" (click)="addFormatter()">Use formatter function for OrderDate col</button>
 <igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="localData" [primaryKey]="'ProductID'"
     [allowFiltering]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px"
     height="550px">
@@ -29,8 +29,8 @@
 </igx-grid>
 
 <h4 class="sample-title">Grid with remote data</h4>
-<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
-<button igxButton="raised" (click)="addFormatter()">Use formatter function for OrderDate col</button>
+<button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
+<button igxButton="contained" (click)="addFormatter()">Use formatter function for OrderDate col</button>
 <igx-grid #grid2 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="remoteData | async" [primaryKey]="'OrderID'"
     [allowFiltering]="true" [moving]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px"
     height="550px">

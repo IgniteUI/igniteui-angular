@@ -3692,6 +3692,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resetCaches(recalcFeatureWidth = true) {
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
+            this.summaryService.summaryHeight = 0;
         }
         this.resetForOfCache();
         this.resetColumnsCaches();
@@ -5672,7 +5673,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public preventContainerScroll = (evt) => {
         if (evt.target.scrollTop !== 0) {
-            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
+            this.verticalScrollContainer.addScroll(evt.target.scrollTop);
             evt.target.scrollTop = 0;
         }
         if (evt.target.scrollLeft !== 0) {

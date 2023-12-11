@@ -108,6 +108,8 @@ export interface IPivotDimension {
     memberName: string;
     /** Function that extracts the value */
     memberFunction?: (data: any) => any;
+    /** Display name to show instead of the field name of this value. **/
+    displayName?: string;
     /** Enables/Disables a particular dimension from pivot structure. */
     enabled: boolean;
     /**

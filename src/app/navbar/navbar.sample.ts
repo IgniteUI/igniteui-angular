@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
-import { IGX_NAVBAR_DIRECTIVES, IgxButtonDirective, IgxIconComponent } from 'igniteui-angular';
+import { IGX_NAVBAR_DIRECTIVES, IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent } from 'igniteui-angular';
 
 
 const CURRENT_VIEW = 'Ignite UI for Angular Samples';
@@ -11,7 +11,7 @@ const CURRENT_VIEW = 'Ignite UI for Angular Samples';
     styleUrls: ['navbar.sample.scss'],
     templateUrl: 'navbar.sample.html',
     standalone: true,
-    imports: [IGX_NAVBAR_DIRECTIVES, IgxIconComponent, IgxButtonDirective]
+    imports: [IGX_NAVBAR_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxIconButtonDirective]
 })
 export class NavbarSampleComponent implements OnInit {
     public currentView: string;
