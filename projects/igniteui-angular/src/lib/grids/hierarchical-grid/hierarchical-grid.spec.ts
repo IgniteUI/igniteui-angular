@@ -1731,23 +1731,25 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const expandIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[0];
             const pinIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[1];
 
-            expect(columnGroup2.expanded).toBeFalsy();
-            expect(columnGroup2.pinned).toBeFalsy();
+            expect(columnGroup2.expanded).toBeFalse();
+            expect(columnGroup2.pinned).toBeFalse();
 
             UIInteractions.simulateClickEvent(expandIcon.nativeElement);
             fixture.detectChanges();
 
-            expect(columnGroup2.expanded).toBeTruthy();
+            expect(columnGroup2.expanded).toBeTrue();
 
             expect(fixture.componentInstance.expandedArgs).toBeDefined();
-            expect(fixture.componentInstance.expandedArgs).not.toBe(false);
+            expect(fixture.componentInstance.expandedArgs.args).toBeTrue();
             expect(fixture.componentInstance.hiddenArgs).toBeDefined();
+            expect(fixture.componentInstance.hiddenArgs.args).toBeTrue();
 
             UIInteractions.simulateClickEvent(pinIcon.nativeElement);
             fixture.detectChanges();
 
-            expect(columnGroup2.pinned).toBeTruthy();
+            expect(columnGroup2.pinned).toBeTrue();
             expect(fixture.componentInstance.pinnedArgs).toBeDefined();
+            expect(fixture.componentInstance.pinnedArgs.args).toBeTrue();
         });
     });
 });
