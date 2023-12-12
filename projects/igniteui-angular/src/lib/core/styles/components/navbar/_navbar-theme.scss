@@ -151,11 +151,19 @@
         @extend %igx-navbar-bundle;
         @extend %igx-navbar-icon-display;
         flex-grow: 1;
+
+        igx-icon {
+            color: var-get($theme, 'idle-icon-color');
+        }
     }
 
     %igx-navbar-right {
         @extend %igx-navbar-bundle;
         @extend %igx-navbar-icon-display;
+
+        igx-icon {
+            color: var-get($theme, 'idle-icon-color');
+        }
     }
 
     igx-navbar-action,
