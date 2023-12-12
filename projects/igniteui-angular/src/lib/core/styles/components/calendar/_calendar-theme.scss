@@ -400,14 +400,111 @@
     $theme: digest-schema($calendar-schema);
     $meta: map.get($theme, '_meta');
     $variant: map.get($schema, '_meta', 'theme');
-    $not-bootstrap-theme: $variant != 'bootstrap';
-    $bootstrap-theme: $variant == 'bootstrap';
+
+    @if $variant == 'bootstrap' {
+        @if not($picker-background) and $header-background {
+            @if meta.type-of($header-background) == 'color' {
+                $picker-background: $header-background;
+            }
+        }
+    } @else {
+        @if not($weekday-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $weekday-color: text-contrast($calendar-background);
+            }
+        }
+    }
+
+    @if not($header-foreground) and $header-background {
+        @if meta.type-of($header-background) == 'color' {
+            $header-foreground: text-contrast($header-background);
+        }
+    }
+
+    @if $variant != 'fluent' and $variant != 'bootstrap' {
+        @if not($date-current-background) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-current-background: $calendar-background;
+            }
+        }
+
+        @if not($date-current-foreground) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-current-foreground: text-contrast($calendar-background);
+            }
+        }
+    }
+
+    @if $variant == 'fluent' and $variant == 'bootstrap' {
+        @if not($date-hover-border-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-hover-border-color: text-contrast($calendar-background);
+            }
+        }
+
+        @if not($date-focus-border-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-focus-border-color: text-contrast($calendar-background);
+            }
+        }
+
+        @if not($date-selected-border-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-border-color: text-contrast($calendar-background);
+            }
+        }
+
+        @if not($date-selected-hover-border-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-hover-border-color: text-contrast($calendar-background);
+            }
+        }
+
+        @if not($date-selected-focus-border-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-focus-border-color: text-contrast($calendar-background);
+            }
+        }
+    }
+
+    @if $variant == 'material' or $variant == 'indigo-design' {
+        @if not($date-current-hover-outline) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-current-hover-outline: $calendar-background;
+            }
+        }
+
+        @if not($date-current-focus-outline) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-current-focus-outline: $calendar-background;
+            }
+        }
+
+        @if not($date-selected-current-outline) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-current-outline: $calendar-background;
+            }
+        }
+
+        @if not($date-selected-current-hover-outline) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-current-hover-outline: $calendar-background;
+            }
+        }
+
+        @if not($date-selected-current-focus-outline) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $date-selected-current-focus-outline: $calendar-background;
+            }
+        }
+    }
 
     @if not($calendar-foreground) and $calendar-background {
         @if meta.type-of($calendar-background) == 'color' {
             $calendar-foreground: text-contrast($calendar-background);
         }
     }
+
 
     @if not($picker-background) and $calendar-background {
         @if meta.type-of($calendar-background) == 'color' {
@@ -417,37 +514,27 @@
 
     @if not($weekend-color) and $calendar-background {
         @if meta.type-of($calendar-background) == 'color' {
-            $weekend-color: rgba($calendar-foreground, .7);
+            $weekend-color: rgba($calendar-foreground, .5);
         }
     }
 
     @if not($inactive-color) and $calendar-background {
         @if meta.type-of($calendar-background) == 'color' {
-            $inactive-color: rgba($calendar-foreground, .5);
+            $inactive-color: rgba($calendar-foreground, .7);
         }
     }
 
-    @if not($weekday-color) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $weekday-color: rgba($calendar-foreground, .5);
+    @if $variant != 'bootstrap' {
+        @if not($month-nav-arrow-color) and $calendar-background {
+            @if meta.type-of($calendar-background) == 'color' {
+                $month-nav-arrow-color: text-contrast($calendar-background);
+            }
         }
-    }
 
-    @if not($month-nav-arrow-color) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $month-nav-arrow-color: $calendar-background;
-        }
-    }
-
-    @if not($month-nav-arrow-hover-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $month-nav-arrow-hover-color: $header-background;
-        }
-    }
-
-    @if not($month-nav-arrow-focus-color) and $month-nav-arrow-hover-color {
-        @if meta.type-of($month-nav-arrow-hover-color) == 'color' {
-            $month-nav-arrow-focus-color: $month-nav-arrow-hover-color;
+        @if not($month-nav-arrow-focus-color) and $month-nav-arrow-hover-color {
+            @if meta.type-of($month-nav-arrow-hover-color) == 'color' {
+                $month-nav-arrow-focus-color: $month-nav-arrow-hover-color;
+            }
         }
     }
 
@@ -463,6 +550,18 @@
         }
     }
 
+    @if not($date-selected-hover-foreground) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-hover-foreground: text-contrast($date-selected-background);
+        }
+    }
+
+    @if not($date-selected-focus-foreground) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-focus-foreground: text-contrast($date-selected-background);
+        }
+    }
+
     @if not($date-selected-hover-foreground) and $date-selected-hover-background {
         @if meta.type-of($date-selected-hover-background) == 'color' {
             $date-selected-hover-foreground: text-contrast($date-selected-hover-background);
@@ -475,89 +574,76 @@
         }
     }
 
-    @if not($date-hover-background) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $date-hover-background: rgba(text-contrast($calendar-background), .12);
+    @if not($date-selected-current-foreground) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-foreground: text-contrast($date-selected-background);
         }
     }
 
-    @if $bootstrap-theme {
-        @if not($picker-background) and $header-background {
-            @if meta.type-of($header-background) == 'color' {
-                $picker-background: $header-background;
-            }
+    @if not($date-selected-current-hover-foreground) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-hover-foreground: text-contrast($date-selected-background);
         }
     }
 
-    @if $not-bootstrap-theme {
-        // TODO REMOVE AFTER TEST
-        @if not($picker-hover-foreground) and $header-background {
-            $picker-hover-foreground: $header-background;
+    @if not($date-selected-current-focus-foreground) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-focus-foreground: text-contrast($date-selected-background);
         }
+    }
 
-        @if not($picker-focus-foreground) and $header-background {
-            $picker-focus-foreground: $header-background;
-        }
-
-        @if not($header-foreground) and $header-background {
-            $header-foreground: text-contrast($header-background);
-        }
-
-        @if not($date-selected-background) and $header-background {
-            $date-selected-background: $header-background;
-        }
-
-        @if not($date-selected-current-background) and $date-selected-background {
+    @if not($date-selected-current-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
             $date-selected-current-background: $date-selected-background;
         }
+    }
 
-        @if not($date-selected-current-hover-background) and $date-selected-hover-background {
-            $date-selected-current-hover-background: $date-selected-hover-background;
-        }
-
-        @if not($date-selected-current-focus-background) and $date-selected-focus-background {
-            $date-selected-current-focus-background: $date-selected-focus-background;
-        }
-
-        @if not($date-selected-foreground) and $header-background {
-            $date-selected-foreground: text-contrast($header-background);
-        }
-
-        @if not($date-current-foreground) and $header-background {
-            $date-current-foreground: $header-background;
-        }
-
-        @if not($date-current-hover-foreground) {
-            $date-current-hover-foreground: $date-current-foreground;
-        }
-
-        @if not($date-current-focus-foreground) {
-            $date-current-focus-foreground: $date-current-foreground;
-        }
-
-        @if not($year-hover-foreground) and $header-background {
-            $year-hover-foreground: $header-background;
-        }
-
-        @if not($year-current-foreground) and $header-background {
-            $year-current-foreground: $header-background;
-        }
-
-        @if not($month-current-foreground) and $header-background {
-            @if $header-background == 'color' {
-                $month-current-foreground: $header-background;
-            }
+    @if not($date-selected-current-hover-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-hover-background: $date-selected-background;
         }
     }
 
-    @if not($date-special-background) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $date-special-background: rgba(text-contrast($calendar-background), .04);
+    @if not($date-selected-current-focus-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-focus-background: $date-selected-background;
+        }
+    }
+
+    @if not($date-selected-current-focus-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-current-focus-background: $date-selected-background;
+        }
+    }
+
+    @if not($date-selected-hover-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-hover-background: $date-selected-background;
+        }
+    }
+
+    @if not($date-selected-focus-background) and $date-selected-background {
+        @if meta.type-of($date-selected-background) == 'color' {
+            $date-selected-focus-background: $date-selected-background;
+        }
+    }
+
+    @if not($date-selected-current-hover-background) and $date-selected-hover-background {
+        @if meta.type-of($date-selected-hover-background) == 'color' {
+            $date-selected-current-hover-background: $date-selected-hover-background;
+        }
+    }
+
+    @if not($date-selected-current-focus-background) and $date-selected-focus-background {
+        @if meta.type-of($date-selected-focus-background) == 'color' {
+            $date-selected-current-focus-background: $date-selected-focus-background;
         }
     }
 
     @if not($date-special-foreground) and $date-special-background {
-        $date-special-foreground: text-contrast($date-special-background);
+        @if meta.type-of($date-special-background) == 'color' {
+            $date-special-foreground: text-contrast($date-special-background);
+        }
     }
 
     @if not($month-hover-foreground) and $month-hover-background {
@@ -988,7 +1074,6 @@
 
         &:hover {
             color: var-get($theme, 'month-nav-arrow-hover-color');
-            cursor: pointer;
         }
 
         &:focus {
