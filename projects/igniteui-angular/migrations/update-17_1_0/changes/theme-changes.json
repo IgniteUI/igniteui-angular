@@ -1,0 +1,88 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$header-text-color",
+      "replaceWith": "$header-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-text-color",
+      "replaceWith": "$picker-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-text-hover-color",
+      "replaceWith": "$picker-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-arrow-color",
+      "replaceWith": "$month-nav-arrow-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-arrow-hover-color",
+      "replaceWith": "$month-nav-arrow-hover-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$inactive-text-color",
+      "replaceWith": "$inactive-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$weekend-text-color",
+      "replaceWith": "$weekend-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$year-current-text-color",
+      "replaceWith": "$year-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$year-hover-text-color",
+      "replaceWith": "$year-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-hover-text-color",
+      "replaceWith": "$month-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-selected-text-color",
+      "replaceWith": "$date-selected-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-current-text-color",
+      "replaceWith": "$date-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-special-text-color",
+      "replaceWith": "$date-special-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-disabled-text-color",
+      "replaceWith": "$date-disabled-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+  ]
+}
