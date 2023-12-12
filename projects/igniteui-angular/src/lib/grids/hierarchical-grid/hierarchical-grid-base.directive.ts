@@ -14,7 +14,6 @@ import {
     NgZone,
     Optional,
     Output,
-    QueryList,
     reflectComponentType,
     ViewContainerRef
 } from '@angular/core';
@@ -29,7 +28,7 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { ColumnType, GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -212,7 +211,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             this.columns.forEach(column => {
                 if (column[output.propName]) {
                     column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
-                        const rowIslandColumn = this.getRowIslandColumn(column, this.parentIsland.childColumns);
+                        const rowIslandColumn = this.parentIsland.columnList.find((col) => col.field
+                            ? col.field === column.field
+                            : col.header === column.header);
                         rowIslandColumn[output.propName].emit({ args, owner: this });
                     });
                 }
@@ -275,32 +276,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             return;
         }
         return this.gridAPI.getChildGrid(path);
-    }
-
-    private getRowIslandColumn(
-        target: ColumnType,
-        columns: QueryList<ColumnType>
-    ): ColumnType {
-        const targetField = target.field ?? target.header;
-        let result;
-
-        for (const col of columns) {
-            const colField = col.field ?? col.header;
-
-            if (colField === targetField) {
-                result = col;
-                break;
-            } else if (col.children) {
-                const column = this.getRowIslandColumn(target, col.children);
-
-                if (column) {
-                    result = column;
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
 }
 
