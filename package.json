@@ -114,7 +114,7 @@
     "gulp-uglify": "^3.0.1",
     "hammer-simulator": "0.0.1",
     "ig-typedoc-theme": "^5.0.1",
-    "igniteui-sassdoc-theme": "^1.2.0",
+    "igniteui-sassdoc-theme": "^1.2.2",
     "igniteui-webcomponents": "^4.5.0",
     "jasmine": "^5.1.0",
     "jasmine-core": "~5.1.1",
