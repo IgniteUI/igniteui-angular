@@ -83,6 +83,7 @@
       "name": "$date-disabled-text-color",
       "replaceWith": "$date-disabled-foreground",
       "owner": "calendar-theme",
-      "type":"property"
+      "type": "property"
+    }
   ]
 }
