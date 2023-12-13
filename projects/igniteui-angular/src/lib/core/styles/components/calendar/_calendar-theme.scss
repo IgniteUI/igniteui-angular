@@ -21,8 +21,8 @@
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $calendar-foreground [null] - The foreground of all calendar views.
-/// @param {Color} $calendar-background [null] - The background of all calendar views.
+/// @param {Color} $content-foreground [null] - The foreground of the days, months and years views.
+/// @param {Color} $content-background [null] - The background of the days, months and years views.
 /// @param {Color} $border-size [null] - The border size of all calendar views.
 ///
 /// @param {Color} $header-foreground [null] - The header foreground.
@@ -192,6 +192,7 @@
 /// @param {Color} $date-range-border-color [null] - The border color of range selection.
 /// @param {Color} $date-range-preview-border-color [null] - The border color of the range selection in preview state(visible before selecting the end of the range).
 ///
+/// @param {Number} $size [null] - The size of the days, months, and years views.
 /// @param {List} $calendar-border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
@@ -202,15 +203,15 @@
 /// @example scss Change the header and content background colors
 ///   $my-calendar-theme: calendar-theme(
 ///     $header-background: purple,
-///     $calendar-background: black
+///     $content-background: black
 ///   );
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-calendar-theme);
 @function calendar-theme(
     $schema: $light-material-schema,
 
-    $calendar-background: null,
-    $calendar-foreground: null,
+    $content-background: null,
+    $content-foreground: null,
     $calendar-border-color: null,
 
     $header-background: null,
@@ -386,6 +387,8 @@
     $date-range-preview-border-color: null,
 
     $month-border-radius: null,
+
+    $size: null,
 ) {
     $name: 'igx-calendar';
     $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view, .igx-date-picker';
@@ -408,9 +411,9 @@
             }
         }
     } @else {
-        @if not($weekday-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $weekday-color: text-contrast($calendar-background);
+        @if not($weekday-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $weekday-color: text-contrast($content-background);
             }
         }
     }
@@ -422,112 +425,112 @@
     }
 
     @if $variant != 'fluent' and $variant != 'bootstrap' {
-        @if not($date-current-background) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-current-background: $calendar-background;
+        @if not($date-current-background) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-current-background: $content-background;
             }
         }
 
-        @if not($date-current-foreground) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-current-foreground: text-contrast($calendar-background);
+        @if not($date-current-foreground) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-current-foreground: text-contrast($content-background);
             }
         }
     }
 
     @if $variant == 'fluent' and $variant == 'bootstrap' {
-        @if not($date-hover-border-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-hover-border-color: text-contrast($calendar-background);
+        @if not($date-hover-border-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-hover-border-color: text-contrast($content-background);
             }
         }
 
-        @if not($date-focus-border-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-focus-border-color: text-contrast($calendar-background);
+        @if not($date-focus-border-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-focus-border-color: text-contrast($content-background);
             }
         }
 
-        @if not($date-selected-border-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-border-color: text-contrast($calendar-background);
+        @if not($date-selected-border-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-border-color: text-contrast($content-background);
             }
         }
 
-        @if not($date-selected-hover-border-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-hover-border-color: text-contrast($calendar-background);
+        @if not($date-selected-hover-border-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-hover-border-color: text-contrast($content-background);
             }
         }
 
-        @if not($date-selected-focus-border-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-focus-border-color: text-contrast($calendar-background);
+        @if not($date-selected-focus-border-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-focus-border-color: text-contrast($content-background);
             }
         }
     }
 
     @if $variant == 'material' or $variant == 'indigo-design' {
-        @if not($date-current-hover-outline) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-current-hover-outline: $calendar-background;
+        @if not($date-current-hover-outline) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-current-hover-outline: $content-background;
             }
         }
 
-        @if not($date-current-focus-outline) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-current-focus-outline: $calendar-background;
+        @if not($date-current-focus-outline) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-current-focus-outline: $content-background;
             }
         }
 
-        @if not($date-selected-current-outline) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-current-outline: $calendar-background;
+        @if not($date-selected-current-outline) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-current-outline: $content-background;
             }
         }
 
-        @if not($date-selected-current-hover-outline) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-current-hover-outline: $calendar-background;
+        @if not($date-selected-current-hover-outline) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-current-hover-outline: $content-background;
             }
         }
 
-        @if not($date-selected-current-focus-outline) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $date-selected-current-focus-outline: $calendar-background;
+        @if not($date-selected-current-focus-outline) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $date-selected-current-focus-outline: $content-background;
             }
         }
     }
 
-    @if not($calendar-foreground) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $calendar-foreground: text-contrast($calendar-background);
+    @if not($content-foreground) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $content-foreground: text-contrast($content-background);
         }
     }
 
 
-    @if not($picker-background) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $picker-background: $calendar-background;
+    @if not($picker-background) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $picker-background: $content-background;
         }
     }
 
-    @if not($weekend-color) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $weekend-color: rgba($calendar-foreground, .5);
+    @if not($weekend-color) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $weekend-color: rgba($content-foreground, .5);
         }
     }
 
-    @if not($inactive-color) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $inactive-color: rgba($calendar-foreground, .7);
+    @if not($inactive-color) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $inactive-color: rgba($content-foreground, .7);
         }
     }
 
     @if $variant != 'bootstrap' {
-        @if not($month-nav-arrow-color) and $calendar-background {
-            @if meta.type-of($calendar-background) == 'color' {
-                $month-nav-arrow-color: text-contrast($calendar-background);
+        @if not($month-nav-arrow-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $month-nav-arrow-color: text-contrast($content-background);
             }
         }
 
@@ -538,9 +541,9 @@
         }
     }
 
-    @if not($picker-foreground) and $calendar-background {
-        @if meta.type-of($calendar-background) == 'color' {
-            $picker-foreground: text-contrast($calendar-background);
+    @if not($picker-foreground) and $content-background {
+        @if meta.type-of($content-background) == 'color' {
+            $picker-foreground: text-contrast($content-background);
         }
     }
 
@@ -678,8 +681,8 @@
         name: $name,
         selector: $selector,
 
-        calendar-background: $calendar-background,
-        calendar-foreground: $calendar-foreground,
+        content-background: $content-background,
+        content-foreground: $content-foreground,
         calendar-border-color: $calendar-border-color,
 
         header-background: $header-background,
@@ -845,6 +848,7 @@
         date-selected-focus-border-color: $date-selected-focus-border-color,
         date-range-preview-border-color: $date-range-preview-border-color,
         date-range-border-color: $date-range-border-color,
+        size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -871,11 +875,12 @@
     ), $variant);
 
     $date-width: map.get((
-        material: rem(32px),
-        fluent: rem(32px),
-        bootstrap: rem(32px),
-        indigo-design: rem(32px),
+        material: var-get($theme, 'size'),
+        fluent: var-get($theme, 'size'),
+        bootstrap: var-get($theme, 'size'),
+        indigo-design: var-get($theme, 'size'),
     ), $variant);
+
     $date-height: $date-width;
 
     $border-size: rem(1px);
@@ -897,8 +902,8 @@
         flex-flow: column nowrap;
         width: 100%;
         min-width: rem(290px);
-        color: var-get($theme, 'calendar-foreground');
-        background: var-get($theme, 'calendar-background');
+        color: var-get($theme, 'content-foreground');
+        background: var-get($theme, 'content-background');
         border: $border-width solid var-get($theme, 'calendar-border-color');
         outline: none;
         overflow: hidden;
@@ -915,8 +920,13 @@
     %days-view,
     %months-view,
     %years-view {
-        color: var-get($theme, 'calendar-foreground');
-        background: var-get($theme, 'calendar-background');
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+
+        color: var-get($theme, 'content-foreground');
+        background: var-get($theme, 'content-background');
 
         @if not $bootstrap-theme {
             padding-block-end: pad-block(rem(16px));
@@ -1085,7 +1095,7 @@
         }
 
         igx-icon {
-            --component-size: 2;
+            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
@@ -1118,7 +1128,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var-get($theme, 'calendar-foreground');
+        color: var-get($theme, 'content-foreground');
         outline: none;
         height: $date-height;
         border-block-start: rem(1px) solid transparent;
@@ -1368,7 +1378,7 @@
             background: var-get($theme, 'year-current-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'current-outline-focus-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'current-outline-focus-color');
@@ -1401,7 +1411,7 @@
             background: var-get($theme, 'year-selected-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
@@ -1434,7 +1444,7 @@
             background: var-get($theme, 'year-selected-current-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
@@ -1485,7 +1495,7 @@
             background: var-get($theme, 'month-current-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'current-outline-focus-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'current-outline-focus-color');
@@ -1518,7 +1528,7 @@
             background: var-get($theme, 'month-selected-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
@@ -1548,7 +1558,7 @@
             background: var-get($theme, 'month-selected-current-focus-background');
 
             @if $variant != 'fluent' {
-                box-shadow: inset 0 0 0 rem(1px) var(--calendar-background),
+                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
                     0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
@@ -1589,10 +1599,6 @@
         %date-inner {
             color: var-get($theme, 'date-current-foreground');
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-current-outline');
-
-            @if $variant == 'fluent' {
-                font-weight: $cal-value-fw;
-            }
 
             @if $variant == 'fluent' {
                 &::after {
@@ -1695,17 +1701,13 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-foreground');
             background: var-get($theme, 'date-selected-current-background') ;
-            border: rem(1px) solid var-get($theme, 'date-border-color');
+            //border: rem(1px) solid var-get($theme, 'date-border-color');
 
             @if $bootstrap-theme and $variant != 'flunet' {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline'),
             } @else {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline'),
                     0 0 0 rem(1px) var-get($theme, 'date-selected-current-background');
-            }
-
-            @if $variant == 'indigo-design' {
-                font-weight: 700;
             }
 
             @if $variant == 'bootstrap' {

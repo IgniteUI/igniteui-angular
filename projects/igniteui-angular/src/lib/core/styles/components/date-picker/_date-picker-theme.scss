@@ -20,11 +20,11 @@
         // move the shadow in the schemas
         box-shadow: elevation(24);
         border-radius: var-get($theme, 'calendar-border-radius');
-        background: var-get($theme, 'calendar-background');
+        background: var-get($theme, 'content-background');
         overflow: hidden;
 
         %display {
-            background: var-get($theme, 'calendar-background');
+            background: var-get($theme, 'content-background');
         }
 
         %header-display {
@@ -53,7 +53,7 @@
         }
 
         %value {
-            color: var-get($theme, 'calendar-foreground');
+            color: var-get($theme, 'content-foreground');
             min-width: 14.28%;
 
             @if $bootstrap-theme {
