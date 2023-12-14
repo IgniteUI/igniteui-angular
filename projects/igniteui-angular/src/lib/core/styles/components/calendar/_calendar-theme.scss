@@ -904,10 +904,10 @@
         min-width: rem(290px);
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
-        border: $border-width solid var-get($theme, 'calendar-border-color');
+        border: $border-width solid var-get($theme, 'border-color');
         outline: none;
         overflow: hidden;
-        border-radius: var-get($theme, 'calendar-border-radius');
+        border-radius: var-get($theme, 'border-radius');
 
         %days-view,
         %months-view,
@@ -974,7 +974,7 @@
     %month-picker {
         %views-navigation {
             @if $bootstrap-theme {
-                border-bottom: rem(1px) solid var-get($theme, 'calendar-border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
             }
         }
     }
@@ -1056,7 +1056,7 @@
                 // This is the weekday labels row
                 &:first-of-type {
                     background: var-get($theme, 'header-background');
-                    border-block-end: rem(1px) solid var-get($theme, 'calendar-border-color');
+                    border-block-end: rem(1px) solid var-get($theme, 'border-color');
                 }
             }
         }
