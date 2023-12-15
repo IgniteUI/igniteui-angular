@@ -162,6 +162,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         this.grid.navigation.setActiveNode({ row: this.index });
     }
 
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        this.grid.rowClick.emit({
+            row: this.grid.createRow(this.index),
+            event
+        });
+    }
+
     /**
      * @hidden
      * @internal
