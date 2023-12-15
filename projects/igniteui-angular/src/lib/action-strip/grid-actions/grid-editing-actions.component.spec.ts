@@ -364,7 +364,7 @@ describe('igxGridEditingActions #grid ', () => {
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 data: treeGrid.getRowData(row.key),
-                oldValue: treeGrid.getRowData(row.key),
+                oldValue: null,
                 owner: treeGrid,
             };
 
