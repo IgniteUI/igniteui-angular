@@ -2078,10 +2078,6 @@ describe('IgxGrid Component Tests #grid', () => {
                 row: row,
                 event
             };
-            const gArgs: IGridRowEventArgs = {
-                row: grow,
-                event
-            }
 
             fix.detectChanges();
             expect(grid.rowClick.emit).toHaveBeenCalledTimes(2);
