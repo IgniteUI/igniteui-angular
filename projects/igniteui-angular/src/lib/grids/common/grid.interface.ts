@@ -6,7 +6,7 @@ import {
     IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IGridEditEventArgs, IRowDataCancellableEventArgs, IGridEditDoneEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -1045,10 +1045,10 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
     densityChanged: EventEmitter<IDensityChangedEventArgs>;
-    rowAdd: EventEmitter<IRowDataCancelableEventArgs>;
+    rowAdd: EventEmitter<IRowDataCancellableEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     rowAddedNotifier: Subject<IRowDataEventArgs>;
-    rowDelete: EventEmitter<IRowDataCancelableEventArgs>;
+    rowDelete: EventEmitter<IRowDataCancellableEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
     cellEditEnter: EventEmitter<IGridEditEventArgs>;

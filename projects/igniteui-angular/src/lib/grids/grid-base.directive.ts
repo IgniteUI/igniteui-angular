@@ -118,7 +118,7 @@ import {
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
     IGridEditEventArgs,
-    IRowDataCancelableEventArgs,
+    IRowDataCancellableEventArgs,
     IGridEditDoneEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
@@ -783,28 +783,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IRowDataCancelableEventArgs` object.
+     * Returns an IRowDataCancellableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
+    public rowDelete = new EventEmitter<IRowDataCancellableEventArgs>();
 
     /**
      * Emmited just before the newly added row is commited.
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IRowDataCancelableEventArgs` object.
+     * Returns an IRowDataCancellableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
+    public rowAdd = new EventEmitter<IRowDataCancellableEventArgs>();
 
     /**
      * Emitted after column is resized.
@@ -4580,7 +4580,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any): any {
-        const args: IRowDataCancelableEventArgs = {
+        const args: IRowDataCancellableEventArgs = {
             rowID: rowId,
             primaryKey: rowId,
             rowKey: rowId,

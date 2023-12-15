@@ -101,7 +101,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
-export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
+export interface IRowDataCancellableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
     /**
      * @deprecated
      */
