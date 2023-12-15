@@ -65,7 +65,7 @@
     "@igniteui/material-icons-extended": "^3.0.0",
     "@types/hammerjs": "^2.0.40",
     "@types/source-map": "0.5.2",
-    "fflate": "^0.7.3",
+    "fflate": "^0.8.1",
     "hammerjs": "^2.0.8",
     "igniteui-theming": "^3.3.2",
     "igniteui-trial-watermark": "^3.0.2",
