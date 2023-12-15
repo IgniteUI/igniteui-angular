@@ -952,7 +952,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
                     data: treeGrid.getRowData(someRow.key),
-                    oldValue: treeGrid.getRowData(someRow.key),
+                    oldValue: null,
                     owner: treeGrid
                 };
 
