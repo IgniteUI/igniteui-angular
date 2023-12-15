@@ -90,10 +90,6 @@
         @include e(date) {
             @extend %date !optional;
 
-            &:hover {
-                @extend %date-hover !optional;
-            }
-
             &:focus {
                 @extend %date-focus !optional;
             }
@@ -125,30 +121,6 @@
             }
         }
 
-        @include e(date, 'current') {
-            @extend %date-current !optional;
-
-            &:hover {
-                @extend %date-current-hover !optional;
-            }
-
-            &:focus {
-                @extend %date-current-focus !optional;
-            }
-        }
-
-        @include e(date, $mods: ('selected', 'current')) {
-            @extend %selected-current !optional;
-
-            &:hover {
-                @extend %selected-current-hover !optional;
-            }
-
-            &:focus {
-                @extend %selected-current-focus !optional;
-            }
-        }
-
         @include e(date, 'hidden') {
             @extend %date-hidden !optional;
         }
@@ -174,6 +146,14 @@
             @extend %date-range-last !optional;
         }
 
+        @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
+            @extend %date-range-current-first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'current', 'last')) {
+            @extend %date-range-current-last !optional;
+        }
+
         @include e(date, $mods: ('range', 'selected', 'current')) {
             @extend %date-selected-current-range !optional;
 
@@ -196,13 +176,29 @@
 
         @include e(date, 'weekend') {
             @extend %date-weekend !optional;
+        }
+
+        @include e(date, 'current') {
+            @extend %date-current !optional;
 
             &:hover {
-                @extend %date-hover !optional;
+                @extend %date-current-hover !optional;
             }
 
             &:focus {
-                @extend %date-focus !optional;
+                @extend %date-current-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('selected', 'current')) {
+            @extend %selected-current !optional;
+
+            &:hover {
+                @extend %selected-current-hover !optional;
+            }
+
+            &:focus {
+                @extend %selected-current-focus !optional;
             }
         }
 
@@ -248,10 +244,6 @@
 
             &:hover {
                 @extend %date-inner-hover !optional;
-            }
-
-            &:focus {
-                @extend %date-inner-focus !optional;
             }
         }
 

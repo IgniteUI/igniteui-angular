@@ -17,9 +17,9 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
-        // move the shadow in the schemas
+        // TODO move the shadow in the schemas
         box-shadow: elevation(24);
-        border-radius: var-get($theme, 'calendar-border-radius');
+        border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
 
