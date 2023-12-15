@@ -192,7 +192,7 @@ export class IgxGridSummaryService {
             );
         }
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
-        if(!rowData) {
+        if (!rowData) {
             return summaryIDs;
         }
         let id = '{ ';
