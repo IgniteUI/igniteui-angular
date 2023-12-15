@@ -744,7 +744,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             cancel: false,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
-            oldValue: this.getRowData(rowId),
+            oldValue: null,
             owner: this
         };
         this.rowDelete.emit(args);
