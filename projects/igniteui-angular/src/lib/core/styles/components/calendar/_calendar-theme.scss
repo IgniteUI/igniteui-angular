@@ -196,7 +196,7 @@
 /// @param {List} $calendar-border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
-/// @param {List} $month-border-radius [null] - The border radius used for the month and year in months and years view.
+/// @param {List} $month-year-border-radius [null] - The border radius used for the month/year in month/year view.
 ///
 /// @requires $light-material-schema
 ///
@@ -386,7 +386,7 @@
     $date-range-border-color: null,
     $date-range-preview-border-color: null,
 
-    $month-border-radius: null,
+    $month-year-border-radius: null,
 
     $size: null,
 ) {
@@ -838,7 +838,7 @@
         calendar-border-radius: $calendar-border-radius,
         date-border-radius: $date-border-radius,
         date-range-border-radius: $date-range-border-radius,
-        month-border-radius: $month-border-radius,
+        month-year-border-radius: $month-year-border-radius,
         week-number-border-radius: $week-number-border-radius,
         date-border-color: $date-border-color,
         date-hover-border-color: $date-hover-border-color,
@@ -1321,8 +1321,7 @@
         align-items: center;
         height: $date-height;
         width: 100%;
-        // TODO: SPLIT TO DIFFERENT VARIABLES, OR RENAME THE VARIABLE?
-        border-radius: var-get($theme, 'month-border-radius');
+        border-radius: var-get($theme, 'month-year-border-radius');
         padding: 0 rem(12px);
         outline: none;
         cursor: pointer;
