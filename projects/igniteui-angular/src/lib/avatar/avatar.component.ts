@@ -6,7 +6,8 @@ import {
     Input,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
@@ -53,8 +54,10 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
+    styleUrls: ['themes/styles.scss'],
     standalone: true,
-    imports: [IgxIconComponent, NgTemplateOutlet]
+    imports: [IgxIconComponent, NgTemplateOutlet],
+    encapsulation: ViewEncapsulation.None
 })
 export class IgxAvatarComponent implements OnInit {
     /**
@@ -121,7 +124,7 @@ export class IgxAvatarComponent implements OnInit {
      * @deprecated in version 15.1.0.
      * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
      * By default the shape of the avatar is a square.
-     * 
+     *
      * @example
      * ```html
      * <igx-avatar [roundShape]="true" ></igx-avatar>
@@ -136,7 +139,7 @@ export class IgxAvatarComponent implements OnInit {
 
     public set roundShape(value: boolean) {
         this.shape = value === true ? 'circle' : 'square';
-    }  
+    }
 
     /**
      * Sets square, rounded or circular shape to the avatar.
@@ -317,7 +320,7 @@ export class IgxAvatarComponent implements OnInit {
     protected get componentSize() {
         if (this._size) {
             return `var(--ig-size-${this._size})`;
-        } 
+        }
     }
 
     /**
