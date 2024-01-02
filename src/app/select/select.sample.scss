@@ -59,14 +59,14 @@
     align-items: center;
     padding: 8px;
     gap: 8px;
-    background: hsla(var(--ig-gray-50));
+    background: var(--ig-gray-50);
 }
 
 .custom-select-header {
-    border-bottom: 1px dashed hsla(var(--ig-gray-200));
+    border-bottom: 1px dashed var(--ig-gray-200);
 }
 
 .custom-select-footer {
     flex-direction: column;
-    border-top: 1px dashed hsla(var(--ig-gray-200))
+    border-top: 1px dashed var(--ig-gray-200);
 }
