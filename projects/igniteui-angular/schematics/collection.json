@@ -1,5 +1,6 @@
 {
   "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "encapsulation": true,
   "schematics": {
     "ng-add": {
       "description": "Installs the needed dependencies onto the host application.",

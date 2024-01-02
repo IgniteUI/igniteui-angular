@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
