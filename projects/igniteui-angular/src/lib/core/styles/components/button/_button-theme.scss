@@ -215,6 +215,7 @@
 }
 
 /// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin button($theme) {
     $button-width: rem(88px);

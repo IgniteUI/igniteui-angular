@@ -159,6 +159,7 @@
 }
 
 /// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin button-group($theme) {
     @include css-vars($theme);
