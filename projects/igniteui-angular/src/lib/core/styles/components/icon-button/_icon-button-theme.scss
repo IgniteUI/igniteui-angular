@@ -109,6 +109,8 @@
         themes: $themes,
     );
 }
+
+/// @deprecated Use the `css-vars` mixin instead.
 /// @param {Map} $theme - The theme used to style the component.
 @mixin icon-button($theme) {
     $variant: map.get($theme, variant);

@@ -35,6 +35,7 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
