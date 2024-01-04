@@ -408,7 +408,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent, { read: IgxColumnComponent, descendants: false } )
+    @ContentChild(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false } )
     public override actionStrip: IgxActionStripComponent;
 
     private _data;
