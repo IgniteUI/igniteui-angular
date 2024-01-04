@@ -8,7 +8,8 @@ import {
     Renderer2,
     HostListener,
     Optional,
-    Inject
+    Inject,
+    booleanAttribute
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
@@ -130,7 +131,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button type="button" igxButton="flat" [selected]="button.selected"></button>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
         if(this._selected !== value) {
             if(!this._selected) {
