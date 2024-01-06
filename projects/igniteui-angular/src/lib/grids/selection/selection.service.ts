@@ -417,7 +417,7 @@ export class IgxGridSelectionService {
     public getSelectedRows(): Array<any> {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
-
+    
     /** Returns array of the rows in indeterminate state. */
     public getIndeterminateRows(): Array<any> {
         return this.indeterminateRows.size ? Array.from(this.indeterminateRows.keys()) : [];
@@ -586,24 +586,36 @@ export class IgxGridSelectionService {
         return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
-    /** Select range from last selected row to the current specified row. */
+    /** Select range from last selected row to the current specified row. */ 
     public selectMultipleRows(rowID, rowData, event?): void {
         this.clearHeaderCBState();
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
             this.selectRowById(rowID);
             return;
         }
-        const gridData = this.allData;
-        const lastRowID = this.getSelectedRows()[this.rowSelection.size - 1];
-        const currIndex = gridData.indexOf(this.getRowDataById(lastRowID));
-        const newIndex = gridData.indexOf(rowData);
-        const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
-        const currSelection = this.getSelectedRowsData();
-        const added = rows.filter(r => !this.isRowSelected(this.getRecordKey(r)));
-        const newSelection = currSelection.concat(added);
-        this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
+            const gridData = this.allData;
+        const lastSelectedRowID = this.getSelectedRows()[this.rowSelection.size - 1];
+        const currentRowIndex = gridData.findIndex(row => this.getRecordKey(row) === rowID);
+        const lastSelectedRowIndex = gridData.findIndex(row => this.getRecordKey(row) === lastSelectedRowID);
+    
+        const currentGroup = this.getGroup(rowData);
+        const lastSelectedGroup = this.getGroup(this.getRowDataById(lastSelectedRowID));
+    
+        if (!this.areGroupsEqual(currentGroup, lastSelectedGroup)) {
+            this.selectRowById(rowID, false, event);
+            return;
+        }
+    
+        const rangeStart = Math.min(currentRowIndex, lastSelectedRowIndex);
+        const rangeEnd = Math.max(currentRowIndex, lastSelectedRowIndex) + 1;
+        const rowsToSelect = gridData.slice(rangeStart, rangeEnd).filter(row => 
+            this.areGroupsEqual(this.getGroup(row), currentGroup));
+    
+        const newSelection = [...this.getSelectedRowsData(), ...rowsToSelect];
+        const addedRows = rowsToSelect.filter(row => !this.isRowSelected(this.getRecordKey(row)));
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event, this.getSelectedRowsData());
     }
-
+        
     public areAllRowSelected(newSelection?): boolean {
         if (!this.grid.data && !newSelection) {
             return false;
@@ -673,6 +685,38 @@ export class IgxGridSelectionService {
     public getRowIDs(data): Array<any> {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
+
+    public getGroup(rowData: any): any {
+        if (this.grid.groupingExpressions.length === 0) {
+            return null;
+        }
+        
+        const groupValues = {};
+        
+        for (let expr of this.grid.groupingExpressions) {
+            if (rowData.hasOwnProperty(expr.fieldName)) {
+                groupValues[expr.fieldName] = rowData[expr.fieldName];
+            } else {
+                return null;
+            }
+        }
+        
+        return groupValues;
+    }
+    
+    private areGroupsEqual(group1, group2): boolean {
+        for (const prop in group1) {
+            if (group1.hasOwnProperty(prop) && group2.hasOwnProperty(prop)) {
+                if (group1[prop] !== group2[prop]) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 
     public getRecordKey(record) {
         return this.grid.primaryKey ? record[this.grid.primaryKey] : record;
