@@ -4,6 +4,8 @@ All notable changes for each version of this project will be documented in this 
 
 ## 17.1.0
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added a new output - `rowClick` that fires when the user clicks on a row element of the grid, including group rows
 - `IgxTree`
     - Added new property `toggleNodeOnClick` that determines whether clicking over a node will change its expanded state or not. Set to `false` by default.
 - `IgxPivotGrid`
