@@ -26,7 +26,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 
 
@@ -2056,6 +2056,33 @@ describe('IgxGrid Component Tests #grid', () => {
                 event: horizontalScrollEvent
             });
         });
+
+        it('Should emit rowClick when clicking anywhere on a row', () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.groupBy({
+                fieldName: 'col2',
+                dir: SortingDirection.Desc,
+                ignoreCase: false
+            });
+            fix.detectChanges();
+            spyOn(fix.componentInstance.grid.rowClick, 'emit').and.callThrough();
+            const event = new Event('click');
+            const grow = grid.rowList.get(0);
+            const row = grid.rowList.get(1);
+            grow.nativeElement.dispatchEvent(event);
+            row.nativeElement.dispatchEvent(event);
+            const args: IGridRowEventArgs = {
+                row: row,
+                event
+            };
+
+            fix.detectChanges();
+            expect(grid.rowClick.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowClick.emit).toHaveBeenCalledWith(args);
+        })
 
         it(`Verify that getRowData returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
