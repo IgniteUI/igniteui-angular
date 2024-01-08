@@ -172,7 +172,7 @@
     $indigo-theme: $variant == 'indigo-design';
 
     %igx-group-display {
-        display: flex;
+        @extend %flex;
         box-shadow: var-get($theme, 'shadow');
         border-radius: var-get($theme, 'border-radius');
 
@@ -189,14 +189,12 @@
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
         min-width: $group-item-min-width;
-        display: flex;
+        @extend %flex-center;
         flex: 1 0 0%;
-        justify-content: center;
-        align-items: center;
         text-decoration: none;
         cursor: pointer;
-        user-select: none;
-        position: relative;
+        @extend %user-none;
+        @extend %position-relative;
         z-index: 0;
 
         &[igxButton] {
@@ -271,7 +269,7 @@
         color: var-get($theme, 'item-selected-text-color');
         background: var-get($theme, 'item-selected-background');
         border-color: var-get($theme, 'item-selected-border-color');
-        position: relative;
+        @extend %position-relative;
         z-index: 1;
 
         &:hover,
@@ -295,10 +293,10 @@
         }
 
         &[igxButton][disabled='true'] {
-            position: relative;
+            @extend %position-relative;
 
             &::before {
-                position: absolute;
+                @extend %position-absolute;
                 content: '';
                 top: 0;
                 bottom: 0;
@@ -314,8 +312,8 @@
     }
 
     %igx-group-item-content {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         flex-flow: row nowrap;
         min-width: 0;
 

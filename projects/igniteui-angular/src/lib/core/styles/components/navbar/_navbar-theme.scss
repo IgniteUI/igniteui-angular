@@ -94,11 +94,11 @@
     $navbar-title-margin: 0;
 
     %igx-navbar-display {
-        display: flex;
-        position: relative;
+        @extend %flex;
+        @extend %position-relative;
         flex-flow: row nowrap;
-        align-items: center;
-        justify-content: space-between;
+        @extend %align-center;
+        @extend %justify-between;
         width: 100%;
         min-height: rem(56px);
         max-height: rem(128px);
@@ -111,8 +111,8 @@
     }
 
     %igx-navbar-part {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
     }
 
     %igx-navbar-title {
@@ -120,13 +120,13 @@
         margin: $navbar-title-margin;
         flex-grow: 1;
         user-select: text;
-        display: flex;
+        @extend %flex;
         flex-direction: row;
     }
 
     %igx-navbar-bundle {
         @extend %igx-navbar-part;
-        user-select: none;
+        @extend %user-none;
 
         > * + * {
             margin-inline-start: rem(16px);

@@ -143,7 +143,7 @@
     %node-toggle-button,
     %node-content,
     %node-select {
-        display: flex;
+        @extend %flex;
     }
 
     %tree-node {
@@ -157,7 +157,7 @@
     %node-wrapper,
     %node-toggle-button,
     %node-select {
-        align-items: center;
+        @extend %align-center;
     }
 
     %node-toggle-button,
@@ -179,7 +179,7 @@
         min-height: var-get($theme, 'size');
         padding-inline: pad-inline(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         padding-block: 0;
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'background');
         color: var-get($theme, 'foreground');
 
@@ -198,7 +198,7 @@
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             top: 0;
             inset-inline-start: 0;
             width: 100%;
@@ -287,22 +287,22 @@
 
     %node-content {
         display: block;
-        align-items: center;
+        @extend %align-center;
         flex: 1;
         @include ellipsis();
     }
 
     %node-toggle-button {
-        justify-content: center;
+        @extend %justify-center;
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         min-width: $icon-size
     }
 
     %node-drop-indicator {
-        display: flex;
+        @extend %flex;
         visibility: hidden;
-        position: absolute;
+        @extend %position-absolute;
         inset-inline-end: pad(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         bottom: 0;
         width: pad(map.get($drop-indicator-width, 'compact'), map.get($drop-indicator-width, 'cosy'), map.get($drop-indicator-width, 'comfortable'));

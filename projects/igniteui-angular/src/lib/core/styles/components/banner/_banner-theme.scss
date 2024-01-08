@@ -80,20 +80,20 @@
     %igx-banner__actions > igx-banner-actions,
     %igx-banner__illustration,
     %igx-banner__message {
-        display: flex;
+        @extend %flex;
     }
 
     %igx-banner__illustration,
     %igx-banner__message {
-        align-items: center;
+        @extend %align-center;
     }
 
     %igx-banner {
         @include sizable();
         --component-size: var(--ig-size, var(--ig-size-large));
 
-        display: flex;
-        justify-content: flex-end;
+        @extend %flex;
+        @extend %justify-end;
         flex-wrap: wrap;
         gap: rem(8px);
 
@@ -104,7 +104,7 @@
     }
 
     %igx-banner__illustration {
-        justify-content: center;
+        @extend %justify-center;
         width: rem(40px);
         min-width: rem(40px);
         height: rem(40px);
@@ -140,8 +140,8 @@
     %igx-banner__actions,
     %igx-banner__actions > igx-banner-actions {
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: center;
+        @extend %justify-end;
+        @extend %align-center;
         align-self: flex-end;
         gap: rem(8px);
         min-height: rem(40px);

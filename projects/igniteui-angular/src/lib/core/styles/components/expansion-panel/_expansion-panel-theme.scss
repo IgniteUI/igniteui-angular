@@ -99,7 +99,7 @@
     $panel-padding: rem(16px) rem(24px);
 
     %igx-expansion-panel {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
@@ -146,8 +146,8 @@
     }
 
     %igx-expansion-panel__header-inner {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         padding: $panel-padding;
         cursor: pointer;
         background: var-get($theme, 'header-background');
@@ -161,9 +161,9 @@
     }
 
     %igx-expansion-panel__title-wrapper {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
-        justify-content: center;
+        @extend %justify-center;
         flex: 1 0 0%;
         overflow: hidden;
     }
@@ -184,10 +184,10 @@
 
     %igx-expansion-panel__header-icon--end,
     %igx-expansion-panel__header-icon--start {
-        display: flex;
+        @extend %flex;
         align-content: center;
-        justify-content: center;
-        user-select: none;
+        @extend %justify-center;
+        @extend %user-none;
 
         color: var-get($theme, 'header-icon-color');
 

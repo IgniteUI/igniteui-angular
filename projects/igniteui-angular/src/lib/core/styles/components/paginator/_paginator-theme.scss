@@ -66,9 +66,9 @@
     %igx-paginator {
         --component-size: var(--ig-size, var(--ig-size-large));
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-between;
+        @extend %align-center;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
         font-size: rem(12px);
@@ -89,16 +89,16 @@
     }
 
     %igx-paginator-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
         width: 100%;
     }
 
     %igx-page-size {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-start;
+        @extend %align-center;
         flex: 1;
     }
 
@@ -108,7 +108,7 @@
     }
 
     %igx-page-size__select {
-        display: flex;
+        @extend %flex;
         max-width: rem(114px);
         min-width: rem(100px);
 
@@ -118,9 +118,9 @@
     }
 
     %igx-page-nav {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-end;
+        @extend %align-center;
         flex: 1;
 
         > * {
@@ -135,6 +135,6 @@
     }
 
     %igx-page-nav__text {
-        display: flex;
+        @extend %flex;
     }
 }

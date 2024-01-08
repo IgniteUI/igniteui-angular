@@ -166,14 +166,14 @@
     $slider-label-padding: 0 rem(2px);
 
     %igx-slider-display {
-        display: flex;
-        position: relative;
-        // Z-index 0 is needed to set the stacking context for the inner elements with z-index.
-        // https://github.com/IgniteUI/igniteui-angular/issues/11597
+        @extend %flex;
+        @extend %position-relative;
+        
+        
         z-index: 0;
         height: $slider-height;
         flex-grow: 1;
-        align-items: center;
+        @extend %align-center;
         transition: all .2s $out-quad;
 
         &:hover {
@@ -202,7 +202,7 @@
     }
 
     %igx-slider-thumbs-container {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
         height: 0;
         cursor: default;
@@ -211,7 +211,7 @@
     }
 
     %igx-slider-track {
-        position: relative;
+        @extend %position-relative;
         width: 100%;
         height: rem($slider-track-height);
         overflow: hidden;
@@ -223,7 +223,7 @@
     }
 
     %igx-slider-track-inactive {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
         height: inherit;
         background: var-get($theme, 'base-track-color');
@@ -238,7 +238,7 @@
     }
 
     %igx-slider-track-fill {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
         background: var-get($theme, 'track-color');
         transform-origin: left center;
@@ -261,10 +261,10 @@
 
     %igx-slider__ticks {
         width: 100%;
-        display: flex;
-        position: absolute;
+        @extend %flex;
+        @extend %position-absolute;
         bottom: 0;
-        justify-content: space-between;
+        @extend %justify-between;
 
         &%igx-slider__ticks--top {
             bottom: auto;
@@ -274,10 +274,10 @@
     }
 
     %igx-slider__ticks-group {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
-        align-items: center;
-        position: relative;
+        @extend %align-center;
+        @extend %position-relative;
 
         &:first-of-type {
             margin-inline-start: rem(-1px);
@@ -290,7 +290,7 @@
 
     %igx-slider__ticks-label {
         color: var-get($theme, 'tick-label-color');
-        position: absolute;
+        @extend %position-absolute;
         top: $tick-height--tall;
         transform: translate(-50%);
         line-height: .7;
@@ -351,8 +351,8 @@
     }
 
     %igx-slider-track-steps {
-        position: absolute;
-        display: flex;
+        @extend %position-absolute;
+        @extend %flex;
         width: 100%;
         height: rem(4px);
         opacity: .85;
@@ -427,10 +427,8 @@
     }
 
     %igx-thumb-display {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %position-absolute;
+        @extend %flex-center;
         flex-direction: column;
         width: rem($thumb-size);
         height: rem($thumb-size);
@@ -464,7 +462,7 @@
             div::after {
                 $focus-outline-offset: rem(2px);
 
-                position: absolute;
+                @extend %position-absolute;
                 content: '';
                 pointer-events: none;
                 left: 50%;
@@ -492,18 +490,16 @@
     }
 
     %igx-label-display {
-        position: absolute;
+        @extend %position-absolute;
         pointer-events: none;
-        display: flex;
+        @extend %flex;
         top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
         height: $thumb-label-height;
     }
 
     %igx-slider-thumb-label__container {
         border-radius: rem(2px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         white-space: nowrap;
         margin-inline-start: -50%;
         padding: 0 rem(2px);
@@ -514,7 +510,7 @@
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             top: 85%;
             border-inline-start: rem(10px) solid transparent;
             border-inline-end: rem(10px) solid transparent;
@@ -523,12 +519,12 @@
     }
 
     %igx-slider-thumb__dot {
-        position: relative;
+        @extend %position-relative;
         inset-inline-start: 0;
         pointer-events: none;
 
         &::before {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             width: rem($thumb-size);
             height: rem($thumb-size);
@@ -543,7 +539,7 @@
 
         @if $variant == 'material' {
             &::after {
-                position: absolute;
+                @extend %position-absolute;
                 content: '';
                 width: $ripple-size;
                 height: $ripple-size;

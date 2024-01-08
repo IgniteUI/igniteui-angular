@@ -125,7 +125,7 @@
     }
 
     %igx-dialog-window {
-        position: relative;
+        @extend %position-relative;
         min-width: $dialog-min-width;
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
@@ -143,7 +143,7 @@
     }
 
     %igx-dialog-title {
-        display: flex;
+        @extend %flex;
         color: var-get($theme, 'title-color');
         padding: $dialog-title-padding;
 
@@ -156,7 +156,7 @@
         color: var-get($theme, 'message-color');
         padding: $dialog-message-padding;
         // The 2 rules below are related to https://github.com/IgniteUI/igniteui-angular/issues/11300
-        position: relative;
+        @extend %position-relative;
         z-index: 0;
     }
 
@@ -176,9 +176,9 @@
     }
 
     %igx-dialog-actions {
-        display: flex;
+        @extend %flex;
         flex-flow: row nowrap;
-        justify-content: flex-end;
+        @extend %justify-end;
         padding: $dialog-actions-padding;
 
         @if $bootstrap-theme {

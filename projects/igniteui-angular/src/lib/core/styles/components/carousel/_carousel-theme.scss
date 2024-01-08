@@ -132,19 +132,15 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
-        display: flex;
-        position: relative;
-        justify-content: center;
+        @extend %flex-center;
+        @extend %position-relative;
         width: 100%;
         height: 100%;
-        align-items: center;
         flex-flow: column nowrap;
     }
 
     %igx-nav-arrow {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
         width: rem(46px);
         height: rem(46px);
         cursor: pointer;
@@ -183,12 +179,12 @@
 
     %igx-carousel-arrow {
         margin: $carousel-arrow-margin;
-        position: absolute;
+        @extend %position-absolute;
         top: 50%;
         transform: translateY(-50%);
         z-index: 3;
         outline: none;
-        user-select: none;
+        @extend %user-none;
     }
 
     %igx-carousel-arrow--next {
@@ -207,10 +203,8 @@
     }
 
     %igx-carousel-indicators {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %position-absolute;
+        @extend %flex-center;
         margin: $carousel-indicators-margin;
         padding: $carousel-indicators-padding;
         list-style: none;
@@ -232,21 +226,19 @@
     }
 
     %igx-carousel-indicators-label {
-        align-items: center;
+        @extend %align-center;
         // TODO: this should be wrapped in carousel typogrpahy
         font-size: rem(16px);
     }
 
     %igx-carousel-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         margin: $carousel-indicator-margin;
         cursor: pointer;
     }
 
     %igx-nav-dot {
-        position: relative;
+        @extend %position-relative;
         width: rem(12px);
         height: rem(12px);
         text-indent: rem(-9999px);
@@ -266,7 +258,7 @@
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);
             }
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             @if $variant != 'indigo-design' {
                 inset: rem(1px);
             } @else {
@@ -298,7 +290,7 @@
     }
 
     %igx-carousel-slide-wrapper {
-        position: relative;
+        @extend %position-relative;
         width: 100%;
         height: inherit;
         overflow: hidden;
@@ -309,7 +301,7 @@
     }
 
     %igx-carousel-slide {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
         height: 100%;
         inset: 0;

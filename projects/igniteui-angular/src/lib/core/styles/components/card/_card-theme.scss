@@ -123,7 +123,7 @@
     $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
 
     %igx-card-display {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
@@ -154,7 +154,7 @@
     }
 
     %igx-card-header {
-        display: flex;
+        @extend %flex;
         flex-flow: row wrap;
         align-content: flex-start;
         width: 100%;
@@ -175,8 +175,8 @@
         }
 
         %igx-card-header-thumbnail {
-            display: flex;
-            justify-content: center;
+            @extend %flex;
+            @extend %justify-center;
             align-self: unset;
             margin-inline-end: 0;
             margin-bottom: rem(16px);
@@ -193,11 +193,11 @@
     }
 
     %igx-card-header-titles {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
         overflow: hidden;
         flex: 1 1 auto;
-        justify-content: center;
+        @extend %justify-center;
 
         &:empty {
             display: none;
@@ -239,10 +239,10 @@
     }
 
     %igx-card-actions {
-        display: flex;
+        @extend %flex;
         flex-flow: row wrap;
-        justify-content: space-between;
-        align-items: center;
+        @extend %justify-between;
+        @extend %align-center;
         padding: $card-actions-padding;
 
         &:first-child {
@@ -271,8 +271,8 @@
     }
 
     %igx-card-actions__end {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         order: 1;
         color: var-get($theme, 'actions-text-color');
         margin-inline-start: auto;
@@ -283,8 +283,8 @@
     }
 
     %igx-card-actions__start {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         order: 0;
 
         &:empty {
@@ -338,7 +338,7 @@
     }
 
     %igx-card-actions-bgroup {
-        display: flex;
+        @extend %flex;
         flex-flow: row nowrap;
 
         [igxButton] ~ [igxButton] {
@@ -347,7 +347,7 @@
     }
 
     %igx-card-actions-igroup {
-        display: flex;
+        @extend %flex;
         flex-flow: row nowrap;
 
         %igx-icon-button-display {

@@ -63,7 +63,7 @@
 
     %tooltip-display {
         display: inline-flex;
-        justify-content: center;
+        @extend %justify-center;
         flex-flow: column wrap;
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');

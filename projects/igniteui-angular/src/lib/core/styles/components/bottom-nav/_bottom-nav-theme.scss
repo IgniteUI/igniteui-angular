@@ -90,10 +90,8 @@
     }
 
     %igx-bottom-nav-menu {
-        display: flex;
+        @extend %flex-center;
         position: fixed;
-        justify-content: center;
-        align-items: center;
         inset-inline-start: 0;
         inset-inline-end: 0;
         height: $menu-height;
@@ -115,18 +113,16 @@
     }
 
     %igx-bottom-nav-menu-item {
-        display: flex;
-        position: relative;
+        @extend %flex-center;
+        @extend %position-relative;
         flex-flow: column nowrap;
         flex: 1;
-        align-items: center;
-        justify-content: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
         height: 100%;
         color: var-get($theme, 'idle-item-color');
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
@@ -159,9 +155,9 @@
     }
 
     %igx-tab-icon {
-        display: flex;
-        position: relative;
-        justify-content: center;
+        @extend %flex;
+        @extend %position-relative;
+        @extend %justify-center;
         height: rem(24px);
         padding: 0 rem(8px);
         transform: translateZ(0);

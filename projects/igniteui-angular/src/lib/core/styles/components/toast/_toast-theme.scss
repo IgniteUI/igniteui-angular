@@ -89,9 +89,7 @@
     ), $variant);
 
     %igx-toast-display {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-inline-center;
         margin: $margin;
         padding: $padding;
         min-width: $width;

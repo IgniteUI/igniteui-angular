@@ -46,7 +46,7 @@
 
     %label-base {
         @include ellipsis();
-        position: relative;
+        @extend %position-relative;
         color: var-get($theme, 'color');
         max-width: 100%;
         line-height: normal;

@@ -285,8 +285,8 @@
 
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --list-size: var(--component-size);
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background');
         height: auto;
@@ -301,8 +301,8 @@
     }
 
     %igx-list--empty {
-        justify-content: center;
-        align-items: center;
+        @extend %justify-center;
+        @extend %align-center;
     }
 
     %igx-list__message--empty {
@@ -314,19 +314,19 @@
 
     %igx-list-header {
         --component-size: var(--list-size);
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         color: var-get($theme, 'header-text-color');
         background: var-get($theme, 'header-background');
         padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
         padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
-        user-select: none;
+        @extend %user-none;
     }
 
     %igx-list-item-base {
-        display: flex;
+        @extend %flex;
         flex-flow: column wrap;
-        justify-content: center;
+        @extend %justify-center;
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
@@ -380,15 +380,15 @@
     }
 
     %igx-list-item-pan {
-        position: absolute;
+        @extend %position-absolute;
         visibility: hidden;
-        display: flex;
+        @extend %flex;
         z-index: 1;
     }
 
     %igx-list__item-lines {
         color: currentColor;
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         flex: 1 0 0%;
 
@@ -407,9 +407,7 @@
     }
 
     %igx-list__item-actions {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         color: var-get($theme, 'item-action-color');
 
         > * {
@@ -434,9 +432,9 @@
 
     %igx-list-item-content {
         --component-size: var(--list-size);
-        display: flex;
-        align-items: center;
-        position: relative;
+        @extend %flex;
+        @extend %align-center;
+        @extend %position-relative;
         padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
         padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
         border-radius: var-get($theme, 'item-border-radius');
@@ -445,9 +443,7 @@
     }
 
     %igx-list__item-thumbnail {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         align-self: flex-start;
         padding: 0;
         color: var-get($theme, 'item-thumbnail-color');

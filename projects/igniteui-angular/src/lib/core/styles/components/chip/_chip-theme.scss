@@ -288,9 +288,9 @@
     $border-size: rem(1px);
 
     %igx-chip-area {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-start;
         flex-wrap: wrap;
         width: 100%;
 
@@ -304,8 +304,8 @@
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --chip-size: var(--component-size);
 
-        position: relative;
-        display: inline-flex;
+        @extend %position-relative;
+        @extend %inline-flex;
         flex-shrink: 0;
         transition: $transition;
         transition-property: top, left;
@@ -375,8 +375,8 @@
     %igx-chip__item {
         display: grid;
         grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
-        align-items: center;
-        justify-content: center;
+        @extend %align-center;
+        @extend %justify-center;
         text-align: center;
         height: var-get($theme, 'size');
         padding-inline: sizable(
@@ -389,7 +389,7 @@
         background: var-get($theme, 'background');
         border: $border-size solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
-        user-select: none;
+        @extend %user-none;
         overflow: hidden;
         cursor: pointer;
         // hacking `overflow: hidden` with border radius
@@ -399,8 +399,8 @@
 
         igx-avatar {
             display: flex !important;
-            align-items: center;
-            justify-content: center;
+            @extend %align-center;
+            @extend %justify-center;
             font-size: 50%;
         }
 
@@ -695,9 +695,9 @@
 
     %igx-chip__start,
     %igx-chip__end {
-        display: flex;
-        align-items: center;
-        position: relative;
+        @extend %flex;
+        @extend %align-center;
+        @extend %position-relative;
 
         &:empty {
             display: none;
@@ -715,7 +715,7 @@
 
     %igx-chip__prefix,
     %igx-chip__suffix {
-        display: inline-flex;
+        @extend %inline-flex;
         vertical-align: middle;
         max-width: $chip-max-width;
 
@@ -736,7 +736,7 @@
     }
 
     %igx-chip__remove {
-        display: inline-flex;
+        @extend %inline-flex;
         color: var-get($theme, 'remove-icon-color', currentColor);
 
         &:empty {
@@ -759,8 +759,8 @@
     }
 
     %igx-chip__select {
-        display: inline-flex;
-        align-items: center;
+        @extend %inline-flex;
+        @extend %align-center;
         opacity: 1;
         z-index: 1;
         transition: opacity 120ms $out-quad, width 120ms $out-quad;
@@ -773,7 +773,7 @@
     %igx-chip__ghost {
         @extend %igx-chip;
 
-        position: absolute;
+        @extend %position-absolute;
         box-shadow: var-get($theme, 'ghost-shadow');
         overflow: hidden;
         color: var-get($theme, 'focus-text-color');

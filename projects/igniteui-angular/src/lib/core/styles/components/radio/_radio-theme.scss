@@ -163,10 +163,10 @@
     );
 
     %radio-display {
-        position: relative;
-        display: inline-flex;
+        @extend %position-relative;
+        @extend %inline-flex;
         flex-flow: row nowrap;
-        align-items: center;
+        @extend %align-center;
         color: var-get($theme, 'label-color');
     }
 
@@ -177,7 +177,7 @@
     %radio-display--disabled {
         pointer-events: none;
         color: var-get($theme, 'disabled-label-color');
-        user-select: none;
+        @extend %user-none;
     }
 
     %radio-label--invalid {
@@ -189,7 +189,7 @@
     }
 
     %radio-composite {
-        position: relative;
+        @extend %position-relative;
         display: inline-block;
         width: $size;
         height: $size;
@@ -197,11 +197,11 @@
         line-height: $size;
         cursor: pointer;
         color: var-get($theme, 'label-color');
-        user-select: none;
+        @extend %user-none;
 
         &::before,
         &::after {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             width: $size;
             height: $size;
@@ -374,7 +374,7 @@
     %radio-label {
         color: currentColor;
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         word-wrap: break-all;
 
         &:empty {
@@ -402,7 +402,7 @@
         @include ripple($ripple-theme);
         @include css-vars($ripple-theme);
         display: $ripple-display;
-        position: absolute;
+        @extend %position-absolute;
         top: calc(50% - #{$ripple-radius});
         inset-inline-start: calc(50% - #{$ripple-radius});
         width: $ripple-size;
@@ -415,13 +415,13 @@
 
     %igx-radio--focused {
         @if $variant == 'fluent' {
-            position: relative;
+            @extend %position-relative;
             $focus-outline-offset-top: rem(2px);
             $focus-outline-offset-left: rem(2px);
 
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 top: -$focus-outline-offset-top;
                 inset-inline-start: -$focus-outline-offset-left;
                 box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
@@ -577,7 +577,7 @@
     }
 
     %radio-group-display--vertical {
-        display: flex;
+        @extend %flex;
         flex-flow: column;
         %radio-display:not(:last-of-type) {
             margin-inline-end: 0;

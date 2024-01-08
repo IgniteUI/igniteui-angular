@@ -108,8 +108,8 @@
     );
 
     %igx-grid-summary {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         flex-direction: column;
         flex: 1 1 0%;
         padding-block: 0;
@@ -119,7 +119,7 @@
         outline-style: none;
 
         &::after {
-            position: absolute;
+            @extend %position-absolute;
             inset: 0;
         }
 
@@ -129,7 +129,7 @@
     }
 
     %igx-grid-summary--pinned {
-        position: relative;
+        @extend %position-relative;
         z-index: 1;
     }
 
@@ -152,12 +152,12 @@
     }
 
     %igx-grid-summary__item {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         padding-block: pad(map.get($item-padding-block, 'compact'), map.get($item-padding-block, 'cosy'), map.get($item-padding-block, 'comfortable'));
         padding-inline: 0;
         font-size: rem(12px);
-        position: relative;
+        @extend %position-relative;
     }
 
     %igx-grid-summary__label {

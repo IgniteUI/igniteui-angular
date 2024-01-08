@@ -95,7 +95,7 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     %igx-combo {
-        position: relative;
+        @extend %position-relative;
         display: block;
     }
 
@@ -104,7 +104,7 @@
     }
 
     %igx-combo__drop-down {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
 
         .igx-drop-down {
@@ -154,7 +154,7 @@
     }
 
     %igx-combo__content {
-        position: relative;
+        @extend %position-relative;
         overflow: hidden;
 
         &:focus {
@@ -163,11 +163,9 @@
     }
 
     %igx-combo__add {
-        display: flex;
+        @extend %flex-center;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: relative;
+        @extend %position-relative;
         padding: rem(16px);
         gap: rem(16px);
         background: var-get($theme, 'empty-list-background');
@@ -180,9 +178,7 @@
     }
 
     %igx-combo__empty {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
         width: 100%;
         color: var-get($theme, 'empty-list-placeholder-color');
         padding: 0 rem(24px);

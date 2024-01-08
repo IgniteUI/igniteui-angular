@@ -368,10 +368,10 @@
 
     %form-group-prefix,
     %form-group-suffix {
-        position: relative;
-        display: inline-flex;
+        @extend %position-relative;
+        @extend %inline-flex;
         width: max-content;
-        align-items: center;
+        @extend %align-center;
 
         @if $indigo-theme {
             height: calc(100% - #{rem(1px)}) !important;
@@ -404,7 +404,7 @@
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
 
-        position: relative;
+        @extend %position-relative;
         display: block;
         color: var-get($theme, 'idle-text-color');
 
@@ -494,7 +494,7 @@
     }
 
     %form-group-display--disabled {
-        user-select: none;
+        @extend %user-none;
         color: var-get($theme, 'disabled-text-color') !important;
 
         igx-prefix,
@@ -525,13 +525,13 @@
         grid-template-columns: auto 1fr auto;
         grid-area: 1 / 2 / span 1 / span 2;
         height: var-get($theme, 'size');
-        position: relative;
+        @extend %position-relative;
         max-width: 100%;
         font-size: rem(16px);
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             bottom: 0%;
             width: 100%;
             border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
@@ -610,7 +610,7 @@
     %form-group-bundle-main {
         grid-area: 1 / 2 / span 1 / span 2;
         flex-grow: 1;
-        position: relative;
+        @extend %position-relative;
         max-width: inherit;
     }
 
@@ -641,12 +641,12 @@
     }
 
     %igx-input-group__notch {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         width: auto;
         min-width: 0;
         height: 100%;
-        position: relative;
+        @extend %position-relative;
 
         grid-area: 1 / 2;
     }
@@ -666,8 +666,8 @@
 
     %form-group-bundle-start,
     %form-group-bundle-end {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         min-width: 0;
         min-height: 100%;
 
@@ -730,7 +730,7 @@
             overflow: visible;
 
             %form-group-label {
-                position: relative;
+                @extend %position-relative;
             }
 
             &:empty {
@@ -739,8 +739,8 @@
         }
 
         %form-group-bundle-end {
-            display: flex;
-            justify-content: flex-end;
+            @extend %flex;
+            @extend %justify-end;
             flex-grow: 1;
             height: 100%;
             grid-area: 1 / 4;
@@ -873,7 +873,7 @@
     %form-group-label--border {
         padding-inline-end: 0;
         display: inline-block;
-        position: relative;
+        @extend %position-relative;
         background: transparent;
     }
 
@@ -968,7 +968,7 @@
         height: auto !important;
 
         %form-group-label {
-            position: absolute;
+            @extend %position-absolute;
         }
     }
 
@@ -1021,7 +1021,7 @@
     }
 
     %form-group-input {
-        position: relative;
+        @extend %position-relative;
         display: block;
         border: none;
         padding-block-start: $input-top-padding;
@@ -1069,7 +1069,7 @@
 
         span {
             @include ellipsis();
-            position: relative;
+            @extend %position-relative;
             display: inline-block;
             width: inherit;
             max-width: inherit;
@@ -1182,7 +1182,7 @@
 
     @if $material-theme {
         %form-group-line {
-            position: absolute;
+            @extend %position-absolute;
             width: 100%;
             inset-inline-end: 0;
             height: rem(2px);
@@ -1294,12 +1294,12 @@
 
     %form-group-helper {
         color: var-get($theme, 'helper-text-color');
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         padding-block-start: $hint-spacing-block;
         padding-inline-start: $hint-spacing-inline;
 
-        justify-content: space-between;
+        @extend %justify-between;
 
         > * {
             margin-inline-end: rem(8px);
@@ -1327,17 +1327,17 @@
     }
 
     %form-group-helper-item {
-        display: flex;
-        align-items: center;
-        position: relative;
+        @extend %flex;
+        @extend %align-center;
+        @extend %position-relative;
     }
 
     %form-group-helper-item--start {
-        justify-content: flex-start;
+        @extend %justify-start;
     }
 
     %form-group-helper-item--end {
-        justify-content: flex-end;
+        @extend %justify-end;
     }
 
     %form-group-helper-item--start,
@@ -1453,7 +1453,7 @@
     }
 
     %igx-input-group-fluent-search {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
 
         igx-prefix,
@@ -1473,7 +1473,7 @@
     %form-group-bundle-required--fluent {
         &::before {
             content: '*';
-            position: absolute;
+            @extend %position-absolute;
             top: rem(-8px);
             inset-inline-start: calc(100% + #{rem(4px)});
             color: var-get($theme, 'error-secondary-color');
@@ -1482,7 +1482,7 @@
 
     %form-group-bundle-bootstrap--textarea,
     %form-group-bundle-fluent--textarea {
-        display: flex;
+        @extend %flex;
     }
 
     %form-group-label-required--fluent {

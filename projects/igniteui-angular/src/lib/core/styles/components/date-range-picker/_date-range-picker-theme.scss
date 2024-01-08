@@ -38,7 +38,7 @@
     @include css-vars($theme);
 
     %igx-date-range-picker {
-        display: flex;
+        @extend %flex;
 
         > igx-icon {
             cursor: pointer;
@@ -57,15 +57,15 @@
     }
 
     %igx-date-range-picker__label {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         color: var-get($theme, 'label-color');
         margin: 0 rem(8px);
     }
 
     %igx-date-range-picker-buttons {
-        display: flex;
-        justify-content: flex-end;
+        @extend %flex;
+        @extend %justify-end;
         padding: 0 rem(16px) rem(16px) rem(16px);
 
         > * {

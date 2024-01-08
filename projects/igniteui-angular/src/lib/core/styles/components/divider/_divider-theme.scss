@@ -47,13 +47,13 @@
     @include css-vars($theme);
 
     %igx-divider-display {
-        position: relative;
-        justify-content: center;
+        @extend %position-relative;
+        @extend %justify-center;
         overflow: hidden;
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             height: 100%;
             width: 100%;
             background: var-get($theme, 'color');
@@ -61,10 +61,10 @@
     }
 
     %igx-divider-display:not(%igx-divider--vertical) {
-        display: flex;
+        @extend %flex;
         min-height: rem(1px);
         width: 100%;
-        position: relative;
+        @extend %position-relative;
 
         &::after {
             inset-inline-start: var-get($theme, 'inset');

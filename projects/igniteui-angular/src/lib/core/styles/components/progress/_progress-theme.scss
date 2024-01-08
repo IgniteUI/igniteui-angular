@@ -140,8 +140,8 @@
     $value-margin: 0;
 
     %linear-display {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         width: 100%;
         flex: 1 1 100%;
         flex-direction: column;
@@ -155,7 +155,7 @@
     }
 
     %linear-bar {
-        position: relative;
+        @extend %position-relative;
         width: inherit;
         height: $bar-height;
         background: var-get($theme, 'track-color');
@@ -166,7 +166,7 @@
 
     %linear-indicator {
         width: 100%;
-        position: absolute;
+        @extend %position-absolute;
         height: 100%;
     }
 
@@ -194,12 +194,12 @@
         transform-origin: top left;
         width: 100% !important;
         height: inherit;
-        position: absolute;
+        @extend %position-absolute;
         background: transparent;
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             top: 0;
             inset-inline-start: 0;
             width: inherit;
@@ -457,7 +457,7 @@
         flex: 1 1 auto;
         width: rem(32px);
         height: rem(32px);
-        position: relative;
+        @extend %position-relative;
 
         svg {
             width: 100%;
@@ -504,7 +504,7 @@
     }
 
     %circular-text {
-        position: absolute;
+        @extend %position-absolute;
         inset-block-start: 50%;
         inset-inline-start: 50%;
         transform: translate(-50%, -50%);

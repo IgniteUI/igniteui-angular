@@ -190,7 +190,7 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     %igx-drop-down {
-        position: absolute;
+        @extend %position-absolute;
     }
 
     %igx-drop-down__list {
@@ -210,13 +210,13 @@
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
-        position: relative;
+        @extend %position-relative;
     }
 
     %igx-drop-down__content {
-        display: flex;
+        @extend %flex;
         width: 100%;
-        align-items: center;
+        @extend %align-center;
         gap: rem(8px)
     }
 
@@ -233,23 +233,23 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-start;
+        @extend %align-center;
         width: 100%;
         white-space: nowrap;
-        position: relative;
+        @extend %position-relative;
         height: var-get($theme, 'size');
 
         igx-divider {
-            position: absolute;
+            @extend %position-absolute;
             width: 100%;
             inset-inline-start: 0;
             bottom: 0;
         }
 
         igx-icon {
-            justify-content: center;
+            @extend %justify-center;
             --component-size: var(--dropdown-size);
         }
     }

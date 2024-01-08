@@ -227,11 +227,11 @@
     %tabs-header-button,
     %tabs-header-item-inner,
     %tabs-header-content {
-        display: flex;
+        @extend %flex;
     }
 
     %tabs-display {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         overflow: hidden;
     }
@@ -251,13 +251,13 @@
     }
 
     %tabs-header-wrapper {
-        position: relative;
+        @extend %position-relative;
         flex-grow: 1;
 
         @if $bootstrap-theme {
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
@@ -269,20 +269,20 @@
     }
 
     %tabs-header-scroll {
-        display: flex;
+        @extend %flex;
         height: 100%;
     }
 
     %tabs-header-button {
-        align-items: center;
-        justify-content: center;
+        @extend %align-center;
+        @extend %justify-center;
         z-index: 1;
         border: none;
         padding: 0;
         min-width: rem(48px);
         width: rem(48px);
         cursor: pointer;
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'button-background');
         color: var-get($theme, 'button-color');
         outline: 0;
@@ -327,9 +327,7 @@
                 margin-inline-start: 0;
             }
         }
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-inline-center;
         min-width: $item-min-width;
         max-width: $item-max-width;
         word-wrap: break-word;
@@ -339,8 +337,8 @@
         padding: $item-padding;
         overflow: hidden;
         cursor: pointer;
-        position: relative;
-        user-select: none;
+        @extend %position-relative;
+        @extend %user-none;
         background: var-get($theme, 'item-background');
         color: var-get($theme, 'item-text-color');
         outline: 0;
@@ -435,12 +433,12 @@
 
         @if $bootstrap-theme {
             background: var-get($theme, 'item-active-background');
-            position: relative;
+            @extend %position-relative;
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
 
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
@@ -481,9 +479,7 @@
     }
 
     %tabs-header-item-inner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         flex-direction: column;
         text-align: center;
 
@@ -501,7 +497,7 @@
     }
 
     %tabs-header-active-indicator {
-        position: absolute;
+        @extend %position-absolute;
         bottom: 0;
         // We need to explicitly set the default for IE 11
         left: 0;
@@ -516,15 +512,15 @@
     }
 
     %tabs-panels {
-        position: relative;
+        @extend %position-relative;
         overflow: hidden;
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         flex: 1 1 auto;
     }
 
     %tabs-panel {
-        position: absolute;
+        @extend %position-absolute;
         inset: 0;
         overflow-x: hidden;
         overflow-y: auto;
@@ -540,21 +536,21 @@
         }
 
         &[tabindex='0'] {
-            position: relative;
+            @extend %position-relative;
         }
     }
 
     %tabs-header-scroll--start {
-        justify-content: flex-start;
+        @extend %justify-start;
     }
 
     %tabs-header-scroll--end {
-        justify-content: flex-end;
+        @extend %justify-end;
         min-width: max-content;
     }
 
     %tabs-header-scroll--center {
-        justify-content: center;
+        @extend %justify-center;
         min-width: max-content;
     }
 

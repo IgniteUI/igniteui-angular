@@ -451,7 +451,7 @@
     $cal-row-margin: rem(2px) 0;
 
     %cal-display {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
         width: 100%;
         min-width: rem(290px);
@@ -541,7 +541,7 @@
     }
 
     %cal-header-date {
-        display: flex;
+        @extend %flex;
         margin: $cal-header-date-margin;
 
         > span {
@@ -554,9 +554,9 @@
     }
 
     %cal-picker-display {
-        display: flex;
+        @extend %flex;
         height: rem(56px);
-        align-items: center;
+        @extend %align-center;
         padding-bottom: $cal-picker-padding;
         background: var-get($theme, 'picker-background-color');
 
@@ -564,7 +564,7 @@
             height: auto;
             padding-top: $cal-picker-padding;
         }
-        position: relative;
+        @extend %position-relative;
 
         div {
             text-align: center;
@@ -576,20 +576,18 @@
     }
 
     %cal-picker-dates {
-        display: flex;
-        justify-content: center;
+        @extend %flex;
+        @extend %justify-center;
     }
 
     %cal-picker-arrow {
-        position: absolute;
-        display: inline-flex;
-        justify-content: center;
+        @extend %position-absolute;
+        @extend %flex-inline-center;
         color: var-get($theme, 'picker-arrow-color');
-        user-select: none;
+        @extend %user-none;
         outline: none;
         cursor: pointer;
         height: calc(100% - #{$cal-picker-padding});
-        align-items: center;
         top: 0;
 
         @if $bootstrap-theme {
@@ -654,10 +652,8 @@
     }
 
     %cal-value {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %position-relative;
+        @extend %flex-center;
         color: var-get($theme, 'content-text-color');
         outline: none;
 
@@ -682,8 +678,8 @@
     }
 
     %cal-row-display {
-        display: flex;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %justify-between;
         margin: $cal-row-margin;
         padding: 0;
 
@@ -737,10 +733,10 @@
     }
 
     %cal-column-display {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
-        justify-content: space-between;
-        align-items: center;
+        @extend %justify-between;
+        @extend %align-center;
     }
 
     %cal-column-year {
@@ -853,10 +849,8 @@
     }
 
     %cal-value-content {
-        position: relative;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
+        @extend %position-relative;
+        @extend %flex-inline-center;
         width: $cal-value-w;
         min-width: $cal-value-w;
         height: $cal-value-h;
@@ -865,7 +859,7 @@
         // transition: background .15s ease-out;
 
         &::after {
-            position: absolute; content: '';
+            @extend %position-absolute; content: '';
             width: calc(100% - 4px);
             height: calc(100% - 4px);
             top: rem(2px);
@@ -905,7 +899,7 @@
 
     %label--week-number,
     %cal-value-content--week-number {
-        position: relative;
+        @extend %position-relative;
         color: var-get($theme, 'week-number-color') !important;
         border-radius: 0;
         pointer-events: none;
@@ -924,7 +918,7 @@
     }
 
     %cal-value-content--week-number {
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'week-number-background') !important;
         min-width: auto;
 
@@ -934,7 +928,7 @@
 
         &::before {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             width: 100%;
             height: math.div($cal-row-padding, 2);
             inset-inline-start: 0;
@@ -949,13 +943,13 @@
 
         span {
             width: $cal-value-w;
-            position: relative;
+            @extend %position-relative;
             background: var-get($theme, 'week-number-background');
 
             &::before,
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 width: 100%;
                 background: var-get($theme, 'week-number-background');
                 inset-inline-start: 0;
@@ -1018,17 +1012,15 @@
     }
 
     %cal-value--month {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex-center;
         margin: $cal-value-month-margin;
         flex: 1 0 25%;
-        justify-content: center;
-        align-items: center;
         height: $cal-value-month-height;
         z-index: 1;
 
         &::after {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             top: 50%;
             inset-inline-start: 0;
@@ -1074,7 +1066,7 @@
     }
 
     %cal-value--selected {
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'date-selected-background');
 
         %cal-value-content {
@@ -1144,12 +1136,12 @@
     }
 
     %cal-value--first {
-        position: relative;
+        @extend %position-relative;
         background: transparent;
         z-index: 0;
 
         &::after {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             width: 50%;
             top: 0;
@@ -1161,12 +1153,12 @@
     }
 
     %cal-value--last {
-        position: relative;
+        @extend %position-relative;
         background: transparent;
         z-index: 0;
 
         &::before {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             width: 50%;
             top: 0;
@@ -1193,7 +1185,7 @@
         overflow: hidden!important;
         padding: 0!important;
         margin: 0 !important;
-        user-select: none;
+        @extend %user-none;
         pointer-events: none;
 
         &:focus {

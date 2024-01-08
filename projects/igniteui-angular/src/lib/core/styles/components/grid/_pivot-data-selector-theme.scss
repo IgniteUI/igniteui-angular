@@ -52,7 +52,7 @@
     $panel-padding: rem(4px, 16px);
 
     %selector-base {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         max-width: rem(280px);
         background: var-get($theme, 'background');
@@ -63,7 +63,7 @@
         }
 
         igx-display-container {
-            display: flex;
+            @extend %flex;
             flex-direction: column;
         }
 
@@ -73,7 +73,7 @@
             }
 
             igx-list-item {
-                display: flex;
+                @extend %flex;
                 min-height: rem(28px);
             }
 
@@ -106,7 +106,7 @@
         }
 
         %igx-expansion-panel__body {
-            position: relative;
+            @extend %position-relative;
             height: rem(128px);
             font-size: rem(14px);
             padding: $panel-padding;
@@ -122,7 +122,7 @@
         }
 
         %igx-expansion-panel__header-title {
-            display: flex;
+            @extend %flex;
 
             > h6 {
                 font-size: rem(12px);
@@ -142,7 +142,7 @@
     }
 
     %selector-filter {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         overflow: hidden;
 
@@ -153,7 +153,7 @@
         }
 
         igx-list {
-            display: flex;
+            @extend %flex;
             flex-direction: column;
             padding: rem(8px) rem(4px);
             min-height: rem(186px);
@@ -162,7 +162,7 @@
         }
 
         igx-list-item {
-            display: flex;
+            @extend %flex;
         }
 
         igx-checkbox + span {
@@ -173,8 +173,8 @@
 
     %selector-header,
     %selector-header-extra {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
     }
 
     %selector-header-extra {
@@ -198,9 +198,9 @@
     }
 
     %selector-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
         min-height: rem(32px);
         width: 100%;
 
@@ -210,9 +210,9 @@
     }
 
     %selector-item-ghost {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
         font-size: rem(14px);
         background: color($color: 'surface');
         min-height: rem(32px);
@@ -235,8 +235,8 @@
     }
 
     %selector-item-ghost-text {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
 
         igx-icon {
             margin-inline-end: rem(8px);
@@ -257,7 +257,7 @@
     %selector-action-filter,
     %selector-action-move,
     %selector-action-summary {
-        user-select: none;
+        @extend %user-none;
     }
 
     %selector-action-sort,
@@ -271,16 +271,16 @@
     }
 
     %selector-item-start {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-between;
+        @extend %align-center;
         flex: 0 1 100%;
         margin-inline-end: rem(8px);
         overflow: hidden;
     }
 
     %selector-item-end {
-        display: flex;
+        @extend %flex;
 
         igx-icon + igx-icon {
             margin-inline-start: rem(8px);

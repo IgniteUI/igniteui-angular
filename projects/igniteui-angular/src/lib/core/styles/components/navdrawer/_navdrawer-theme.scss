@@ -181,7 +181,7 @@
     }
 
     %aside--pinned {
-        position: relative;
+        @extend %position-relative;
         max-width: 100%;
         box-shadow: none;
         z-index: 0;
@@ -225,7 +225,7 @@
         transition-duration: .2s, .2s;
 
         %item {
-            justify-content: center;
+            @extend %justify-center;
             @if $variant == 'indigo-design' {
                 max-width: rem(32px);
                 // important is needed to override the typography margins
@@ -250,7 +250,7 @@
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
         transition-delay: 0s, 0s;
-        position: absolute;
+        @extend %position-absolute;
         inset-inline-start: 0;
         top: 0;
         width: 100%;
@@ -276,9 +276,9 @@
     }
 
     %item {
-        position: relative;
-        display: flex;
-        align-items: center;
+        @extend %position-relative;
+        @extend %flex;
+        @extend %align-center;
         flex-flow: row nowrap;
         color: var-get($theme, 'item-text-color');
         max-height: $drawer-item-max-h;
@@ -297,14 +297,14 @@
         }
 
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         outline: transparent;
         white-space: nowrap;
         border-radius: var-get($theme, 'item-border-radius');
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
-        justify-content: flex-start;
+        @extend %justify-start;
 
         igx-icon {
             --component-size: 3;

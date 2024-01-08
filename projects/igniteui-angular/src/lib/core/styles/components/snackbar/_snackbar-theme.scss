@@ -86,11 +86,11 @@
     $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         flex-flow: row nowrap;
-        align-items: center;
-        justify-content: space-between;
+        @extend %align-center;
+        @extend %justify-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
         margin: rem(8px);

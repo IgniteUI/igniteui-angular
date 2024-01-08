@@ -105,11 +105,11 @@
     }
 
     %advanced-filter__header {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         background-color: var-get($theme, 'header-background');
         color: var-get($theme, 'header-foreground');
-        user-select: none;
+        @extend %user-none;
 
         h4,
         .ig-typography__h6 {
@@ -148,7 +148,7 @@
     }
 
     %filter-tree {
-        display: flex;
+        @extend %flex;
 
         + %filter-tree,
         + %filter-tree__expression-item,
@@ -196,14 +196,14 @@
     }
 
     %filter-tree__expression {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         align-items: flex-start;
     }
 
     %filter-tree__expression-item {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
 
         + %filter-tree,
         + %filter-tree__inputs,
@@ -216,7 +216,7 @@
         }
 
         > igx-chip igx-prefix {
-            display: flex;
+            @extend %flex;
         }
     }
 
@@ -225,7 +225,7 @@
     }
 
     %filter-tree__expression-actions {
-        display: inline-flex;
+        @extend %inline-flex;
         margin: 0 rem(8px);
 
         igx-icon {
@@ -249,9 +249,9 @@
     }
 
     %filter-tree__buttons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-between;
+        @extend %align-center;
         margin-top: pad(
             map.get($vertical-space, 'compact'),
             map.get($vertical-space, 'cosy'),
@@ -270,9 +270,9 @@
     }
 
     %filter-tree__inputs {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-between;
+        @extend %align-center;
 
         igx-select + igx-select,
         igx-select + igx-input-group,
@@ -293,9 +293,9 @@
     }
 
     %filter-tree__inputs-actions {
-        display: flex;
+        @extend %flex;
         margin: 0 rem(8px);
-        align-items: center;
+        @extend %align-center;
 
         [igxIconButton] {
             transition: none;
@@ -307,15 +307,15 @@
     }
 
     %filter-legend {
-        display: flex;
+        @extend %flex;
         margin-inline-start: auto;
         pointer-events: none;
     }
 
     %filter-legend__item {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
+        @extend %position-relative;
+        @extend %inline-flex;
+        @extend %align-center;
         font-size: rem(12px);
 
         &::before {
@@ -341,8 +341,8 @@
     }
 
     %filter-con-menu {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         flex-flow: column;
         width: rem(196px);
         background-color: var-get($theme, 'background');
@@ -394,7 +394,7 @@
     }
 
     %filter-con-menu__close-btn {
-        position: absolute;
+        @extend %position-absolute;
         top: rem(-18px);
         inset-inline-end: rem(-18px);
         background-color: var-get($theme, 'background');
@@ -409,9 +409,7 @@
     }
 
     %filter-empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         height: pad(
             map.get($filter-empty, 'compact'),
             map.get($filter-empty, 'cosy'),
@@ -424,7 +422,7 @@
     }
 
     %advanced-filter--inline {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         width: 100%;
         max-width: 100%;

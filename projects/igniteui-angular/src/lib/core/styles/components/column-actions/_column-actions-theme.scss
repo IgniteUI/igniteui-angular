@@ -59,7 +59,7 @@
     @include css-vars($theme);
 
     %column-actions-display {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background-color');
         box-shadow: elevation(8);
@@ -81,7 +81,7 @@
     }
 
     %column-actions-columns {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
         overflow-y: auto;
         outline-style: none;
@@ -93,8 +93,8 @@
     }
 
     %column-actions-buttons {
-        display: flex;
-        justify-content: flex-end;
+        @extend %flex;
+        @extend %justify-end;
         padding: rem(8px) rem(16px);
     }
 }

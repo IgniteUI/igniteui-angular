@@ -74,7 +74,7 @@
     ), $variant);
 
     %igx-avatar-outline {
-        position: absolute;
+        @extend %position-absolute;
         content: '';
         width: 100%;
         height: 100%;
@@ -86,11 +86,9 @@
         @include sizable();
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
-        position: relative;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        user-select: none;
+        @extend %position-relative;
+        @extend %flex-inline-center;
+        @extend %user-none;
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;

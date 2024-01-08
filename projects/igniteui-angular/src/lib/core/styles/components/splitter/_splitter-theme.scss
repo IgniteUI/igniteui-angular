@@ -88,7 +88,7 @@
     }
 
     %handle-area {
-        position: absolute;
+        @extend %position-absolute;
         content: '';
         width: 100%;
         height: $hitbox-size;
@@ -101,11 +101,9 @@
     }
 
     %igx-splitter-bar {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex-center;
         flex-grow: 1;
-        justify-content: center;
-        align-items: center;
         background: $splitter-color;
         border: rem(1px) solid $splitter-color;
         z-index: 99;
@@ -173,13 +171,13 @@
     }
 
     %igx-splitter-hitbox {
-        position: absolute;
+        @extend %position-absolute;
         content: '';
         background: if($debug-hitbox, $hitbox-debug-color, transparent);
     }
 
     %igx-splitter-expander {
-        position: relative;
+        @extend %position-relative;
         width: 0;
         height: 0;
         border-inline-end: var-get($theme, 'size') solid transparent;

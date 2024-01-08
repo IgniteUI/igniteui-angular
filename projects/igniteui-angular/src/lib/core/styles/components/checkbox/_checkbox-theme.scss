@@ -161,15 +161,15 @@
     @include scale-in-center();
 
     %cbx-display {
-        position: relative;
-        display: inline-flex;
+        @extend %position-relative;
+        @extend %inline-flex;
         flex-flow: row nowrap;
-        align-items: center;
+        @extend %align-center;
         outline-style: none;
     }
 
     %cbx-display--disabled {
-        user-select: none;
+        @extend %user-none;
         pointer-events: none;
         cursor: initial;
     }
@@ -179,16 +179,14 @@
     }
 
     %cbx-composite-wrapper {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        position: relative;
+        @extend %flex-center;
+        @extend %position-relative;
         width: $size;
         height: $size;
     }
 
     %cbx-composite {
-        position: relative;
+        @extend %position-relative;
         display: inline-block;
         cursor: pointer;
         width: $size;
@@ -265,7 +263,7 @@
     }
 
     %cbx-composite-mark {
-        position: absolute;
+        @extend %position-absolute;
         inset: 0;
         stroke: var-get($theme, 'tick-color');
         stroke-linecap: square;
@@ -315,7 +313,7 @@
 
                 &::before {
                     content: '';
-                    position: absolute;
+                    @extend %position-absolute;
                     top: calc($size / 2 - rem(6px));
                     inset-inline-start: calc($size / 2 - rem(6px));
                     width: rem(10px);
@@ -408,7 +406,7 @@
         display: inline-block;
         color: var-get($theme, 'label-color');
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         word-wrap: break-all;
 
         &:empty {
@@ -444,7 +442,7 @@
         @include ripple($ripple-theme);
         @include css-vars($ripple-theme);
         display: $ripple-display;
-        position: absolute;
+        @extend %position-absolute;
         top: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
@@ -474,13 +472,13 @@
 
     %igx-checkbox--focused {
         @if $variant == 'fluent' {
-            position: relative;
+            @extend %position-relative;
             $focus-outline-offset-top: rem(2px);
             $focus-outline-offset-left: rem(2px);
 
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 top: -$focus-outline-offset-top;
                 inset-inline-start: -$focus-outline-offset-left;
                 box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');

@@ -376,7 +376,7 @@
     %igx-stepper__header,
     %igx-stepper__body,
     %igx-stepper__step {
-        display: flex;
+        @extend %flex;
     }
 
     %stepper-display {
@@ -392,7 +392,7 @@
     }
 
     %igx-stepper__body {
-        position: relative;
+        @extend %position-relative;
         flex-direction: column;
         flex: 1 1 auto;
     }
@@ -413,10 +413,10 @@
     }
 
     %igx-stepper__step {
-        position: relative;
+        @extend %position-relative;
         flex-direction: column;
         align-content: center;
-        justify-content: center;
+        @extend %justify-center;
         min-width: rem(100px);
 
         &:focus {
@@ -488,9 +488,9 @@
     }
 
     %igx-stepper__step-header {
-        display: flex;
+        @extend %flex;
         padding: $step-header-padding;
-        position: relative;
+        @extend %position-relative;
         line-height: normal;
         flex-direction: column;
         align-items: flex-start;
@@ -512,10 +512,8 @@
     }
 
     %igx-stepper__step-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
+        @extend %flex-center;
+        @extend %position-relative;
         font-size: rem(12px);
         height: $indicator-size;
         width: $indicator-size;
@@ -632,7 +630,7 @@
 
     %igx-stepper__body-content {
         display: block;
-        position: absolute;
+        @extend %position-absolute;
         inset: 0;
         width: 100%;
         height: 100%;
@@ -648,17 +646,17 @@
 
     %igx-stepper__body-content--active {
         z-index: 1;
-        position: relative;
+        @extend %position-relative;
     }
 
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
-        position: relative;
+        @extend %position-relative;
         min-height: rem(32px);
 
         &::before {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             inset-inline-start: calc(-#{$separator-size} / 2);
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
@@ -688,7 +686,7 @@
     %igx-stepper__step--end {
         %igx-stepper__step-header {
             flex-direction: row;
-            align-items: center;
+            @extend %align-center;
             //gap: $title-gap--horizontal;
         }
     }
@@ -805,7 +803,7 @@
                 min-width: rem(10px);
                 height: $separator-size;
                 flex: 1;
-                position: relative;
+                @extend %position-relative;
                 z-index: -1;
                 top: $separator-title-bottom;
                 border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
@@ -822,15 +820,13 @@
         }
 
         %igx-stepper__step-header {
-            display: flex;
+            @extend %flex-center;
             flex-direction: row;
-            align-items: center;
-            justify-content: center;
 
             &::before,
             &::after {
                 content: '';
-                position: absolute;
+                @extend %position-absolute;
                 z-index: -1;
                 height: $separator-size;
                 width: calc(50% - (#{$indicator-size} - #{$indicator-gap}));
@@ -875,7 +871,7 @@
 
         %igx-stepper__step--top {
             %igx-stepper__step-header {
-                justify-content: flex-end;
+                @extend %justify-end;
 
                 &::before,
                 &::after {
@@ -893,7 +889,7 @@
 
         %igx-stepper__step--bottom {
             %igx-stepper__step-header {
-                justify-content: flex-start;
+                @extend %justify-start;
             }
         }
 
@@ -955,7 +951,7 @@
         }
 
         %igx-stepper__body-content {
-            display: flex;
+            @extend %flex;
         }
     }
     // HORIZONTAL MODE END

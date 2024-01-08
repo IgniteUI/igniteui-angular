@@ -73,7 +73,7 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     %igx-select {
-        position: relative;
+        @extend %position-relative;
         display: block;
     }
 

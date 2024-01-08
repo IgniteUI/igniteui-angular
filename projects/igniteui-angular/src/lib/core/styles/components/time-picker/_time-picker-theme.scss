@@ -150,7 +150,7 @@
     ), $variant);
 
     %time-picker-display {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
         max-width: rem(340px);
         min-width: rem(320px);
@@ -175,9 +175,9 @@
     }
 
     %time-picker__body {
-        display: flex;
+        @extend %flex;
         padding: rem(10px) 0;
-        justify-content: center;
+        @extend %justify-center;
     }
 
     %time-picker-content {
@@ -216,7 +216,7 @@
     }
 
     %time-picker__ampmList {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         padding-top: rem(48px);
 
@@ -230,10 +230,10 @@
         height: rem(325px);
         padding: 0;
         cursor: pointer;
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
-        justify-content: space-between;
-        align-items: center;
+        @extend %justify-between;
+        @extend %align-center;
         color: var-get($theme, 'text-color');
         overflow: hidden;
 
@@ -248,9 +248,7 @@
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
         height: rem(48px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
 
         &:focus,
         &:active {
@@ -291,12 +289,12 @@
     }
 
     %time-picker__header-hour {
-        display: flex;
+        @extend %flex;
         color: var-get($theme, 'header-hour-text-color');
 
         [dir='rtl'] & {
             flex-direction: row-reverse;
-            justify-content: flex-end;
+            @extend %justify-end;
         }
     }
 
@@ -306,8 +304,8 @@
     }
 
     %time-picker__buttons {
-        display: flex;
-        justify-content: flex-end;
+        @extend %flex;
+        @extend %justify-end;
         @if $not-bootstrap-theme {
             height: rem(52px);
         }

@@ -56,13 +56,11 @@
     }
 
     %igx-excel-filter__loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
     }
 
     %grid-excel-icon {
-        display: flex;
+        @extend %flex;
         cursor: pointer;
 
         igx-icon {
@@ -85,7 +83,7 @@
     %grid-excel-menu {
         --component-size: var(--ig-size, var(--ig-size-large));
 
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         height: 100%;
         background: var-get($theme, 'filtering-row-background');
@@ -134,14 +132,14 @@
     }
 
     %grid-excel-menu__header {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         padding: pad(rem(4px), rem(8px), rem(16px));
         color: var-get($theme, 'excel-filtering-header-foreground');
     }
 
     %grid-excel-menu__header-actions {
-        display: flex;
+        @extend %flex;
         margin-inline-start: auto;
 
         [igxButton] + [igxButton] {
@@ -155,13 +153,13 @@
 
         %grid-excel-actions__action,
         %grid-excel-actions--selected {
-            justify-content: center;
+            @extend %justify-center;
         }
     }
 
     %grid-excel-menu__footer {
-        display: flex;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %justify-between;
 
         %grid-excel-filter__apply,
         %grid-excel-filter__cancel {
@@ -201,9 +199,9 @@
     }
 
     %grid-excel-action--compact {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
 
         header {
             margin-inline-end: auto;
@@ -248,9 +246,9 @@
     }
 
     %grid-excel-actions__action {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
         padding-block: pad-block(rem(4px), rem(8px), rem(8px));
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         cursor: pointer;
@@ -286,7 +284,7 @@
     }
 
     %grid-excel-main {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;
@@ -360,14 +358,14 @@
 
         %igx-excel-filter__tree-alike {
             background: color($color: 'surface');
-            display: flex;
+            @extend %flex;
             flex-direction: column;
             z-index: 1;
         }
 
         %igx-excel-filter__tree-alike-item {
-            display: flex;
-            align-items: center;
+            @extend %flex;
+            @extend %align-center;
             height: sizable(
                 map.get($tree-node-height, 'compact'),
                 map.get($tree-node-height, 'cosy'),
@@ -394,7 +392,7 @@
         --component-size: var(--ig-size, var(--ig-size-medium));
 
         %grid-excel-menu__header {
-            justify-content: space-between;
+            @extend %justify-between;
         }
     }
 
@@ -402,7 +400,7 @@
         --component-size: var(--ig-size, var(--ig-size-small));
 
         %grid-excel-menu__header {
-            justify-content: space-between;
+            @extend %justify-between;
         }
 
         %grid-excel-sort,
@@ -428,9 +426,9 @@
     }
 
     %grid-excel-menu__condition {
-        display: flex;
+        @extend %flex;
         flex-wrap: wrap;
-        align-items: center;
+        @extend %align-center;
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         padding-block: 0;
 
@@ -494,7 +492,7 @@
     }
 
     %grid-excel-menu__filter-results {
-        position: absolute;
+        @extend %position-absolute;
         width: 1px;
         height: 1px;
         overflow: hidden;
@@ -502,7 +500,7 @@
 
     igx-excel-style-filter-operations,
     [igxExcelStyleFilterOperations] {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;

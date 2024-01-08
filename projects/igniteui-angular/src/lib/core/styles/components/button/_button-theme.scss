@@ -441,10 +441,8 @@
     %igx-button-display {
         @include sizable();
 
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        @extend %position-relative;
+        @extend %flex-inline-center;
         min-width: $button-width;
         padding-inline: pad-inline(
             map.get($button-padding-inline, 'compact'),
@@ -459,7 +457,7 @@
         min-height: var-get($flat-theme, 'size');
         border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         outline-style: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
@@ -479,8 +477,8 @@
 
         igx-icon {
             --component-size: var(--ig-size, var(--ig-size-large));
-            display: flex;
-            justify-content: center;
+            @extend %flex;
+            @extend %justify-center;
             width: var(--igx-icon-size, #{$icon-in-button-size});
             height: var(--igx-icon-size, #{$icon-in-button-size});
             font-size: var(--igx-icon-size, #{$icon-in-button-size});
@@ -500,8 +498,8 @@
                 padding-block: 0;
 
                 > * {
-                    display: flex;
-                    align-items: center;
+                    @extend %flex;
+                    @extend %align-center;
                     height: rem(18px);
                 }
             }
@@ -626,7 +624,7 @@
                 &::after {
                     $outline-btn-indent: rem(2px);
                     content: '';
-                    position: absolute;
+                    @extend %position-absolute;
                     top: $outline-btn-indent;
                     inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
@@ -717,7 +715,7 @@
                 &::after {
                     $outline-btn-indent: rem(3px);
                     content: '';
-                    position: absolute;
+                    @extend %position-absolute;
                     top: $outline-btn-indent;
                     inset-inline-start: $outline-btn-indent;
                     pointer-events: none;
@@ -744,15 +742,13 @@
     }
 
     %igx-button--round {
-        display: inline-flex;
-        position: relative;
+        @extend %flex-inline-center;
+        @extend %position-relative;
         flex-direction: row;
-        justify-content: center;
-        align-items: center;
         outline: none;
         cursor: pointer;
         transition: $button-transition;
-        user-select: none;
+        @extend %user-none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         // hack to allow circular overflow in safari...
@@ -839,7 +835,7 @@
                 &::after {
                     $outline-btn-indent: rem(3px);
                     content: '';
-                    position: absolute;
+                    @extend %position-absolute;
                     top: $outline-btn-indent;
                     inset-inline-start: $outline-btn-indent;
                     pointer-events: none;

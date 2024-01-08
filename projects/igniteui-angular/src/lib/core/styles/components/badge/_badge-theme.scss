@@ -93,9 +93,7 @@
         --size: #{rem(22px)};
         --_badge-size: var(--size);
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
         min-width: var(--_badge-size);
         min-height: var(--_badge-size);
         font-size: calc(var(--_badge-size) / 2);
@@ -113,9 +111,9 @@
         igx-icon {
             --size: var(--igx-icon-size, calc(var(--_badge-size) / 2));
 
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
+            @extend %inline-flex;
+            @extend %align-center;
+            @extend %justify-center;
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
         }

@@ -584,7 +584,7 @@
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
-    position: absolute;
+    @extend %position-absolute;
     width: rem(10px);
     content: '';
     inset-block: rem(-2px);
@@ -805,7 +805,7 @@
         )};
         --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
 
-        position: relative;
+        @extend %position-relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 100%;
@@ -825,8 +825,8 @@
     }
 
     %grid-caption {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         font-size: $grid-caption-fs;
         line-height: $grid-caption-lh;
         padding: $grid-caption-padding;
@@ -835,15 +835,15 @@
 
     %grid-thead,
     %grid-tfoot {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         background: var-get($theme, 'header-background');
         color: var-get($theme, 'header-text-color');
         overflow: hidden;
         outline-style: none;
 
         %grid-row {
-            position: relative;
+            @extend %position-relative;
             background: inherit;
             color: inherit;
             z-index: 2;
@@ -884,7 +884,7 @@
 
     %grid-thead-container {
         grid-row: 3;
-        display: flex;
+        @extend %flex;
         overflow: hidden;
 
         %igx-grid__header-indentation {
@@ -928,7 +928,7 @@
     }
 
     %grid-thead-group {
-        display: flex;
+        @extend %flex;
         flex-flow: row nowrap;
     }
 
@@ -940,7 +940,7 @@
     thead item and group.
     */
     %grid-thead-item {
-        display: flex;
+        @extend %flex;
         flex-flow: column nowrap;
 
         %grid-thead-group {
@@ -958,7 +958,7 @@
 
     %grid-thead-item,
     %grid-thead-subgroup {
-        position: relative;
+        @extend %position-relative;
     }
 
     %grid-tfoot {
@@ -984,14 +984,14 @@
     %grid-mrl-block {
         display: grid;
         background: inherit;
-        position: relative;
+        @extend %position-relative;
 
         %grid-thead-item {
-            display: flex;
+            @extend %flex;
         }
 
         %grid-cell-header {
-            align-items: center;
+            @extend %align-center;
             flex-grow: 1;
             border-bottom: $grid-header-border;
         }
@@ -1015,7 +1015,7 @@
     }
 
     %grid-tbody {
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'content-background');
         color: var-get($theme, 'content-text-color');
         overflow: hidden;
@@ -1024,16 +1024,14 @@
     }
 
     %grid-tbody-container {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         grid-row: 4;
         overflow: hidden;
     }
 
     %grid-tbody-message {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-center;
         height: 100%;
         color: var-get($theme, 'content-text-color');
         flex-direction: column;
@@ -1041,9 +1039,7 @@
     }
 
     %igx-grid__loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         height: 100%;
         min-height: rem(100px);
 
@@ -1055,7 +1051,7 @@
 
     %grid-scroll {
         grid-row: 6;
-        display: flex;
+        @extend %flex;
         flex-flow: row nowrap;
         width: 100%;
         background: var-get($theme, 'header-background');
@@ -1068,7 +1064,7 @@
     }
 
     %grid-tfoot-thumb {
-        position: absolute;
+        @extend %position-absolute;
         top: 0;
         inset-inline-end: 0;
         background: var-get($theme, 'header-background');
@@ -1078,7 +1074,7 @@
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
         border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
-        position: relative;
+        @extend %position-relative;
     }
 
     %grid-tbody-scrollbar-start {
@@ -1086,7 +1082,7 @@
     }
 
     %grid-tbody-scrollbar-main {
-        position: relative;
+        @extend %position-relative;
     }
 
     %grid-tbody-scrollbar-end {
@@ -1108,11 +1104,11 @@
     }
 
     %grid-row {
-        display: flex;
+        @extend %flex;
         background: var-get($theme, 'content-background');
         border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
         outline-style: none;
-        position: relative;
+        @extend %position-relative;
         background-clip: content-box !important;
 
         &:hover {
@@ -1144,9 +1140,7 @@
     }
 
     %igx-grid__drag-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         padding-inline: pad-inline(
             map.get($grid-cell-padding-inline, 'compact'),
             map.get($grid-cell-padding-inline, 'cosy'),
@@ -1196,7 +1190,7 @@
     }
 
     %igx-grid__tr--pinned {
-        position: relative;
+        @extend %position-relative;
         background: inherit;
         z-index: 10000;
 
@@ -1211,12 +1205,12 @@
 
     %igx-grid__tr--pinned-bottom {
         border-top: map.get($cell-pin, 'style') map.get($cell-pin, 'color') !important;
-        position: absolute;
+        @extend %position-absolute;
         bottom: 0;
     }
 
     %igx-grid__td--centered {
-        justify-content: center;
+        @extend %justify-center;
     }
 
     %igx-grid__td--bool {
@@ -1239,11 +1233,11 @@
 
     %igx-grid__tr--edit {
         border-bottom: rem(1px) solid var-get($theme, 'edit-mode-color');
-        position: relative;
+        @extend %position-relative;
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             height: rem(1);
             width: 100%;
             top: rem(-1);
@@ -1283,13 +1277,13 @@
     }
 
     %igx-grid__tr--inner {
-        display: flex;
+        @extend %flex;
         background: inherit;
     }
 
     %igx-grid__tr--header {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
     }
 
     %igx-grid__tr--add-animate {
@@ -1306,7 +1300,7 @@
     %igx-grid__tr--edited {
         &::before {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             width: if($variant == 'indigo-design', rem(4px), rem(2px));
             height: 100%;
             z-index: 10000;
@@ -1315,7 +1309,7 @@
     }
 
     %grid-row--group {
-        position: relative;
+        @extend %position-relative;
         background: var-get($theme, 'header-background') !important;
     }
 
@@ -1376,10 +1370,8 @@
     }
 
     %igx-grid__tree-grouping-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
+        @extend %flex-center;
+        @extend %user-none;
         outline-style: none;
         margin-inline-end: rem(8);
         cursor: pointer;
@@ -1415,10 +1407,10 @@
     }
 
     %grid-cell-display {
-        position: relative;
-        display: flex;
+        @extend %position-relative;
+        @extend %flex;
         flex: 1 1 0%;
-        align-items: center;
+        @extend %align-center;
         outline-style: none;
         padding-inline: pad-inline(
             map.get($grid-cell-padding-inline, 'compact'),
@@ -1582,7 +1574,7 @@
         igx-select,
         igx-date-picker,
         igx-time-picker {
-            position: relative;
+            @extend %position-relative;
             height: calc(100% - #{$editing-outline-width * 2});
             width: calc(100% - #{$editing-outline-width * 2});
             inset-inline-start: $editing-outline-width;
@@ -1661,7 +1653,7 @@
     }
 
     %grid-cell--pinned {
-        position: relative;
+        @extend %position-relative;
         background: inherit;
         z-index: 9999;
     }
@@ -1707,7 +1699,7 @@
 
     %grid-cell-header {
         flex-flow: row nowrap;
-        justify-content: space-between;
+        @extend %justify-between;
         align-items: flex-end;
         font-size: $grid-head-fs;
         font-weight: $grid-head-fw;
@@ -1735,7 +1727,7 @@
         @include ellipsis();
         font-weight: $grid-header-weight;
         min-width: 3ch;
-        user-select: none;
+        @extend %user-none;
         cursor: initial;
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
@@ -1744,10 +1736,10 @@
     }
 
     %grid-cell-header-icons {
-        display: inline-flex;
-        align-items: center;
-        justify-content: flex-end;
-        user-select: none;
+        @extend %inline-flex;
+        @extend %align-center;
+        @extend %justify-end;
+        @extend %user-none;
         min-width: rem(30px); /* sort-icon + filter icon width */
         height: var(--header-size);
         align-self: flex-end;
@@ -1757,8 +1749,8 @@
         }
 
         .sort-icon {
-            position: relative;
-            display: flex;
+            @extend %position-relative;
+            @extend %flex;
 
             igx-icon {
                 width: var(--igx-icon-size, #{rem(15px)});
@@ -1768,7 +1760,7 @@
 
             &::after {
                 content: attr(data-sortIndex);
-                position: absolute;
+                @extend %position-absolute;
                 top: rem(-5px);
                 inset-inline-end: rem(-1px);
                 font-size: rem(10px);
@@ -1781,9 +1773,7 @@
 
 
     %igx-grid-th__expander {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         margin-inline-end: rem(8px);
         cursor: pointer;
 
@@ -1918,10 +1908,10 @@
 
     %grid-cell-number {
         text-align: $grid-cell-align-num;
-        justify-content: flex-end;
+        @extend %justify-end;
 
         %grid-cell-header-icons {
-            justify-content: flex-start;
+            @extend %justify-start;
             order: -1;
 
             .sort-icon {
@@ -1931,23 +1921,21 @@
     }
 
     %grid__cbx-selection {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex;
+        @extend %justify-center;
+        @extend %align-center;
         background: inherit;
         z-index: 4;
         background-clip: border-box;
     }
 
     %cbx-padding {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         padding-inline: pad-inline($cbx-padding-compact, $cbx-padding-cosy, $cbx-padding);
     }
 
     %grid__resize-handle {
-        position: absolute;
+        @extend %position-absolute;
         width: rem(4px);
         top: 0;
         inset-inline-end: rem(-2px);
@@ -1956,7 +1944,7 @@
     }
 
     %grid__resize-line {
-        position: absolute;
+        @extend %position-absolute;
         cursor: col-resize;
         width: rem(4px);
         background: var-get($theme, 'resize-line-color');
@@ -1964,7 +1952,7 @@
 
         &::before,
         &::after {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             height: 100%;
             width: rem(96px);
@@ -1980,7 +1968,7 @@
     }
 
     %grid-summaries {
-        display: flex;
+        @extend %flex;
         overflow: hidden;
         background: var-get($theme, 'root-summaries-background');
         outline-style: none;
@@ -2009,7 +1997,7 @@
         } @else {
             background: inherit;
         }
-        position: relative;
+        @extend %position-relative;
         z-index: 1;
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
     }
@@ -2017,7 +2005,7 @@
     // Column moving
     %igx-grid-th__drop-indicator-left,
     %igx-grid-th__drop-indicator-right {
-        position: absolute;
+        @extend %position-absolute;
         width: rem(1px);
         height: 100%;
         top: 0;
@@ -2040,7 +2028,7 @@
 
         &::after,
         &::before {
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             width: 0;
             height: 0;
@@ -2063,7 +2051,7 @@
 
     %grid__scroll-on-drag-left,
     %grid__scroll-on-drag-right {
-        position: absolute;
+        @extend %position-absolute;
         width: rem(15px);
         top: 0;
         height: 100%;
@@ -2079,7 +2067,7 @@
     }
 
     %grid__scroll-on-drag-pinned {
-        position: absolute;
+        @extend %position-absolute;
         width: rem(15px);
         height: 100%;
         top: 0;
@@ -2087,9 +2075,9 @@
     }
 
     %grid__drag-ghost-image {
-        position: absolute;
-        display: flex;
-        align-items: center;
+        @extend %position-absolute;
+        @extend %flex;
+        @extend %align-center;
         background: var-get($theme, 'ghost-header-background');
         color: var-get($theme, 'ghost-header-text-color');
         min-width: rem(168px);
@@ -2143,7 +2131,7 @@
     // Group by section
     %igx-grid__group-row {
         background: var-get($theme, 'group-row-background');
-        display: flex;
+        @extend %flex;
         outline-style: none;
         border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
         min-height: var(--header-size);
@@ -2179,9 +2167,9 @@
     }
 
     %igx-group-label {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-start;
         line-height: rem(16px);
 
         > * {
@@ -2194,7 +2182,7 @@
     }
 
     %igx-group-label__icon {
-        user-select: none;
+        @extend %user-none;
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
@@ -2245,9 +2233,9 @@
     }
 
     %igx-grid__group-content {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-start;
         flex: 1 1 auto;
         padding-inline-start: pad-inline(
             map.get($grid-grouping-indicator-padding, 'compact'),
@@ -2266,10 +2254,8 @@
     }
 
     %igx-grid__row-indentation {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @extend %position-relative;
+        @extend %flex-center;
         padding-inline-start: pad-inline(
             map.get($grid-grouping-indicator-padding, 'compact'),
             map.get($grid-grouping-indicator-padding, 'cosy'),
@@ -2287,7 +2273,7 @@
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             width: 100%;
             height: rem(1px);
             bottom: rem(-1px);
@@ -2311,9 +2297,9 @@
 
     %igx-grid-grouparea {
         grid-row: 2;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-start;
         flex-wrap: wrap;
         border-bottom: $grid-header-border;
         background: var-get($theme, 'grouparea-background');
@@ -2339,9 +2325,7 @@
     }
 
     %igx-grid-grouparea__connector {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
+        @extend %flex-inline-center;
         margin: 0 rem(4px);
 
         igx-icon {
@@ -2356,9 +2340,9 @@
     }
 
     %igx-drop-area {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-start;
         min-width: rem(80px);
         height: sizable(
             map.get($drop-area-height, 'compact'),
@@ -2395,11 +2379,9 @@
     }
 
     %igx-grid__grouping-indicator {
-        position: relative;
-        display: flex;
-        user-select: none;
-        justify-content: center;
-        align-items: center;
+        @extend %position-relative;
+        @extend %flex-center;
+        @extend %user-none;
         z-index: 1;
         cursor: pointer;
         padding-inline-end: $grouping-padding-right;
@@ -2432,7 +2414,7 @@
     }
 
     %igx-grid__header-indentation {
-        position: relative;
+        @extend %position-relative;
         padding-inline-end: sizable(
             map.get($grid-grouping-indicator-padding, 'compact'),
             map.get($grid-grouping-indicator-padding, 'cosy'),
@@ -2449,9 +2431,9 @@
 
 
     %igx-grid__group-expand-btn {
-        position: absolute;
+        @extend %position-absolute;
         cursor: pointer;
-        user-select: none;
+        @extend %user-none;
         inset-block-start: calc(50% - 12px);
         inset-inline-start: sizable(
             map.get($grid-grouping-indicator-padding, 'compact'),
@@ -2520,16 +2502,16 @@
 
     %igx-grid__row-editing-outlet {
         z-index: 10000;
-        position: absolute;
+        @extend %position-absolute;
 
         %overlay-wrapper {
             /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
-            position: absolute;
+            @extend %position-absolute;
         }
     }
 
     %igx-grid__addrow-snackbar {
-        position: absolute;
+        @extend %position-absolute;
         z-index: 5;
         bottom: rem(24px);
         inset-inline-start: 50%;
@@ -2537,8 +2519,8 @@
     }
 
     %igx-grid__filtering-cell {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         border-inline-end: $grid-header-border;
         border-top: $grid-header-border;
         height: var(--header-size);
@@ -2569,10 +2551,8 @@
     }
 
     %igx-grid__filtering-cell-indicator {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %position-relative;
+        @extend %flex-center;
         padding-inline-end: rem(8px);
         margin-inline-start: rem(8px);
         cursor: pointer;
@@ -2588,7 +2568,7 @@
             --size: #{rem(14px)};
             --font-size: #{rem(12px)};
             line-height: 0;
-            position: absolute;
+            @extend %position-absolute;
             inset-inline-end: 0;
         }
     }
@@ -2603,13 +2583,13 @@
             map.get($grid-header-height, 'cosy'),
             map.get($grid-header-height, 'comfortable')
         )};
-        position: absolute;
-        display: flex;
+        @extend %position-absolute;
+        @extend %flex;
         width: 100%;
         height: $filtering-row-height;
         padding-inline: pad-inline($cell-padding-compact, $cell-padding-cosy, $cell-padding-comfortable);
-        align-items: center;
-        justify-content: space-between;
+        @extend %align-center;
+        @extend %justify-between;
         background: var-get($theme, 'filtering-row-background');
         color: var-get($theme, 'filtering-row-text-color');
         inset-inline-start: 0;
@@ -2618,7 +2598,7 @@
 
         &::after {
             display: block;
-            position: absolute;
+            @extend %position-absolute;
             content: '';
             background: inherit;
             inset-inline-start: 0;
@@ -2663,8 +2643,8 @@
     }
 
     %igx-grid__filtering-dropdown-items {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
     }
 
     %igx-grid__filtering-dropdown-text {
@@ -2672,7 +2652,7 @@
     }
 
     %igx-grid__filtering-row-main {
-        display: flex;
+        @extend %flex;
         flex: 1;
         overflow: hidden;
         max-width: calc(100% - 176px);
@@ -2690,7 +2670,7 @@
 
         [igxButton] {
             igx-icon {
-                position: absolute;
+                @extend %position-absolute;
                 inset-inline-start: rem(12px);
                 /* IE fix for vertical alignment*/
                 top: 50%;
@@ -2706,7 +2686,7 @@
     %igx-grid__filtering-scroll-start {
         width: rem(24px);
         height: rem(24px);
-        position: relative;
+        @extend %position-relative;
         overflow: visible;
         margin: 0 rem(8px);
         z-index: 1;
@@ -2733,7 +2713,7 @@
     %igx-grid__filtering-scroll-end {
         width: rem(24px);
         height: rem(24px);
-        position: relative;
+        @extend %position-relative;
         overflow: visible;
         margin: 0 rem(8px);
         z-index: 1;
@@ -2758,11 +2738,11 @@
     }
 
     %igx-grid__tr--highlighted {
-        position: relative;
+        @extend %position-relative;
 
         &::after {
             content: '';
-            position: absolute;
+            @extend %position-absolute;
             top: 0;
             inset-inline-start: 0;
             width: rem(4px);
@@ -2793,16 +2773,14 @@
     }
 
     %igx-grid__hierarchical-expander {
-        user-select: none;
+        @extend %user-none;
         background: inherit;
         padding-inline: pad-inline(
             map.get($hierarchical-grid-indent, 'compact'),
             map.get($hierarchical-grid-indent, 'cosy'),
             map.get($hierarchical-grid-indent, 'comfortable')
         );
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
@@ -2847,8 +2825,8 @@
         background-clip: border-box;
 
         igx-icon {
-            display: flex;
-            align-items: center;
+            @extend %flex;
+            @extend %align-center;
         }
     }
 
@@ -2866,7 +2844,7 @@
     }
 
     %igx-grid__hierarchical-indent {
-        display: flex;
+        @extend %flex;
         margin-inline-start: pad-inline(
             map.get($hierarchical-indent, 'compact'),
             map.get($hierarchical-indent, 'cosy'),
@@ -2914,8 +2892,8 @@
 
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
 
         button {
             transition: none;
@@ -2958,7 +2936,7 @@
 
 
     %grid-thead--pivot {
-        display: flex;
+        @extend %flex;
 
         %grid-thead--virtualizationWrapper {
             border-inline-start: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
@@ -2975,8 +2953,8 @@
     }
 
     %igx-grid__tr-pivot {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         background: inherit;
         overflow: hidden;
         z-index: 3;
@@ -3006,14 +2984,12 @@
     }
 
     %igx-grid__pivot-filter-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @extend %flex-center;
         cursor: pointer;
-        position: relative;
+        @extend %position-relative;
 
         > igx-badge {
-            position: absolute;
+            @extend %position-absolute;
             top: rem(-4px);
             inset-inline-start: 60%;
             width: rem(18px);
@@ -3021,7 +2997,7 @@
             height: rem(18px);
             font-size: rem(10px);
             pointer-events: none;
-            user-select: none;
+            @extend %user-none;
         }
     }
 
@@ -3044,7 +3020,7 @@
     }
 
     %igx-grid__tr-pivot--filter-container {
-        display: flex;
+        @extend %flex;
         flex-direction: column;
     }
 
@@ -3097,7 +3073,7 @@
     %igx-grid__tr-header-row {
         igx-pivot-row-dimension-header-group {
             igx-pivot-row-dimension-header {
-                align-items: center;
+                @extend %align-center;
             }
         }
     }

@@ -134,11 +134,11 @@
     );
 
     %igx-grid-toolbar {
-        position: relative;
+        @extend %position-relative;
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @extend %flex;
+        @extend %align-center;
+        @extend %justify-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
 
@@ -190,21 +190,21 @@
     }
 
     %igx-grid-toolbar__custom-content {
-        display: flex;
+        @extend %flex;
         flex-wrap: wrap;
         flex-grow: 1;
-        justify-content: flex-end;
+        @extend %justify-end;
         margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable');
     }
 
     %igx-grid-toolbar__actions {
-        display: flex;
-        align-items: center;
+        @extend %flex;
+        @extend %align-center;
         flex-flow: row wrap;
         margin-inline-start: auto;
 
         > * {
-            display: flex;
+            @extend %flex;
             margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
 
             &:first-child {
@@ -225,12 +225,12 @@
         + %igx-grid-toolbar__actions {
             width: 100%;
             margin-inline-start: 0;
-            justify-content: flex-end;
+            @extend %justify-end;
         }
     }
 
     %igx-grid-toolbar__progress-bar {
-        position: absolute;
+        @extend %position-absolute;
         width: 100%;
         inset-inline-start: 0;
         inset-inline-end: 0;
@@ -264,7 +264,7 @@
     }
 
     %igx-grid-toolbar__dropdown {
-        position: relative;
+        @extend %position-relative;
     }
 
     %igx-grid-toolbar__dd-list {
@@ -277,7 +277,7 @@
 
     %igx-grid-toolbar__dd-list-items {
         cursor: pointer;
-        position: relative;
+        @extend %position-relative;
         padding: rem(8px) rem(16px);
         color: var-get($theme, 'item-text-color');
         white-space: nowrap;

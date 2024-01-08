@@ -68,16 +68,16 @@
     }
 
     %overlay-wrapper--flex {
-        display: flex;
+        @extend %flex;
     }
 
     %overlay-wrapper--flex-container {
-        display: flex;
-        position: absolute;
+        @extend %flex;
+        @extend %position-absolute;
     }
 
     %overlay-content {
-        position: absolute;
+        @extend %position-absolute;
         pointer-events: all;
         box-sizing: content-box;
     }
@@ -91,7 +91,7 @@
     }
 
     %overlay-content--relative {
-        position: relative;
+        @extend %position-relative;
     }
 
     %igx-toggle--hidden {
