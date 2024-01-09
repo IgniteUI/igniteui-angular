@@ -32,7 +32,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 
 /** Represents an event argument related to grid row interactions. */
 export interface IGridRowEventArgs extends IBaseEventArgs {
-    /** Represents the grid cell that triggered the event. */
+    /** Represents the grid row that triggered the event. */
     row: RowType;
     /**
      * Represents the original event that ocurred
