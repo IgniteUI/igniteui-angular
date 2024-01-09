@@ -81,6 +81,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
     @include css-vars($theme);
@@ -119,7 +121,7 @@
         flex-grow: 1;
         user-select: text;
         display: flex;
-        flex-direction: row
+        flex-direction: row;
     }
 
     %igx-navbar-bundle {
@@ -131,8 +133,9 @@
         }
     }
 
-    %igx-navbar-icon-display {
-        > igx-icon,
+    %igx-navbar-icon-display,
+    %igx-navbar-part {
+        igx-icon,
         [igxIconButton] {
             --component-size: 3;
 

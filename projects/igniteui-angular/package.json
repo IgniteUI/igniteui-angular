@@ -71,7 +71,7 @@
     "dependencies": {
         "@types/hammerjs": "^2.0.40",
         "hammerjs": "^2.0.8",
-        "fflate": "^0.7.3",
+        "fflate": "^0.8.1",
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^3.0.2",
         "lodash-es": "^4.17.21",
@@ -86,7 +86,7 @@
         "@angular/forms": "^17.0.0"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~17.0.1300"
+        "@igniteui/angular-schematics": "~17.1.1310"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

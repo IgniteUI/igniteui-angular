@@ -118,7 +118,8 @@ import {
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IPinColumnCancellableEventArgs
+    IPinColumnCancellableEventArgs,
+    IGridRowEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -474,6 +475,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
+
+    /**
+     * Emitted when a row is clicked.
+     *
+     * @remarks
+     * Returns the `IgxGridRow`.
+     * @example
+     * ```html
+     * <igx-grid #grid (rowClick)="rowClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public rowClick = new EventEmitter<IGridRowEventArgs>();
 
 
     /**
