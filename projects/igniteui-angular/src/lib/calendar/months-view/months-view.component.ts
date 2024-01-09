@@ -3,20 +3,27 @@ import {
     Input,
     HostBinding,
     ElementRef,
+    booleanAttribute,
 } from '@angular/core';
 import { IgxCalendarMonthDirective } from '../calendar.directives';
 import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 let NEXT_ID = 0;
 
 @Component({
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: IgxMonthsViewComponent,
+        multi: true
+    }],
     selector: 'igx-months-view',
     templateUrl: 'months-view.component.html',
     standalone: true,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
 })
-export class IgxMonthsViewComponent extends IgxCalendarViewDirective {
+export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     protected tagName = 'igx-months-view';
 
     /**
@@ -74,6 +81,13 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective {
         this._monthFormat = value;
         this.initFormatter();
     }
+
+    /**
+     * Gets/sets whether the view should be rendered
+     * according to the locale and format, if any.
+     */
+    @Input({ transform: booleanAttribute })
+    public override formatView = true;
 
     /**
      * Returns an array of date objects which are then used to

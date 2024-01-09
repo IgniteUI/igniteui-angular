@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { NgFor } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
@@ -24,6 +25,11 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 @Component({
     providers: [
         {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxYearsViewComponent,
+            multi: true
+        },
+        {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: CalendarHammerConfig
         }
@@ -33,7 +39,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     standalone: true,
     imports: [NgFor, IgxCalendarYearDirective]
 })
-export class IgxYearsViewComponent extends IgxCalendarViewDirective implements AfterViewInit {
+export class IgxYearsViewComponent extends IgxCalendarViewDirective implements AfterViewInit, ControlValueAccessor {
     /**
      * @hidden
      * @internal
