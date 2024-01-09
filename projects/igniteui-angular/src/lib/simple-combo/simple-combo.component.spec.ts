@@ -1490,6 +1490,23 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.displayValue).toEqual('Ohio ');
         }));
+
+        fit('should properly filter dropdown when pasting from clipboard in input', () => {
+            spyOn(combo, 'handleInputChange').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulatePaste(combo.data[1].field, input, 0, 19);
+            expect(combo.comboInput.value).toEqual(combo.data[1].field);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual(combo.data[1].field);
+            expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
+            expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
+                target: jasmine.objectContaining({ value: combo.data[1].field})
+            }));
+        });
     });
 
     describe('Display density', () => {
