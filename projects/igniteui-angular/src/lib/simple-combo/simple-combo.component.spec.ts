@@ -1498,7 +1498,6 @@ describe('IgxSimpleCombo', () => {
                 value: combo.data[1].field
             }
             combo.comboInput.value = target.value
-
             const pasteData = new DataTransfer();
             const pasteEvent = new ClipboardEvent('paste', { clipboardData: pasteData });
             Object.defineProperty(pasteEvent, 'target', {
@@ -1506,10 +1505,7 @@ describe('IgxSimpleCombo', () => {
                 value: target
             })
             input.triggerEventHandler('paste', pasteEvent);
-
             fixture.detectChanges();
-            console.log(combo.filteredData)
-
 
             expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
             expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
