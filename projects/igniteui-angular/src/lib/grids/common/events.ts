@@ -24,7 +24,18 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     /** Represents the grid cell that triggered the event. */
     cell: CellType;
     /**
-     * Represents the original event that occured
+     * Represents the original event that ocurred
+     * Examples of such events include: selecting, clicking, double clicking, etc.
+     */
+    event: Event;
+}
+
+/** Represents an event argument related to grid row interactions. */
+export interface IGridRowEventArgs extends IBaseEventArgs {
+    /** Represents the grid cell that triggered the event. */
+    row: RowType;
+    /**
+     * Represents the original event that ocurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
