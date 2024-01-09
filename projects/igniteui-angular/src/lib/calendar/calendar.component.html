@@ -210,9 +210,11 @@
                 </div>
             </div>
         </div>
-        <ng-container [@animateChange]="animationAction" (@animateChange.done)="animationDone($event)">
+        <ng-container>
             <igx-days-view role="grid"
                #days
+               [@animateChange]="animationAction"
+               (@animateChange.done)="animationDone($event)"
                [changeDaysView]="true"
                [selection]="selection"
                [locale]="locale"

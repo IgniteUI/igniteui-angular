@@ -1,37 +1,31 @@
 import {
     Component,
-    Output,
-    EventEmitter,
     Input,
     HostBinding,
-    HostListener,
-    ViewChildren,
-    QueryList,
     ElementRef,
-    booleanAttribute,
-    AfterViewChecked
 } from '@angular/core';
-import { Calendar } from '../calendar';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxCalendarMonthDirective } from '../calendar.directives';
-import { noop } from 'rxjs';
 import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
 
 let NEXT_ID = 0;
 
-enum Direction {
-    NEXT = 1,
-    PREV = -1
-}
-
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMonthsViewComponent, multi: true }],
     selector: 'igx-months-view',
     templateUrl: 'months-view.component.html',
     standalone: true,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
 })
-export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewChecked {
+export class IgxMonthsViewComponent extends IgxCalendarViewDirective {
+    protected tagName = 'igx-months-view';
+
+    /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     */
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
     /**
      * Sets/gets the `id` of the months view.
      * If not set, the `id` will have value `"igx-months-view-0"`.
@@ -44,6 +38,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
      *
      * @memberof IgxMonthsViewComponent
      */
+
     @HostBinding('attr.id')
     @Input()
     public id = `igx-months-view-${NEXT_ID++}`;
@@ -55,31 +50,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
      */
     @HostBinding('class.igx-months-view')
     public readonly viewClass = true;
-
-    /**
-     * Gets/sets the selected date of the months view.
-     * By default it is the current date.
-     * ```html
-     * <igx-months-view [date]="myDate"></igx-months-view>
-     * ```
-     * ```typescript
-     * let date =  this.monthsView.date;
-     * ```
-     *
-     * @memberof IgxMonthsViewComponent
-     */
-    @Input()
-    public set date(value: Date) {
-        if (!(value instanceof Date)) {
-            return;
-        }
-        this._date = value;
-        this.activeMonth = this.date.getMonth();
-    }
-
-    public get date() {
-        return this._date;
-    }
 
     /**
      * Gets the month format option of the months view.
@@ -102,83 +72,8 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
      */
     public set monthFormat(value: any) {
         this._monthFormat = value;
-        this.initMonthFormatter();
+        this.initFormatter();
     }
-
-    /**
-     * Gets the `locale` of the months view.
-     * Default value is `"en"`.
-     * ```typescript
-     * let locale =  this.monthsView.locale;
-     * ```
-     *
-     * @memberof IgxMonthsViewComponent
-     */
-    @Input()
-    public get locale(): string {
-        return this._locale;
-    }
-
-    /**
-     * Sets the `locale` of the months view.
-     * Expects a valid BCP 47 language tag.
-     * Default value is `"en"`.
-     * ```html
-     * <igx-months-view [locale]="de"></igx-months-view>
-     * ```
-     *
-     * @memberof IgxMonthsViewComponent
-     */
-    public set locale(value: string) {
-        this._locale = value;
-        this.initMonthFormatter();
-    }
-
-    /**
-     * Gets/sets whether the view should be rendered
-     * according to the locale and monthFormat, if any.
-     */
-    @Input({ transform: booleanAttribute })
-    public formatView = true;
-
-    /**
-     * Emits an event when a selection is made in the months view.
-     * Provides reference the `date` property in the `IgxMonthsViewComponent`.
-     * ```html
-     * <igx-months-view (selected)="onSelection($event)"></igx-months-view>
-     * ```
-     *
-     * @memberof IgxMonthsViewComponent
-     */
-    @Output()
-    public selected = new EventEmitter<Date>();
-
-    /**
-     * Emits an event when a page changes in the months view.
-     * Provides reference the `date` property in the `IgxMonthsViewComponent`.
-     * ```html
-     * <igx-months-view (pageChanged)="onPageChanged($event)"></igx-months-view>
-     * ```
-     *
-     * @memberof IgxMonthsViewComponent
-     * @hidden @internal
-     */
-    @Output()
-    public pageChanged = new EventEmitter<Date>();
-
-    /**
-     * The default css class applied to the component.
-     *
-     * @hidden
-     */
-    @HostBinding('class.igx-calendar')
-    public styleClass = true;
-
-    /**
-     * @hidden
-     */
-    @ViewChildren(IgxCalendarMonthDirective, { read: IgxCalendarMonthDirective })
-    public monthsRef: QueryList<IgxCalendarMonthDirective>;
 
     /**
      * Returns an array of date objects which are then used to
@@ -202,114 +97,11 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
 
     /**
      * @hidden
-     * @internal
-     */
-    public activeMonth;
-
-    private _date = new Date();
-    /**
-     * @hidden
-     */
-    private _formatterMonth: any;
-
-    /**
-     * @hidden
-     */
-    private _locale = 'en';
-
-    /**
-     * @hidden
      */
     private _monthFormat = 'short';
 
-    /**
-     * @hidden
-     */
-    private _calendarModel: Calendar;
-
-    /**
-     * @hidden
-     */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     */
-    private _onChangeCallback: (_: Date) => void = noop;
-
     constructor(public el: ElementRef) {
-        this.initMonthFormatter();
-        this._calendarModel = new Calendar();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        this.navigateToMonth(event, Direction.PREV, 3);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        this.navigateToMonth(event, Direction.NEXT, 3);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event: KeyboardEvent) {
-        this.navigateToMonth(event, Direction.NEXT, 1);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
-        this.navigateToMonth(event, Direction.PREV, 1);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const month = this.monthsRef.toArray()[0];
-        this.activeMonth = month.value.getMonth();
-        month.nativeElement.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const months = this.monthsRef.toArray();
-        const month = months[months.length - 1];
-        this.activeMonth = month.value.getMonth();
-        month.nativeElement.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.enter', ['$event'])
-    public onKeydownEnter(event) {
-        const value = this.monthsRef.find((date) => date.nativeElement === event.target).value;
-        this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
-        this.activeMonth = this.date.getMonth();
-        this.selected.emit(this.date);
-        this._onChangeCallback(this.date);
+        super();
     }
 
     /**
@@ -319,82 +111,53 @@ export class IgxMonthsViewComponent implements ControlValueAccessor, AfterViewCh
      */
     public formattedMonth(value: Date): string {
         if (this.formatView) {
-            return this._formatterMonth.format(value);
+            return this._formatter.format(value);
         }
+
         return `${value.getMonth()}`;
     }
 
     /**
      * @hidden
      */
-    public selectMonth(event) {
-        this.selected.emit(event);
-
-        this.date = event;
-        this.activeMonth = this.date.getMonth();
-        this._onChangeCallback(this.date);
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (v: Date) => void) {
-        this._onChangeCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnTouched(fn: () => void) {
-        this._onTouchedCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public writeValue(value: Date) {
-        if (value) {
-            this.date = value;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public monthTracker(index, item: Date): string {
+    public monthTracker(_: number, item: Date): string {
         return `${item.getMonth()}}`;
     }
 
-    private navigateToMonth(event: KeyboardEvent, direction: Direction, delta: number) {
+    /**
+     * @hidden
+     */
+    protected navigateTo(event: KeyboardEvent, direction: Direction, delta: number) {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
+        const node = this.viewItems.find((date) => date.nativeElement === event.target);
         if (!node) return;
 
-        const _date = new Date(this.date.getFullYear(), this.activeMonth);
+        const _date = new Date(this.date.getFullYear(), this.activeDate.getMonth());
         const _delta = this._calendarModel.timedelta(_date, 'month', direction * delta);
 
         if (_delta.getFullYear() !== this.date.getFullYear()) {
             this.pageChanged.emit(_delta);
         }
 
-        this.activeMonth = _delta.getMonth();
+        this.activeDate = _delta;
+        this.getActiveNode().focus();
     }
 
     /**
      * @hidden
      */
-    public ngAfterViewChecked() {
-        const months = this.monthsRef.toArray();
-        const idx = months.findIndex((month) => month.value.getMonth() === this.activeMonth);
-        months[idx].nativeElement.focus();
+    private getActiveNode() {
+        const monthNodes = this.viewItems.toArray();
+        const idx = monthNodes.findIndex((month) => month.value.getMonth() === this.activeDate.getMonth());
+        return monthNodes[idx].nativeElement;
     }
 
     /**
      * @hidden
      */
-    private initMonthFormatter() {
-        this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
+    protected initFormatter() {
+        this._formatter = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
     }
 }

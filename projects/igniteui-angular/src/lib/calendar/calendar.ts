@@ -267,7 +267,7 @@ export class Calendar {
         return res;
     }
 
-	public decadedates(date: Date) {
+	public yearDates(date: Date) {
 		const result: Date[] = [];
 		const year = date.getFullYear();
 		const month = date.getMonth();

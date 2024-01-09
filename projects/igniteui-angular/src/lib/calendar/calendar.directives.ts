@@ -11,6 +11,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    InjectionToken,
     Output,
     TemplateRef,
     ElementRef,
@@ -22,11 +23,17 @@ import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
 import { PlatformUtil } from '../core/utils';
 
+export const IGX_CALENDAR_VIEW_ITEM = 
+    new InjectionToken<IgxCalendarMonthDirective | IgxCalendarYearDirective>('IgxCalendarViewItem');
+
 /**
  * @hidden
  */
 @Directive({
     selector: '[igxCalendarYear]',
+    providers: [
+        { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarYearDirective }
+    ],
     standalone: true
 })
 export class IgxCalendarYearDirective {
@@ -56,7 +63,7 @@ export class IgxCalendarYearDirective {
 
     @HostBinding('attr.tabindex')
     public get tabIndex(): number {
-        return this.isCurrentYear ? 0 : -1;
+        return this.value.getFullYear() === this.date.getFullYear() ? 0 : -1;
     }
 
 
@@ -83,6 +90,9 @@ export class IgxCalendarYearDirective {
 
 @Directive({
     selector: '[igxCalendarMonth]',
+    providers: [
+        { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarMonthDirective }
+    ],
     standalone: true
 })
 export class IgxCalendarMonthDirective {

@@ -21,6 +21,7 @@ import {
 	IgxCalendarHeaderTemplateDirective,
 	IgxCalendarSubheaderTemplateDirective,
     IgxCalendarScrollPageDirective,
+    IgxCalendarMonthDirective,
 } from './calendar.directives';
 import { ICalendarDate, IgxCalendarView, monthRange, ScrollDirection } from './calendar';
 import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
@@ -804,7 +805,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		requestAnimationFrame(() => {
 			if (this.dacadeView) {
 				this.dacadeView.date = args;
-				this.dacadeView.calendarDir.find(date => date.isCurrentYear).nativeElement.focus();
 			}
 		});
 	}
@@ -816,12 +816,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public onActiveViewDecadeKB(event, args: Date, activeViewIdx: number) {
 		super.activeViewDecadeKB(event, activeViewIdx);
 
-		requestAnimationFrame(() => {
-			if (this.dacadeView) {
-				this.dacadeView.date = args;
-				this.dacadeView.calendarDir.find(date => date.isCurrentYear).nativeElement.focus();
-			}
-		});
+        requestAnimationFrame(() => {
+            if (this.dacadeView) {
+                this.dacadeView.date = args;
+                this.dacadeView.viewItems
+                    .find((date) => {
+                        return date.value.getFullYear() === this.viewDate.getFullYear();
+                    })
+                    .nativeElement.focus();
+            }
+        });
 	}
 
 	/**
@@ -919,6 +923,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @intenal
 	 */
+    public override changeYear(event: Date) {
+        console.log('Changing Year');
+        this.previousViewDate = this.viewDate;
+        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.activeView = IgxCalendarView.Year;
+    }
+
+	/**
+	 * @hidden
+	 * @intenal
+	 */
 	public updateYear(event: Date) {
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.getFirstViewDate(event, 'year', this.activeViewIdx);
@@ -977,7 +992,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	}
 
 	protected getDecadeRange(): { start: string; end: string } {
-		const dates = this.calendarModel.decadedates(this.viewDate);
+		const dates = this.calendarModel.yearDates(this.viewDate);
 
 		return {
 			start: this.formatterYear.format(dates[0]),
@@ -1195,8 +1210,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     private focusMonth() {
-        const month = this.monthsView.monthsRef.find(
-            (e) => e.index === this.monthsView.date.getMonth()
+        const month = this.monthsView.viewItems.find(
+            (e: IgxCalendarMonthDirective) => e.index === this.monthsView.date.getMonth()
         );
 
         if (month) {

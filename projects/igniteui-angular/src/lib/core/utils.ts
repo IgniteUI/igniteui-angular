@@ -22,7 +22,7 @@ export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T)
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver;
+export const getResizeObserver = () => globalThis.window?.ResizeObserver;
 
 /**
  * @hidden
@@ -573,7 +573,7 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
+    const base = parseFloat(globalThis.window?.getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
 }
 
