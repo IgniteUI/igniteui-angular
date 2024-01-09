@@ -802,6 +802,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	public onActiveViewDecade(args: Date, activeViewIdx: number) {
 		super.activeViewDecade(activeViewIdx);
+
 		requestAnimationFrame(() => {
 			if (this.dacadeView) {
 				this.dacadeView.date = args;
@@ -818,15 +819,41 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         requestAnimationFrame(() => {
             if (this.dacadeView) {
-                this.dacadeView.date = args;
-                this.dacadeView.viewItems
-                    .find((date) => {
-                        return date.value.getFullYear() === this.viewDate.getFullYear();
-                    })
-                    .nativeElement.focus();
+				this.dacadeView.date = args;
+                this.dacadeView.focusActiveDate();
             }
         });
 	}
+
+	/**
+	 * @hidden
+	 * @internal
+	 */
+    public onYearsViewClick(event: MouseEvent) {
+        const path = event.composed ? event.composedPath() : [event.target];
+        const years = this.dacadeView.viewItems.toArray();
+        const validTarget = years.some(year => path.includes(year.nativeElement));
+
+        if (validTarget) {
+            this.activeView = IgxCalendarView.Year;
+        }
+    }
+
+	/**
+	 * @hidden
+	 * @internal
+	 */
+    public onYearsViewKeydown(event: KeyboardEvent) {
+        if (this.platform.isActivationKey(event)) {
+            this.activeView = IgxCalendarView.Year;
+
+            requestAnimationFrame(() => {
+                if (this.monthsView) {
+                    this.monthsView.focusActiveDate();
+                }
+            });
+        }
+    }
 
 	/**
 	 * @hidden
@@ -924,10 +951,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @intenal
 	 */
     public override changeYear(event: Date) {
-        console.log('Changing Year');
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
-        this.activeView = IgxCalendarView.Year;
     }
 
 	/**
@@ -949,7 +974,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
 		requestAnimationFrame(() => {
 			this.monthsView.date = args;
-			this.focusMonth();
 		});
 	}
 
@@ -960,7 +984,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public onActiveViewYearKB(args: Date, event: KeyboardEvent, activeViewIdx: number): void {
 		if (this.platform.isActivationKey(event)) {
 			event.preventDefault();
-			this.onActiveViewYear(args, activeViewIdx);
+            this.activeView = IgxCalendarView.Year;
+            this.activeViewIdx = activeViewIdx;
+
+            requestAnimationFrame(() => {
+                if (this.monthsView) {
+			        this.monthsView.date = args;
+                    this.monthsView.focusActiveDate();
+                }
+            });
 		}
 	}
 

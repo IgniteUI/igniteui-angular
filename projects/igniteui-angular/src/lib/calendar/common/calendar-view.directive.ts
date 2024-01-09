@@ -252,6 +252,17 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     }
 
     /**
+     * @hidden @internal
+     */
+    public focusActiveDate() {
+        if (this.activeDate) {
+            const dates = this.viewItems.toArray();
+            const date = dates.find(d => d.value.getTime() === this.activeDate.getTime());
+            date?.nativeElement.focus();
+        }
+    }
+
+    /**
      * @hidden
      */
     public registerOnChange(fn: (v: Date) => void) {

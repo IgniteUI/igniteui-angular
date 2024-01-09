@@ -262,6 +262,8 @@
             [formatView]="formatViews.year"
             [yearFormat]="formatOptions.year"
             (pageChanged)="updateYear($event)"
-            (selected)="changeYear($event)">
+            (selected)="changeYear($event)"
+            (click)="onYearsViewClick($event)"
+            (keydown)="onYearsViewKeydown($event)">
     </igx-years-view>
 </div>

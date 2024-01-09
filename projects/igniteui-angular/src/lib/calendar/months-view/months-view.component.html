@@ -5,7 +5,7 @@
             [attr.aria-label]="month | date: 'LLLL'"
             [igxCalendarMonth]="month"
             [date]="date"
-            [attr.tabindex]="activeDate.getMonth() === month.getMonth() ? 0 : -1"
+            [attr.tabindex]="activeDate?.getMonth() === month.getMonth() ? 0 : -1"
             [index]="i"
             (monthSelection)="selectDate($event)"
             *ngFor="let month of months; index as i; trackBy: monthTracker">

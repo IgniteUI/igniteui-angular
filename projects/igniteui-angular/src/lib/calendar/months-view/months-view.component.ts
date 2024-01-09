@@ -33,6 +33,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      */
     @HostBinding('class.igx-calendar')
     public styleClass = true;
+
     /**
      * Sets/gets the `id` of the months view.
      * If not set, the `id` will have value `"igx-months-view-0"`.
@@ -45,7 +46,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * @memberof IgxMonthsViewComponent
      */
-
     @HostBinding('attr.id')
     @Input()
     public id = `igx-months-view-${NEXT_ID++}`;
