@@ -18,7 +18,7 @@
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
         (input)="handleInputChange($event)" (click)="handleInputClick()"
-        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
+        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
