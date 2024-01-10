@@ -593,26 +593,41 @@ export class IgxGridSelectionService {
             this.selectRowById(rowID);
             return;
         }
-            const gridData = this.allData;
+    
+        const isGrouped = this.grid.groupingExpressions.length > 0;
+        const dataView = this.grid.dataView;
+    
+        let currentRowIndex, lastSelectedRowIndex;
+        let rowsToSelect = [];
+    
         const lastSelectedRowID = this.getSelectedRows()[this.rowSelection.size - 1];
-        const currentRowIndex = gridData.findIndex(row => this.getRecordKey(row) === rowID);
-        const lastSelectedRowIndex = gridData.findIndex(row => this.getRecordKey(row) === lastSelectedRowID);
+        const lastSelectedRowData = this.getRowDataById(lastSelectedRowID);
     
-        const currentGroup = this.getGroup(rowData);
-        const lastSelectedGroup = this.getGroup(this.getRowDataById(lastSelectedRowID));
+        if (isGrouped) {
+            const currentGroup = this.getGroup(rowData);
+            const lastSelectedGroup = this.getGroup(lastSelectedRowData);
     
-        if (!this.areGroupsEqual(currentGroup, lastSelectedGroup)) {
-            this.selectRowById(rowID, false, event);
-            return;
+            // enhanced group comparison to handle hierarchical data
+            if (!this.deepCompareGroups(currentGroup, lastSelectedGroup)) {
+                this.selectRowById(rowID, false, event);
+                return;
+            }
+    
+            rowsToSelect = dataView.filter(row => this.deepCompareGroups(this.getGroup(row), currentGroup));
+            currentRowIndex = rowsToSelect.findIndex(row => this.getRecordKey(row) === rowID);
+            lastSelectedRowIndex = rowsToSelect.findIndex(row => this.getRecordKey(row) === this.getRecordKey(lastSelectedRowData));
+        } else {
+            currentRowIndex = dataView.findIndex(row => this.getRecordKey(row) === rowID);
+            lastSelectedRowIndex = dataView.findIndex(row => this.getRecordKey(row) === this.getRecordKey(lastSelectedRowData));
+            rowsToSelect = dataView;
         }
     
         const rangeStart = Math.min(currentRowIndex, lastSelectedRowIndex);
         const rangeEnd = Math.max(currentRowIndex, lastSelectedRowIndex) + 1;
-        const rowsToSelect = gridData.slice(rangeStart, rangeEnd).filter(row => 
-            this.areGroupsEqual(this.getGroup(row), currentGroup));
+        const selectedRows = rowsToSelect.slice(rangeStart, rangeEnd);
     
-        const newSelection = [...this.getSelectedRowsData(), ...rowsToSelect];
-        const addedRows = rowsToSelect.filter(row => !this.isRowSelected(this.getRecordKey(row)));
+        const newSelection = [...this.getSelectedRowsData(), ...selectedRows];
+        const addedRows = selectedRows.filter(row => !this.isRowSelected(this.getRecordKey(row)));
         this.emitRowSelectionEvent(newSelection, addedRows, [], event, this.getSelectedRowsData());
     }
         
@@ -704,13 +719,31 @@ export class IgxGridSelectionService {
         return groupValues;
     }
     
-    private areGroupsEqual(group1, group2): boolean {
-        for (const prop in group1) {
-            if (group1.hasOwnProperty(prop) && group2.hasOwnProperty(prop)) {
-                if (group1[prop] !== group2[prop]) {
-                    return false;
-                }
-            } else {
+    private deepCompareGroups(group1, group2): boolean {
+        if (group1 === group2) {
+            return true;
+        }
+    
+        if (typeof group1 !== 'object' || typeof group2 !== 'object' || group1 == null || group2 == null) {
+            return false;
+        }
+    
+        const keys1 = Object.keys(group1);
+        const keys2 = Object.keys(group2);
+    
+        if (keys1.length !== keys2.length) {
+            return false;
+        }
+    
+        for (const key of keys1) {
+            const val1 = group1[key];
+            const val2 = group2[key];
+    
+            const areObjects = (val1 != null && typeof val1 === 'object') && (val2 != null && typeof val2 === 'object');
+            if (
+                areObjects && !this.deepCompareGroups(val1, val2) ||
+                !areObjects && val1 !== val2
+            ) {
                 return false;
             }
         }
