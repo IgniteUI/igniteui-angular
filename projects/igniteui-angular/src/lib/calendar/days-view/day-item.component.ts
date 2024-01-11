@@ -56,6 +56,9 @@ export class IgxDayItemComponent {
     @Input({ transform: booleanAttribute })
     public isWithinRange = false;
 
+    @Input({ transform: booleanAttribute })
+    public isWithinPreviewRange = false;
+
     @Output()
     public dateSelection = new EventEmitter<ICalendarDate>();
 
@@ -134,6 +137,11 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-days-view__date--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
+    }
+
+    @HostBinding('class.igx-days-view__date--preview-range')
+    public get isWithinPreviewRangeCSS(): boolean {
+        return !this.isSingleSelection && this.isWithinPreviewRange;
     }
 
     @HostBinding('class.igx-days-view__date--special')

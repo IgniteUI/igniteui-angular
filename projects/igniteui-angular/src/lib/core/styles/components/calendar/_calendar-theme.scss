@@ -1778,6 +1778,12 @@
         }
     }
 
+    %date-preview-range {
+        %date-inner {
+            color: red;
+        }
+    }
+
     %date-range-selected-special {
         %date-inner {
             background: var-get($theme, 'date-special-background');

@@ -88,6 +88,20 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     /**
      * @hidden
+     * @internal
+     */
+    @Input()
+    public set previewRangeDate(value: Date) {
+        this._previewRangeDate = value;
+        this.previewRangeDateChange.emit(this._previewRangeDate);
+    }
+
+    public get previewRangeDate() {
+        return this._previewRangeDate;
+    }
+
+    /**
+     * @hidden
      */
     @Output()
     public dateSelection = new EventEmitter<ICalendarDate>();
@@ -113,6 +127,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
+    @Output()
+    public previewRangeDateChange = new EventEmitter<any>();
+
+    /**
+     * @hidden
+     */
     @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
 
@@ -131,6 +151,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /** @hidden */
     public shouldResetDate = true;
     private _activeDate;
+    private _previewRangeDate: Date;
 
     /**
      * @hidden
@@ -366,6 +387,24 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         );
     }
 
+    protected isWithinPreviewRange(date: Date): boolean {
+        if (
+            this.selection === 'range' &&
+            Array.isArray(this.value) &&
+            this.value.length > 0 &&
+            this.previewRangeDate
+        ) {
+            return isDateInRanges(date, [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [this.value[0], this.previewRangeDate],
+                },
+            ]);
+        }
+
+        return false;
+    }
+
     /**
      * @hidden
      */
@@ -434,5 +473,26 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     private get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
+    }
+
+    protected changePreviewRange(date: Date) {
+        if (
+          this.selection === 'range' &&
+          Array.isArray(this.value) &&
+          this.value.length === 1 &&
+          !isEqual(this.value[0], date)
+        ) {
+          this.setPreviewRangeDate(date);
+        }
+    }
+
+    protected clearPreviewRange() {
+        if (this.previewRangeDate) {
+            this.setPreviewRangeDate(undefined);
+        }
+    }
+
+    private setPreviewRangeDate(value?: Date) {
+        this.previewRangeDate = value;
     }
 }

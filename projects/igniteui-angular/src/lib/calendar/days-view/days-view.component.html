@@ -32,13 +32,18 @@
         [isLastInRange]="isLastInRange(day)"
         [isFirstInRange]="isFirstInRange(day)"
         [isWithinRange]="isWithinRange(day.date, true)"
+        [isWithinPreviewRange]="isWithinPreviewRange(day.date)"
         [disabledDates]="disabledDates"
         [specialDates]="specialDates"
         [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
         [attr.tabindex]="tabIndex(day)"
-        (focus)="activeDate = day.date.toLocaleDateString()"
-        (dateSelection)="selectDay($event)">
+        (focus)="activeDate = day.date.toLocaleDateString(); changePreviewRange(day.date)"
+        (blur)="clearPreviewRange()"
+        (dateSelection)="selectDay($event)"
+        (mouseenter)="changePreviewRange(day.date)"
+        (mouseleave)="clearPreviewRange()"
+        >
         {{ formattedDate(day.date) }}
     </igx-day-item>
 </div>

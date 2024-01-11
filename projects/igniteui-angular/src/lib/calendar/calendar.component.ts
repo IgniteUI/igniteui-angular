@@ -392,6 +392,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public activeDate = new Date().toLocaleDateString();
 
 	/**
+	 * @hidden
+	 * @internal
+	 */
+	protected previewRangeDate: Date;
+
+	/**
 	 * Used to apply the active date when the calendar view is changed
 	 *
 	 * @hidden
