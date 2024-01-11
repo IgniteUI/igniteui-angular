@@ -607,7 +607,6 @@ export class IgxGridSelectionService {
             const currentGroup = this.getGroup(rowData);
             const lastSelectedGroup = this.getGroup(lastSelectedRowData);
     
-            // enhanced group comparison to handle hierarchical data
             if (!this.deepCompareGroups(currentGroup, lastSelectedGroup)) {
                 this.selectRowById(rowID, false, event);
                 return;
@@ -624,11 +623,13 @@ export class IgxGridSelectionService {
     
         const rangeStart = Math.min(currentRowIndex, lastSelectedRowIndex);
         const rangeEnd = Math.max(currentRowIndex, lastSelectedRowIndex) + 1;
-        const selectedRows = rowsToSelect.slice(rangeStart, rangeEnd);
+        const rangeSelection = rowsToSelect.slice(rangeStart, rangeEnd);
     
-        const newSelection = [...this.getSelectedRowsData(), ...selectedRows];
-        const addedRows = selectedRows.filter(row => !this.isRowSelected(this.getRecordKey(row)));
-        this.emitRowSelectionEvent(newSelection, addedRows, [], event, this.getSelectedRowsData());
+        let existingSelectionSet = new Set(this.getSelectedRowsData().map(r => this.getRecordKey(r)));
+        const newSelection = rangeSelection.filter(row => !existingSelectionSet.has(this.getRecordKey(row)));
+    
+        const addedRows = newSelection.filter(row => !this.isRowSelected(this.getRecordKey(row)));
+        this.emitRowSelectionEvent([...this.getSelectedRowsData(), ...newSelection], addedRows, [], event, this.getSelectedRowsData());
     }
         
     public areAllRowSelected(newSelection?): boolean {
