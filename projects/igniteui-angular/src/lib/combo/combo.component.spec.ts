@@ -2411,6 +2411,11 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('West South Cent');
+
+                combo.groupSortingDirection = SortingDirection.None;
+                combo.toggle();
+                fixture.detectChanges();
+                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
             });
         });
         describe('Filtering tests: ', () => {
