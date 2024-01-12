@@ -44,6 +44,7 @@ export class IgxGridSelectionService {
 
     private allRowsSelected: boolean;
     private _lastSelectedNode: ISelectionNode;
+    public lastSelectedRowIndex: number = -1;
     private _ranges: Set<string> = new Set<string>();
     private _selectionRange: Range;
 
@@ -626,10 +627,19 @@ export class IgxGridSelectionService {
         const rangeSelection = rowsToSelect.slice(rangeStart, rangeEnd);
     
         let existingSelectionSet = new Set(this.getSelectedRowsData().map(r => this.getRecordKey(r)));
-        const newSelection = rangeSelection.filter(row => !existingSelectionSet.has(this.getRecordKey(row)));
     
+        // updating the existing selection set directly
+        rangeSelection.forEach(row => {
+            const rowKey = this.getRecordKey(row);
+            if (!existingSelectionSet.has(rowKey)) {
+                existingSelectionSet.add(rowKey);
+            }
+        });
+    
+        const newSelection = Array.from(existingSelectionSet).map(id => this.getRowDataById(id));
         const addedRows = newSelection.filter(row => !this.isRowSelected(this.getRecordKey(row)));
-        this.emitRowSelectionEvent([...this.getSelectedRowsData(), ...newSelection], addedRows, [], event, this.getSelectedRowsData());
+
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event, this.getSelectedRowsData());
     }
         
     public areAllRowSelected(newSelection?): boolean {
