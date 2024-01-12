@@ -2417,6 +2417,34 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
             });
+            it('should sort groups with diacritics correctly', () => {
+                combo.data = [
+                    { field: "Alaska", region: "Méxícó" },
+                    { field: "California", region: "Méxícó" },
+                    { field: "Michigan", region: "Ángel" },
+                    { field: "Ohio", region: "Ángel" },
+                    { field: "Iowa", region: "México" },
+                    { field: "Kansas", region: "México" },
+                    { field: "Wisconsin", region: "Boris" },
+                ];
+                combo.groupSortingDirection = SortingDirection.Asc;
+                combo.toggle();
+                fixture.detectChanges();
+                let headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
+
+                combo.groupSortingDirection = SortingDirection.Desc;
+                combo.toggle();
+                fixture.detectChanges();
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
+
+                combo.groupSortingDirection = SortingDirection.None;
+                combo.toggle();
+                fixture.detectChanges();
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
+            });
         });
         describe('Filtering tests: ', () => {
             beforeEach(() => {
