@@ -1,4 +1,4 @@
-<igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="isDropdown">
+<igx-input-group [displayDensity]="displayDensity" [type]="type">
     <input [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
         type="text" [readonly]="!isDropdown || readOnly" [minValue]="minValue" [maxValue]="maxValue"
         [locale]="locale" [spinDelta]="itemsDelta" [spinLoop]="spinLoop" [placeholder]="placeholder"
