@@ -9,7 +9,9 @@ import {
     HostBinding,
     DoCheck,
     OnInit,
-    Inject, LOCALE_ID, booleanAttribute
+    Inject,
+    LOCALE_ID,
+    booleanAttribute,
 } from '@angular/core';
 import { CalendarSelection, ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -110,7 +112,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     @Output()
-    public viewChanging = new EventEmitter<IViewChangingEventArgs>();
+    public pageChanged = new EventEmitter<IViewChangingEventArgs>();
 
     /**
      * @hidden

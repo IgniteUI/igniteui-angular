@@ -213,8 +213,6 @@
         <ng-container>
             <igx-days-view role="grid"
                #days
-               [@animateChange]="animationAction"
-               (@animateChange.done)="animationDone($event)"
                [changeDaysView]="true"
                [selection]="selection"
                [locale]="locale"
@@ -229,7 +227,7 @@
                [specialDates]="specialDates"
                [hideOutsideDays]="hideOutsideDays"
                [showWeekNumbers]="showWeekNumbers"
-               (viewChanging)="viewChanging($event)"
+               (pageChanged)="changeDay($event)"
                (dateSelection)="childClicked($event)"
                (monthsViewBlur)="resetActiveDate()">
             </igx-days-view>

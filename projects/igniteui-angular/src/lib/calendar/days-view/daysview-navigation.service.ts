@@ -16,8 +16,10 @@ const ARROW = 'Arrow';
 @Injectable()
 export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;
+
     /**
-     * Implements kb navigation in all MoveDirections. nextDate and nextMonthView naming convention is used for both previous/next
+     * Implements keyboard navigation in all MoveDirections.
+     * `nextDate` and `nextMonthView` naming convention is used for both previous/next
      *
      * @hidden
      */
@@ -49,6 +51,8 @@ export class IgxDaysViewNavigationService {
                 step = -1;
                 nextDate = this.timedelta(node.date.date, step);
 
+                day = dates.find((d) => d.date.date.getTime() === nextDate.getTime());
+
                 for (i = index; i > 0; i--) {
                     day = nextView ? dates[i] : dates[i - 1];
                     nextDate = day.date.date;
@@ -62,11 +66,15 @@ export class IgxDaysViewNavigationService {
                         return;
                     }
                 }
+
                 break;
             }
+
             case Direction.Right: {
                 step = 1;
                 nextDate = this.timedelta(node.date.date, step);
+
+                day = dates.find((d) => d.date.date.getTime() === nextDate.getTime());
 
                 for (i = index; i < dates.length - 1; i++) {
                     day = nextView ? dates[i] : dates[i + 1];
@@ -81,45 +89,60 @@ export class IgxDaysViewNavigationService {
                         return;
                     }
                 }
+
                 break;
             }
 
             case Direction.Up: {
                 step = -7;
                 nextDate = this.timedelta(node.date.date, step);
+
+                day = dates.find((d) => d.date.date.getTime() === nextDate.getTime());
+
                 for (i = index; i - 7 > -1; i -= 7) {
                     day = nextView ? dates[i] : dates[i - 7];
                     nextDate = day.date.date;
+
                     if (day.date.isPrevMonth) {
                         break;
                     }
+
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
                         return;
                     }
                 }
+
                 break;
             }
+
             case Direction.Down: {
                 step = 7;
                 nextDate = this.timedelta(node.date.date, step);
+
+                day = dates.find((d) => d.date.date.getTime() === nextDate.getTime());
+
                 for (i = index; i + 7 < 42; i += 7) {
                     day = nextView ? dates[i] : dates[i + 7];
                     nextDate = day.date.date;
+
                     if (day.date.isNextMonth) {
                         break;
                     }
+
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
                         return;
                     }
                 }
+
                 break;
             }
         }
 
         // focus item in prev/next visible month
         const nextMonthView = step > 0 ? monthView.nextMonthView : monthView.prevMonthView;
+
         if (nextMonthView) {
             dates = nextMonthView.dates.toArray();
             day = dates.find((item) => item.date.date.getTime() === nextDate.getTime());
@@ -128,6 +151,7 @@ export class IgxDaysViewNavigationService {
                 day.nativeElement.focus();
                 return;
             }
+
             nextMonthView.daysNavService.focusNextDate(day.nativeElement, key);
         }
 
@@ -149,7 +173,7 @@ export class IgxDaysViewNavigationService {
 
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
             const monthAction = step > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
-            monthView.viewChanging.emit({monthAction, key, nextDate});
+            monthView.pageChanged.emit({ monthAction, key, nextDate });
         }
     }
 
@@ -185,23 +209,27 @@ export class IgxDaysViewNavigationService {
 
     private focusFirstDay(monthView: IgxDaysViewComponent): boolean {
         const dates = monthView.dates.filter(d => d.isCurrentMonth);
+
         for (const date of dates) {
             if (date.isFocusable) {
                 date.nativeElement.focus();
                 return true;
             }
         }
+
         return false;
     }
 
     private focusLastDay(monthView: IgxDaysViewComponent): boolean {
         const dates = monthView.dates.filter(d => d.isCurrentMonth);
+
         for (let i = dates.length - 1; i >= 0; i--) {
             if (dates[i].isFocusable) {
                 dates[i].nativeElement.focus();
                 return true;
             }
         }
+
         return false;
     }
 }
