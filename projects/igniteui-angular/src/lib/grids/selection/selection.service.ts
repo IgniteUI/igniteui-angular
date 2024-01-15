@@ -594,52 +594,15 @@ export class IgxGridSelectionService {
             this.selectRowById(rowID);
             return;
         }
-    
-        const isGrouped = this.grid.groupingExpressions.length > 0;
-        const dataView = this.grid.dataView;
-    
-        let currentRowIndex, lastSelectedRowIndex;
-        let rowsToSelect = [];
-    
-        const lastSelectedRowID = this.getSelectedRows()[this.rowSelection.size - 1];
-        const lastSelectedRowData = this.getRowDataById(lastSelectedRowID);
-    
-        if (isGrouped) {
-            const currentGroup = this.getGroup(rowData);
-            const lastSelectedGroup = this.getGroup(lastSelectedRowData);
-    
-            if (!this.deepCompareGroups(currentGroup, lastSelectedGroup)) {
-                this.selectRowById(rowID, false, event);
-                return;
-            }
-    
-            rowsToSelect = dataView.filter(row => this.deepCompareGroups(this.getGroup(row), currentGroup));
-            currentRowIndex = rowsToSelect.findIndex(row => this.getRecordKey(row) === rowID);
-            lastSelectedRowIndex = rowsToSelect.findIndex(row => this.getRecordKey(row) === this.getRecordKey(lastSelectedRowData));
-        } else {
-            currentRowIndex = dataView.findIndex(row => this.getRecordKey(row) === rowID);
-            lastSelectedRowIndex = dataView.findIndex(row => this.getRecordKey(row) === this.getRecordKey(lastSelectedRowData));
-            rowsToSelect = dataView;
-        }
-    
-        const rangeStart = Math.min(currentRowIndex, lastSelectedRowIndex);
-        const rangeEnd = Math.max(currentRowIndex, lastSelectedRowIndex) + 1;
-        const rangeSelection = rowsToSelect.slice(rangeStart, rangeEnd);
-    
-        let existingSelectionSet = new Set(this.getSelectedRowsData().map(r => this.getRecordKey(r)));
-    
-        // updating the existing selection set directly
-        rangeSelection.forEach(row => {
-            const rowKey = this.getRecordKey(row);
-            if (!existingSelectionSet.has(rowKey)) {
-                existingSelectionSet.add(rowKey);
-            }
-        });
-    
-        const newSelection = Array.from(existingSelectionSet).map(id => this.getRowDataById(id));
-        const addedRows = newSelection.filter(row => !this.isRowSelected(this.getRecordKey(row)));
-
-        this.emitRowSelectionEvent(newSelection, addedRows, [], event, this.getSelectedRowsData());
+        const gridData = this.allData;
+        const lastRowID = this.getSelectedRows()[this.rowSelection.size - 1];
+        const currIndex = gridData.indexOf(this.getRowDataById(lastRowID));
+        const newIndex = gridData.indexOf(rowData);
+        const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
+        const currSelection = this.getSelectedRowsData();
+        const added = rows.filter(r => !this.isRowSelected(this.getRecordKey(r)));
+        const newSelection = currSelection.concat(added);
+        this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
     }
         
     public areAllRowSelected(newSelection?): boolean {
@@ -712,55 +675,7 @@ export class IgxGridSelectionService {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
 
-    public getGroup(rowData: any): any {
-        if (this.grid.groupingExpressions.length === 0) {
-            return null;
-        }
-        
-        const groupValues = {};
-        
-        for (let expr of this.grid.groupingExpressions) {
-            if (rowData.hasOwnProperty(expr.fieldName)) {
-                groupValues[expr.fieldName] = rowData[expr.fieldName];
-            } else {
-                return null;
-            }
-        }
-        
-        return groupValues;
-    }
-    
-    private deepCompareGroups(group1, group2): boolean {
-        if (group1 === group2) {
-            return true;
-        }
-    
-        if (typeof group1 !== 'object' || typeof group2 !== 'object' || group1 == null || group2 == null) {
-            return false;
-        }
-    
-        const keys1 = Object.keys(group1);
-        const keys2 = Object.keys(group2);
-    
-        if (keys1.length !== keys2.length) {
-            return false;
-        }
-    
-        for (const key of keys1) {
-            const val1 = group1[key];
-            const val2 = group2[key];
-    
-            const areObjects = (val1 != null && typeof val1 === 'object') && (val2 != null && typeof val2 === 'object');
-            if (
-                areObjects && !this.deepCompareGroups(val1, val2) ||
-                !areObjects && val1 !== val2
-            ) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
+
 
     public getRecordKey(record) {
         return this.grid.primaryKey ? record[this.grid.primaryKey] : record;
@@ -777,7 +692,7 @@ export class IgxGridSelectionService {
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
         let allData;
-        if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
+        if (this.isFilteringApplied() || this.grid.sortingExpressions.length || this.grid.groupingExpressions?.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
             allData = this.grid.gridAPI.get_all_data(true);
