@@ -1639,17 +1639,12 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.notifyChanges();
             fix.detectChanges();
 
-            console.log('Selected rows after first selection:', grid.selectedRows);
-
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.paginator.nextPage();
             fix.detectChanges();
-
-            console.log('Current page index after next page:', grid.paginator.page);
-            console.log('Selected rows after page change:', grid.selectedRows);
-
+            
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
 

@@ -44,7 +44,6 @@ export class IgxGridSelectionService {
 
     private allRowsSelected: boolean;
     private _lastSelectedNode: ISelectionNode;
-    public lastSelectedRowIndex: number = -1;
     private _ranges: Set<string> = new Set<string>();
     private _selectionRange: Range;
 
@@ -418,7 +417,6 @@ export class IgxGridSelectionService {
     public getSelectedRows(): Array<any> {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
-    
     /** Returns array of the rows in indeterminate state. */
     public getIndeterminateRows(): Array<any> {
         return this.indeterminateRows.size ? Array.from(this.indeterminateRows.keys()) : [];
@@ -587,7 +585,7 @@ export class IgxGridSelectionService {
         return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
-    /** Select range from last selected row to the current specified row. */ 
+    /** Select range from last selected row to the current specified row. */
     public selectMultipleRows(rowID, rowData, event?): void {
         this.clearHeaderCBState();
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
@@ -604,7 +602,7 @@ export class IgxGridSelectionService {
         const newSelection = currSelection.concat(added);
         this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
     }
-        
+    
     public areAllRowSelected(newSelection?): boolean {
         if (!this.grid.data && !newSelection) {
             return false;
@@ -674,8 +672,6 @@ export class IgxGridSelectionService {
     public getRowIDs(data): Array<any> {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
-
-
 
     public getRecordKey(record) {
         return this.grid.primaryKey ? record[this.grid.primaryKey] : record;
