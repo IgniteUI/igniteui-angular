@@ -106,11 +106,10 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
         if (this._selected !== value) {
-            if (!this._selected) {
-                this.buttonSelected.emit({
-                    button: this
-                });
-            }
+
+            this.buttonSelected.emit({
+                button: this
+            });
 
             this._selected = value;
         }
