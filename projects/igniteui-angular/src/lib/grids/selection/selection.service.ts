@@ -603,7 +603,7 @@ export class IgxGridSelectionService {
         const newSelection = currSelection.concat(added);
         this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
     }
-    
+
     public areAllRowSelected(newSelection?): boolean {
         if (!this.grid.data && !newSelection) {
             return false;
