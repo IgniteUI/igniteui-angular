@@ -150,15 +150,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public showWeekNumbers = false;
 
 	/**
-	 * Apply the different states for the transitions of animateChange
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@Input()
-	public animationAction: any = '';
-
-	/**
 	 * The default css class applied to the component.
 	 *
 	 * @hidden
@@ -511,7 +502,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
 
-		this.animationAction = isPageDown ? ScrollDirection.NEXT: ScrollDirection.PREV;
 		this.isKeydownTrigger = true;
 
 		let monthView = this.daysView as IgxDaysViewComponent;
@@ -615,6 +605,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                         break;
                 }
             });
+
+        this.activeView$.subscribe((view) => {
+			this.activeViewChanged.emit(view);
+
+            requestAnimationFrame(() => {
+                if (this.isDefaultView) {
+                    this.resetActiveDate();
+                    this.focusDay();
+                }
+            });
+        });
     }
 
 	/**
@@ -669,7 +670,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     protected changePage(isKeydownTrigger = false, direction: ScrollDirection) {
 		this.previousViewDate = this.viewDate;
 		this.isKeydownTrigger = isKeydownTrigger;
-        this.animationAction = direction;
 
         if (!this.isKeydownTrigger) {
             requestAnimationFrame(() => {
@@ -720,7 +720,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public startPrevPageScroll = (isKeydownTrigger = false) => {
 		this.startPageScroll$.next();
 		this.pageScrollDirection = ScrollDirection.PREV;
-        this.animationAction = ScrollDirection.PREV;
 		this.previousPage(isKeydownTrigger);
 	}
 
@@ -733,7 +732,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public startNextPageScroll = (isKeydownTrigger = false) => {
 		this.startPageScroll$.next();
 		this.pageScrollDirection = ScrollDirection.NEXT;
-        this.animationAction = ScrollDirection.NEXT;
 		this.nextPage(isKeydownTrigger);
 	}
 
@@ -1025,21 +1023,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public getContext(i: number) {
 		const date = this.getViewDate(i);
 		return this.generateContext(date, i);
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public viewRendered(event) {
-		if (event.fromState !== 'void') {
-			this.activeViewChanged.emit(this.activeView);
-
-			if (this.isDefaultView) {
-				this.resetActiveDate();
-                this.focusDay();
-			}
-		}
 	}
 
 	/**

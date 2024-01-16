@@ -1,12 +1,15 @@
 import { IgxCalendarView } from '../calendar';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Directive({
     selector: '[igxMonthPickerBase]',
     standalone: true
 })
 export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
+    private activeViewSubject = new Subject<IgxCalendarView>();
+
     /**
      * @hidden
      */
@@ -28,6 +31,10 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     private _activeView: IgxCalendarView = IgxCalendarView.Month;
 
+    /**
+     * @hidden
+     */
+    protected activeView$ = this.activeViewSubject.asObservable();
 
     /**
      * Gets the current active view.
@@ -51,6 +58,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     public set activeView(val: IgxCalendarView) {
         this._activeView = val;
+        this.activeViewSubject.next(val);
     }
 
     /**
