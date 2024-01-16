@@ -366,7 +366,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.selectedIndexes.push(index);
         }
 
-        if (!button.selected) {
+        if (button.selected) {
             this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
             this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
 
