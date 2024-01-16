@@ -150,8 +150,6 @@
 
 <div *ngIf="isDefaultView"
      class="igx-calendar__body"
-     [@animateView]="activeView"
-     (@animateView.done)="viewRendered($event)"
      (swiperight)="previousPage()"
      (swipeleft)="nextPage()"
      (pointerdown)="suppressBlur()">
@@ -227,7 +225,7 @@
                [specialDates]="specialDates"
                [hideOutsideDays]="hideOutsideDays"
                [showWeekNumbers]="showWeekNumbers"
-               (pageChanged)="changeDay($event)"
+               (pageChanged)="updateDay($event)"
                (dateSelection)="childClicked($event)"
                (monthsViewBlur)="resetActiveDate()">
             </igx-days-view>
@@ -238,9 +236,7 @@
 <div *ngIf="isYearView">
     <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
     <igx-months-view
-            [@animateView]="activeView"
             #months
-            (@animateView.done)="viewRendered($event)"
             [date]="viewDate"
             [locale]="locale"
             [formatView]="formatViews.month"
@@ -253,9 +249,7 @@
 <div *ngIf="isDecadeView">
     <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
     <igx-years-view
-            [@animateView]="activeView"
             #decade
-            (@animateView.done)="viewRendered($event)"
             [date]="viewDate"
             [locale]="locale"
             [formatView]="formatViews.year"

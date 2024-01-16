@@ -38,7 +38,7 @@
         [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
         [attr.tabindex]="tabIndex(day)"
-        (focus)="activeDate = day.date.toLocaleDateString(); changePreviewRange(day.date)"
+        (focus)="activeDate = day.date; changePreviewRange(day.date)"
         (blur)="clearPreviewRange()"
         (dateSelection)="selectDay($event)"
         (mouseenter)="changePreviewRange(day.date)"

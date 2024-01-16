@@ -48,16 +48,16 @@ export class CalendarSampleComponent implements OnInit {
 	private calendar: IgxCalendarComponent;
 	@ViewChild('alert', { static: true })
 	private dialog: IgxDialogComponent;
-	private weekStart: string = 'sunday';
-	private setLocale = 'en';
-	private weekDayFormat: IFormattingOptions['weekday'] = 'narrow'
-	private weekNumber: boolean;
-	private calendarHeader: boolean;
-	private outsideDays: boolean;
-	private webComponentSelection = 'single';
-	private visibleMonths: number;
-	private headerOrientation: string;
-	private orientation: string;
+	protected weekStart: string = 'sunday';
+	protected setLocale = 'en';
+	protected weekDayFormat: IFormattingOptions['weekday'] = 'narrow'
+	protected weekNumber: boolean;
+	protected calendarHeader: boolean;
+	protected outsideDays: boolean;
+	protected webComponentSelection = 'single';
+	protected visibleMonths: number;
+	protected headerOrientation: string;
+	protected orientation: string;
 
 	public range = [];
 	public today = new Date();

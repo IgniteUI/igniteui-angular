@@ -79,13 +79,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @internal
      */
     @Input()
-    public set activeDate(value: string) {
+    public set activeDate(value: Date) {
         this._activeDate = value;
         this.activeDateChange.emit(this._activeDate);
     }
 
-    public get activeDate() {
-        return this._activeDate ? this._activeDate : this.viewDate.toLocaleDateString();
+    public get activeDate(): Date {
+        return this._activeDate ?? this.viewDate;
     }
 
     /**
@@ -118,7 +118,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     @Output()
-    public activeDateChange = new EventEmitter<string>();
+    public activeDateChange = new EventEmitter<Date>();
 
     /**
      * @hidden
@@ -242,7 +242,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @internal
      */
     public tabIndex(day: ICalendarDate): number {
-        return this.activeDate && this.activeDate === day.date.toLocaleDateString() && day.isCurrentMonth ? 0 : -1;
+        return this.activeDate?.getDate() === day.date?.getDate() && day.isCurrentMonth ? 0 : -1;
     }
 
     /**
