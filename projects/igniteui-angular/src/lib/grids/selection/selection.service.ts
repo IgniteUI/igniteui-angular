@@ -417,6 +417,7 @@ export class IgxGridSelectionService {
     public getSelectedRows(): Array<any> {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
+    
     /** Returns array of the rows in indeterminate state. */
     public getIndeterminateRows(): Array<any> {
         return this.indeterminateRows.size ? Array.from(this.indeterminateRows.keys()) : [];
