@@ -1136,7 +1136,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // When the base element is moved to previous index, angular reattaches the ghost template as a sibling by default.
         // This is the defaut place for the EmbededViewRef when recreated.
         // That's why we need to move it to the proper place and set pointer capture again.
-        if (this._pointerDownId && this.ghostElement && !this._dynamicGhostRef.destroyed) {
+        if (this._pointerDownId && this.ghostElement && this._dynamicGhostRef && !this._dynamicGhostRef.destroyed) {
             let ghostReattached = false;
             if (this.ghostHost && !Array.from(this.ghostHost.children).includes(this.ghostElement)) {
                 ghostReattached = true;
