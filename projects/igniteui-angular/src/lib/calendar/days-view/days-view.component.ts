@@ -152,7 +152,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public prevMonthView: IgxDaysViewComponent;
     /** @hidden */
     public shouldResetDate = true;
-    private _activeDate;
+    private _activeDate: Date;
     private _previewRangeDate: Date;
 
     /**
@@ -312,6 +312,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     public isSelected(date: ICalendarDate): boolean {
         let selectedDates: Date | Date[];
+
         if (this.isDateDisabled(date.date) || !this.value ||
             (Array.isArray(this.value) && this.value.length === 0)
         ) {

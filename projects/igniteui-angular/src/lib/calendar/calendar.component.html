@@ -179,7 +179,7 @@
                     *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonthYear; context: getContext(i)">
                 </ng-container>
             </div>
-            <div class="igx-calendar-picker__nav">
+            <div class="igx-calendar-picker__nav" *ngIf="monthsViewNumber === i + 1">
                 <div
                     tabindex="0"
                     class="igx-calendar-picker__prev"
