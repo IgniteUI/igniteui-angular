@@ -49,6 +49,11 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
+/* blazorElement */
+/* wcElementTag: igc-row-island */
+/* blazorIndirectRender */
+/* jsonAPIManageCollectionInMarkup */
+/* jsonAPIManageItemInMarkup */
 /**
  * Row island
  *
@@ -72,6 +77,8 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+
+    /* blazorSuppress */
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -86,6 +93,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Input()
     public key: string;
+
+    @Input()
+    public get childKey() {
+        return this.key;
+    }
+    public set childKey(value: string) {
+        this.key = value;
+    }
 
     /**
      * @hidden
