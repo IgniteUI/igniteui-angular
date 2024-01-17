@@ -1005,15 +1005,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		return date;
 	}
 
-	protected getDecadeRange(): { start: string; end: string } {
-		const dates = this.calendarModel.yearDates(this.viewDate);
-
-		return {
-			start: this.formatterYear.format(dates[0]),
-			end: this.formatterYear.format(dates.at(-1))
-		}
-	}
-
 	/**
 	 * Getter for the context object inside the calendar templates.
 	 *

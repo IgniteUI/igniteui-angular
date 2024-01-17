@@ -124,4 +124,13 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 		const dates = value as unknown as Date[];
 		return dates.map(date => this.formattedYear(date)).join(' - ');
 	}
+
+	protected getDecadeRange(): { start: string; end: string } {
+		const dates = this.calendarModel.yearDates(this.viewDate);
+
+		return {
+			start: this.formatterYear.format(dates[0]),
+			end: this.formatterYear.format(dates.at(-1))
+		}
+	}
 }
