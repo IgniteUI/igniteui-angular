@@ -2269,7 +2269,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
             expect(fix.componentInstance.onHeaderCheckboxClick).
-                toHaveBeenCalledWith(fix.componentInstance.headerCheckboxClick, contextUnselect);
+                 toHaveBeenCalledWith(fix.componentInstance.headerCheckboxClick, contextUnselect);
         });
 
         it('Should have correct indices on all pages', () => {
