@@ -931,7 +931,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected destroy$ = new Subject<any>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
-
+    protected compareCollator = new Intl.Collator(); 
+    
     private _type = null;
     private _dataType = '';
     private _itemHeight = null;
