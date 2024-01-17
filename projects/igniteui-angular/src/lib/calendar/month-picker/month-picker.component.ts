@@ -160,7 +160,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
 
         requestAnimationFrame(() => {
             if (this.dacadeView) {
-                this.dacadeView.el.nativeElement.focus();
+                this.dacadeView.focusActiveDate();
             }
         });
     }
@@ -206,8 +206,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
         this.activeView = IgxCalendarView.Month;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) {
-                this.yearsBtn.nativeElement.focus();
+            if (this.monthsView) {
+                this.monthsView.focusActiveDate();
             }
         });
     }
