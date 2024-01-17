@@ -140,7 +140,8 @@ import {
     IGX_GRID_SERVICE_BASE,
     ISizeInfo,
     RowType,
-    IPinningConfig
+    IPinningConfig,
+    IClipboardOptions
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -322,7 +323,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Controls the copy behavior of the grid.
      */
     @Input()
-    public clipboardOptions = {
+    public clipboardOptions: IClipboardOptions = {
         /**
          * Enables/disables the copy behavior
          */
@@ -3697,6 +3698,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resetCaches(recalcFeatureWidth = true) {
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
+            this.summaryService.summaryHeight = 0;
         }
         this.resetForOfCache();
         this.resetColumnsCaches();

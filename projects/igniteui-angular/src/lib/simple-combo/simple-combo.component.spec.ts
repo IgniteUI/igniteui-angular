@@ -915,6 +915,7 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not clear selection on tab/blur after filtering and selecting a value', () => {
+            combo.focusSearchInput();
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
@@ -1032,6 +1033,7 @@ describe('IgxSimpleCombo', () => {
         }));
 
         it('should select the first filtered item with Enter', () => {
+            combo.focusSearchInput();
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
@@ -1485,6 +1487,33 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.displayValue).toEqual(['Ohio ']);
         }));
+
+        it('should properly filter dropdown when pasting from clipboard in input', () => {
+            spyOn(combo, 'handleInputChange').and.callThrough();
+            combo.open();
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            const target = {
+                value: combo.data[1].field
+            }
+            combo.comboInput.value = target.value
+            const pasteData = new DataTransfer();
+            const pasteEvent = new ClipboardEvent('paste', { clipboardData: pasteData });
+            Object.defineProperty(pasteEvent, 'target', {
+                writable: false,
+                value: target
+            })
+            input.triggerEventHandler('paste', pasteEvent);
+            fixture.detectChanges();
+
+            expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
+            expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
+                target: jasmine.objectContaining({ value: target.value })
+            }));
+            expect(combo.filteredData.length).toBeLessThan(combo.data.length)
+            expect(combo.filteredData[0].field).toBe(target.value)
+        });
     });
 
     describe('Display density', () => {
