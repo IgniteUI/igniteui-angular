@@ -60,6 +60,10 @@ export class IgxGridStateDirective extends IgxGridStateBaseDirective {
      * ```
      */
     public setState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
+        if (typeof state === 'string') {
+            state = JSON.parse(state) as IGridState;
+            this.stateParsed.emit(state)
+        }
         return super.setStateInternal(state, features);
     }
 

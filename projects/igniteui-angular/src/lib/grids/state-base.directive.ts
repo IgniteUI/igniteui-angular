@@ -500,11 +500,7 @@ export class IgxGridStateBaseDirective {
      * this.state.setState(gridState);
      * ```
      */
-    protected setStateInternal(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
-        if (typeof state === 'string') {
-            state = JSON.parse(state) as IGridState;
-            this.stateParsed.emit(state)
-        }
+    protected setStateInternal(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         this.state = state;
         this.currGrid = this.grid;
         this.restoreGridState(state, features);

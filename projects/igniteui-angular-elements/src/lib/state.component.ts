@@ -75,7 +75,9 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         if (features.length === 0) {
             features = null;
         }
-        super.setStateInternal(state, features);
+        const gridState = JSON.parse(state) as IGridStateInfo;
+        this.stateParsed.emit(gridState);
+        super.setStateInternal(gridState, features);
     }
 
     /**
