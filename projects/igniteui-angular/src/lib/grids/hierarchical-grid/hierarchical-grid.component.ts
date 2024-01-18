@@ -116,6 +116,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
+    /* blazorSuppress */
     @ViewChild('container', {read: ViewContainerRef, static: true})
     public container: ViewContainerRef;
 
@@ -124,6 +125,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public hGrid: IgxHierarchicalGridComponent;
 
+    /* blazorSuppress */
     /**
      * Get a reference to the grid that contains the selected row.
      *
@@ -468,6 +470,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /* treatAsRef */
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
      * ```typescript
