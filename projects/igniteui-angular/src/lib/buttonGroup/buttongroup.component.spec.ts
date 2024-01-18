@@ -363,8 +363,11 @@ describe('IgxButtonGroup', () => {
     it('should style the corresponding button as deselected when the value bound to the selected input changes', () => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
-        
+
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
+
+        expect(btnGroupInstance.selectedButtons.length).toBe(1);
+        expect(btnGroupInstance.buttons[1].selected).toBe(true);
 
         fixture.componentInstance.selectedValue = 100;
         fixture.detectChanges();
