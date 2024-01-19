@@ -35,10 +35,10 @@
         }
 
         %picker-arrow {
-            color: var-get($theme, 'month-nav-arrow-color');
+            color: var-get($theme, 'navigation-color');
 
             &:hover {
-                color: var-get($theme, 'month-nav-arrow-hover-color');
+                color: var-get($theme, 'navigation-hover-color');
             }
         }
 

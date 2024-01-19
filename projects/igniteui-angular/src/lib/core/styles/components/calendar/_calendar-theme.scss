@@ -63,9 +63,9 @@
 /// @param {Color} $year-selected-current-focus-foreground [null] - The :focus foreground for the current selected year in years view.
 /// @param {Color} $year-selected-current-focus-background [null] - The :focus background on focus for the current year in years view.
 ///
-/// @param {Color} $month-nav-arrow-color [null] - The color of the icon button responsible for month navigation.
-/// @param {Color} $month-nav-arrow-hover-color [null] - The :hover color of the icon button responsible for month navigation.
-/// @param {Color} $month-nav-arrow-focus-color [null] - The :focus color of the icon button responsible for month navigation.
+/// @param {Color} $navigation-color [null] - The color of the icon button responsible for month navigation.
+/// @param {Color} $navigation-hover-color [null] - The :hover color of the icon button responsible for month navigation.
+/// @param {Color} $navigation-focus-color [null] - The :focus color of the icon button responsible for month navigation.
 ///
 /// @param {Color} $month-hover-foreground [null] - The :hover foreground of the month inside the months view.
 /// @param {Color} $month-hover-background [null] - The :hover background of the month inside the months view.
@@ -174,8 +174,12 @@
 ///
 /// @param {Color} $date-disabled-foreground [null] - The foreground of the disabled dates.
 /// @param {Color} $date-disabled-background [null] - The background of the disabled dates.
+/// @param {Color} $date-disabled-current-foreground [null] - The foreground of the current/disabled date.
+/// @param {Color} $date-disabled-current-background [null] - The background of the current/disabled date.
 /// @param {Color} $date-disabled-range-foreground [null] - The foreground of the disabled dates in range selection.
 /// @param {Color} $date-disabled-range-background [null] - The background of the disabled dates in range selection.
+/// @param {Color} $date-disabled-current-range-foreground [null] - The foreground of the current/disabled date in range selection.
+/// @param {Color} $date-disabled-current-range-background [null] - The background of the current/disabled date in range selection.
 ///
 /// @param {Color} $calendar-border-color [null] - The calendar border color.
 ///
@@ -255,9 +259,9 @@
     $year-selected-current-focus-foreground: null,
     $year-selected-current-focus-background: null,
 
-    $month-nav-arrow-color: null,
-    $month-nav-arrow-hover-color: null,
-    $month-nav-arrow-focus-color: null,
+    $navigation-color: null,
+    $navigation-hover-color: null,
+    $navigation-focus-color: null,
 
     $month-hover-foreground: null,
     $month-hover-background: null,
@@ -377,6 +381,12 @@
 
     $date-disabled-range-foreground: null,
     $date-disabled-range-background: null,
+
+    $date-disabled-current-foreground: null,
+    $date-disabled-current-background: null,
+
+    $date-disabled-current-range-foreground: null,
+    $date-disabled-current-range-background: null,
 
     $calendar-border-radius: null,
     $week-number-border-radius: null,
@@ -528,15 +538,15 @@
     }
 
     @if $variant != 'bootstrap' {
-        @if not($month-nav-arrow-color) and $content-background {
+        @if not($navigation-color) and $content-background {
             @if meta.type-of($content-background) == 'color' {
-                $month-nav-arrow-color: text-contrast($content-background);
+                $navigation-color: text-contrast($content-background);
             }
         }
 
-        @if not($month-nav-arrow-focus-color) and $month-nav-arrow-hover-color {
-            @if meta.type-of($month-nav-arrow-hover-color) == 'color' {
-                $month-nav-arrow-focus-color: $month-nav-arrow-hover-color;
+        @if not($navigation-focus-color) and $navigation-hover-color {
+            @if meta.type-of($navigation-hover-color) == 'color' {
+                $navigation-focus-color: $navigation-hover-color;
             }
         }
     }
@@ -720,9 +730,9 @@
         month-hover-foreground: $month-hover-foreground,
         month-focus-foreground: $month-focus-foreground,
 
-        month-nav-arrow-color: $month-nav-arrow-color,
-        month-nav-arrow-hover-color: $month-nav-arrow-hover-color,
-        month-nav-arrow-focus-color: $month-nav-arrow-focus-color,
+        navigation-color: $navigation-color,
+        navigation-hover-color: $navigation-hover-color,
+        navigation-focus-color: $navigation-focus-color,
 
         month-current-background: $month-current-background,
         month-current-foreground: $month-current-foreground,
@@ -824,6 +834,12 @@
 
         date-disabled-foreground: $date-disabled-foreground,
         date-disabled-background: $date-disabled-background,
+
+        date-disabled-current-foreground: $date-disabled-current-foreground,
+        date-disabled-current-background: $date-disabled-current-background,
+
+        date-disabled-current-range-foreground: $date-disabled-current-range-foreground,
+        date-disabled-current-range-background: $date-disabled-current-range-background,
 
         date-disabled-range-foreground: $date-disabled-range-foreground,
         date-disabled-range-background: $date-disabled-range-background,
@@ -1075,7 +1091,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var-get($theme, 'month-nav-arrow-color');
+        color: var-get($theme, 'navigation-color');
         user-select: none;
         outline: none;
         cursor: pointer;
@@ -1085,11 +1101,11 @@
         }
 
         &:hover {
-            color: var-get($theme, 'month-nav-arrow-hover-color');
+            color: var-get($theme, 'navigation-hover-color');
         }
 
         &:focus {
-            color: var-get($theme, 'month-nav-arrow-focus-color');
+            color: var-get($theme, 'navigation-focus-color');
         }
 
         [dir='rtl'] & {
@@ -1621,6 +1637,12 @@
         }
     }
 
+    %date-current-special {
+        %date-inner {
+        color: var-get($theme, 'date-current-foreground');
+            }
+    }
+
     %date-selected {
         position: relative;
 
@@ -1769,11 +1791,11 @@
                 height: calc(#{$date-height} - #{$border-size * 2});
             } @else {
                 height: $date-height;
-            }
 
-            &::before,
-            &::after {
-                display: none;
+                &::before,
+                &::after {
+                    display: none;
+                }
             }
         }
     }
@@ -1787,7 +1809,10 @@
     %date-range-selected-special {
         %date-inner {
             background: var-get($theme, 'date-special-background');
-            color: var-get($theme, 'date-special-foreground');
+
+            @if $variant != 'fleunt' {
+                color: var-get($theme, 'date-special-foreground');
+            }
         }
 
         &:hover,
@@ -1984,15 +2009,29 @@
         cursor: not-allowed;
 
         %date-inner {
-            color: var-get($theme, 'date-disabled-foreground') !important;
-            background: var-get($theme, 'date-disabled-background') !important;
+            color: var-get($theme, 'date-disabled-foreground');
+            background: var-get($theme, 'date-disabled-background');
         }
     }
 
     %date-range-disabled {
         %date-inner {
-            color: var-get($theme, 'date-disabled-range-foreground') !important;
-            background: var-get($theme, 'date-disabled-range-background') !important;
+            color: var-get($theme, 'date-disabled-range-foreground');
+            background: var-get($theme, 'date-disabled-range-background');
+        }
+    }
+
+    %date-disabled-current {
+        %date-inner {
+            color: var-get($theme, 'date-disabled-current-foreground');
+            background: var-get($theme, 'date-disabled-current-background');
+        }
+    }
+
+    %date-disabled-current-range {
+        %date-inner {
+            color: var-get($theme, 'date-disabled-current-range-foreground');
+            background: var-get($theme, 'date-disabled-current-range-background');
         }
     }
 

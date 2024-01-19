@@ -174,7 +174,7 @@
             @extend %date-range-selected-special !optional;
         }
 
-        @include e(date, $mods: ('inactive', 'selected', single, 'range')) {
+        @include e(date, $mods: ('range', 'inactive', 'selected', single)) {
             @extend %date-range-inactive-selected-single !optional;
         }
 
@@ -194,7 +194,11 @@
             }
         }
 
-        @include e(date, $mods: ('selected', 'current')) {
+        @include e(date, $mods: ('current', 'special')) {
+            @extend %date-current-special !optional;
+        }
+
+        @include e(date, $mods: ('current', 'selected')) {
             @extend %selected-current !optional;
 
             &:hover {
@@ -206,11 +210,11 @@
             }
         }
 
-        @include e(date, 'special') {
+        @include e(date, $mods: ('current' 'special')) {
             @extend %date-special !optional;
         }
 
-        @include e(date, $mods: ('special', 'current')) {
+        @include e(date, 'special') {
             @extend %date-special !optional;
         }
 
@@ -228,10 +232,6 @@
 
         @include e(date, 'selected', $mods: ('first', 'last')) {
             @extend %date-single !optional;
-        }
-
-        @include e(date, $mods: ('disabled', 'inactive')) {
-            @extend %date-disabled !optional;
         }
 
         @include e(label) {
@@ -259,8 +259,20 @@
             @extend %date-disabled !optional;
         }
 
-        @include e(date, $mods: ('range', 'disabled')) {
+        @include e(date, $mods: ('disabled', 'inactive')) {
+            @extend %date-disabled !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'range')) {
             @extend %date-range-disabled !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'current')) {
+            @extend %date-disabled-current !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'current', 'range')) {
+            @extend %date-disabled-current-range!optional;
         }
     }
 
