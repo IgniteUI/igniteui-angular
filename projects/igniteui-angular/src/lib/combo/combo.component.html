@@ -60,7 +60,7 @@
         [attr.aria-activedescendant]="activeDescendant">
         <igx-combo-item [itemHeight]="itemHeight" *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
-            | comboGrouping:groupKey:valueKey:groupSortingDirection;
+            | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex" [role]="item?.isHeader? 'group' : 'option'">
             <ng-container *ngIf="item?.isHeader">
