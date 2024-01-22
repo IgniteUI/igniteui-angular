@@ -904,10 +904,10 @@
     $border-size: rem(1px);
 
     $border-width: map.get((
-        material: 0,
-        fluent: 0,
+        material: 1px,
+        fluent: 1px,
         bootstrap: 1px,
-        indigo-design: 0
+        indigo-design: 1px
     ), $variant);
 
     $cal-value-fw: 600;
@@ -1082,7 +1082,13 @@
 
     %picker__nav {
         display: flex;
-        gap: rem(24px);
+
+        @if $variant != 'fluent' {
+            gap: rem(24px);
+        } @else {
+            gap: rem(8px);
+        }
+
         position: absolute;
         inset-inline-end: rem(16px);
     }
@@ -1639,8 +1645,8 @@
 
     %date-current-special {
         %date-inner {
-        color: var-get($theme, 'date-current-foreground');
-            }
+            color: var-get($theme, 'date-current-foreground');
+        }
     }
 
     %date-selected {
@@ -1800,9 +1806,11 @@
         }
     }
 
-    %date-preview-range {
+    %date-range-preview {
+        border-block-color: red;
+
         %date-inner {
-            color: red;
+            color: var-get($theme, 'date-selected-range-foreground');
         }
     }
 
@@ -1969,15 +1977,6 @@
 
         %date-inner {
             border-inline-color: transparent;
-        }
-
-        @if $variant == 'fluent' {
-            &:hover,
-            &:focus {
-                %date-inner {
-                    border-inline-color: var-get($theme, 'date-range-border-color');
-                }
-            }
         }
     }
 

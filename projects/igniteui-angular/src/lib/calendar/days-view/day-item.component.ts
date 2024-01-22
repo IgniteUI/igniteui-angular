@@ -139,7 +139,7 @@ export class IgxDayItemComponent {
         return !this.isSingleSelection && this.isWithinRange;
     }
 
-    @HostBinding('class.igx-days-view__date--preview-range')
+    @HostBinding('class.igx-days-view__date--range-preview')
     public get isWithinPreviewRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinPreviewRange;
     }

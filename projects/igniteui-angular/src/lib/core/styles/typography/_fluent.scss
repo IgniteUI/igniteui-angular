@@ -37,9 +37,9 @@
     @include calendar-typography($categories: (
         header-year: 'overline',
         header-date: 'h4',
-        weekday-label: 'subtitle-1',
+        weekday-label: 'body-1',
         picker-date: 'subtitle-2',
-        content: 'subtitle-1',
+        content: 'body-1',
     ));
     @include card-typography($categories: (
         title: 'subtitle-1',
