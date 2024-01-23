@@ -6,6 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getComponentSize } from '../core/utils';
+import { NgFor } from '@angular/common';
 
 interface IButton {
     type?: string;
@@ -54,7 +55,8 @@ describe('IgxButtonGroup', () => {
                 InitButtonGroupWithValuesComponent,
                 TemplatedButtonGroupComponent,
                 TemplatedButtonGroupDesplayDensityComponent,
-                ButtonGroupWithSelectedButtonComponent
+                ButtonGroupWithSelectedButtonComponent,
+                ButtonGroupButtonWithBoundSelectedOutputComponent,
             ]
         }).compileComponents();
     }));
@@ -182,15 +184,15 @@ describe('IgxButtonGroup', () => {
     it('Button Group single required selection', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
-        
+
         const buttongroup = fixture.componentInstance.buttonGroup;
         buttongroup.selectionMode = 'singleRequired';
         spyOn(buttongroup.deselected, 'emit');
-        
+
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(1);
         expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
-        
+
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
 
@@ -358,6 +360,22 @@ describe('IgxButtonGroup', () => {
         }
     });
 
+    it('should style the corresponding button as deselected when the value bound to the selected input changes', () => {
+        const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
+        fixture.detectChanges();
+
+        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+
+        expect(btnGroupInstance.selectedButtons.length).toBe(1);
+        expect(btnGroupInstance.buttons[1].selected).toBe(true);
+
+        fixture.componentInstance.selectedValue = 100;
+        fixture.detectChanges();
+
+        expect(btnGroupInstance.selectedButtons.length).toBe(0);
+        expect(btnGroupInstance.buttons[1].selected).toBe(false);
+    });
+
 });
 
 @Component({
@@ -483,4 +501,25 @@ class TemplatedButtonGroupDesplayDensityComponent {
 })
 class ButtonGroupWithSelectedButtonComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+}
+
+@Component({
+    template: `
+    <igx-buttongroup>
+        <button igxButton *ngFor="let item of items" [selected]="item.key === selectedValue">{{item.value}}</button>
+    </igx-buttongroup>
+    `,
+    standalone: true,
+    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor ]
+})
+class ButtonGroupButtonWithBoundSelectedOutputComponent {
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+
+    public items = [
+        { key: 0, value: 'Button 1' },
+        { key: 1, value: 'Button 2' },
+        { key: 2, value: 'Button 3' },
+    ];
+
+    public selectedValue = 1;
 }
