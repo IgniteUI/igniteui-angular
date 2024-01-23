@@ -366,22 +366,27 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.selectedIndexes.push(index);
         }
 
-        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
-        this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
+        if (button.selected) {
+            this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
+            this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
 
-        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
-        if (indexInViewButtons !== -1) {
+            const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+            if (indexInViewButtons !== -1) {
             this.values[indexInViewButtons].selected = true;
+            }
+
+            // deselect other buttons if selectionMode is not multi
+            if (this.selectionMode !== 'multi' && this.selectedIndexes.length > 1) {
+                this.buttons.forEach((_, i) => {
+                    if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
+                        this.deselectButton(i);
+                    }
+                });
+            }
+        } else {
+            this.deselectButton(index);
         }
 
-        // deselect other buttons if selectionMode is not multi
-        if (this.selectionMode !== 'multi' && this.selectedIndexes.length > 1) {
-            this.buttons.forEach((_, i) => {
-                if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
-                    this.deselectButton(i);
-                }
-            });
-        }
     }
 
     /**
