@@ -91,7 +91,7 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Pénznemszűrő',
     igx_grid_excel_custom_filter: 'Egyéni szűrő...',
     igx_grid_excel_no_matches: 'Nincs találat',
-    igx_grid_excel_matches_count: '{0} matches.',
+    igx_grid_excel_matches_count: '{0} találat',
     igx_grid_advanced_filter_title: 'Speciális szűrés',
     igx_grid_advanced_filter_and_group: '"És" csoport',
     igx_grid_advanced_filter_or_group: '"Vagy" Csoport',
