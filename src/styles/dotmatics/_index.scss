@@ -4,6 +4,7 @@
 @use 'palette' as *;
 @use 'typography' as *;
 @use './components/radio';
+@use './components/button';
 
 // Base
 $background-color: contrast-color($light-material-palette, 'gray', 900);
@@ -26,13 +27,15 @@ body {
     $font-family: $typeface,
     $type-scale: $type-scale
 );
+
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio')
+    $exclude: ('igx-radio', 'igx-button')
 );
 
 @include radio.component();
+@include button.component();
 
 .nav-header {
     @if luminance($background-color) < .5 {
