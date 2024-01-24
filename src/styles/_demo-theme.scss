@@ -2,7 +2,8 @@
 @use 'igniteui-theming/sass/config' as * with ($base-font-size: 16px);
 // Standard imports
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
-@use 'variables' as *;
+// @use 'variables' as *;
+@use 'dotmatics' as *;
 @use 'mixins' as *;
 @use 'app-layout';
 
@@ -21,6 +22,7 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
+    $exclude: ('igx-radio', 'igx-button')
 );
 
 .dock {

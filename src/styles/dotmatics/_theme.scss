@@ -1,0 +1,13 @@
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+@forward 'palette';
+@forward 'typography';
+
+// Base
+$schema: $light-bootstrap-schema;
+
+$background-color: contrast-color($light-material-palette, 'gray', 900);
+$foreground-color: color($light-material-palette, 'gray', 900);
+
+:root {
+    --ig-theme: bootstrap;
+}
