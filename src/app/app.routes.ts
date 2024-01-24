@@ -11,6 +11,7 @@ import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
+import { DotmaticsComponent } from "./dotmatics/dotmatics.component";
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -231,6 +232,10 @@ export const appRoutes: Routes = [
     {
         path: 'drag-drop',
         component: DragDropSampleComponent
+    },
+    {
+        path: 'dotmatics',
+        component: DotmaticsComponent
     },
     {
         path: 'icon',

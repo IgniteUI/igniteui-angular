@@ -1,0 +1,15 @@
+<span class="title">Buttons</span>
+<igx-switch  [(ngModel)]="isDisabled">Disable buttons</igx-switch>
+<div class="buttons preview">
+    <button igxButton="raised" [disabled]="isDisabled">Primary</button>
+
+    <button igxButton="outlined" [disabled]="isDisabled">Default</button>
+
+    <button igxButton="flat" [disabled]="isDisabled">Text</button>
+
+    <a href="http://localhost:4200/dotmatics" igxButton="flat" [disabled]="isDisabled">Anchor Button</a>
+
+    <button igxButton="fab">
+        <igx-icon>menu</igx-icon>
+    </button>
+</div>
