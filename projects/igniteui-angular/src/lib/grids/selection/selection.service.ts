@@ -689,7 +689,7 @@ export class IgxGridSelectionService {
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
         let allData;
-        if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
+        if (this.isFilteringApplied() || this.grid.sortingExpressions.length || this.grid.groupingExpressions?.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
             allData = this.grid.gridAPI.get_all_data(true);
