@@ -49,6 +49,7 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
+/* blazorCopyInheritedMembers */
 /* blazorElement */
 /* wcElementTag: igc-row-island */
 /* blazorIndirectRender */
