@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$_base-schema: $light-fluent-schema;
+$_base-schema: $light-indigo-schema;
 $_radio-schema: extend(
     map.get($_base-schema, 'radio'),
     (
@@ -19,4 +19,10 @@ $_radio-schema: extend(
             )
         )
     );
+
+    .ig-typography {
+        @include radio-typography(
+            $categories: (label: 'subtitle-2')
+        );
+    }
 }
