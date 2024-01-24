@@ -6311,7 +6311,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isPercentWidth) {
             /* width in %*/
             const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
-            width = computed.indexOf('%') === -1 ? parseInt(computed, 10) : null;
+            width = computed.indexOf('%') === -1 ? parseFloat(computed) : null;
         } else {
             width = parseInt(this.width, 10);
         }
