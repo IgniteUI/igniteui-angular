@@ -4,6 +4,7 @@
 @use 'palette' as *;
 @use 'typography' as *;
 @use './components/radio';
+@use './components/checkbox';
 @use './components/button';
 
 // Base
@@ -31,10 +32,11 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio', 'igx-button')
+    $exclude: ('igx-radio', 'igx-checkbox', 'igx-button')
 );
 
 @include radio.component();
+@include checkbox.component();
 @include button.component();
 
 .nav-header {
