@@ -233,6 +233,7 @@ A list of the events emitted by the **igx-grid**:
 |`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
 |`rowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
+|`rowClick`|Emitted when a row is clicked. Returns the row object.|
 |`rowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
 |`dataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
 |`columnPin`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
