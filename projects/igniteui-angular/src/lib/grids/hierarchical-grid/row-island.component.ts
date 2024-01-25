@@ -109,6 +109,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
+
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
+    public childLayoutList = new QueryList<IgxRowIslandComponent>();
+
     /**
      * @hidden
      */
