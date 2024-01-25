@@ -253,7 +253,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,
@@ -532,12 +536,16 @@ export var registerConfig = [
         descendants: true,
       },
       {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
+      {
         property: "columnList",
         childType: IgxColumnComponent,
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,
@@ -851,7 +859,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
     ],
     additionalProperties: [
       { name: "islandToolbarTemplate", writable: true },
@@ -989,7 +1001,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,

@@ -403,7 +403,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     @ContentChild(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false } )
-    public override actionStrip: IgxActionStripComponent;
+    public override actionStripComponents: QueryList<IgxActionStripComponent>;
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
