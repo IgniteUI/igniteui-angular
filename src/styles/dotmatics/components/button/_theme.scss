@@ -40,6 +40,7 @@ $_flat-button: extend(map.get($_base-schema, button, flat), (
   active-background: $flat-background,
   disabled-foreground: color($color: 'gray', $variant: 400),
   border-radius: rem(6px),
+  default-size: 2,
 ));
 
 $_raised-button: extend(map.get($_base-schema, button, raised), (
@@ -61,14 +62,14 @@ $_raised-button: extend(map.get($_base-schema, button, raised), (
 ));
 
 $_outlined-button: extend(map.get($_base-schema, button, outlined), (
-  background: color($color: 'surface', $variant: 500),
   foreground: color($color: 'gray', $variant: 900),
-  hover-background: color($color: 'surface', $variant: 500),
+  background: color($color: 'surface', $variant: 500),
   hover-foreground: color($color: 'primary', $variant: 400),
-  focus-background: color($color: 'surface', $variant: 500),
+  hover-background: color($color: 'surface', $variant: 500),
   focus-foreground: color($color: 'primary', $variant: 400),
-  focus-visible-background: color($color: 'surface', $variant: 500),
+  focus-background: color($color: 'surface', $variant: 500),
   focus-visible-foreground: color($color: 'primary', $variant: 400),
+  focus-visible-background: color($color: 'surface', $variant: 500),
   active-foreground: color($color: 'primary', $variant: 600),
   active-background: color($color: 'surface', $variant: 500),
   border-color: color($color: 'gray', $variant: 300),
@@ -76,14 +77,27 @@ $_outlined-button: extend(map.get($_base-schema, button, outlined), (
   focus-border-color: color($color: 'gray', $variant: 300),
   focus-visible-border-color: color($color: 'gray', $variant: 300),
   active-border-color: color($color: 'primary', $variant: 600),
-  disabled-background: color($color: 'gray', $variant: 300),
   disabled-foreground: color($color: 'gray', $variant: 400),
+  disabled-background: color($color: 'gray', $variant: 300),
   disabled-border-color: color($color: 'gray', $variant: 300),
   border-radius: rem(6px),
+  default-size: 2,
 ));
 
 $_fab-button: extend(map.get($_base-schema, button, fab), (
-
+  foreground: color($color: 'gray', $variant: 900),
+  background: color($color: 'surface', $variant: 500),
+  hover-foreground: color($color: 'gray', $variant: 900),
+  hover-background: color($color: 'gray', $variant: 200),
+  focus-foreground: color($color: 'gray', $variant: 900),
+  focus-background: color($color: 'gray', $variant: 200),
+  focus-visible-foreground: color($color: 'gray', $variant: 900),
+  focus-visible-background: color($color: 'gray', $variant: 200),
+  active-foreground: color($color: 'gray', $variant: 900),
+  active-background: color($color: 'gray', $variant: 200),
+  border-radius: rem(8px),
+  default-size: 2,
+  resting-elevation: 12,
 ));
 
 $_button-schema: extend(map.get($_base-schema, 'button'), (
