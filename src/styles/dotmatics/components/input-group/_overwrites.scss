@@ -1,0 +1,62 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+igx-input-group.igx-input-group--fluent {
+    .igx-input-group__bundle {
+        &:focus-within,
+        &:focus {
+            border-width: rem(1px);
+            box-shadow: 0 0 0 2px color($color: 'primary', $variant: 100);
+
+            .igx-input-group__bundle-start {
+                margin-block-start: 0;
+                margin-inline-start: 0;
+            }
+
+            .igx-input-group__bundle-main {
+                margin-block-start: 0;
+            }
+
+            .igx-input-group__bundle-end {
+                margin-block-end: 0;
+                margin-inline-end: 0;
+            }
+        }
+    }
+}
+
+igx-input-group.igx-input-group--fluent.igx-input-group--invalid {
+    --igx-input-group-input-suffix-color: #{color($color: 'error')};
+    --igx-input-group-input-suffix-color--focused: #{color($color: 'error')};
+    --igx-input-group-input-suffix-color-filled: #{color($color: 'error')};
+
+    .igx-input-group__bundle {
+        &:focus-within,
+        &:focus {
+            box-shadow: 0 0 0 2px color($color: 'error', $variant: 100);
+        }
+    }
+}
+
+igx-input-group.igx-input-group--fluent.igx-input-group--prefixed,
+igx-input-group.igx-input-group--fluent.igx-input-group--suffixed {
+    .igx-input-group__input {
+        padding-inline-start: 0;
+    }
+}
+
+igx-input-group.igx-input-group--fluent:not(.igx-input-group--prefixed) {
+    .igx-input-group__input {
+        padding-inline-start: rem(12px);
+    }
+}
+
+igx-input-group.igx-input-group--fluent:not(.igx-input-group--suffixed) {
+    .igx-input-group__input {
+        padding-inline-end: rem(12px);
+    }
+}
+
+igx-input-group.igx-input-group--fluent [igxPrefix],
+igx-input-group.igx-input-group--fluent [igxSuffix] {
+    padding-inline: rem(12px);
+}

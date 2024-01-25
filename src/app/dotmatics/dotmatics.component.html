@@ -1,11 +1,13 @@
 <span class="title">Buttons</span>
-<igx-switch  [(ngModel)]="isDisabled">Disable buttons</igx-switch>
+<igx-switch  [(ngModel)]="isButtonDisabled">
+    <span igxLabel>Disable buttons</span>
+</igx-switch>
 <div class="buttons preview">
-    <button igxButton="raised" [disabled]="isDisabled">Primary</button>
+    <button igxButton="raised" [disabled]="isButtonDisabled">Primary</button>
 
-    <button igxButton="outlined" [disabled]="isDisabled">Default</button>
+    <button igxButton="outlined" [disabled]="isButtonDisabled">Default</button>
 
-    <button igxButton="flat" [disabled]="isDisabled">Text</button>
+    <button igxButton="flat" [disabled]="isButtonDisabled">Text</button>
 
     <a href="http://localhost:4200/dotmatics" igxButton="flat" [disabled]="isDisabled">Anchor Button</a>
 
@@ -13,3 +15,18 @@
         <igx-icon>menu</igx-icon>
     </button>
 </div>
+
+<span class="title">Input-group</span>
+<igx-switch  [(ngModel)]="isInputDisabled">
+    <span igxLabel>Disable input-group</span>
+</igx-switch>
+<form class="input-form preview">
+    <igx-input-group>
+        <igx-icon igxPrefix>face</igx-icon>
+        <input [disabled]="isInputDisabled" placeholder="Placeholder" igxInput id="file" name="file" type="text" />
+        <label igxLabel for="file">Default input</label>
+        <span igxSuffix>
+            <igx-icon>info</igx-icon>
+        </span>
+    </igx-input-group>
+</form>

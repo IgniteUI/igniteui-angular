@@ -7,6 +7,7 @@
 @use './components/checkbox';
 @use './components/switch';
 @use './components/button';
+@use './components/input-group';
 
 // Base
 $background-color: contrast-color($light-material-palette, 'gray', 900);
@@ -33,13 +34,14 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-button')
+    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-button', 'igx-input-group')
 );
 
 @include radio.component();
 @include checkbox.component();
 @include button.component();
 @include switch.component();
+@include input-group.component();
 
 .nav-header {
     @if luminance($background-color) < .5 {

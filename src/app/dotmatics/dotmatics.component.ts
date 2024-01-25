@@ -1,5 +1,11 @@
 import {Component} from '@angular/core';
-import {IgxButtonModule, IgxIconComponent, IgxSwitchComponent} from "igniteui-angular";
+import {
+    IgxButtonModule,
+    IgxIconComponent, IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective,
+    IgxSwitchComponent
+} from "igniteui-angular";
 import {FormsModule} from "@angular/forms";
 
 @Component({
@@ -10,10 +16,16 @@ import {FormsModule} from "@angular/forms";
         IgxIconComponent,
         IgxSwitchComponent,
         FormsModule,
+        IgxInputGroupComponent,
+        IgxLabelDirective,
+        IgxInputDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
     ],
     templateUrl: './dotmatics.component.html',
     styleUrl: './dotmatics.component.scss'
 })
 export class DotmaticsComponent {
-    public isDisabled = false;
+    public isButtonDisabled = false;
+    public isInputDisabled = false;
 }
