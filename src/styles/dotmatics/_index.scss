@@ -5,6 +5,7 @@
 @use 'typography' as *;
 @use './components/radio';
 @use './components/checkbox';
+@use './components/switch';
 @use './components/button';
 
 // Base
@@ -32,12 +33,13 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio', 'igx-checkbox', 'igx-button')
+    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-button')
 );
 
 @include radio.component();
 @include checkbox.component();
 @include button.component();
+@include switch.component();
 
 .nav-header {
     @if luminance($background-color) < .5 {
