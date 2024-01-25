@@ -9,7 +9,9 @@
   display: grid;
   padding: 1rem;
   background: hsla(var(--ig-gray-100));
-  border: 1px solid hsla(var(--ig-gray-500));
+  border: 1px solid hsla(var(--ig-gray-200));
+  box-shadow: inset 0 0 0 1px  hsla(var(--ig-gray-50));
+  border-radius: 6px;
   margin-bottom: 1rem;
 }
 

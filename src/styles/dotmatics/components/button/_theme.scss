@@ -1,8 +1,8 @@
 @use 'sass:map';
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$flat-foreground: hsla(var(--ig-gray-900));
-$flat-background: hsla(var(--ig-gray-200));
+$flat-foreground: color($color: 'gray', $variant: 900);
+$flat-background: color($color: 'gray', $variant: 200);
 //$elevations: null,
 //$background: null,
 //$foreground: null,
@@ -38,7 +38,7 @@ $_flat-button: extend(map.get($_base-schema, button, flat), (
   focus-visible-background: $flat-background,
   active-foreground: $flat-foreground,
   active-background: $flat-background,
-  disabled-foreground: hsla(var(--ig-gray-400)),
+  disabled-foreground: color($color: 'gray', $variant: 400),
   border-radius: rem(6px),
 ));
 
@@ -47,38 +47,38 @@ $_raised-button: extend(map.get($_base-schema, button, raised), (
   hover-elevation: 0,
   focus-elevation: 0,
   active-elevation: 0,
-  hover-foreground: var(--ig-primary-900-contrast),
-  hover-background: hsla(var(--ig-primary-400)),
-  focus-foreground: var(--ig-primary-900-contrast),
-  focus-background: hsla(var(--ig-primary-400)),
-  active-foreground: var(--ig-primary-600-contrast),
-  active-background: hsla(var(--ig-primary-600)),
-  disabled-background: hsla(var(--ig-gray-200)),
-  disabled-foreground: hsla(var(--ig-gray-400)),
-  disabled-border-color: hsla(var(--ig-gray-300)),
+  hover-foreground: contrast-color($color: 'primary', $variant: 900),
+  hover-background: color($color: 'primary', $variant: 400),
+  focus-foreground: contrast-color($color: 'primary', $variant: 900),
+  focus-background: color($color: 'primary', $variant: 400),
+  active-foreground: contrast-color($color: 'primary', $variant: 600),
+  active-background: color($color: 'primary', $variant: 600),
+  disabled-background: color($color: 'gray', $variant: 200),
+  disabled-foreground: color($color: 'gray', $variant: 400),
+  disabled-border-color: color($color: 'gray', $variant: 300),
   border-radius: rem(6px),
   default-size: 2,
 ));
 
 $_outlined-button: extend(map.get($_base-schema, button, outlined), (
-  background: hsla(var(--ig-surface-500)),
-  foreground: hsla(var(--ig-gray-900)),
-  hover-background: hsla(var(--ig-surface-500)),
-  hover-foreground: hsla(var(--ig-primary-400)),
-  focus-background: hsla(var(--ig-surface-500)),
-  focus-foreground: hsla(var(--ig-primary-400)),
-  focus-visible-background: hsla(var(--ig-surface-500)),
-  focus-visible-foreground: hsla(var(--ig-primary-400)),
-  active-foreground: hsla(var(--ig-primary-600)),
-  active-background: hsla(var(--ig-surface-500)),
-  border-color: hsla(var(--ig-gray-300)),
-  hover-border-color: hsla(var(--ig-gray-300)),
-  focus-border-color: hsla(var(--ig-gray-300)),
-  focus-visible-border-color: hsla(var(--ig-gray-300)),
-  active-border-color: hsla(var(--ig-primary-600)),
-  disabled-background: hsla(var(--ig-gray-200)),
-  disabled-foreground: hsla(var(--ig-gray-400)),
-  disabled-border-color: hsla(var(--ig-gray-300)),
+  background: color($color: 'surface', $variant: 500),
+  foreground: color($color: 'gray', $variant: 900),
+  hover-background: color($color: 'surface', $variant: 500),
+  hover-foreground: color($color: 'primary', $variant: 400),
+  focus-background: color($color: 'surface', $variant: 500),
+  focus-foreground: color($color: 'primary', $variant: 400),
+  focus-visible-background: color($color: 'surface', $variant: 500),
+  focus-visible-foreground: color($color: 'primary', $variant: 400),
+  active-foreground: color($color: 'primary', $variant: 600),
+  active-background: color($color: 'surface', $variant: 500),
+  border-color: color($color: 'gray', $variant: 300),
+  hover-border-color: color($color: 'gray', $variant: 300),
+  focus-border-color: color($color: 'gray', $variant: 300),
+  focus-visible-border-color: color($color: 'gray', $variant: 300),
+  active-border-color: color($color: 'primary', $variant: 600),
+  disabled-background: color($color: 'gray', $variant: 300),
+  disabled-foreground: color($color: 'gray', $variant: 400),
+  disabled-border-color: color($color: 'gray', $variant: 300),
   border-radius: rem(6px),
 ));
 
