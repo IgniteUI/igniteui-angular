@@ -401,10 +401,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childRow: IgxChildGridRowComponent;
 
-    /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false } )
-    public override actionStripComponents: QueryList<IgxActionStripComponent>;
-
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
