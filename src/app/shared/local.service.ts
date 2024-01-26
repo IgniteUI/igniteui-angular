@@ -3,7 +3,9 @@ import { HttpClient} from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FinancialData } from './financialData';
 
-@Injectable()
+@Injectable({ 
+    providedIn: 'root' 
+})
 export class LocalService {
     public records: Observable<any[]>;
     public url: string;

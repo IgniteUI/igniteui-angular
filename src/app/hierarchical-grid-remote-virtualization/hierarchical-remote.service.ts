@@ -5,7 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { IgxGridHierarchicalPipe } from 'projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.pipes';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class HierarchicalRemoteService {
 
     public remotePagingData: BehaviorSubject<any[]>;

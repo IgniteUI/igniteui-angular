@@ -3,7 +3,9 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RemoteService {
     public remotePagingData: BehaviorSubject<any[]>;
     public urlPaging = 'https://www.igniteui.com/api/products';
