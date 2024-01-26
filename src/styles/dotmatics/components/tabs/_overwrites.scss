@@ -22,7 +22,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 1px;
+            height: rem(1px);
             background-color: #{color(null, 'gray', 200)};
         }
     }
