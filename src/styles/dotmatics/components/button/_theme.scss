@@ -33,6 +33,8 @@ $_raised-button: extend(map.get($_base-schema, button, raised), (
     hover-background: color($color: 'primary', $variant: 400),
     focus-foreground: contrast-color($color: 'primary', $variant: 900),
     focus-background: color($color: 'primary', $variant: 400),
+    focus-visible-foreground: contrast-color($color: 'primary', $variant: 900),
+    focus-visible-background: color($color: 'primary', $variant: 400),
     active-foreground: contrast-color($color: 'primary', $variant: 600),
     active-background: color($color: 'primary', $variant: 600),
     disabled-background: color($color: 'gray', $variant: 200),
@@ -108,7 +110,7 @@ $_button-schema: extend(map.get($_base-schema, 'button'), (
 
     .igx-button--fab {
         @include css-vars($_fab-theme);
-        
+
         box-shadow: var-get($_fab-theme, 'resting-elevation');
 
         &:focus,
@@ -117,3 +119,5 @@ $_button-schema: extend(map.get($_base-schema, 'button'), (
         }
     }
 }
+
+

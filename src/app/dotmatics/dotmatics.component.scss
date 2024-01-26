@@ -36,3 +36,13 @@ igx-switch {
     flex-direction: column;
     gap: 16px;
 }
+
+.controls {
+    display: flex;
+    gap: 16px;
+    padding-block: 16px;
+}
+
+.dd-button {
+    justify-self: self-start;
+}

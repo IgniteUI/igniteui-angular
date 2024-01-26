@@ -9,24 +9,92 @@
 
     <button igxButton="flat" [disabled]="isButtonDisabled">Text</button>
 
-    <a href="http://localhost:4200/dotmatics" igxButton="flat" [disabled]="isDisabled">Anchor Button</a>
+<!--    <a href="http://localhost:4200/dotmatics" igxButton="flat" [disabled]="isDisabled">Anchor Button</a>-->
 
     <button igxButton="fab">
         <igx-icon>menu</igx-icon>
     </button>
 </div>
 
-<span class="title">Input-group</span>
+
+<span class="title">Dropdown</span>
+<div class="preview">
+    <button class="dd-button" igxButton="raised" [igxToggleAction]="dropdown">Dropdown</button>
+    <igx-drop-down #dropdown>
+        <igx-drop-down-item *ngFor="let item of ddItems">
+            <span>{{ item.field }}</span>
+            <igx-icon *ngIf="item.icon" igxSuffix>{{item.icon}}</igx-icon>
+        </igx-drop-down-item>
+    </igx-drop-down>
+</div>
+
+
+<span class="title">Form controls</span>
 <igx-switch  [(ngModel)]="isInputDisabled">
-    <span igxLabel>Disable input-group</span>
+    <span igxLabel>Disable controls</span>
 </igx-switch>
 <form class="input-form preview">
     <igx-input-group>
         <igx-icon igxPrefix>face</igx-icon>
-        <input [disabled]="isInputDisabled" placeholder="Placeholder" igxInput id="file" name="file" type="text" />
         <label igxLabel for="file">Default input</label>
+        <input [disabled]="isInputDisabled" placeholder="Placeholder" igxInput id="file" name="file" type="text" />
         <span igxSuffix>
             <igx-icon>info</igx-icon>
         </span>
     </igx-input-group>
+
+    <igx-input-group>
+        <label igxLabel for="textarea">Default input</label>
+        <textarea [disabled]="isInputDisabled" placeholder="Placeholder" igxInput id="textarea" name="file"></textarea>
+    </igx-input-group>
+
+    <igx-select #select>
+        <label igxLabel>Select</label>
+        <igx-select-item *ngFor="let item of items" [value]="item">
+            {{item}}
+        </igx-select-item>
+    </igx-select>
+
+    <igx-combo
+            [itemsMaxHeight]="250"
+            [data]="lData"
+            [displayKey]="'field'"
+            [valueKey]="'field'"
+            [disabled]="isInputDisabled"
+               placeholder="Location(s)">
+        <label igxLabel>Combo</label>
+    </igx-combo>
+
+    <div class="controls">
+        <igx-checkbox [disabled]="isInputDisabled">
+            <label igxLabel>Unchecked</label>
+        </igx-checkbox>
+
+        <igx-checkbox checked [disabled]="isInputDisabled">
+            <label igxLabel>Checked</label>
+        </igx-checkbox>
+
+        <igx-checkbox indeterminate [disabled]="isInputDisabled">
+            <label igxLabel>indeterminate</label>
+        </igx-checkbox>
+    </div>
+
+    <div class="controls">
+        <igx-radio [disabled]="isInputDisabled">
+            <label igxLabel>Unchecked</label>
+        </igx-radio>
+
+        <igx-radio checked [disabled]="isInputDisabled">
+            <label igxLabel>Checked</label>
+        </igx-radio>
+    </div>
+
+    <div class="controls">
+        <label igxLabel>Radio group</label>
+        <igx-radio-group>
+            <igx-radio [disabled]="isInputDisabled">Radio 1</igx-radio>
+            <igx-radio [disabled]="isInputDisabled">Radio 2</igx-radio>
+            <igx-radio [disabled]="isInputDisabled">Radio 3</igx-radio>
+        </igx-radio-group>
+    </div>
 </form>

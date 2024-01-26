@@ -9,6 +9,9 @@
 @use './components/button';
 @use './components/input-group';
 @use './components/tabs';
+@use './components/select';
+@use './components/combo';
+@use './components/dropdown';
 
 // Base
 $background-color: contrast-color($light-material-palette, 'gray', 900);
@@ -35,7 +38,7 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-button', 'igx-input-group', 'igx-tabs')
+    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-input-group', 'igx-select', 'igx-combo', 'igx-drop-down', 'igx-tabs')
 );
 
 @include radio.component();
@@ -43,6 +46,9 @@ body {
 @include button.component();
 @include switch.component();
 @include input-group.component();
+@include select.component();
+@include combo.component();
+@include dropdown.component();
 @include tabs.component();
 
 .nav-header {
