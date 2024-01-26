@@ -1,0 +1,26 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+a.igx-button--flat {
+    color: color($color: 'primary', $variant: 500);
+    text-decoration: none;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-within,
+    &:focus-visible {
+        background: color($color: 'gray', $variant: 100, $opacity: 0);
+
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+        color: color($color: 'primary', $variant: 400);
+    }
+
+    &:active {
+        color: color($color: 'primary', $variant: 600);
+    }
+}
