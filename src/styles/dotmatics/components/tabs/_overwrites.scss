@@ -1,0 +1,33 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-tabs {
+    .igx-tabs__header-content {
+        margin-bottom: rem(16px);
+    }
+
+    .igx-tabs__header-item {
+        transition: none;
+        border: none;
+        padding: rem(12px) rem(16px);
+        position: relative;
+
+        &:hover,
+        &:focus {
+            border: none;
+        }
+
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #{color(null, 'gray', 200)};
+        }
+    }
+}
+
+.ig-typography .igx-tabs__header-item--selected .igx-tabs__header-item-inner > [igxtabheaderlabel]{
+    font-weight: 600;
+}
