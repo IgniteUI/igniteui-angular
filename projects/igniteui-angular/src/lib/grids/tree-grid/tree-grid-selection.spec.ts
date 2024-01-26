@@ -1488,6 +1488,47 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
         });
 
+        it(`Parent with two or more children. Select parent. Filter out one of the children. Deselect all the others -> children
+            and parent checkbox state becomes deselected. Filter the other child back in. This child should remain selected.
+            Parent checkbox state should be indeterminate.`, fakeAsync(() => {
+            treeGrid.selectRows([147], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+
+            const expressionTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
+            expressionTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 957
+                },
+            ];
+            treeGrid.filter('ID', null, expressionTree);
+
+            fix.detectChanges();
+            tick(100);
+
+            expect(getVisibleSelectedRows(fix).length).toBe(6);
+
+            treeGrid.deselectRows([475, 317]);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+
+            treeGrid.clearFilter();
+
+            tick(1000);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            expect(treeGrid.selectionService.indeterminateRows.size).toBe(1);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, null, null);
+        }));
+
         it(`Parent in indeterminate state. Filter out its children -> parent not selected. Select parent and add new child.
         Parent -> not selected. Revert filtering so that previous records are back in the view and parent should become in
         indeterminate state because one of it children is selected`, fakeAsync(() => {
