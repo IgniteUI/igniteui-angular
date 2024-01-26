@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
+    IgxAvatarComponent,
     IgxButtonModule,
     IgxCheckboxComponent,
     IgxComboComponent,
@@ -12,9 +13,15 @@ import {
     IgxPrefixDirective,
     IgxRadioComponent,
     IgxRadioGroupDirective,
-    IgxSelectComponent, IgxSelectItemComponent,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
     IgxSuffixDirective,
-    IgxSwitchComponent,
+    IgxSwitchComponent, IgxTabHeaderComponent,
+    IgxTabHeaderIconDirective,
+    IgxTabHeaderLabelDirective,
+    IgxTabItemComponent,
+    IgxTabsComponent,
+    IgxTabsModule,
     IgxToggleActionDirective,
     IgxToggleDirective
 } from "igniteui-angular";
@@ -46,6 +53,13 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxRadioGroupDirective,
         NgIf,
         IgxSelectItemComponent,
+        IgxTabsModule,
+        IgxTabsComponent,
+        IgxTabItemComponent,
+        IgxTabHeaderIconDirective,
+        IgxTabHeaderLabelDirective,
+        IgxAvatarComponent,
+        IgxTabHeaderComponent,
     ],
     templateUrl: './dotmatics.component.html',
     styleUrl: './dotmatics.component.scss'
@@ -53,9 +67,7 @@ import {NgForOf, NgIf} from "@angular/common";
 export class DotmaticsComponent implements OnInit {
     public isButtonDisabled = false;
     public isInputDisabled = false;
-    public isTextareaDisabled = false;
-    public isSelectDisabled = false;
-    public isComboDisabled = false;
+    public isTabDisabled = false;
 
     public items: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
 

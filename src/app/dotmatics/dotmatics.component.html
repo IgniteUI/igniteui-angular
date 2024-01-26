@@ -9,8 +9,6 @@
 
     <button igxButton="flat" [disabled]="isButtonDisabled">Text</button>
 
-<!--    <a href="http://localhost:4200/dotmatics" igxButton="flat" [disabled]="isDisabled">Anchor Button</a>-->
-
     <button igxButton="fab">
         <igx-icon>menu</igx-icon>
     </button>
@@ -48,7 +46,7 @@
         <textarea [disabled]="isInputDisabled" placeholder="Placeholder" igxInput id="textarea" name="file"></textarea>
     </igx-input-group>
 
-    <igx-select #select>
+    <igx-select checked [disabled]="isInputDisabled">
         <label igxLabel>Select</label>
         <igx-select-item *ngFor="let item of items" [value]="item">
             {{item}}
@@ -98,3 +96,39 @@
         </igx-radio-group>
     </div>
 </form>
+
+<span class="title">Form controls</span>
+<igx-switch  [(ngModel)]="isTabDisabled">
+    <span igxLabel>Disable controls</span>
+</igx-switch>
+<div class="preview">
+    <igx-tabs>
+        <igx-tab-item>
+            <igx-tab-header>
+                <igx-icon igxTabHeaderIcon>library_music</igx-icon>
+                <span igxTabHeaderLabel>Albums</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                Albums
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item [disabled]="isTabDisabled">
+            <igx-tab-header>
+                <igx-icon igxTabHeaderIcon>favorite</igx-icon>
+                <span igxTabHeaderLabel>Favorite</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                Favorite
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <igx-icon igxTabHeaderIcon>info</igx-icon>
+                <span igxTabHeaderLabel>Details</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                Details
+            </igx-tab-content>
+        </igx-tab-item>
+    </igx-tabs>
+</div>
