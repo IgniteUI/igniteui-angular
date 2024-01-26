@@ -509,7 +509,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         return new MutationObserver((records, observer) => {
             // Stop observing while handling changes
             observer.disconnect();
-            console.log('mutation observer called');
 
             const updatedButtons = this.getUpdatedButtons(records);
 
