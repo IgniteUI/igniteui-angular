@@ -115,7 +115,11 @@ describe('IgxButtonGroup', () => {
 
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
+        // The first button is already selected, so it should not fire the selected event, but the deselected one.
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
 
+        const unselectedButton = fixture.debugElement.nativeElement.querySelector('#unselected');
+        unselectedButton.click();
         expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
     });
 
@@ -492,7 +496,7 @@ class TemplatedButtonGroupDesplayDensityComponent {
     template: `
     <igx-buttongroup>
         <button igxButton [selected]="true">Button 0</button>
-        <button igxButton>Button 1</button>
+        <button igxButton id="unselected">Button 1</button>
         <button igxButton>Button 2</button>
     </igx-buttongroup>
     `,

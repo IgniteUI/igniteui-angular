@@ -501,7 +501,15 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             });
         }
 
-        this.updateButtonSelectionState(index, args);
+        if (this.selectedIndexes.indexOf(index) === -1) {
+            this.selectButton(index);
+            this.selected.emit(args);
+        } else {
+            if (this.selectionMode !== 'singleRequired') {
+                this.deselectButton(index);
+                this.deselected.emit(args);
+            }
+        }
 
         this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
     }
@@ -547,10 +555,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.selectButton(index);
             this.selected.emit(args);
         } else {
-            if (this.selectionMode !== 'singleRequired') {
-                this.deselectButton(index);
-                this.deselected.emit(args);
-            }
+            this.deselectButton(index);
+            this.deselected.emit(args);
         }
     }
 }
