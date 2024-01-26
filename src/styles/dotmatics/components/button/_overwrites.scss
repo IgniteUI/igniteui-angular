@@ -1,5 +1,21 @@
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
+.igx-button.igx-button--flat,
+.igx-button.igx-button--raised,
+.igx-button.igx-button--outlined {
+    padding-inline: pad-inline(rem(8px), rem(16px), rem(16px));
+    padding-block: 0;
+    min-height: sizable(rem(24px), rem(32px), rem(40px));
+}
+
+.ig-typography {
+    .igx-button.igx-button--flat,
+    .igx-button.igx-button--raised,
+    .igx-button.igx-button--outlined {
+        font-size: sizable(rem(14px), rem(16px), rem(16px));
+    }
+}
+
 a.igx-button--flat {
     color: color($color: 'primary', $variant: 500);
     text-decoration: none;
@@ -10,7 +26,6 @@ a.igx-button--flat {
     &:focus-within,
     &:focus-visible {
         background: color($color: 'gray', $variant: 100, $opacity: 0);
-
     }
 
     &:hover,
