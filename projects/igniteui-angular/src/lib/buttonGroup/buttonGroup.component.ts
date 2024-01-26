@@ -302,13 +302,19 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public selectedIndexes: number[] = [];
 
     protected buttonClickNotifier$ = new Subject<boolean>();
-    protected buttonSelectedNotifier$ = new Subject<boolean>();
     protected queryListNotifier$ = new Subject<boolean>();
 
     private _isVertical: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
     private _selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
+
+    private mutationObserver: MutationObserver;
+    private observerConfig: MutationObserverInit = {
+      attributeFilter: ["aria-pressed"],
+      childList: true,
+      subtree: true,
+    };
 
     constructor(
         private _cdr: ChangeDetectorRef,
@@ -351,6 +357,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             return;
         }
 
+        this.updateSelected(index);
+
         const button = this.buttons[index];
         button.select();
     }
@@ -366,7 +374,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.selectedIndexes.push(index);
         }
 
-        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
         this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
@@ -405,7 +412,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         const button = this.buttons[index];
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
 
-        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
         this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
         button.deselect();
 
@@ -450,9 +456,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 }
 
                 button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((_) => this._clickHandler(index));
-                button.buttonSelected
-                    .pipe(takeUntil(this.buttonSelectedNotifier$))
-                    .subscribe((_) => this.updateSelected(index));
             });
         };
 
@@ -461,6 +464,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         initButtons();
 
         this._cdr.detectChanges();
+
+        this.mutationObserver = this.setMutationsObserver();
+
+        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
     }
 
     /**
@@ -470,17 +477,18 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this.buttonClickNotifier$.next();
         this.buttonClickNotifier$.complete();
 
-        this.buttonSelectedNotifier$.next();
-        this.buttonSelectedNotifier$.complete();
-
         this.queryListNotifier$.next();
         this.queryListNotifier$.complete();
+
+        this.mutationObserver.disconnect();
     }
 
     /**
      * @hidden
      */
     public _clickHandler(index: number) {
+        this.mutationObserver.disconnect();
+
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { owner: this, button, index };
 
@@ -492,6 +500,49 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             });
         }
 
+        this.updateButtonSelectionState(index, args);
+
+        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
+    }
+
+    private setMutationsObserver() {
+        return new MutationObserver((records, observer) => {
+            // Stop observing while handling changes
+            observer.disconnect();
+            console.log('mutation observer called');
+
+            const updatedButtons = this.getUpdatedButtons(records);
+
+            if (updatedButtons.length > 0) {
+                updatedButtons.forEach((button) => {
+                    const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
+                    const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
+
+                    this.updateButtonSelectionState(index, args);
+                });
+            }
+
+            // Watch for changes again
+            observer.observe(this._el.nativeElement, this.observerConfig);
+        });
+    }
+
+    private getUpdatedButtons(records: MutationRecord[]) {
+        const updated: HTMLButtonElement[] = [];
+
+        records
+          .filter((x) => x.type === 'attributes')
+          .reduce((prev, curr) => {
+            prev.push(
+              curr.target as HTMLButtonElement
+            );
+            return prev;
+          }, updated);
+
+        return updated;
+    }
+
+    private updateButtonSelectionState(index: number, args: IButtonGroupEventArgs) {
         if (this.selectedIndexes.indexOf(index) === -1) {
             this.selectButton(index);
             this.selected.emit(args);

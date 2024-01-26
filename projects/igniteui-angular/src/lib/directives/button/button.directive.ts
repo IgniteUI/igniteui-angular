@@ -108,6 +108,10 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements OnInit
     public set selected(value: boolean) {
         if (this._selected !== value) {
             this._selected = value;
+            this._renderer.setAttribute(this.nativeElement, 'aria-pressed', value.toString());
+            // value
+            //     ? this._renderer.addClass(this.nativeElement, 'igx-button-group__item--selected')
+            //     : this._renderer.removeClass(this.nativeElement, 'igx-button-group__item--selected');
         }
     }
 
@@ -250,7 +254,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements OnInit
      * @internal
      */
     public deselect() {
-        this._selected = false;
+        this.selected = false;
     }
 }
 
