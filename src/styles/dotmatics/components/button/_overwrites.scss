@@ -23,4 +23,8 @@ a.igx-button--flat {
     &:active {
         color: color($color: 'primary', $variant: 600);
     }
+
+    &.igx-button--disabled {
+        color: color($color: 'gray', $variant: 400);
+    }
 }
