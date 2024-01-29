@@ -1,4 +1,4 @@
-@use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+@use 'igniteui-angular/lib/core/styles/themes' as *;
 
 // Base setup
 @use 'palette' as *;
@@ -16,7 +16,10 @@
 @use './components/combo';
 @use './components/dropdown';
 
-// Schema
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap');
+
+// Base schema
 $schema: $light-bootstrap-schema;
 
 :root {
@@ -28,7 +31,6 @@ $schema: $light-bootstrap-schema;
     $font-family: $typeface,
     $type-scale: $type-scale
 );
-
 @include theme(
     $palette: $palette,
     $schema: $schema,

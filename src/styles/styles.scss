@@ -9,12 +9,11 @@
 
 // Theme
 @use 'demo-theme' as *;
-@use 'dotmatics' as *;
+// @use 'dotmatics' as *;
 
 // Fonts
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap');
 
 $_palette: if(meta.variable-exists('palette'), $palette, $light-material-palette);
 
