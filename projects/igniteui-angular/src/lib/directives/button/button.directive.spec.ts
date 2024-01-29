@@ -141,6 +141,7 @@ describe('IgxButton', () => {
         const button = fixture.componentInstance.button;
         spyOn(button.buttonSelected, 'emit');
 
+        button.ngOnInit();
         expect(button.buttonSelected.emit).not.toHaveBeenCalled();
 
         button.nativeElement.click();
