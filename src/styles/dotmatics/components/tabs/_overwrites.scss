@@ -2,13 +2,14 @@
 
 .igx-tabs {
     .igx-tabs__header-content {
-        margin-bottom: rem(16px);
+        margin-bottom: pad(rem(16px));
     }
 
     .igx-tabs__header-item {
         transition: none;
         border: none;
-        padding: rem(12px) rem(16px);
+        padding-block: pad-block(rem(12px));
+        padding-inline: pad-inline(rem(16px));
         position: relative;
 
         &:hover,
