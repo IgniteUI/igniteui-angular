@@ -1,7 +1,42 @@
+@use 'sass:meta';
+// Configure the base font-size #optional
+@use 'igniteui-theming/sass/config' as * with ($base-font-size: 16px);
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+// App Layout
+@use 'app-layout';
+@use 'mixins' as *;
+
+// Theme
 @use 'demo-theme' as *;
+@use 'dotmatics' as *;
+
+// Fonts
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap');
+
+$_palette: if(meta.variable-exists('palette'), $palette, $light-material-palette);
+
+$background-color: contrast-color($_palette, 'gray', 900);
+$foreground-color: color($_palette, 'gray', 900);
+
+body {
+    background: $background-color;
+    color: $foreground-color;
+}
+
+:root {
+    --some-dynamic-color: hsl(#{random(360)}, 100%, 50%);
+}
+
+.nav-header {
+    @if luminance($background-color) < .5 {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $background-color);
+    } @else {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $background-color);
+    }
+}
 
 // Tests should always be imported last
 // @import '../../projects/igniteui-angular/src/lib/core/styles/spec/index';

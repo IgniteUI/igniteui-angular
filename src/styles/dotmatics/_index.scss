@@ -1,8 +1,10 @@
 @use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
-@use '../mixins' as *;
 
+// Base setup
 @use 'palette' as *;
 @use 'typography' as *;
+
+// Modified themes
 @use './components/radio';
 @use './components/checkbox';
 @use './components/switch';
@@ -14,20 +16,11 @@
 @use './components/combo';
 @use './components/dropdown';
 
-// Base
-$background-color: contrast-color($light-material-palette, 'gray', 900);
-$foreground-color: color($light-material-palette, 'gray', 900);
-
 // Schema
 $schema: $light-bootstrap-schema;
 
 :root {
     --ig-theme: bootstrap;
-}
-
-body {
-    background: $background-color;
-    color: $foreground-color;
 }
 
 @include core();
@@ -39,7 +32,21 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
-    $exclude: ('igx-radio', 'igx-checkbox', 'igx-switch', 'igx-button', 'igx-card' 'igx-input-group', 'igx-tabs')
+    $exclude: (
+        'igx-card',
+        'igx-checkbox',
+        'igx-combo',
+        'igx-select',
+        'igx-date-range-picker',
+        'igx-grid',
+        'igx-input-group',
+        'igx-paginator',
+        'igx-radio',
+        'igx-switch', 
+        'igx-tabs',
+        'igx-time-picker',
+        'igx-tree'
+    )
 );
 
 @include radio.component();
@@ -52,11 +59,7 @@ body {
 @include combo.component();
 @include dropdown.component();
 @include tabs.component();
-
-.nav-header {
-    @if luminance($background-color) < .5 {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $background-color);
-    } @else {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $background-color);
-    }
-}
+@include grid(grid-theme($schema));
+@include paginator(paginator-theme($schema));
+@include time-picker(time-picker-theme($schema));
+@include tree(tree-theme($schema));
