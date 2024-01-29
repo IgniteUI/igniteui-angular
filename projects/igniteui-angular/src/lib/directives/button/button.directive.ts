@@ -9,7 +9,7 @@ import {
     Optional,
     Inject,
     booleanAttribute,
-    OnInit
+    AfterContentInit
 } from '@angular/core';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
@@ -49,7 +49,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective implements OnInit {
+export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -125,7 +125,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements OnInit
         super(element, _displayDensityOptions);
     }
 
-    public override ngOnInit() {
+    public ngAfterContentInit() {
         this.nativeElement.addEventListener('click', () => {
             this.buttonSelected.emit({
                 button: this

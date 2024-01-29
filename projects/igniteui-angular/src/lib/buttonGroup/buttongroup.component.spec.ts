@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -364,7 +364,7 @@ describe('IgxButtonGroup', () => {
         }
     });
 
-    it('should style the corresponding button as deselected when the value bound to the selected input changes', () => {
+    it('should style the corresponding button as deselected when the value bound to the selected input changes', fakeAsync(() => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
 
@@ -374,11 +374,13 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.buttons[1].selected).toBe(true);
 
         fixture.componentInstance.selectedValue = 100;
+        flushMicrotasks();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.selectedButtons.length).toBe(0);
-        expect(btnGroupInstance.buttons[1].selected).toBe(false);
-    });
+        btnGroupInstance.buttons.forEach((button) => {
+            expect(button.selected).toBe(false);
+        });
+    }));
 
 });
 
