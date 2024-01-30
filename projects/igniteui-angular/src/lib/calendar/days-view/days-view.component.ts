@@ -390,6 +390,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         );
     }
 
+    public isFirstInPreviewRange(date: ICalendarDate): boolean {
+        return this.previewRangeDate && this.isFirstInRange(date);
+    }
+
+    public isLastInPreviewRange(date: ICalendarDate): boolean {
+        return isEqual(date.date, this.previewRangeDate);
+    }
+
     protected isWithinPreviewRange(date: Date): boolean {
         if (
             this.selection === 'range' &&
@@ -428,6 +436,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     public selectDay(event) {
         this.selectDateFromClient(event.date);
+        this.clearPreviewRange();
         this.dateSelection.emit(event);
         this.selected.emit(this.selectedDates);
     }
