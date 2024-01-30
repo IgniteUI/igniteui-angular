@@ -95,11 +95,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @Input()
     public key: string;
 
+    /** @hidden **/
+    /**
+     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
+     */
     @Input()
-    public get childKey() {
+    public get childDataKey() {
         return this.key;
     }
-    public set childKey(value: string) {
+    public set childDataKey(value: string) {
         this.key = value;
     }
 
@@ -109,7 +113,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
-
+    /** @hidden **/
     /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
