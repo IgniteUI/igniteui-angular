@@ -108,7 +108,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     public set selected(value: boolean) {
         if (this._selected !== value) {
             this._selected = value;
-            this._renderer.setAttribute(this.nativeElement, 'aria-pressed', value.toString());
+            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
         }
     }
 

@@ -311,7 +311,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     private mutationObserver: MutationObserver;
     private observerConfig: MutationObserverInit = {
-      attributeFilter: ["aria-pressed"],
+      attributeFilter: ["data-selected"],
       childList: true,
       subtree: true,
     };
@@ -374,6 +374,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.selectedIndexes.push(index);
         }
 
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
         this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
@@ -413,6 +414,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         const button = this.buttons[index];
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
 
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
         this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
         button.deselect();
 
