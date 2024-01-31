@@ -69,10 +69,12 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
 
         const result = [];
 
-        const updatedCollection = DataUtil.mergeTransactions(
-            cloneArray(collection, true),
-            grid.transactions.getAggregatedChanges(true),
-            grid.primaryKey);
+        const updatedCollection = grid.transactions ? 
+            DataUtil.mergeTransactions(
+                cloneArray(collection, true),
+                grid.transactions.getAggregatedChanges(true),
+                grid.primaryKey) :
+            collection;
 
         const groupedRecords = this.groupByMultiple(updatedCollection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey,
