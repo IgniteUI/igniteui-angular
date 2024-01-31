@@ -94,8 +94,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             let parent = parents[0];
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
-            const test = await parent?.ngElementStrategy;
-            if (test) {
+            if (parent?.ngElementStrategy) {
                 const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
 
