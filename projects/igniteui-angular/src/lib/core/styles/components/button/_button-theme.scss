@@ -22,6 +22,8 @@
 /// @param {Color} $hover-foreground [null] - The hover text color of the button.
 /// @param {Color} $focus-background [null] - The focus background color of the button.
 /// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Color} $focus-hover-background [null] - The background color on focus hovered state of the button.
+/// @param {Color} $focus-hover-foreground [null] - The text color on focus hovered state of the button.
 /// @param {Color} $focus-visible-background [null] - The focus-visible background color of the button.
 /// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
 /// @param {Color} $active-background [null] - The active background of the button.
@@ -62,6 +64,9 @@
 
     $focus-background: null,
     $focus-foreground: null,
+
+    $focus-hover-background: null,
+    $focus-hover-foreground: null,
 
     $focus-visible-background: null,
     $focus-visible-foreground: null,
@@ -135,6 +140,14 @@
             $focus-foreground: text-contrast($focus-background);
         }
 
+        @if not($focus-hover-background) and $background {
+            $focus-hover-background: color.scale($background, $lightness: 5%);
+        }
+
+        @if not($focus-hover-foreground) and $focus-hover-background {
+            $focus-hover-foreground: text-contrast($focus-hover-background);
+        }
+
         @if not($focus-visible-background) and $focus-background {
             $focus-visible-background: $focus-background;
         }
@@ -178,6 +191,9 @@
 
                 focus-background: $focus-background,
                 focus-foreground: $focus-foreground,
+
+                focus-hover-background: $focus-hover-background,
+                focus-hover-foreground: $focus-hover-foreground,
 
                 focus-visible-background: $focus-visible-background,
                 focus-visible-foreground: $focus-visible-foreground,
@@ -525,6 +541,11 @@
             color: var-get($flat-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
             border-color: var-get($flat-theme, 'focus-border-color');
+
+            &:hover {
+                background: var-get($flat-theme, 'focus-hover-background');
+                color: var-get($flat-theme, 'focus-hover-foreground');
+            }
         }
 
         &:active {
@@ -581,14 +602,13 @@
             color: var-get($outlined-theme, 'focus-foreground');
             border-color: var-get($outlined-theme, 'focus-border-color');
 
-            @if($variant == 'bootstrap') {
-                &:hover {
-                    background: var-get($outlined-theme, 'hover-background');
-                    color: var-get($outlined-theme, 'hover-foreground');
-                }
+            @if($variant == 'bootstrap' or $variant == 'indigo-design') {
                 box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
-            } @else if($variant == 'indigo-design') {
-                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+            }
+
+            &:hover {
+                background: var-get($outlined-theme, 'focus-hover-background');
+                color: var-get($outlined-theme, 'focus-hover-foreground');
             }
         }
 
@@ -675,6 +695,11 @@
                 box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--focus;
             } @else {
                 box-shadow: $contained-shadow--focus;
+            }
+
+            &:hover {
+                color: var-get($contained-theme, 'focus-hover-foreground');
+                background: var-get($contained-theme, 'focus-hover-background');
             }
         }
 
@@ -797,6 +822,11 @@
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $contained-shadow--focus;
+            }
+
+            &:hover {
+                color: var-get($fab-theme, 'focus-hover-foreground');
+                background: var-get($fab-theme, 'focus-hover-background'); 
             }
         }
 
