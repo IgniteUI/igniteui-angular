@@ -530,6 +530,8 @@ export var registerConfig = [
         childType: IgxPaginatorComponent,
         isQueryList: true,
         descendants: true,
+        cachedTemplates: "childGridTemplates",
+        cachedTemplateViewRefProp: "view",
       },
       {
         property: "columnList",
@@ -854,8 +856,6 @@ export var registerConfig = [
       { property: "actionStrip", childType: IgxActionStripComponent },
     ],
     additionalProperties: [
-      { name: "islandToolbarTemplate", writable: true },
-      { name: "islandPaginatorTemplate", writable: true },
       { name: "data" },
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
@@ -957,6 +957,8 @@ export var registerConfig = [
       "headSelectorTemplate",
       "rowSelectorTemplate",
       "dragIndicatorIconTemplate",
+      "toolbarTemplate",
+      "paginatorTemplate",
     ],
     numericProps: [
       "snackbarDisplayTime",
