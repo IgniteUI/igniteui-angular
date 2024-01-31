@@ -241,6 +241,8 @@
             [locale]="locale"
             [formatView]="formatViews.month"
             [monthFormat]="formatOptions.month"
+            (swiperight)="previousPage()"
+            (swipeleft)="nextPage()"
             (pageChanged)="updateYear($event)"
             (selected)="changeMonth($event)">
     </igx-months-view>
@@ -254,6 +256,8 @@
             [locale]="locale"
             [formatView]="formatViews.year"
             [yearFormat]="formatOptions.year"
+            (swiperight)="previousPage()"
+            (swipeleft)="nextPage()"
             (pageChanged)="updateYear($event)"
             (selected)="changeYear($event)"
             (click)="onYearsViewClick($event)"
