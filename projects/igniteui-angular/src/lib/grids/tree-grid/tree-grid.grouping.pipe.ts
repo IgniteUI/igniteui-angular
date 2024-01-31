@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from '../../core/utils';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { cloneArray, formatDate } from '../../core/utils';
+import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType } from '../common/grid.interface';
 import { IgxSorting } from '../common/strategy';
@@ -54,7 +54,8 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                      groupKey: string,
                      childDataKey: string,
                      grid: GridType,
-                     aggregations?: ITreeGridAggregation[]
+                     aggregations?: ITreeGridAggregation[],
+                     _pipeTrigger?: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
             return collection;
@@ -67,7 +68,13 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         this.grid = grid;
 
         const result = [];
-        const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
+
+        const updatedCollection = DataUtil.mergeTransactions(
+            cloneArray(collection, true),
+            grid.transactions.getAggregatedChanges(true),
+            grid.primaryKey);
+
+        const groupedRecords = this.groupByMultiple(updatedCollection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey,
             childDataKey, result, aggregations);
 
