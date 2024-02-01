@@ -5,6 +5,10 @@
 ## Milestone 29, (Due by Feb, 2024)
 
 1. Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
+2. Deprecate rowID and rowData in interfaces [#10617](https://github.com/IgniteUI/igniteui-angular/issues/10617)
+3. Update calendar theme to match material [#10400](https://github.com/IgniteUI/igniteui-angular/issues/10400)
+4. Calendar: Default date formatting in the header [#13811](https://github.com/IgniteUI/igniteui-angular/issues/13811)
+5. Component: Icon Button [#13590](https://github.com/IgniteUI/igniteui-angular/issues/13590)  
 
 ## Going down the road
 
