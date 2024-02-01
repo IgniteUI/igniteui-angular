@@ -1847,6 +1847,13 @@
         }
     }
 
+    %date-range-preview + %date-range-preview-last {
+        &::after {
+            inset-inline-start: 0;
+            inset-inline-end: 50%;
+        }
+    }
+
     %date-range-selected-special {
         %date-inner {
             background: var-get($theme, 'date-special-background');
