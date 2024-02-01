@@ -133,6 +133,14 @@
             @extend %date-range-preview !optional;
         }
 
+        @include e(date, $mods: ('range-preview', first)) {
+            @extend %date-range-preview-first !optional;
+        }
+
+        @include e(date, $mods: ('range-preview', last)) {
+            @extend %date-range-preview-last !optional;
+        }
+
         @include e(date, $mods: ('range', 'selected')) {
             @extend %date-range-selected !optional;
 
