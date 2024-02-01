@@ -141,7 +141,9 @@
         }
 
         @if not($focus-hover-background) and $background {
-            $focus-hover-background: color.scale($background, $lightness: 5%);
+            @if meta.type-of($background) == 'color' {
+                $focus-hover-background: color.scale($background, $lightness: 5%);
+            }
         }
 
         @if not($focus-hover-foreground) and $focus-hover-background {
