@@ -1,4 +1,4 @@
 <ng-template *ngFor="let templateFunc of templateFunctions" let-context="context">
-    <ng-container #container style="display: contents;"></ng-container>
-    {{ litRender(container.parentElement, templateFunc, context) }}
+    <div #container style="display: contents;"></div>
+    {{ litRender(container, templateFunc, context) }}
 </ng-template>
