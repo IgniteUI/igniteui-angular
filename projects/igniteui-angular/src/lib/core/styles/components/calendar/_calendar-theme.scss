@@ -1212,7 +1212,7 @@
         height: $date-height;
         border-radius: var-get($theme, 'date-border-radius');
         border: rem(1px) solid var-get($theme, 'date-border-color');
-        z-index: 2;
+        z-index: 0;
     }
 
     %date-focus {
@@ -1807,50 +1807,10 @@
     }
 
     %date-range-preview {
-        border-block-color: var-get($theme, 'date-range-preview-border-color');
-        border-block-style: dashed;
-        position: relative;
+        border-block-color: red;
 
         %date-inner {
             color: var-get($theme, 'date-selected-range-foreground');
-        }
-    }
-
-    %date-range-preview-first,
-    %date-range-preview-last {
-        background: transparent;
-
-        &::after {
-            content: '';
-            position: absolute;
-            height: 100%;
-            top: 0;
-            width: calc(50% + #{rem(1px)});
-            z-index: 1;
-            border-block: rem(1px) dashed var-get($theme, 'date-range-preview-border-color');
-        }
-    }
-
-    %date-range-preview-first {
-        border-block-color: transparent !important;
-
-        &::after {
-            inset-inline-start: 50%;
-        }
-    }
-
-    %date-range-preview-last {
-        border-block: transparent !important;
-
-        &::after {
-            inset-inline-end: 50%;
-        }
-    }
-
-    %date-range-preview + %date-range-preview-last {
-        &::after {
-            inset-inline-start: 0;
-            inset-inline-end: 50%;
         }
     }
 
@@ -2076,7 +2036,10 @@
 
     %date-hidden {
         cursor: default;
-        visibility: hidden;
+
+        %date-inner {
+            visibility: hidden;
+        }
     }
 }
 

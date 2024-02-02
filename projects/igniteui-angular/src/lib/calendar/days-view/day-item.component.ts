@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute } from '@angular/core';
 import { CalendarSelection, ICalendarDate, isDateInRanges } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
 
@@ -85,6 +85,10 @@ export class IgxDayItemComponent {
     public get nativeElement() {
         return this.elementRef.nativeElement;
     }
+
+    @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-days-view__date--active')
+    public isActive = false;
 
     @HostBinding('class.igx-days-view__date--selected')
     public get isSelectedCSS(): boolean {
@@ -174,11 +178,4 @@ export class IgxDayItemComponent {
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
-
-    @HostListener('click', ['$event'])
-    @HostListener('keydown.enter', ['$event'])
-    public onSelect(event) {
-        event.stopPropagation();
-        this.dateSelection.emit(this.date);
-    }
 }

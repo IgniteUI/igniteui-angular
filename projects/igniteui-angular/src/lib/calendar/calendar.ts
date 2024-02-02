@@ -157,6 +157,7 @@ export interface ICalendarDate {
     isCurrentMonth: boolean;
     isPrevMonth: boolean;
     isNextMonth: boolean;
+    isDisabled: boolean;
 }
 
 export interface IFormattedParts {
@@ -192,6 +193,7 @@ export enum WEEKDAYS {
 export class Calendar {
 
     private _firstWeekDay: WEEKDAYS | number;
+    private _disabledDates: DateRangeDescriptor[];
 
     constructor(firstWeekDay: WEEKDAYS = WEEKDAYS.SUNDAY) {
         this._firstWeekDay = firstWeekDay;
@@ -203,6 +205,14 @@ export class Calendar {
 
     public set firstWeekDay(value: number) {
         this._firstWeekDay = value;
+    }
+
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
     }
 
     /**
@@ -461,7 +471,8 @@ export class Calendar {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
             isNextMonth: this.isNextMonth(date, year, month),
-            isPrevMonth: this.isPreviousMonth(date, year, month)
+            isPrevMonth: this.isPreviousMonth(date, year, month),
+            isDisabled: this.isDisabled(date)
         };
     }
 
@@ -478,5 +489,9 @@ export class Calendar {
         }
 
         return date.getFullYear() > year;
+    }
+
+    private isDisabled(date: Date): boolean {
+        return isDateInRanges(date, this.disabledDates);
     }
 }

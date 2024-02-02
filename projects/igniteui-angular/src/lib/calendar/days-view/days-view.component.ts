@@ -12,6 +12,8 @@ import {
     Inject,
     LOCALE_ID,
     booleanAttribute,
+    ElementRef,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { CalendarSelection, ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -22,6 +24,7 @@ import { isEqual, PlatformUtil } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';
 import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { ScrollDirection } from '../calendar';
 
 let NEXT_ID = 0;
 
@@ -47,12 +50,16 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * <igx-days-view id="my-days-view"></igx-days-view>
      * ```
      * ```typescript
-     * let daysViewId =  this.daysView.id;
+     * let daysViewId = this.daysView.id;
      * ```
      */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-days-view-${NEXT_ID++}`;
+
+    @HostBinding('attr.tabIndex')
+    @Input()
+    public tabIndex = 0;
 
 	@HostBinding('class.igx-days-view')
 	public readonly viewClass = true;
@@ -93,12 +100,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @internal
      */
     @Input()
-    public set previewRangeDate(value: Date) {
+    protected set previewRangeDate(value: Date) {
         this._previewRangeDate = value;
         this.previewRangeDateChange.emit(this._previewRangeDate);
     }
 
-    public get previewRangeDate() {
+    protected get previewRangeDate() {
         return this._previewRangeDate;
     }
 
@@ -150,17 +157,21 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     /** @hidden */
     public prevMonthView: IgxDaysViewComponent;
+
     /** @hidden */
     public shouldResetDate = true;
     private _activeDate: Date;
     private _previewRangeDate: Date;
+    private _hasFocus = false;
 
     /**
      * @hidden
      */
     constructor(
         public daysNavService: IgxDaysViewNavigationService,
-        platform: PlatformUtil, @Inject(LOCALE_ID) _localeId: any
+        platform: PlatformUtil, @Inject(LOCALE_ID) _localeId: any,
+        protected el: ElementRef,
+        protected cdr: ChangeDetectorRef
     ) {
         super(platform, _localeId);
     }
@@ -188,9 +199,42 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+
+        let key = event.key;
+
+        if (key.indexOf('Arrow') === -1) {
+            key = 'Arrow'.concat(event.key);
+        }
+
+        const delta = this.getKeyDelta(key);
+        const monthAction = delta > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
+        const currentMonthDates = this.getMonthDates(this.viewDate);
+        const nextMonthDates = this.getOffsetMonthDates(monthAction);
+        let nextDate = this.findClosestDate(currentMonthDates, this.activeDate, delta);
+
+        if (!nextDate) {
+            nextDate = this.findClosestDate(nextMonthDates, this.activeDate, delta);
+            this.pageChanged.emit({ monthAction, key, nextDate });
+        }
+
         this.shouldResetDate = false;
-        this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
+        this.activeDate = nextDate;
+        this.viewDate = nextDate;
+        this.cdr.detectChanges();
     }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.enter', ['$event'])
+    protected selectDay(event: KeyboardEvent) {
+        event.stopPropagation();
+
+        this.selectDateFromClient(this.activeDate);
+        this.clearPreviewRange();
+        this.selected.emit(this.selectedDates);
+    }
+
 
     /**
      * @hidden
@@ -214,11 +258,110 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         this.getLastMonthView().daysNavService.focusEndDate();
     }
 
+    protected getKeyDelta(key: string) {
+        let delta: number;
+
+        switch(key) {
+            case 'ArrowRight':
+                delta = 1;
+                break;
+            case 'ArrowLeft':
+                delta = -1;
+                break;
+            case 'ArrowUp':
+                delta = -7;
+                break;
+            case 'ArrowDown':
+                delta = 7;
+                break;
+        }
+
+        return delta;
+    }
+
+    /**
+     * @hidden
+     */
+    protected findClosestDate(dates: ICalendarDate[], target: Date, delta: number): Date | null {
+        let counter = 0;
+
+        while (counter < dates.length) {
+            const nextDate = new Date(target);
+            nextDate.setDate(nextDate.getDate() + delta * (counter + 1));
+            nextDate.setHours(0, 0, 0, 0);
+
+            for (const day of dates) {
+                const compareDate = new Date(day.date);
+                compareDate.setHours(0, 0, 0, 0);
+
+                if (compareDate.getTime() === nextDate.getTime()) {
+                    if (!day.isDisabled) return day.date;
+                    else break; // Found disabled target date, adjust and try again
+                }
+            }
+
+            counter++;
+        }
+
+        return null;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('focus')
+    protected handleFocus() {
+        this._hasFocus = true;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('blur')
+    protected handleBlur() {
+        this._hasFocus = false;
+    }
+
+    /**
+     * @hidden
+     */
+    protected handleClick(event: MouseEvent, date: ICalendarDate) {
+        event.stopPropagation();
+        this.el.nativeElement.focus();
+        this.activeDate = date.date;
+        this.selectDateFromClient(this.activeDate);
+        this.dateSelection.emit(date);
+    }
+
     /**
      * @hidden
      */
     public get getCalendarMonth(): ICalendarDate[][] {
         return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
+    }
+
+    /**
+     * @hidden
+     */
+    protected getMonthDates(date: Date): ICalendarDate[] {
+        return this.calendarModel.monthdatescalendar(date.getFullYear(), date.getMonth(), false)
+            .flat()
+            .filter((_date) => _date.isCurrentMonth);
+    }
+
+    /**
+     * @hidden
+     */
+    protected getOffsetMonthDates(dir: ScrollDirection) {
+        if (dir === ScrollDirection.PREV) {
+            return this.getMonthDates(this.calendarModel.getPrevMonth(this.activeDate));
+        }
+
+        if (dir === ScrollDirection.NEXT) {
+            return this.getMonthDates(this.calendarModel.getNextMonth(this.activeDate));
+        }
+
+        return this.getMonthDates(this.activeDate);
     }
 
     /**
@@ -241,9 +384,9 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      * @internal
      */
-    public tabIndex(day: ICalendarDate): number {
-        return this.activeDate?.getDate() === day.date?.getDate() && day.isCurrentMonth ? 0 : -1;
-    }
+    // public tabIndex(day: ICalendarDate): number {
+    //     return this.activeDate?.getDate() === day.date?.getDate() && day.isCurrentMonth ? 0 : -1;
+    // }
 
     /**
      * Returns the week number by date
@@ -372,6 +515,15 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
+    protected isActiveDate(date: ICalendarDate): boolean {
+        if (!this._hasFocus) return false;
+
+        return (this.activeDate?.getDate() === date.date?.getDate()) && date.isCurrentMonth;
+    }
+
+    /**
+     * @hidden
+     */
     public isWithinRange(date: Date, checkForRange: boolean, min?: Date, max?: Date): boolean {
         if (checkForRange && !(Array.isArray(this.value) && this.value.length > 1)) {
             return false;
@@ -434,20 +586,21 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    public selectDay(event) {
-        this.selectDateFromClient(event.date);
-        this.clearPreviewRange();
-        this.dateSelection.emit(event);
-        this.selected.emit(this.selectedDates);
+    public getFirstMonthView(): IgxDaysViewComponent {
+        let monthView = this as IgxDaysViewComponent;
+        while (monthView.prevMonthView) {
+            monthView = monthView.prevMonthView;
+        }
+        return monthView;
     }
 
     /**
      * @hidden
      */
-    public getFirstMonthView(): IgxDaysViewComponent {
+    private getLastMonthView(): IgxDaysViewComponent {
         let monthView = this as IgxDaysViewComponent;
-        while (monthView.prevMonthView) {
-            monthView = monthView.prevMonthView;
+        while (monthView.nextMonthView) {
+            monthView = monthView.nextMonthView;
         }
         return monthView;
     }
@@ -467,17 +620,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
             type: DateRangeType.Specific,
             dateRange
         }];
-    }
-
-    /**
-     * @hidden
-     */
-    private getLastMonthView(): IgxDaysViewComponent {
-        let monthView = this as IgxDaysViewComponent;
-        while (monthView.nextMonthView) {
-            monthView = monthView.nextMonthView;
-        }
-        return monthView;
     }
 
     /**

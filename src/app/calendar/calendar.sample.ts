@@ -63,6 +63,7 @@ export class CalendarSampleComponent implements OnInit {
 	public today = new Date();
 	public ppNovember = new Date(this.today.getFullYear(), this.today.getMonth() + 1, 10);
 	public rangeDisabled = [
+		new Date(this.today.getFullYear(), this.today.getMonth() - 1, 31),
 		new Date(this.today.getFullYear(), this.today.getMonth(), 20),
 		new Date(this.today.getFullYear(), this.today.getMonth(), 21),
 	];
@@ -73,7 +74,7 @@ export class CalendarSampleComponent implements OnInit {
 	public selectionType = 'single';
 
 	public ngOnInit() {
-		this.calendar.disabledDates = [{ type: DateRangeType.Between, dateRange: this.rangeDisabled }];
+		this.calendar.disabledDates = [{ type: DateRangeType.Specific, dateRange: this.rangeDisabled }];
 		this.calendar.specialDates = [{ type: DateRangeType.Specific, dateRange: this.specialDates }];
 		this.calendar.selectDate([new Date(this.today.getFullYear(), this.today.getMonth(), 10),
 			new Date(this.today.getFullYear(), this.today.getMonth(), 17),
@@ -83,7 +84,7 @@ export class CalendarSampleComponent implements OnInit {
 
 	public selectPTOdays(dates: Date | Date[]) {
 		this.range = dates as Date [];
-		console.log(this.range);
+		// console.log(this.range);
 	}
 
 	public submitPTOdays() {
@@ -112,7 +113,7 @@ export class CalendarSampleComponent implements OnInit {
 	}
 
 	public viewDateChanged(event: IViewDateChangeEventArgs) {
-		console.log(event);
+		// console.log(event);
 	}
 
 	public activeViewChanged(event) {

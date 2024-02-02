@@ -823,7 +823,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
             requestAnimationFrame(() => {
                 if (this.monthsView) {
-                    this.monthsView.focusActiveDate();
+                    // this.monthsView.focusActiveDate();
                 }
             });
         }
@@ -897,19 +897,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.previousViewDate = this.viewDate;
 		this.viewDate = this.nextDate;
 
-        requestAnimationFrame(() => {
-            const day = this.daysView.dates.find(
-                (d) => d.date.date.getTime() === this.nextDate.getTime()
-            );
-
-            if (day) {
-                day.nativeElement.focus();
-            }
-
-            this.viewDateChanged.emit({
-                previousValue: this.previousViewDate,
-                currentValue: this.viewDate
-            });
+        this.viewDateChanged.emit({
+            previousValue: this.previousViewDate,
+            currentValue: this.viewDate
         });
 	}
 
@@ -972,7 +962,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             requestAnimationFrame(() => {
                 if (this.monthsView) {
 			        this.monthsView.date = args;
-                    this.monthsView.focusActiveDate();
+                    // this.monthsView.focusActiveDate();
                 }
             });
 		}

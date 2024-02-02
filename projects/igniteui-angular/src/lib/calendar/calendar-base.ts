@@ -432,6 +432,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
+        this.calendarModel.disabledDates = this._disabledDates;
     }
 
     /**
