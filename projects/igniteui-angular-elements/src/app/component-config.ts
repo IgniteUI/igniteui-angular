@@ -7,7 +7,6 @@ export interface ContentQueryMeta {
     isQueryList?: boolean;
     descendants?: boolean;
     cachedTemplates?: string;
-    cachedTemplateViewRefProp?: string;
 }
 export interface ComponentConfig {
     component: Type<any>,
