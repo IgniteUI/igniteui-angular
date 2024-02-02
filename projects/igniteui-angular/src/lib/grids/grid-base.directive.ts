@@ -3576,7 +3576,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.resizeNotify.pipe(
             filter(() => !this._init),
-            throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }),
+            throttleTime(40, animationFrameScheduler, { leading: false, trailing: true }),
             destructor
         )
             .subscribe(() => {

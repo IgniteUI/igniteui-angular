@@ -293,7 +293,7 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait();
+            await wait(50);
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 

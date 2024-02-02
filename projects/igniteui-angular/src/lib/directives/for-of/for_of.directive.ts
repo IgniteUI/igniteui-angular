@@ -439,7 +439,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true }),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }

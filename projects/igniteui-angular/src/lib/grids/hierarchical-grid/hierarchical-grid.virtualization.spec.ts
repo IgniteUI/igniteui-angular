@@ -7,7 +7,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError, clearGridSubs } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -203,9 +203,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         // Scroll to bottom
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
-        await wait();
+        await wait(50);
         fixture.detectChanges();
-
         // Expand two rows at the bottom
         (hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0] as HTMLElement).click();
         await wait();
@@ -282,7 +281,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
-        resizeObserverIgnoreError();
         fixture.componentInstance.data = [
             { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },
             { ID: 1, ChildLevels: 3, ProductName: 'Product: A0 ' },
