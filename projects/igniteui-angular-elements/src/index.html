@@ -372,6 +372,10 @@
     hgrid.data = hgridData;
 
     let developersRowIsland = document.getElementById('DevelopersRowIsland');
+    let virtualMachinesRowIsland = document.getElementById('VirtualMachinesRowIsland');
+    virtualMachinesRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
     developersRowIsland.paginatorTemplate = (ctx) => html`
         <igc-paginator per-page="5"></igc-paginator>
     `;

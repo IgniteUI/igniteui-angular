@@ -1144,6 +1144,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return super._shouldAutoSize(renderedHeight);
     }
 
+    private get allChildGridTemplates() {
+        let allCachedTemplates = Array.from(this.childGridTemplates.values());
+        if (!this.parent) {
+            const childGrids = this.allLayoutList.map(l => l.rowIslandAPI.getChildGrids()).flat();
+            if (childGrids) {
+                allCachedTemplates = [...allCachedTemplates, ...childGrids.map(child => Array.from(child.childGridTemplates.values())).flat()];
+            }
+        }
+
+        return allCachedTemplates;
+    }
+
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());

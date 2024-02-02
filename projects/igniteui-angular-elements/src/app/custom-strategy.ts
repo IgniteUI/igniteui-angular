@@ -290,15 +290,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         const instance = (element as any).ngElementStrategy?.componentRef.instance;
         if (instance && query.cachedTemplates) {
-            let templates = [];
-            if (instance[query.cachedTemplates] instanceof Array) {
-                templates = instance[query.cachedTemplates];
-            } else if (instance[query.cachedTemplates] instanceof Map) {
-                templates = Array.from(instance[query.cachedTemplates].values());
-            }
+            let templates = instance[query.cachedTemplates];
 
             if (templates.length) {
-                const extractedChildren = templates.flatMap(t => t[query.cachedTemplateViewRefProp].rootNodes)
+                const extractedChildren = templates.flatMap(t => t.view.rootNodes)
                     .flatMap(el => Array.from(el.querySelectorAll(childSelector)));
                 for (const child of extractedChildren) {
                     if (!children.includes(child as any)) {

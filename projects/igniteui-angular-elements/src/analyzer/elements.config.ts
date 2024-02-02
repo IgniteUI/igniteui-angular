@@ -530,8 +530,7 @@ export var registerConfig = [
         childType: IgxPaginatorComponent,
         isQueryList: true,
         descendants: true,
-        cachedTemplates: "childGridTemplates",
-        cachedTemplateViewRefProp: "view",
+        cachedTemplates: "allChildGridTemplates",
       },
       {
         property: "columnList",
