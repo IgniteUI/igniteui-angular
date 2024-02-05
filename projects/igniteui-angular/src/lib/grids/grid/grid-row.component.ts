@@ -18,7 +18,6 @@ import { NgTemplateOutlet, NgIf, NgFor, NgStyle, NgClass } from '@angular/common
 })
 export class IgxGridRowComponent extends IgxRowDirective {
 
-    // TODO, is this public?
     public getContext(col, row) {
         return {
             $implicit: col,
