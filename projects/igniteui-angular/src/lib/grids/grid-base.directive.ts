@@ -6557,17 +6557,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (diff) {
             let added = false;
             let removed = false;
+            let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
+                    pinning = true;
                 } else {
                     this._unpinnedColumns.push(record.item);
                 }
             });
 
             this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
-            this.handleColumnPinningForGroups();
+            if (pinning) {
+                this.initPinning();
+            }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
