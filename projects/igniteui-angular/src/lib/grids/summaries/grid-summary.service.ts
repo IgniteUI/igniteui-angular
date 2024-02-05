@@ -192,6 +192,9 @@ export class IgxGridSummaryService {
             );
         }
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
+        if (!rowData) {
+            return summaryIDs;
+        }
         let id = '{ ';
         groupingExpressions.forEach(expr => {
             id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;

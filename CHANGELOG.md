@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTree`
     - Added new property `toggleNodeOnClick` that determines whether clicking over a node will change its expanded state or not. Set to `false` by default.
 - `IgxPivotGrid`
-    - `IPivotDimension` interface now exposes a property called `displayName` similar to the one in the `IPivotValue` interface. This property is optional and will be displayed inside the chips for rows and columns in the `IgxPivotGrid`. If the `displayName` proeprty is not set, `memberName` will be used as a fallback.
+    - `IPivotDimension` interface now exposes a property called `displayName` similar to the one in the `IPivotValue` interface. This property is optional and will be displayed inside the chips for rows and columns in the `IgxPivotGrid`. If the `displayName` property is not set, `memberName` will be used as a fallback.
 - New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 - `IgxButton`
     - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. However, the event is no longer being emitted on initialization. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
@@ -20,7 +20,16 @@ All notable changes for each version of this project will be documented in this 
     - The `igxButtonColor` and `igxButtonBackground` input properties have been deprecated and will be removed in a future version.
 - `IgxForOf`
     - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
-    - Addded new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
+    - Added new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
+
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Changes**
+        - `rowAdd` and `rowDelete` events now emit event argument of type `IRowDataCancelableEventArgs` instead of `IGridEditEventArgs`. The two interfaces are still compatible, however redundant for these events properties `cellID`, `newValue`, `oldValue`, `isAddRow` are deprecated in `IRowDataCancelableEventArgs` and will be removed in a future version. Switching to the correct new interfaces should reveal any deprecated use that can be safely removed.
+    - **Deprecations**
+        - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
+        - `primaryKey` property has been deprecated in the following interfaces: `IRowDataEventArgs`, `IGridEditDoneEventArgs`. Use `rowKey` instead.
+        - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
 
 ## 17.0.0
 ### General
@@ -33,14 +42,14 @@ All notable changes for each version of this project will be documented in this 
     - `igniteui-angular-i18n` is now tree-shakeable
     - `igniteui-angular/animations` is now tree-shakeable
     - `igniteui-angular` components have improved tree-shaking
-    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead. 
+    - **Breaking Change** `getCurrentResourceStrings` has been removed. Use the specific component string imports instead.
         - E.g. EN strings come from `igniteui-angular`: `import { GridResourceStringsEN } from 'igniteui-angular';`
         - E.g. DE or other language strings come from `igniteui-angular-i18n`: `import { GridResourceStringsDE } from 'igniteui-angular-i18n';`
 - DisplayDensity token and inputs are deprecated in favor of `--ig-size` theming
 - We're working on reducing the library size
     - `IgxRadioComponent` size has been reduced in half
     - `IgxSwitchComponent` size has been reduced in half
-- `IgxRadioComponent` 
+- `IgxRadioComponent`
     - **Breaking Change** `IChangeRadioEventArgs` is now `IChangeCheckboxEventArgs`. `ng update` to `17.0.0` will automatically migrate this for you.
     - **Breaking Change** `RadioLabelPosition` is now `LabelPosition`. `ng update` to `17.0.0` will automatically migrate this for you.
 - `IgxSwitchComponent`
@@ -49,7 +58,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`
     - **Breaking Change** `IComboSelectionChangingEventArgs` properties `newSelection` and `oldSelection` have been renamed to `newValue` and `oldValue` respectively to better reflect their function. Just like Combo's `value`, those will emit either the specified property values or full data items depending on whether `valueKey` is set or not. Automatic migrations are available and will be applied on `ng update`.
     - `IComboSelectionChangingEventArgs` exposes two new properties `newSelection` and `oldSelection` in place of the old ones that are no longer affected by `valueKey` and consistently emit items from Combo's `data`.
-      
+
       Note: In remote data scenarios with `valueKey` set, selected items that are not currently part of the loaded data chunk will be emitted a partial item data object with the `valueKey` property.
     - **Breaking Change** - `IComboSelectionChangingEventArgs` properties `added` and `removed` now always contain data items, regardless of `valueKey` being set. This aligns them with the updated `newSelection` and `oldSelection` properties, including the same limitation for remote data as described above.
 - `IgxSimpleCombo`
@@ -61,11 +70,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
+=======
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
     - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
-
 ## 16.1.4
 ### New Features
 - `Themes`:
@@ -107,7 +116,7 @@ All notable changes for each version of this project will be documented in this 
      ```
 - `IgxBadge`:
     - Material icons extended along with any other custom icon set can now be used inside the badge component.
-    - Code example: 
+    - Code example:
 
      ```typescript
      import { IgxBadgeComponent, IgxIconService } from 'igniteui-angular';
@@ -150,7 +159,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 
     ```css
-    /* 
+    /*
     Add --ig-size to a component or global file.
     Available values are:
     compact: --ig-size-small
