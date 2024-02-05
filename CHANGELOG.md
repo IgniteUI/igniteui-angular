@@ -12,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - `IPivotDimension` interface now exposes a property called `displayName` similar to the one in the `IPivotValue` interface. This property is optional and will be displayed inside the chips for rows and columns in the `IgxPivotGrid`. If the `displayName` proeprty is not set, `memberName` will be used as a fallback.
 - New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 - `IgxButton`
-    - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. A benefit of that is when updating the value bound to the `selected` input of an `IgxButton`, the button group in which the button resides is now able to update the styling of the button from selected to deselected. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
+    - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. However, the event is no longer being emitted on initialization. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
 
 ### General
 - `igxButton`:
