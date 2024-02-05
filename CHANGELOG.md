@@ -26,6 +26,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Changes**
         - `rowAdd` and `rowDelete` events now emit event argument of type `IRowDataCancelableEventArgs` instead of `IGridEditEventArgs`. The two interfaces are still compatible, however redundant for these events properties `cellID`, `newValue`, `oldValue`, `isAddRow` are deprecated in `IRowDataCancelableEventArgs` and will be removed in a future version. Switching to the correct new interfaces should reveal any deprecated use that can be safely removed.
+    - **Deprecations**
         - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
         - `primaryKey` property has been deprecated in the following interfaces: `IRowDataEventArgs`, `IGridEditDoneEventArgs`. Use `rowKey` instead.
         - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
