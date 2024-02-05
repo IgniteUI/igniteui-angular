@@ -948,16 +948,20 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const rowDeleteArgs = {
                     rowID: someRow.key,
                     primaryKey: someRow.key,
+                    rowKey: someRow.key,
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
                     owner: treeGrid
                 };
 
                 const rowDeletedArgs = {
                     data: treeGrid.getRowData(someRow.key),
+                    rowData: treeGrid.getRowData(someRow.key),
                     primaryKey: someRow.key,
-                    owner: treeGrid
+                    owner: treeGrid,
+                    rowKey: someRow.key,
                 };
 
                 treeGrid.deleteRow(someRow.key);
@@ -991,10 +995,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const rowDeleteArgs = {
                     rowID: someRow.key,
                     primaryKey: someRow.key,
+                    rowKey: someRow.key,
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
-                    owner: treeGrid
+                    owner: treeGrid,
                 };
 
                 treeGrid.deleteRow(someRow.key);
