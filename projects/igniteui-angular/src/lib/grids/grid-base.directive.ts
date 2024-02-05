@@ -1104,6 +1104,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public loadingOutlet: IgxOverlayOutletDirective;
 
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    /* ngQueryListName: columnList */
     /**
      * @hidden @internal
      */
@@ -4331,16 +4336,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.featureColumnsWidth();
     }
 
-    /* ngQueryListName: columnList */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: ColumnCollection */
-    /* reactContentChildren */
     /**
      * Gets an array of `IgxColumnComponent`s.
      *
      * @example
      * ```typescript
-     * const colums = this.grid.columns.
+     * const columns = this.grid.columns.
      * ```
      */
     public get columns(): IgxColumnComponent[] {

@@ -21,7 +21,8 @@ import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-sty
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
-import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { getComponentSize } from '../../core/utils';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -41,7 +42,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridAutoSizeColumnsComponent,
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
-                IgxHierarchicalGridToggleRIAndColsComponent
+                IgxHierarchicalGridToggleRIAndColsComponent,
+                IgxHierarchicalGridMCHComponent
             ]
         }).compileComponents();
     }))
@@ -1690,6 +1692,44 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }));
     });
 
+    describe('IgxHierarchicalGrid Multi-Column Headers', () => {
+        let fixture: ComponentFixture<IgxHierarchicalGridMCHComponent>;
+        let hierarchicalGrid: IgxHierarchicalGridComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridMCHComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hGrid;
+        });
+
+        it('should fire expandedChange, hiddenChange and pinnedChange events for child grid.', () => {
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            const columnGroup2 = childGrid.columns[4] as IgxColumnGroupComponent;
+            const columnGroup2Header = GridFunctions.getColumnGroupHeaders(fixture)[3];
+            const expandIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[0];
+            const pinIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[1];
+
+            expect(columnGroup2.expanded).toBeFalse();
+            expect(columnGroup2.pinned).toBeFalse();
+
+            UIInteractions.simulateClickEvent(expandIcon.nativeElement);
+            fixture.detectChanges();
+
+            expect(columnGroup2.expanded).toBeTrue();
+
+            expect(fixture.componentInstance.expandedArgs).toBeDefined();
+            expect(fixture.componentInstance.expandedArgs.args).toBeTrue();
+            expect(fixture.componentInstance.hiddenArgs).toBeDefined();
+            expect(fixture.componentInstance.hiddenArgs.args).toBeTrue();
+
+            UIInteractions.simulateClickEvent(pinIcon.nativeElement);
+            fixture.detectChanges();
+
+            expect(columnGroup2.pinned).toBeTrue();
+            expect(fixture.componentInstance.pinnedArgs).toBeDefined();
+            expect(fixture.componentInstance.pinnedArgs.args).toBeTrue();
+        });
+    });
 });
 
 @Component({
@@ -2108,3 +2148,93 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
+
+@Component({
+    template: `
+    <ng-template #headerTemplate igxHeader let-col>
+        <span >{{ col.header ? col.header : col.field}}</span>
+        <igx-icon (click)="pinColumn(col)">push_pin</igx-icon>
+    </ng-template>
+    <igx-hierarchical-grid #hGrid [data]="data" [height]="'400px'" [width]="'800px'" [expandChildren]="true">
+        <igx-column field="CustomerID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="ContactName" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="ContactTitle" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="Location" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="Address" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="City" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="Country" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="PostalCode" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-row-island [height]="null" [key]="'Orders'" [autoGenerate]="false">
+            <igx-column-group header="Order Details" [collapsible]="true" [expanded]="false">
+                <igx-column field="OrderID" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column field="OrderDate" [dataType]="'date'" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="RequiredDate" [dataType]="'date'" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+            <igx-column-group header="General Shipping Information" [collapsible]="true" [expanded]="false"
+                [headerTemplate]="headerTemplate" (expandedChange)="expandedChange($event)">
+                <igx-column field="ShippedDate" [dataType]="'date'" [visibleWhenCollapsed]="true"
+                    (hiddenChange)="hiddenChange($event)" (pinnedChange)="pinnedChange($event)"></igx-column>
+                <igx-column field="ShipVia" [visibleWhenCollapsed]="false" ></igx-column>
+                <igx-column field="Freight" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="ShipName" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent, IgxCellHeaderTemplateDirective]
+})
+export class IgxHierarchicalGridMCHComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public expandedArgs: any;
+    public hiddenArgs: any;
+    public pinnedArgs: any;
+
+    public data = [
+        {
+            CustomerID: "VINET",
+            CompanyName: "Vins et alcools Chevalier",
+            ContactName: "Paul Henriot",
+            ContactTitle: "Accounting Manager",
+            Location: "59 rue de l'Abbaye, Reims, France",
+            Address: "59 rue de l'Abbaye",
+            City: "Reims",
+            Country: "France",
+            PostalCode: "51100",
+            Orders: [
+                {
+                    OrderID: 10248,
+                    OrderDate: new Date("1996-07-04T00:00:00"),
+                    RequiredDate: new Date("1996-08-01T00:00:00"),
+                    ShippedDate: new Date("1996-07-16T00:00:00"),
+                    ShipVia: 3,
+                    Freight: 32.38,
+                    ShipName: "Vins et alcools Chevalier",
+                },
+            ],
+        },
+    ];
+
+    public pinColumn(col: ColumnType) {
+        col.pinned ? col.unpin() : col.pin();
+    }
+
+    public expandedChange(args: any) {
+        this.expandedArgs = args;
+    }
+
+    public hiddenChange(args: any) {
+        this.hiddenArgs = args;
+    }
+
+    public pinnedChange(args: any) {
+        this.pinnedArgs = args;
+    }
+}
