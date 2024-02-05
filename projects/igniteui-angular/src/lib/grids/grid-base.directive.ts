@@ -95,7 +95,6 @@ import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
-    IGridEditEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -112,13 +111,15 @@ import {
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
     IGridScrollEventArgs,
-    IGridEditDoneEventArgs,
     IActiveNodeChangeEventArgs,
     ISortingEventArgs,
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
+    IGridEditEventArgs,
+    IRowDataCancelableEventArgs,
+    IGridEditDoneEventArgs,
     IGridRowEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
@@ -796,28 +797,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IGridEditEventArgs` object.
+     * Returns an IRowDataCancellableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowDelete = new EventEmitter<IGridEditEventArgs>();
+    public rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * Emmited just before the newly added row is commited.
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IGridEditEventArgs` object.
+     * Returns an IRowDataCancellableEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowAdd = new EventEmitter<IGridEditEventArgs>();
+    public rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * Emitted after column is resized.
@@ -4569,7 +4570,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.addRowToData(data);
 
         this.pipeTrigger++;
-        this.rowAddedNotifier.next({ data: data, owner: this, primaryKey: data[this.primaryKey] });
+        this.rowAddedNotifier.next({ data: data, rowData: data, owner: this, primaryKey: data[this.primaryKey], rowKey: data[this.primaryKey] });
         this.notifyChanges();
     }
 
@@ -4593,13 +4594,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any): any {
-        const args = {
+        const args: IRowDataCancelableEventArgs = {
             rowID: rowId,
             primaryKey: rowId,
-            cancel: false,
+            rowKey: rowId,
             rowData: this.getRowData(rowId),
-            oldValue: null,
-            owner: this
+            data: this.getRowData(rowId),
+            oldValue: this.getRowData(rowId),
+            owner: this,
+            isAddRow: false,
+            cancel: false
         };
         this.rowDelete.emit(args);
         if (args.cancel) {
@@ -4608,7 +4612,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this, primaryKey: record[this.primaryKey] };
+            const rowDeletedEventArgs: IRowDataEventArgs = {
+                data: record,
+                rowData: record,
+                owner: this,
+                primaryKey: record[this.primaryKey],
+                rowKey: record[this.primaryKey]
+            };
             this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
