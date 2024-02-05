@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { DisplayDensity, IDataCloneStrategy, IRowDataEventArgs, IgxActionStripComponent, IgxActionStripMenuItemDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxIconComponent, IRowDataCancellableEventArgs } from 'igniteui-angular';
+import { DisplayDensity, IDataCloneStrategy, IRowDataEventArgs, IgxActionStripComponent, IgxActionStripMenuItemDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxIconComponent, IRowDataCancelableEventArgs } from 'igniteui-angular';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -107,7 +107,7 @@ export class ActionStripSampleComponent implements OnInit {
         this.displayDensity = density;
     }
 
-    public rowAdd(event: IRowDataCancellableEventArgs) {
+    public rowAdd(event: IRowDataCancelableEventArgs) {
         console.log("RowAdd is: " + event.primaryKey);
     }
 
@@ -115,7 +115,7 @@ export class ActionStripSampleComponent implements OnInit {
         console.log("RowAdded is: " + event.primaryKey);
     }
 
-    public rowDelete(event: IRowDataCancellableEventArgs) {
+    public rowDelete(event: IRowDataCancelableEventArgs) {
         console.log("Row Delete is: " + event.primaryKey);
     }
 

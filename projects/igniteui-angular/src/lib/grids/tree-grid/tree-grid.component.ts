@@ -28,7 +28,7 @@ import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angu
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowDataCancellableEventArgs, IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
+import { IRowDataCancelableEventArgs, IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
 import {
     HierarchicalTransaction,
     HierarchicalState,
@@ -737,7 +737,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        const args: IRowDataCancellableEventArgs = {
+        const args: IRowDataCancelableEventArgs = {
             rowID: rowId,
             primaryKey: rowId,
             rowKey: rowId,

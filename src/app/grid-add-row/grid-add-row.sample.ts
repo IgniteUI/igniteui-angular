@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IRowDataCancellableEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
+import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-add-row',
@@ -96,7 +96,7 @@ export class GridAddRowSampleComponent implements OnInit {
         this.grid.beginAddRowById(string);
     }
 
-    public log(args: IRowDataCancellableEventArgs | IRowDataEventArgs) {
+    public log(args: IRowDataCancelableEventArgs | IRowDataEventArgs) {
         console.log(args);
         // const rowArgs = args as IRowDataCancellableEventArgs;
     }

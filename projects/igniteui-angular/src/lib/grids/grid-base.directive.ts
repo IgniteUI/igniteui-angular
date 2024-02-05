@@ -118,7 +118,7 @@ import {
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
     IGridEditEventArgs,
-    IRowDataCancellableEventArgs,
+    IRowDataCancelableEventArgs,
     IGridEditDoneEventArgs,
     IGridRowEventArgs
 } from './common/events';
@@ -804,7 +804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowDelete = new EventEmitter<IRowDataCancellableEventArgs>();
+    public rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * Emmited just before the newly added row is commited.
@@ -818,7 +818,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowAdd = new EventEmitter<IRowDataCancellableEventArgs>();
+    public rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * Emitted after column is resized.
@@ -4594,7 +4594,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any): any {
-        const args: IRowDataCancellableEventArgs = {
+        const args: IRowDataCancelableEventArgs = {
             rowID: rowId,
             primaryKey: rowId,
             rowKey: rowId,

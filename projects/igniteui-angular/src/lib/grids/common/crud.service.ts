@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancellableEventArgs, IRowDataEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { copyDescriptors, isEqual, isDate } from '../../core/utils';
@@ -36,8 +36,8 @@ export class IgxEditRow {
         return args;
     }
 
-    public createRowDataEventArgs(event?: Event): IRowDataCancellableEventArgs {
-        const args: IRowDataCancellableEventArgs = {
+    public createRowDataEventArgs(event?: Event): IRowDataCancelableEventArgs {
+        const args: IRowDataCancelableEventArgs = {
             rowID: this.id,
             primaryKey: this.id,
             rowKey: this.id,
@@ -416,7 +416,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
     /**
      * @hidden @internal
      */
-    public endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs | IRowDataCancellableEventArgs {
+    public endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs | IRowDataCancelableEventArgs {
         this.row.newData = this.grid.transactions.getAggregatedValue(this.row.id, true);
         let rowEditArgs = this.row.createRowEditEventArgs(true, event);
 
@@ -545,7 +545,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     /**
      * @hidden @internal
      */
-    public override endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs | IRowDataCancellableEventArgs {
+    public override endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs | IRowDataCancelableEventArgs {
         const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
         if (isAddRow) {
             this.grid.rowAdded.pipe(first()).subscribe((addRowArgs: IRowDataEventArgs) => {
