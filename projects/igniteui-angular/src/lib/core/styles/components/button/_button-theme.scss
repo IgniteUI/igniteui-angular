@@ -575,6 +575,24 @@
                 box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
             }
         }
+
+        @if ($variant == 'fluent') {
+            &:focus-visible {
+                border-color: transparent;
+
+                &::after {
+                    $outline-btn-indent: rem(2px);
+                    content: '';
+                    position: absolute;
+                    top: $outline-btn-indent;
+                    inset-inline-start: $outline-btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$outline-btn-indent} * 2));
+                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
+                }
+            }
+        }
     }
 
     %igx-button--outlined {
@@ -632,8 +650,8 @@
             border-color: var-get($outlined-theme, 'focus-visible-border-color');
 
             &:hover {
-                background: var-get($outlined-theme, 'hover-background');
-                color: var-get($outlined-theme, 'hover-foreground');
+                background: var-get($outlined-theme, 'focus-hover-background');
+                color: var-get($outlined-theme, 'focus-hover-foreground');
                 border-color: var-get($outlined-theme, 'hover-border-color');
             }
 
@@ -645,11 +663,9 @@
         }
 
         @if($variant == 'fluent') {
-            &::after {
-                border-radius: inherit;
-            }
-
             &:focus-visible {
+                border-color: var-get($outlined-theme, 'focus-border-color');
+
                 &::after {
                     $outline-btn-indent: rem(2px);
                     content: '';
@@ -659,16 +675,10 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
                 }
 
                 /* stylelint-disable */
-                &:hover {
-                    &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
-                    }
-                }
-
                 &:active {
                     &::after {
                         box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
@@ -741,10 +751,6 @@
         }
 
         @if($variant == 'fluent') {
-            &::after {
-                border-radius: inherit;
-            }
-
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -759,12 +765,6 @@
                 }
 
                 /* stylelint-disable */
-                &:hover {
-                    &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
-                    }
-                }
-
                 &:active {
                     &::after {
                         box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
@@ -855,8 +855,8 @@
             border-color: var-get($fab-theme, 'focus-visible-border-color');
 
             &:hover {
-                color: var-get($fab-theme, 'hover-foreground');
-                background: var-get($fab-theme, 'hover-background');
+                color: var-get($fab-theme, 'focus-hover-foreground');
+                background: var-get($fab-theme, 'focus-hover-background');
                 border-color: var-get($fab-theme, 'hover-border-color');
             }
 
@@ -868,10 +868,6 @@
         }
 
         @if($variant == 'fluent') {
-            &::after {
-                border-radius: inherit;
-            }
-
             &:focus-visible {
                 &::after {
                     $outline-btn-indent: rem(3px);
@@ -883,16 +879,10 @@
                     border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
                 }
 
                 /* stylelint-disable */
-                &:hover {
-                    &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'hover-foreground');
-                    }
-                }
-
                 &:active {
                     &::after {
                         box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
