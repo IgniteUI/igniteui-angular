@@ -281,8 +281,8 @@
 
     $button-padding-fluent-inline: (
         comfortable: rem(16px, 16px),
-        cosy: rem(16px, 16px),
-        compact: rem(16px, 16px)
+        cosy: rem(12px, 16px),
+        compact: rem(8px, 16px)
     );
 
     $button-padding-fluent-block: (
@@ -589,7 +589,7 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-visible-border-color');
                 }
             }
         }
@@ -761,13 +761,13 @@
                     pointer-events: none;
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-foreground');
+                    box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-visible-foreground');
                 }
 
                 /* stylelint-disable */
                 &:active {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                        box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'active-foreground');
                     }
                 }
                 /* stylelint-enable */
@@ -879,13 +879,13 @@
                     border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'focus-visible-foreground');
                 }
 
                 /* stylelint-disable */
                 &:active {
                     &::after {
-                        box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'active-foreground');
+                        box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'active-foreground');
                     }
                 }
                 /* stylelint-enable */
