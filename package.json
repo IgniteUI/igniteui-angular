@@ -75,7 +75,7 @@
     "igniteui-theming": "^4.1.0",
     "igniteui-trial-watermark": "^3.0.2",
     "lodash-es": "^4.17.21",
-    "rxjs": "^6.6.7",
+    "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "uuid": "^9.0.0",
     "zone.js": "~0.14.3"
@@ -128,7 +128,7 @@
     "ng-packagr": "^17.1.2",
     "postcss": "^8.4.31",
     "postcss-scss": "^4.0.6",
-    "puppeteer": "^21.5.1",
+    "puppeteer": "^22.0.0",
     "sass-embedded": "^1.69.1",
     "sass-true": "^6.0.1",
     "sassdoc": "^2.7.4",
