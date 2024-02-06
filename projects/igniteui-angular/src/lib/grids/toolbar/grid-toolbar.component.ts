@@ -24,6 +24,8 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
 /* wcElementTag: igc-grid-toolbar */
 /* blazorIndirectRender */
 /* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /* jsonAPIManageItemInMarkup */
 /**
  * Provides a context-aware container component for UI operations for the grid components.

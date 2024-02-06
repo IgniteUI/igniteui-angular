@@ -317,6 +317,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorCSSuppress */
     /**
      * Controls the copy behavior of the grid.
      */

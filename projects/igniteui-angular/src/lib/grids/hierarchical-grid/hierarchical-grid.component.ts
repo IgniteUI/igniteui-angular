@@ -350,6 +350,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -444,6 +446,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
+    /* treatAsRef */
     /**
      * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
      * ```html
@@ -470,7 +473,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    /* treatAsRef */
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
      * ```typescript

@@ -31,6 +31,8 @@ export class IgxPaginatorContentDirective {
 /* wcElementTag: igc-paginator */
 /* blazorIndirectRender */
 /* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Paginator component description
@@ -250,6 +252,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._overlaySettings = Object.assign({}, this._overlaySettings, value);
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
