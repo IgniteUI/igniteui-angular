@@ -52,7 +52,7 @@
     @include icon-button-typography();
     @include input-group-typography($categories: (
         helper-text: 'caption',
-        input-text: 'body-1'
+        input-text: 'body-2'
     ));
     @include list-typography($categories: (
         header: 'overline',

@@ -30,7 +30,6 @@
 /// @param {Color} $input-suffix-color--focused [null] - The input suffix color in the focused state.
 /// @param {Color} $input-suffix-background--focused [null] - The background color of an input suffix in the focused state.
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
-/// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
 /// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
@@ -81,7 +80,6 @@
     $disabled-text-color: null,
 
     $idle-secondary-color: null,
-    $filled-secondary-color: null,
     $focused-secondary-color: null,
 
     $idle-bottom-line-color: null,
@@ -229,7 +227,6 @@
         border-border-radius: $border-border-radius,
         search-border-radius: $search-border-radius,
         idle-secondary-color: $idle-secondary-color,
-        filled-secondary-color: $filled-secondary-color,
         focused-secondary-color: $focused-secondary-color,
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
@@ -577,8 +574,14 @@
 
     %form-group-bundle--focus {
         &::after {
-            border-block-end-width: rem(2px);
+            @if $variant != 'indigo-design' {
+                border-block-end-width: rem(2px);
+            }
             border-block-end-color: var-get($theme, 'focused-bottom-line-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            caret-color: var-get($theme, 'focused-bottom-line-color');
         }
     }
 
@@ -586,12 +589,14 @@
         &::after {
             border-block-end-color: var-get($theme, 'success-secondary-color');
         }
+        caret-color: initial;
     }
 
     %form-group-bundle--error {
         &::after {
             border-block-end-color: var-get($theme, 'error-secondary-color');
         }
+        caret-color: initial;
     }
 
     %form-group-bundle--disabled {
@@ -824,8 +829,10 @@
             overflow: hidden;
         }
 
-        &::after {
-            display: none;
+        @if $variant != 'indigo-design' {
+            &::after {
+                display: none;
+            }
         }
     }
 
@@ -1049,6 +1056,10 @@
             color: var-get($theme, 'placeholder-color');
             opacity: 1;
             line-height: normal; /* Fix placeholder position in Safari */
+
+            @if $variant == 'indigo-design' {
+                font-style: italic;
+            }
         }
     }
 
@@ -1634,6 +1645,12 @@
         [dir='rtl'] & {
             transform-origin: top right;
         }
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(11px);
+            line-height: rem(15px);
+            font-weight: 400;
+        }
     }
 
     %fluent-label + %form-group-bundle-required--fluent {
@@ -1938,7 +1955,7 @@
 }
 
 /// Adds typography styles for the igx-input-group component.
-/// Uses the 'body-1', 'caption'
+/// Uses the 'subtitle-1', 'caption'
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
