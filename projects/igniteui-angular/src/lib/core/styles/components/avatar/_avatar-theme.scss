@@ -103,6 +103,12 @@
             --component-size: 3;
         }
 
+        @if($variant == 'indigo-design'){
+            igx-icon {
+                --component-size: 1;
+            }
+        }
+
         &::after {
             box-shadow: none;
             @if $bootstrap-theme {
