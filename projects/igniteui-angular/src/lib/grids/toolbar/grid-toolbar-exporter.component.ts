@@ -36,6 +36,7 @@ export interface IgxExporterEvent {
 /* wcElementTag: igc-grid-toolbar-exporter */
 /* blazorIndirectRender */
 /* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured exporter component for the grid.
  *

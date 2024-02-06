@@ -40,10 +40,13 @@ export class IgxActionStripMenuItemDirective {
 }
 
 /* blazorElement */
-/* contentParent: GridBaseDirective */
 /* jsonAPIManageItemInMarkup */
 /* wcElementTag: igc-action-strip */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /**
  * Action Strip provides templatable area for one or more actions.
  *
@@ -86,6 +89,8 @@ export class IgxActionStripMenuItemDirective {
 })
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
+
+    /* blazorCSSuppress */
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -98,6 +103,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      */
     @Input()
     public context: any;
+
     /**
      * Menu Items ContentChildren inside the Action Strip
      *
