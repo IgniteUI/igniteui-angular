@@ -281,7 +281,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         }
         this.children.forEach(child => {
             child.parent = this;
-            child.pinned = this.pinned;
+            if (this.pinned) {
+                child.pinned = this.pinned;
+            }
         });
         if (this.collapsible) {
             this.setExpandCollapseState();
