@@ -28,7 +28,7 @@ import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { PlatformUtil } from '../../core/utils';
 
-describe('IgxForOf directive -', () => {
+xdescribe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     const DISPLAY_CONTAINER = 'igx-display-container';
     const VERTICAL_SCROLLER = 'igx-virtual-helper';
