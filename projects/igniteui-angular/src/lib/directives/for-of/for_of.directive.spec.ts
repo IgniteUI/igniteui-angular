@@ -25,7 +25,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
-import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { PlatformUtil } from '../../core/utils';
 
 describe('IgxForOf directive -', () => {
@@ -62,8 +61,7 @@ describe('IgxForOf directive -', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [HorizontalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [HorizontalVirtualComponent]
             });
         }));
 
@@ -226,8 +224,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent]
             });
         }));
 
@@ -383,8 +380,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent]
             });
         }));
 
@@ -421,8 +417,7 @@ describe('IgxForOf directive -', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [VirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [VirtualComponent]
             });
         }));
 
@@ -1185,8 +1180,7 @@ describe('IgxForOf directive -', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [VerticalVirtualDestroyComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [VerticalVirtualDestroyComponent]
             });
         }));
 
@@ -1231,8 +1225,7 @@ describe('IgxForOf directive -', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                imports: [VerticalVirtualCreateComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+                imports: [VerticalVirtualCreateComponent]
             });
         }));
 
