@@ -1865,7 +1865,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
-            this.localeChange.next();
+            this.localeChange.emit();
         }
     }
 
