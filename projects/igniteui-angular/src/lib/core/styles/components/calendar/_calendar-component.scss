@@ -145,22 +145,6 @@
             @extend %date-range-preview-current !optional;
         }
 
-        @include e(date, 'preview-first') {
-            @extend %date-range-preview-first !optional;
-        }
-
-        @include e(date, $mods: ('preview-first', 'current')) {
-            @extend %date-range-preview-first-current !optional;
-        }
-
-        @include e(date, 'preview-last') {
-            @extend %date-range-preview-last !optional;
-        }
-
-        @include e(date, $mods: ('preview-last', 'current')) {
-            @extend %date-range-preview-last-current !optional;
-        }
-
         @include e(date, $mods: ('range', 'selected')) {
             @extend %date-range-selected !optional;
 
@@ -267,6 +251,14 @@
 
         @include e(date, 'first') {
             @extend %date-first !optional;
+        }
+
+        @include e(date, $mods: ('first', 'range-preview')) {
+            @extend %date-first-preview !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview')) {
+            @extend %date-last-preview !optional;
         }
 
         @include e(date, 'last') {

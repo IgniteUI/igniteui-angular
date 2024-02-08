@@ -1161,6 +1161,19 @@
         width: 100%;
     }
 
+    %date-hover {
+        %date-inner {
+            @if $bootstrap-theme {
+                color: var-get($theme, 'date-selected-foreground');
+            }
+
+            color: var-get($theme, 'date-hover-foreground');
+            background: var-get($theme, 'date-hover-background');
+            border: rem(1px) solid var-get($theme, 'date-hover-border-color');
+            cursor: pointer;
+        }
+    }
+
     %weekday-label {
         @if $not-bootstrap-theme {
             height: $date-height;
@@ -1223,19 +1236,6 @@
             @if $variant != 'fluent' {
                 border: rem(1px) solid var-get($theme, 'date-focus-border-color');
             }
-        }
-    }
-
-    %date-hover {
-        %date-inner {
-            @if $bootstrap-theme {
-                color: var-get($theme, 'date-selected-foreground');
-            }
-
-            color: var-get($theme, 'date-hover-foreground');
-            background: var-get($theme, 'date-hover-background');
-            border: rem(1px) solid var-get($theme, 'date-hover-border-color');
-            cursor: pointer;
         }
     }
 
@@ -1997,8 +1997,6 @@
 
     // PREVIEW START
     %date-range-preview {
-        border-block-color: var-get($theme, 'date-range-preview-border-color');
-
         @if $variant == 'bootstrap' {
             background: var-get($theme, 'date-selected-range-background');
 
@@ -2027,17 +2025,41 @@
         }
     }
 
-    %date-range-preview-first,
-    %date-range-preview-last {
+    %date-range-preview-current {
+        %date-inner {
+            @if $variant == 'bootstrap' {
+                color: var-get($theme, 'date-selected-current-range-foreground');
+                background: var-get($theme, 'date-selected-current-range-background');
+
+                &::after {
+                    content: '';
+                    border-radius: var-get($theme, 'date-border-radius');
+                    position: absolute;
+                    width: calc(100% - 4px);
+                    height: calc(100% - 4px);
+                    background: var-get($theme, 'date-current-background');
+
+                    z-index: -1;
+                }
+            }
+        }
+    }
+
+
+    %date-range-preview:not(%date-first-preview),
+    %date-range-preview:not(%date-last-preview) {
+        border-block-color: var-get($theme, 'date-range-preview-border-color');
+    }
+
+    %date-first-preview,
+    %date-last-preview {
         background: transparent;
 
         &::after {
             content: '';
             position: absolute;
             height: var-get($theme, 'size');
-            //inset-block-start: 0;
             width: calc(50% + #{rem(1px)});
-            z-index: 1;
 
             border-width: rem(1px);
 
@@ -2060,7 +2082,7 @@
         }
     }
 
-    %date-range-preview-first {
+    %date-first-preview {
         border-block-color: transparent !important;
 
         %date-inner {
@@ -2074,7 +2096,7 @@
         }
     }
 
-    %date-range-preview-last {
+    %date-last-preview {
         border-block: transparent !important;
 
         %date-inner {
@@ -2088,39 +2110,7 @@
         }
     }
 
-    %date-range-preview-current {
-        %date-inner {
-            @if $variant == 'bootstrap' {
-                color: var-get($theme, 'date-selected-current-range-foreground');
-                background: var-get($theme, 'date-selected-current-range-background');
 
-                &::after {
-                    content: '';
-                    border-radius: var-get($theme, 'date-border-radius');
-                    position: absolute;
-                    width: calc(100% - 4px);
-                    height: calc(100% - 4px);
-                    background: var-get($theme, 'date-current-background');
-
-                    z-index: -1;
-                }
-            }
-        }
-    }
-
-    %date-range-preview-first-current {
-        %date-inner {
-            color: var-get($theme, 'date-current-hover-foreground');
-            background: var-get($theme, 'date-current-hover-background');
-        }
-    }
-
-    %date-range-preview-last-current {
-        %date-inner {
-            color: var-get($theme, 'date-current-hover-foreground');
-            background: var-get($theme, 'date-current-hover-background');
-        }
-    }
     // PREVIEW END
 
     %date-special {
