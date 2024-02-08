@@ -69,7 +69,7 @@
         "tree"
     ],
     "dependencies": {
-        "@types/hammerjs": "^2.0.40",
+        "@types/hammerjs": "^2.0.45",
         "hammerjs": "^2.0.8",
         "fflate": "^0.8.1",
         "tslib": "^2.3.0",
