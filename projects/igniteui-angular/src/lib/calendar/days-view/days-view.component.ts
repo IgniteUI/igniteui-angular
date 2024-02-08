@@ -160,6 +160,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     /** @hidden */
     public shouldResetDate = true;
+
     private _activeDate: Date;
     private _previewRangeDate: Date;
     private _hasFocus = false;
@@ -174,19 +175,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         protected cdr: ChangeDetectorRef
     ) {
         super(platform, _localeId);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('keydown.pagedown')
-    @HostListener('keydown.pageup')
-    @HostListener('keydown.shift.pagedown')
-    @HostListener('keydown.shift.pageup')
-    @HostListener('pointerdown')
-    public pointerDown() {
-        this.shouldResetDate = false;
     }
 
     /**
@@ -240,22 +228,29 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event: KeyboardEvent) {
+    protected onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.shouldResetDate = false;
-        this.getFirstMonthView().daysNavService.focusHomeDate();
+        this.activateDay(0);
     }
 
     /**
      * @hidden
      */
     @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event: KeyboardEvent) {
+    protected onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.activateDay(-1);
+    }
+    
+    protected activateDay(offset: number) {
         this.shouldResetDate = false;
-        this.getLastMonthView().daysNavService.focusEndDate();
+        const day = this.getMonthDates(this.viewDate).at(offset);
+
+        if (!day.isDisabled) {
+            this.activeDate = day.date;
+        }
     }
 
     protected getKeyDelta(key: string) {
@@ -491,25 +486,43 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    public isLastInRange(date: ICalendarDate): boolean {
-        if (this.isSingleSelection || !this.value) {
+    protected isFirstInRange(date: ICalendarDate): boolean {
+        const dates = this.value as Date[];
+
+        if (this.isSingleSelection || dates.length === 0) {
             return false;
         }
 
-        const dates = this.value as Date[];
-        const lastDate = dates[dates.length - 1];
-        return isEqual(lastDate, date.date);
+        let day = dates.at(0);
+
+        if (this.previewRangeDate) {
+            if (this.previewRangeDate < day) {
+                day = this.previewRangeDate;
+            }
+        }
+
+        return isEqual(day, date.date);
     }
 
     /**
      * @hidden
      */
-    public isFirstInRange(date: ICalendarDate): boolean {
-        if (this.isSingleSelection || !this.value) {
+    protected isLastInRange(date: ICalendarDate): boolean {
+        const dates = this.value as Date[];
+
+        if (this.isSingleSelection || dates.length === 0) {
             return false;
         }
 
-        return isEqual((this.value as Date[])[0], date.date);
+        let day = dates.at(-1);
+
+        if (this.previewRangeDate) {
+            if (this.previewRangeDate > day) {
+                day = this.previewRangeDate;
+            }
+        }
+
+        return isEqual(day, date.date);
     }
 
     /**
@@ -540,14 +553,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
                 }
             ]
         );
-    }
-
-    public isFirstInPreviewRange(date: ICalendarDate): boolean {
-        return this.previewRangeDate && this.isFirstInRange(date);
-    }
-
-    public isLastInPreviewRange(date: ICalendarDate): boolean {
-        return isEqual(date.date, this.previewRangeDate);
     }
 
     protected isWithinPreviewRange(date: Date): boolean {

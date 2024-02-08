@@ -431,6 +431,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 			let year = this.nextDate.getFullYear();
 
 			let month = this.nextDate.getMonth() + step;
+
 			if (isPageDown) {
 				if (month > 11) {
 					month = 0;
@@ -446,6 +447,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 			const range = monthRange(this.nextDate.getFullYear(), month);
 
 			let day = this.nextDate.getDate();
+
 			if (day > range[1]) {
 				day = range[1];
 			}
@@ -457,10 +459,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 			this.callback = (next) => {
 				monthView = this.daysView as IgxDaysViewComponent;
 				let dayItem;
+
 				while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
 					dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
 					monthView = monthView.nextMonthView;
 				}
+
 				if (dayItem && dayItem.isFocusable) {
 					dayItem.nativeElement.focus();
 				}
@@ -542,32 +546,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	}
 
 	/**
-	 * Keyboard navigation of the calendar
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostListener('keydown.home', ['$event'])
-	public onKeydownHome(event: KeyboardEvent) {
-		if (this.daysView) {
-			this.daysView.onKeydownHome(event);
-		}
-	}
-
-	/**
-	 * Keyboard navigation of the calendar
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostListener('keydown.end', ['$event'])
-	public onKeydownEnd(event: KeyboardEvent) {
-		if (this.daysView) {
-			this.daysView.onKeydownEnd(event);
-		}
-	}
-
-	/**
 	 * Stop continuous navigation on mouseup event
 	 *
 	 * @hidden
@@ -608,13 +586,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         this.activeView$.subscribe((view) => {
 			this.activeViewChanged.emit(view);
-
-            requestAnimationFrame(() => {
-                if (this.isDefaultView) {
-                    this.resetActiveDate();
-                    this.focusDay();
-                }
-            });
         });
     }
 

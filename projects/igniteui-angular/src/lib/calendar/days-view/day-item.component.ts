@@ -54,14 +54,6 @@ export class IgxDayItemComponent {
     public isFirstInRange = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-days-view__date--preview-first')
-    public isFirstInPreviewRange = false;
-
-    @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-days-view__date--preview-last')
-    public isLastInPreviewRange = false;
-
-    @Input({ transform: booleanAttribute })
     public isWithinRange = false;
 
     @Input({ transform: booleanAttribute })
