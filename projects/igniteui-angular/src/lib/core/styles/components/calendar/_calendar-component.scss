@@ -131,6 +131,30 @@
 
         @include e(date, 'range-preview') {
             @extend %date-range-preview !optional;
+
+            &:hover {
+                @extend %date-range-preview-hover !optional;
+            }
+        }
+
+        @include e(date, $mods: ('range-preview', 'current')) {
+            @extend %date-range-preview-current !optional;
+        }
+
+        @include e(date, 'preview-first') {
+            @extend %date-range-preview-first !optional;
+        }
+
+        @include e(date, $mods: ('preview-first', 'current')) {
+            @extend %date-range-preview-first-current !optional;
+        }
+
+        @include e(date, 'preview-last') {
+            @extend %date-range-preview-last !optional;
+        }
+
+        @include e(date, $mods: ('preview-last', 'current')) {
+            @extend %date-range-preview-last-current !optional;
         }
 
         @include e(date, $mods: ('range', 'selected')) {
@@ -141,16 +165,28 @@
             }
         }
 
-        @include e(date, $mods: ('range', 'selected', 'active')) {
-            @extend %date-range-selected-hover !optional;
-        }
-
         @include e(date, $mods: ('range', 'selected', 'first')) {
             @extend %date-range-first !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'last')) {
             @extend %date-range-last !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'first', 'last')) {
+            @extend %date-first-last !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'active')) {
+            @extend %date-range-selected-active !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'active', 'first')) {
+            @extend %date-range-selected-active-first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'active', 'last')) {
+            @extend %date-range-selected-active-last !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
