@@ -6540,16 +6540,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (diff) {
             let added = false;
             let removed = false;
+            let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
+                    pinning = true;
                 } else {
                     this._unpinnedColumns.push(record.item);
                 }
             });
 
             this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            if (pinning) {
+                this.initPinning();
+            }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
@@ -7158,42 +7163,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected initPinning() {
-        const pinnedColumns = [];
-        const unpinnedColumns = [];
-
         this.calculateGridWidth();
         this.resetCaches();
-        // When a column is a group or is inside a group, pin all related.
-        this._pinnedColumns.forEach(col => {
-            if (col.parent) {
-                col.parent.pinned = true;
-            }
-            if (col.columnGroup) {
-                col.children.forEach(child => child.pinned = true);
-            }
-        });
-
-        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
-        // We take into account top level columns (top level groups and non groups).
-        // If top level is unpinned the pinning handles all children to be unpinned as well.
-        for (const column of this._columns) {
-            if (column.pinned && !column.parent) {
-                pinnedColumns.push(column);
-            } else if (column.pinned && column.parent) {
-                if (column.topLevelParent.pinned) {
-                    pinnedColumns.push(column);
-                } else {
-                    column.pinned = false;
-                    unpinnedColumns.push(column);
-                }
-            } else {
-                unpinnedColumns.push(column);
-            }
-        }
-
-        // Assign the applicable collections.
-        this._pinnedColumns = pinnedColumns;
-        this._unpinnedColumns = unpinnedColumns;
+        this.handleColumnPinningForGroups();
         this.notifyChanges();
     }
 
@@ -7624,5 +7596,41 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
+    }
+
+    private handleColumnPinningForGroups(): void {
+        // When a column is a group or is inside a group, pin all related.
+        const pinnedColumns = [];
+        const unpinnedColumns = [];
+
+        this._pinnedColumns.forEach(col => {
+            if (col.parent) {
+                col.parent.pinned = true;
+            }
+            if (col.columnGroup) {
+                col.children.forEach(child => child.pinned = true);
+            }
+        });
+
+        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
+        // We take into account top level columns (top level groups and non groups).
+        // If top level is unpinned the pinning handles all children to be unpinned as well.
+        for (const column of this._columns) {
+            if (column.pinned && !column.parent) {
+                pinnedColumns.push(column);
+            } else if (column.pinned && column.parent) {
+                if (column.topLevelParent.pinned) {
+                    pinnedColumns.push(column);
+                } else {
+                    column.pinned = false;
+                    unpinnedColumns.push(column);
+                }
+            } else {
+                unpinnedColumns.push(column);
+            }
+        }
+        // Assign the applicable collections.
+        this._pinnedColumns = pinnedColumns;
+        this._unpinnedColumns = unpinnedColumns;
     }
 }
