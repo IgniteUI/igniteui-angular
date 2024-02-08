@@ -42,8 +42,8 @@
         (focus)="changePreviewRange(day.date)"
         (blur)="clearPreviewRange()"
         (click)="handleClick($event, day)"
-        (mouseenter)="changePreviewRange(day.date)"
-        (mouseleave)="clearPreviewRange()"
+        (mouseEnter)="changePreviewRange(day.date)"
+        (mouseLeave)="clearPreviewRange()"
         >
         {{ formattedDate(day.date) }}
     </igx-day-item>

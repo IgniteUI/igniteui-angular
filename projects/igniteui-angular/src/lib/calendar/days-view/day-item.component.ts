@@ -62,6 +62,12 @@ export class IgxDayItemComponent {
     @Output()
     public dateSelection = new EventEmitter<ICalendarDate>();
 
+    @Output()
+    public mouseEnter = new EventEmitter<void>();
+
+    @Output()
+    public mouseLeave = new EventEmitter<void>();
+
     public get isCurrentMonth(): boolean {
         return this.date.isCurrentMonth;
     }
@@ -136,6 +142,14 @@ export class IgxDayItemComponent {
 
     public get isFocusable(): boolean {
         return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
+    }
+
+    protected onMouseEnter() {
+        this.mouseEnter.emit();
+    }
+
+    protected onMouseLeave() {
+        this.mouseLeave.emit();
     }
 
     @HostBinding('class.igx-days-view__date--range')
