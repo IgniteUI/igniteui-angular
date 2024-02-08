@@ -282,6 +282,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         }
         this.children.forEach(child => {
             child.parent = this;
+            if (this.pinned) {
+                child.pinned = this.pinned;
+            }
         });
         if (this.collapsible) {
             this.setExpandCollapseState();
@@ -290,11 +293,22 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.changes
             .pipe(takeUntil(this.destroy$))
             .subscribe((change: QueryList<IgxColumnComponent>) => {
-                change.forEach(x => x.parent = this);
+                let shouldReinitPinning = false;
+                change.forEach(x => {
+                    x.parent = this;
+                    if (this.pinned && x.pinned !== this.pinned) {
+                        shouldReinitPinning = true;
+                        x.pinned = this.pinned;
+                    }
+                });
                 if (this.collapsible) {
                     this.setExpandCollapseState();
                 }
+                if (shouldReinitPinning) {
+                    (this.grid as any).initPinning();
+                }
             });
+
     }
 
     /** @hidden @internal **/
