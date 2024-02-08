@@ -39,8 +39,6 @@
         [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
         [attr.tabindex]="-1"
-        (focus)="changePreviewRange(day.date)"
-        (blur)="clearPreviewRange()"
         (click)="handleClick($event, day)"
         (mouseEnter)="changePreviewRange(day.date)"
         (mouseLeave)="clearPreviewRange()"

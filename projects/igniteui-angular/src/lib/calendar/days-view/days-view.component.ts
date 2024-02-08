@@ -88,6 +88,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     @Input()
     public set activeDate(value: Date) {
         this._activeDate = value;
+        this.changePreviewRange(value);
         this.activeDateChange.emit(this._activeDate);
     }
 
@@ -243,7 +244,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         event.stopPropagation();
         this.activateDay(-1);
     }
-    
+
     protected activateDay(offset: number) {
         this.shouldResetDate = false;
         const day = this.getMonthDates(this.viewDate).at(offset);
@@ -307,6 +308,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     @HostListener('focus')
     protected handleFocus() {
         this._hasFocus = true;
+        this.changePreviewRange(this.activeDate);
     }
 
     /**
@@ -315,6 +317,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     @HostListener('blur')
     protected handleBlur() {
         this._hasFocus = false;
+        this.clearPreviewRange();
     }
 
     /**
