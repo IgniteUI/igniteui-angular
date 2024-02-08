@@ -89,6 +89,10 @@
 
         @include e(date) {
             @extend %date !optional;
+
+            &:hover {
+                @extend %date-hover !optional;
+            }
         }
 
         @include e(date, 'week-number') {
@@ -284,10 +288,6 @@
 
         @include e(date-inner) {
             @extend %date-inner !optional;
-
-            &:hover {
-                @extend %date-inner-hover !optional;
-            }
         }
 
         @include e(date-inner, 'week-number') {

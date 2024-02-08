@@ -1226,15 +1226,17 @@
         }
     }
 
-    %date-inner-hover {
-        @if $bootstrap-theme {
-            color: var-get($theme, 'date-selected-foreground');
-        }
+    %date-hover {
+        %date-inner {
+            @if $bootstrap-theme {
+                color: var-get($theme, 'date-selected-foreground');
+            }
 
-        color: var-get($theme, 'date-hover-foreground');
-        background: var-get($theme, 'date-hover-background');
-        border: rem(1px) solid var-get($theme, 'date-hover-border-color');
-        cursor: pointer;
+            color: var-get($theme, 'date-hover-foreground');
+            background: var-get($theme, 'date-hover-background');
+            border: rem(1px) solid var-get($theme, 'date-hover-border-color');
+            cursor: pointer;
+        }
     }
 
     %date-weekend {
