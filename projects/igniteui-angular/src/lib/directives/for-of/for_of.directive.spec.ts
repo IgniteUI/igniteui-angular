@@ -17,7 +17,7 @@ import {
     Pipe,
     PipeTransform
 } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
@@ -25,7 +25,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
-import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { PlatformUtil } from '../../core/utils';
 
 describe('IgxForOf directive -', () => {
@@ -43,11 +42,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('empty virtual component', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [EmptyVirtualComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should initialize empty directive', () => {
@@ -61,12 +59,10 @@ describe('IgxForOf directive -', () => {
     describe('horizontal virtual component', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [HorizontalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [HorizontalVirtualComponent]
+            });
         }));
 
         beforeEach(() => {
@@ -189,7 +185,7 @@ describe('IgxForOf directive -', () => {
             expect(state.startIndex).toBe(1);
         });
 
-        it('should display the correct chunk items on resizing the container', async() => {
+        it('should display the correct chunk items on resizing the container', async () => {
             // initially the container's width is narrow enough to be scrollable
             fix.componentInstance.width = '200px';
             fix.componentInstance.cols = [
@@ -226,12 +222,10 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent]
+            });
         }));
 
         beforeEach(() => {
@@ -244,6 +238,11 @@ describe('IgxForOf directive -', () => {
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
+        afterEach(() => {
+            displayContainer = null;
+            verticalScroller = null;
+            horizontalScroller = null;
+        });
 
         it('should initialize directive with vertical virtualization', async () => {
             expect(displayContainer).not.toBeNull();
@@ -379,12 +378,10 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component no data', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [VerticalVirtualNoDataComponent, VerticalVirtualComponent]
+            });
         }));
 
         beforeEach(() => {
@@ -418,12 +415,10 @@ describe('IgxForOf directive -', () => {
     describe('vertical and horizontal virtual component', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [VirtualComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [VirtualComponent]
+            });
         }));
 
         beforeEach(() => {
@@ -436,6 +431,12 @@ describe('IgxForOf directive -', () => {
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
             expect(horizontalScroller).not.toBeNull();
+        });
+
+        afterEach(() => {
+            displayContainer = null;
+            verticalScroller = null;
+            horizontalScroller = null;
         });
 
         it('should initialize directive with vertical and horizontal virtualization', () => {
@@ -994,11 +995,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('variable size component', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [VirtualVariableSizeComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should update display container classes when content state changes from virtualized to non-virtualized.', () => {
@@ -1036,11 +1036,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [RemoteVirtualizationComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should allow remote virtualization', async () => {
@@ -1074,11 +1073,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [RemoteVirtCountComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should apply remote virtualization correctly', async () => {
@@ -1112,11 +1110,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('no width and height component', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [NoWidthAndHeightComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should use itemSize when no width or height are provided', () => {
@@ -1132,11 +1129,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('even odd first last functions', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [LocalVariablesComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should differentiate even odd items', () => {
@@ -1161,11 +1157,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('`as` syntax', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
                 imports: [LocalVariablesAsComponent]
-            }).compileComponents();
+            });
         }));
 
         it('should get correct data using `as` syntax', () => {
@@ -1183,12 +1178,10 @@ describe('IgxForOf directive -', () => {
     describe('on destroy', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [VerticalVirtualDestroyComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [VerticalVirtualDestroyComponent]
+            });
         }));
 
         beforeEach(() => {
@@ -1230,12 +1223,10 @@ describe('IgxForOf directive -', () => {
     describe('on create new instance', () => {
         let fix: ComponentFixture<VerticalVirtualCreateComponent>;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [VerticalVirtualCreateComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
-            }).compileComponents();
+        configureTestSuite((() => {
+            return TestBed.configureTestingModule({
+                imports: [VerticalVirtualCreateComponent]
+            });
         }));
 
         beforeEach(() => {
