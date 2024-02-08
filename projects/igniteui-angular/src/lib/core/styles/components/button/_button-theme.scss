@@ -387,7 +387,7 @@
 
     $icon-sizes: map.get((
         material: rem(18px),
-        fluent: rem(16px),
+        fluent: rem(18px),
         bootstrap: rem(18px),
         indigo-design: rem(18px),
     ), $variant);
@@ -489,6 +489,22 @@
             map.get($items-gap, 'comfortable')
         );
 
+        @if ($variant == 'fluent') {
+            border: none;
+
+            &:focus-visible {
+                &::after {
+                    $btn-indent: rem(3px);
+                    content: '';
+                    position: absolute;
+                    top: $btn-indent;
+                    inset-inline-start: $btn-indent;
+                    pointer-events: none;
+                    width: calc(100% - (#{$btn-indent} * 2));
+                    height: calc(100% - (#{$btn-indent} * 2));
+                }
+            }
+        }
 
         @if ($variant == 'bootstrap') {
             // important is needed to override the typography margins
@@ -578,17 +594,7 @@
 
         @if ($variant == 'fluent') {
             &:focus-visible {
-                border-color: transparent;
-
                 &::after {
-                    $outline-btn-indent: rem(2px);
-                    content: '';
-                    position: absolute;
-                    top: $outline-btn-indent;
-                    inset-inline-start: $outline-btn-indent;
-                    pointer-events: none;
-                    width: calc(100% - (#{$outline-btn-indent} * 2));
-                    height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-visible-border-color');
                 }
             }
@@ -663,18 +669,17 @@
         }
 
         @if($variant == 'fluent') {
+            border: rem(1px) solid var-get($flat-theme, 'border-color');
+
             &:focus-visible {
                 border-color: var-get($outlined-theme, 'focus-border-color');
 
                 &::after {
-                    $outline-btn-indent: rem(2px);
-                    content: '';
-                    position: absolute;
-                    top: $outline-btn-indent;
-                    inset-inline-start: $outline-btn-indent;
-                    pointer-events: none;
-                    width: calc(100% - (#{$outline-btn-indent} * 2));
-                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    $outlined-btn-indent: 2px;
+                    top: $outlined-btn-indent;
+                    inset-inline-start: $outlined-btn-indent;
+                    width: calc(100% - (#{$outlined-btn-indent} * 2));
+                    height: calc(100% - (#{$outlined-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
                 }
 
@@ -753,14 +758,6 @@
         @if($variant == 'fluent') {
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(3px);
-                    content: '';
-                    position: absolute;
-                    top: $outline-btn-indent;
-                    inset-inline-start: $outline-btn-indent;
-                    pointer-events: none;
-                    width: calc(100% - (#{$outline-btn-indent} * 2));
-                    height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-visible-foreground');
                 }
 
@@ -870,15 +867,13 @@
         @if($variant == 'fluent') {
             &:focus-visible {
                 &::after {
-                    $outline-btn-indent: rem(3px);
+                    $btn-indent: rem(3px);
                     content: '';
                     position: absolute;
-                    top: $outline-btn-indent;
-                    inset-inline-start: $outline-btn-indent;
+                    top: $btn-indent;
+                    inset-inline-start: $btn-indent;
                     pointer-events: none;
-                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$outline-btn-indent});
-                    width: calc(100% - (#{$outline-btn-indent} * 2));
-                    height: calc(100% - (#{$outline-btn-indent} * 2));
+                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$btn-indent});
                     box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'focus-visible-foreground');
                 }
 

@@ -147,6 +147,7 @@
         compact: rem(4px)
     );
 
+    $btn-indent: rem(3px);
     $outline-btn-indent: rem(2px);
 
     %igx-icon-button-display {
@@ -190,11 +191,10 @@
                 position: absolute;
                 content: '';
                 pointer-events: none;
-                top: 2px;
-                left: 2px;
-                width: calc(100% - (#{$outline-btn-indent * 2}));
-                height: calc(100% - (#{$outline-btn-indent * 2}));
-                border-radius: calc(#{var-get($flat-theme, 'border-radius')} - #{$outline-btn-indent * 2});
+                inset-block-start: $btn-indent;
+                inset-inline-start: $btn-indent;
+                width: calc(100% - (#{$btn-indent * 2}));
+                height: calc(100% - (#{$btn-indent * 2}));
             }
         }
 
@@ -236,10 +236,8 @@
         @if ($variant == 'fluent') {
             border: none;
 
-            &:focus-visible {
-                &::after {
-                    box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-border-color');
-                }
+            &:focus-visible::after {
+                box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-border-color');
             }
         }
 
@@ -295,11 +293,11 @@
             }
         }
 
-        &:focus-visible {
-            @if ($variant == 'fluent') {
-                &::after {
-                    box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-border-color');
-                }
+        @if ($variant == 'fluent') {
+            border: none;
+
+            &:focus-visible::after {
+                box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-border-color');
             }
         }
 
@@ -357,11 +355,18 @@
             }
         }
 
-        &:focus-visible {
-            @if ($variant == 'fluent') {
-                &::after {
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-border-color');
-                }
+        @if ($variant == 'fluent') {
+            &:focus,
+            &:focus-visible {
+                border: rem(1px) solid var-get($outlined-theme, 'border-color');
+            }
+
+            &:focus-visible::after {
+                inset-block-start: $outline-btn-indent;
+                inset-inline-start: $outline-btn-indent;
+                width: calc(100% - (#{$outline-btn-indent * 2}));
+                height: calc(100% - (#{$outline-btn-indent * 2}));
+                box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-border-color');
             }
         }
 
