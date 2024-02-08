@@ -1310,15 +1310,15 @@ class DataGenerator {
 
     public generateData300x50000(instance) {
         if (this.data300x50000.length !== 0) {
-            instance.cols = [...this.cols300];
-            instance.data = [...this.data300x50000];
+            instance.cols = this.cols300;
+            instance.data = this.data300x50000;
         } else {
             const result = this.generateData(300, 50000);
-            this.data300x50000 = [...result.data];
-            this.cols300 = [...result.cols];
+            this.data300x50000 = result.data;
+            this.cols300 = result.cols;
 
-            instance.cols = [...this.cols300];
-            instance.data = [...this.data300x50000];
+            instance.cols = this.cols300;
+            instance.data = this.data300x50000;
         }
     }
 }
