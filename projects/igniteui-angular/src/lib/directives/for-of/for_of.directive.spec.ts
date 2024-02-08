@@ -241,6 +241,11 @@ describe('IgxForOf directive -', () => {
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
+        afterEach(() => {
+            displayContainer = null;
+            verticalScroller = null;
+            horizontalScroller = null;
+        });
 
         it('should initialize directive with vertical virtualization', async () => {
             expect(displayContainer).not.toBeNull();
@@ -431,6 +436,12 @@ describe('IgxForOf directive -', () => {
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
             expect(horizontalScroller).not.toBeNull();
+        });
+
+        afterEach(() => {
+            displayContainer = null;
+            verticalScroller = null;
+            horizontalScroller = null;
         });
 
         it('should initialize directive with vertical and horizontal virtualization', () => {
