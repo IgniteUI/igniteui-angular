@@ -117,7 +117,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden
      */
-    protected destroy$ = new Subject<any>();
+    protected destroy$ = new Subject<void>();
 
     /**
      * @hidden

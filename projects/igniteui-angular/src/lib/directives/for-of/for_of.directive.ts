@@ -269,7 +269,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
-    protected contentResizeNotify = new Subject();
+    protected contentResizeNotify = new Subject<void>();
     protected contentObserver: ResizeObserver;
     /** Size that is being virtualized. */
     protected _virtSize = 0;

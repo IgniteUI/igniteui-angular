@@ -616,7 +616,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @hidden
      * @internal
      */
-    public destroy$ = new Subject();
+    public destroy$ = new Subject<void>();
 
     protected _tabIndex = null;
     protected _selected = false;
