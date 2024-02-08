@@ -269,8 +269,8 @@
 
     $button-padding-material-inline: (
         comfortable: rem(16px, 16px),
-        cosy: rem(16px, 16px),
-        compact: rem(16px, 16px)
+        cosy: rem(12px, 16px),
+        compact: rem(8px, 16px)
     );
 
     $button-padding-material-block: (
@@ -292,8 +292,8 @@
     );
 
     $button-padding-bootstrap-inline: (
-        comfortable: rem(12px, 16px),
-        cosy: rem(10px, 16px),
+        comfortable: rem(16px, 16px),
+        cosy: rem(12px, 16px),
         compact: rem(8px, 16px)
     );
 
@@ -316,9 +316,9 @@
     );
 
     $outlined-button-padding-material-inline: (
-        comfortable: rem(14px, 16px),
-        cosy: rem(14px, 16px),
-        compact: rem(14px, 16px)
+        comfortable: rem(16px, 16px),
+        cosy: rem(12px, 16px),
+        compact: rem(8px, 16px)
     );
 
     $outlined-button-padding-material-block: (
@@ -402,14 +402,14 @@
 
     $contained-shadow: map.get((
         material: var-get($contained-theme, 'resting-shadow'),
-        fluent: var-get($contained-theme, 'resting-shadow'),
+        fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $contained-shadow--hover: map.get((
         material: var-get($contained-theme, 'hover-shadow'),
-        fluent: var-get($contained-theme, 'hover-shadow'),
+        fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
@@ -430,14 +430,14 @@
 
     $fab-shadow: map.get((
         material: var-get($fab-theme, 'resting-shadow'),
-        fluent: var-get($fab-theme, 'resting-shadow'),
+        fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $fab-shadow--hover: map.get((
         material: var-get($fab-theme, 'hover-shadow'),
-        fluent: var-get($fab-theme, 'hover-shadow'),
+        fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
@@ -713,7 +713,7 @@
             background: var-get($contained-theme, 'focus-background');
             border-color: var-get($contained-theme, 'focus-border-color');
 
-            @if $variant == 'material' or  $variant == 'fluent' {
+            @if $variant == 'material' {
                 box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--focus;
             } @else {
                 box-shadow: $contained-shadow--focus;
@@ -722,6 +722,10 @@
             &:hover {
                 color: var-get($contained-theme, 'focus-hover-foreground');
                 background: var-get($contained-theme, 'focus-hover-background');
+
+                @if $variant == 'material' {
+                    box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--focus;
+                }
             }
         }
 
@@ -730,7 +734,7 @@
             background: var-get($contained-theme, 'active-background');
             border-color: var-get($contained-theme, 'active-border-color');
 
-            @if $variant == 'material' or  $variant == 'fluent' {
+            @if $variant == 'material' {
                 box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--active;
             } @else {
                 box-shadow: $contained-shadow--active;
@@ -742,10 +746,18 @@
             color: var-get($contained-theme, 'focus-visible-foreground');
             border-color: var-get($contained-theme, 'focus-visible-border-color');
 
+            @if $variant == 'material' {
+                box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--focus;
+            }
+
             &:hover {
                 color: var-get($contained-theme, 'hover-foreground');
                 background: var-get($contained-theme, 'hover-background');
                 border-color: var-get($contained-theme, 'hover-border-color');
+
+                @if $variant == 'material' {
+                    box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'), $contained-shadow--focus;
+                }
             }
 
             &:active {
@@ -815,6 +827,12 @@
             background: var-get($fab-theme, 'hover-background');
             border-color: var-get($flat-theme, 'hover-border-color');
             box-shadow: $fab-shadow;
+
+            @if $variant == 'material' {
+                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--hover;
+            } @else {
+                box-shadow: $contained-shadow--hover;
+            }
         }
 
         &:focus {
@@ -822,7 +840,7 @@
             background: var-get($fab-theme, 'focus-background');
             border-color: var-get($flat-theme, 'focus-border-color');
 
-            @if $variant == 'material' or  $variant == 'fluent' {
+            @if $variant == 'material' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $contained-shadow--focus;
@@ -839,7 +857,7 @@
             background: var-get($fab-theme, 'active-background');
             border-color: var-get($flat-theme, 'active-border-color');
 
-            @if $variant == 'material' or  $variant == 'fluent' {
+            @if $variant == 'material' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--active;
             } @else {
                 box-shadow: $contained-shadow--active;
@@ -850,6 +868,12 @@
             background: var-get($fab-theme, 'focus-visible-background');
             color: var-get($fab-theme, 'focus-visible-foreground');
             border-color: var-get($fab-theme, 'focus-visible-border-color');
+
+            @if $variant == 'material' {
+                box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
+            } @else {
+                box-shadow: $contained-shadow--focus;
+            }
 
             &:hover {
                 color: var-get($fab-theme, 'focus-hover-foreground');
