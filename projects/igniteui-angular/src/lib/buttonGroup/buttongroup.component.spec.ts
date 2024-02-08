@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -115,7 +115,11 @@ describe('IgxButtonGroup', () => {
 
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
+        // The first button is already selected, so it should not fire the selected event, but the deselected one.
+        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
 
+        const unselectedButton = fixture.debugElement.nativeElement.querySelector('#unselected');
+        unselectedButton.click();
         expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
     });
 
@@ -360,7 +364,7 @@ describe('IgxButtonGroup', () => {
         }
     });
 
-    it('should style the corresponding button as deselected when the value bound to the selected input changes', () => {
+    it('should style the corresponding button as deselected when the value bound to the selected input changes', fakeAsync(() => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
 
@@ -370,11 +374,13 @@ describe('IgxButtonGroup', () => {
         expect(btnGroupInstance.buttons[1].selected).toBe(true);
 
         fixture.componentInstance.selectedValue = 100;
+        flushMicrotasks();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.selectedButtons.length).toBe(0);
-        expect(btnGroupInstance.buttons[1].selected).toBe(false);
-    });
+        btnGroupInstance.buttons.forEach((button) => {
+            expect(button.selected).toBe(false);
+        });
+    }));
 
 });
 
@@ -492,7 +498,7 @@ class TemplatedButtonGroupDesplayDensityComponent {
     template: `
     <igx-buttongroup>
         <button igxButton [selected]="true">Button 0</button>
-        <button igxButton>Button 1</button>
+        <button igxButton id="unselected">Button 1</button>
         <button igxButton>Button 2</button>
     </igx-buttongroup>
     `,
