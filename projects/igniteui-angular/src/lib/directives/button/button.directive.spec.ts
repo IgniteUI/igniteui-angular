@@ -146,6 +146,24 @@ describe('IgxButton', () => {
         expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
     });
+
+    it('Should emit the buttonSelected event only on user interaction, not on initialization', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+        fixture.detectChanges();
+        const button = fixture.componentInstance.button;
+        spyOn(button.buttonSelected, 'emit');
+
+        button.ngOnInit();
+        expect(button.buttonSelected.emit).not.toHaveBeenCalled();
+
+        button.nativeElement.click();
+        fixture.detectChanges();
+        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(1);
+
+        button.nativeElement.click();
+        fixture.detectChanges();
+        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(2);
+    });
 });
 
 @Component({

@@ -8,7 +8,8 @@ import {
     Renderer2,
     HostListener,
     Optional,
-    Inject
+    Inject,
+    AfterContentInit
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
@@ -50,7 +51,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends DisplayDensityBase {
+export class IgxButtonDirective extends DisplayDensityBase implements AfterContentInit {
     private static ngAcceptInputType_type: IgxButtonType | '';
     private static ngAcceptInputType_disabled: boolean | '';
 
@@ -135,9 +136,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
         if(this._selected !== value) {
             this._selected = value;
 
-            this.buttonSelected.emit({
-                button: this
-            });
+            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
         }
     }
 
@@ -151,6 +150,14 @@ export class IgxButtonDirective extends DisplayDensityBase {
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
         super(_displayDensityOptions, element);
+    }
+
+    public ngAfterContentInit() {
+        this.nativeElement.addEventListener('click', () => {
+            this.buttonSelected.emit({
+                button: this
+            });
+        });
     }
 
     /**
@@ -329,7 +336,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     public deselect() {
-        this._selected = false;
+        this.selected = false;
     }
 }
 
