@@ -113,8 +113,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
     public set data(value: any) {
         this._data = value;
-        if (this.hGrid) {
+        if (this.hGrid && !this.hGrid.dataSetByUser) {
             this.hGrid.data = this._data.childGridsData[this.layout.key];
+            this.hGrid.dataSetByUser = false;
         }
     }
 
@@ -198,6 +199,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
         this.hGrid.data = this.data.childGridsData[this.layout.key];
+        this.hGrid.dataSetByUser = false;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -388,6 +390,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childLayoutKeys = [];
 
+    /** @hidden @internal */
+    public dataSetByUser = false;
+
     /**
      * @hidden
      */
@@ -446,6 +451,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @Input()
     public set data(value: any[] | null) {
         this._data = value || [];
+        this.dataSetByUser = true;
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
