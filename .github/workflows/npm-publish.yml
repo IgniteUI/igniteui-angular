@@ -25,7 +25,7 @@ jobs:
         run: |
             npm run build:lib
             npm run build:schematics
-            npm run build:migration
+            npm run build:migrations
 
       - name: Build igniteui-angular-i18n
         run: npm run build:i18n

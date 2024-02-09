@@ -27,7 +27,7 @@
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/src/lib/core/i18n/tests/tests.ts",
     "build:lib": "ng build igniteui-angular --configuration production && gulp buildStyle",
     "build:style": "gulp buildStyle",
-    "build:migration": "gulp copyMigrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
+    "build:migrations": "gulp copyMigrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
     "build:schematics": "gulp copySchematics && tsc --listEmittedFiles --project ./projects/igniteui-angular/schematics/tsconfig.json",
     "build:docs": "sassdoc projects/igniteui-angular/src/lib/core/styles && gulp typedoc-build:theme",
     "lint:lib": "ng lint && stylelint \"projects/igniteui-angular/src/lib/core/styles\"",
