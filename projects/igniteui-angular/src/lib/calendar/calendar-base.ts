@@ -650,7 +650,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private selectSingle(value: Date) {
         const selectedDate = this.selectedDates as Date;
-        if(!selectedDate || selectedDate.getTime() !== value.getTime()){
+        if (!selectedDate || selectedDate.getTime() !== value.getTime()) {
             this.selectedDates = this.getDateOnly(value);
             this._onChangeCallback(this.selectedDates);
         }
