@@ -18,23 +18,38 @@
 ///
 /// @param {box-shadow} $shadow [null] - The shadow to be applied for the button group.
 /// @param {Color} $item-text-color [null]- The text color for button group items.
+/// @param {color} $item-icon-color [null]- The icon color for button group items.
 /// @param {Color} $item-background [null] - The background color for button group items .
 /// @param {Color} $item-border-color [null] - The border color between button group items.
-/// @param {Color} $item-disabled-border [null] - The border color for a disabled item in the button group.
 ///
 /// @param {Color} $item-hover-text-color [null] - The hover text color for button group items.
+/// @param {Color} $item-hover-icon-color [null] - The hover icon color for button group items.
 /// @param {Color} $item-hover-background [null] - The hover background color for button group items.
+/// @param {Color} $item-hover-border-color [null] - The hover border color between button group items.
+///
+/// @param {Color} $item-focused-background [null] - The focused background color for button group items.
+/// @param {Color} $item-focused-border-color [null] - The focused border color for an item from the button group.
+/// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
+/// @param {Color} $selected-shadow-color [null] - The outline color of focused/selected button group items.
 ///
 /// @param {Color} $disabled-text-color [null]- The text/icon color for a disabled item in the button group.
 /// @param {Color} $disabled-background-color [null] - The background color for a disabled item in the button group.
 /// @param {Color} $item-disabled-border [null] - The border color for a disabled item in the button group.
 ///
 /// @param {Color} $item-selected-text-color [null]- The text color for a selected item in the button group.
+/// @param {Color} $item-selected-icon-color [null]- The icon color for a selected item in the button group.
 /// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
 /// @param {Color} $item-selected-border-color [null] - The border color for a selected item from the button group.
+///
+/// @param {Color} $item-selected-hover-text-color [null] - The text color for a selected item in hover state in the button group.
+/// @param {Color} $item-selected-hover-icon-color [null] - The icon color for a selected item in hover state in the button group.
 /// @param {Color} $item-selected-hover-background [null] - The background color for a selected item in hover or focus state in the button group.
-/// @param {Color} $selected-shadow-color [null] - The outline color of focused/selected button group items.
-/// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
+/// @param {Color} $item-selected-hover-border-color [null] - The border color for a selected item in hover state in the button group.
+///
+/// @param {Color} $disabled-selected-text-color [null] - The disabled text color for a selected item in the button group.
+/// @param {Color} $disabled-selected-icon-color [null] - The disabled icon color for a selected item in the button group.
+/// @param {Color} $disabled-selected-background [null] - The disabled background color for a selected item in the button group.
+/// @param {Color} $disabled-selected-border-color [null] - The disabled border color for a selected item from the button group.
 ///
 /// @param {List} $border-radius [null] - The border radius used for button-group component.
 ///
@@ -51,28 +66,42 @@
 @function button-group-theme(
     $schema: $light-material-schema,
     $elevations: null,
-
     $shadow: null,
+
     $item-text-color: null,
+    $item-icon-color: null,
     $item-background: null,
     $item-border-color: null,
-    $item-focused-border-color: null,
-    $item-disabled-border: null,
-    $border-radius: null,
 
     $item-hover-text-color: null,
+    $item-hover-icon-color: null,
     $item-hover-background: null,
+    $item-hover-border-color: null,
+
+    $item-focused-border-color: null,
     $item-focused-background: null,
     $idle-shadow-color: null,
+    $selected-shadow-color: null,
+    $border-radius: null,
 
     $disabled-text-color: null,
     $disabled-background-color: null,
+    $item-disabled-border: null,
 
     $item-selected-text-color: null,
+    $item-selected-icon-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
+
+    $item-selected-hover-text-color: null,
+    $item-selected-hover-icon-color: null,
     $item-selected-hover-background: null,
-    $selected-shadow-color: null
+    $item-selected-hover-border-color: null,
+
+    $disabled-selected-text-color: null,
+    $disabled-selected-icon-color: null,
+    $disabled-selected-background: null,
+    $disabled-selected-border-color: null,
 ) {
     $name: 'igx-button-group';
     $selector: 'igx-buttongroup';
@@ -138,20 +167,31 @@
         name: $name,
         selector: $selector,
         item-text-color: $item-text-color,
+        item-icon-color: $item-icon-color,
         item-background: $item-background,
         item-border-color: $item-border-color,
+        item-focused-background: $item-focused-background,
         item-focused-border-color: $item-focused-border-color,
-        item-disabled-border: $item-disabled-border,
         border-radius: $border-radius,
         item-hover-text-color: $item-hover-text-color,
+        item-hover-icon-color: $item-hover-icon-color,
         item-hover-background: $item-hover-background,
-        item-focused-background: $item-focused-background,
+        item-hover-border-color: $item-hover-border-color,
         disabled-text-color:$disabled-text-color,
         disabled-background-color:$disabled-background-color,
+        item-disabled-border: $item-disabled-border,
         item-selected-text-color: $item-selected-text-color,
+        item-selected-icon-color: $item-selected-icon-color,
         item-selected-background: $item-selected-background,
         item-selected-border-color: $item-selected-border-color,
+        item-selected-hover-text-color: $item-selected-hover-text-color,
+        item-selected-hover-icon-color: $item-selected-hover-icon-color,
         item-selected-hover-background: $item-selected-hover-background,
+        item-selected-hover-border-color: $item-selected-hover-border-color,
+        disabled-selected-text-color: $disabled-selected-text-color,
+        disabled-selected-icon-color: $disabled-selected-icon-color,
+        disabled-selected-background: $disabled-selected-background,
+        disabled-selected-border-color: $disabled-selected-border-color,
         border: $border,
         shadow: $shadow,
         idle-shadow-color: $idle-shadow-color,
@@ -232,6 +272,12 @@
             color: var-get($theme, 'disabled-text-color');
             background: var-get($theme, 'disabled-background-color');
             border-color: var-get($theme, 'item-disabled-border');
+
+            @if $variant == 'indigo-design' {
+                igx-icon {
+                    color: var-get($theme, 'disabled-text-color');
+                }
+            }
         }
 
         &:hover,
@@ -294,6 +340,42 @@
                 }
             }
         }
+
+        @if $variant == 'indigo-design' {
+            padding-inline: pad-inline(rem(8px));
+            padding-block: pad-block(rem(6px));
+
+            igx-icon {
+                color: var-get($theme, 'item-icon-color');
+                $icon-size: rem(16px);
+
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            }
+
+            &:hover {
+                border-color: var-get($theme, 'item-hover-border-color');
+
+                igx-icon {
+                    color: var-get($theme, 'item-hover-icon-color');
+                }
+            }
+
+            &:focus {
+                color: var-get($theme, 'item-text-color');
+                background: var-get($theme, 'item-background'); 
+
+                &:hover {
+                    color: var-get($theme, 'item-hover-text-color');
+                    background: var-get($theme, 'item-hover-background');
+                    border-color: var-get($theme, 'item-hover-border-color');
+
+                    igx-icon {
+                        color: var-get($theme, 'item-hover-icon-color');
+                    }
+                }
+            }
+        }
     }
 
     %igx-group-item-vertical {
@@ -336,9 +418,37 @@
             z-index: 3;
         }
 
+        &[igxButton] {
+            border-color: var-get($theme, 'item-selected-border-color');
+        }
+
         @if $indigo-theme {
+            igx-icon {
+                color: var-get($theme, 'item-selected-icon-color');
+            }
+
+            &:hover {
+                border-color: var-get($theme, 'item-selected-hover-border-color');
+                color: var-get($theme, 'item-selected-hover-text-color');
+
+                igx-icon {
+                    color: var-get($theme, 'item-selected-hover-icon-color');
+                }
+            }
+
             &:focus {
+                background: var-get($theme, 'item-selected-background');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
+                
+                &:hover {
+                    border-color: var-get($theme, 'item-selected-hover-border-color');
+                    color: var-get($theme, 'item-selected-hover-text-color');
+                    background: var-get($theme, 'item-selected-hover-background');
+    
+                    igx-icon {
+                        color: var-get($theme, 'item-selected-hover-icon-color');
+                    }
+                }
             }
         }
 
@@ -364,10 +474,6 @@
             }
         }
 
-        &[igxButton] {
-            border-color: var-get($theme, 'item-selected-border-color');
-        }
-
         &[igxButton][disabled='true'] {
             position: relative;
 
@@ -379,6 +485,20 @@
                 inset-inline-end: 0;
                 inset-inline-start: 0;
                 background: color($color: 'gray', $variant: 500, $opacity: .12);
+            }
+
+            @if $variant == 'indigo-design' {
+                color: var-get($theme, 'disabled-selected-text-color');
+                background: var-get($theme, 'disabled-selected-background');
+                border: none;
+
+                igx-icon {
+                    color: var-get($theme, 'disabled-selected-text-color');
+                }
+
+                &::before {
+                    display: none;
+                }
             }
         }
     }
