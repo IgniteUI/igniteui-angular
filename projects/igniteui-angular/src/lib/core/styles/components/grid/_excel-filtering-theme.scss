@@ -461,7 +461,7 @@
 
         @if $bootstrap-theme {
             // important is needed to override the typography margins
-            margin-block-end: rem(4px)!important;
+            margin-block-end: rem(4px) !important;
         }
 
         igx-icon {
