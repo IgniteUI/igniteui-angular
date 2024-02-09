@@ -274,7 +274,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         return this.mode === PickerInteractionMode.DropDown;
     }
 
-    protected _destroy$ = new Subject();
+    protected _destroy$ = new Subject<void>();
 
     // D.P. EventEmitter<string | Date | DateRange | null> throws on strict checks for more restrictive overrides
     // w/ TS2416 Type 'string | Date ...' not assignable to type 'DateRange' due to observer method check

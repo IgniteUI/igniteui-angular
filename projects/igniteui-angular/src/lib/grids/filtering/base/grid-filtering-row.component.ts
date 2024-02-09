@@ -210,7 +210,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
-    private $destroyer = new Subject<boolean>();
+    private $destroyer = new Subject<void>();
 
     constructor(
         public filteringService: IgxFilteringService,

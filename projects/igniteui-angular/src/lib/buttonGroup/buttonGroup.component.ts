@@ -301,8 +301,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public selectedIndexes: number[] = [];
 
-    protected buttonClickNotifier$ = new Subject<boolean>();
-    protected queryListNotifier$ = new Subject<boolean>();
+    protected buttonClickNotifier$ = new Subject<void>();
+    protected queryListNotifier$ = new Subject<void>();
 
     private _isVertical: boolean;
     private _itemContentCssClass: string;
