@@ -31,6 +31,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
     public childDataKey = 'ChildCompanies';
     public sorting = IgxGroupedTreeGridSorting.instance();
     public filteringStrategy = new TreeGridFilteringStrategy([this.groupKey]);
+    public pipeTrigger = 0;
 
     public employeeAggregations: ITreeGridAggregation[] = [{
         field: 'Employees',
