@@ -106,13 +106,6 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         }
     }
 
-    public get size() {
-        return globalThis.document?.defaultView
-            .getComputedStyle(this._host.nativeElement)
-            .getPropertyValue('--ig-size')
-            .trim();
-    }
-
     /**
      * @hidden
      */
@@ -137,26 +130,28 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * @hidden
      */
     public ngOnInit(): void {
-        const size = globalThis.document?.defaultView
-                .getComputedStyle(this._host.nativeElement)
-                .getPropertyValue('--ig-size')
-                .trim()
+        const el = this._host.nativeElement;
 
-        switch (size) {
-            case '1':
-                this.initialDensity = DisplayDensity.compact;
-                break;
-            case '2':
-                this.initialDensity = DisplayDensity.cosy;
-                break;
-            case '3':
-                this.initialDensity = DisplayDensity.comfortable;
-                break;
-            default:
-                this.initialDensity = this._displayDensity;
+        if (el) {
+            const size = globalThis.document?.defaultView
+                .getComputedStyle(el)
+                .getPropertyValue("--ig-size")
+                .trim();
+
+            switch (size) {
+                case '1':
+                    this._displayDensity = DisplayDensity.compact;
+                    break;
+                case '2':
+                    this._displayDensity = DisplayDensity.cosy;
+                    break;
+                case '3':
+                    this._displayDensity = DisplayDensity.comfortable;
+                    break;
+            }
         }
 
-        this._displayDensity = this.initialDensity;
+        this.initialDensity = this._displayDensity;
     }
 
     /** @hidden @internal **/
