@@ -915,6 +915,7 @@ export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
 }
 
+/* marshalByValue */
 /**
  * An interface describing settings for row/column pinning position.
  */

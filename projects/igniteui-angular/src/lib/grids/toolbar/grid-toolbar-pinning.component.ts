@@ -9,6 +9,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-pinning */
+/* singleInstanceIdentifier */
 /* blazorIndirectRender */
 /* jsonAPIManageItemInMarkup */
 /**

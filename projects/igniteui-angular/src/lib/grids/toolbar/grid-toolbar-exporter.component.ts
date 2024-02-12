@@ -22,6 +22,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
 
 /* jsonAPIComplexObject */
+/* wcAlternateName: ExporterEventArgs */
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
     /* alternateType: ExporterOptionsBase */
@@ -35,6 +36,7 @@ export interface IgxExporterEvent {
 /* wcElementTag: igc-grid-toolbar-exporter */
 /* blazorIndirectRender */
 /* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured exporter component for the grid.
  *

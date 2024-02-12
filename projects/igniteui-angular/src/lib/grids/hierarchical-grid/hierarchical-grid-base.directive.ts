@@ -98,6 +98,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this._maxLevelHeaderDepth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
@@ -108,6 +109,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
+    /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
@@ -138,6 +140,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
+    /* blazorSuppress */
     public abstract expandChildren: boolean;
 
     constructor(
@@ -209,7 +212,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             this.columns.forEach(column => {
                 if (column[output.propName]) {
                     column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
-                        const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
+                        const rowIslandColumn = this.parentIsland.columnList.find((col) => col.field
+                            ? col.field === column.field
+                            : col.header === column.header);
                         rowIslandColumn[output.propName].emit({ args, owner: this });
                     });
                 }

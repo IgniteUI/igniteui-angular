@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -63,6 +64,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 
 let NEXT_ID = 0;
 
@@ -116,6 +118,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
+    /* blazorSuppress */
     @ViewChild('container', {read: ViewContainerRef, static: true})
     public container: ViewContainerRef;
 
@@ -124,6 +127,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public hGrid: IgxHierarchicalGridComponent;
 
+    /* blazorSuppress */
     /**
      * Get a reference to the grid that contains the selected row.
      *
@@ -256,6 +260,23 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
+
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorAdditionalDependency: RowIsland */
+/* blazorIndirectRender */
 /**
  * Hierarchical grid
  *
@@ -328,6 +349,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @HostBinding('attr.role')
     public role = 'grid';
 
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -422,6 +448,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
+    /* treatAsRef */
     /**
      * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
      * ```html

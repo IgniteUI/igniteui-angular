@@ -49,6 +49,15 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
+/* blazorCopyInheritedMembers */
+/* blazorElement */
+/* wcElementTag: igc-row-island */
+/* blazorIndirectRender */
+/* jsonAPIManageCollectionInMarkup */
+/* jsonAPIManageItemInMarkup */
+/* mustUseNGParentAnchor */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /**
  * Row island
  *
@@ -72,6 +81,8 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+
+    /* blazorSuppress */
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -87,11 +98,33 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @Input()
     public key: string;
 
+    /** @hidden **/
+    /**
+     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
+     */
+    @Input()
+    public get childDataKey() {
+        return this.key;
+    }
+    public set childDataKey(value: string) {
+        this.key = value;
+    }
+
     /**
      * @hidden
      */
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
+
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /**
+     * @hidden
+     */
+    @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
+    public childLayoutList = new QueryList<IgxRowIslandComponent>();
 
     /**
      * @hidden

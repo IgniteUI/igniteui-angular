@@ -1677,6 +1677,21 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public children: QueryList<IgxColumnComponent>;
+
+    /**
+     * Gets the children columns array.
+     * ```typescript
+     * let columnChildren = this.column.columnChildren;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public get columnChildren(): IgxColumnComponent[] {
+        return this.children.toArray();
+    }
+
+    public set columnChildren(cols: IgxColumnComponent[]) {
+    }
+
     /**
      * @hidden
      */
