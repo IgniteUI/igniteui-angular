@@ -267,7 +267,7 @@
     $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
 
-    $button-padding-material-inline: (
+    $button-padding-inline: (
         comfortable: rem(16px, 16px),
         cosy: rem(12px, 16px),
         compact: rem(8px, 16px)
@@ -279,22 +279,10 @@
         compact: rem(1px, 16px)
     );
 
-    $button-padding-fluent-inline: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
-    );
-
     $button-padding-fluent-block: (
         comfortable: 0,
         cosy: 0,
         compact: 0
-    );
-
-    $button-padding-bootstrap-inline: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
     );
 
     $button-padding-bootstrap-block: (
@@ -303,27 +291,9 @@
         compact: rem(2px, 16px)
     );
 
-    $button-padding-indigo-inline: (
-        comfortable: rem(12px, 16px),
-        cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
-    );
-
     $button-padding-indigo-block: (
         comfortable: rem(3px, 16px),
         cosy: rem(2px, 16px),
-        compact: rem(1px, 16px)
-    );
-
-    $outlined-button-padding-material-inline: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
-    );
-
-    $outlined-button-padding-material-block: (
-        comfortable: rem(7px, 16px),
-        cosy: rem(4px, 16px),
         compact: rem(1px, 16px)
     );
 
@@ -340,10 +310,10 @@
     );
 
     $button-padding-inline: map.get((
-        material: $button-padding-material-inline,
-        fluent: $button-padding-fluent-inline,
-        bootstrap: $button-padding-bootstrap-inline,
-        indigo-design: $button-padding-indigo-inline,
+        material: $button-padding-inline,
+        fluent: $button-padding-inline,
+        bootstrap: $button-padding-inline,
+        indigo-design: $button-padding-inline,
     ), $variant);
 
     $button-padding-block: map.get((
@@ -354,14 +324,14 @@
     ), $variant);
 
     $outlined-button-padding-inline: map.get((
-        material: $outlined-button-padding-material-inline,
-        fluent: $button-padding-fluent-inline,
-        bootstrap: $button-padding-bootstrap-inline,
+        material: $button-padding-inline,
+        fluent: $button-padding-inline,
+        bootstrap: $button-padding-inline,
         indigo-design: $outlined-button-padding-indigo-inline
     ), $variant);
 
     $outlined-button-padding-block: map.get((
-        material: $outlined-button-padding-material-block,
+        material: $button-padding-material-block,
         fluent: $button-padding-fluent-block,
         bootstrap: $button-padding-bootstrap-block,
         indigo-design: $outlined-button-padding-indigo-block
@@ -385,13 +355,6 @@
         compact: rem(4px)
     );
 
-    $icon-sizes: map.get((
-        material: rem(18px),
-        fluent: rem(18px),
-        bootstrap: rem(18px),
-        indigo-design: rem(18px),
-    ), $variant);
-  
     $filtering-row-button-size: (
         comfortable: rem(40px),
         cosy: rem(30px),
@@ -506,11 +469,6 @@
             }
         }
 
-        @if ($variant == 'bootstrap') {
-            // important is needed to override the typography margins
-            margin: rem(4px) !important;
-        }
-      
         igx-icon {
             --component-size: var(--ig-size, var(--ig-size-large));
             display: flex;
