@@ -391,14 +391,14 @@
         bootstrap: rem(18px),
         indigo-design: rem(18px),
     ), $variant);
-
+  
     $filtering-row-button-size: (
         comfortable: rem(40px),
         cosy: rem(30px),
         compact: rem(21px)
     );
 
-    $icon-in-button-size: $icon-sizes;
+    $icon-in-button-size: rem(18px);
 
     $contained-shadow: map.get((
         material: var-get($contained-theme, 'resting-shadow'),
@@ -510,7 +510,7 @@
             // important is needed to override the typography margins
             margin: rem(4px) !important;
         }
-
+      
         igx-icon {
             --component-size: var(--ig-size, var(--ig-size-large));
             display: flex;

@@ -69,10 +69,6 @@ import { IgxActionStripComponent } from '../../action-strip/action-strip.compone
 
 let NEXT_ID = 0;
 
-export interface HierarchicalStateRecord {
-    rowID: any;
-}
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',

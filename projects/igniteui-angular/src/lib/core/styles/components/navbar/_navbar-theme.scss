@@ -108,6 +108,10 @@
         box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
+
+        @if $variant == 'bootstrap' {
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
+        }
     }
 
     %igx-navbar-part {

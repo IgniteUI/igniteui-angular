@@ -928,11 +928,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
-    protected destroy$ = new Subject<any>();
+    protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
-    protected compareCollator = new Intl.Collator(); 
-    
+    protected compareCollator = new Intl.Collator();
+
     private _type = null;
     private _dataType = '';
     private _itemHeight = null;

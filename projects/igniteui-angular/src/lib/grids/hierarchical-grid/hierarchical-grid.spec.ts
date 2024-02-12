@@ -227,15 +227,15 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             // verify row is expanded
             expect(row1.expanded).toBe(true);
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             expect(childGrid).not.toBeNull();
             const childState = new Map<any, boolean>();
             childState.set(fixture.componentInstance.data[0].childData[0], true);
             childGrid.expansionStates = childState;
             childGrid.cdr.detectChanges();
             const grandChildGrid = hierarchicalGrid.gridAPI.getChildGrid([
-                { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
-                { rowID: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
+                { rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
+                { rowID: fixture.componentInstance.data[0].childData[0], rowKey: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
             ]);
             expect(grandChildGrid).not.toBeNull();
 
@@ -304,7 +304,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(fixture.componentInstance.rowIsland.expandChildren).toBeFalsy();
             fixture.componentInstance.rowIsland.expandChildren = true;
             fixture.detectChanges();
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             const childRow = childGrid.getRowByIndex(0);
             expect(childRow.expanded).toBe(true);
             let rows = childGrid.dataRowList.toArray();
