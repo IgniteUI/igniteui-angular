@@ -1033,6 +1033,7 @@
     %body-display {
         flex-grow: 1;
         display: flex;
+        flex-direction: column;
 
         > * {
             flex-grow: 1;
@@ -2085,6 +2086,8 @@
 
         %date-inner {
             @if $variant == 'fluent' {
+                background: transparent;
+                border-color: var-get($theme, 'date-range-preview-border-color');
                 border-inline-end-color: transparent;
             }
         }
@@ -2095,10 +2098,12 @@
     }
 
     %date-last-preview {
-        border-block: transparent !important;
+        border-block-color: transparent !important;
 
         %date-inner {
             @if $variant == 'fluent' {
+                background: transparent;
+                border-color: var-get($theme, 'date-range-preview-border-color');
                 border-inline-start-color: transparent;
             }
         }
