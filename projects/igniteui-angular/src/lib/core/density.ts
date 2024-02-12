@@ -130,9 +130,9 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * @hidden
      */
     public ngOnInit(): void {
-        const el = this._host.nativeElement;
+        const el = this._host?.nativeElement;
 
-        if (el) {
+        if (el instanceof Element) {
             const size = globalThis.document?.defaultView
                 .getComputedStyle(el)
                 .getPropertyValue("--ig-size")
