@@ -325,7 +325,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     };
     /** @hidden @internal */
     public _defaultTitlePosition: IgxStepperTitlePosition = IgxStepperTitlePosition.Bottom;
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
     private _orientation: IgxStepperOrientation = IgxStepperOrientation.Horizontal;
     private _verticalAnimationType: VerticalAnimationType = VerticalAnimationType.Grow;
     private _linear = false;

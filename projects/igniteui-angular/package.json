@@ -76,17 +76,17 @@
         "igniteui-trial-watermark": "^3.0.2",
         "lodash-es": "^4.17.21",
         "uuid": "^9.0.0",
-        "igniteui-theming": "^4.0.0",
+        "igniteui-theming": "^4.2.0",
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
-        "@angular/common": "^17.0.0",
-        "@angular/core": "^17.0.0",
-        "@angular/animations": "^17.0.0",
-        "@angular/forms": "^17.0.0"
+        "@angular/common": "^17.1.2",
+        "@angular/core": "^17.1.2",
+        "@angular/animations": "^17.1.2",
+        "@angular/forms": "^17.1.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~17.1.1310"
+        "@igniteui/angular-schematics": "~17.1.1316-beta.2"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

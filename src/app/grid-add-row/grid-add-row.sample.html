@@ -1,14 +1,19 @@
 <div>
+    <button (click)="add()">ADD</button>
     <igx-grid
         #grid
         [data]="data"
         [width]="'800px'"
         [height]="'500px'"
-        [primaryKey]="'ID'"
+
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
         [rowEditable]="true"
         [allowFiltering]="true"
+        (rowAdd)="log($event)"
+        (rowAdded)="log($event)"
+        (rowDelete)="log($event)"
+        (rowDeleted)="log($event)"
     >
         <igx-column
             *ngFor="let c of columns"
@@ -25,7 +30,7 @@
 
         <igx-action-strip #actionstrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions [addRow]="false" [editRow]="false" [deleteRow]='false'></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true" [editRow]="false" [deleteRow]='true'></igx-grid-editing-actions>
         </igx-action-strip>
         <igx-paginator
             *ngIf="paging"

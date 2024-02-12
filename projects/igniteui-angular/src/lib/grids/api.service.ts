@@ -141,9 +141,10 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (!cell) {
             return;
         }
-        const args = cell.createEditEventArgs(true);
-
-        this.grid.summaryService.clearSummaryCache(args);
+        const args = cell.createCellEditEventArgs(true);
+        if (!this.grid.crudService.row) { // should not recalculate summaries when there is row in edit mode
+            this.grid.summaryService.clearSummaryCache(args);
+        }
         const data = this.getRowData(cell.id.rowID);
         const newRowData = reverseMapper(cell.column.field, args.newValue);
         this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
@@ -187,7 +188,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const hasSummarized = grid.hasSummarizedColumns;
         this.crudService.updateRowEditData(row, value);
 
-        const args = row.createEditEventArgs(true, event);
+        const args = row.createRowEditEventArgs(true, event);
 
         // If no valid row is found
         if (index === -1) {
@@ -338,7 +339,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public deleteRowById(rowId: any): any {
         let index: number;
         const grid = this.grid;
-        const data = this.get_all_data();
+        const data = this.get_all_data(grid.transactions.enabled);
         if (grid.primaryKey) {
             // eslint-disable-next-line @typescript-eslint/no-shadow
             index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
@@ -360,7 +361,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         const record = data[index];
         const key = record ? record[grid.primaryKey] : undefined;
-        grid.rowDeletedNotifier.next({ data: record, owner: grid, primaryKey: key });
+        grid.rowDeletedNotifier.next({ data: record, rowData: record, owner: grid, primaryKey: key, rowKey: key });
 
         this.deleteRowFromData(rowId, index);
 
@@ -424,6 +425,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         const args: IRowToggleEventArgs = {
+            rowKey: rowID,
             rowID,
             expanded,
             event,
@@ -585,6 +587,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public get_pin_row_event_args(rowID: any, index?: number, row?: RowType, pinned?: boolean) {
         const eventArgs: IPinRowEventArgs = {
             isPinned: pinned ? true : false,
+            rowKey: rowID,
             rowID,
             row,
             cancel: false
