@@ -20,6 +20,10 @@
             @extend %header-display !optional;
         }
 
+        @include e(picker) {
+            @extend %body-display !optional;
+        }
+
         @include e(body) {
             @extend %body-display !optional;
         }

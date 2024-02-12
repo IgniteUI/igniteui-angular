@@ -57,37 +57,78 @@
     <span>{{getDecadeRange().end}}</span>
 </ng-template>
 
+<!-- PICKER IN DAYS -->
+<ng-template #calendarDaysPicker let-i>
+    <section class="igx-calendar-picker">
+        <div class="igx-calendar-picker__dates"
+             [style.width.%]="100/monthsViewNumber"
+             [attr.data-month]="i | IgxGetViewDate:viewDate:false">
+            <ng-container
+                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonthYear; context: getContext(i)">
+            </ng-container>
+        </div>
+        <div class="igx-calendar-picker__nav" *ngIf="monthsViewNumber === i + 1">
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
+                data-action="prev"
+                #prevPageBtn
+                igxCalendarScrollPage
+                [startScroll]="startPrevPageScroll"
+                [stopScroll]="stopPageScroll"
+                [ngStyle]="{ 'min-width.%': 100/(monthsViewNumber*7)}">
+                <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
+            </div>
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
+                data-action="next"
+                #nextPageBtn
+                igxCalendarScrollPage
+                [startScroll]="startNextPageScroll"
+                [stopScroll]="stopPageScroll"
+                [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
+                <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
+            </div>
+        </div>
+    </section>
+</ng-template>
+
 <!-- PICKER IN MONTHS -->
 <ng-template #calendarYearPicker>
     <section class="igx-calendar-picker">
         <div class="igx-calendar-picker__dates">
             <ng-container
-                    *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(0)">
+                *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(0)">
             </ng-container>
         </div>
         <div class="igx-calendar-picker__nav">
             <div
-                    tabindex="0"
-                    class="igx-calendar-picker__prev"
-                    role="button"
-                    [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
-                    data-action="prev"
-                    #prevPageBtn
-                    igxCalendarScrollPage
-                    [startScroll]="startPrevPageScroll"
-                    [stopScroll]="stopPageScroll">
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
+                data-action="prev"
+                #prevPageBtn
+                igxCalendarScrollPage
+                [startScroll]="startPrevPageScroll"
+                [stopScroll]="stopPageScroll">
                 <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
             </div>
             <div
-                    tabindex="0"
-                    class="igx-calendar-picker__next"
-                    role="button"
-                    [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
-                    data-action="next"
-                    #nextPageBtn
-                    igxCalendarScrollPage
-                    [startScroll]="startNextPageScroll"
-                    [stopScroll]="stopPageScroll">
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
+                data-action="next"
+                #nextPageBtn
+                igxCalendarScrollPage
+                [startScroll]="startNextPageScroll"
+                [stopScroll]="stopPageScroll">
                 <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
             </div>
         </div>
@@ -104,40 +145,41 @@
         </div>
         <div class="igx-calendar-picker__nav">
             <div
-                    tabindex="0"
-                    class="igx-calendar-picker__prev"
-                    role="button"
-                    [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
-                    data-action="prev"
-                    #prevPageBtn
-                    igxCalendarScrollPage
-                    [startScroll]="startPrevPageScroll"
-                    [stopScroll]="stopPageScroll">
+                #prevPageBtn
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
+                data-action="prev"
+                igxCalendarScrollPage
+                [startScroll]="startPrevPageScroll"
+                [stopScroll]="stopPageScroll">
                 <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
             </div>
             <div
-                    tabindex="0"
-                    class="igx-calendar-picker__next"
-                    role="button"
-                    [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
-                    data-action="next"
-                    #nextPageBtn
-                    igxCalendarScrollPage
-                    [startScroll]="startNextPageScroll"
-                    [stopScroll]="stopPageScroll">
+                #nextPageBtn
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                role="button"
+                [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
+                data-action="next"
+                igxCalendarScrollPage
+                [startScroll]="startNextPageScroll"
+                [stopScroll]="stopPageScroll">
                 <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
             </div>
         </div>
     </section>
 </ng-template>
 
+
 <!-- TODO create templates for single, multi and range -->
 <!-- headers and remove the hiding of the full header -->
 <!-- when selection is not single -->
 <header
-        aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
-        class="igx-calendar__header"
-        *ngIf="selection === 'single' && hasHeader || selection === 'range' && hasHeader">
+    aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
+    class="igx-calendar__header"
+    *ngIf="selection === 'single' && hasHeader || selection === 'range' && hasHeader">
     <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
 <!--        TODO Make sure to localize the 'End' string-->
         {{ selection === 'single' ? formattedYear(headerDate) : resourceStrings.igx_calendar_range_placeholder }}
@@ -148,126 +190,99 @@
     </h2>
 </header>
 
-<div class="igx-calendar__body">
-    <ng-container *ngIf="isDefaultView"
-      (swiperight)="previousPage()"
-      (swipeleft)="nextPage()"
-      (pointerdown)="suppressBlur()">
+<span tabindex="0" class="igx-calendar__aria-off-screen">
+    <ng-container *ngIf="selection === 'multi'">
+        {{ monthsViewNumber && monthsViewNumber > 1 ?
+        resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
+        resourceStrings.igx_calendar_singular_multi_selection}}
+    </ng-container>
+    <ng-container *ngIf="selection === 'range'">
+        {{ monthsViewNumber && monthsViewNumber > 1 ?
+        resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
+        resourceStrings.igx_calendar_singular_range_selection}}
+    </ng-container>
+    <ng-container *ngIf="selection === 'single'">
+        {{ monthsViewNumber && monthsViewNumber > 1 ?
+        resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
+        resourceStrings.igx_calendar_singular_single_selection}}
+    </ng-container>
+</span>
+
+<section class="igx-calendar__picker">
+    <ng-container *ngIf="isDefaultView">
         <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
-            <section>
-                <div class="igx-calendar-picker">
-                <span tabindex="0" class="igx-calendar__aria-off-screen">
-                    <ng-container *ngIf="selection === 'multi'">
-                        {{ monthsViewNumber && monthsViewNumber > 1 ?
-                        resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
-                        resourceStrings.igx_calendar_singular_multi_selection}}
-                    </ng-container>
-                    <ng-container *ngIf="selection === 'range'">
-                        {{ monthsViewNumber && monthsViewNumber > 1 ?
-                        resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
-                        resourceStrings.igx_calendar_singular_range_selection}}
-                    </ng-container>
-                    <ng-container *ngIf="selection === 'single'">
-                        {{ monthsViewNumber && monthsViewNumber > 1 ?
-                        resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
-                        resourceStrings.igx_calendar_singular_single_selection}}
-                    </ng-container>
-                </span>
-                    <div class="igx-calendar-picker__dates"
-                         [style.width.%]="100/monthsViewNumber"
-                         [attr.data-month]="i | IgxGetViewDate:viewDate:false">
-                        <ng-container
-                                *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonthYear; context: getContext(i)">
-                        </ng-container>
-                    </div>
-                    <div class="igx-calendar-picker__nav" *ngIf="monthsViewNumber === i + 1">
-                        <div
-                                tabindex="0"
-                                class="igx-calendar-picker__prev"
-                                role="button"
-                                [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
-                                data-action="prev"
-                                #prevPageBtn
-                                igxCalendarScrollPage
-                                [startScroll]="startPrevPageScroll"
-                                [stopScroll]="stopPageScroll"
-                                [ngStyle]="{ 'min-width.%': 100/(monthsViewNumber*7)}">
-                            <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
-                        </div>
-                        <div
-                                tabindex="0"
-                                class="igx-calendar-picker__next"
-                                role="button"
-                                [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
-                                data-action="next"
-                                #nextPageBtn
-                                igxCalendarScrollPage
-                                [startScroll]="startNextPageScroll"
-                                [stopScroll]="stopPageScroll"
-                                [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
-                            <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
-                        </div>
-                    </div>
-                </div>
-                <ng-container>
-                    <igx-days-view role="grid"
-                                   #days
-                                   [changeDaysView]="true"
-                                   [selection]="selection"
-                                   [locale]="locale"
-                                   [value]="value"
-                                   [(activeDate)]="activeDate"
-                                   [(previewRangeDate)]="previewRangeDate"
-                                   [viewDate]="i | IgxGetViewDate:viewDate"
-                                   [weekStart]="weekStart"
-                                   [formatOptions]="formatOptions"
-                                   [formatViews]="formatViews"
-                                   [disabledDates]="disabledDates"
-                                   [specialDates]="specialDates"
-                                   [hideOutsideDays]="hideOutsideDays"
-                                   [showWeekNumbers]="showWeekNumbers"
-                                   (pageChanged)="updateDay($event)"
-                                   (dateSelection)="childClicked($event)"
-                                   (monthsViewBlur)="resetActiveDate()">
-                    </igx-days-view>
-                </ng-container>
-            </section>
+            <ng-container *ngTemplateOutlet="calendarDaysPicker; context: {$implicit: i}"></ng-container>
         </ng-container>
     </ng-container>
 
     <ng-container *ngIf="isYearView">
-        <section>
-            <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
-            <igx-months-view
-                #months
-                [date]="viewDate"
-                [locale]="locale"
-                [formatView]="formatViews.month"
-                [monthFormat]="formatOptions.month"
-                (swiperight)="previousPage()"
-                (swipeleft)="nextPage()"
-                (pageChanged)="updateYear($event)"
-                (selected)="changeMonth($event)">
-            </igx-months-view>
-        </section>
+        <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
     </ng-container>
 
-    <ng-container  *ngIf="isDecadeView">
-        <section>
-            <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
-            <igx-years-view
-                #decade
-                [date]="viewDate"
-                [locale]="locale"
-                [formatView]="formatViews.year"
-                [yearFormat]="formatOptions.year"
-                (swiperight)="previousPage()"
-                (swipeleft)="nextPage()"
-                (pageChanged)="updateYear($event)"
-                (selected)="changeYear($event)"
-                (click)="onYearsViewClick($event)"
-                (keydown)="onYearsViewKeydown($event)">
-            </igx-years-view>
-        </section>
+    <ng-container *ngIf="isDecadeView">
+        <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
     </ng-container>
-</div>
+</section>
+
+<section class="igx-calendar__body">
+    <ng-container
+        *ngIf="isDefaultView"
+        (swiperight)="previousPage()"
+        (swipeleft)="nextPage()"
+        (pointerdown)="suppressBlur()"
+    >
+        <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
+            <igx-days-view
+                #days
+                role="grid"
+                [changeDaysView]="true"
+                [selection]="selection"
+                [locale]="locale"
+                [value]="value"
+                [(activeDate)]="activeDate"
+                [(previewRangeDate)]="previewRangeDate"
+                [viewDate]="i | IgxGetViewDate: viewDate"
+                [weekStart]="weekStart"
+                [formatOptions]="formatOptions"
+                [formatViews]="formatViews"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [hideOutsideDays]="hideOutsideDays"
+                [showWeekNumbers]="showWeekNumbers"
+                (pageChanged)="updateDay($event)"
+                (dateSelection)="childClicked($event)"
+                (monthsViewBlur)="resetActiveDate()">
+            </igx-days-view>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isYearView">
+        <igx-months-view
+            #months
+            [date]="viewDate"
+            [locale]="locale"
+            [formatView]="formatViews.month"
+            [monthFormat]="formatOptions.month"
+            (swiperight)="previousPage()"
+            (swipeleft)="nextPage()"
+            (pageChanged)="updateYear($event)"
+            (selected)="changeMonth($event)">
+        </igx-months-view>
+    </ng-container>
+
+    <ng-container *ngIf="isDecadeView">
+        <igx-years-view
+            #decade
+            [date]="viewDate"
+            [locale]="locale"
+            [formatView]="formatViews.year"
+            [yearFormat]="formatOptions.year"
+            (swiperight)="previousPage()"
+            (swipeleft)="nextPage()"
+            (pageChanged)="updateYear($event)"
+            (selected)="changeYear($event)"
+            (click)="onYearsViewClick($event)"
+            (keydown)="onYearsViewKeydown($event)">
+        </igx-years-view>
+    </ng-container>
+</section>
