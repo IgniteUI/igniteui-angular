@@ -90,6 +90,8 @@ export interface IColumnState {
     parent: any;
     disableHiding: boolean;
     disablePinning: boolean;
+    collapsible?: boolean;
+    expanded?: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -202,15 +204,23 @@ export class IgxGridStateDirective {
                     parent: c.parent ? c.parent.header : null,
                     columnGroup: c.columnGroup,
                     disableHiding: c.disableHiding,
-                    disablePinning: c.disablePinning
+                    disablePinning: c.disablePinning,
+                    collapsible: c.columnGroup ? c.collapsible : undefined,
+                    expanded: c.columnGroup ? c.expanded : undefined
                 }));
                 return { columns: gridColumns };
             },
-            restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
+            restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[], restoreCollapsible: boolean = true): void => {
                 const newColumns = [];
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
+
+                    // if restoreCollapsible is false, skip restoring 'collapsible' and 'expanded'
+                    if (!restoreCollapsible) {
+                        delete colState.collapsible;
+                        delete colState.expanded;
+                    }
                     if (hasColumnGroup) {
                         const ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                         Object.assign(ref1.instance, colState);
