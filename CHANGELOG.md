@@ -24,6 +24,8 @@ All notable changes for each version of this project will be documented in this 
 
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Tree-shaking of the grids has been improved:
+        - The `igx-paginator`, `igx-grid-toolbar` and `igx-action-strip` components should now correctly tree-shake when not used in a grid.
     - **Breaking Changes**
         - `rowAdd` and `rowDelete` events now emit event argument of type `IRowDataCancelableEventArgs` instead of `IGridEditEventArgs`. The two interfaces are still compatible, however redundant for these events properties `cellID`, `newValue`, `oldValue`, `isAddRow` are deprecated in `IRowDataCancelableEventArgs` and will be removed in a future version. Switching to the correct new interfaces should reveal any deprecated use that can be safely removed.
     - **Deprecations**
