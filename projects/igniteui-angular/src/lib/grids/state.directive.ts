@@ -212,26 +212,22 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                // capture the current 'collapsible' state of each column before restoration
-                const currentCollapsibleStates = context.currGrid.columns.map(col => ({
-                    field: col.field,
-                    collapsible: col.collapsible
-                }));
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
-
-                    const column = context.currGrid.getColumnByName(colState.field);
-                    if (column) {
-                        Object.assign(column, colState);
-                        const currentCollapsibleState = currentCollapsibleStates.find(c => c.field === column.field);
-                        if (currentCollapsibleState) {
-                            column.collapsible = currentCollapsibleState.collapsible;
+                    if (hasColumnGroup) {
+                        const ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                        Object.assign(ref1.instance, colState);
+                        ref1.instance.grid = context.currGrid;
+                        if (ref1.instance.parent) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent);
+                            columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
+                            ref1.instance.parent = columnGroup;
                         }
-                    }
-                        const ref = hasColumnGroup
-                        ? createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector })
-                        : createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                        ref1.changeDetectorRef.detectChanges();
+                        newColumns.push(ref1.instance);
+                    } else {
+                        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
@@ -243,6 +239,7 @@ export class IgxGridStateDirective {
                         }
                         ref.changeDetectorRef.detectChanges();
                         newColumns.push(ref.instance);
+                    }
                 });
                 context.currGrid.updateColumns(newColumns);
                 newColumns.forEach(col => {
