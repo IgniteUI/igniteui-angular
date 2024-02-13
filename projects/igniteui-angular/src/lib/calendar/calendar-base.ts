@@ -77,7 +77,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public scrollMonth$ = new Subject();
+    public scrollMonth$ = new Subject<void>();
 
     /**
      * @hidden
@@ -87,7 +87,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public startMonthScroll$ = new Subject();
+    public startMonthScroll$ = new Subject<void>();
 
     /**
      * @hidden

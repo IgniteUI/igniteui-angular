@@ -43,7 +43,8 @@ import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directive
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy } from './grid.common';
-import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import { IgxToolbarToken } from './toolbar/token';
 import { IgxRowDirective } from './row.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -152,9 +153,10 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
-import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../action-strip/token';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import type { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorToken } from '../paginator/token';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
@@ -1116,8 +1118,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent)
-    public actionStrip: IgxActionStripComponent;
+    @ContentChild(IgxActionStripToken)
+    public actionStrip: IgxActionStripToken;
 
     /**
      * @hidden @internal
@@ -1673,11 +1675,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public hostRole = 'grid';
 
     /** @hidden @internal */
-    @ContentChildren(IgxGridToolbarComponent)
+    @ContentChildren(IgxToolbarToken)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent)
+    @ContentChildren(IgxPaginatorToken)
     protected paginationComponents: QueryList<IgxPaginatorComponent>;
 
     /**
@@ -1865,7 +1867,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
-            this.localeChange.next();
+            this.localeChange.emit();
         }
     }
 
@@ -6557,16 +6559,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (diff) {
             let added = false;
             let removed = false;
+            let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
+                    pinning = true;
                 } else {
                     this._unpinnedColumns.push(record.item);
                 }
             });
 
             this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            if (pinning) {
+                this.initPinning();
+            }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
@@ -7175,42 +7182,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected initPinning() {
-        const pinnedColumns = [];
-        const unpinnedColumns = [];
-
         this.calculateGridWidth();
         this.resetCaches();
-        // When a column is a group or is inside a group, pin all related.
-        this._pinnedColumns.forEach(col => {
-            if (col.parent) {
-                col.parent.pinned = true;
-            }
-            if (col.columnGroup) {
-                col.children.forEach(child => child.pinned = true);
-            }
-        });
-
-        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
-        // We take into account top level columns (top level groups and non groups).
-        // If top level is unpinned the pinning handles all children to be unpinned as well.
-        for (const column of this._columns) {
-            if (column.pinned && !column.parent) {
-                pinnedColumns.push(column);
-            } else if (column.pinned && column.parent) {
-                if (column.topLevelParent.pinned) {
-                    pinnedColumns.push(column);
-                } else {
-                    column.pinned = false;
-                    unpinnedColumns.push(column);
-                }
-            } else {
-                unpinnedColumns.push(column);
-            }
-        }
-
-        // Assign the applicable collections.
-        this._pinnedColumns = pinnedColumns;
-        this._unpinnedColumns = unpinnedColumns;
+        this.handleColumnPinningForGroups();
         this.notifyChanges();
     }
 
@@ -7641,5 +7615,41 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
+    }
+
+    private handleColumnPinningForGroups(): void {
+        // When a column is a group or is inside a group, pin all related.
+        const pinnedColumns = [];
+        const unpinnedColumns = [];
+
+        this._pinnedColumns.forEach(col => {
+            if (col.parent) {
+                col.parent.pinned = true;
+            }
+            if (col.columnGroup) {
+                col.children.forEach(child => child.pinned = true);
+            }
+        });
+
+        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
+        // We take into account top level columns (top level groups and non groups).
+        // If top level is unpinned the pinning handles all children to be unpinned as well.
+        for (const column of this._columns) {
+            if (column.pinned && !column.parent) {
+                pinnedColumns.push(column);
+            } else if (column.pinned && column.parent) {
+                if (column.topLevelParent.pinned) {
+                    pinnedColumns.push(column);
+                } else {
+                    column.pinned = false;
+                    unpinnedColumns.push(column);
+                }
+            } else {
+                unpinnedColumns.push(column);
+            }
+        }
+        // Assign the applicable collections.
+        this._pinnedColumns = pinnedColumns;
+        this._unpinnedColumns = unpinnedColumns;
     }
 }
