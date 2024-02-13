@@ -31,6 +31,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxActionStripToken } from './token';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -40,16 +41,6 @@ export class IgxActionStripMenuItemDirective {
     constructor(
         public templateRef: TemplateRef<any>
     ) { }
-}
-
-/** @hidden @internal */
-export abstract class IgxActionStripToken {
-    public abstract context: any;
-    public abstract menuOverlaySettings: OverlaySettings;
-    public abstract get hideOnRowLeave(): boolean;
-
-    public abstract show(context?: any): void;
-    public abstract hide(): void;
 }
 
 /**

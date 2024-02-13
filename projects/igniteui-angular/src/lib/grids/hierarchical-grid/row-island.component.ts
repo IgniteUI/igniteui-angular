@@ -43,7 +43,7 @@ import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
-import { IgxActionStripToken } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';

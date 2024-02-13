@@ -41,7 +41,8 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
-import { IgxPaginatorToken, type IgxPaginatorComponent } from '../../paginator/paginator.component';
+import type { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxPaginatorToken } from '../../paginator/token';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -65,7 +66,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxActionStripToken } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 
 let NEXT_ID = 0;
 
