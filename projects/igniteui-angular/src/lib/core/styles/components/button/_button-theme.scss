@@ -633,7 +633,7 @@
                 border-color: var-get($outlined-theme, 'focus-border-color');
 
                 &::after {
-                    $outlined-btn-indent: 2px;
+                    $outlined-btn-indent: rem(2px);
                     top: $outlined-btn-indent;
                     inset-inline-start: $outlined-btn-indent;
                     width: calc(100% - (#{$outlined-btn-indent} * 2));
