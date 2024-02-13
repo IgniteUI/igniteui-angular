@@ -6,7 +6,6 @@ export interface ContentQueryMeta {
     childType: Type<any>;
     isQueryList?: boolean;
     descendants?: boolean;
-    cachedTemplates?: string;
 }
 export interface ComponentConfig {
     component: Type<any>,

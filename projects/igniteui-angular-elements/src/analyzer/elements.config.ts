@@ -537,7 +537,6 @@ export var registerConfig = [
         childType: IgxPaginatorComponent,
         isQueryList: true,
         descendants: true,
-        cachedTemplates: "allChildGridTemplates",
       },
       {
         property: "columnList",
@@ -545,7 +544,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,
@@ -844,6 +847,11 @@ export var registerConfig = [
         isQueryList: true,
       },
       {
+        property: "childLayoutList",
+        childType: IgxRowIslandComponent,
+        isQueryList: true,
+      },
+      {
         property: "childColumns",
         childType: IgxColumnComponent,
         isQueryList: true,
@@ -859,7 +867,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
     ],
     additionalProperties: [
       { name: "data" },
@@ -945,6 +957,8 @@ export var registerConfig = [
       "beginAddRowByIndex",
     ],
     templateProps: [
+      "toolbarTemplate",
+      "paginatorTemplate",
       "emptyGridTemplate",
       "addRowEmptyTemplate",
       "loadingGridTemplate",
@@ -963,8 +977,6 @@ export var registerConfig = [
       "headSelectorTemplate",
       "rowSelectorTemplate",
       "dragIndicatorIconTemplate",
-      "toolbarTemplate",
-      "paginatorTemplate",
     ],
     numericProps: [
       "snackbarDisplayTime",
@@ -997,7 +1009,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,

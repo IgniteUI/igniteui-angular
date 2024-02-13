@@ -24,6 +24,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     // public override componentRef: ComponentRef<any>|null = null;
 
     protected element: IgcNgElement;
+    protected angularParent: ComponentRef<any>;
+    protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
     private setComponentRef: (value: ComponentRef<any>) => void;
 
     /**
@@ -95,6 +97,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
+                this.angularParent = parent.ngElementStrategy.angularParent;
                 const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
 
@@ -107,7 +110,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     parentAnchor = parentComponentRef?.instance.anchor;
                 }
             } else if ((parent as any)?.__componentRef) {
-                parentInjector = (parent as any).__componentRef.injector;
+                this.angularParent = (parent as any).__componentRef;
+                parentInjector = this.angularParent.injector;
             }
 
         }
@@ -133,6 +137,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (element) {
             if ((this as any).componentRef.instance) {
                 (this as any).componentRef.instance.___wcElement = element;
+            }
+        }
+
+        if (this.angularParent && parents.length > 1) {
+            const parentRoot = parents[parents.length - 1];
+            if (element.tagName.toLocaleLowerCase() === 'igc-paginator') {
+                // Cache the paginator component in the parent (currently on for HGrid),
+                // so it is kept in the query even when detached from DOM
+                this.addToParentCache(parentRoot, "paginatorList");
             }
         }
 
@@ -261,7 +274,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
             const query = componentConfig.contentQueries.find(x => x.property === queryName);
             const children = this.runQueryInDOM(this.element, query);
-            const childRefs = [];
+            let childRefs = [];
             for (const child of children) {
                 // D.P. Use sync componentRef to avoid having this being stuck waiting while another update is queued
                 // While for initialized comps resolved promises will almost certainly yield within the same cycle https://stackoverflow.com/a/64371201 (tested)
@@ -272,6 +285,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 if (childRef?.instance) {
                     childRefs.push(childRef.instance);
                 }
+            }
+            if (query.descendants && this.cachedChildComponents.has(queryName)) {
+                childRefs = [...this.cachedChildComponents.get(queryName), ...childRefs];
             }
             const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
             list.reset(childRefs);
@@ -288,21 +304,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         let children = Array.from(element.querySelectorAll<IgcNgElement>(childSelector));
 
-        const instance = (element as any).ngElementStrategy?.componentRef.instance;
-        if (instance && query.cachedTemplates) {
-            let templates = instance[query.cachedTemplates];
-
-            if (templates.length) {
-                const extractedChildren = templates.flatMap(t => t.view.rootNodes)
-                    .flatMap(el => Array.from(el.querySelectorAll(childSelector)));
-                for (const child of extractedChildren) {
-                    if (!children.includes(child as any)) {
-                        children.push(child as any);
-                    }
-                }
-            }
-        }
-
         if (children.length && !query.descendants) {
             // combined parent selectors tad assuming, but for now it just covers column+group in single query so might be fine
             const parents = new Set(childConfigs.map(x => x.parents).flat());
@@ -313,6 +314,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return children;
     }
 
+    private addToParentCache(parentElement: IgcNgElement, queryName: string) {
+        var cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
+        cachedComponents.push((this as any).componentRef.instance);
+        parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
+    }
     //#endregion schedule query update
 
     /**
@@ -360,6 +366,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         });
     }
     //#endregion
+
+    override disconnect(): void {
+        if (this.angularParent) {
+            this.angularParent.onDestroy(() => super.disconnect());
+        } else {
+            super.disconnect();
+        }
+    }
 }
 
 /**

@@ -185,7 +185,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
         this.hGrid.data = this.data.childGridsData[this.layout.key];
-        this.hGrid.nativeElement["__componentRef"] = ref.instance;
+        this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -1142,18 +1142,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return true;
         }
         return super._shouldAutoSize(renderedHeight);
-    }
-
-    private get allChildGridTemplates() {
-        let allCachedTemplates = Array.from(this.childGridTemplates.values());
-        if (!this.parent) {
-            const childGrids = this.allLayoutList.map(l => l.rowIslandAPI.getChildGrids()).flat();
-            if (childGrids) {
-                allCachedTemplates = [...allCachedTemplates, ...childGrids.map(child => Array.from(child.childGridTemplates.values())).flat()];
-            }
-        }
-
-        return allCachedTemplates;
     }
 
     private updateColumnList(recalcColSizes = true) {
