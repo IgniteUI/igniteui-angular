@@ -114,8 +114,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public set data(value: any) {
         this._data = value;
         if (this.hGrid && !this.hGrid.dataSetByUser) {
-            this.hGrid.data = this._data.childGridsData[this.layout.key];
-            this.hGrid.dataSetByUser = false;
+            this.hGrid.setDataInternal(this._data.childGridsData[this.layout.key]);
         }
     }
 
@@ -198,8 +197,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
-        this.hGrid.data = this.data.childGridsData[this.layout.key];
-        this.hGrid.dataSetByUser = false;
+        this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -450,21 +448,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     public set data(value: any[] | null) {
-        this._data = value || [];
+        this.setDataInternal(value);
         this.dataSetByUser = true;
-        this.summaryService.clearSummaryCache();
-        if (!this._init) {
-            this.validation.updateAll(this._data);
-        }
-        if (this.shouldGenerate) {
-            this.setupColumns();
-            this.reflow();
-        }
-        this.cdr.markForCheck();
-        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
-            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
-            this.notifyChanges(true);
-        }
     }
 
     /**
@@ -803,6 +788,24 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public override pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
+    }
+
+    /** @hidden @internal */
+    public setDataInternal(value: any) {
+        this._data = value || [];
+        this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+        this.cdr.markForCheck();
+        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
+            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
+            this.notifyChanges(true);
+        }
     }
 
     public override unpinRow(rowID: any): boolean {
