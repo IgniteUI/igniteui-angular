@@ -43,7 +43,8 @@ import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directive
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy } from './grid.common';
-import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import { IgxToolbarToken } from './toolbar/token';
 import { IgxRowDirective } from './row.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -154,7 +155,7 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorToken, type IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
@@ -1673,11 +1674,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public hostRole = 'grid';
 
     /** @hidden @internal */
-    @ContentChildren(IgxGridToolbarComponent)
+    @ContentChildren(IgxToolbarToken)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent)
+    @ContentChildren(IgxPaginatorToken)
     protected paginationComponents: QueryList<IgxPaginatorComponent>;
 
     /**
