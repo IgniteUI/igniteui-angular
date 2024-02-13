@@ -41,7 +41,7 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxPaginatorToken, type IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -346,7 +346,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent, { descendants: true })
+    @ContentChildren(IgxPaginatorToken, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
     /** @hidden @internal */
