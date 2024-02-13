@@ -153,7 +153,7 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
-import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../action-strip/action-strip.component';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IgxPaginatorToken, type IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
@@ -1117,8 +1117,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent)
-    public actionStrip: IgxActionStripComponent;
+    @ContentChild(IgxActionStripToken)
+    public actionStrip: IgxActionStripToken;
 
     /**
      * @hidden @internal

@@ -42,6 +42,16 @@ export class IgxActionStripMenuItemDirective {
     ) { }
 }
 
+/** @hidden @internal */
+export abstract class IgxActionStripToken {
+    public abstract context: any;
+    public abstract menuOverlaySettings: OverlaySettings;
+    public abstract get hideOnRowLeave(): boolean;
+
+    public abstract show(context?: any): void;
+    public abstract hide(): void;
+}
+
 /**
  * Action Strip provides templatable area for one or more actions.
  *
@@ -79,10 +89,10 @@ export class IgxActionStripMenuItemDirective {
         IgxIconComponent,
         IgxDropDownComponent,
         IgxDropDownItemComponent
-    ]
+    ],
+    providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-
-export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
+export class IgxActionStripComponent extends DisplayDensityBase implements IgxActionStripToken, AfterContentInit, AfterViewInit {
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.

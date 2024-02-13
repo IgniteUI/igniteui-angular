@@ -65,7 +65,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/action-strip.component';
 
 let NEXT_ID = 0;
 
@@ -405,8 +405,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false } )
-    public override actionStrip: IgxActionStripComponent;
+    @ContentChild(IgxActionStripToken, { read: IgxActionStripToken, descendants: false } )
+    public override actionStrip: IgxActionStripToken;
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
