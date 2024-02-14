@@ -245,7 +245,7 @@ export class Calendar {
      *
      * @memberof Calendar
      */
-    public monthdates(year: number, month: number, extraWeek = false): ICalendarDate[] {
+    public monthDates(year: number, month: number, extraWeek = false): ICalendarDate[] {
         let date = new Date(year, month, 1);
         let days = (date.getDay() - this.firstWeekDay) % 7;
         if (days < 0) {
@@ -310,13 +310,15 @@ export class Calendar {
      *
      * @memberof Calendar
      */
-    public monthdatescalendar(year: number, month: number, extraWeek = false): ICalendarDate[][] {
-        const dates = this.monthdates(year, month, extraWeek);
-        const res = [];
+    public monthDatesCalendar(year: number, month: number, extraWeek = false): ICalendarDate[][] {
+        const dates = this.monthDates(year, month, extraWeek);
+        const result = [];
+
         for (const i of range(0, dates.length, 7)) {
-            res.push(dates.slice(i, i + 7));
+            result.push(dates.slice(i, i + 7));
         }
-        return res;
+
+        return result;
     }
 
     public timedelta(date: Date, interval: string, units: number): Date {
@@ -442,7 +444,7 @@ export class Calendar {
         // day number in the year
         const dayNumber = Math.floor((date.getTime() - yearStart.getTime() -
         (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
-        let weekNumber;
+        let weekNumber: number;
         // if 01 Jan is Monday to Thursday, is considered 1st week of the year
         // if 01 Jan starts Friday to Sunday, is considered last week of previous year
         if (firstDayOfTheYear < 4) {
@@ -464,6 +466,30 @@ export class Calendar {
             weekNumber = nextYearFirstDay < 4 ? 1 : 53;
         }
         return weekNumber;
+    }
+
+    public getClosestDate(dates: ICalendarDate[], target: Date, delta: number): Date | null {
+        let counter = 0;
+
+        while (counter < dates.length) {
+            const nextDate = new Date(target);
+            nextDate.setDate(nextDate.getDate() + delta * (counter + 1));
+            nextDate.setHours(0, 0, 0, 0);
+
+            for (const day of dates) {
+                const compareDate = new Date(day.date);
+                compareDate.setHours(0, 0, 0, 0);
+
+                if (compareDate.getTime() === nextDate.getTime()) {
+                    if (!day.isDisabled) return day.date;
+                    else break; // Found disabled target date, adjust and try again
+                }
+            }
+
+            counter++;
+        }
+
+        return null;
     }
 
     private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {

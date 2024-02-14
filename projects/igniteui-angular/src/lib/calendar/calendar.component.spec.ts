@@ -27,7 +27,7 @@ fdescribe('IgxCalendar - ', () => {
         expect(calendar.firstWeekDay).toEqual(WEEKDAYS.SUNDAY);
         expect(calendar.weekdays()).toEqual([0, 1, 2, 3, 4, 5, 6]);
 
-        const weeks = calendar.monthdatescalendar(2017, 5);
+        const weeks = calendar.monthDatesCalendar(2017, 5);
         const firstWeek = weeks[0];
         const lastWeek = weeks[weeks.length - 1];
 
@@ -39,7 +39,7 @@ fdescribe('IgxCalendar - ', () => {
         );
 
         // 2017 June with first day set to Sunday
-        let dates = calendar.monthdates(2017, 5);
+        let dates = calendar.monthDates(2017, 5);
         expect(dates[0].date.toDateString()).toMatch(
             new Date(2017, 4, 28).toDateString()
         );
@@ -49,7 +49,7 @@ fdescribe('IgxCalendar - ', () => {
         expect(dates.length).toEqual(35);
 
         // 2017 June with first day set to Sunday and extra week
-        dates = calendar.monthdates(2017, 5, true);
+        dates = calendar.monthDates(2017, 5, true);
         expect(dates.length).toEqual(42);
         expect(dates[0].date.toDateString()).toMatch(
             new Date(2017, 4, 28).toDateString()
@@ -63,7 +63,7 @@ fdescribe('IgxCalendar - ', () => {
         expect(calendar.weekdays()).toEqual([5, 6, 0, 1, 2, 3, 4]);
 
         // 2017 June with first day set to Friday
-        dates = calendar.monthdates(2017, 5);
+        dates = calendar.monthDates(2017, 5);
         expect(dates[0].date.toDateString()).toMatch(
             new Date(2017, 4, 26).toDateString()
         );
@@ -74,7 +74,7 @@ fdescribe('IgxCalendar - ', () => {
 
         // Leap year tests - 2016
         calendar.firstWeekDay = WEEKDAYS.SUNDAY;
-        dates = calendar.monthdates(2016, 1);
+        dates = calendar.monthDates(2016, 1);
         expect(dates[0].date.toDateString()).toMatch(
             new Date(2016, 0, 31).toDateString()
         );

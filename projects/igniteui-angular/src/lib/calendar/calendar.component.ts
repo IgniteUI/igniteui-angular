@@ -3,7 +3,6 @@ import {
 	ContentChild,
 	forwardRef,
 	HostBinding,
-	HostListener,
 	Input,
 	ViewChild,
 	ElementRef,
@@ -21,7 +20,7 @@ import {
 	IgxCalendarSubheaderTemplateDirective,
     IgxCalendarScrollPageDirective,
 } from './calendar.directives';
-import { ICalendarDate, IgxCalendarView, monthRange, ScrollDirection } from './calendar';
+import { ICalendarDate, IgxCalendarView, ScrollDirection } from './calendar';
 import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
@@ -75,6 +74,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     @ViewChildren("wrapper", { read: HTMLElement })
     private wrapper: QueryList<HTMLElement>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild("body")
+    private body: ElementRef;
 
 	/**
 	 * Sets/gets the `id` of the calendar.
@@ -401,168 +407,171 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	private _monthViewsChanges$: Subscription;
 
-	/**
-	 * Keyboard navigation of the calendar
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostListener('keydown.pagedown', ['$event'])
-	@HostListener('keydown.pageup', ['$event'])
-	public onKeydownPageDown(event: KeyboardEvent) {
-		event.preventDefault();
-		if (!this.isDefaultView) {
-			return;
-		}
+	// /**
+	//  * Keyboard navigation of the calendar
+	//  *
+	//  * @hidden
+	//  * @internal
+	//  */
+	// @HostListener('keydown.pagedown', ['$event'])
+	// @HostListener('keydown.pageup', ['$event'])
+	// public onKeydownPageDown(event: KeyboardEvent) {
+	// 	event.preventDefault();
+	// 	if (!this.isDefaultView) {
+	// 		return;
+	// 	}
+	//
+	// 	const isPageDown = event.key==='PageDown';
+	// 	const step = isPageDown ? 1: -1;
+	// 	let monthView = this.daysView as IgxDaysViewComponent;
+	// 	let activeDate;
+	//
+	// 	while (!activeDate && monthView) {
+	// 		activeDate = monthView.dates.find((date) => date.nativeElement === document.activeElement);
+	// 		monthView = monthView.nextMonthView;
+	// 	}
+	//
+	// 	if (activeDate) {
+	// 		this.nextDate = new Date(activeDate.date.date);
+	//
+	// 		let year = this.nextDate.getFullYear();
+	//
+	// 		let month = this.nextDate.getMonth() + step;
+	//
+	// 		if (isPageDown) {
+	// 			if (month > 11) {
+	// 				month = 0;
+	// 				year += step;
+	// 			}
+	// 		} else {
+	// 			if (month < 0) {
+	// 				month = 11;
+	// 				year += step;
+	// 			}
+	// 		}
+	//
+	// 		const range = monthRange(this.nextDate.getFullYear(), month);
+	//
+	// 		let day = this.nextDate.getDate();
+	//
+	// 		if (day > range[1]) {
+	// 			day = range[1];
+	// 		}
+	//
+	// 		this.nextDate.setDate(day);
+	// 		this.nextDate.setMonth(month);
+	// 		this.nextDate.setFullYear(year);
+	//
+	// 		this.callback = (next) => {
+	// 			monthView = this.daysView as IgxDaysViewComponent;
+	// 			let dayItem;
+	//
+	// 			while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
+	// 				dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
+	// 				monthView = monthView.nextMonthView;
+	// 			}
+	//
+	// 			if (dayItem && dayItem.isFocusable) {
+	// 				dayItem.nativeElement.focus();
+	// 			}
+	// 		};
+	// 	}
+	//
+	// 	if (isPageDown) {
+	// 		if (event.repeat) {
+	// 			requestAnimationFrame(() => this.nextPage(true));
+	// 		} else {
+	// 			this.nextPage(true);
+	// 		}
+	// 	} else {
+	// 		if (event.repeat) {
+	// 			requestAnimationFrame(() => this.previousPage(true));
+	// 		} else {
+	// 			this.previousPage(true);
+	// 		}
+	// 	}
+	// }
 
-		const isPageDown = event.key==='PageDown';
-		const step = isPageDown ? 1: -1;
-		let monthView = this.daysView as IgxDaysViewComponent;
-		let activeDate;
-
-		while (!activeDate && monthView) {
-			activeDate = monthView.dates.find((date) => date.nativeElement === document.activeElement);
-			monthView = monthView.nextMonthView;
-		}
-
-		if (activeDate) {
-			this.nextDate = new Date(activeDate.date.date);
-
-			let year = this.nextDate.getFullYear();
-
-			let month = this.nextDate.getMonth() + step;
-
-			if (isPageDown) {
-				if (month > 11) {
-					month = 0;
-					year += step;
-				}
-			} else {
-				if (month < 0) {
-					month = 11;
-					year += step;
-				}
-			}
-
-			const range = monthRange(this.nextDate.getFullYear(), month);
-
-			let day = this.nextDate.getDate();
-
-			if (day > range[1]) {
-				day = range[1];
-			}
-
-			this.nextDate.setDate(day);
-			this.nextDate.setMonth(month);
-			this.nextDate.setFullYear(year);
-
-			this.callback = (next) => {
-				monthView = this.daysView as IgxDaysViewComponent;
-				let dayItem;
-
-				while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
-					dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
-					monthView = monthView.nextMonthView;
-				}
-
-				if (dayItem && dayItem.isFocusable) {
-					dayItem.nativeElement.focus();
-				}
-			};
-		}
-
-		if (isPageDown) {
-			if (event.repeat) {
-				requestAnimationFrame(() => this.nextPage(true));
-			} else {
-				this.nextPage(true);
-			}
-		} else {
-			if (event.repeat) {
-				requestAnimationFrame(() => this.previousPage(true));
-			} else {
-				this.previousPage(true);
-			}
-		}
-	}
-
-	/**
-	 * Keyboard navigation of the calendar
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostListener('keydown.shift.pageup', ['$event'])
-	@HostListener('keydown.shift.pagedown', ['$event'])
-	public onKeydownShiftPageUp(event: KeyboardEvent) {
-		event.preventDefault();
-
-		if (!this.isDefaultView) {
-			return;
-		}
-
-		const isPageDown = event.key === 'PageDown';
-		const step = isPageDown ? 1: -1;
-		this.previousViewDate = this.viewDate;
-		this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
-
-		this.isKeydownTrigger = true;
-
-		let monthView = this.daysView as IgxDaysViewComponent;
-		let activeDate;
-
-		while (!activeDate && monthView) {
-			activeDate = monthView.dates.find((date) => date.nativeElement===document.activeElement);
-			monthView = monthView.nextMonthView;
-		}
-
-		if (activeDate) {
-			this.nextDate = new Date(activeDate.date.date);
-
-			const year = this.nextDate.getFullYear() + step;
-
-			const range = monthRange(year, this.nextDate.getMonth());
-
-			let day = this.nextDate.getDate();
-			if (day > range[1]) {
-				day = range[1];
-			}
-
-			this.nextDate.setDate(day);
-			this.nextDate.setFullYear(year);
-
-			this.callback = (next) => {
-				monthView = this.daysView as IgxDaysViewComponent;
-				let dayItem;
-				while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
-					dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
-					monthView = monthView.nextMonthView;
-				}
-				if (dayItem && dayItem.isFocusable) {
-					dayItem.nativeElement.focus();
-				}
-			};
-		}
-	}
-
-	/**
-	 * Stop continuous navigation on mouseup event
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostListener('document:mouseup', ['$event'])
-	public onMouseUp(event: KeyboardEvent) {
-		if (this.pageScrollDirection !== ScrollDirection.NONE) {
-			this.stopPageScroll(event);
-		}
-	}
+	// /**
+	//  * Keyboard navigation of the calendar
+	//  *
+	//  * @hidden
+	//  * @internal
+	//  */
+	// @HostListener('keydown.shift.pageup', ['$event'])
+	// @HostListener('keydown.shift.pagedown', ['$event'])
+	// public onKeydownShiftPageUp(event: KeyboardEvent) {
+	// 	event.preventDefault();
+	//
+	// 	if (!this.isDefaultView) {
+	// 		return;
+	// 	}
+	//
+	// 	const isPageDown = event.key === 'PageDown';
+	// 	const step = isPageDown ? 1: -1;
+	// 	this.previousViewDate = this.viewDate;
+	// 	this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
+	//
+	// 	this.isKeydownTrigger = true;
+	//
+	// 	let monthView = this.daysView as IgxDaysViewComponent;
+	// 	let activeDate;
+	//
+	// 	while (!activeDate && monthView) {
+	// 		activeDate = monthView.dates.find((date) => date.nativeElement===document.activeElement);
+	// 		monthView = monthView.nextMonthView;
+	// 	}
+	//
+	// 	if (activeDate) {
+	// 		this.nextDate = new Date(activeDate.date.date);
+	//
+	// 		const year = this.nextDate.getFullYear() + step;
+	//
+	// 		const range = monthRange(year, this.nextDate.getMonth());
+	//
+	// 		let day = this.nextDate.getDate();
+	// 		if (day > range[1]) {
+	// 			day = range[1];
+	// 		}
+	//
+	// 		this.nextDate.setDate(day);
+	// 		this.nextDate.setFullYear(year);
+	//
+	// 		this.callback = (next) => {
+	// 			monthView = this.daysView as IgxDaysViewComponent;
+	// 			let dayItem;
+	// 			while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
+	// 				dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
+	// 				monthView = monthView.nextMonthView;
+	// 			}
+	// 			if (dayItem && dayItem.isFocusable) {
+	// 				dayItem.nativeElement.focus();
+	// 			}
+	// 		};
+	// 	}
+	// }
+	//
+	// /**
+	//  * Stop continuous navigation on mouseup event
+	//  *
+	//  * @hidden
+	//  * @internal
+	//  */
+	// @HostListener('document:mouseup', ['$event'])
+	// public onMouseUp(event: KeyboardEvent) {
+	// 	if (this.pageScrollDirection !== ScrollDirection.NONE) {
+	// 		this.stopPageScroll(event);
+	// 	}
+	// }
 
 	public ngAfterViewInit() {
 		this.setSiblingMonths(this.monthViews);
 		this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
 			this.setSiblingMonths(c);
 		});
+
+        this.keyboardNavigation.attachKeyboardHandlers(this.body);
+        this.keyboardNavigation.registerKeyHandler('ArrowDown', () => this.navigateDown());
 
         this.startPageScroll$.pipe(
             takeUntil(this.stopPageScroll$),
@@ -587,6 +596,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.activeView$.subscribe((view) => {
 			this.activeViewChanged.emit(view);
         });
+    }
+
+    private navigateDown() {
+        if (this.activeView === IgxCalendarView.Month) {
+            console.log('arrow down on days view');
+        }
+
+        if (this.activeView === IgxCalendarView.Year) {
+            console.log('arrow down on month view');
+        }
+
+        if (this.activeView === IgxCalendarView.Decade) {
+            console.log('arrow down on years view');
+        }
     }
 
 	/**
@@ -1012,6 +1035,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		if (this._monthViewsChanges$) {
 			this._monthViewsChanges$.unsubscribe();
 		}
+
+        this.keyboardNavigation.detachKeyboardHandlers();
 	}
 
 	/**

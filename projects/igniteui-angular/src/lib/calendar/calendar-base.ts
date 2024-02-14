@@ -8,6 +8,7 @@ import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { KeyboardNavigationService } from './calendar.services';
 
 /** @hidden @internal */
 @Directive({
@@ -462,7 +463,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: string) {
+    constructor(
+        protected platform: PlatformUtil,
+        @Inject(LOCALE_ID)
+        protected _localeId: string,
+        protected keyboardNavigation?: KeyboardNavigationService
+    ) {
         this.calendarModel = new Calendar();
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();

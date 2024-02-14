@@ -581,3 +581,18 @@ export const rem = (value: number | string) => {
 export function getComponentSize(el: Element) {
     return globalThis.window?.getComputedStyle(el).getPropertyValue('--component-size');
 }
+
+/** Get the first item in an array */
+export function first<T>(arr: T[]) {
+    return arr.at(0) as T;
+}
+
+/** Get the last item in an array */
+export function last<T>(arr: T[]) {
+    return arr.at(-1) as T;
+}
+
+/** Calculates the modulo of two numbers, ensuring a non-negative result. */
+export function modulo(n: number, d: number) {
+    return ((n % d) + d) % d;
+}

@@ -224,7 +224,7 @@
     </ng-container>
 </section>
 
-<section class="igx-calendar__body">
+<section #body class="igx-calendar__body" tabindex="0">
     <ng-container
         *ngIf="isDefaultView"
         (swiperight)="previousPage()"
