@@ -227,14 +227,13 @@
 <section #body class="igx-calendar__body" tabindex="0">
     <ng-container
         *ngIf="isDefaultView"
-        (swiperight)="previousPage()"
-        (swipeleft)="nextPage()"
         (pointerdown)="suppressBlur()"
     >
         <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
             <igx-days-view
                 #days
                 role="grid"
+                [tabIndex]="-1"
                 [changeDaysView]="true"
                 [selection]="selection"
                 [locale]="locale"
@@ -249,6 +248,8 @@
                 [specialDates]="specialDates"
                 [hideOutsideDays]="hideOutsideDays"
                 [showWeekNumbers]="showWeekNumbers"
+                (swiperight)="previousPage()"
+                (swipeleft)="nextPage()"
                 (pageChanged)="updateDay($event)"
                 (dateSelection)="childClicked($event)"
                 (monthsViewBlur)="resetActiveDate()">

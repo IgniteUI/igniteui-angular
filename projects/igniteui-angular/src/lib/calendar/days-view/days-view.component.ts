@@ -8,14 +8,11 @@ import {
     QueryList,
     HostBinding,
     DoCheck,
-    OnInit,
     Inject,
     LOCALE_ID,
     booleanAttribute,
     ElementRef,
     ChangeDetectorRef,
-    AfterViewInit,
-    OnDestroy,
 } from '@angular/core';
 import { CalendarSelection, ICalendarDate, ScrollDirection, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -24,11 +21,9 @@ import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { isEqual, PlatformUtil } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';
 import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
 import { areSameMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate } from '../common/helpers';
 import { CalendarDay } from '../common/model';
-import { KeyboardNavigationService } from '../calendar.services';
 
 let NEXT_ID = 0;
 
@@ -39,15 +34,13 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxDaysViewComponent
         },
-        { provide: IgxDaysViewNavigationService, useClass: IgxDaysViewNavigationService },
-        { provide: KeyboardNavigationService, useClass: KeyboardNavigationService }
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
     standalone: true,
     imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
-export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements DoCheck, OnInit, AfterViewInit, OnDestroy {
+export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements DoCheck {
     /**
      * Sets/gets the `id` of the days view.
      * If not set, the `id` will have value `"igx-days-view-0"`.
@@ -119,7 +112,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     @Output()
-    public dateSelection = new EventEmitter<ICalendarDate>();
+    public dateSelection = new EventEmitter<Date>();
 
     /**
      * @hidden
@@ -169,19 +162,17 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     private _activeDate: Date;
     private _previewRangeDate: Date;
-    private _hasFocus = false;
 
     /**
      * @hidden
      */
     constructor(
-        public daysNavService: IgxDaysViewNavigationService,
-        platform: PlatformUtil, @Inject(LOCALE_ID) _localeId: any,
+        platform: PlatformUtil, 
+        @Inject(LOCALE_ID) _localeId: string,
         protected el: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected override keyboardNavigation: KeyboardNavigationService
     ) {
-        super(platform, _localeId, keyboardNavigation);
+        super(platform, _localeId);
     }
 
     /**
@@ -213,46 +204,49 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    private onArrowRight(event: KeyboardEvent) {
+    @HostListener('keydown.arrowright', ['$event'])
+    protected onArrowRight(event: KeyboardEvent) {
         this.handleArrowKeydown(event, 1);
     }
 
     /**
      * @hidden
      */
-    private onArrowLeft(event: KeyboardEvent) {
+    @HostListener('keydown.arrowleft', ['$event'])
+    protected onArrowLeft(event: KeyboardEvent) {
         this.handleArrowKeydown(event, -1);
     }
-    
+
     /**
      * @hidden
      */
-    private onArrowUp(event: KeyboardEvent) {
+    @HostListener('keydown.arrowup', ['$event'])
+    protected onArrowUp(event: KeyboardEvent) {
         this.handleArrowKeydown(event, -7);
     }
 
     /**
      * @hidden
      */
-    private onArrowDown(event: KeyboardEvent) {
+    @HostListener('keydown.arrowdown', ['$event'])
+    protected onArrowDown(event: KeyboardEvent) {
         this.handleArrowKeydown(event, 7);
     }
 
     /**
      * @hidden
      */
-    private onKeydownEnter(event: KeyboardEvent) {
+    @HostListener('keydown.enter', ['$event'])
+    protected onKeydownEnter(event: KeyboardEvent) {
         event.stopPropagation();
-
-        this.selectDateFromClient(this.activeDate);
-        this.clearPreviewRange();
-        this.selected.emit(this.selectedDates);
+        this.selectActiveDate();
     }
-    
+
     /**
      * @hidden
      */
-    private onKeydownHome(event: KeyboardEvent) {
+    @HostListener('keydown.home', ['$event'])
+    protected onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -266,7 +260,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    private onKeydownEnd(event: KeyboardEvent) {
+    @HostListener('keydown.end', ['$event'])
+    protected onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -282,7 +277,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @HostListener('focus')
     protected handleFocus() {
-        this._hasFocus = true;
         this.changePreviewRange(this.activeDate);
     }
 
@@ -291,20 +285,43 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @HostListener('blur')
     protected handleBlur() {
-        this._hasFocus = false;
         this.clearPreviewRange();
     }
 
     /**
      * @hidden
      */
-    protected handleClick(event: MouseEvent, date: ICalendarDate) {
-        event.stopPropagation();
+    protected handleDateClick(event: MouseEvent, date: ICalendarDate) {
+        event.preventDefault();
 
+        if (date.isPrevMonth) {
+            this.pageChanged.emit({
+                monthAction: ScrollDirection.PREV,
+                key: '',
+                nextDate: date.date
+            });
+        }
+
+        if (date.isNextMonth) {
+            this.pageChanged.emit({
+                monthAction: ScrollDirection.NEXT,
+                key: '',
+                nextDate: date.date
+            });
+        }
+
+        // TODO: remove this when we have proper keyboard navigation
         this.el.nativeElement.focus();
+
         this.activeDate = date.date;
+        this.selectActiveDate();
+    }
+
+    private selectActiveDate() {
         this.selectDateFromClient(this.activeDate);
-        this.dateSelection.emit(date);
+        this.dateSelection.emit(this.activeDate);
+        this.selected.emit(this.selectedDates);
+        this.clearPreviewRange();
     }
 
     /**
@@ -317,39 +334,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    public ngOnInit() {
-        this.daysNavService.monthView = this;
-    }
-
-    /**
-     * @hidden
-     */
     public ngDoCheck() {
         if (!this.changeDaysView && this.dates) {
             this.disableOutOfRangeDates();
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.keyboardNavigation.detachKeyboardHandlers();
-    }
-
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        this.keyboardNavigation.attachKeyboardHandlers(this.el);
-        this.keyboardNavigation.registerKeyHandler('ArrowDown', (event) => this.onArrowDown(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowUp', (event) => this.onArrowUp(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowLeft', (event) => this.onArrowLeft(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowRight', (event) => this.onArrowRight(event));
-        this.keyboardNavigation.registerKeyHandler('Enter', (event) => this.onKeydownEnter(event));
-        this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onKeydownHome(event));
-        this.keyboardNavigation.registerKeyHandler('End', (event) => this.onKeydownEnd(event));
     }
 
     /**
@@ -498,9 +486,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     protected isActiveDate(date: ICalendarDate): boolean {
-        if (!this._hasFocus) return false;
+        const day = new CalendarDay({ 
+            year: date.date.getFullYear(),
+            month: date.date.getMonth(),
+            date: date.date.getDate()
+        });
 
-        return (this.activeDate?.getDate() === date.date?.getDate()) && date.isCurrentMonth;
+        return day.equalTo(this.activeDate);
     }
 
     /**
@@ -540,21 +532,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         }
 
         return false;
-    }
-
-    /**
-     * @hidden
-     */
-    public focusActiveDate() {
-        let date = this.dates.find((d) => d.selected);
-
-        if (!date) {
-            date = this.dates.find((d) => d.isToday);
-        }
-
-        if (date.isFocusable) {
-            date.nativeElement.focus();
-        }
     }
 
     /**
@@ -603,7 +580,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         return this.selection !== CalendarSelection.RANGE;
     }
 
-    protected changePreviewRange(date: Date) {
+    /**
+     * @hidden @internal
+     */
+    public changePreviewRange(date: Date) {
         if (
           this.selection === 'range' &&
           Array.isArray(this.value) &&
@@ -614,7 +594,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         }
     }
 
-    protected clearPreviewRange() {
+    /**
+     * @hidden @internal
+     */
+    public clearPreviewRange() {
         if (this.previewRangeDate) {
             this.setPreviewRangeDate(undefined);
         }

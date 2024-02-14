@@ -85,9 +85,13 @@ export function getPreviousActiveDate(
     return start;
 }
 
-export function getClosestActiveDate(start: CalendarDay, delta: number, disabled: DateRangeDescriptor[] = []): CalendarDay  {
-    const length = getLargestRange(disabled).dateRange.length;
-    const maxAttempts = Math.max(Math.abs(delta), length);
+export function getClosestActiveDate(
+    start: CalendarDay,
+    delta: number,
+    disabled: DateRangeDescriptor[] = [],
+): CalendarDay {
+    const range = getLargestRange(disabled)?.dateRange;
+    const maxAttempts = Math.max(Math.abs(delta), (range ?? []).length);
     let date = start;
     let attempts = 0;
 
@@ -145,12 +149,12 @@ export function getYearRange(current: DayParameter, range: number) {
     return { start, end: start + range - 1 };
 }
 
-export function getLargestRange(ranges: DateRangeDescriptor[]) {
+export function getLargestRange(ranges: DateRangeDescriptor[] = []) {
     return ranges.reduce((prev, current) => {
-        return current.dateRange.length > prev.dateRange.length
-            ? current
-            : prev;
-    });
+        const c = current?.dateRange ?? [];
+        const p = prev?.dateRange ?? [];
+        return c.length > p.length ? current : prev;
+    }, [] as unknown as DateRangeDescriptor);
 }
 
 export function isDateInRanges(

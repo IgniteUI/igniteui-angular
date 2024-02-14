@@ -279,7 +279,6 @@ describe('IgxDateRangePicker', () => {
             expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
             expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
             expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
-            expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
