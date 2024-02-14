@@ -206,7 +206,8 @@ export class IgxGridStateDirective {
                     disableHiding: c.disableHiding,
                     disablePinning: c.disablePinning,
                     collapsible: c.columnGroup ? c.collapsible : undefined,
-                    expanded: c.columnGroup ? c.expanded : undefined
+                    expanded: c.columnGroup ? c.expanded : undefined,
+                    visibleWhenCollapsed: c.parent?.columnGroup ? (c as IgxColumnComponent).visibleWhenCollapsed : undefined
                 }));
                 return { columns: gridColumns };
             },
