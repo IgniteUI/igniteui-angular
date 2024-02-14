@@ -69,8 +69,6 @@
         "tree"
     ],
     "dependencies": {
-        "@types/hammerjs": "^2.0.40",
-        "hammerjs": "^2.0.8",
         "fflate": "^0.8.1",
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^3.0.2",
@@ -78,6 +76,10 @@
         "uuid": "^9.0.0",
         "igniteui-theming": "^4.2.0",
         "@igniteui/material-icons-extended": "^3.0.0"
+    },
+    "optionalDependencies": {
+        "@types/hammerjs": "^2.0.40",
+        "hammerjs": "^2.0.8"
     },
     "peerDependencies": {
         "@angular/common": "^17.1.2",
