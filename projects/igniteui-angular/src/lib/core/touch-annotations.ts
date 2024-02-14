@@ -1,10 +1,11 @@
 /**
- * Stripped-down HammerJS annotations to be used within Material, which are necessary,
- * because HammerJS is an optional dependency. For the full annotations see:
- * https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/hammerjs
+ * Stripped-down HammerJS annotations.
  */
 
-/** @docs-private */
+/**
+* @hidden
+* @internal
+*/
 export interface HammerInput {
     preventDefault: () => {};
     deltaX: number;
@@ -14,7 +15,10 @@ export interface HammerInput {
     distance: number;
   }
 
-  /** @docs-private */
+/**
+* @hidden
+* @internal
+*/
   export interface HammerStatic {
     new(element: HTMLElement | SVGElement, options?: any): HammerManager;
 
@@ -27,24 +31,36 @@ export interface HammerInput {
     DIRECTION_VERTICAL: number;
   }
 
-  /** @docs-private */
+/**
+* @hidden
+* @internal
+*/
   export interface Recognizer {
     new(options?: any): Recognizer;
     recognizeWith(otherRecognizer: Recognizer | string): Recognizer;
   }
 
-  /** @docs-private */
+/**
+* @hidden
+* @internal
+*/
   export interface RecognizerStatic {
     new(options?: any): Recognizer;
   }
 
-  /** @docs-private */
+/**
+* @hidden
+* @internal
+*/
   export interface HammerInstance {
     on(eventName: string, callback: Function): void;
     off(eventName: string, callback: Function): void;
   }
 
-  /** @docs-private */
+/**
+* @hidden
+* @internal
+*/
   export interface HammerManager {
     add(recogniser: Recognizer | Recognizer[]): Recognizer;
     set(options: any): HammerManager;
@@ -55,6 +71,10 @@ export interface HammerInput {
     get(event:string): HammerManager;
   }
 
+/**
+* @hidden
+* @internal
+*/
   export interface HammerOptions {
     cssProps?: {[key: string]: string};
     domEvents?: boolean;
