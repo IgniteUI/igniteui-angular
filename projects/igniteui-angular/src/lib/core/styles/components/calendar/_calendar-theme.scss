@@ -1395,7 +1395,7 @@
             color: var-get($theme, 'year-selected-current-foreground');
             background: var-get($theme, 'year-selected-current-background');
 
-            @if $variant != 'bootstrap' and $variant != 'fluent' {
+            @if $variant != 'bootstrap' {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-color');
             }
         }
@@ -1541,15 +1541,42 @@
 
     // DATE VIEW
     %date-inactive {
-        cursor: pointer;
-        color: var-get($theme, 'inactive-color');
+        cursor: default;
+
+        %date-inner {
+            color: var-get($theme, 'inactive-color');
+
+            &:hover {
+                color: var-get($theme, 'inactive-color');
+            }
+        }
     }
 
-    %date-inactive-single-hover {
+    %date-inactive-selected-range,
+    %date-inactive-selected-single,
+    %date-inactive-special {
         %date-inner {
-            @if $bootstrap-theme {
-                color: var-get($theme, 'date-selected-foreground');
-            } @else {
+            background: transparent;
+            border-color: transparent;
+
+            &:hover {
+                background: var-get($theme, 'date-hover-background');
+                border-color: transparent;
+            }
+
+            &::before,
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    %date-inactive-selected-single,
+    %date-inactive-special {
+        %date-inner {
+            color: var-get($theme, 'inactive-color');
+
+            &:hover {
                 color: var-get($theme, 'inactive-color');
             }
         }
@@ -1641,6 +1668,12 @@
             color: var-get($theme, 'date-selected-foreground');
             background: var-get($theme, 'date-selected-background');
             border-color: var-get($theme, 'date-selected-border-color');
+
+            &:hover {
+                color: var-get($theme, 'date-selected-hover-foreground');
+                background: var-get($theme, 'date-selected-hover-background');
+                border-color: var-get($theme, 'date-selected-hover-border-color');
+            }
         }
 
         &::before,
@@ -1658,13 +1691,6 @@
         }
     }
 
-    %date-selected-hover {
-        %date-inner {
-            color: var-get($theme, 'date-selected-hover-foreground');
-            background: var-get($theme, 'date-selected-hover-background');
-            border-color: var-get($theme, 'date-selected-hover-border-color');
-        }
-    }
 
     %selected-current {
         %date-inner {
@@ -1969,13 +1995,6 @@
             color: var-get($theme, 'date-selected-range-hover-foreground');
         }
     }
-
-    %date-range-inactive-selected-single {
-        %date-inner {
-            color: var-get($theme, 'date-selected-foreground');
-            background: var-get($theme, 'date-selected-background');
-        }
-    }
     // RANGE END
 
     // PREVIEW START
@@ -2002,6 +2021,8 @@
 
     %date-range-preview-hover {
         %date-inner {
+            color: var-get($theme, 'date-selected-range-hover-foreground');
+
             @if $variant == 'fluent' {
                 background: transparent;
             }

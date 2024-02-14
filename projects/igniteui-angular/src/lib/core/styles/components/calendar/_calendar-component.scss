@@ -99,26 +99,29 @@
             @extend %date-week-number !optional;
         }
 
-        @include e(date, 'active') {
-            @extend %date-active !optional;
-        }
-
         @include e(date, 'inactive') {
             @extend %date-inactive !optional;
         }
 
-        @include e(date, $mods: ('inactive', 'single')) {
-            &:hover {
-                @extend %date-inactive-single-hover !optional;
-            }
+        @include e(date, $mods: ('inactive', 'selected', 'single')) {
+            @extend %date-inactive-selected-single !optional;
+        }
+
+
+        @include e(date, $mods: ('inactive', 'selected', 'range')) {
+            @extend %date-inactive-selected-range !optional;
+        }
+
+        @include e(date, $mods: ('inactive', 'special')) {
+            @extend %date-inactive-special !optional;
+        }
+
+        @include e(date, 'active') {
+            @extend %date-active !optional;
         }
 
         @include e(date, 'selected') {
             @extend %date-selected !optional;
-
-            &:hover {
-                @extend %date-selected-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('active', 'selected')) {
@@ -213,14 +216,6 @@
             @extend %date-selected-current-range-active !optional;
         }
 
-        @include e(date, $mods: ('range', 'selected', 'special')) {
-            @extend %date-range-selected-special !optional;
-        }
-
-        @include e(date, $mods: ('range', 'selected', 'inactive', single)) {
-            @extend %date-range-inactive-selected-single !optional;
-        }
-
         @include e(date, 'weekend') {
             @extend %date-weekend !optional;
         }
@@ -272,7 +267,6 @@
                 @extend %date-special-current-hover !optional;
             }
         }
-
 
         @include e(date, $mods: ('special' 'active')) {
             @extend %date-special-active !optional;
@@ -346,18 +340,6 @@
         @include e(date, $mods: ('disabled', 'inactive')) {
             @extend %date-disabled !optional;
         }
-
-        @include e(date, $mods: ('disabled', 'range')) {
-            @extend %date-range-disabled !optional;
-        }
-
-        @include e(date, $mods: ('disabled', 'current')) {
-            @extend %date-disabled-current !optional;
-        }
-
-        @include e(date, $mods: ('disabled', 'current', 'range')) {
-            @extend %date-disabled-current-range!optional;
-        }
     }
 
     @include b(igx-years-view) {
@@ -393,6 +375,7 @@
                 @extend %years-view__year-selected-hover !optional;
             }
 
+            &:focus-within,
             &:focus {
                 @extend %years-view__year-selected-focus !optional;
             }
@@ -452,6 +435,7 @@
                 @extend %months-view__month-selected-hover !optional;
             }
 
+            &:focus-within,
             &:focus {
                 @extend %months-view__month-selected-focus !optional;
             }
