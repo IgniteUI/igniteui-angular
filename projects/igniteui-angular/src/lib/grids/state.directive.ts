@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { GridFeatures, IGridState, IGridStateOptions, IgxGridStateBaseDirective } from './state-base.directive';
 
 @Directive({
@@ -60,6 +60,20 @@ export class IgxGridStateDirective extends IgxGridStateBaseDirective {
      * ```
      */
     public setState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
+        if (typeof state === 'string') {
+            state = JSON.parse(state) as IGridState;
+            this.stateParsed.emit(state)
+        }
         return super.setStateInternal(state, features);
     }
+
+    /**
+     *  Event emitted when set state is called with a string.
+     * Returns the parsed state object so that it can be further modified before applying to the grid.
+     * ```typescript
+     * this.state.stateParsed.subscribe(parsedState => parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance()});
+     * ```
+     */
+    @Output()
+    public stateParsed = new EventEmitter<IGridState>();
 }

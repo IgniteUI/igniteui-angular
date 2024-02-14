@@ -56,6 +56,9 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 /* blazorIndirectRender */
 /* jsonAPIManageCollectionInMarkup */
 /* jsonAPIManageItemInMarkup */
+/* mustUseNGParentAnchor */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /**
  * Row island
  *
@@ -114,11 +117,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
-    /** @hidden **/
     /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */
+    /**
+     * @hidden
+     */
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public childLayoutList = new QueryList<IgxRowIslandComponent>();
 

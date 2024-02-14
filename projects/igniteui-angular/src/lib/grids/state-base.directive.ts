@@ -42,6 +42,7 @@ export interface IGridState {
     pivotConfiguration?: IPivotConfiguration;
 }
 
+/* marshalByValue */
 export interface IGridStateCollection {
     id: string;
     parentRowID: any;
@@ -66,6 +67,7 @@ export interface IGridStateOptions {
     pivotConfiguration?: boolean;
 }
 
+/* marshalByValue */
 export interface IColumnState {
     pinned: boolean;
     sortable: boolean;
@@ -430,16 +432,6 @@ export class IgxGridStateBaseDirective {
     };
 
     /**
-     *  Event emitted when set state is called with a string.
-     * Returns the parsed state object so that it can be further modified before applying to the grid.
-     * ```typescript
-     * this.state.stateParsed.subscribe(parsedState => parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance()});
-     * ```
-     */
-    @Output()
-    public stateParsed = new EventEmitter<IGridState>();
-
-    /**
      *  An object with options determining if a certain feature state should be saved.
      * ```html
      * <igx-grid [igxGridState]="options"></igx-grid>
@@ -508,11 +500,7 @@ export class IgxGridStateBaseDirective {
      * this.state.setState(gridState);
      * ```
      */
-    protected setStateInternal(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
-        if (typeof state === 'string') {
-            state = JSON.parse(state) as IGridState;
-            this.stateParsed.emit(state)
-        }
+    protected setStateInternal(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         this.state = state;
         this.currGrid = this.grid;
         this.restoreGridState(state, features);

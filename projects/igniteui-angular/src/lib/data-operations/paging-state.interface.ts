@@ -4,6 +4,7 @@ export enum PagingError {
     IncorrectRecordsPerPage
 }
 
+/* marshalByValue */
 export declare interface IPagingState {
     index: number;
     recordsPerPage: number;

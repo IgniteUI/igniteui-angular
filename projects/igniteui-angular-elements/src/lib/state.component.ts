@@ -1,4 +1,4 @@
-import { Component, EnvironmentInjector, Inject, Injector, ViewContainerRef } from '@angular/core';
+import { Component, EnvironmentInjector, EventEmitter, Inject, Injector, Output, ViewContainerRef } from '@angular/core';
 import { IGX_GRID_SERVICE_BASE, GridServiceType, IPinningConfig}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 import { IFilteringExpressionsTree } from '../../../igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../igniteui-angular/src/lib/data-operations/paging-state.interface';
@@ -54,7 +54,6 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
             super(api.grid, viewRef, envInjector, injector);
         }
 
-    /* blazorCSSuppress */
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.
      * @param state object to restore state from.
@@ -76,10 +75,11 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         if (features.length === 0) {
             features = null;
         }
-        super.setStateInternal(state, features);
+        const gridState = JSON.parse(state) as IGridStateInfo;
+        this.stateParsed.emit(gridState);
+        super.setStateInternal(gridState, features);
     }
 
-    /* blazorCSSuppress */
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
      *
@@ -107,6 +107,13 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         }
         return super.getStateInternal(true, features) as string;
     }
+
+    /**
+     *  Event emitted when set state is called with a string.
+     * Returns the parsed state object so that it can be further modified before applying to the grid.
+     */
+    @Output()
+    public stateParsed = new EventEmitter<IGridStateInfo>();
 
     protected override stringifyCallback(key: string, val: any){
         if (key === 'searchVal' && val instanceof Set) {

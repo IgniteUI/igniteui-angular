@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 /* blazorElement */
 /* wcElementTag: igc-grid-editing-actions */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Grid Editing Actions for the Action Strip
  *

@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -63,6 +64,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 
 let NEXT_ID = 0;
 
@@ -351,6 +353,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -445,6 +449,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
+    /* treatAsRef */
     /**
      * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
      * ```html
@@ -471,7 +476,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    /* treatAsRef */
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
      * ```typescript
