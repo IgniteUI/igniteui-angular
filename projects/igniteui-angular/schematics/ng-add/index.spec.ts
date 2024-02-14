@@ -90,7 +90,8 @@ describe('ng-add schematics', () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['fflate']).toBeTruthy();
-    expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
+    // hammer is optional now.
+    //expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should NOT add hammer.js to the main.ts file', async () => {
@@ -105,13 +106,15 @@ describe('ng-add schematics', () => {
     expect(testTs).not.toContain('import \'hammerjs\';');
   });
 
-  it('should add hammer.js in angular.json build options under scripts', async () => {
+  // Hammer is optional now.
+  xit('should add hammer.js in angular.json build options under scripts', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).toContain('./node_modules/hammerjs/hammer.min.js');
   });
 
-  it('should add hammer.js in angular.json test options under scripts', async () => {
+  // Hammer is optional now.
+  xit('should add hammer.js in angular.json test options under scripts', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts).toContain('./node_modules/hammerjs/hammer.min.js');
@@ -159,7 +162,8 @@ describe('ng-add schematics', () => {
     expect(newContent).toMatch('// test comment');
   });
 
-  it('should add hammer.js to package.json dependencies', async () => {
+    // Hammer is optional now.
+  xit('should add hammer.js to package.json dependencies', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();

@@ -7,6 +7,20 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch test schematics",
+            "args": [
+                "-r",
+                "ts-node/register",
+                "./node_modules/jasmine/bin/jasmine.js",
+                "./projects/igniteui-angular/schematics/**/*.spec.ts"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Node migration tests",
             "args": [
                 "-r",
