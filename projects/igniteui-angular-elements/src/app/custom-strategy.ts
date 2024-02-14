@@ -171,8 +171,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const parent = parents[i];
 
             // find the respective config entry
-            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase() ||
-                reflectComponentType(x.component).selector === parent?.tagName.toLocaleLowerCase());
+            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+
+            if (!parentConfig) {
+                continue;
+            }
 
             const componentType = this._componentFactory.componentType;
             // TODO - look into more cases where query expects a certain base class but gets a subclass.
@@ -180,7 +183,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
 
             for (const query of contentQueries) {
-                if ((i > 0 && !query.descendants) || !parent.ngElementStrategy) {
+                if (i > 0 && !query.descendants) {
                     continue;
                 }
 
