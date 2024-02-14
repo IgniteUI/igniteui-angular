@@ -72,7 +72,7 @@
     "express": "^4.18.2",
     "fflate": "^0.8.1",
     "hammerjs": "^2.0.8",
-    "igniteui-theming": "^4.2.0",
+    "igniteui-theming": "^4.4.0",
     "igniteui-trial-watermark": "^3.0.2",
     "lodash-es": "^4.17.21",
     "rxjs": "^7.8.0",
