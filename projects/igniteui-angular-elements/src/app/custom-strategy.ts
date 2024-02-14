@@ -24,7 +24,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     // public override componentRef: ComponentRef<any>|null = null;
 
     protected element: IgcNgElement;
+    /** Native Angular parent (if any) the Element is created under, usually as template of dynamic component (e.g. HGrid row island paginator) */
     protected angularParent: ComponentRef<any>;
+    /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
     protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
     private setComponentRef: (value: ComponentRef<any>) => void;
 
@@ -113,7 +115,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 this.angularParent = (parent as any).__componentRef;
                 parentInjector = this.angularParent.injector;
             }
-
         }
 
         // need to be able to reset the injector (as protected) to the parent's to call super normally
@@ -137,15 +138,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (element) {
             if ((this as any).componentRef.instance) {
                 (this as any).componentRef.instance.___wcElement = element;
-            }
-        }
-
-        if (this.angularParent && parents.length > 1) {
-            const parentRoot = parents[parents.length - 1];
-            if (element.tagName.toLocaleLowerCase() === 'igc-paginator') {
-                // Cache the paginator component in the parent (currently on for HGrid),
-                // so it is kept in the query even when detached from DOM
-                this.addToParentCache(parentRoot, "paginatorList");
             }
         }
 
@@ -195,6 +187,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
                 if (query.isQueryList) {
                     parent.ngElementStrategy.scheduleQueryUpdate(query.property);
+                    if (this.angularParent) {
+                        // Cache the component in the parent (currently only paginator for HGrid),
+                        // so it is kept in the query even when detached from DOM
+                        this.addToParentCache(parent, query.property);
+                    }
                 } else {
                     parentRef.instance[query.property] = componentRef.instance;
                     parentRef.changeDetectorRef.detectChanges();
