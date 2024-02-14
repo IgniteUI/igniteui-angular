@@ -100,7 +100,7 @@
         }
 
         @include e(date, 'active') {
-            @extend %date-focus !optional;
+            @extend %date-active !optional;
         }
 
         @include e(date, 'inactive') {
@@ -122,7 +122,7 @@
         }
 
         @include e(date, $mods: ('active', 'selected')) {
-            @extend %date-selected-focus !optional;
+            @extend %date-selected-active !optional;
         }
 
         @include e(date, 'hidden') {
@@ -131,6 +131,14 @@
 
         @include e(date, 'range') {
             @extend %date-range !optional;
+
+            &:hover {
+                @extend %date-range-hover !optional;
+            }
+
+            &:focus {
+                @extend %date-range-focus !optional;
+            }
         }
 
         @include e(date, 'range-preview') {
@@ -155,10 +163,18 @@
 
         @include e(date, $mods: ('range', 'selected', 'first')) {
             @extend %date-range-first !optional;
+
+            &:hover {
+                @extend %date-range-first-hover !optional;
+            }
         }
 
         @include e(date, $mods: ('range', 'selected', 'last')) {
             @extend %date-range-last !optional;
+
+            &:hover {
+                @extend %date-range-last-hover !optional;
+            }
         }
 
         @include e(date, $mods: ('selected', 'first', 'last')) {
@@ -194,7 +210,7 @@
         }
 
         @include e(date, $mods: ('range', 'selected', 'current', 'active')) {
-            @extend %date-selected-current-range-focus !optional;
+            @extend %date-selected-current-range-active !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'special')) {
@@ -218,11 +234,11 @@
         }
 
         @include e(date, $mods: ('current', 'active')) {
-            @extend %date-current-focus !optional;
+            @extend %date-current-active !optional;
         }
 
-        @include e(date, $mods: ('current', 'special')) {
-            @extend %date-current-special !optional;
+        @include e(date, $mods: ('current', 'range')) {
+            @extend %date-current-range !optional;
         }
 
         @include e(date, $mods: ('current', 'selected')) {
@@ -234,7 +250,7 @@
         }
 
         @include e(date, $mods: ('current', 'selected', 'active')) {
-            @extend %selected-current-focus !optional;
+            @extend %selected-current-active !optional;
         }
 
         @include e(date, $mods: ('current' 'special')) {
@@ -243,6 +259,39 @@
 
         @include e(date, 'special') {
             @extend %date-special !optional;
+
+            &:hover {
+                @extend %date-special-hover !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'current')) {
+            @extend %date-special-current !optional;
+
+            &:hover {
+                @extend %date-special-current-hover !optional;
+            }
+        }
+
+
+        @include e(date, $mods: ('special' 'active')) {
+            @extend %date-special-active !optional;
+        }
+
+        @include e(date, $mods: ('special', 'current', 'active')) {
+            @extend %date-special-current !optional;
+
+            &:hover {
+                @extend %date-special-current-hover !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'current', 'active', 'range')) {
+            @extend %date-special-current !optional;
+
+            &:hover {
+                @extend %date-special-current-hover !optional;
+            }
         }
 
         @include e(date, 'single') {
