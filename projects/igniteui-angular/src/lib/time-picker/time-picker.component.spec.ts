@@ -443,7 +443,7 @@ describe('IgxTimePicker', () => {
             expect(timePicker.validate(mockFormControl)).toEqual({ maxValue: true });
         });
 
-        fit('should handle panmove event correctly', () => {
+        it('should handle panmove event correctly', () => {
             const touchManager = new HammerGesturesManager(null, null, new PlatformUtil(1));
             const itemListDirective = new IgxItemListDirective(timePicker, elementRef, touchManager);
             spyOn(touchManager, 'addEventListener');
