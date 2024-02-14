@@ -59,7 +59,7 @@ export class HammerGesturesManager {
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
-            if(!HammerGesturesManager.Hammer) {
+            if (!HammerGesturesManager.Hammer) {
                 //no hammer
                 return;
             }
@@ -82,7 +82,7 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
-        if (!this.platformBrowser) {
+        if (!this.platformBrowser || !HammerGesturesManager.Hammer) {
             return;
         }
 

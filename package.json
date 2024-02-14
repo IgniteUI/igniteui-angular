@@ -145,6 +145,8 @@
     "ts-node": "^10.8.1",
     "typedoc": "^0.23.21",
     "typedoc-plugin-localization": "^3.0.1",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "hammerjs": "^2.0.8",
+    "@types/hammerjs": "^2.0.40"
   }
 }
