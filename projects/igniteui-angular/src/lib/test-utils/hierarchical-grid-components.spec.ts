@@ -360,7 +360,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
-            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
+            <igx-grid-toolbar *igxGridToolbar>
                 <button type="button" igxButton="contained">Child2 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>

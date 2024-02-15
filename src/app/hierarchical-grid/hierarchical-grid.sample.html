@@ -67,8 +67,8 @@
                 </igx-excel-style-filter-operations>
             </igx-grid-excel-style-filtering>
 
-            <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid">
-                <igx-grid-toolbar-title>Child Grid 1</igx-grid-toolbar-title>
+            <igx-grid-toolbar *igxGridToolbar>
+                <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
