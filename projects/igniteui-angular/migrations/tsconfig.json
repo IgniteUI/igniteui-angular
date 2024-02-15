@@ -15,7 +15,8 @@
             "@infragistics/igniteui-angular/*": [
                 "../*"
             ],
-        }
+        },
+        "skipLibCheck": true
     },
     "exclude": [
         "../../../node_modules",
