@@ -258,6 +258,7 @@
                     [hideLeadingDays]="hideOutsideDays || i !== 0"
                     [hideTrailingDays]="hideOutsideDays || i !== monthsViewNumber - 1"
                     [showWeekNumbers]="showWeekNumbers"
+                    [showActiveDay]="showActiveDay"
                     (swiperight)="previousPage()"
                     (swipeleft)="nextPage()"
                     (pageChanged)="updateDay($event)"

@@ -422,6 +422,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.body.nativeElement.focus();
     }
 
+    private _showActiveDay: boolean;
+
+	/**
+	 * @hidden
+	 * @internal
+	 */
+    protected set showActiveDay(value: boolean) {
+        this._showActiveDay = value;
+    }
+
+    protected get showActiveDay() {
+        return this._showActiveDay;
+    }
+
 	// /**
 	//  * Keyboard navigation of the calendar
 	//  *
@@ -594,6 +608,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onKeydownHome(event));
         this.keyboardNavigation.registerKeyHandler('End', (event) => this.onKeydownEnd(event));
 
+        this.body.nativeElement.addEventListener('focus', this.onWrapperFocus.bind(this));
+        this.body.nativeElement.addEventListener('blur', this.onWrapperBlur.bind(this));
+
         this.startPageScroll$.pipe(
             takeUntil(this.stopPageScroll$),
             switchMap(() => this.scrollPage$.pipe(
@@ -617,6 +634,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.activeView$.subscribe((view) => {
 			this.activeViewChanged.emit(view);
         });
+    }
+
+    private onWrapperFocus() {
+        this.showActiveDay = true;
+    }
+
+    private onWrapperBlur() {
+        this.showActiveDay = false;
     }
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {
@@ -1112,6 +1137,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		}
 
         this.keyboardNavigation.detachKeyboardHandlers();
+        this.body.nativeElement.removeEventListener('focus', this.onWrapperFocus);
+        this.body.nativeElement.removeEventListener('blur', this.onWrapperBlur);
 	}
 
 	/**
