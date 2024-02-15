@@ -469,7 +469,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         this.mutationObserver = this.setMutationsObserver();
 
-        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
+        this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
     }
 
     /**
@@ -482,7 +482,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this.queryListNotifier$.next();
         this.queryListNotifier$.complete();
 
-        this.mutationObserver.disconnect();
+        this.mutationObserver?.disconnect();
     }
 
     /**
@@ -512,28 +512,35 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             }
         }
 
-        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
+        this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
     }
 
     private setMutationsObserver() {
-        return new MutationObserver((records, observer) => {
-            // Stop observing while handling changes
-            observer.disconnect();
+        if (typeof MutationObserver !== 'undefined') {
+            return new MutationObserver((records, observer) => {
+                // Stop observing while handling changes
+                observer.disconnect();
 
-            const updatedButtons = this.getUpdatedButtons(records);
+                const updatedButtons = this.getUpdatedButtons(records);
 
-            if (updatedButtons.length > 0) {
-                updatedButtons.forEach((button) => {
-                    const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
-                    const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
+                if (updatedButtons.length > 0) {
+                    updatedButtons.forEach((button) => {
+                        const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
+                        const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
 
-                    this.updateButtonSelectionState(index, args);
+                        this.updateButtonSelectionState(index, args);
+                    });
+                }
+
+                // Watch for changes again
+                observer.observe(this._el.nativeElement, this.observerConfig);
+
+                // Cleanup function
+                this._renderer.listen(this._el.nativeElement, 'DOMNodeRemoved', () => {
+                    observer.disconnect();
                 });
-            }
-
-            // Watch for changes again
-            observer.observe(this._el.nativeElement, this.observerConfig);
-        });
+            });
+        }
     }
 
     private getUpdatedButtons(records: MutationRecord[]) {
