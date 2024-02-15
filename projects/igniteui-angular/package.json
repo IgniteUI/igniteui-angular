@@ -80,10 +80,10 @@
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
-        "@angular/common": "^17.1.2",
-        "@angular/core": "^17.1.2",
-        "@angular/animations": "^17.1.2",
-        "@angular/forms": "^17.1.2"
+        "@angular/common": "17",
+        "@angular/core": "17",
+        "@angular/animations": "17",
+        "@angular/forms": "17"
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~17.1.1316-beta.2"
