@@ -783,6 +783,10 @@
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
             }
+
+            @include e(upload-button) {
+                @extend %indigo-upload-button !optional;
+            }
         }
 
         @include mx(indigo, focused) {

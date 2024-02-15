@@ -408,6 +408,7 @@
         @include sizable();
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
+        --input-icon: #{sizable(rem(14px), rem(16px), rem(18px))};
 
         position: relative;
         display: block;
@@ -459,6 +460,10 @@
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
             --component-size: var(--input-size);
+
+            @if $variant == 'indigo-design' {
+                --size: var(--input-icon) !important;
+            }
         }
     }
 
@@ -1150,6 +1155,10 @@
     %form-group-input--focus {
         cursor: text;
         color: var-get($theme, 'focused-text-color');
+
+        &::placeholder {
+            color: var-get($theme, 'hover-placeholder-color');
+        }
     }
 
     %form-group-input--disabled {
@@ -1442,6 +1451,13 @@
 
         &::after {
             border-bottom-style: solid;
+        }
+    }
+
+    %indigo-upload-button {
+        [igxButton] {
+            min-height: 0;
+            height: calc(100% - #{rem(8px)});
         }
     }
     // INDIGO END
