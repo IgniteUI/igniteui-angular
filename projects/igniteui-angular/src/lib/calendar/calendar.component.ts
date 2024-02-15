@@ -75,15 +75,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    @ViewChildren("wrapper", { read: HTMLElement })
-    private wrapper: QueryList<HTMLElement>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild("body")
-    private body: ElementRef;
+    @ViewChild("wrapper")
+    private wrapper: ElementRef;
 
 	/**
 	 * Sets/gets the `id` of the calendar.
@@ -419,7 +412,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
         event.stopPropagation();
-        this.body.nativeElement.focus();
+        this.wrapper.nativeElement.focus();
     }
 
     private _showActiveDay: boolean;
@@ -599,7 +592,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 			this.setSiblingMonths(c);
 		});
 
-        this.keyboardNavigation.attachKeyboardHandlers(this.body);
+        this.keyboardNavigation.attachKeyboardHandlers(this.wrapper);
         this.keyboardNavigation.registerKeyHandler('ArrowUp', (event) => this.onArrowUp(event));
         this.keyboardNavigation.registerKeyHandler('ArrowDown', (event) => this.onArrowDown(event));
         this.keyboardNavigation.registerKeyHandler('ArrowLeft', (event) => this.onArrowLeft(event));
@@ -608,8 +601,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onKeydownHome(event));
         this.keyboardNavigation.registerKeyHandler('End', (event) => this.onKeydownEnd(event));
 
-        this.body.nativeElement.addEventListener('focus', this.onWrapperFocus.bind(this));
-        this.body.nativeElement.addEventListener('blur', this.onWrapperBlur.bind(this));
+        this.wrapper.nativeElement.addEventListener('focus', this.onWrapperFocus.bind(this));
+        this.wrapper.nativeElement.addEventListener('blur', this.onWrapperBlur.bind(this));
 
         this.startPageScroll$.pipe(
             takeUntil(this.stopPageScroll$),
@@ -1137,8 +1130,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		}
 
         this.keyboardNavigation.detachKeyboardHandlers();
-        this.body.nativeElement.removeEventListener('focus', this.onWrapperFocus);
-        this.body.nativeElement.removeEventListener('blur', this.onWrapperBlur);
+        this.wrapper.nativeElement.removeEventListener('focus', this.onWrapperFocus);
+        this.wrapper.nativeElement.removeEventListener('blur', this.onWrapperBlur);
 	}
 
 	/**
