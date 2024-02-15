@@ -61,6 +61,20 @@ export class IgxDayItemComponent {
     @Input({ transform: booleanAttribute })
     public isWithinPreviewRange = false;
 
+    @Input({ transform: booleanAttribute })
+    public hideLeadingDays = false;
+
+    @Input({ transform: booleanAttribute })
+    public hideTrailingDays = false;
+
+    private get hideLeading() {
+        return this.hideLeadingDays && this.isPreviousMonth;
+    }
+
+    private get hideTrailing() {
+        return this.hideTrailingDays && this.isNextMonth;
+    }
+
     @Output()
     public dateSelection = new EventEmitter<CalendarDay>();
 
@@ -71,18 +85,15 @@ export class IgxDayItemComponent {
     public mouseLeave = new EventEmitter<void>();
 
     public get isCurrentMonth(): boolean {
-        const isCurrent = areSameMonth(this.date, this.viewDate);
-        return isCurrent;
+        return areSameMonth(this.date, this.viewDate);
     }
 
     public get isPreviousMonth(): boolean {
-        const isPrevious = isPreviousMonth(this.date, this.viewDate);
-        return isPrevious;
+        return isPreviousMonth(this.date, this.viewDate);
     }
 
     public get isNextMonth(): boolean {
-        const isNext = isNextMonth(this.date, this.viewDate);
-        return isNext;
+        return isNextMonth(this.date, this.viewDate);
     }
 
     public get nativeElement() {
@@ -105,7 +116,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--hidden')
     public get isHidden(): boolean {
-        return this.hideOutsideDays && this.isInactive;
+        return (this.hideLeading || this.hideTrailing) && this.isInactive;
     }
 
     @HostBinding('class.igx-days-view__date--current')

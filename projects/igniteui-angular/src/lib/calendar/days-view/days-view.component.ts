@@ -108,6 +108,24 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         return this._previewRangeDate;
     }
 
+    @Input({ transform: booleanAttribute })
+    public set hideLeadingDays(value: boolean) {
+        this._hideLeadingDays = value;
+    }
+
+    public get hideLeadingDays() {
+        return this._hideLeadingDays ?? this.hideOutsideDays;
+    }
+
+    @Input({ transform: booleanAttribute })
+    public set hideTrailingDays(value: boolean) {
+        this._hideTrailingDays = value;
+    }
+
+    public get hideTrailingDays() {
+        return this._hideTrailingDays ?? this.hideOutsideDays;
+    }
+
     /**
      * @hidden
      */
@@ -157,6 +175,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
 
     private _activeDate: Date;
     private _previewRangeDate: Date;
+    private _hideLeadingDays: boolean;
+    private _hideTrailingDays: boolean;
 
     /**
      * @hidden
