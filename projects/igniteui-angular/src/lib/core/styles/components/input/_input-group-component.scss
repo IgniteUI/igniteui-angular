@@ -795,18 +795,6 @@
             }
         }
 
-        @include mx(indigo, invalid) {
-            @include e(label) {
-                @extend %indigo-label--invalid !optional;
-            }
-        }
-
-        @include mx(indigo, valid) {
-            @include e(label) {
-                @extend %indigo-label--success !optional;
-            }
-        }
-
         @include mx(indigo, disabled) {
             @include e(bundle) {
                 @extend %form-group-bundle--indigo--disabled !optional;
