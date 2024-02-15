@@ -90,7 +90,7 @@
             </ng-template>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
                 [allowFiltering]="true">
-                <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid">
+                <igx-grid-toolbar *igxGridToolbar>
                     <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
                 </igx-grid-toolbar>
                 <igx-column field="ID" [hasSummary]='true'></igx-column>

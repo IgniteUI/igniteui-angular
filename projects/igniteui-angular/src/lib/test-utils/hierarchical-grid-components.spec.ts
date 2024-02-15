@@ -30,7 +30,7 @@ import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
+            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -104,7 +104,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
+            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -355,7 +355,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             <button type="button" igxButton="contained">Parent Button</button>
         </igx-grid-toolbar>
         <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
-            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
+            <igx-grid-toolbar *igxGridToolbar>
                 <button type="button" igxButton="contained">Child 1 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
