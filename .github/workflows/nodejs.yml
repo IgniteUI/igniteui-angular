@@ -56,7 +56,7 @@ jobs:
         run: |
             npm run build:i18n
             npm run test:i18n:dist
-      - name: Bundle Tree-Shake Test
+      - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
         if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '18.x'
