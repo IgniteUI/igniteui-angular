@@ -92,6 +92,7 @@ export interface IColumnState {
     disablePinning: boolean;
     collapsible?: boolean;
     expanded?: boolean;
+    visibleWhenCollapsed?: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
