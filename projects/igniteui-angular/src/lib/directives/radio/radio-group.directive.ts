@@ -324,7 +324,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
-    private queryChange$ = new Subject();
+    private queryChange$ = new Subject<void>();
 
     /**
      * @hidden
