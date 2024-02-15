@@ -19,7 +19,7 @@ import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective } from '../calendar-base';
-import { isEqual, PlatformUtil, intoChunks } from '../../core/utils';
+import { PlatformUtil, intoChunks } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import {
     areSameMonth,
@@ -222,6 +222,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
 
         this.activeDate = date.native;
         this.viewDate = date.native;
+        this.clearPreviewRange();
         this.cdr.detectChanges();
     }
 
@@ -450,15 +451,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
             return false;
         }
 
-        let day = dates.at(0);
+        let target = dates.at(0);
 
-        if (this.previewRangeDate) {
-            if (this.previewRangeDate < day) {
-                day = this.previewRangeDate;
-            }
+        if (this.previewRangeDate && this.previewRangeDate < target) {
+            target = this.previewRangeDate;
         }
 
-        return date.equalTo(day);
+        return date.equalTo(target);
     }
 
     /**
@@ -471,15 +470,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
             return false;
         }
 
-        let day = dates.at(-1);
+        let target = dates.at(-1);
 
-        if (this.previewRangeDate) {
-            if (this.previewRangeDate > day) {
-                day = this.previewRangeDate;
-            }
+        if (this.previewRangeDate && this.previewRangeDate > target) {
+            target = this.previewRangeDate;
         }
 
-        return date.equalTo(day);
+        return date.equalTo(target);
     }
 
     /**
@@ -511,21 +508,20 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     }
 
     protected isWithinPreviewRange(date: Date): boolean {
-        if (
-            this.selection === 'range' &&
-            Array.isArray(this.value) &&
-            this.value.length === 1 &&
-            this.previewRangeDate
-        ) {
-            return isDateInRanges(date, [
-                {
-                    type: DateRangeType.Between,
-                    dateRange: [this.value[0], this.previewRangeDate],
-                },
-            ]);
+        if (this.selection !== 'range') return false;
+
+        const dates = this.value as Date[];
+
+        if (!(dates.length > 0 && this.previewRangeDate)) {
+            return false;
         }
 
-        return false;
+        return isDateInRanges(date, [
+          {
+            type: DateRangeType.Between,
+            dateRange: [dates.at(0), this.previewRangeDate],
+          },
+        ]);
     }
 
     /**
@@ -539,13 +535,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden @internal
      */
     public changePreviewRange(date: Date) {
-        if (
-          this.selection === 'range' &&
-          Array.isArray(this.value) &&
-          this.value.length === 1 &&
-          !isEqual(this.value[0], date)
-        ) {
-          this.setPreviewRangeDate(date);
+        const dates = this.value as Date[];
+
+        if (this.selection === 'range' && dates.length === 1) {
+            const first = CalendarDay.from(dates.at(0));
+
+            if (!first.equalTo(date)) {
+              this.setPreviewRangeDate(date);
+            }
         }
     }
 

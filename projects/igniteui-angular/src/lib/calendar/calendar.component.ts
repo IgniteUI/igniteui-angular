@@ -631,10 +631,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     private onWrapperFocus() {
         this.showActiveDay = true;
+        this.monthViews.forEach(view => view.changePreviewRange(this.activeDate));
     }
 
     private onWrapperBlur() {
         this.showActiveDay = false;
+        this.monthViews.forEach(view => view.clearPreviewRange());
     }
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {
@@ -651,6 +653,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         const dates = this.monthViews.toArray().flatMap(view => view.dates.toArray()).filter(d => d.isCurrentMonth);
         const isDateInView = dates.some(d => d.date.equalTo(this.activeDate));
+        this.monthViews.forEach(view => view.clearPreviewRange());
 
         if (!isDateInView) {
             delta > 0 ? this.nextPage(true) : this.previousPage(true);
@@ -685,9 +688,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         event.stopPropagation();
         this.selectDateFromClient(this.activeDate);
         this.selected.emit(this.selectedDates);
-
-        // TODO: Should clear the preview range on enter
-        // this.clearPreviewRange();
+        this.monthViews.forEach(view => view.clearPreviewRange());
     }
 
     private onKeydownHome(event: KeyboardEvent) {
