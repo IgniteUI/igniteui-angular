@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "grid",
+            "remove": true,
+            "owner": {
+                "selector": "igx-grid-toolbar",
+                "type": "component"
+            }
+        }
+    ]
+}

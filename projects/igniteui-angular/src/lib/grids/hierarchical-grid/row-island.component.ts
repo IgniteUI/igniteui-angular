@@ -334,7 +334,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         // Create the child toolbar if the parent island has a toolbar definition
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
-                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
             grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
                 .subscribe(() => {
                     this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());
