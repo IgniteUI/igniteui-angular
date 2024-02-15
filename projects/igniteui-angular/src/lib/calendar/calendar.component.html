@@ -59,7 +59,7 @@
 
 <!-- PICKER IN DAYS -->
 <ng-template #calendarDaysPicker let-i>
-    <section class="igx-calendar-picker">
+    <section class="igx-calendar-picker" style="--calendar-row-start: {{ 1 + (2 * i) }}">
         <div class="igx-calendar-picker__dates"
              [style.width.%]="100/monthsViewNumber"
              [attr.data-month]="i | IgxGetViewDate:viewDate:false">
@@ -67,7 +67,10 @@
                     *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonthYear; context: getContext(i)">
             </ng-container>
         </div>
-        <div class="igx-calendar-picker__nav" *ngIf="monthsViewNumber === i + 1">
+        <div 
+            class="igx-calendar-picker__nav" 
+            *ngIf="this.orientation === 'horizontal' ? i === monthsViewNumber - 1 : i === 0"
+        >
             <div
                 tabindex="0"
                 class="igx-calendar-picker__prev"
@@ -190,7 +193,7 @@
     </h2>
 </header>
 
-<span tabindex="0" class="igx-calendar__aria-off-screen">
+<span tabindex="-1" class="igx-calendar__aria-off-screen">
     <ng-container *ngIf="selection === 'multi'">
         {{ monthsViewNumber && monthsViewNumber > 1 ?
         resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
@@ -208,82 +211,90 @@
     </ng-container>
 </span>
 
-<section class="igx-calendar__picker">
-    <ng-container *ngIf="isDefaultView">
-        <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
-            <ng-container *ngTemplateOutlet="calendarDaysPicker; context: {$implicit: i}"></ng-container>
-        </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="isYearView">
-        <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="isDecadeView">
-        <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
-    </ng-container>
-</section>
-
-<section #body class="igx-calendar__body" tabindex="0">
-    <ng-container
-        *ngIf="isDefaultView"
-        (pointerdown)="suppressBlur()"
+<div 
+    #body style="--calendar-months: {{ monthsViewNumber }}" 
+    [tabIndex]="0"
+    class="igx-calendar__wrapper"
+    [class.igx-calendar__wrapper--vertical]="orientation === 'vertical'"
     >
-        <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
-            <igx-days-view
-                #days
-                role="grid"
-                [tabIndex]="-1"
-                [selection]="selection"
+    <section class="igx-calendar__pickers" [class.igx-calendar__pickers--vertical]="orientation === 'vertical'">
+        <ng-container *ngIf="isDefaultView">
+            <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
+                <ng-container *ngTemplateOutlet="calendarDaysPicker; context: {$implicit: i}"></ng-container>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isYearView">
+            <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isDecadeView">
+            <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
+        </ng-container>
+    </section>
+
+    <section class="igx-calendar__body" [class.igx-calendar__body--vertical]="orientation === 'vertical'">
+        <ng-container
+            *ngIf="isDefaultView"
+            (pointerdown)="suppressBlur()"
+        >
+            <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
+                <igx-days-view
+                    #days
+                    style="--calendar-row-start: {{(i + 1) * 2 }}"
+                    role="grid"
+                    [tabIndex]="-1"
+                    [selection]="selection"
+                    [locale]="locale"
+                    [value]="value"
+                    [(activeDate)]="activeDate"
+                    [(previewRangeDate)]="previewRangeDate"
+                    [viewDate]="i | IgxGetViewDate: viewDate"
+                    [weekStart]="weekStart"
+                    [formatOptions]="formatOptions"
+                    [formatViews]="formatViews"
+                    [disabledDates]="disabledDates"
+                    [specialDates]="specialDates"
+                    [hideLeadingDays]="hideOutsideDays || i !== 0"
+                    [hideTrailingDays]="hideOutsideDays || i !== monthsViewNumber - 1"
+                    [showWeekNumbers]="showWeekNumbers"
+                    (swiperight)="previousPage()"
+                    (swipeleft)="nextPage()"
+                    (pageChanged)="updateDay($event)"
+                    (dateSelection)="childClicked($event)"
+                    (monthsViewBlur)="resetActiveDate()">
+                </igx-days-view>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isYearView">
+            <igx-months-view
+                #months
+                [date]="viewDate"
                 [locale]="locale"
-                [value]="value"
-                [(activeDate)]="activeDate"
-                [(previewRangeDate)]="previewRangeDate"
-                [viewDate]="i | IgxGetViewDate: viewDate"
-                [weekStart]="weekStart"
-                [formatOptions]="formatOptions"
-                [formatViews]="formatViews"
-                [disabledDates]="disabledDates"
-                [specialDates]="specialDates"
-                [hideLeadingDays]="hideOutsideDays || i !== 0"
-                [hideTrailingDays]="hideOutsideDays || i !== monthsViewNumber - 1"
-                [showWeekNumbers]="showWeekNumbers"
+                [formatView]="formatViews.month"
+                [monthFormat]="formatOptions.month"
                 (swiperight)="previousPage()"
                 (swipeleft)="nextPage()"
-                (pageChanged)="updateDay($event)"
-                (dateSelection)="childClicked($event)"
-                (monthsViewBlur)="resetActiveDate()">
-            </igx-days-view>
+                (pageChanged)="updateYear($event)"
+                (selected)="changeMonth($event)">
+            </igx-months-view>
         </ng-container>
-    </ng-container>
 
-    <ng-container *ngIf="isYearView">
-        <igx-months-view
-            #months
-            [date]="viewDate"
-            [locale]="locale"
-            [formatView]="formatViews.month"
-            [monthFormat]="formatOptions.month"
-            (swiperight)="previousPage()"
-            (swipeleft)="nextPage()"
-            (pageChanged)="updateYear($event)"
-            (selected)="changeMonth($event)">
-        </igx-months-view>
-    </ng-container>
-
-    <ng-container *ngIf="isDecadeView">
-        <igx-years-view
-            #decade
-            [date]="viewDate"
-            [locale]="locale"
-            [formatView]="formatViews.year"
-            [yearFormat]="formatOptions.year"
-            (swiperight)="previousPage()"
-            (swipeleft)="nextPage()"
-            (pageChanged)="updateYear($event)"
-            (selected)="changeYear($event)"
-            (click)="onYearsViewClick($event)"
-            (keydown)="onYearsViewKeydown($event)">
-        </igx-years-view>
-    </ng-container>
-</section>
+        <ng-container *ngIf="isDecadeView">
+            <igx-years-view
+                #decade
+                [date]="viewDate"
+                [locale]="locale"
+                [formatView]="formatViews.year"
+                [yearFormat]="formatOptions.year"
+                (swiperight)="previousPage()"
+                (swipeleft)="nextPage()"
+                (pageChanged)="updateYear($event)"
+                (selected)="changeYear($event)"
+                (click)="onYearsViewClick($event)"
+                (keydown)="onYearsViewKeydown($event)">
+            </igx-years-view>
+        </ng-container>
+    </section>
+</div>

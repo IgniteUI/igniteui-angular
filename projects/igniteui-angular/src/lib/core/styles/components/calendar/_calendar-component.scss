@@ -20,12 +20,28 @@
             @extend %header-display !optional;
         }
 
-        @include e(picker) {
-            @extend %body-display !optional;
+        @include e(wrapper) {
+            @extend %calendar-wrapper !optional;
+        }
+
+        @include e(wrapper, $m: 'vertical') {
+            @extend %calendar-wrapper--vertical !optional;
+        }
+
+        @include e(pickers) {
+            @extend %pickers-display !optional;
+        }
+
+        @include e(pickers, $m: 'vertical') {
+            @extend %pickers-display--vertical !optional;
         }
 
         @include e(body) {
             @extend %body-display !optional;
+        }
+
+        @include e(body, $m: 'vertical') {
+            @extend %body-display--vertical !optional;
         }
 
         @include e(header-year) {
@@ -43,10 +59,6 @@
             @include e(header-date) {
                 @extend %header-date !optional;
                 @extend %header-date-vertical !optional;
-            }
-
-            @include e(body) {
-                @extend %body-display-vertical !optional;
             }
         }
 

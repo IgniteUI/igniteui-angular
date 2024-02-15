@@ -162,10 +162,10 @@ export class CalendarSampleComponent implements OnInit {
 	public setHeaderOrientation(args: string) {
 		if (this.calendar.hasHeader) {
 			if (args === 'vertical') {
-				this.calendar.vertical = this.calendar.hasHeader;
+                this.calendar.headerOrientation = 'vertical';
 				this.headerOrientation = 'vertical';
 			} else {
-				this.calendar.vertical = !this.calendar.hasHeader;
+                this.calendar.headerOrientation = 'horizontal';
 				this.headerOrientation = 'horizontal';
 			}
 		}
@@ -174,8 +174,10 @@ export class CalendarSampleComponent implements OnInit {
 	public setOrientation(args: string) {
 		if (args === 'vertical') {
 			this.orientation = 'vertical';
+            this.calendar.orientation = 'vertical';
 		} else {
 			this.orientation = 'horizontal';
+            this.calendar.orientation = 'horizontal';
 		}
 	}
 

@@ -980,22 +980,45 @@
         }
     }
 
+    %calendar-wrapper {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        outline-style: none;
+    }
+
+    %calendar-wrapper--vertical {
+        display: grid;
+        grid-template-rows: repeat(calc(var(--calendar-months) * 2), auto);
+    }
+
     %header-date-vertical {
         flex-flow: column nowrap;
         min-width: rem(168px);
     }
 
-    %body-display {
-        flex-grow: 1;
+    %pickers-display {
         display: flex;
+        flex-grow: 1;
+        grid-row: var(--calendar-row-start);
 
         > * {
             flex-grow: 1;
         }
     }
 
-    %body-display-vertical {
-        flex-flow: column nowrap;
+    %body-display {
+        display: flex;
+        flex-grow: 1;
+
+        > * {
+            flex-grow: 1;
+        }
+    }
+
+    %pickers-display--vertical,
+    %body-display--vertical  {
+        display: contents;
     }
 
     %views-navigation {
@@ -1022,6 +1045,7 @@
     %days-view {
         display: flex;
         gap: rem(6px);
+        grid-row: var(--calendar-row-start);
 
 
         @if $bootstrap-theme {

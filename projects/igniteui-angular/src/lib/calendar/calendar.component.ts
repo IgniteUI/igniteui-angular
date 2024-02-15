@@ -125,6 +125,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @Input({ transform: booleanAttribute })
     public vertical = false;
 
+    @Input()
+    public orientation: 'horizontal' | 'vertical' = 'horizontal';
+
+    @Input()
+    public headerOrientation: 'horizontal' | 'vertical' = 'horizontal';
+
 	/**
 	 * Sets/gets the number of month views displayed.
 	 * Default value is `1`.
@@ -166,7 +172,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	@HostBinding('class.igx-calendar--vertical')
 	public get styleVerticalClass(): boolean {
-		return this.vertical;
+		return this.headerOrientation === 'vertical';
 	}
 
 	/**
