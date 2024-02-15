@@ -626,7 +626,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.activeDate = date.native;
 
         const dates = this.monthViews.toArray().flatMap(view => view.dates.toArray()).filter(d => d.isCurrentMonth);
-        const isDateInView = dates.some(d => d.date.date.getTime() === this.activeDate.getTime());
+        const isDateInView = dates.some(d => d.date.equalTo(this.activeDate));
 
         if (!isDateInView) {
             delta > 0 ? this.nextPage(true) : this.previousPage(true);
@@ -673,7 +673,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             .flatMap((view) => view.dates.toArray())
             .filter((d) => d.isCurrentMonth && d.isFocusable);
 
-        this.activeDate = dates.at(0).date.date;
+        this.activeDate = dates.at(0).date.native;
     }
 
     private onKeydownEnd(event: KeyboardEvent) {
@@ -683,7 +683,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             .flatMap((view) => view.dates.toArray())
             .filter((d) => d.isCurrentMonth && d.isFocusable);
 
-        this.activeDate = dates.at(-1).date.date;
+        this.activeDate = dates.at(-1).date.native;
     }
 
 	/**
@@ -756,6 +756,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                 }
 
                 break;
+
             case "year":
                 if (direction === ScrollDirection.PREV) {
                     this.viewDate = this.calendarModel.getPrevYear(this.viewDate)
@@ -766,6 +767,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                 }
 
                 break;
+
             case "decade":
                 if (direction === ScrollDirection.PREV) {
                     this.viewDate = this.calendarModel.getPrevYears(this.viewDate)
@@ -976,7 +978,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         requestAnimationFrame(() => {
             this.resetActiveDate();
-            this.focusDay();
         });
 	}
 
@@ -1081,7 +1082,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		const dates = this.getMonthDays();
 
         for (let i = 0; i < dates.length - 1; i++) {
-            const date = dates[i].date.date.getDate();
+            const date = dates[i].date.date;
             const activeDate = new Date(this.activeDate).getDate();
 
             if (activeDate === date) {
@@ -1091,7 +1092,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
 
         if (dates[idx]) {
-            this.activeDate = dates[idx].date.date;
+            this.activeDate = dates[idx].date.native;
         }
 	}
 
@@ -1208,15 +1209,5 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.monthViews.forEach(m => {
             m.deselectMultipleInMonth(value);
         });
-    }
-
-    private focusDay() {
-        const day = this.getMonthDays().find(
-            d => d.date.date.getDate() === this.activeDate.getDate()
-        );
-
-        if (day) {
-            day.nativeElement.focus();
-        }
     }
 }

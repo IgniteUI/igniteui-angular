@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute } from '@angular/core';
-import { CalendarSelection, ICalendarDate, isDateInRanges } from '../calendar';
+import { CalendarSelection } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
+import { CalendarDay } from '../common/model'
+import { areSameMonth, isNextMonth, isPreviousMonth, isDateInRanges } from '../common/helpers';
 
 /**
  * @hidden
@@ -12,7 +14,10 @@ import { DateRangeDescriptor } from '../../core/dates';
 })
 export class IgxDayItemComponent {
     @Input()
-    public date: ICalendarDate;
+    public date: CalendarDay;
+
+    @Input()
+    public viewDate: Date;
 
     @Input()
     public selection: string;
@@ -37,9 +42,6 @@ export class IgxDayItemComponent {
     public disabledDates: DateRangeDescriptor[];
 
     @Input()
-    public outOfRangeDates: DateRangeDescriptor[];
-
-    @Input()
     public specialDates: DateRangeDescriptor[];
 
     @Input({ transform: booleanAttribute })
@@ -60,7 +62,7 @@ export class IgxDayItemComponent {
     public isWithinPreviewRange = false;
 
     @Output()
-    public dateSelection = new EventEmitter<ICalendarDate>();
+    public dateSelection = new EventEmitter<CalendarDay>();
 
     @Output()
     public mouseEnter = new EventEmitter<void>();
@@ -69,15 +71,18 @@ export class IgxDayItemComponent {
     public mouseLeave = new EventEmitter<void>();
 
     public get isCurrentMonth(): boolean {
-        return this.date.isCurrentMonth;
+        const isCurrent = areSameMonth(this.date, this.viewDate);
+        return isCurrent;
     }
 
     public get isPreviousMonth(): boolean {
-        return this.date.isPrevMonth;
+        const isPrevious = isPreviousMonth(this.date, this.viewDate);
+        return isPrevious;
     }
 
     public get isNextMonth(): boolean {
-        return this.date.isNextMonth;
+        const isNext = isNextMonth(this.date, this.viewDate);
+        return isNext;
     }
 
     public get nativeElement() {
@@ -95,7 +100,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--inactive')
     public get isInactive(): boolean {
-        return this.date.isNextMonth || this.date.isPrevMonth;
+        return !this.isCurrentMonth;
     }
 
     @HostBinding('class.igx-days-view__date--hidden')
@@ -105,43 +110,24 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--current')
     public get isToday(): boolean {
-        const today = new Date(Date.now());
-        const date = this.date.date;
-
-        if (date.getDate() === today.getDate()) {
-            this.nativeElement.setAttribute('aria-current', 'date');
-        }
-
-        return (date.getFullYear() === today.getFullYear() &&
-            date.getMonth() === today.getMonth() &&
-            date.getDate() === today.getDate()
-        );
+        return this.date.equalTo(CalendarDay.today);
     }
 
     @HostBinding('class.igx-days-view__date--weekend')
     public get isWeekend(): boolean {
-        const day = this.date.date.getDay();
-        return day === 0 || day === 6;
+        return this.date.weekend;
     }
 
     public get isDisabled(): boolean {
-        if (this.disabledDates === null) {
+        if (!this.disabledDates) {
             return false;
         }
 
-        return isDateInRanges(this.date.date, this.disabledDates);
-    }
-
-    public get isOutOfRange(): boolean {
-        if (!this.outOfRangeDates) {
-            return false;
-        }
-
-        return isDateInRanges(this.date.date, this.outOfRangeDates);
+        return isDateInRanges(this.date, this.disabledDates);
     }
 
     public get isFocusable(): boolean {
-        return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
+        return this.isCurrentMonth && !this.isHidden && !this.isDisabled;
     }
 
     protected onMouseEnter() {
@@ -164,16 +150,16 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--special')
     public get isSpecial(): boolean {
-        if (this.specialDates === null) {
+        if (!this.specialDates) {
             return false;
         }
 
-        return isDateInRanges(this.date.date, this.specialDates);
+        return isDateInRanges(this.date, this.specialDates);
     }
 
     @HostBinding('class.igx-days-view__date--disabled')
     public get isDisabledCSS(): boolean {
-        return this.isHidden || this.isDisabled || this.isOutOfRange;
+        return this.isHidden || this.isDisabled;
     }
 
     @HostBinding('class.igx-days-view__date--single')

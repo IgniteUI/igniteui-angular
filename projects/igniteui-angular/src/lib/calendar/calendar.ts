@@ -1,4 +1,4 @@
-import { DateRangeDescriptor, DateRangeType } from '../core/dates';
+import { DateRangeDescriptor } from '../core/dates';
 import { mkenum } from '../core/utils';
 
 /**
@@ -88,78 +88,6 @@ export const monthRange = (year: number, month: number): number[] => {
     return [day, nDays];
 };
 
-export const isDateInRanges = (date: Date, ranges: DateRangeDescriptor[]): boolean => {
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    const dateInMs = date.getTime();
-
-    if (!ranges) {
-        return false;
-    }
-
-    for (const descriptor of ranges) {
-        const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
-            r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
-        switch (descriptor.type) {
-            case (DateRangeType.After):
-                if (dateInMs > dRanges[0].getTime()) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Before):
-                if (dateInMs < dRanges[0].getTime()) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Between):
-                const dRange = dRanges.map(d => d.getTime());
-                const min = Math.min(dRange[0], dRange[1]);
-                const max = Math.max(dRange[0], dRange[1]);
-                if (dateInMs >= min && dateInMs <= max) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Specific):
-                const datesInMs = dRanges.map(d => d.getTime());
-                for (const specificDateInMs of datesInMs) {
-                    if (dateInMs === specificDateInMs) {
-                        return true;
-                    }
-                }
-
-                break;
-            case (DateRangeType.Weekdays):
-                const day = date.getDay();
-                if (day % 6 !== 0) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Weekends):
-                const weekday = date.getDay();
-                if (weekday % 6 === 0) {
-                    return true;
-                }
-
-                break;
-            default:
-                return false;
-        }
-    }
-
-    return false;
-};
-
-export interface ICalendarDate {
-    date: Date;
-    isCurrentMonth: boolean;
-    isPrevMonth: boolean;
-    isNextMonth: boolean;
-    isDisabled: boolean;
-}
-
 export interface IFormattedParts {
     value: string;
     literal?: string;
@@ -191,7 +119,6 @@ export enum WEEKDAYS {
 }
 
 export class Calendar {
-
     private _firstWeekDay: WEEKDAYS | number;
     private _disabledDates: DateRangeDescriptor[];
 
@@ -228,52 +155,11 @@ export class Calendar {
      */
     public weekdays(): number[] {
         const res = [];
+
         for (const i of range(this.firstWeekDay, this.firstWeekDay + 7)) {
             res.push(i % 7);
         }
-        return res;
-    }
 
-    /**
-     * Returns the date values for one month. It will always iterate throught
-     * complete weeks, so it will contain dates outside the specified month.
-     *
-     * @param year
-     * @param month
-     * @param boolean
-     * @returns
-     *
-     * @memberof Calendar
-     */
-    public monthDates(year: number, month: number, extraWeek = false): ICalendarDate[] {
-        let date = new Date(year, month, 1);
-        let days = (date.getDay() - this.firstWeekDay) % 7;
-        if (days < 0) {
-            days = 7 - Math.abs(days);
-        }
-        date = this.timedelta(date, 'day', -days);
-        const res = [];
-        let value: ICalendarDate;
-
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-
-            value = this.generateICalendarDate(date, year, month);
-            res.push(value);
-
-            date = this.timedelta(date, 'day', 1);
-
-            if ((date.getMonth() !== month) && (date.getDay() === this.firstWeekDay)) {
-                if (extraWeek && res.length <= 35) {
-                    for (const _ of range(0, 7)) {
-                        value = this.generateICalendarDate(date, year, month);
-                        res.push(value);
-                        date = this.timedelta(date, 'day', 1);
-                    }
-                }
-                break;
-            }
-        }
         return res;
     }
 
@@ -299,27 +185,6 @@ export class Calendar {
 
 		return result;
 	}
-
-    /**
-     * Returns a matrix (array of arrays) representing a month's calendar.
-     * Each row represents a full week; week entries are ICalendarDate objects.
-     *
-     * @param year
-     * @param month
-     * @returns
-     *
-     * @memberof Calendar
-     */
-    public monthDatesCalendar(year: number, month: number, extraWeek = false): ICalendarDate[][] {
-        const dates = this.monthDates(year, month, extraWeek);
-        const result = [];
-
-        for (const i of range(0, dates.length, 7)) {
-            result.push(dates.slice(i, i + 7));
-        }
-
-        return result;
-    }
 
     public timedelta(date: Date, interval: string, units: number): Date {
         const ret = new Date(date);
@@ -361,6 +226,7 @@ export class Calendar {
             default:
                 throw new Error('Invalid interval specifier');
         }
+
         return ret;
     }
 
@@ -432,92 +298,5 @@ export class Calendar {
 
     public getPrevYears(date: Date) {
         return this.timedelta(date, TimeDeltaInterval.Year, -15);
-    }
-
-    public getWeekNumber(date: Date, weekStart: WEEKDAYS | number) {
-        // current year
-        const yearStart = new Date(date.getFullYear(), 0, 1);
-        // first day number of the current year
-        let firstDayOfTheYear = yearStart.getDay() - weekStart;
-        firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
-        const dayInMilSeconds = 86400000;
-        // day number in the year
-        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() -
-        (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
-        let weekNumber: number;
-        // if 01 Jan is Monday to Thursday, is considered 1st week of the year
-        // if 01 Jan starts Friday to Sunday, is considered last week of previous year
-        if (firstDayOfTheYear < 4) {
-            // when calculating the week number we add 1 for the 1st week
-            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
-        } else {
-            // calculating the week number
-            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7);
-        }
-        // if the week number is greater than week 52
-        if (weekNumber > 52) {
-            // next year
-            const nextYear = new Date(date.getFullYear() + 1, 0, 1);
-            // first day of the next year
-            let nextYearFirstDay = nextYear.getDay() - weekStart;
-            nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
-            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year
-            // if 01 Jan is Friday to Sunday, is considered 53rd week of the current year
-            weekNumber = nextYearFirstDay < 4 ? 1 : 53;
-        }
-        return weekNumber;
-    }
-
-    public getClosestDate(dates: ICalendarDate[], target: Date, delta: number): Date | null {
-        let counter = 0;
-
-        while (counter < dates.length) {
-            const nextDate = new Date(target);
-            nextDate.setDate(nextDate.getDate() + delta * (counter + 1));
-            nextDate.setHours(0, 0, 0, 0);
-
-            for (const day of dates) {
-                const compareDate = new Date(day.date);
-                compareDate.setHours(0, 0, 0, 0);
-
-                if (compareDate.getTime() === nextDate.getTime()) {
-                    if (!day.isDisabled) return day.date;
-                    else break; // Found disabled target date, adjust and try again
-                }
-            }
-
-            counter++;
-        }
-
-        return null;
-    }
-
-    private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
-        return {
-            date,
-            isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
-            isNextMonth: this.isNextMonth(date, year, month),
-            isPrevMonth: this.isPreviousMonth(date, year, month),
-            isDisabled: this.isDisabled(date)
-        };
-    }
-
-    private isPreviousMonth(date: Date, year: number, month: number): boolean {
-        if (date.getFullYear() === year) {
-            return date.getMonth() < month;
-        }
-        return date.getFullYear() < year;
-    }
-
-    private isNextMonth(date: Date, year: number, month: number): boolean {
-        if (date.getFullYear() === year) {
-            return date.getMonth() > month;
-        }
-
-        return date.getFullYear() > year;
-    }
-
-    private isDisabled(date: Date): boolean {
-        return isDateInRanges(date, this.disabledDates);
     }
 }

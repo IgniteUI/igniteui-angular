@@ -37,8 +37,9 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges, IFormattingViews, IFormattingOptions
+     IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
+import { isDateInRanges } from '../calendar/common/helpers';
 import {
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
 } from '../input-group/public_api';
@@ -910,7 +911,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
                 this._calendar?.daysView?.dates
-                    .find(d => d.date.date.getTime() === this._targetViewDate.getTime())?.nativeElement.focus();
+                    .find(d => d.date.timestamp === this._targetViewDate.getTime())?.nativeElement.focus();
             }
         });
 

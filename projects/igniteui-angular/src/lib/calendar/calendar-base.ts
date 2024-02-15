@@ -1,5 +1,5 @@
 import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
-import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
+import { WEEKDAYS, Calendar, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
@@ -9,6 +9,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
+import { isDateInRanges } from './common/helpers';
 
 /** @hidden @internal */
 @Directive({
@@ -541,7 +542,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     public isDateDisabled(date: Date) {
-        if (this.disabledDates === null) {
+        if (!this.disabledDates) {
             return false;
         }
 

@@ -7,43 +7,43 @@
     </span>
 </div>
 
-<div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker"
+<div *ngFor="let week of monthWeeks; last as isLast; index as i; trackBy: rowTracker"
      class="igx-days-view__row" role="row">
 
     <div *ngIf="showWeekNumbers" class="igx-days-view__date igx-days-view__date--week-number">
 
         <span role="rowheader" class="igx-days-view__date-inner igx-days-view__date-inner--week-number">
-            {{getWeekNumber(week[0].date)}}
+            {{ getWeekNumber(week[0]) }}
         </span>
 
     </div>
 
-    <!-- <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item> -->
     <igx-day-item
+        #item
         class="igx-days-view__date"
         *ngFor="let day of week; trackBy: dateTracker"
         [attr.aria-selected]="isSelected(day)"
         role="gridcell"
-        [attr.aria-disabled]="isDateDisabled(day.date)"
-        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.date.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.date.toDateString()"
+        [attr.aria-disabled]="isDateDisabled(day.native)"
+        [attr.aria-label]="isFirstInRange(day) ? day.native.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.native.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.native.toDateString()"
         [date]="day"
+        [viewDate]="viewDate"
         [selection]="selection"
         [selected]="isSelected(day)"
         [isActive]="isActiveDate(day)"
         [isLastInRange]="isLastInRange(day)"
         [isFirstInRange]="isFirstInRange(day)"
-        [isWithinRange]="isWithinRange(day.date, true)"
-        [isWithinPreviewRange]="isWithinPreviewRange(day.date)"
+        [isWithinRange]="isWithinRange(day.native, true)"
+        [isWithinPreviewRange]="isWithinPreviewRange(day.native)"
         [disabledDates]="disabledDates"
         [specialDates]="specialDates"
-        [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
         [attr.tabindex]="-1"
-        (mousedown)="handleDateClick($event, day)"
-        (mouseEnter)="changePreviewRange(day.date)"
+        (mousedown)="handleDateClick($event, item)"
+        (mouseEnter)="changePreviewRange(day.native)"
         (mouseLeave)="clearPreviewRange()"
         >
-        {{ formattedDate(day.date) }}
+        {{ formattedDate(day.native) }}
     </igx-day-item>
 </div>
 
