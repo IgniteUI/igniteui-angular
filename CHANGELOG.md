@@ -35,6 +35,7 @@ All notable changes for each version of this project will be documented in this 
     - Unified logic for vertical and horizontal virtualization such as - caching, updating, max browser size exceeding.
     - Added new method - `addScroll` that can shift the scroll thumb by the specified amount in pixels (negative number to scroll to previous, positive to scroll next). Similar to `addScrollTop` but works for both vertical and horizontal virtualization.
 - `IgxTextHighlightDirective` is now correctly tree-shaken out of the bundle when not used.
+    - **Breaking Change** A new `IgxTextHighlightService` is now exposed and methods `setActiveHighlight` and `clearActiveHighlight` have been moved to it.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Tree-shaking of the grids has been improved:
         - The `igx-paginator`, `igx-grid-toolbar` and `igx-action-strip` components should now correctly tree-shake when not used in a grid.
