@@ -56,14 +56,12 @@
             <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData"
                 displayDensity="compact" [allowFiltering]="true" [moving]="true">
                 <igx-column [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
-                <igx-column-group header="Employee">
-                    <igx-column [sortable]="true" [resizable]="true" field="Country">
-                    </igx-column>
+                <igx-column-group [pinned]="false" header="Employee">
+                    <igx-column [sortable]="true" [resizable]="true" field="Country"></igx-column>
                     <igx-column-group header="Employee Names" [collapsible]="true">
-                        <igx-column [pinned]="false" [sortable]="true" [resizable]="true" field="FirstName"
-                            [visibleWhenCollapsed]="true"></igx-column>
-                        <igx-column [sortable]="true" [resizable]="true" field="LastName"
-                            [visibleWhenCollapsed]="false"></igx-column>
+                        <igx-column [pinned]="false" [sortable]="true" [resizable]="true"
+                            field="FirstName" [visibleWhenCollapsed]="true"></igx-column>
+                        <igx-column [sortable]="true" [resizable]="true" field="LastName" [visibleWhenCollapsed]="false"></igx-column>
                     </igx-column-group>
                 </igx-column-group>
                 <igx-column-group header="Additional Information">
