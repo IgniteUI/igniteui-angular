@@ -2,7 +2,6 @@ import {
     AfterViewInit,
     Directive,
     ElementRef,
-    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
@@ -13,6 +12,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { compareMaps } from '../../core/utils';
+import { IgxTextHighlightService } from './text-highlight.service';
 
 export interface IBaseSearchInfo {
     searchText: string;
@@ -49,9 +49,6 @@ export interface IActiveHighlightInfo {
     standalone: true
 })
 export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
-    public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
-    private static onActiveElementChanged = new EventEmitter<string>();
-
     /**
      * Determines the `CSS` class of the highlight elements.
      * This allows the developer to provide custom `CSS` to customize the highlight.
@@ -202,8 +199,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     private _defaultCssClass = 'igx-highlight';
     private _defaultActiveCssClass = 'igx-highlight--active';
 
-    constructor(private element: ElementRef, public renderer: Renderer2) {
-        IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
+    constructor(private element: ElementRef, private service: IgxTextHighlightService, private renderer: Renderer2) {
+        this.service.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
                     this.deactivate();
@@ -211,25 +208,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 this.activateIfNecessary();
             }
         });
-    }
-
-    /**
-     * Activates the highlight at a given index.
-     * (if such index exists)
-     */
-    public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
-        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
-        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
-    }
-
-    /**
-     * Clears any existing highlight.
-     */
-    public static clearActiveHighlight(groupName) {
-        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
-            index: -1
-        });
-        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
     /**
@@ -267,8 +245,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public ngAfterViewInit() {
         this.parentElement = this.renderer.parentNode(this.element.nativeElement);
 
-        if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
-            IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
+        if (this.service.highlightGroupsMap.has(this.groupName) === false) {
+            this.service.highlightGroupsMap.set(this.groupName, {
                 index: -1
             });
         }
@@ -338,7 +316,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * Activates the highlight if it is on the currently active row and column.
      */
     public activateIfNecessary(): void {
-        const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
+        const group = this.service.highlightGroupsMap.get(this.groupName);
 
         if (group.index >= 0 && group.column === this.column && group.row === this.row && compareMaps(this.metadata, group.metadata)) {
             this.activate(group.index);
