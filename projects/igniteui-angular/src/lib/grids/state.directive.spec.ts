@@ -389,7 +389,7 @@ describe('IgxGridState - input properties #grid', () => {
         let gridState = state.getState(true, 'columns');
         expect(gridState).toBe(initialState);
 
-        state.setState(columnsStateObject); // set new state
+        state.setState(columnsStateObject);
         gridState = state.getState(false, 'columns') as IGridState;
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
         gridState = state.getState(true, 'columns');
