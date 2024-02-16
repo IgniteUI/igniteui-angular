@@ -43,7 +43,7 @@ import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
@@ -96,8 +96,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public islandPaginatorTemplate: TemplateRef<any>;
 
     /** @hidden @internal **/
-    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
-    public actionStrips: QueryList<IgxActionStripComponent>;
+    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
+    public actionStrips: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
@@ -331,7 +331,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         // Create the child toolbar if the parent island has a toolbar definition
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
-                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
             grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
                 .subscribe(() => {
                     this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());

@@ -10,9 +10,22 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `toggleNodeOnClick` that determines whether clicking over a node will change its expanded state or not. Set to `false` by default.
 - `IgxPivotGrid`
     - `IPivotDimension` interface now exposes a property called `displayName` similar to the one in the `IPivotValue` interface. This property is optional and will be displayed inside the chips for rows and columns in the `IgxPivotGrid`. If the `displayName` property is not set, `memberName` will be used as a fallback.
+- `IgxHierarchicalGrid`, `IgxGridToolbar`
+    - The declaration of child layout toolbar templates no longer require explicit grid reference so the following:
+        ```html
+        <igx-row-island>
+          <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid">
+        ```
+        can be simplified like:
+        ```html
+        <igx-row-island>
+          <igx-grid-toolbar *igxGridToolbar>
+        ```
+    - With this change the `grid` property of the `IgxGridToolbar` has been deprecated as it's no longer needed and will be removed in a future version.
 - New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 - `IgxButton`
     - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. However, the event is no longer being emitted on initialization. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
+
 
 ### General
 - `igxButton`:
@@ -24,6 +37,8 @@ All notable changes for each version of this project will be documented in this 
 
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Tree-shaking of the grids has been improved:
+        - The `igx-paginator`, `igx-grid-toolbar` and `igx-action-strip` components should now correctly tree-shake when not used in a grid.
     - **Breaking Changes**
         - `rowAdd` and `rowDelete` events now emit event argument of type `IRowDataCancelableEventArgs` instead of `IGridEditEventArgs`. The two interfaces are still compatible, however redundant for these events properties `cellID`, `newValue`, `oldValue`, `isAddRow` are deprecated in `IRowDataCancelableEventArgs` and will be removed in a future version. Switching to the correct new interfaces should reveal any deprecated use that can be safely removed.
     - **Deprecations**

@@ -296,6 +296,16 @@
             }
         }
 
+        @if $variant != 'fluent' {
+            &:focus,
+            &:focus-visible {
+                &:hover {
+                    color: var-get($theme, 'item-hover-text-color');
+                    background: var-get($theme, 'item-hover-background');
+                }
+            }
+        }
+
         @if $variant == 'fluent' {
             min-width: rem(50px);
             min-height: rem(32px);
@@ -309,17 +319,20 @@
                 --igx-icon-size: #{$icon-size};
             }
 
-            &:focus {
+            &:focus,
+            &:focus-visible {
                 background: var-get($theme, 'item-background');
-            }
 
-            &:active {
-                background: var-get($theme, 'item-focused-background');
+                &:hover {
+                    background: var-get($theme, 'item-hover-background');
+                }
+
+                &:active {
+                    background: var-get($theme, 'item-focused-background');
+                }
             }
 
             &:focus-visible {
-                background: var-get($theme, 'item-background');
-    
                 &::after {
                     content: '';
                     position: absolute;
@@ -329,14 +342,6 @@
                     width: calc(100% - (#{$outline-btn-indent} * 2));
                     height: calc(100% - (#{$outline-btn-indent} * 2));
                     box-shadow: 0 0 0 rem(1px) var-get($theme, 'item-focused-border-color');
-                }
-    
-                &:hover {
-                    background: var-get($theme, 'item-hover-background');
-                }
-    
-                &:active {
-                    background: var-get($theme, 'item-focused-background');
                 }
             }
         }
@@ -452,6 +457,20 @@
             }
         }
 
+        @if $variant != 'fluent' {
+            &:focus,
+            &:focus-visible {
+                &:hover {
+                    color: var-get($theme, 'item-selected-text-color');
+                    background: var-get($theme, 'item-selected-hover-background');
+                }
+
+                &:active {
+                    background: var-get($theme, 'item-selected-hover-background');
+                }
+            }
+        }
+
         @if $variant == 'fluent' {
             &:hover,
             &:focus,
@@ -463,6 +482,7 @@
                 background: var-get($theme, 'item-selected-hover-background');
             }
 
+            &:focus,
             &:focus-visible {
                 &:hover {
                     background: var-get($theme, 'item-selected-background');

@@ -2660,6 +2660,12 @@
         [igxIconButton] {
             --ig-size: 1;
         }
+
+        @if ($variant == 'bootstrap') {
+            [igxButton] {
+                margin: rem(4px);
+            }
+        }
     }
 
     %igx-grid__filtering-dropdown-items {
