@@ -156,12 +156,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @Output()
-    public monthsViewBlur = new EventEmitter<any>();
-
-    /**
-     * @hidden
-     */
-    @Output()
     public previewRangeDateChange = new EventEmitter<any>();
 
     /**
@@ -169,17 +163,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
-
-    /**
-     * @hidden
-     */
-    public nextMonthView: IgxDaysViewComponent;
-
-    /** @hidden */
-    public prevMonthView: IgxDaysViewComponent;
-
-    /** @hidden */
-    public shouldResetDate = true;
 
     private _activeDate: Date;
     private _previewRangeDate: Date;
@@ -412,32 +395,36 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     public isSelected(date: CalendarDay): boolean {
         const dates = this.value as Date[];
-        const hasValue = this.value || (Array.isArray(this.value) && this.value.length > 0);
+        const hasValue = this.value || (Array.isArray(this.value) && this.value.length === 1);
 
-        if (this.isDateDisabled(date.native) || !hasValue) {
+        if (isDateInRanges(date, this.disabledDates)) {
             return false;
         }
 
         if (this.selection === CalendarSelection.SINGLE) {
-            return date.equalTo(this.value as Date);
+            return !!this.value && date.equalTo(this.value as Date);
         }
 
-        if (this.selection === CalendarSelection.RANGE && dates.length === 1) {
-            return date.equalTo(this.getDateOnly(dates.at(0)));
+        if (!hasValue) {
+            return false;
         }
 
-        if (this.selection === CalendarSelection.MULTI) {
-            const start = this.getDateOnly(dates.at(0));
-            const end = this.getDateOnly(dates.at(-1));
+        if (this.selection === CalendarSelection.MULTI && dates.length > 0) {
+            return isDateInRanges(date, [
+                {
+                    type: DateRangeType.Specific,
+                    dateRange: dates,
+                },
+            ]);
+        }
 
-            if (this.isWithinRange(date.native, false, start, end)) {
-                const currentDate = dates.find(day => date.equalTo(day));
-                return !!currentDate;
-            } else {
-                return false;
-            }
-        } else {
-            return this.isWithinRange(date.native, true);
+        if (this.selection === CalendarSelection.RANGE && dates.length > 0) {
+            return isDateInRanges(date, [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [dates.at(0), dates.at(-1)],
+                },
+            ]);
         }
     }
 
@@ -528,7 +515,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     private get isSingleSelection(): boolean {
-        return this.selection === CalendarSelection.SINGLE;
+        return this.selection !== CalendarSelection.RANGE;
     }
 
     /**

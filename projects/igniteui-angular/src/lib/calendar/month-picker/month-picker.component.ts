@@ -16,6 +16,7 @@ import { IgxYearsViewComponent } from "../years-view/years-view.component";
 import { IgxDaysViewComponent } from "../days-view/days-view.component";
 import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxCalendarView } from "../calendar";
+import { CalendarDay } from "../common/model";
 
 let NEXT_ID = 0;
 @Component({
@@ -261,13 +262,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
     /**
      * @hidden
      */
-    public updateDate(event: Date) {
+    public updateDate(date: Date) {
         this.previousViewDate = this.viewDate;
-        this.viewDate = this.calendarModel.getFirstViewDate(
-            event,
-            "year",
-            this.activeViewIdx,
-        );
+        this.viewDate = CalendarDay.from(date).add('year', -this.activeViewIdx).native;
 
         if (this.isDefaultView) {
             this.viewDateChanged.emit({

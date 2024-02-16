@@ -268,22 +268,6 @@ export class Calendar {
         return result;
     }
 
-    public getFirstViewDate(date: Date, interval: string, activeViewIdx: number) {
-        return this.timedelta(date, interval, -activeViewIdx);
-    }
-
-    public getDateByView(date: Date, interval: string, activeViewIdx: number) {
-        return this.timedelta(date, interval, activeViewIdx);
-    }
-
-    public getNextMonth(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Month, 1);
-    }
-
-    public getPrevMonth(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Month, -1);
-    }
-
     public getNextYear(date: Date) {
         return this.timedelta(date, TimeDeltaInterval.Year, 1);
     }

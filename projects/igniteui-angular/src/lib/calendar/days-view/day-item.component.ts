@@ -106,7 +106,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--selected')
     public get isSelectedCSS(): boolean {
-        return !this.isDisabled && this.selected && !this.isInactive;
+        return !this.isDisabled && this.selected;
     }
 
     @HostBinding('class.igx-days-view__date--inactive')
@@ -151,12 +151,12 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--range')
     public get isWithinRangeCSS(): boolean {
-        return !this.isSingleSelection && this.isWithinRange && !this.isInactive;
+        return !this.isSingleSelection && this.isWithinRange;
     }
 
     @HostBinding('class.igx-days-view__date--range-preview')
     public get isWithinPreviewRangeCSS(): boolean {
-        return !this.isSingleSelection && this.isWithinPreviewRange && !this.isInactive;
+        return !this.isSingleSelection && this.isWithinPreviewRange;
     }
 
     @HostBinding('class.igx-days-view__date--special')

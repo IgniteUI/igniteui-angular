@@ -18,7 +18,7 @@
         role="button"
         [attr.aria-label]="(getViewDate(obj.index) | date: 'LLLL') + ' ' + resourceStrings.igx_calendar_select_month"
         (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
-        (click)="onActiveViewYear(getViewDate(obj.index), obj.index)"
+        (mousedown)="onActiveViewYear(getViewDate(obj.index), obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
@@ -67,8 +67,8 @@
                     *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonthYear; context: getContext(i)">
             </ng-container>
         </div>
-        <div 
-            class="igx-calendar-picker__nav" 
+        <div
+            class="igx-calendar-picker__nav"
             *ngIf="this.orientation === 'horizontal' ? i === monthsViewNumber - 1 : i === 0"
         >
             <div
@@ -211,9 +211,9 @@
     </ng-container>
 </span>
 
-<div 
-    #wrapper 
-    style="--calendar-months: {{ monthsViewNumber }}" 
+<div
+    #wrapper
+    style="--calendar-months: {{ monthsViewNumber }}"
     [tabIndex]="0"
     class="igx-calendar__wrapper"
     [class.igx-calendar__wrapper--vertical]="orientation === 'vertical'"
@@ -235,10 +235,7 @@
     </section>
 
     <section class="igx-calendar__body" [class.igx-calendar__body--vertical]="orientation === 'vertical'">
-        <ng-container
-            *ngIf="isDefaultView"
-            (pointerdown)="suppressBlur()"
-        >
+        <ng-container *ngIf="isDefaultView">
             <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
                 <igx-days-view
                     #days
@@ -263,8 +260,7 @@
                     (swiperight)="previousPage()"
                     (swipeleft)="nextPage()"
                     (pageChanged)="updateDay($event)"
-                    (dateSelection)="childClicked($event)"
-                    (monthsViewBlur)="resetActiveDate()">
+                    (dateSelection)="childClicked($event)">
                 </igx-days-view>
             </ng-container>
         </ng-container>

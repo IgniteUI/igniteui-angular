@@ -26,13 +26,12 @@ import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
-import { interval, Subscription } from 'rxjs';
+import { interval } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from '../icon/icon.component';
-import { IgxDayItemComponent } from './days-view/day-item.component';
-import { getClosestActiveDate } from './common/helpers';
+import { areSameMonth, getClosestActiveDate, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 
 let NEXT_ID = 0;
@@ -403,12 +402,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 */
 	private _monthsViewNumber = 1;
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	private _monthViewsChanges$: Subscription;
-
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
         event.stopPropagation();
@@ -429,177 +422,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         return this._showActiveDay;
     }
 
-	// /**
-	//  * Keyboard navigation of the calendar
-	//  *
-	//  * @hidden
-	//  * @internal
-	//  */
-	// @HostListener('keydown.pagedown', ['$event'])
-	// @HostListener('keydown.pageup', ['$event'])
-	// public onKeydownPageDown(event: KeyboardEvent) {
-	// 	event.preventDefault();
-	// 	if (!this.isDefaultView) {
-	// 		return;
-	// 	}
-	//
-	// 	const isPageDown = event.key==='PageDown';
-	// 	const step = isPageDown ? 1: -1;
-	// 	let monthView = this.daysView as IgxDaysViewComponent;
-	// 	let activeDate;
-	//
-	// 	while (!activeDate && monthView) {
-	// 		activeDate = monthView.dates.find((date) => date.nativeElement === document.activeElement);
-	// 		monthView = monthView.nextMonthView;
-	// 	}
-	//
-	// 	if (activeDate) {
-	// 		this.nextDate = new Date(activeDate.date.date);
-	//
-	// 		let year = this.nextDate.getFullYear();
-	//
-	// 		let month = this.nextDate.getMonth() + step;
-	//
-	// 		if (isPageDown) {
-	// 			if (month > 11) {
-	// 				month = 0;
-	// 				year += step;
-	// 			}
-	// 		} else {
-	// 			if (month < 0) {
-	// 				month = 11;
-	// 				year += step;
-	// 			}
-	// 		}
-	//
-	// 		const range = monthRange(this.nextDate.getFullYear(), month);
-	//
-	// 		let day = this.nextDate.getDate();
-	//
-	// 		if (day > range[1]) {
-	// 			day = range[1];
-	// 		}
-	//
-	// 		this.nextDate.setDate(day);
-	// 		this.nextDate.setMonth(month);
-	// 		this.nextDate.setFullYear(year);
-	//
-	// 		this.callback = (next) => {
-	// 			monthView = this.daysView as IgxDaysViewComponent;
-	// 			let dayItem;
-	//
-	// 			while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
-	// 				dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
-	// 				monthView = monthView.nextMonthView;
-	// 			}
-	//
-	// 			if (dayItem && dayItem.isFocusable) {
-	// 				dayItem.nativeElement.focus();
-	// 			}
-	// 		};
-	// 	}
-	//
-	// 	if (isPageDown) {
-	// 		if (event.repeat) {
-	// 			requestAnimationFrame(() => this.nextPage(true));
-	// 		} else {
-	// 			this.nextPage(true);
-	// 		}
-	// 	} else {
-	// 		if (event.repeat) {
-	// 			requestAnimationFrame(() => this.previousPage(true));
-	// 		} else {
-	// 			this.previousPage(true);
-	// 		}
-	// 	}
-	// }
-
-	// /**
-	//  * Keyboard navigation of the calendar
-	//  *
-	//  * @hidden
-	//  * @internal
-	//  */
-	// @HostListener('keydown.shift.pageup', ['$event'])
-	// @HostListener('keydown.shift.pagedown', ['$event'])
-	// public onKeydownShiftPageUp(event: KeyboardEvent) {
-	// 	event.preventDefault();
-	//
-	// 	if (!this.isDefaultView) {
-	// 		return;
-	// 	}
-	//
-	// 	const isPageDown = event.key === 'PageDown';
-	// 	const step = isPageDown ? 1: -1;
-	// 	this.previousViewDate = this.viewDate;
-	// 	this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
-	//
-	// 	this.isKeydownTrigger = true;
-	//
-	// 	let monthView = this.daysView as IgxDaysViewComponent;
-	// 	let activeDate;
-	//
-	// 	while (!activeDate && monthView) {
-	// 		activeDate = monthView.dates.find((date) => date.nativeElement===document.activeElement);
-	// 		monthView = monthView.nextMonthView;
-	// 	}
-	//
-	// 	if (activeDate) {
-	// 		this.nextDate = new Date(activeDate.date.date);
-	//
-	// 		const year = this.nextDate.getFullYear() + step;
-	//
-	// 		const range = monthRange(year, this.nextDate.getMonth());
-	//
-	// 		let day = this.nextDate.getDate();
-	// 		if (day > range[1]) {
-	// 			day = range[1];
-	// 		}
-	//
-	// 		this.nextDate.setDate(day);
-	// 		this.nextDate.setFullYear(year);
-	//
-	// 		this.callback = (next) => {
-	// 			monthView = this.daysView as IgxDaysViewComponent;
-	// 			let dayItem;
-	// 			while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
-	// 				dayItem = monthView.dates.find((d) => d.date.date.getTime()===next.getTime());
-	// 				monthView = monthView.nextMonthView;
-	// 			}
-	// 			if (dayItem && dayItem.isFocusable) {
-	// 				dayItem.nativeElement.focus();
-	// 			}
-	// 		};
-	// 	}
-	// }
-	//
-	// /**
-	//  * Stop continuous navigation on mouseup event
-	//  *
-	//  * @hidden
-	//  * @internal
-	//  */
-	// @HostListener('document:mouseup', ['$event'])
-	// public onMouseUp(event: KeyboardEvent) {
-	// 	if (this.pageScrollDirection !== ScrollDirection.NONE) {
-	// 		this.stopPageScroll(event);
-	// 	}
-	// }
-
 	public ngAfterViewInit() {
-		this.setSiblingMonths(this.monthViews);
-		this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
-			this.setSiblingMonths(c);
-		});
-
         this.keyboardNavigation.attachKeyboardHandlers(this.wrapper);
         this.keyboardNavigation.registerKeyHandler('ArrowUp', (event) => this.onArrowUp(event));
         this.keyboardNavigation.registerKeyHandler('ArrowDown', (event) => this.onArrowDown(event));
         this.keyboardNavigation.registerKeyHandler('ArrowLeft', (event) => this.onArrowLeft(event));
         this.keyboardNavigation.registerKeyHandler('ArrowRight', (event) => this.onArrowRight(event));
-        this.keyboardNavigation.registerKeyHandler('Enter', (event) => this.onKeydownEnter(event));
-        this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onKeydownHome(event));
-        this.keyboardNavigation.registerKeyHandler('End', (event) => this.onKeydownEnd(event));
+        this.keyboardNavigation.registerKeyHandler('Enter', (event) => this.onEnter(event));
+        this.keyboardNavigation.registerKeyHandler(' ', (event) => this.onEnter(event));
+        this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onHome(event));
+        this.keyboardNavigation.registerKeyHandler('End', (event) => this.onEnd(event));
+        this.keyboardNavigation.registerKeyHandler('PageUp', (event) => this.handlePageUpDown(event, -1));
+        this.keyboardNavigation.registerKeyHandler('PageDown', (event) => this.handlePageUpDown(event, 1));
 
         this.wrapper.nativeElement.addEventListener('focus', this.onWrapperFocus.bind(this));
         this.wrapper.nativeElement.addEventListener('blur', this.onWrapperBlur.bind(this));
@@ -660,6 +494,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
+    private handlePageUpDown(event: KeyboardEvent, delta: number) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const dir = delta > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
+
+        if (this.activeView === IgxCalendarView.Month && event.shiftKey) {
+            this.viewDate = CalendarDay.from(this.viewDate).add('year', delta).native;
+            this.resetActiveDate();
+        } else {
+            this.changePage(false, dir);
+        }
+    }
+
     private onArrowUp(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleArrowKeydown(event, -7);
@@ -684,14 +532,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
-    private onKeydownEnter(event: KeyboardEvent) {
+    private onEnter(event: KeyboardEvent) {
         event.stopPropagation();
         this.selectDateFromClient(this.activeDate);
         this.selected.emit(this.selectedDates);
         this.monthViews.forEach(view => view.clearPreviewRange());
     }
 
-    private onKeydownHome(event: KeyboardEvent) {
+    private onHome(event: KeyboardEvent) {
         event.stopPropagation();
 
         const dates = this.monthViews.toArray()
@@ -701,7 +549,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.activeDate = dates.at(0).date.native;
     }
 
-    private onKeydownEnd(event: KeyboardEvent) {
+    private onEnd(event: KeyboardEvent) {
         event.stopPropagation();
 
         const dates = this.monthViews.toArray()
@@ -764,46 +612,43 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.previousViewDate = this.viewDate;
 		this.isKeydownTrigger = isKeydownTrigger;
 
-        if (!this.isKeydownTrigger) {
-            requestAnimationFrame(() => {
-                this.resetActiveDate();
-            });
-        }
-
         switch (this.activeView) {
             case "month":
                 if (direction === ScrollDirection.PREV) {
-                    this.viewDate = this.calendarModel.getPrevMonth(this.viewDate)
+                    this.viewDate = CalendarDay.from(this.viewDate).add('month', -1).native;
                 }
 
                 if (direction === ScrollDirection.NEXT) {
-                    this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
+                    this.viewDate = CalendarDay.from(this.viewDate).add('month', 1).native;
                 }
 
                 break;
 
             case "year":
                 if (direction === ScrollDirection.PREV) {
-                    this.viewDate = this.calendarModel.getPrevYear(this.viewDate)
+                    this.viewDate = CalendarDay.from(this.viewDate).add('year', -1).native;
                 }
 
                 if (direction === ScrollDirection.NEXT) {
-                    this.viewDate = this.calendarModel.getNextYear(this.viewDate);
+                    this.viewDate = CalendarDay.from(this.viewDate).add('year', 1).native;
                 }
 
                 break;
 
             case "decade":
                 if (direction === ScrollDirection.PREV) {
-                    this.viewDate = this.calendarModel.getPrevYears(this.viewDate)
+                    this.viewDate = CalendarDay.from(this.viewDate).add('year', -15).native;
                 }
 
                 if (direction === ScrollDirection.NEXT) {
-                    this.viewDate = this.calendarModel.getNextYears(this.viewDate);
+                    this.viewDate = CalendarDay.from(this.viewDate).add('year', 15).native;
                 }
 
                 break;
         }
+
+        // XXX: Why only when it's not triggered by keyboard?
+        if (!this.isKeydownTrigger) this.resetActiveDate();
     }
 
 	/**
@@ -839,15 +684,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public stopPageScroll = (event: KeyboardEvent) => {
 		event.stopPropagation();
 
-        // We call the stopPageScroll on the view instead of directly on the calendar as otherwise a
-		// strange bug is introduced --> after changing number of months, continuous scrolling on mouse click stops working
 		this.stopPageScroll$.next(true);
 		this.stopPageScroll$.complete();
 
-
+        // TODO: remove once the years and months views stop stealing focus
 		if (this.pageScrollDirection === ScrollDirection.PREV) {
 			this.prevPageBtn.nativeElement.focus();
-		} else if (this.pageScrollDirection === ScrollDirection.NEXT) {
+		}
+
+        // TODO: remove once the years and months views stop stealing focus
+        if (this.pageScrollDirection === ScrollDirection.NEXT) {
 			this.nextPageBtn.nativeElement.focus();
 		}
 
@@ -858,18 +704,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		this.pageScrollDirection = ScrollDirection.NONE;
 	}
 
-	public suppressBlur() {
-		this.monthViews?.forEach(d => d.shouldResetDate = false);
-		if (this.daysView) {
-			this.daysView.shouldResetDate = false;
-		}
-	}
-
 	/**
 	 * @hidden
 	 * @internal
 	 */
-	public onActiveViewDecade(args: Date, activeViewIdx: number) {
+	public onActiveViewDecade(args: Date, activeViewIdx: number): void {
 		super.activeViewDecade(activeViewIdx);
 
 		requestAnimationFrame(() => {
@@ -889,7 +728,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         requestAnimationFrame(() => {
             if (this.dacadeView) {
 				this.dacadeView.date = args;
-                this.dacadeView.focusActiveDate();
+                // this.dacadeView.focusActiveDate();
             }
         });
 	}
@@ -952,7 +791,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	public childClicked(date: Date) {
+	protected childClicked(date: Date) {
 		// selectDateFromClient is called both here and in days-view.component
 		// when multiple months are in view, 'shiftKey' and 'lastSelectedDate'
 		// should be set before and after selectDateFromClient
@@ -996,32 +835,29 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @intenal
 	 */
-	public changeMonth(event: Date) {
+	public changeMonth(date: Date) {
 		this.previousViewDate = this.viewDate;
-		this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
 		this.activeView = IgxCalendarView.Month;
-
-        requestAnimationFrame(() => {
-            this.resetActiveDate();
-        });
+        this.resetActiveDate();
 	}
 
 	/**
 	 * @hidden
 	 * @intenal
 	 */
-    public override changeYear(event: Date) {
+    public override changeYear(date: Date) {
         this.previousViewDate = this.viewDate;
-        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
     }
 
 	/**
 	 * @hidden
 	 * @intenal
 	 */
-	public updateYear(event: Date) {
+	public updateYear(date: Date) {
 		this.previousViewDate = this.viewDate;
-		this.viewDate = this.calendarModel.getFirstViewDate(event, 'year', this.activeViewIdx);
+        this.viewDate = CalendarDay.from(date).add('year', -this.activeViewIdx).native;
 	}
 
 	/**
@@ -1099,26 +935,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	public resetActiveDate() {
-		if (this.activeView !== IgxCalendarView.Month) {
-			return;
-		}
+        const target = CalendarDay.from(this.activeDate).set({
+            month: this.viewDate.getMonth(),
+            year: this.viewDate.getFullYear(),
+        });
+        const outOfRange =
+            !areSameMonth(this.viewDate, target) ||
+            isDateInRanges(target, this.disabledDates);
 
-        let idx = 0;
-		const dates = this.getMonthDays();
-
-        for (let i = 0; i < dates.length - 1; i++) {
-            const date = dates[i].date.date;
-            const activeDate = new Date(this.activeDate).getDate();
-
-            if (activeDate === date) {
-                idx = i;
-            }
-        }
-
-
-        if (dates[idx]) {
-            this.activeDate = dates[idx].date.native;
-        }
+        this.activeDate = outOfRange ? this.viewDate : target.native;
 	}
 
 	/**
@@ -1126,10 +951,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	public ngOnDestroy(): void {
-		if (this._monthViewsChanges$) {
-			this._monthViewsChanges$.unsubscribe();
-		}
-
         this.keyboardNavigation.detachKeyboardHandlers();
         this.wrapper.nativeElement.removeEventListener('focus', this.onWrapperFocus);
         this.wrapper.nativeElement.removeEventListener('blur', this.onWrapperBlur);
@@ -1139,21 +960,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	public getPrevMonth(date): Date {
-		return this.calendarModel.getPrevMonth(date);
+	public getPrevMonth(date: Date): Date {
+		return CalendarDay.from(date).add('month', -1).native;
 	}
 
 	/**
 	 * @hidden
 	 * @internal
 	 */
-	public getNextMonth(date, viewIndex): Date {
-		return this.calendarModel.getDateByView(date, 'Month', viewIndex);
+	public getNextMonth(date: Date, viewIndex: number): Date {
+        return CalendarDay.from(date).add('month', viewIndex).native;
 	}
 
 	/**
-	 * Helper method building and returning the context object inside
-	 * the calendar templates.
+	 * Helper method building and returning the context object inside the calendar templates.
 	 *
 	 * @hidden
 	 * @internal
@@ -1184,47 +1004,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 		return { $implicit: formatObject };
 	}
 
-	/**
-	 * Helper method that sets references for prev/next months for each month in the view
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	private setSiblingMonths(monthViews: QueryList<IgxDaysViewComponent>) {
-		monthViews.forEach((item, index) => {
-			const prevMonthView = this.getMonthView(index - 1);
-			const nextMonthView = this.getMonthView(index + 1);
-			item.nextMonthView = nextMonthView;
-			item.prevMonthView = prevMonthView;
-		});
-	}
-
-    /**
-     * Helper method returning previous/next day views
-     *
-     * @hidden
-     * @internal
-     */
-    private getMonthView(index: number): IgxDaysViewComponent {
-        if (index === -1 || index === this.monthViews.length) {
-            return null;
-        } else {
-            return this.monthViews.toArray()[index];
-        }
-    }
-
-    private getMonthDays(): IgxDayItemComponent[] {
-		let dates = [];
-
-		this.monthViews.map(mv => mv.dates).forEach(days => {
-			dates = dates.concat(days.toArray()).filter(
-                day => day.isCurrentMonth && day.isFocusable
-            )
-		});
-
-        return dates;
-    }
-
     /**
      * Helper method that does deselection for all month views when selection is "multi"
      * If not called, selection in other month views stays
@@ -1233,8 +1012,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     private deselectDateInMonthViews(value: Date) {
-        this.monthViews.forEach(m => {
-            m.deselectMultipleInMonth(value);
+        this.monthViews.forEach(view => {
+            view.deselectMultipleInMonth(value);
         });
     }
 }

@@ -2,6 +2,7 @@ import { IgxCalendarView } from '../calendar';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
 import { Subject } from 'rxjs';
+import { CalendarDay } from '../common/model';
 
 @Directive({
     selector: '[igxMonthPickerBase]',
@@ -78,9 +79,9 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public changeYear(event: Date) {
+    public changeYear(date: Date) {
         this.previousViewDate = this.viewDate;
-        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
         this.activeView = IgxCalendarView.Month;
     }
 
