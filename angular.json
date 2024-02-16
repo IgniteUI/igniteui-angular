@@ -269,6 +269,11 @@
               "includePaths": [
                 "node_modules"
               ]
+            },
+            "server": "projects/bundle-test/src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {

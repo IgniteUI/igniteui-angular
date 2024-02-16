@@ -2,10 +2,10 @@
     "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
-            "name": "position",
+            "name": "grid",
             "remove": true,
             "owner": {
-                "selector": "igx-toast",
+                "selector": "igx-grid-toolbar",
                 "type": "component"
             }
         }

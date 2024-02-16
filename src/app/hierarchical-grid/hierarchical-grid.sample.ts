@@ -42,6 +42,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public hgridState = [];
     public columns;
     public childColumns;
+    public toolbarTitle = 'Child Grid 1';
 
     public evenCondition = (row: RowType) =>  parseInt(row.data['ID'], 0) % 2 === 0;
     public rowClasses = {
