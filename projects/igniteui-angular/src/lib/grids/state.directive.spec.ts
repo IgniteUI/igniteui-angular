@@ -397,7 +397,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
     });
 
-    fit('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
+    it('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
         const fix = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
