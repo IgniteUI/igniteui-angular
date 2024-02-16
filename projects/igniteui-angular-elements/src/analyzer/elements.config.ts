@@ -539,15 +539,15 @@ export var registerConfig = [
         descendants: true,
       },
       {
-        property: "actionStripComponents",
-        childType: IgxActionStripComponent,
-        isQueryList: true,
-      },
-      {
         property: "columnList",
         childType: IgxColumnComponent,
         isQueryList: true,
         descendants: true,
+      },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
       },
       {
         property: "toolbar",
@@ -847,6 +847,11 @@ export var registerConfig = [
         isQueryList: true,
       },
       {
+        property: "childLayoutList",
+        childType: IgxRowIslandComponent,
+        isQueryList: true,
+      },
+      {
         property: "childColumns",
         childType: IgxColumnComponent,
         isQueryList: true,
@@ -869,8 +874,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "islandToolbarTemplate", writable: true },
-      { name: "islandPaginatorTemplate", writable: true },
       { name: "data" },
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
@@ -954,6 +957,8 @@ export var registerConfig = [
       "beginAddRowByIndex",
     ],
     templateProps: [
+      "toolbarTemplate",
+      "paginatorTemplate",
       "emptyGridTemplate",
       "addRowEmptyTemplate",
       "loadingGridTemplate",

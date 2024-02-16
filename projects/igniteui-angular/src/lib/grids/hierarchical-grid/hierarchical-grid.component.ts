@@ -187,6 +187,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
         this.hGrid.data = this.data.childGridsData[this.layout.key];
+        this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });

@@ -246,7 +246,7 @@
     <igc-column field="EndDate" data-type="date" header="End Date" sortable="true" selectable="false"></igc-column>
     <igc-column field="IsPostponed" data-type="boolean" header="Postponed" sortable="true" selectable="false"></igc-column>
 
-      <igc-row-island key="Developers">
+    <igc-row-island id="DevelopersRowIsland" key="Developers">
         <igc-column field="Name" header="Name" sortable="true"></igc-column>
         <igc-column-group header="Position Information">
             <igc-column-group header="Position Details" collapsible>
@@ -259,8 +259,8 @@
             <igc-grid-pinning-actions></igc-grid-pinning-actions>
             <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
         </igc-action-strip>
-        <igc-row-island auto-generate key="VirtualMachines"></igc-row-island>
-        </igc-row-island>
+        <igc-row-island auto-generate id="VirtualMachinesRowIsland" key="VirtualMachines"></igc-row-island>
+    </igc-row-island>
     <igc-paginator per-page="10"></igc-paginator>
     <igc-action-strip>
         <igc-grid-pinning-actions></igc-grid-pinning-actions>
@@ -365,10 +365,35 @@
   <!-- END IgxPivotGridComponent -->
 
   <script type="module">
+    import { html } from "/lit-html.js";
     // jump around vite import analysis with dynamic import url
     const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
     let hgrid = document.getElementById('hgrid1');
     hgrid.data = hgridData;
+
+    let developersRowIsland = document.getElementById('DevelopersRowIsland');
+    let virtualMachinesRowIsland = document.getElementById('VirtualMachinesRowIsland');
+    virtualMachinesRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.toolbarTemplate = (ctx) => html`
+        <igc-grid-toolbar>
+            <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+            <igc-grid-toolbar-actions>
+                <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+                <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                <igc-grid-toolbar-exporter>
+                    <span excelText>Export Excel</span>
+                    <span csvText>Export CSV</span>
+                </igc-grid-toolbar-exporter>
+                <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+            </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+    `;
   </script>
 </body>
 </html>
