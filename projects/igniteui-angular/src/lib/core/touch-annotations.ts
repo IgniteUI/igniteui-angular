@@ -7,82 +7,53 @@
 * @internal
 */
 export interface HammerInput {
-    preventDefault: () => {};
+    preventDefault: () => void;
     deltaX: number;
     deltaY: number;
     center: { x: number; y: number; };
     pointerType: string;
     distance: number;
-  }
+}
 
 /**
 * @hidden
 * @internal
 */
-  export interface HammerStatic {
+export interface HammerStatic {
     new(element: HTMLElement | SVGElement, options?: any): HammerManager;
 
     Pan: Recognizer;
     Swipe: Recognizer;
-    Press: Recognizer;
     Tap: Recognizer;
     TouchInput: HammerInput;
     DIRECTION_HORIZONTAL: number;
     DIRECTION_VERTICAL: number;
-  }
+}
 
 /**
 * @hidden
 * @internal
 */
-  export interface Recognizer {
-    new(options?: any): Recognizer;
-    recognizeWith(otherRecognizer: Recognizer | string): Recognizer;
-  }
+export interface Recognizer { }
 
 /**
 * @hidden
 * @internal
 */
-  export interface RecognizerStatic {
-    new(options?: any): Recognizer;
-  }
-
-/**
-* @hidden
-* @internal
-*/
-  export interface HammerInstance {
-    on(eventName: string, callback: Function): void;
-    off(eventName: string, callback: Function): void;
-  }
-
-/**
-* @hidden
-* @internal
-*/
-  export interface HammerManager {
-    add(recogniser: Recognizer | Recognizer[]): Recognizer;
+export interface HammerManager {
     set(options: any): HammerManager;
-    emit(event: string, data: any): void;
-    off(events: string, handler?: Function): void;
-    on(events: string, handler: Function): void;
+    off(events: string, handler?: (event: HammerInput) => void): void;
+    on(events: string, handler: (event: HammerInput) => void): void;
     destroy(): void;
-    get(event:string): HammerManager;
-  }
+    get(event: string): HammerManager;
+}
 
 /**
 * @hidden
 * @internal
 */
-  export interface HammerOptions {
-    cssProps?: {[key: string]: string};
-    domEvents?: boolean;
-    enable?: boolean | ((manager: HammerManager) => boolean);
-    preset?: any[];
-    touchAction?: string;
+export interface HammerOptions {
+    cssProps?: { [key: string]: string };
     recognizers?: any[];
-
     inputClass?: HammerInput;
-    inputTarget?: EventTarget;
-  }
+}
