@@ -185,7 +185,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
 
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {

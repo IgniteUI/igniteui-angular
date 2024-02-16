@@ -90,7 +90,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Filtru valutar',
     igx_grid_excel_custom_filter: 'Filtru customizat...',
     igx_grid_excel_no_matches: 'Nicio potrivire',
-    igx_grid_excel_matches_count: '{0} matches.',
+    igx_grid_excel_matches_count: '{0} potriviri',
     igx_grid_advanced_filter_title: 'Filtrare avansată',
     igx_grid_advanced_filter_and_group: '"Și" Grup',
     igx_grid_advanced_filter_or_group: '"Sau" grup',

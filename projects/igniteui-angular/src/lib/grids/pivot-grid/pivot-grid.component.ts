@@ -45,11 +45,13 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
+    IGridEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
-    IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
+    IColumnVisibilityChangedEventArgs,
+    IGridEditDoneEventArgs,
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -68,7 +70,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -529,7 +531,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowAdd = new EventEmitter<IGridEditEventArgs>();
+    public override rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * @hidden @internal
@@ -547,7 +549,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowDelete = new EventEmitter<IGridEditEventArgs>();
+    public override rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
 
     /**
      * @hidden @internal
@@ -684,7 +686,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override actionStrip: IgxActionStripComponent;
+    public override actionStrip: IgxActionStripToken;
 
     /**
      * @hidden @internal

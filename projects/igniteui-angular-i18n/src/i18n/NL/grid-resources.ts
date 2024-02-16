@@ -90,7 +90,7 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Valutafilter',
     igx_grid_excel_custom_filter: 'Aangepast filter ...',
     igx_grid_excel_no_matches: 'Geen overeenkomsten',
-    igx_grid_excel_matches_count: '{0} matches.',
+    igx_grid_excel_matches_count: '{0} overeenkomsten',
     igx_grid_advanced_filter_title: 'Geavanceerd filteren',
     igx_grid_advanced_filter_and_group: 'En-groep',
     igx_grid_advanced_filter_or_group: 'Of-groep',

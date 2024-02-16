@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
-import { IGridEditEventArgs } from '../public_api';
+import { IRowDataCancelableEventArgs } from '../public_api';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
@@ -197,10 +197,9 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
         it('should have correct foreignKey value for the data record in rowAdd event arguments', () => {
             let newRowId = null;
-            treeGrid.rowAdd.pipe(first()).subscribe((args: IGridEditEventArgs) => {
-                expect(args.newValue[treeGrid.foreignKey]).toBe(2);
+            treeGrid.rowAdd.pipe(first()).subscribe((args: IRowDataCancelableEventArgs) => {
                 expect(args.rowData[treeGrid.foreignKey]).toBe(2);
-                newRowId = args.newValue[treeGrid.primaryKey];
+                newRowId = args.rowData[treeGrid.primaryKey];
             });
 
             treeGrid.beginAddRowById(2, true);

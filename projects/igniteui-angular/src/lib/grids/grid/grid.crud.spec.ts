@@ -2,10 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../common/events';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IGridEditEventArgs } from '../common/events';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
