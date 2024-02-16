@@ -2518,7 +2518,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    protected setExpandCollapseState() {
+    public setExpandCollapseState() {
         this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c => {
             if (!this.collapsible) {
                 c.hidden = this.hidden; return;
@@ -2530,7 +2530,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    protected checkCollapsibleState() {
+    public checkCollapsibleState() {
         if (!this.children) {
             return false;
         }

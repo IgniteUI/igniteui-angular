@@ -18,7 +18,7 @@ import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
-import { IgxColumnComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxGridDetailTemplateDirective } from './public_api';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
@@ -395,6 +395,39 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'columns');
         expect(gridState).toBe(columnsState);
         expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
+    });
+
+    fit('should correctly restore grid columns state properties: collapsible, expanded, and visibleWhenCollapsed properties', () => {
+        const fixtureColumnGroup = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
+        fixtureColumnGroup.detectChanges();
+
+        const grid = fixtureColumnGroup.componentInstance.grid;
+        spyOn(grid.columnInit, 'emit').and.callThrough();
+        const addressInfoGroup = grid.columnList.toArray().find(group => group.header === 'Address Information' && group instanceof IgxColumnGroupComponent);
+
+        // Simulate changing and then restoring the state - TO DO, can't get the actual state
+        addressInfoGroup.expanded = false; // collapse the group
+        addressInfoGroup.setExpandCollapseState(); // apply the collapsed state
+        fixtureColumnGroup.detectChanges();
+
+        addressInfoGroup.expanded = true; // restore expanded state
+        addressInfoGroup.collapsible = true;
+        addressInfoGroup.setExpandCollapseState(); // apply the restored state
+
+        fixtureColumnGroup.detectChanges();
+
+        // verify the restored state
+        expect(addressInfoGroup.collapsible).toBe(true);
+
+        const collapsibleStateCorrect = addressInfoGroup.checkCollapsibleState();
+        expect(collapsibleStateCorrect).toBe(true);
+
+        addressInfoGroup.children.forEach(child => {
+            if (!child.columnGroup && child.visibleWhenCollapsed !== undefined) {
+                const expectedVisibility = addressInfoGroup.expanded ? child.visibleWhenCollapsed : !child.visibleWhenCollapsed;
+                expect(child.hidden).toBe(!expectedVisibility, `Child column ${child.header} visibility should match expanded and visibleWhenCollapsed state`);
+            }
+        });
     });
 
     it('setState should correctly restore grid paging state from string', () => {
@@ -846,6 +879,56 @@ export class IgxGridStateWithDetailsComponent {
     public state: IgxGridStateDirective;
 
     public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="generalInfCollapsible" [expanded]="generalInfExpanded">
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="companyNameVisibleWhenCollapse"></igx-column>
+            <igx-column-group header="Person Details"
+                [collapsible]="personDetailsCollapsible"
+                [expanded]="personDetailsExpanded" [visibleWhenCollapsed]="personDetailsVisibleWhenCollapse">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+            <igx-column-group header="Country Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column  field="Empty"></igx-column>
+                <igx-column-group header="Region Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                    <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
+                    <igx-column field="PostalCode" [visibleWhenCollapsed]="true"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false"
+                    [collapsible]="true" [hidden]="hideContactInformation">
+                <igx-column field="Phone" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="Fax" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective]
+})
+export class CollapsibleColumnGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public generalInfCollapsible;
+    public generalInfExpanded;
+    public personDetailsCollapsible;
+    public personDetailsExpanded;
+    public personDetailsVisibleWhenCollapse;
+    public companyNameVisibleWhenCollapse;
+    public hideContactInformation = true;
+    public data = SampleTestData.contactInfoDataFull();
 }
 /* eslint-enable max-len */
 
