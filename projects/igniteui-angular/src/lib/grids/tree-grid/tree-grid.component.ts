@@ -81,6 +81,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 let NEXT_ID = 0;
 
@@ -438,6 +439,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
@@ -447,7 +449,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService,
+            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 

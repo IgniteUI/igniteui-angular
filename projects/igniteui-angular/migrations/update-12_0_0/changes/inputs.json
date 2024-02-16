@@ -1,5 +1,5 @@
 {
-    "@scheme": "../../common/schema/binding.schema.json",
+    "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
             "name": "type",

@@ -1,9 +1,9 @@
 {
-    "@scheme": "../../common/schema/binding.schema.json",
+    "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -11,7 +11,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -19,7 +19,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -27,7 +27,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"

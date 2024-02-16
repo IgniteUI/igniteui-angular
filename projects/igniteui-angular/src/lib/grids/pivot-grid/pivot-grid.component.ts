@@ -70,7 +70,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -91,6 +91,7 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -686,7 +687,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override actionStrip: IgxActionStripComponent;
+    public override actionStrip: IgxActionStripToken;
 
     /**
      * @hidden @internal
@@ -976,6 +977,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         envInjector: EnvironmentInjector,
         navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
@@ -998,6 +1000,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             envInjector,
             navigation,
             filteringService,
+            textHighlightService,
             overlayService,
             summaryService,
             _displayDensityOptions,
