@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarSelection } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
 import { CalendarDay } from '../common/model'
@@ -10,6 +10,7 @@ import { areSameMonth, isNextMonth, isPreviousMonth, isDateInRanges } from '../c
 @Component({
     selector: 'igx-day-item',
     templateUrl: 'day-item.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true
 })
 export class IgxDayItemComponent {

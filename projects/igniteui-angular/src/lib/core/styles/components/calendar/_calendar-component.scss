@@ -36,6 +36,10 @@
             @extend %pickers-display--vertical !optional;
         }
 
+        @include e(pickers, $m: 'days') {
+            @extend %pickers-display--days !optional;
+        }
+
         @include e(body) {
             @extend %body-display !optional;
         }

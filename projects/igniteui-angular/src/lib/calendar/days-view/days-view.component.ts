@@ -12,6 +12,7 @@ import {
     booleanAttribute,
     ElementRef,
     ChangeDetectorRef,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
@@ -43,6 +44,7 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
@@ -99,12 +101,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @internal
      */
     @Input()
-    protected set previewRangeDate(value: Date) {
+    public set previewRangeDate(value: Date) {
         this._previewRangeDate = value;
         this.previewRangeDateChange.emit(this._previewRangeDate);
     }
 
-    protected get previewRangeDate() {
+    public get previewRangeDate() {
         return this._previewRangeDate;
     }
 
@@ -347,7 +349,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     public getWeekNumber(date: CalendarDay): number {
-        return date.week + 1;
+        return date.week;
     }
 
     /**

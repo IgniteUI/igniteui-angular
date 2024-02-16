@@ -23,7 +23,7 @@ import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
 import { PlatformUtil } from '../core/utils';
 
-export const IGX_CALENDAR_VIEW_ITEM = 
+export const IGX_CALENDAR_VIEW_ITEM =
     new InjectionToken<IgxCalendarMonthDirective | IgxCalendarYearDirective>('IgxCalendarViewItem');
 
 /**

@@ -97,6 +97,8 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public activeViewDecadeKB(event: KeyboardEvent, activeViewIdx = 0) {
+        event.stopPropagation();
+
         if (this.platform.isActivationKey(event)) {
             event.preventDefault();
             this.activeViewDecade(activeViewIdx);
