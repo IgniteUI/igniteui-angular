@@ -266,18 +266,26 @@
 
         @include e(date, 'special') {
             @extend %date-special !optional;
-
-            &:hover {
-                @extend %date-special-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('special', 'current')) {
             @extend %date-special-current !optional;
+        }
 
-            &:hover {
-                @extend %date-special-current-hover !optional;
-            }
+        @include e(date, $mods: ('special', 'selected')) {
+            @extend %date-special-selected !optional;
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'range')) {
+            @extend %date-special-selected-range !optional;
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'range', 'first')) {
+            @extend %date-special-selected-range-first !optional;
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'range', 'last')) {
+            @extend %date-special-selected-range-last !optional;
         }
 
         @include e(date, $mods: ('special' 'active')) {
@@ -286,18 +294,10 @@
 
         @include e(date, $mods: ('special', 'current', 'active')) {
             @extend %date-special-current !optional;
-
-            &:hover {
-                @extend %date-special-current-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('special', 'current', 'active', 'range')) {
             @extend %date-special-current !optional;
-
-            &:hover {
-                @extend %date-special-current-hover !optional;
-            }
         }
 
         @include e(date, 'single') {
