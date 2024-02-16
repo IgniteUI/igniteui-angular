@@ -181,6 +181,9 @@
 /// @param {Color} $date-current-border-color [null] - The border color of the current date.
 /// @param {Color} $date-current-hover-border-color [null] - The :hover border color of the current date.
 /// @param {Color} $date-current-focus-border-color [null] - The :focus border color of the current date.
+/// @param {Color} $date-selected-current-border-color [null] - The border color of the selected current date.
+/// @param {Color} $date-selected-current-hover-border-color [null] - The :hover border color of the selected current date.
+/// @param {Color} $date-selected-current-focus-border-color [null] - The :focus border color of the selected current date.
 ///
 /// @param {Color} $date-range-border-color [null] - The border color of range selection.
 /// @param {Color} $date-range-preview-border-color [null] - The border color of the range selection in preview state(visible before selecting the end of the range).
@@ -348,6 +351,10 @@
     $date-current-border-color: null,
     $date-current-hover-border-color: null,
     $date-current-focus-border-color: null,
+
+    $date-selected-current-border-color: null,
+    $date-selected-current-hover-border-color: null,
+    $date-selected-current-focus-border-color: null,
 
     $date-current-outline: null,
     $date-current-hover-outline: null,
@@ -828,6 +835,9 @@
         date-current-border-color: $date-current-border-color,
         date-current-hover-border-color: $date-current-hover-border-color,
         date-current-focus-border-color: $date-current-focus-border-color,
+        date-selected-current-border-color: $date-selected-current-border-color,
+        date-selected-current-hover-border-color: $date-selected-current-hover-border-color,
+        date-selected-current-focus-border-color: $date-selected-current-focus-border-color,
         date-range-preview-border-color: $date-range-preview-border-color,
         date-range-border-color: $date-range-border-color,
         size: $size,
@@ -1205,9 +1215,9 @@
                 content: '';
                 position: absolute;
                 z-index: 0;
-                width: calc(100% - #{sizable(rem(2px), rem(4px), rem(6px))});
-                height: calc(100% - #{sizable(rem(2px), rem(4px), rem(6px))});
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'date-special-outline');
+                width: sizable(rem(24px), rem(28px), rem(32px));
+                height: sizable(rem(24px), rem(28px), rem(32px));
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-special-outline');
                 border-radius: 50%;
             }
         }
@@ -1662,17 +1672,17 @@
             } @else {
                 background: var-get($theme, 'date-current-background');
             }
+
+            &:hover {
+                color: var-get($theme, 'date-current-hover-foreground');
+                background: var-get($theme, 'date-current-hover-background');
+                border-color: var-get($theme, 'date-current-hover-border-color');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-current-hover-outline');
+            }
         }
     }
 
-    %date-current-hover {
-        %date-inner {
-            color: var-get($theme, 'date-current-hover-foreground');
-            background: var-get($theme, 'date-current-hover-background');
-            border-color: var-get($theme, 'date-current-hover-border-color');
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-current-hover-outline');
-        }
-    }
+
 
     %date-current-range {
         %date-inner {
@@ -1702,8 +1712,8 @@
 
             @if $variant == 'fluent' {
                 &::after {
-                    width: calc(100% - #{sizable(rem(6px), rem(8px), rem(10px))});
-                    height: calc(100% - #{sizable(rem(6px), rem(8px), rem(10px))});
+                    width: sizable(rem(22px), rem(24px), rem(28px));
+                    height: sizable(rem(22px), rem(24px), rem(28px));
                     box-shadow: 0 0 0 rem(1px) var-get($theme, 'date-special-current-outline');
                 }
             }
@@ -1717,7 +1727,7 @@
     %date-special-selected {
         %date-inner {
             &::after {
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'date-selected-foreground');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-foreground');
             }
         }
     }
@@ -1725,7 +1735,7 @@
     %date-special-selected-range {
         %date-inner {
             &::after {
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'date-special-outline');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-special-outline');
             }
         }
     }
@@ -1734,7 +1744,7 @@
     %date-special-selected-range-last, {
         %date-inner {
             &::after {
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'date-selected-foreground');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-foreground');
             }
         }
     }
@@ -1775,7 +1785,7 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-foreground');
             background: var-get($theme, 'date-selected-current-background') ;
-            border-color: var-get($theme, 'date-current-border-color') !important;
+            border-color: var-get($theme, 'date-selected-current-border-color') !important;
 
             @if $variant != 'material' and $variant != 'indigo' {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline'),
@@ -1783,15 +1793,13 @@
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline'),
                     0 0 0 rem(1px) var-get($theme, 'date-selected-current-background');
             }
-        }
-    }
 
-    %selected-current-hover {
-        %date-inner {
-            color: var-get($theme, 'date-selected-current-hover-foreground');
-            background: var-get($theme, 'date-selected-current-hover-background');
-            border-color: var-get($theme, 'date-current-hover-border-color');
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline');
+            &:hover {
+                color: var-get($theme, 'date-selected-current-hover-foreground');
+                background: var-get($theme, 'date-selected-current-hover-background');
+                border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline');
+            }
         }
     }
 
@@ -1799,7 +1807,7 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-focus-foreground');
             background: var-get($theme, 'date-selected-current-focus-background');
-            border-color: var-get($theme, 'date-current-focus-border-color');
+            border-color: var-get($theme, 'date-selected-current-focus-border-color');
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'date-selected-current-outline');
         }
     }
@@ -1827,6 +1835,10 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-range-foreground');
             background: var-get($theme, 'date-selected-current-range-background');
+
+            @if $variant == 'fluent' {
+                border-color: transparent !important;
+            }
 
             @if $variant == 'fluent' {
                 box-shadow: none;
@@ -2109,7 +2121,13 @@
             content: '';
             position: absolute;
             height: var-get($theme, 'size');
-            width: calc(50% + #{rem(1px)});
+
+            // Otherwise fluent has gaps in the range preview selection
+            @if $variant == 'fluent' {
+                width: calc(50% + #{rem(2px)});
+            } @else {
+                width: calc(50% + #{rem(1px)});
+            }
 
             border-width: rem(1px);
 
@@ -2143,7 +2161,7 @@
             @if $variant == 'fluent' {
                 background: transparent !important;
                 border-color: var-get($theme, 'date-range-preview-border-color');
-                border-inline-end-color: transparent;
+                border-inline-end-color: transparent !important;
             }
         }
 
@@ -2159,7 +2177,7 @@
             @if $variant == 'fluent' {
                 background: transparent !important;
                 border-color: var-get($theme, 'date-range-preview-border-color');
-                border-inline-start-color: transparent;
+                border-inline-start-color: transparent !important;
             }
         }
 

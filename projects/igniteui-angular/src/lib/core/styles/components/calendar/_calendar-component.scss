@@ -234,10 +234,6 @@
 
         @include e(date, 'current') {
             @extend %date-current !optional;
-
-            &:hover {
-                @extend %date-current-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('current', 'active')) {
@@ -250,10 +246,6 @@
 
         @include e(date, $mods: ('current', 'selected')) {
             @extend %selected-current !optional;
-
-            &:hover {
-                @extend %selected-current-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('current', 'selected', 'active')) {
