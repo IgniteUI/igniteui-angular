@@ -31,6 +31,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxActionStripToken } from './token';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -79,10 +80,10 @@ export class IgxActionStripMenuItemDirective {
         IgxIconComponent,
         IgxDropDownComponent,
         IgxDropDownItemComponent
-    ]
+    ],
+    providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-
-export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
+export class IgxActionStripComponent extends DisplayDensityBase implements IgxActionStripToken, AfterContentInit, AfterViewInit {
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.

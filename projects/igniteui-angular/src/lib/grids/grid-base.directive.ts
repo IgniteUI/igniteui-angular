@@ -40,10 +40,11 @@ import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy } from './grid.common';
-import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
+import { IgxToolbarToken } from './toolbar/token';
 import { IgxRowDirective } from './row.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -152,9 +153,10 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
-import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../action-strip/token';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import type { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorToken } from '../paginator/token';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
@@ -1116,8 +1118,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripComponent)
-    public actionStrip: IgxActionStripComponent;
+    @ContentChild(IgxActionStripToken)
+    public actionStrip: IgxActionStripToken;
 
     /**
      * @hidden @internal
@@ -1673,11 +1675,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public hostRole = 'grid';
 
     /** @hidden @internal */
-    @ContentChildren(IgxGridToolbarComponent)
+    @ContentChildren(IgxToolbarToken)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent)
+    @ContentChildren(IgxPaginatorToken)
     protected paginationComponents: QueryList<IgxPaginatorComponent>;
 
     /**
@@ -3304,6 +3306,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public navigation: IgxGridNavigationService,
         /** @hidden @internal */
         public filteringService: IgxFilteringService,
+        protected textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         /** @hidden @internal */
         public summaryService: IgxGridSummaryService,
@@ -5070,7 +5073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.rebuildMatchCache();
 
             if (updateActiveInfo) {
-                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+                const activeInfo = this.textHighlightService.highlightGroupsMap.get(this.id);
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
@@ -7525,7 +7528,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.scrollTo(matchInfo.row, matchInfo.column);
             }
 
-            IgxTextHighlightDirective.setActiveHighlight(this.id, {
+            this.textHighlightService.setActiveHighlight(this.id, {
                 column: matchInfo.column,
                 row: matchInfo.row,
                 index: matchInfo.index,
@@ -7533,7 +7536,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         } else {
-            IgxTextHighlightDirective.clearActiveHighlight(this.id);
+            this.textHighlightService.clearActiveHighlight(this.id);
         }
 
         return this.lastSearchInfo.matchCount;
