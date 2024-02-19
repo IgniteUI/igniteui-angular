@@ -48,6 +48,7 @@ import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -234,6 +235,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
@@ -256,6 +258,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             envInjector,
             navigation,
             filteringService,
+            textHighlightService,
             overlayService,
             summaryService,
             _displayDensityOptions,
@@ -331,7 +334,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         // Create the child toolbar if the parent island has a toolbar definition
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
-                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
             grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
                 .subscribe(() => {
                     this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());

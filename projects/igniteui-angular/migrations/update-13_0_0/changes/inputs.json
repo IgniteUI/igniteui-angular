@@ -1,9 +1,9 @@
 {
-    "@scheme": "../../common/schema/binding.schema.json",
+    "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
             "name": "color",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-icon",
                 "type": "component"
@@ -11,7 +11,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -19,7 +19,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -27,7 +27,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -35,7 +35,7 @@
         },
         {
             "name": "showToolbar",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -43,7 +43,7 @@
         },
         {
             "name": "toolbarTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -51,7 +51,7 @@
         },
         {
             "name": "toolbarTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -59,7 +59,7 @@
         },
         {
             "name": "toolbarTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -67,7 +67,7 @@
         },
         {
             "name": "toolbarTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -75,7 +75,7 @@
         },
         {
             "name": "columnHiding",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -83,7 +83,7 @@
         },
         {
             "name": "columnHiding",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -91,7 +91,7 @@
         },
         {
             "name": "columnHiding",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -99,7 +99,7 @@
         },
         {
             "name": "columnHiding",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -107,7 +107,7 @@
         },
         {
             "name": "columnHidingTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -115,7 +115,7 @@
         },
         {
             "name": "columnHidingTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -123,7 +123,7 @@
         },
         {
             "name": "columnHidingTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -131,7 +131,7 @@
         },
         {
             "name": "columnHidingTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -139,7 +139,7 @@
         },
         {
             "name": "hiddenColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -147,7 +147,7 @@
         },
         {
             "name": "hiddenColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -155,7 +155,7 @@
         },
         {
             "name": "hiddenColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -163,7 +163,7 @@
         },
         {
             "name": "hiddenColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -171,7 +171,7 @@
         },
         {
             "name": "columnPinning",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -179,7 +179,7 @@
         },
         {
             "name": "columnPinning",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -187,7 +187,7 @@
         },
         {
             "name": "columnPinning",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -195,7 +195,7 @@
         },
         {
             "name": "columnPinning",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -203,7 +203,7 @@
         },
         {
             "name": "columnPinningTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -211,7 +211,7 @@
         },
         {
             "name": "columnPinningTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -219,7 +219,7 @@
         },
         {
             "name": "columnPinningTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -227,7 +227,7 @@
         },
         {
             "name": "columnPinningTitle",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -235,7 +235,7 @@
         },
         {
             "name": "pinnedColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -243,7 +243,7 @@
         },
         {
             "name": "pinnedColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -251,7 +251,7 @@
         },
         {
             "name": "pinnedColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -259,7 +259,7 @@
         },
         {
             "name": "pinnedColumnsText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -267,7 +267,7 @@
         },
         {
             "name": "exportExcel",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -275,7 +275,7 @@
         },
         {
             "name": "exportExcel",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -283,7 +283,7 @@
         },
         {
             "name": "exportExcel",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -291,7 +291,7 @@
         },
         {
             "name": "exportExcel",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -299,7 +299,7 @@
         },
         {
             "name": "exportExcelText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -307,7 +307,7 @@
         },
         {
             "name": "exportExcelText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -315,7 +315,7 @@
         },
         {
             "name": "exportExcelText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -323,7 +323,7 @@
         },
         {
             "name": "exportExcelText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -331,7 +331,7 @@
         },
         {
             "name": "exportCsv",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -339,7 +339,7 @@
         },
         {
             "name": "exportCsv",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -347,7 +347,7 @@
         },
         {
             "name": "exportCsv",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -355,7 +355,7 @@
         },
         {
             "name": "exportCsv",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -363,7 +363,7 @@
         },
         {
             "name": "exportCsvText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -371,7 +371,7 @@
         },
         {
             "name": "exportCsvText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -379,7 +379,7 @@
         },
         {
             "name": "exportCsvText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -387,7 +387,7 @@
         },
         {
             "name": "exportCsvText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"
@@ -395,7 +395,7 @@
         },
         {
             "name": "exportText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -403,7 +403,7 @@
         },
         {
             "name": "exportText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -411,7 +411,7 @@
         },
         {
             "name": "exportText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
@@ -419,7 +419,7 @@
         },
         {
             "name": "exportText",
-            "remove": "true",
+            "remove": true,
             "owner": {
                 "selector": "igx-row-island",
                 "type": "component"

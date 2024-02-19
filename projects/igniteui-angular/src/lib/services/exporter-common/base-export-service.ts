@@ -1064,7 +1064,7 @@ export abstract class IgxBaseExporter {
             let summaryKey = '';
 
             if (this._setChildSummaries) {
-                currKey = `'${groupExpressionName}': '${recordVal}'`;
+                currKey = `'${record.expression.fieldName}': '${recordVal}'`;
                 summaryKeysArr = summaryKeysArr.filter(a => a !== previousKey);
                 previousKey = currKey;
                 summaryKeysArr.push(currKey);
