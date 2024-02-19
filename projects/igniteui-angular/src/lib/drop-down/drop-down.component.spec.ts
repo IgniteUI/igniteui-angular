@@ -179,7 +179,7 @@ describe('IgxDropDown ', () => {
             dropdown.toggle();
             expect(dropdown.close).toHaveBeenCalledTimes(1);
         });
-        it('should notify when selection is deleted', () => {
+        it('should remove selection on destroy', () => {
             const selectionService = new IgxSelectionAPIService();
             const selectionDeleteSpy = spyOn(selectionService, 'delete');
             dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
