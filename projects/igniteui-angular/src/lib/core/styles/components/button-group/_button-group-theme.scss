@@ -27,6 +27,7 @@
 /// @param {Color} $item-hover-background [null] - The hover background color for button group items.
 /// @param {Color} $item-hover-border-color [null] - The hover border color between button group items.
 ///
+/// @param {Color} $item-focused-text-color [null] - The focused text color for button group items.
 /// @param {Color} $item-focused-background [null] - The focused background color for button group items.
 /// @param {Color} $item-focused-border-color [null] - The focused border color for an item from the button group.
 /// @param {Color} $idle-shadow-color [null] - The outline color of focused button group items.
@@ -78,6 +79,7 @@
     $item-hover-background: null,
     $item-hover-border-color: null,
 
+    $item-focused-text-color: null,
     $item-focused-border-color: null,
     $item-focused-background: null,
     $idle-shadow-color: null,
@@ -170,6 +172,7 @@
         item-icon-color: $item-icon-color,
         item-background: $item-background,
         item-border-color: $item-border-color,
+        item-focused-text-color: $item-focused-text-color,
         item-focused-background: $item-focused-background,
         item-focused-border-color: $item-focused-border-color,
         border-radius: $border-radius,
@@ -348,7 +351,6 @@
 
         @if $variant == 'indigo-design' {
             padding-inline: pad-inline(rem(8px));
-            padding-block: pad-block(rem(6px));
 
             igx-icon {
                 color: var-get($theme, 'item-icon-color');
@@ -367,8 +369,8 @@
             }
 
             &:focus {
-                color: var-get($theme, 'item-text-color');
-                background: var-get($theme, 'item-background'); 
+                color: var-get($theme, 'item-focused-text-color');
+                background: var-get($theme, 'item-focused-background'); 
 
                 &:hover {
                     color: var-get($theme, 'item-hover-text-color');
@@ -513,7 +515,7 @@
                 border: none;
 
                 igx-icon {
-                    color: var-get($theme, 'disabled-selected-text-color');
+                    color: var-get($theme, 'disabled-selected-icon-color');
                 }
 
                 &::before {
@@ -541,5 +543,19 @@
     %igx-button-group__button-text {
         width: 100%;
         @include ellipsis();
+    }
+}
+
+/// Adds typography styles for the igx-button-group component.
+/// Uses the 'button' category from the typographic scale.
+/// @group typography
+/// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
+@mixin button-group-typography($categories: (text: 'button')) {
+    $text: map.get($categories, 'text');
+
+    %igx-group-display {
+        @include type-style($text) {
+            text-align: center;
+        }
     }
 }
