@@ -62,7 +62,9 @@
     ));
     @include navbar-typography();
     @include navdrawer-typography();
-    @include radio-typography();
+    @include radio-typography($categories: (
+        label: 'body-2'
+    ));
     @include slider-typography();
     @include snackbar-typography();
     @include switch-typography();
