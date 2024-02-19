@@ -26,12 +26,14 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: 'lodash-es', target: PackageTarget.NONE },
     { name: 'uuid', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+    { name: 'igniteui-theming', target: PackageTarget.NONE },
     // peerDependencies
     { name: '@angular/forms', target: PackageTarget.NONE },
     { name: '@angular/common', target: PackageTarget.NONE },
     { name: '@angular/core', target: PackageTarget.NONE },
     { name: '@angular/animations', target: PackageTarget.NONE },
-    { name: 'igniteui-theming', target: PackageTarget.NONE },
+    { name: 'hammerjs', target: PackageTarget.REGULAR },
+    { name: '@types/hammerjs', target: PackageTarget.DEV },
     // igxDevDependencies
     { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
@@ -95,7 +97,7 @@ export const addDependencies = (options: Options) => async (tree: Tree, context:
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
 
-    await includeDependencies(workspaceHost, workspace, pkgJson, context, tree);
+    await includeDependencies(workspaceHost, workspace, pkgJson, context, tree, options);
 
     await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree);
 
@@ -190,9 +192,14 @@ const addStylePreprocessorOptions =
         }
     };
 
-const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
-    for (const pkg of Object.keys(pkgJson.dependencies)) {
-        const version = pkgJson.dependencies[pkg];
+const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, pkgJson: any, context: SchematicContext, tree: Tree, options: Options): Promise<void> => {
+    const allDeps = Object.keys(pkgJson.dependencies).concat(Object.keys(pkgJson.peerDependencies));
+    for (const pkg of allDeps) {
+        // In case of hammerjs and user prompted to not add hammer, skip
+        if (pkg === 'hammerjs' && !options.addHammer) {
+            break;
+        }
+        const version = pkgJson.dependencies[pkg] || pkgJson.peerDependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
         if (!entry || entry.target === PackageTarget.NONE) {
             continue;
