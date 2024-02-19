@@ -97,17 +97,18 @@ describe('ng-add schematics', () => {
   it('should add hammerjs dependency to package.json dependencies if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(pkgJsonData.dependencies['fflate']).toBeTruthy();
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should NOT add hammer.js to the main.ts file', async () => {
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const mainTs = tree.read(`${sourceRoot}/main.ts`).toString();
     expect(mainTs).not.toContain('import \'hammerjs\';');
   });
 
   it('should NOT add hammer.js to the test.ts file', async () => {
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const testTs = tree.read(`${sourceRoot}/test.ts`).toString();
     expect(testTs).not.toContain('import \'hammerjs\';');
   });
@@ -142,7 +143,7 @@ describe('ng-add schematics', () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
 
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts.length).toBe(1);
@@ -153,7 +154,7 @@ describe('ng-add schematics', () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
 
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts.length).toBe(1);
@@ -164,7 +165,7 @@ describe('ng-add schematics', () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
 
     const newContent = tree.read(`${sourceRoot}/main.ts`).toString();
     expect(newContent).toMatch('// test comment');
@@ -174,7 +175,7 @@ describe('ng-add schematics', () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
 
     const newContent = tree.read(`${sourceRoot}/test.ts`).toString();
     expect(newContent).toMatch('// test comment');
@@ -197,7 +198,7 @@ describe('ng-add schematics', () => {
     const mainTsPath = `${sourceRoot}/main.ts`;
     const content = tree.read(mainTsPath).toString();
     tree.overwrite(mainTsPath, 'import \'hammerjs\';\n' + content);
-    await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
 
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts.length).toBe(0);
