@@ -1,10 +1,13 @@
 <div class="igx-years-view__grid">
-    <span class="igx-years-view__year"
-        [igxCalendarYear]="year"
+    <span
+        *ngFor="let year of range; trackBy: yearTracker"
+        class="igx-years-view__year"
+        igxCalendarYear
+        [value]="year"
         [date]="date"
-        [attr.tabindex]="activeDate?.getFullYear() === year.getFullYear() ? 0 : -1"
-        (yearSelection)="selectDate($event)"
-        *ngFor="let year of years; trackBy: yearTracker">
+        [showActive]="showActive"
+        (itemSelection)="selectDate($event)"
+    >
         <span class="igx-years-view__year-inner">
             {{ formattedYear(year) }}
         </span>

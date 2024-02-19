@@ -9,6 +9,9 @@ import { IgxCalendarMonthDirective } from '../calendar.directives';
 import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { getNextActiveDate, isDateInRanges } from '../common/helpers';
+import { CalendarDay } from '../common/model';
+import { DateRangeType } from '../common/types';
 
 let NEXT_ID = 0;
 
@@ -97,7 +100,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * @hidden
      */
-    public get months(): Date[] {
+    public get range(): Date[] {
         let start = new Date(this.date.getFullYear(), 0, 1);
         const result = [];
 
@@ -145,27 +148,21 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.viewItems.find((date) => date.nativeElement === event.target);
-        if (!node) return;
+        const date = getNextActiveDate(
+            CalendarDay.from(this.date).add('month', direction * delta),
+            []
+        );
 
-        const _date = new Date(this.date.getFullYear(), this.activeDate.getMonth());
-        const _delta = this._calendarModel.timedelta(_date, 'month', direction * delta);
+        const outOfRange = !isDateInRanges(date, [{
+            type: DateRangeType.Between,
+            dateRange: [this.range.at(0), this.range.at(-1)]
+        }]);
 
-        if (_delta.getFullYear() !== this.date.getFullYear()) {
-            this.pageChanged.emit(_delta);
+        if (outOfRange) {
+            this.pageChanged.emit(date.native);
         }
 
-        this.activeDate = _delta;
-        this.getActiveNode().focus();
-    }
-
-    /**
-     * @hidden
-     */
-    private getActiveNode() {
-        const monthNodes = this.viewItems.toArray();
-        const idx = monthNodes.findIndex((month) => month.value.getMonth() === this.activeDate.getMonth());
-        return monthNodes[idx].nativeElement;
+        this.date = date.native;
     }
 
     /**

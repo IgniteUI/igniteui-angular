@@ -18,7 +18,7 @@
         role="button"
         [attr.aria-label]="(obj.date | date: 'LLLL') + ' ' + resourceStrings.igx_calendar_select_month"
         (keydown)="onActiveViewYearKB(obj.date, $event, obj.index)"
-        (mousedown)="onActiveViewYear(obj.date, obj.index)"
+        (mousedown)="onActiveViewYear($event, obj.date, obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(obj.date) }}
     </span>
@@ -32,7 +32,7 @@
         role="button"
         [attr.aria-label]="(obj.date | date: 'yyyy') + ' ' + resourceStrings.igx_calendar_select_year"
         (keydown)="onActiveViewDecadeKB(obj.date, $event, obj.index)"
-        (mousedown)="onActiveViewDecade(obj.date, obj.index)"
+        (mousedown)="onActiveViewDecade($event, obj.date, obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedYear(obj.date) }}
     </span>
@@ -242,7 +242,8 @@
                     (swiperight)="previousPage()"
                     (swipeleft)="nextPage()"
                     (pageChanged)="updateDay($event)"
-                    (dateSelection)="childClicked($event)">
+                    (dateSelection)="childClicked($event)"
+                    (mousedown)="$event.preventDefault()">
                 </igx-days-view>
             </ng-container>
         </ng-container>
@@ -250,30 +251,34 @@
         <ng-container *ngIf="isYearView">
             <igx-months-view
                 #months
+                [tabIndex]="-1"
                 [date]="viewDate"
                 [locale]="locale"
                 [formatView]="formatViews.month"
                 [monthFormat]="formatOptions.month"
+                [showActive]="showActiveDay"
                 (swiperight)="previousPage()"
                 (swipeleft)="nextPage()"
                 (pageChanged)="updateYear($event)"
-                (selected)="changeMonth($event)">
+                (selected)="changeMonth($event)"
+                (mousedown)="$event.preventDefault()">
             </igx-months-view>
         </ng-container>
 
         <ng-container *ngIf="isDecadeView">
             <igx-years-view
                 #decade
+                [tabIndex]="-1"
                 [date]="viewDate"
                 [locale]="locale"
                 [formatView]="formatViews.year"
                 [yearFormat]="formatOptions.year"
+                [showActive]="showActiveDay"
                 (swiperight)="previousPage()"
                 (swipeleft)="nextPage()"
                 (pageChanged)="updateYear($event)"
                 (selected)="changeYear($event)"
-                (click)="onYearsViewClick($event)"
-                (keydown)="onYearsViewKeydown($event)">
+                (mousedown)="$event.preventDefault()">
             </igx-years-view>
         </ng-container>
     </section>

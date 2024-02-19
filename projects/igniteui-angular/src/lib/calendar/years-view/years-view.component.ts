@@ -3,24 +3,14 @@ import {
     Input,
     HostBinding,
     ElementRef,
-    Injectable,
-    QueryList,
-    AfterViewInit
 } from '@angular/core';
-import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
-import { Subject } from 'rxjs';
 import { NgFor } from '@angular/common';
-import { takeUntil } from 'rxjs/operators';
 import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-@Injectable()
-export class CalendarHammerConfig extends HammerGestureConfig {
-    public override overrides = {
-        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
-    };
-}
+import { CalendarDay } from '../common/model';
+import { getNextActiveDate, isDateInRanges } from '../common/helpers';
+import { DateRangeType } from '../common/types';
 
 @Component({
     providers: [
@@ -28,10 +18,6 @@ export class CalendarHammerConfig extends HammerGestureConfig {
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxYearsViewComponent,
             multi: true
-        },
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: CalendarHammerConfig
         }
     ],
     selector: 'igx-years-view',
@@ -39,7 +25,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     standalone: true,
     imports: [NgFor, IgxCalendarYearDirective]
 })
-export class IgxYearsViewComponent extends IgxCalendarViewDirective implements AfterViewInit, ControlValueAccessor {
+export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      * @internal
@@ -58,8 +44,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements A
      * @hidden
      */
     private _yearFormat = 'numeric';
-
-    private destroy$ = new Subject<boolean>();
 
     /**
      * Gets the year format option of the years view.
@@ -93,7 +77,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements A
      *
      * @hidden
      */
-    public get years() {
+    public get range() {
 		return this._calendarModel.yearDates(this.date);
     }
 
@@ -117,25 +101,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements A
     /**
      * @hidden
      */
-    public scroll(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const delta = event.deltaY < 0 ? -1 : 1;
-        this.generateYearRange(delta);
-    }
-
-    /**
-     * @hidden
-     */
-    public pan(event) {
-        const delta = event.deltaY < 0 ? 1 : -1;
-        this.generateYearRange(delta);
-    }
-
-    /**
-     * @hidden
-     */
     public yearTracker(_: number, item: Date): string {
         return `${item.getFullYear()}}`;
     }
@@ -147,58 +112,21 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements A
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.viewItems.find((date) => date.nativeElement === event.target);
-        if (!node) return;
-
-        const _date = new Date(this.activeDate.getFullYear(), this.date.getMonth());
-        const _delta = this._calendarModel.timedelta(_date, 'year', direction * delta);
-        const years = this._calendarModel.yearDates(_delta);
-        const hasNextYear = years.find((year) => year.getFullYear() === this.activeDate.getFullYear());
-
-        if (!hasNextYear) {
-            this.date = _delta;
-            this.pageChanged.emit(_delta);
-        }
-
-        this.activeDate = _delta;
-        this.focusActiveNode(this.viewItems as QueryList<IgxCalendarYearDirective>);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        this.viewItems.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((list: QueryList<IgxCalendarYearDirective>) =>
-                this.focusActiveNode(list),
-            );
-    }
-
-    /**
-     * @hidden
-     */
-    private focusActiveNode(list: QueryList<IgxCalendarYearDirective>) {
-        const years = list.toArray();
-        const idx = years.findIndex(
-            (year) => year.value.getFullYear() === this.activeDate.getFullYear()
+        const date = getNextActiveDate(
+            CalendarDay.from(this.date).add('year', direction * delta),
+            []
         );
 
-        if (years[idx]) years[idx].nativeElement.focus();
-    }
+        const outOfRange = !isDateInRanges(date, [{
+            type: DateRangeType.Between,
+            dateRange: [this.range.at(0), this.range.at(-1)]
+        }]);
 
-    /**
-     * @hidden
-     */
-    private generateYearRange(delta: number) {
-        const currentYear = new Date().getFullYear();
-
-        if ((delta > 0 && this.date.getFullYear() - currentYear >= 95) ||
-            (delta < 0 && currentYear - this.date.getFullYear() >= 95)) {
-            return;
+        if (outOfRange) {
+            this.pageChanged.emit(date.native);
         }
 
-        this.date = this._calendarModel.timedelta(this.date, 'year', delta);
+        this.date = date.native;
     }
 
     /**
@@ -207,5 +135,4 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements A
     protected initFormatter() {
         this._formatter = new Intl.DateTimeFormat(this._locale, { year: this.yearFormat });
     }
-
 }

@@ -8,14 +8,17 @@ import {
     QueryList,
     booleanAttribute,
     Directive,
+    HostBinding,
 } from "@angular/core";
-import { noop } from 'rxjs';
+import { noop } from "rxjs";
 import { Calendar } from "../calendar";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { HammerGestureConfig } from "@angular/platform-browser";
 import {
-    HammerGestureConfig,
-} from "@angular/platform-browser";
-import { IGX_CALENDAR_VIEW_ITEM, IgxCalendarMonthDirective, IgxCalendarYearDirective } from '../calendar.directives';
+    IGX_CALENDAR_VIEW_ITEM,
+    IgxCalendarMonthDirective,
+    IgxCalendarYearDirective,
+} from "../calendar.directives";
 
 export enum Direction {
     NEXT = 1,
@@ -30,7 +33,13 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 }
 
 @Directive({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarViewDirective, multi: true }],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarViewDirective,
+            multi: true,
+        },
+    ],
     standalone: true,
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
@@ -40,12 +49,22 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     protected abstract tagName: string;
 
+    @HostBinding("attr.tabIndex")
+    @Input()
+    public tabIndex = 0;
+
     /**
      * Gets/sets whether the view should be rendered
      * according to the locale and format, if any.
      */
     @Input({ transform: booleanAttribute })
     public formatView: boolean;
+
+    /**
+     * Applies styles to the active item on view focus.
+     */
+    @Input({ transform: booleanAttribute })
+    public showActive = false;
 
     /**
      * Emits an event when a selection is made in the view.
@@ -69,7 +88,9 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @internal
      */
     @ViewChildren(IGX_CALENDAR_VIEW_ITEM, { read: IGX_CALENDAR_VIEW_ITEM })
-    public viewItems: QueryList<IgxCalendarMonthDirective | IgxCalendarYearDirective>;
+    public viewItems: QueryList<
+        IgxCalendarMonthDirective | IgxCalendarYearDirective
+    >;
 
     /**
      * @hidden
@@ -85,12 +106,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     protected _calendarModel: Calendar;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected activeDate: Date;
 
     /**
      * @hidden
@@ -119,23 +134,13 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @Input()
     public set date(value: Date) {
-        if (!(value instanceof Date)) {
-            return;
-        }
+        if (!(value instanceof Date)) return;
+
         this._date = value;
-        this.updateOnDateChange();
     }
 
     public get date() {
         return this._date;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected updateOnDateChange() {
-        this.activeDate = this.date;
     }
 
     /**
@@ -204,28 +209,23 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener('keydown.home', ['$event'])
+    @HostListener("keydown.home", ["$event"])
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 
-        const date = this.viewItems.toArray()[0];
-        this.activeDate = date.value;
-        date.nativeElement.focus();
+        this.date = this.range.at(0);
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.end', ['$event'])
+    @HostListener("keydown.end", ["$event"])
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 
-        const dates = this.viewItems.toArray();
-        const date = dates.at(-1);
-        this.activeDate = date.value;
-        date.nativeElement.focus();
+        this.date = this.range.at(-1);
     }
 
     /**
@@ -233,8 +233,8 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.enter", ["$event"])
     public onKeydownEnter(event: KeyboardEvent) {
-        const value = this.viewItems.find((date) => date.nativeElement === event.target).value;
-        this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
+        event.stopPropagation();
+        console.log("Enter key pressed in CALENDAR VIEW", this.date);
 
         this.selected.emit(this.date);
         this._onChangeCallback(this.date);
@@ -243,23 +243,27 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public selectDate(event: Date) {
-        this.date = event;
-        this.activeDate = this.date;
-
-        this.selected.emit(this.date);
-        this._onChangeCallback(this.date);
+    @HostListener('focus')
+    protected handleFocus() {
+        this.showActive = true;
     }
 
     /**
-     * @hidden @internal
+     * @hidden
      */
-    public focusActiveDate() {
-        if (this.activeDate) {
-            const dates = this.viewItems.toArray();
-            const date = dates.find(d => d.value.getTime() === this.activeDate.getTime());
-            date?.nativeElement.focus();
-        }
+    @HostListener('blur')
+    protected handleBlur() {
+        this.showActive = false;
+    }
+
+    /**
+     * @hidden
+     */
+    public selectDate(value: Date) {
+        this.date = value;
+
+        this.selected.emit(this.date);
+        this._onChangeCallback(this.date);
     }
 
     /**
@@ -288,10 +292,19 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected abstract navigateTo(event: KeyboardEvent, direction: Direction, delta: number): void;
+    protected abstract navigateTo(
+        event: KeyboardEvent,
+        direction: Direction,
+        delta: number,
+    ): void;
 
     /**
-     * @hidden @internal
+     * @hidden
      */
     protected abstract initFormatter(): void;
+
+    /**
+     * @hidden
+     */
+    protected abstract get range(): Date[];
 }

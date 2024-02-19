@@ -3,6 +3,7 @@ import { IgxCalendarBaseDirective } from '../calendar-base';
 import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CalendarDay } from '../common/model';
+import { getYearRange } from '../common/helpers';
 
 @Directive({
     selector: '[igxMonthPickerBase]',
@@ -129,11 +130,13 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 	}
 
 	protected getDecadeRange(): { start: string; end: string } {
-		const dates = this.calendarModel.yearDates(this.viewDate);
+        const range = getYearRange(this.viewDate, 15);
+        const start = CalendarDay.from(this.viewDate).set({ date: 1, year: range.start }); 
+        const end = CalendarDay.from(this.viewDate).set({ date: 1, year: range.end });
 
 		return {
-			start: this.formatterYear.format(dates[0]),
-			end: this.formatterYear.format(dates.at(-1))
+			start: this.formatterYear.format(start.native),
+			end: this.formatterYear.format(end.native)
 		}
 	}
 }

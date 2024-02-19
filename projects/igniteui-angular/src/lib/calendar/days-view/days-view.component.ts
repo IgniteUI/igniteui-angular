@@ -136,6 +136,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     public get showActiveDay() {
         return this._showActiveDay;
     }
+
     /**
      * @hidden
      */

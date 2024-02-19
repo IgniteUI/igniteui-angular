@@ -158,12 +158,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
         if (event.key === this.platform.KEYMAP.ARROW_LEFT) {
             this.previousPage(event);
         }
-
-        requestAnimationFrame(() => {
-            if (this.dacadeView) {
-                this.dacadeView.focusActiveDate();
-            }
-        });
     }
 
     /**
@@ -205,12 +199,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
         );
 
         this.activeView = IgxCalendarView.Month;
-
-        requestAnimationFrame(() => {
-            if (this.monthsView) {
-                this.monthsView.focusActiveDate();
-            }
-        });
     }
 
     /**

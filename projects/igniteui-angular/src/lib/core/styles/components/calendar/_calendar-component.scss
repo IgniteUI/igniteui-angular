@@ -357,11 +357,8 @@
             @extend %years-grid !optional;
         }
 
-        @include e(year) {
-            &:focus,
-            &:focus-within {
-                @extend %year-focus !optional;
-            }
+        @include e(year, 'active') {
+            @extend %year-focus !optional;
         }
 
         @include e(year, 'current') {
@@ -370,10 +367,10 @@
             &:hover {
                 @extend %years-view__year-current-hover !optional;
             }
+        }
 
-            &:focus {
-                @extend %years-view__year-current-focus !optional;
-            }
+        @include e(year, $mods: ('current', 'active')) {
+            @extend %years-view__year-current-focus !optional;
         }
 
         @include e(year, 'selected') {
@@ -381,11 +378,6 @@
 
             &:hover {
                 @extend %years-view__year-selected-hover !optional;
-            }
-
-            &:focus-within,
-            &:focus {
-                @extend %years-view__year-selected-focus !optional;
             }
         }
 
@@ -395,10 +387,14 @@
             &:hover {
                 @extend %years-view__year-selected-current-hover !optional;
             }
+        }
 
-            &:focus {
-                @extend %years-view__year-selected-current-focus !optional;
-            }
+        @include e(year, $mods: ('selected', 'active')) {
+            @extend %years-view__year-selected-focus !optional;
+        }
+
+        @include e(year, $mods: ('selected', 'current', 'active')) {
+            @extend %years-view__year-selected-current-focus !optional;
         }
 
         @include e(year-inner) {
@@ -417,11 +413,8 @@
             @extend %months-grid !optional;
         }
 
-        @include e(month) {
-            &:focus,
-            &:focus-within {
-                @extend %month-focus !optional;
-            }
+        @include e(month, 'active') {
+            @extend %month-focus !optional;
         }
 
         @include e(month, 'current') {
@@ -430,10 +423,10 @@
             &:hover {
                 @extend %months-view__month-current-hover !optional;
             }
+        }
 
-            &:focus {
-                @extend %months-view__month-current-focus !optional;
-            }
+        @include e(month, $mods: ('current', 'active')) {
+            @extend %months-view__month-current-focus !optional;
         }
 
         @include e(month, 'selected') {
@@ -442,11 +435,10 @@
             &:hover {
                 @extend %months-view__month-selected-hover !optional;
             }
+        }
 
-            &:focus-within,
-            &:focus {
-                @extend %months-view__month-selected-focus !optional;
-            }
+        @include e(month, $mods: ('selected', 'active')) {
+            @extend %months-view__month-selected-focus !optional;
         }
 
         @include e(month, $mods: ('selected', 'current')) {
@@ -455,10 +447,10 @@
             &:hover {
                 @extend %months-view__month-selected-current-hover !optional;
             }
+        }
 
-            &:focus {
-                @extend %months-view__month-selected-current-focus !optional;
-            }
+        @include e(month, $mods: ('selected', 'current', 'active')) {
+            @extend %months-view__month-selected-current-focus !optional;
         }
 
         @include e(month-inner) {

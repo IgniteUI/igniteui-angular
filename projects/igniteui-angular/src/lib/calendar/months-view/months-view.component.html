@@ -1,15 +1,16 @@
 <div class="igx-months-view__grid">
-        <span
-            class="igx-months-view__month"
-            role="button"
-            [attr.aria-label]="month | date: 'LLLL'"
-            [igxCalendarMonth]="month"
-            [date]="date"
-            [attr.tabindex]="activeDate?.getMonth() === month.getMonth() ? 0 : -1"
-            [index]="i"
-            (monthSelection)="selectDate($event)"
-            *ngFor="let month of months; index as i; trackBy: monthTracker">
-            <span class="igx-months-view__month-inner">{{ formattedMonth(month) | titlecase }}</span>
+    <span
+        *ngFor="let month of range; trackBy: monthTracker"
+        class="igx-months-view__month"
+        igxCalendarMonth
+        [value]="month"
+        [date]="date"
+        [showActive]="showActive"
+        (itemSelection)="selectDate($event)"
+    >
+        <span class="igx-months-view__month-inner">
+            {{ formattedMonth(month) | titlecase }}
         </span>
+    </span>
 </div>
 
