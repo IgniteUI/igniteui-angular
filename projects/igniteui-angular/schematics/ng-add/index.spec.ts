@@ -94,7 +94,7 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies['hammerjs']).toBeFalsy();
   });
 
-  it('should add hammerjs dependency to package.json dependencies if addHammer promp is set.', async () => {
+  it('should add hammerjs dependency to package.json dependencies if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
@@ -119,12 +119,11 @@ describe('ng-add schematics', () => {
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).not.toContain('./node_modules/hammerjs/hammer.min.js');
   });
 
-   it('should add hammer.js in angular.json build options under scripts if addHammer promp is set.', async () => {
+  it('should add hammer.js in angular.json build options under scripts if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).toContain('./node_modules/hammerjs/hammer.min.js');
   });
-
 
   // Hammer is optional now.
   it('should not add hammer.js in angular.json test options under scripts', async () => {
@@ -133,7 +132,7 @@ describe('ng-add schematics', () => {
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts).not.toContain('./node_modules/hammerjs/hammer.min.js');
   });
 
-  it('should add hammer.js in angular.json test options under scripts if addHammer promp is set.', async () => {
+  it('should add hammer.js in angular.json test options under scripts if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts).toContain('./node_modules/hammerjs/hammer.min.js');
@@ -181,14 +180,14 @@ describe('ng-add schematics', () => {
     expect(newContent).toMatch('// test comment');
   });
 
-    // Hammer is optional now.
+  // Hammer is optional now.
   it('should not add hammer.js to package.json dependencies', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['hammerjs']).toBeFalsy();
   });
 
-  it('should add hammer.js to package.json dependencies if addHammer promp is set.', async () => {
+  it('should add hammer.js to package.json dependencies if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
@@ -260,4 +259,3 @@ describe('ng-add schematics', () => {
   });
 
 });
-
