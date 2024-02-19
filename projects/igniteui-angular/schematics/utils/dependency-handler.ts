@@ -197,7 +197,7 @@ const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, work
     for (const pkg of allDeps) {
         // In case of hammerjs and user prompted to not add hammer, skip
         if (pkg === 'hammerjs' && !options.addHammer) {
-            break;
+            continue;
         }
         const version = pkgJson.dependencies[pkg] || pkgJson.peerDependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
