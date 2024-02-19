@@ -14,7 +14,7 @@
             "type": "boolean",
             "description": "Add HammerJS",
             "default": false,
-            "x-prompt": "Add setup for HammerJS for touch interactions support?"
+            "x-prompt": "Add HammerJS setup for touch-specific interactions support?"
         }
     },
     "required": []
