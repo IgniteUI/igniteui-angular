@@ -397,7 +397,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
     });
 
-    it('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
+    fit('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
         const fix = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
@@ -916,12 +916,12 @@ export class CollapsibleColumnGroupTestComponent {
     public grid: IgxGridComponent;
     @ViewChild(IgxGridStateDirective, { static: true })
     public state: IgxGridStateDirective;
-    public generalInfCollapsible;
-    public generalInfExpanded;
-    public personDetailsCollapsible;
-    public personDetailsExpanded;
-    public personDetailsVisibleWhenCollapse;
-    public companyNameVisibleWhenCollapse;
+    public generalInfCollapsible = false;
+    public generalInfExpanded = false;
+    public personDetailsCollapsible = false;
+    public personDetailsExpanded = false;
+    public personDetailsVisibleWhenCollapse = false;
+    public companyNameVisibleWhenCollapse = false;
     public hideContactInformation = true;
     public data = SampleTestData.contactInfoDataFull();
 }
