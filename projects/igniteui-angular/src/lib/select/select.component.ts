@@ -557,7 +557,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public override ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-        this.selection.clear(this.id);
+        this.selection.delete(this.id);
+        super.ngOnDestroy();
     }
 
     /**
