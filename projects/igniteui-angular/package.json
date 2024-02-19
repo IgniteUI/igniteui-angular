@@ -87,11 +87,11 @@
     },
     "peerDependenciesMeta": {
         "hammerjs": {
-          "optional": true
+            "optional": true
         },
         "@types/hammerjs": {
             "optional": true
-          }
+        }
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~17.1.1316-rc.0"
