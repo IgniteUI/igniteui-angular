@@ -306,7 +306,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * Clears any existing highlight.
      */
     public clearHighlight(): void {
-        this.service.destroyGroup(this.groupName);
         this.clearChildElements(false);
 
         this._lastSearchInfo.searchText = '';
