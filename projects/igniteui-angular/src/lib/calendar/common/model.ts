@@ -13,7 +13,7 @@ type CalendarDayParams = {
     date?: number;
 };
 
-type DayInterval = "year" | "quarter" | "month" | "week" | "day";
+export type DayInterval = "year" | "quarter" | "month" | "week" | "day";
 
 export const daysInWeek = 7;
 const millisecondsInDay = 86400000;

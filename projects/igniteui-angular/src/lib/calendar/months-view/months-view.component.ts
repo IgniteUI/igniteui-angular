@@ -4,37 +4,48 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-} from '@angular/core';
-import { IgxCalendarMonthDirective } from '../calendar.directives';
-import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
-import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { getNextActiveDate, isDateInRanges } from '../common/helpers';
-import { CalendarDay } from '../common/model';
-import { DateRangeType } from '../common/types';
+    Inject,
+} from "@angular/core";
+import { IgxCalendarMonthDirective } from "../calendar.directives";
+import { NgFor, TitleCasePipe, DatePipe } from "@angular/common";
+import {
+    IgxCalendarViewDirective,
+    DAY_INTERVAL_TOKEN,
+} from "../common/calendar-view.directive";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CalendarDay, DayInterval } from "../common/model";
+import { calendarRange } from "../common/helpers";
 
 let NEXT_ID = 0;
 
 @Component({
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: IgxMonthsViewComponent,
-        multi: true
-    }],
-    selector: 'igx-months-view',
-    templateUrl: 'months-view.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxMonthsViewComponent,
+            multi: true,
+        },
+        {
+            provide: DAY_INTERVAL_TOKEN,
+            useValue: "month",
+        },
+    ],
+    selector: "igx-months-view",
+    templateUrl: "months-view.component.html",
     standalone: true,
-    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
+    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe],
 })
-export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
-    protected tagName = 'igx-months-view';
+export class IgxMonthsViewComponent
+    extends IgxCalendarViewDirective
+    implements ControlValueAccessor {
+    protected tagName = "igx-months-view";
 
     /**
      * The default css class applied to the component.
      *
      * @hidden
      */
-    @HostBinding('class.igx-calendar')
+    @HostBinding("class.igx-calendar")
     public styleClass = true;
 
     /**
@@ -49,7 +60,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * @memberof IgxMonthsViewComponent
      */
-    @HostBinding('attr.id')
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-months-view-${NEXT_ID++}`;
 
@@ -58,7 +69,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * @hidden
      */
-    @HostBinding('class.igx-months-view')
+    @HostBinding("class.igx-months-view")
     public readonly viewClass = true;
 
     /**
@@ -98,27 +109,27 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * Used in the template of the component
      *
-     * @hidden
+     * @hidden @internal
      */
     public get range(): Date[] {
-        let start = new Date(this.date.getFullYear(), 0, 1);
-        const result = [];
+        const start = CalendarDay.from(this.date).set({ date: 1, month: 0 });
+        const end = start.add(this.dayInterval, 12);
 
-        for (let i = 0; i < 12; i++) {
-            result.push(start);
-            start = this._calendarModel.timedelta(start, 'month', 1);
-        }
-
-        return result;
+        return Array.from(calendarRange({ start, end, unit: this.dayInterval })).map(
+            (m) => m.native,
+        );
     }
 
     /**
      * @hidden
      */
-    private _monthFormat = 'short';
+    private _monthFormat = "short";
 
-    constructor(public el: ElementRef) {
-        super();
+    constructor(
+        public el: ElementRef,
+        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
+    ) {
+        super(dayInterval);
     }
 
     /**
@@ -144,31 +155,9 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     /**
      * @hidden
      */
-    protected navigateTo(event: KeyboardEvent, direction: Direction, delta: number) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const date = getNextActiveDate(
-            CalendarDay.from(this.date).add('month', direction * delta),
-            []
-        );
-
-        const outOfRange = !isDateInRanges(date, [{
-            type: DateRangeType.Between,
-            dateRange: [this.range.at(0), this.range.at(-1)]
-        }]);
-
-        if (outOfRange) {
-            this.pageChanged.emit(date.native);
-        }
-
-        this.date = date.native;
-    }
-
-    /**
-     * @hidden
-     */
     protected initFormatter() {
-        this._formatter = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
+        this._formatter = new Intl.DateTimeFormat(this._locale, {
+            month: this.monthFormat,
+        });
     }
 }

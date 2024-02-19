@@ -3,34 +3,34 @@ import {
     EventEmitter,
     Input,
     HostListener,
-    Injectable,
     ViewChildren,
     QueryList,
     booleanAttribute,
     Directive,
     HostBinding,
+    InjectionToken,
+    Inject,
 } from "@angular/core";
 import { noop } from "rxjs";
 import { Calendar } from "../calendar";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { HammerGestureConfig } from "@angular/platform-browser";
 import {
     IGX_CALENDAR_VIEW_ITEM,
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
 } from "../calendar.directives";
+import { CalendarDay, DayInterval } from "../common/model";
+import { getNextActiveDate, isDateInRanges } from "./helpers";
+import { DateRangeType } from "igniteui-webcomponents";
 
 export enum Direction {
     NEXT = 1,
     PREV = -1,
 }
 
-@Injectable()
-export class CalendarHammerConfig extends HammerGestureConfig {
-    public override overrides = {
-        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 },
-    };
-}
+export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
+    "DAY_INTERVAL",
+);
 
 @Directive({
     providers: [
@@ -169,7 +169,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         this.initFormatter();
     }
 
-    constructor() {
+    constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
         this.initFormatter();
         this._calendarModel = new Calendar();
     }
@@ -234,7 +234,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     @HostListener("keydown.enter", ["$event"])
     public onKeydownEnter(event: KeyboardEvent) {
         event.stopPropagation();
-        console.log("Enter key pressed in CALENDAR VIEW", this.date);
 
         this.selected.emit(this.date);
         this._onChangeCallback(this.date);
@@ -243,7 +242,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener('focus')
+    @HostListener("focus")
     protected handleFocus() {
         this.showActive = true;
     }
@@ -251,7 +250,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener('blur')
+    @HostListener("blur")
     protected handleBlur() {
         this.showActive = false;
     }
@@ -292,11 +291,32 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected abstract navigateTo(
+    protected navigateTo(
         event: KeyboardEvent,
         direction: Direction,
         delta: number,
-    ): void;
+    ) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const date = getNextActiveDate(
+            CalendarDay.from(this.date).add(this.dayInterval, direction * delta),
+            [],
+        );
+
+        const outOfRange = !isDateInRanges(date, [
+            {
+                type: DateRangeType.Between,
+                dateRange: [this.range.at(0), this.range.at(-1)],
+            },
+        ]);
+
+        if (outOfRange) {
+            this.pageChanged.emit(date.native);
+        }
+
+        this.date = date.native;
+    }
 
     /**
      * @hidden

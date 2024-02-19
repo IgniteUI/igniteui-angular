@@ -3,47 +3,61 @@ import {
     Input,
     HostBinding,
     ElementRef,
-} from '@angular/core';
-import { IgxCalendarYearDirective } from '../calendar.directives';
-import { NgFor } from '@angular/common';
-import { IgxCalendarViewDirective, Direction } from '../common/calendar-view.directive';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CalendarDay } from '../common/model';
-import { getNextActiveDate, isDateInRanges } from '../common/helpers';
-import { DateRangeType } from '../common/types';
+    Inject,
+} from "@angular/core";
+import { IgxCalendarYearDirective } from "../calendar.directives";
+import { NgFor } from "@angular/common";
+import {
+    IgxCalendarViewDirective,
+    DAY_INTERVAL_TOKEN,
+} from "../common/calendar-view.directive";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CalendarDay, DayInterval } from "../common/model";
+import { calendarRange } from "../common/helpers";
 
 @Component({
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxYearsViewComponent,
-            multi: true
-        }
+            multi: true,
+        },
+        {
+            provide: DAY_INTERVAL_TOKEN,
+            useValue: "year",
+        },
     ],
-    selector: 'igx-years-view',
-    templateUrl: 'years-view.component.html',
+    selector: "igx-years-view",
+    templateUrl: "years-view.component.html",
     standalone: true,
-    imports: [NgFor, IgxCalendarYearDirective]
+    imports: [NgFor, IgxCalendarYearDirective],
 })
-export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+export class IgxYearsViewComponent
+    extends IgxCalendarViewDirective
+    implements ControlValueAccessor {
     /**
      * @hidden
      * @internal
      */
-    protected tagName = 'igx-years-view';
+    protected tagName = "igx-years-view";
 
     /**
      * The default css class applied to the component.
      *
      * @hidden
      */
-    @HostBinding('class.igx-years-view')
+    @HostBinding("class.igx-years-view")
     public readonly viewClass = true;
 
     /**
      * @hidden
      */
-    private _yearFormat = 'numeric';
+    private _yearFormat = "numeric";
+
+    /**
+     * @hidden
+     */
+    private _yearsPerPage = 15;
 
     /**
      * Gets the year format option of the years view.
@@ -75,14 +89,26 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      *
      * Used in the template of the component.
      *
-     * @hidden
+     * @hidden @internal
      */
-    public get range() {
-		return this._calendarModel.yearDates(this.date);
+    public get range(): Date[] {
+        const year = this.date.getFullYear();
+        const start = new CalendarDay({
+            year: Math.floor(year / this._yearsPerPage) * this._yearsPerPage,
+            month: this.date.getMonth(),
+        });
+        const end = start.add(this.dayInterval, this._yearsPerPage);
+
+        return Array.from(calendarRange({ start, end, unit: this.dayInterval })).map(
+            (m) => m.native,
+        );
     }
 
-    constructor(public el: ElementRef) {
-        super();
+    constructor(
+        public el: ElementRef,
+        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
+    ) {
+        super(dayInterval);
     }
 
     /**
@@ -108,31 +134,9 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
     /**
      * @hidden
      */
-    protected navigateTo(event: KeyboardEvent, direction: Direction, delta: number) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const date = getNextActiveDate(
-            CalendarDay.from(this.date).add('year', direction * delta),
-            []
-        );
-
-        const outOfRange = !isDateInRanges(date, [{
-            type: DateRangeType.Between,
-            dateRange: [this.range.at(0), this.range.at(-1)]
-        }]);
-
-        if (outOfRange) {
-            this.pageChanged.emit(date.native);
-        }
-
-        this.date = date.native;
-    }
-
-    /**
-     * @hidden
-     */
     protected initFormatter() {
-        this._formatter = new Intl.DateTimeFormat(this._locale, { year: this.yearFormat });
+        this._formatter = new Intl.DateTimeFormat(this._locale, {
+            year: this.yearFormat,
+        });
     }
 }
