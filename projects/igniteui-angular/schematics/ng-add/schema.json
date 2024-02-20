@@ -9,6 +9,12 @@
             "description": "Add reset CSS lib",
             "default": true,
             "x-prompt": "Add CSS library to reset HTML element styles across browsers?"
+        },
+        "addHammer": {
+            "type": "boolean",
+            "description": "Add HammerJS",
+            "default": false,
+            "x-prompt": "Add HammerJS setup for touch-specific interactions support?"
         }
     },
     "required": []

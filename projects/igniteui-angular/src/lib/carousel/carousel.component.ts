@@ -35,6 +35,7 @@ import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarou
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { HammerGesturesManager } from '../core/touch';
 
 let NEXT_ID = 0;
 
@@ -47,7 +48,7 @@ export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientatio
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
     };
 }
 /**
