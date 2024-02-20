@@ -258,6 +258,17 @@
         }
     }
 
+    @if $variant == 'indigo-design' {
+        %igx-card-content,
+        %igx-card-actions {
+            padding: rem(16px);
+        }
+
+        %igx-card-header + %igx-card-content {
+            padding-block-start: 0;
+        }        
+    }
+
     %igx-card-actions--vertical {
         flex-direction: column;
 
@@ -276,6 +287,10 @@
         order: 1;
         color: var-get($theme, 'actions-text-color');
         margin-inline-start: auto;
+
+        @if $variant == 'indigo-design' {
+            gap: rem(8px);
+        }
 
         &:empty {
             display: none;
