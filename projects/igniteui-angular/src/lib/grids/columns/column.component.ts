@@ -1541,7 +1541,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
-            this.parent.setExpandCollapseState();
+            this.parent?.setExpandCollapseState?.();
         }
     }
 
