@@ -17,11 +17,12 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { IgxCalendarYearDirective } from '../calendar.directives';
 import { noop } from 'rxjs';
 import { NgFor } from '@angular/common';
+import { HammerGesturesManager } from '../../core/touch';
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL, threshold: 1 }
     };
 }
 

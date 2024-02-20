@@ -18,6 +18,7 @@ import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-commo
 import { Subscription } from 'rxjs';
 import { HammerGesturesManager } from '../core/touch';
 import { NgIf } from '@angular/common';
+import { HammerOptions } from '../core/touch-annotations';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -449,7 +450,7 @@ describe('IgxTimePicker', () => {
 
             itemListDirective.ngOnInit();
             expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
-            const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
+            const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer.Pan, { direction: HammerGesturesManager.Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
             expect(touchManager.addEventListener).toHaveBeenCalledWith(
                 elementRef.nativeElement,
                 'pan',
@@ -1722,7 +1723,7 @@ describe('IgxTimePicker', () => {
                 expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
                 expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                 expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
-            
+
                 // remove the validators and set errors
                 (fixture.componentInstance as IgxTimePickerReactiveFormComponent).removeValidators();
                 form.markAsUntouched();
