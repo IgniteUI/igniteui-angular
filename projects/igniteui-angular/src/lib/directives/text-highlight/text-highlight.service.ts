@@ -29,4 +29,10 @@ export class IgxTextHighlightService {
         this.onActiveElementChanged.emit(groupName);
     }
 
+    /**
+     * Destroys a highlight group.
+     */
+    public destroyGroup(groupName: string) {
+        this.highlightGroupsMap.delete(groupName);
+    }
 }
