@@ -23,6 +23,12 @@ const DaysMap = {
     saturday: 6,
 };
 
+interface IFormattedParts {
+    value: string;
+    literal: string;
+    combined: string;
+}
+
 /* Converter functions */
 
 export function dateFromISOString(value: string | null) {
@@ -150,11 +156,14 @@ export function getYearRange(current: DayParameter, range: number) {
 }
 
 export function getLargestRange(ranges: DateRangeDescriptor[] = []) {
-    return ranges.reduce((prev, current) => {
-        const c = current?.dateRange ?? [];
-        const p = prev?.dateRange ?? [];
-        return c.length > p.length ? current : prev;
-    }, [] as unknown as DateRangeDescriptor);
+    return ranges.reduce(
+        (prev, current) => {
+            const c = current?.dateRange ?? [];
+            const p = prev?.dateRange ?? [];
+            return c.length > p.length ? current : prev;
+        },
+        [] as unknown as DateRangeDescriptor,
+    );
 }
 
 export function isDateInRanges(
@@ -198,4 +207,45 @@ export function isDateInRanges(
                 return false;
         }
     });
+}
+
+export function formatToParts(
+    date: Date,
+    locale: string,
+    options: Intl.DateTimeFormatOptions,
+    parts: string[],
+): Record<string, any> {
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    const result: Record<string, any> = {
+        date,
+        full: formatter.format(date),
+    };
+
+    const getFormattedPart = (
+        formattedParts: Intl.DateTimeFormatPart[],
+        partType: string,
+    ): IFormattedParts => {
+        const part = formattedParts.find(({ type }) => type === partType);
+        const nextPart = formattedParts[formattedParts.indexOf(part) + 1];
+        const value = part?.value || "";
+        const literal = nextPart?.type === "literal" ? nextPart.value : "";
+        return {
+            value,
+            literal,
+            combined: value + literal,
+        };
+    };
+
+    if ("formatToParts" in formatter) {
+        const formattedParts = formatter.formatToParts(date);
+        parts.forEach(
+            (part) => (result[part] = getFormattedPart(formattedParts, part)),
+        );
+    } else {
+        parts.forEach(
+            (part) => (result[part] = { value: "", literal: "", combined: "" }),
+        );
+    }
+
+    return result;
 }

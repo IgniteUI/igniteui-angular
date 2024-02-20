@@ -168,7 +168,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _weekStart: WEEKDAYS | number;
+    private _weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
     /**
      * @hidden
@@ -245,7 +245,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this.calendarModel.firstWeekDay;
+        return this._weekStart;
     }
 
     /**
@@ -254,7 +254,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
-        this.calendarModel.firstWeekDay = value;
     }
 
     /**
@@ -281,9 +280,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
-        if (this._weekStart === undefined) {
-            this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
-        }
+        this._weekStart = getLocaleFirstDayOfWeek(this._locale);
 
         this.initFormatters();
     }
@@ -436,7 +433,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
-        this.calendarModel.disabledDates = this._disabledDates;
     }
 
     /**
@@ -788,7 +784,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else {
                 this.rangeStarted = false;
 
-                if (this.selectedDates[0].getTime() === value.getTime()) {
+                if (this.selectedDates[0]?.getTime() === value.getTime()) {
                     this.selectedDates = [];
                     this._onChangeCallback(this.selectedDates);
                     return;

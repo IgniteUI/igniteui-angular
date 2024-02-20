@@ -84,7 +84,7 @@ export class CalendarSampleComponent implements OnInit {
 
 	public selectPTOdays(dates: Date | Date[]) {
 		this.range = dates as Date [];
-		// console.log(this.range);
+		console.log(this.range);
 	}
 
 	public submitPTOdays() {
@@ -113,7 +113,7 @@ export class CalendarSampleComponent implements OnInit {
 	}
 
 	public viewDateChanged(event: IViewDateChangeEventArgs) {
-		// console.log(event);
+		console.log(event);
 	}
 
 	public activeViewChanged(event) {

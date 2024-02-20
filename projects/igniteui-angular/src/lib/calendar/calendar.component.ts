@@ -28,10 +28,9 @@ import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { interval } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
-import { IViewChangingEventArgs } from './days-view/days-view.interface';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from '../icon/icon.component';
-import { areSameMonth, getClosestActiveDate, isDateInRanges } from './common/helpers';
+import { areSameMonth, formatToParts, getClosestActiveDate, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 
 let NEXT_ID = 0;
@@ -395,12 +394,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	public callback: (next) => void;
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
 	private _monthsViewNumber = 1;
 
     @HostListener('mousedown', ['$event'])
@@ -573,8 +566,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         event.stopPropagation();
 
         if (this.activeView === IgxCalendarView.Month) {
-            this.selectDateFromClient(this.activeDate);
-            this.selected.emit(this.selectedDates);
+            this.childClicked(this.activeDate);
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -690,6 +682,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                 if (direction === ScrollDirection.NEXT) {
                     this.viewDate = CalendarDay.from(this.viewDate).add('month', 1).native;
                 }
+
+                this.viewDateChanged.emit({
+                    previousValue: this.previousViewDate,
+                    currentValue: this.viewDate
+                });
 
                 break;
 
@@ -825,11 +822,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	}
 
 	public getFormattedRange(): { start: string; end: string } {
-		const dates = this.selectedDates as unknown as Date[];
+		const dates = this.selectedDates as Date[];
 
 		return {
-			start: this.formatterRangeday.format(dates[0]),
-			end: this.formatterRangeday.format(dates[dates.length - 1])
+			start: this.formatterRangeday.format(dates.at(0)),
+			end: this.formatterRangeday.format(dates.at(-1))
 		};
 	}
 
@@ -840,15 +837,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	protected childClicked(date: Date) {
-		// selectDateFromClient is called both here and in days-view.component
-		// when multiple months are in view, 'shiftKey' and 'lastSelectedDate'
-		// should be set before and after selectDateFromClient
-		// in order all views to have the same values for these properties
-		this.monthViews.forEach(m => {
-			m.shiftKey = this.shiftKey;
-			m.lastSelectedDate = this.lastSelectedDate;
-		});
-
 		this.selectDateFromClient(date);
 
 		if (this.selection === 'multi' && this._deselectDate) {
@@ -857,26 +845,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
 		this.selected.emit(this.selectedDates);
 
-		this.monthViews.forEach(m => {
+        // keep all views in sync
+		this.monthViews.forEach((m) => {
 			m.shiftKey = this.shiftKey;
-			m.lastSelectedDate = this.lastSelectedDate;
+            m.selectedDates = this.selectedDates;
 		});
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public updateDay(args: IViewChangingEventArgs) {
-		this.isKeydownTrigger = true;
-		this.nextDate = args.nextDate;
-		this.previousViewDate = this.viewDate;
-		this.viewDate = this.nextDate;
-
-        this.viewDateChanged.emit({
-            previousValue: this.previousViewDate,
-            currentValue: this.viewDate
-        });
 	}
 
 	/**
@@ -973,11 +946,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
+    // TODO: See if this can be incorporated in the DaysView directly
 	public resetActiveDate(date: Date) {
         const target = CalendarDay.from(this.activeDate).set({
             month: date.getMonth(),
             year: date.getFullYear(),
-        });
+       });
         const outOfRange =
             !areSameMonth(date, target) ||
             isDateInRanges(target, this.disabledDates);
@@ -1018,27 +992,23 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @internal
 	 */
 	private generateContext(value: Date | Date[], i?: number) {
-		let formatObject;
+        const construct = (date: Date, index: number) => ({
+            index: index,
+            date,
+            ...formatToParts(date, this.locale, this.formatOptions, [
+                "era",
+                "year",
+                "month",
+                "day",
+                "weekday",
+            ]),
+        });
 
-		if (Array.isArray(value)) {
-			formatObject = value.map((date, index) => {
-				return {
-					index: index,
-                    date,
-					...this.calendarModel.formatToParts(date, this.locale, this.formatOptions,
-						['era', 'year', 'month', 'day', 'weekday']),
-				};
-			});
-		} else {
-			formatObject = {
-				index: i,
-                date: value,
-				...this.calendarModel.formatToParts(value, this.locale, this.formatOptions,
-					['era', 'year', 'month', 'day', 'weekday']),
-			};
-		}
+        const formatObject = Array.isArray(value)
+            ? value.map((date, index) => construct(date, index))
+            : construct(value, i);
 
-		return { $implicit: formatObject };
+        return { $implicit: formatObject };
 	}
 
     /**

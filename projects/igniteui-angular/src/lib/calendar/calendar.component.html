@@ -221,7 +221,6 @@
             <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
                 <igx-days-view
                     #days
-                    [style.--calendar-row-start]="(i + 1) * 2"
                     role="grid"
                     [tabIndex]="-1"
                     [selection]="selection"
@@ -235,13 +234,13 @@
                     [formatViews]="formatViews"
                     [disabledDates]="disabledDates"
                     [specialDates]="specialDates"
+                    [style.--calendar-row-start]="(i + 1) * 2"
                     [hideLeadingDays]="hideOutsideDays || i !== 0"
                     [hideTrailingDays]="hideOutsideDays || i !== monthsViewNumber - 1"
                     [showWeekNumbers]="showWeekNumbers"
                     [showActiveDay]="showActiveDay"
                     (swiperight)="previousPage()"
                     (swipeleft)="nextPage()"
-                    (pageChanged)="updateDay($event)"
                     (dateSelection)="childClicked($event)"
                     (mousedown)="$event.preventDefault()">
                 </igx-days-view>

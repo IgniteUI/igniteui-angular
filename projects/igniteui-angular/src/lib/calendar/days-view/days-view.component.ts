@@ -103,7 +103,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @Input()
     public set previewRangeDate(value: Date) {
         this._previewRangeDate = value;
-        this.previewRangeDateChange.emit(this._previewRangeDate);
+        this.previewRangeDateChange.emit(value);
     }
 
     public get previewRangeDate() {
@@ -434,7 +434,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isFirstInRange(date: CalendarDay): boolean {
-        const dates = this.value as Date[];
+        const dates = this.selectedDates as Date[];
 
         if (this.isSingleSelection || dates.length === 0) {
             return false;
@@ -453,7 +453,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isLastInRange(date: CalendarDay): boolean {
-        const dates = this.value as Date[];
+        const dates = this.selectedDates as Date[];
 
         if (this.isSingleSelection || dates.length === 0) {
             return false;
@@ -479,12 +479,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isWithinRange(date: Date, checkForRange: boolean, min?: Date, max?: Date): boolean {
-        if (checkForRange && !(Array.isArray(this.value) && this.value.length > 1)) {
+        const dates = this.selectedDates as Date[];
+
+        if (checkForRange && !(Array.isArray(dates) && dates.length > 1)) {
             return false;
         }
 
-        min = min ? min : this.value[0];
-        max = max ? max : this.value[(this.value as Date[]).length - 1];
+        min = min ? min : dates.at(0);
+        max = max ? max : dates.at(-1);
 
         return isDateInRanges(date,
             [
@@ -499,7 +501,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected isWithinPreviewRange(date: Date): boolean {
         if (this.selection !== 'range') return false;
 
-        const dates = this.value as Date[];
+        const dates = this.selectedDates as Date[];
 
         if (!(dates.length > 0 && this.previewRangeDate)) {
             return false;

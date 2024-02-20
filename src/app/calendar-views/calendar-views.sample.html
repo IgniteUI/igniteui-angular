@@ -4,6 +4,7 @@
             <h4 class="sample-title">Days View</h4>
             <igx-days-view [(ngModel)]="date" #daysView
                            [showWeekNumbers]="true"
+                           [activeDate]="date"
                            [viewDate]="date || selection"
                            [locale]="locale"
                            [selection]="'single'"
@@ -28,7 +29,7 @@
         </article>
         <div class="sample-actions">
            <div class="sample-actions__inner">
-               <button igxButton="raised" #selectDate igxRipple (click)="selectDV()">Select</button>
+               <button igxButton="contained" #selectDate igxRipple (click)="selectDV()">Select</button>
                <button igxButton="flat" [disabled]="isActive" igxRipple (click)="deselectDV()">Deselect</button>
            </div>
             {{ date ? date : 'press the select button to print the selected date' }}

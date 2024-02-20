@@ -1,4 +1,3 @@
-import { DateRangeDescriptor } from '../core/dates';
 import { mkenum } from '../core/utils';
 
 /**
@@ -43,9 +42,6 @@ enum TimeDeltaInterval {
 
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
-
-const YEARS_PER_PAGE = 15;
-const YEARS_PER_ROW = 3;
 
 export const range = (start = 0, stop, step = 1) => {
     const res = [];
@@ -119,73 +115,6 @@ export enum WEEKDAYS {
 }
 
 export class Calendar {
-    private _firstWeekDay: WEEKDAYS | number;
-    private _disabledDates: DateRangeDescriptor[];
-
-    constructor(firstWeekDay: WEEKDAYS = WEEKDAYS.SUNDAY) {
-        this._firstWeekDay = firstWeekDay;
-    }
-
-    public get firstWeekDay(): number {
-        return this._firstWeekDay % 7;
-    }
-
-    public set firstWeekDay(value: number) {
-        this._firstWeekDay = value;
-    }
-
-    public get disabledDates(): DateRangeDescriptor[] {
-        return this._disabledDates;
-    }
-
-    public set disabledDates(value: DateRangeDescriptor[]) {
-        this._disabledDates = value;
-    }
-
-    /**
-     * Returns an array of weekdays for one week starting
-     * with the currently set `firstWeekDay`
-     *
-     * this.firstWeekDay = 0 (Sunday) --> [0, 1, 2, 3, 4, 5, 6]
-     * this.firstWeekDay = 1 (Monday) --> [1, 2, 3, 4, 5, 6, 0]
-     *
-     * @returns
-     *
-     * @memberof Calendar
-     */
-    public weekdays(): number[] {
-        const res = [];
-
-        for (const i of range(this.firstWeekDay, this.firstWeekDay + 7)) {
-            res.push(i % 7);
-        }
-
-        return res;
-    }
-
-	public yearDates(date: Date) {
-		const result: Date[] = [];
-		const year = date.getFullYear();
-		const month = date.getMonth();
-		const start = Math.floor(year / YEARS_PER_PAGE) * YEARS_PER_PAGE;
-		const rows = YEARS_PER_PAGE / YEARS_PER_ROW;
-
-		for (let i = 0; i < rows; i++) {
-			const row: Date[] = [];
-
-			for (let j = 0; j < YEARS_PER_ROW; j++) {
-				const _year = start + i * YEARS_PER_ROW + j;
-				const _date = new Date(_year, month, 1);
-				_date.setFullYear(_year);
-				row.push(_date);
-			}
-
-			result.push(...row);
-		}
-
-		return result;
-	}
-
     public timedelta(date: Date, interval: string, units: number): Date {
         const ret = new Date(date);
 
@@ -228,44 +157,6 @@ export class Calendar {
         }
 
         return ret;
-    }
-
-    public formatToParts(date: Date, locale: string, options: any, parts: string[]) {
-        const formatter = new Intl.DateTimeFormat(locale, options);
-        const result = {
-            date,
-            full: formatter.format(date)
-        };
-
-        if ((formatter as any).formatToParts) {
-            const formattedParts = (formatter as any).formatToParts(date);
-
-            const toType = (partType: string) => {
-                const index = formattedParts.findIndex(({ type }) => type === partType);
-                const o: IFormattedParts = { value: '', literal: '', combined: '' };
-
-                if (partType === 'era' && index > -1) {
-                    o.value = formattedParts[index].value;
-                    return o;
-                } else if (partType === 'era' && index === -1) {
-                    return o;
-                }
-
-                o.value = formattedParts[index].value;
-                o.literal = formattedParts[index + 1] ? formattedParts[index + 1].value : '';
-                o.combined = [o.value, o.literal].join('');
-                return o;
-            };
-
-            for (const each of parts) {
-                result[each] = toType(each);
-            }
-        } else {
-            for (const each of parts) {
-                result[each] = { value: '', literal: '', combined: '' };
-            }
-        }
-        return result;
     }
 
     public getNextYear(date: Date) {
