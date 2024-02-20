@@ -174,10 +174,6 @@
 
         @include e(date, $mods: ('range', 'selected')) {
             @extend %date-range-selected !optional;
-
-            &:hover {
-                @extend %date-range-selected-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('range', 'selected', 'first')) {
@@ -222,14 +218,14 @@
 
         @include e(date, $mods: ('range', 'selected', 'current')) {
             @extend %date-selected-current-range !optional;
-
-            &:hover {
-                @extend %date-selected-current-range-hover !optional;
-            }
         }
 
         @include e(date, $mods: ('range', 'selected', 'current', 'active')) {
             @extend %date-selected-current-range-active !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'current', 'special')) {
+            @extend %date-selected-current-range-special !optional;
         }
 
         @include e(date, 'weekend') {
@@ -257,7 +253,7 @@
         }
 
         @include e(date, $mods: ('current' 'special')) {
-            @extend %date-special !optional;
+            @extend %date-special-current !optional;
         }
 
         @include e(date, 'special') {
