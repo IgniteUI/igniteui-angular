@@ -85,6 +85,9 @@ export class IgxDayItemComponent {
     @Output()
     public mouseLeave = new EventEmitter<void>();
 
+    @Output()
+    public mouseDown = new EventEmitter<void>();
+
     public get isCurrentMonth(): boolean {
         return areSameMonth(this.date, this.viewDate);
     }
@@ -148,6 +151,11 @@ export class IgxDayItemComponent {
 
     protected onMouseLeave() {
         this.mouseLeave.emit();
+    }
+
+    protected onMouseDown(event: MouseEvent) {
+        event.preventDefault();
+        this.mouseDown.emit();
     }
 
     @HostBinding('class.igx-days-view__date--range')

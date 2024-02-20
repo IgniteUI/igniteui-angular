@@ -304,8 +304,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    protected handleDateClick(event: MouseEvent, item: IgxDayItemComponent) {
-        event.preventDefault();
+    protected handleDateClick(item: IgxDayItemComponent) {
         const date = item.date.native;
 
         if (item.isPreviousMonth) {
@@ -337,7 +336,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     }
 
     protected get calendarMonth(): CalendarDay[] {
-        return Array.from(generateMonth(this.viewDate, this.calendarModel.firstWeekDay));
+        return Array.from(generateMonth(this.viewDate, this.weekStart));
     }
 
     protected get monthWeeks(): CalendarDay[][] {
