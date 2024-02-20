@@ -357,7 +357,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override ngOnDestroy() {
-        // Override the base destroy because we don't have rendered anything to use removeEventListener on
+        // Override the base destroy because we have not rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;

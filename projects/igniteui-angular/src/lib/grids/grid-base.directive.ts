@@ -3962,6 +3962,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.transactionChange$.complete();
         this._destroyed = true;
 
+        this.textHighlightService.destroyGroup(this.id);
+
         if (this._advancedFilteringOverlayId) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
             delete this._advancedFilteringOverlayId;
