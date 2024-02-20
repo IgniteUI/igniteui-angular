@@ -180,12 +180,24 @@
             align-self: unset;
             margin-inline-end: 0;
             margin-bottom: rem(16px);
+
+            @if $variant == 'indigo-design' {
+                margin-bottom: rem(8px);
+            }
         }
     }
 
     %igx-card-header-thumbnail {
         align-self: flex-start;
         margin-inline-end: rem(16px);
+
+        @if $variant == 'indigo-design' {
+            margin-inline-end: rem(8px);
+
+            igx-avatar {
+                --ig-size: 3;
+            }
+        }
 
         &:empty {
             display: none;
