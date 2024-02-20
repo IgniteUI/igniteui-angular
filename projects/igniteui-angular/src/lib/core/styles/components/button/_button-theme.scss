@@ -18,6 +18,8 @@
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color of the button.
 /// @param {Color} $foreground [null] - The text color of the button.
+/// @param {Color} $icon-color [null] - The icon color in the button.
+/// @param {Color} $icon-color-hover [null] - The icon color in the button on hover.
 /// @param {Color} $hover-background [null] - The hover background color of the button.
 /// @param {Color} $hover-foreground [null] - The hover text color of the button.
 /// @param {Color} $focus-background [null] - The focus background color of the button.
@@ -61,6 +63,9 @@
 
     $hover-background: null,
     $hover-foreground: null,
+
+    $icon-color: null,
+    $icon-color-hover: null,
 
     $focus-background: null,
     $focus-foreground: null,
@@ -187,6 +192,9 @@
                 name: $name,
                 background: $background,
                 foreground: $foreground,
+
+                icon-color: $icon-color,
+                icon-color-hover: $icon-color-hover,
 
                 hover-background: $hover-background,
                 hover-foreground: $hover-foreground,
@@ -568,6 +576,32 @@
                 }
             }
         }
+
+        @if ($variant == 'indigo-design') {
+            igx-icon {
+                color: var-get($flat-theme, 'icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($flat-theme, 'icon-color-hover');
+                }
+            }
+
+            &:focus,
+            &:focus-visible,
+            &:active {
+                igx-icon {
+                    color: var-get($flat-theme, 'icon-color');
+                }
+
+                &:hover {
+                    igx-icon {
+                        color: var-get($flat-theme, 'icon-color-hover');
+                    }
+                }
+            }
+        }
     }
 
     %igx-button--outlined {
@@ -662,6 +696,32 @@
                 /* stylelint-enable */
             }
         }
+
+        @if ($variant == 'indigo-design') {
+            igx-icon {
+                color: var-get($outlined-theme, 'icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($outlined-theme, 'icon-color-hover');
+                }
+            }
+
+            &:focus,
+            &:focus-visible,
+            &:active {
+                igx-icon {
+                    color: var-get($outlined-theme, 'icon-color');
+                }
+
+                &:hover {
+                    igx-icon {
+                        color: var-get($outlined-theme, 'icon-color-hover');
+                    }
+                }
+            }
+        }
     }
 
     %igx-button--contained {
@@ -750,6 +810,32 @@
                     }
                 }
                 /* stylelint-enable */
+            }
+        }
+
+        @if ($variant == 'indigo-design') {
+            igx-icon {
+                color: var-get($contained-theme, 'icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($contained-theme, 'icon-color-hover');
+                }
+            }
+
+            &:focus,
+            &:focus-visible,
+            &:active {
+                igx-icon {
+                    color: var-get($contained-theme, 'icon-color');
+                }
+
+                &:hover {
+                    igx-icon {
+                        color: var-get($contained-theme, 'icon-color-hover');
+                    }
+                }
             }
         }
     }
@@ -887,6 +973,32 @@
                     }
                 }
                 /* stylelint-enable */
+            }
+        }
+
+        @if ($variant == 'indigo-design') {
+            igx-icon {
+                color: var-get($fab-theme, 'icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($fab-theme, 'icon-color-hover');
+                }
+            }
+
+            &:focus,
+            &:focus-visible,
+            &:active {
+                igx-icon {
+                    color: var-get($fab-theme, 'icon-color');
+                }
+
+                &:hover {
+                    igx-icon {
+                        color: var-get($fab-theme, 'icon-color-hover');
+                    }
+                }
             }
         }
     }
