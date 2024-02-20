@@ -18,7 +18,7 @@ import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
-import { IgxColumnComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxGridDetailTemplateDirective } from './public_api';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
@@ -414,6 +414,33 @@ describe('IgxGridState - input properties #grid', () => {
 
         gridState = state.getState(false, 'columns') as IGridState;
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
+    });
+
+    it('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
+        const fix = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+        const grid = fix.componentInstance.grid;
+        /* eslint-disable max-len */
+        const initialState = '{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"width":"100px","header":"Address Information","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":true,"expanded":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":true,"dataType":"string","hasSummary":false,"field":"City","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":"Address Information","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Address","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":"Address Information","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":false}]}'
+        const newState = `{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"width":"100px","header":"Address Information","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":true,"expanded":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":true,"dataType":"string","hasSummary":false,"field":"City","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":"Address Information","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Address","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"parent":"Address Information","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":false}]}`
+        /* eslint-enable max-len */
+        const columnsStateObject = JSON.parse(newState);
+        let gridState = state.getState(true, 'columns');
+        expect(gridState).toBe(initialState);
+        // 1. initial state collapsible:true, expanded: true;
+        // 2. new state collapsible:true, expanded: false after restoration
+
+        state.setState(columnsStateObject); // set new state - resored state
+        gridState = state.getState(false, 'columns') as IGridState;
+        HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
+        gridState = state.getState(true, 'columns');
+        fix.detectChanges();
+        expect(gridState).toBe(newState);
+
+        const addressInfoGroup = grid.columns.find(c => c.header === "Address Information");
+        expect(addressInfoGroup.collapsible).toBe(true);
+        expect(addressInfoGroup.expanded).toBe(false);
     });
 
     it('setState should correctly restore grid paging state from string', () => {
@@ -865,6 +892,27 @@ export class IgxGridStateWithDetailsComponent {
     public state: IgxGridStateDirective;
 
     public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" igxGridState height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="Address Information" [collapsible]="true">
+                    <igx-column field="City" [visibleWhenCollapsed]="true"></igx-column>
+                    <igx-column field="Address" [visibleWhenCollapsed]="false"></igx-column>
+                </igx-column-group>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective, NgFor]
+})
+export class CollapsibleColumnGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+    public data = SampleTestData.contactInfoDataFull();
 }
 /* eslint-enable max-len */
 
