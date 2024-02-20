@@ -519,7 +519,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
-        this.selectDate(value as Date);
+        this.selectDate(value);
     }
 
     /**
@@ -668,7 +668,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 return;
             }
 
-            this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            if (selDates.length === 0 || selDates.length > newDates.length) {
+                // deselect the dates that are part of currently selectedDates and not part of updated new values
+                this.selectedDates = newDates.map(v => new Date(v));
+            } else {
+                this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            }
+
         } else {
             let newSelection = [];
 
