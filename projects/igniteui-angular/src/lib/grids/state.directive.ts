@@ -90,6 +90,9 @@ export interface IColumnState {
     parent: any;
     disableHiding: boolean;
     disablePinning: boolean;
+    collapsible?: boolean;
+    expanded?: boolean;
+    visibleWhenCollapsed?: boolean;
 }
 
 export type GridFeatures = keyof IGridStateOptions;
@@ -202,7 +205,10 @@ export class IgxGridStateDirective {
                     parent: c.parent ? c.parent.header : null,
                     columnGroup: c.columnGroup,
                     disableHiding: c.disableHiding,
-                    disablePinning: c.disablePinning
+                    disablePinning: c.disablePinning,
+                    collapsible: c.columnGroup ? c.collapsible : undefined,
+                    expanded: c.columnGroup ? c.expanded : undefined,
+                    visibleWhenCollapsed: c.parent?.columnGroup ? (c as IgxColumnComponent).visibleWhenCollapsed : undefined
                 }));
                 return { columns: gridColumns };
             },

@@ -100,6 +100,7 @@
         "migrations": "./migrations/migration-collection.json",
         "packageGroup": [
             "igniteui-angular",
+            "igniteui-angular-extras",
             "igniteui-angular-i18n"
         ]
     },
