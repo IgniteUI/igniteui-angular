@@ -362,7 +362,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.destroy$.complete();
         this._destroyed = true;
         this.rowIslandAPI.unset(this.id);
-        this.textHighlightService.destroyGroup(this.id);
         if (this.parentIsland) {
             this.getGridsForIsland(this.key).forEach(grid => {
                 this.cleanGridState(grid);
