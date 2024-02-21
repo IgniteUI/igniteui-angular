@@ -23,6 +23,7 @@ import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
 import { PlatformUtil } from '../core/utils';
 import { NgTemplateOutlet } from '@angular/common';
+import { HammerInput } from '../core/touch-annotations';
 
 let NEXT_ID = 0;
 /**
