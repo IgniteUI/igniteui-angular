@@ -8,7 +8,7 @@ import {
 } from './stepper.directive';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { HorizontalAnimationType } from '../carousel/token';
+import { HorizontalAnimationType } from '../carousel/enums';
 
 // Component interfaces
 export interface IgxStepper extends IgxCarouselComponentBase {

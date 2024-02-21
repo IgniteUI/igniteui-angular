@@ -36,7 +36,7 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
-import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './token';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
 
 let NEXT_ID = 0;
 

@@ -3,7 +3,7 @@ import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
-import { HorizontalAnimationType } from './token';
+import { HorizontalAnimationType } from './enums';
 
 export enum Direction { NONE, NEXT, PREV }
 

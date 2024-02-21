@@ -29,7 +29,7 @@ import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.d
 import { IgxStepperService } from '../stepper.service';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
-import { HorizontalAnimationType } from '../../carousel/token';
+import { HorizontalAnimationType } from '../../carousel/enums';
 
 let NEXT_ID = 0;
 

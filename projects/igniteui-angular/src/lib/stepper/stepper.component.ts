@@ -24,7 +24,7 @@ import {
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
 import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { HorizontalAnimationType } from '../carousel/token';
+import { HorizontalAnimationType } from '../carousel/enums';
 
 
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
