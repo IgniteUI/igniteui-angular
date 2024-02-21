@@ -148,10 +148,30 @@
         width: rem(46px);
         height: rem(46px);
         cursor: pointer;
+
         @if $not-bootstrap-theme {
             border-radius: border-radius(50%);
         } @else {
             border-radius: var-get($theme, 'border-radius');
+        }
+
+        @if $variant == 'indigo-design' {
+            width: rem(28px);
+            height: rem(28px);
+            border: rem(2px) solid var-get($theme, 'button-border-color');
+
+            igx-icon {
+                display: none;
+            };
+
+            &::after {
+                content: "";
+                position: absolute;
+                width: rem(7px);
+                height: rem(7px);
+                border-bottom: 2px solid;
+                border-left: 2px solid;
+            }
         }
 
         outline-style: none;
@@ -179,6 +199,7 @@
     %igx-nav-arrow--hover {
         color: var-get($theme, 'button-hover-arrow-color');
         background: var-get($theme, 'button-hover-background');
+        border-color: var-get($theme, 'button-hover-border-color');
     }
 
     %igx-carousel-arrow {
@@ -193,10 +214,26 @@
 
     %igx-carousel-arrow--next {
         inset-inline-end: 0;
+
+        @if $variant == 'indigo-design' {
+            %igx-nav-arrow {
+                &::after {
+                    transform: rotate(-135deg);
+                }
+            }
+        }
     }
 
     %igx-carousel-arrow--prev {
         inset-inline-start: 0;
+
+        @if $variant == 'indigo-design' {
+            %igx-nav-arrow {
+                &::after {
+                    transform: rotate(45deg);
+                }
+            }
+        }
     }
 
     %igx-carousel-arrow--next,
@@ -221,6 +258,11 @@
         [dir='rtl'] & {
             transform: translateX(50%);
         }
+
+        @if $variant == 'indigo-design' {
+            gap: rem(10px);
+            margin: 0;
+        }
     }
 
     %igx-carousel-indicators--bottom {
@@ -243,6 +285,10 @@
         justify-content: center;
         margin: $carousel-indicator-margin;
         cursor: pointer;
+
+        @if $variant == 'indigo-design' {
+            margin: 0;
+        }
     }
 
     %igx-nav-dot {
@@ -256,24 +302,30 @@
             border-color: var-get($theme, 'indicator-border-color');
             box-shadow: elevation(1);
             opacity: .7;
+        } @else {
+            width: rem(20px);
+            height: rem(20px);
         }
 
         border-radius: border-radius(50%);
         transition: all .15s $ease-out-quad;
 
         &::after {
-            @if $variant != 'indigo-design' {
-                @include animation('scale-out-center' .15s $ease-out-quad forwards);
-            }
             content: '';
             position: absolute;
-            @if $variant != 'indigo-design' {
-                inset: rem(1px);
-            } @else {
-                inset: 0;
-            }
             border-radius: inherit;
             background: var-get($theme, 'indicator-dot-color');
+
+            @if $variant != 'indigo-design' {
+                @include animation('scale-out-center' .15s $ease-out-quad forwards);
+                inset: rem(1px);
+            } @else {
+                width: rem(8px);
+                height: rem(8px);
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
         }
 
         &:hover {
@@ -285,6 +337,17 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-active-border-color');
+        } @else {
+            &::before {
+                position: absolute;
+                content: '';
+                width: rem(20px);
+                height: rem(20px);
+                border: rem(2px) solid var-get($theme, 'indicator-active-dot-color');
+                inset-inline-start: 0;
+                top: 0;
+                border-radius: border-radius(50%);
+            }  
         }
 
         opacity: 1;
