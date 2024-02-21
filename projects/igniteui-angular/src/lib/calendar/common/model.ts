@@ -28,7 +28,6 @@ function checkRollover(original: CalendarDay, modified: CalendarDay) {
         : modified;
 }
 
-/* blazorSuppress */
 export class CalendarDay {
     private _date!: Date;
 
