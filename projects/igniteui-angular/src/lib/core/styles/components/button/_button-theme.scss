@@ -43,6 +43,7 @@
 /// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
 /// @param {Color} $disabled-background [null] - The disabled background color of the button.
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
+/// @param {Color} $disabled-icon-color [null] - The disabled icon color of the button.
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
 /// @requires $light-material-schema
@@ -95,6 +96,7 @@
 
     $disabled-background: null,
     $disabled-foreground: null,
+    $disabled-icon-color: null,
     $disabled-border-color: null,
     $size: null,
 ) {
@@ -227,6 +229,7 @@
 
                 disabled-background: $disabled-background,
                 disabled-foreground: $disabled-foreground,
+                disabled-icon-color: $disabled-icon-color,
                 disabled-border-color: $disabled-border-color,
                 size: $size,
             ))
@@ -362,6 +365,8 @@
         cosy: rem(8px),
         compact: rem(4px)
     );
+
+    $items-gap-indigo-comfortable: rem(8px);
 
     $filtering-row-button-size: (
         comfortable: rem(40px),
@@ -578,6 +583,12 @@
         }
 
         @if ($variant == 'indigo-design') {
+            gap: pad-inline(
+                map.get($items-gap, 'compact'),
+                map.get($items-gap, 'cosy'),
+                $items-gap-indigo-comfortable
+            );
+        
             igx-icon {
                 color: var-get($flat-theme, 'icon-color');
             }
@@ -622,6 +633,12 @@
         );
 
         @if $variant == 'indigo-design' {
+            gap: pad-inline(
+                map.get($items-gap, 'compact'),
+                map.get($items-gap, 'cosy'),
+                $items-gap-indigo-comfortable
+            );
+
             border: rem(2px) solid var-get($outlined-theme, 'border-color');
         }
 
@@ -814,6 +831,12 @@
         }
 
         @if ($variant == 'indigo-design') {
+            gap: pad-inline(
+                map.get($items-gap, 'compact'),
+                map.get($items-gap, 'cosy'),
+                $items-gap-indigo-comfortable
+            );
+
             igx-icon {
                 color: var-get($contained-theme, 'icon-color');
             }
@@ -1009,6 +1032,10 @@
         border-color: var-get($flat-theme, 'disabled-border-color');
         pointer-events: none;
         box-shadow: none;
+
+        igx-icon {
+            color: var-get($flat-theme, 'disabled-icon-color');
+        }
 
         &:focus {
             box-shadow: none;
