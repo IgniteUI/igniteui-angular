@@ -41,7 +41,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripToken } from '../../action-strip/token';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
@@ -122,7 +122,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * Gets the paginator template for each child grid created from this row island.
     */
     @Input()
-    public get paginatorTemplate(): TemplateRef<any> {
+    public get paginatorTemplate(): TemplateRef<IgxGridPaginatorTemplateContext> {
         return this._paginatorTemplate || this.paginatorDirectiveTemplate;
     }
 
@@ -384,7 +384,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                             }
                         });
                     });
-                    grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate);
+                    grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate, { $implicit: grid });
                 });
         });
     }
