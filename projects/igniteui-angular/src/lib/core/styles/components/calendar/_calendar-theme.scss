@@ -1995,13 +1995,15 @@
         }
     }
 
-    %date-range-selected-current-first,
-    %date-range-selected-current-last {
-        %date-inner {
-            color: var-get($theme, 'date-selected-current-range-foreground');
-
-            &:hover {
+    @if $variant == 'fluent' {
+        %date-range-selected-current-first,
+        %date-range-selected-current-last {
+            %date-inner {
                 color: var-get($theme, 'date-selected-current-range-foreground');
+
+                &:hover {
+                    color: var-get($theme, 'date-selected-current-range-foreground');
+                }
             }
         }
     }
@@ -2174,10 +2176,12 @@
         }
     }
 
-    %date-first-preview-current-selected,
-    %date-last-preview-current-selected {
-        %date-inner {
-            color: var-get($theme, 'date-selected-current-range-foreground');
+    @if $variant == 'fluent' {
+        %date-first-preview-current-selected,
+        %date-last-preview-current-selected {
+            %date-inner {
+                color: var-get($theme, 'date-selected-current-range-foreground');
+            }
         }
     }
 
