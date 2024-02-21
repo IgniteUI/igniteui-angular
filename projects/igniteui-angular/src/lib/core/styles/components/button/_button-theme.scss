@@ -474,6 +474,7 @@
 
         @if $variant == 'indigo-design' {
             border: none;
+            min-width: rem(28px);
         }
 
         @if ($variant == 'fluent') {
