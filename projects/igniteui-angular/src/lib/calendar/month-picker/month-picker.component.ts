@@ -89,11 +89,11 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
         this.previousViewDate = this.viewDate;
 
         if (this.isDefaultView) {
-            this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
+            this.viewDate = CalendarDay.from(this.viewDate).add('year', -1).native;
         }
 
         if (this.isDecadeView) {
-            this.viewDate = this.calendarModel.getPrevYears(this.viewDate);
+            this.viewDate = CalendarDay.from(this.viewDate).add('year', -15).native;
         }
     }
 
@@ -106,11 +106,11 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
         this.previousViewDate = this.viewDate;
 
         if (this.isDefaultView) {
-            this.viewDate = this.calendarModel.getNextYear(this.viewDate);
+            this.viewDate = CalendarDay.from(this.viewDate).add('year', 1).native;
         }
 
         if (this.isDecadeView) {
-            this.viewDate = this.calendarModel.getNextYears(this.viewDate);
+            this.viewDate = CalendarDay.from(this.viewDate).add('year', 15).native;
         }
     }
 
@@ -237,14 +237,14 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective impleme
      * @hidden
      */
     public getNextYear() {
-        return this.calendarModel.getNextYear(this.viewDate).getFullYear();
+        return CalendarDay.from(this.viewDate).add('year', 1).year;
     }
 
     /**
      * @hidden
      */
     public getPreviousYear() {
-        return this.calendarModel.getPrevYear(this.viewDate).getFullYear();
+        return CalendarDay.from(this.viewDate).add('year', -1).year;
     }
 
     /**
