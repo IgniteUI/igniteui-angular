@@ -141,7 +141,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @Output()
-    public dateSelection = new EventEmitter<Date>();
+    public dateSelected = new EventEmitter<Date>();
 
     /**
      * @hidden
@@ -329,8 +329,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     }
 
     private selectActiveDate() {
-        this.selectDateFromClient(this.activeDate);
-        this.dateSelection.emit(this.activeDate);
+        this.selectDate(this.activeDate);
+        this.dateSelected.emit(this.activeDate);
         this.selected.emit(this.selectedDates);
         this.clearPreviewRange();
     }

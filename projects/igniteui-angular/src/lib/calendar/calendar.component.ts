@@ -566,7 +566,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         event.stopPropagation();
 
         if (this.activeView === IgxCalendarView.Month) {
-            this.childClicked(this.activeDate);
+            this.handleDateSelection(this.activeDate);
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -836,29 +836,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	protected childClicked(date: Date) {
-		// selectDateFromClient is called both here and in days-view.component
-		// when multiple months are in view, 'shiftKey' and 'lastSelectedDate'
-		// should be set before and after selectDateFromClient
-		// in order all views to have the same values for these properties
-		// this.monthViews.forEach(m => {
-		// 	m.shiftKey = this.shiftKey;
-		// 	m.selectedDates = this.selectedDates;
-		// });
-
-		this.selectDateFromClient(date);
-
-		if (this.selection === 'multi' && this._deselectDate) {
-			this.deselectDateInMonthViews(date);
-		}
-
-		this.selected.emit(this.selectedDates);
+	protected handleDateSelection(date: Date) {
+		this.selectDate(date);
 
         // keep views in sync
 		this.monthViews.forEach((m) => {
 			m.shiftKey = this.shiftKey;
             m.selectedDates = this.selectedDates;
 		});
+
+		this.selected.emit(this.selectedDates);
 	}
 
 	/**
@@ -931,9 +918,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 	public override deselectDate(value?: Date | Date[]) {
 		super.deselectDate(value);
 
-		this.monthViews.forEach((view) => {
-			view.selectedDates = this.selectedDates;
-			view.rangeStarted = false;
+		this.monthViews.forEach((m) => {
+			m.selectedDates = this.selectedDates;
+			m.rangeStarted = false;
 		});
 
 		this._onChangeCallback(this.selectedDates);
@@ -1019,17 +1006,4 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         return { $implicit: formatObject };
 	}
-
-    /**
-     * Helper method that does deselection for all month views when selection is "multi"
-     * If not called, selection in other month views stays
-     *
-     * @hidden
-     * @internal
-     */
-    private deselectDateInMonthViews(value: Date) {
-        this.monthViews.forEach(view => {
-            view.deselectMultipleInMonth(value);
-        });
-    }
 }

@@ -32,14 +32,6 @@ export const IgxCalendarView = mkenum({
  */
 export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarView];
 
-/**
- * @hidden
- */
-enum TimeDeltaInterval {
-    Month = 'month',
-    Year = 'year'
-}
-
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
 
@@ -157,21 +149,5 @@ export class Calendar {
         }
 
         return ret;
-    }
-
-    public getNextYear(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Year, 1);
-    }
-
-    public getPrevYear(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Year, -1);
-    }
-
-    public getNextYears(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Year, 15);
-    }
-
-    public getPrevYears(date: Date) {
-        return this.timedelta(date, TimeDeltaInterval.Year, -15);
     }
 }

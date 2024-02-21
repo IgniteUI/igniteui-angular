@@ -241,7 +241,7 @@
                     [showActiveDay]="showActiveDay"
                     (swiperight)="previousPage()"
                     (swipeleft)="nextPage()"
-                    (dateSelection)="childClicked($event)"
+                    (dateSelected)="handleDateSelection($event)"
                     (mousedown)="$event.preventDefault()">
                 </igx-days-view>
             </ng-container>

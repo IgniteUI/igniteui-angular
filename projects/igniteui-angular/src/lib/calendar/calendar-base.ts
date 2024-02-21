@@ -9,7 +9,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
-import { calendarRange, isDateInRanges } from './common/helpers';
+import { isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 
 /** @hidden @internal */
@@ -348,52 +348,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Gets the selected date(s).
-     *
-     * When selection is set to `single`, it returns
-     * a single `Date` object.
-     * Otherwise it is an array of `Date` objects.
-     */
-    @Input()
-    public get value(): Date | Date[] {
-        return this.selectedDates;
-    }
-
-    /**
-     * Sets the selected date(s).
-     *
-     * When selection is set to `single`, it accepts
-     * a single `Date` object.
-     * Otherwise it is an array of `Date` objects.
-     */
-    public set value(value: Date | Date[]) {
-        // Check if value is set initially by the user, 
-        // if it's not set the initial selection to the current date
-        if (!value || !!value && (value as Date[]).length === 0) {
-            this.initialSelection = new Date();
-            return;
-        }
-
-        // Value is provided, but there's no initial selection, set the initial selection to the passed value
-        if (!this.initialSelection) {
-            // If the value is an array find the earliest date and use it in consequent operations 
-            // otherwise the value is not an array, use it directly
-            const valueDate = value[0] ? Math.min.apply(null, value) : value;
-            // getDateOnly always returns a valid date, if valueDate is a valid date it sets the 
-            // the date part of the date to the first day of the month, otherwise it will set it to the first
-            // day in the current month
-            const date = this.getDateOnly(new Date(valueDate)).setDate(1);
-            // we then set the viewDate to the generated date value in the previous step
-            this.viewDate = new Date(date);
-        }
-
-        // we then call selectDate with either a single date or an array of dates
-        // we also set the initial selection to the provided value
-        this.selectDate(value);
-        this.initialSelection = value;
-    }
-
-    /**
      * Gets the date that is presented. By default it is the current date.
      */
     @Input()
@@ -444,6 +398,19 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Checks whether a date is disabled.
+     *
+     * @hidden
+     */
+    public isDateDisabled(date: Date) {
+        if (!this.disabledDates) {
+            return false;
+        }
+
+        return isDateInRanges(date, this.disabledDates);
+    }
+
+    /**
      * Gets the special dates descriptors.
      */
     @Input()
@@ -465,6 +432,52 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
+    }
+
+    /**
+     * Gets the selected date(s).
+     *
+     * When selection is set to `single`, it returns
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     */
+    @Input()
+    public get value(): Date | Date[] {
+        return this.selectedDates;
+    }
+
+    /**
+     * Sets the selected date(s).
+     *
+     * When selection is set to `single`, it accepts
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     */
+    public set value(value: Date | Date[]) {
+        // Check if value is set initially by the user,
+        // if it's not set the initial selection to the current date
+        if (!value || !!value && (value as Date[]).length === 0) {
+            this.initialSelection = new Date();
+            return;
+        }
+
+        // Value is provided, but there's no initial selection, set the initial selection to the passed value
+        if (!this.initialSelection) {
+            // If the value is an array find the earliest date and use it in consequent operations
+            // otherwise the value is not an array, use it directly
+            const valueDate = value[0] ? Math.min.apply(null, value) : value;
+            // getDateOnly always returns a valid date, if valueDate is a valid date it sets the
+            // the date part of the date to the first day of the month, otherwise it will set it to the first
+            // day in the current month
+            const date = this.getDateOnly(new Date(valueDate)).setDate(1);
+            // we then set the viewDate to the generated date value in the previous step
+            this.viewDate = new Date(date);
+        }
+
+        // we then call selectDate with either a single date or an array of dates
+        // we also set the initial selection to the provided value
+        this.selectDate(value);
+        this.initialSelection = value;
     }
 
     /**
@@ -493,34 +506,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Performs deselection of date/dates, when selection is multi
-     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
-     *
-     * @hidden
-     */
-    public deselectMultipleInMonth(value: Date) {
-        // deselect multiple dates from last clicked to shift clicked date (excluding)
-        if (this.shiftKey) {
-            const [start, end] = this.lastSelectedDate.getTime() < value.getTime()
-                ? [this.lastSelectedDate, value]
-                : [value, this.lastSelectedDate];
-
-            this.selectedDates = this.selectedDates.filter(
-                (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
-            );
-
-            this.selectedDates.push(value);
-
-        } else {
-            // deselect a single date
-            const valueDateOnly = this.getDateOnly(value);
-            this.selectedDates = this.selectedDates.filter(
-                (date: Date) => date.getTime() !== valueDateOnly.getTime()
-            );
-        }
-    }
-
-    /**
      * @hidden
      */
     public registerOnChange(fn: (v: Date) => void) {
@@ -538,20 +523,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
-        this.selectDate(value as Date);
-    }
-
-    /**
-     * Checks whether a date is disabled.
-     *
-     * @hidden
-     */
-    public isDateDisabled(date: Date) {
-        if (!this.disabledDates) {
-            return false;
-        }
-
-        return isDateInRanges(date, this.disabledDates);
+        this.value = value;
     }
 
     /**
@@ -606,64 +578,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * @hidden
-     */
-    public selectDateFromClient(value: Date) {
-        switch (this.selection) {
-            case CalendarSelection.SINGLE:
-            case CalendarSelection.MULTI:
-                this.selectDate(value);
-                break;
-            case CalendarSelection.RANGE:
-                this.selectRange(value, true);
-                break;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatters() {
-        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
-        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
-        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
-        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
-        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-		this.formatterRangeday = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day, month: 'short' });
-    }
-
-    /**
-     * @hidden
-     */
-    protected getDateOnly(date: Date) {
-        const validDate = this.validateDate(date);
-        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
-    }
-
-    /**
-     * @hidden
-     */
-    private getDateOnlyInMs(date: Date) {
-        return this.getDateOnly(date).getTime();
-    }
-
-    /**
-     * @hidden
-     */
-    private generateDateRange(start: Date, end: Date): Date[] {
-        const result = [];
-        start = this.getDateOnly(start);
-        end = this.getDateOnly(end);
-
-        while (start.getTime() < end.getTime()) {
-            start = CalendarDay.from(start).add('day', 1).native;
-            result.push(start);
-        }
-
-        return result;
-    }
-
-    /**
      * Performs a single selection.
      *
      * @hidden
@@ -671,6 +585,19 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private selectSingle(value: Date) {
         if (!isEqual(this.selectedDates, value)) {
             this.selectedDates = this.getDateOnly(value);
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a single deselection.
+     *
+     * @hidden
+     */
+    private deselectSingle(value: Date) {
+        if (this.selectedDates !== null &&
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
+            this.selectedDates = null;
             this._onChangeCallback(this.selectedDates);
         }
     }
@@ -745,38 +672,27 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._onChangeCallback(this.selectedDates);
     }
 
-    private range(start: Date, end: Date) {
-        return Array.from(calendarRange({ start, end })).map(d => d.native);
-    }
+    /**
+     * Performs a multiple deselection.
+     *
+     * @hidden
+     */
+    private deselectMultiple(value: Date[]) {
+        value = value.filter(v => v !== null);
+        const selectedDatesCount = this.selectedDates.length;
+        const datesInMsToDeselect: Set<number> = new Set<number>(
+            value.map(v => this.getDateOnlyInMs(v)));
 
-    // private _selectRange(date: Date | Date[]) {
-    //     // TODO: implement selection for an array of dates
-    //     if (Array.isArray(date)) return;
-    //
-    //     let values = this.selectedDates;
-    //
-    //     if (values.length !== 1) {
-    //         values = [date];
-    //     } else {
-    //         const start = CalendarDay.from(values.at(0));
-    //
-    //         if (start.equalTo(date)) {
-    //             this.selectedDates = [];
-    //             return;
-    //         }
-    //
-    //         values = start.greaterThan(date)
-    //             ? this.range(date, start.native)
-    //             : this.range(start.native, date);
-    //         values.push(CalendarDay.from(values.at(-1)).add("day", 1).native);
-    //     }
-    //
-    //     this.selectedDates = values.filter(
-    //         (v: Date) => !isDateInRanges(v, this.disabledDates),
-    //     );
-    //
-    //     this._onChangeCallback(this.selectedDates);
-    // }
+        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
+            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                this.selectedDates.splice(i, 1);
+            }
+        }
+
+        if (this.selectedDates.length !== selectedDatesCount) {
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
 
     /**
      * @hidden
@@ -851,41 +767,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Performs a single deselection.
-     *
-     * @hidden
-     */
-    private deselectSingle(value: Date) {
-        if (this.selectedDates !== null &&
-            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
-            this.selectedDates = null;
-            this._onChangeCallback(this.selectedDates);
-        }
-    }
-
-    /**
-     * Performs a multiple deselection.
-     *
-     * @hidden
-     */
-    private deselectMultiple(value: Date[]) {
-        value = value.filter(v => v !== null);
-        const selectedDatesCount = this.selectedDates.length;
-        const datesInMsToDeselect: Set<number> = new Set<number>(
-            value.map(v => this.getDateOnlyInMs(v)));
-
-        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
-            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
-                this.selectedDates.splice(i, 1);
-            }
-        }
-
-        if (this.selectedDates.length !== selectedDatesCount) {
-            this._onChangeCallback(this.selectedDates);
-        }
-    }
-
-    /**
      * Performs a range deselection.
      *
      * @hidden
@@ -912,6 +793,49 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected initFormatters() {
+        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
+        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
+        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
+        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
+        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+		this.formatterRangeday = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day, month: 'short' });
+    }
+
+    /**
+     * @hidden
+     */
+    protected getDateOnly(date: Date) {
+        const validDate = this.validateDate(date);
+        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
+    }
+
+    /**
+     * @hidden
+     */
+    private getDateOnlyInMs(date: Date) {
+        return this.getDateOnly(date).getTime();
+    }
+
+    /**
+     * @hidden
+     */
+    private generateDateRange(start: Date, end: Date): Date[] {
+        const result = [];
+        start = this.getDateOnly(start);
+        end = this.getDateOnly(end);
+
+        while (start.getTime() < end.getTime()) {
+            start = CalendarDay.from(start).add('day', 1).native;
+            result.push(start);
+        }
+
+        return result;
     }
 
     private validateDate(value: Date) {
