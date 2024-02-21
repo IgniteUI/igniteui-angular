@@ -49,6 +49,7 @@ import { IgxFlatTransactionFactory } from '../../services/transaction/transactio
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,15 +91,51 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
-    public islandToolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+    protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
-    public islandPaginatorTemplate: TemplateRef<any>;
+    protected paginatorDirectiveTemplate: TemplateRef<any>;
+
+    /**
+     * Gets the toolbar template for each child grid created from this row island.
+    */
+    @Input()
+    public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
+        return this._toolbarTemplate || this.toolbarDirectiveTemplate;
+    }
+
+    /**
+     * Sets the toolbar template for each child grid created from this row island.
+    */
+    public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
+        this._toolbarTemplate = template;
+    }
+
+    /**
+     * Gets the paginator template for each child grid created from this row island.
+    */
+    @Input()
+    public get paginatorTemplate(): TemplateRef<any> {
+        return this._paginatorTemplate || this.paginatorDirectiveTemplate;
+    }
+
+    /**
+     * Sets the paginator template for each child grid created from this row island.
+    */
+    public set paginatorTemplate(template: TemplateRef<any>) {
+        this._paginatorTemplate = template;
+    }
 
     /** @hidden @internal **/
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    public actionStrips: QueryList<IgxActionStripToken>;
+    protected actionStrips: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
@@ -151,6 +188,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;
+    private _toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+    private _paginatorTemplate: TemplateRef<any>;
 
     /**
      * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
@@ -333,12 +372,19 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
         // Create the child toolbar if the parent island has a toolbar definition
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
-            grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
-                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
-            grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
+            grid.rendered$.pipe(first(), filter(() => !!this.toolbarTemplate))
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.toolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
+            grid.rendered$.pipe(first(), filter(() => !!this.paginatorTemplate))
                 .subscribe(() => {
-                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());
-                    grid.paginatorOutlet.createEmbeddedView(this.islandPaginatorTemplate);
+                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxPaginatorComponent>) => {
+                        changes.forEach(p => {
+                            if (p.nativeElement.offsetParent?.id === grid.id) {
+                                // Optimize update only for those grids that have related changed paginator.
+                                grid.setUpPaginator()
+                            }
+                        });
+                    });
+                    grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate);
                 });
         });
     }
