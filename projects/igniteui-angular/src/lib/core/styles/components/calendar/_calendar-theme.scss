@@ -1141,6 +1141,10 @@
             %date-inner-week-number {
                 border-bottom-left-radius: var-get($theme, 'week-number-border-radius');
                 border-bottom-right-radius: var-get($theme, 'week-number-border-radius');
+
+                &::before {
+                    height: auto;
+                }
             }
 
             @if $bootstrap-theme {
@@ -1178,15 +1182,15 @@
             }
         }
     }
+
     %date-inner-week-number {
-        position: relative;
         min-width: auto;
         width: $date-size;
         color: var-get($theme, 'week-number-foreground');
         background: var-get($theme, 'week-number-background');
 
         &::after {
-            display: none;
+            display: none !important;
         }
 
         &::before {
@@ -1216,7 +1220,6 @@
             border-top-left-radius: var-get($theme, 'week-number-border-radius');
             border-top-right-radius: var-get($theme, 'week-number-border-radius');
             border: rem(1px) solid transparent;
-
 
             @if not $bootstrap-theme {
                 &::before {
@@ -1334,13 +1337,7 @@
         %years-view__year-inner {
             color: var-get($theme, 'year-selected-focus-foreground');
             background: var-get($theme, 'year-selected-focus-background');
-
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
-            } @else {
-                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
-                    0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
-            }
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
         }
     }
 
@@ -1448,13 +1445,7 @@
         %months-view__month-inner {
             color: var-get($theme, 'month-selected-focus-foreground');
             background: var-get($theme, 'month-selected-focus-background');
-
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
-            } @else {
-                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
-                    0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
-            }
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-focus-outline-color');
         }
     }
 
@@ -1539,6 +1530,10 @@
                     height: $date-size;
                 }
             }
+        }
+
+        %date-inner-week-number {
+            border-radius: 0;
         }
     }
 
@@ -2263,7 +2258,7 @@
         header-date: 'h4',
         weekday-label: 'body-1',
         picker-date: 'subtitle-1',
-        content: 'body-1'
+        content: 'body-1',
     )
 ) {
     $header-year: map.get($categories, 'header-year');
