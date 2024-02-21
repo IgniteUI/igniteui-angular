@@ -2675,7 +2675,7 @@ describe('igxSelect', () => {
 describe('igxSelect ControlValueAccessor Unit', () => {
     let select: IgxSelectComponent;
     it('Should correctly implement interface methods', () => {
-        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'delete', 'first_item']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
@@ -2716,6 +2716,10 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         spyOnProperty(select, 'collapsed').and.returnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+
+        // destroy
+        select.ngOnDestroy();
+        expect(mockSelection.delete).toHaveBeenCalled();
     });
 
     it('Should correctly handle ngControl validity', () => {

@@ -1012,7 +1012,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.clear(this.id);
+        this.selectionService.delete(this.id);
     }
 
     /**

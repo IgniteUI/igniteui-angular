@@ -72,9 +72,9 @@ describe('IgxSimpleCombo', () => {
         const elementRef = { nativeElement: null };
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
-        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
+        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register', 'clear']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
@@ -428,6 +428,17 @@ describe('IgxSimpleCombo', () => {
             combo.select(item);
             combo.handleClear(spyObj);
             expect(combo.value).toEqual(item[0]);
+        });
+
+        it('should delete the selection on destroy', () => {
+            const selectionService = new IgxSelectionAPIService();
+            const comboClearSpy = spyOn(mockComboService, 'clear');
+            const selectionDeleteSpy = spyOn(selectionService, 'delete');
+            combo = new IgxSimpleComboComponent(elementRef, mockCdr, selectionService, mockComboService,
+                mockIconService, platformUtil, null, null, mockInjector);
+            combo.ngOnDestroy();
+            expect(comboClearSpy).toHaveBeenCalled();
+            expect(selectionDeleteSpy).toHaveBeenCalled();
         });
     });
 
