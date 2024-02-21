@@ -19,7 +19,7 @@ export interface IgxExpansionPanelBase {
 }
 
 /** @hidden */
-export const IGX_EXPANSION_PANEL_COMPONENT = new InjectionToken<IgxExpansionPanelBase>('IgxExpansionPanelToken');
+export const IGX_EXPANSION_PANEL_COMPONENT = /*@__PURE__*/new InjectionToken<IgxExpansionPanelBase>('IgxExpansionPanelToken');
 
 export interface IExpansionPanelEventArgs extends IBaseEventArgs {
     event: Event;

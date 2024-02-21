@@ -26,24 +26,19 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './token';
 
 let NEXT_ID = 0;
-
-export const CarouselIndicatorsOrientation = mkenum({
-    bottom: 'bottom',
-    top: 'top'
-});
-export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
@@ -89,7 +84,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     standalone: true,
     imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
-
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
 
     /**

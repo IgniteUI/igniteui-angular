@@ -22,7 +22,7 @@ import { NgIf } from '@angular/common';
 /**
  * @hidden
  */
-export const ExpansionPanelHeaderIconPosition = mkenum({
+export const ExpansionPanelHeaderIconPosition = /*@__PURE__*/mkenum({
     LEFT: 'left',
     NONE: 'none',
     RIGHT: 'right'
