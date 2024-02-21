@@ -17,6 +17,7 @@ import {
 import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { HammerInput, HammerOptions } from '../core/touch-annotations';
 
 /** @hidden */
 @Directive({
@@ -179,7 +180,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnInit() {
-        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
+        const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer?.Pan, { direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL, threshold: 10 }]] };
         this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
     }
 
