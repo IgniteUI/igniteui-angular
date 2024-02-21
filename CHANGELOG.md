@@ -45,6 +45,7 @@ All notable changes for each version of this project will be documented in this 
         - `rowID` property has been deprecated in the following interfaces: `IGridEditDoneEventArgs`, `IPathSegment`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and will be removed in a future version. Use `rowKey` instead.
         - `primaryKey` property has been deprecated in the following interfaces: `IRowDataEventArgs`, `IGridEditDoneEventArgs`. Use `rowKey` instead.
         - `data` property has been deprecated in the following interfaces: `IRowDataEventArgs`. Use `rowData` instead.
+- HammerJS is now an optional dependency, which means apps no longer need to install and include it for related components to work. Touch-specific handling on some components is still dependent on HammerJS setup, but will be disabled without. The setup is now also an option when adding Ignite UI for Angular to existing projects via the `ng add` command.
 
 ## 17.0.0
 ### General
