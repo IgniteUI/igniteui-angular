@@ -40,7 +40,9 @@
     @include chip-typography();
     @include column-actions-typography();
     @include date-range-typography();
-    @include dialog-typography();
+    @include dialog-typography($categories: (
+        title: 'h5',
+    ));
     @include dock-manager-typography();
     @include drop-down-typography();
     @include expansion-panel-typography($categories: (
