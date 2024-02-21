@@ -877,7 +877,6 @@
         background: var-get($theme, 'content-background');
         border: $border-width solid var-get($theme, 'border-color');
         outline: none;
-        overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
 
         %days-view,
