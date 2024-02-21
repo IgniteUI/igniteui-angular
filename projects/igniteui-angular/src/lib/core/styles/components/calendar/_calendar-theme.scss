@@ -1364,13 +1364,7 @@
         %years-view__year-inner {
             color: var-get($theme, 'year-selected-current-focus-foreground');
             background: var-get($theme, 'year-selected-current-focus-background');
-
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
-            } @else {
-                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
-                    0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
-            }
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
         }
     }
 
@@ -1469,13 +1463,7 @@
         %months-view__month-inner {
             color: var-get($theme, 'month-selected-current-focus-foreground');
             background: var-get($theme, 'month-selected-current-focus-background');
-
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
-            } @else {
-                box-shadow: inset 0 0 0 rem(1px) var(--content-background),
-                    0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
-            }
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'selected-current-outline-focus-color');
         }
     }
 
