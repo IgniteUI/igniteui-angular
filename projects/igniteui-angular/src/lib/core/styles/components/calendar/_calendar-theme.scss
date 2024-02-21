@@ -2090,7 +2090,11 @@
             color: var-get($theme, 'date-selected-range-foreground');
 
             &:hover {
-                color: var-get($theme, 'date-selected-range-hover-foreground');
+                @if $variant != 'bootstrap' {
+                    color: var-get($theme, 'date-selected-range-hover-foreground');
+                } @else {
+                    color: var-get($theme, 'date-selected-foreground');
+                }
             }
         }
     }
@@ -2129,11 +2133,19 @@
             // TODO see if you can remove the else here
             @if $variant == 'fluent' {
                 width: calc(50% + #{rem(2px)});
-            } @else {
+            }
+            @if $variant == 'material' or $variant == 'indigo-desing' {
                 width: calc(50% + #{rem(1px)});
             }
+            @if $variant == 'bootstrap' {
+                width: 50%;
+            }
 
-            border-inline-color: transparent;
+            @if $variant != 'bootstrap' {
+                border-inline-color: transparent;
+            } @else {
+                border-inline: 0;
+            }
 
             @if $variant == 'material' or $variant == 'indigo-design' {
                 border-style: dashed;
@@ -2146,6 +2158,7 @@
 
         %date-inner {
             @if $variant == 'bootstrap' {
+                color: var-get($theme, 'date-selected-foreground');
                 background: var-get($theme, 'date-selected-background');
             }
         }
