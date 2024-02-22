@@ -1370,11 +1370,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
         }
-        if (this.sizesCache && this.igxForScrollOrientation === 'horizontal') {
-            // Updating horizontal chunks and offsets based on the new scrollLeft
-            const scrollOffset = this.fixedUpdateAllElements(this.scrollPosition);
-            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
-        }
     }
 
     /**
