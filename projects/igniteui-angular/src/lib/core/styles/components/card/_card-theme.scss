@@ -216,7 +216,13 @@
         }
 
         @if $variant == 'indigo-design' {
-            gap: rem(2px)
+            gap: rem(2px);
+
+            %igx-card-header-subtitle {
+                @if $variant == 'indigo-design' {
+                    margin-block-end: rem(2px)
+                }
+            }
         }
     }
 
@@ -274,6 +280,10 @@
         %igx-card-content,
         %igx-card-actions {
             padding: rem(16px);
+        }
+
+        %igx-card-actions {
+            padding-block-start: rem(8px); 
         }
 
         %igx-card-header + %igx-card-content {
