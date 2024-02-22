@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -9,7 +9,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
-import { isDateInRanges } from './common/helpers';
+import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 
 /** @hidden @internal */
@@ -18,6 +18,26 @@ import { CalendarDay } from './common/model';
     standalone: true
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
+    /**
+     * Holds month view index we are operating on.
+     */
+    protected activeViewIdx = 0;
+
+    /**
+     * @hidden
+     */
+    private _activeView: IgxCalendarView = IgxCalendarView.Month;
+
+    /**
+     * @hidden
+     */
+    private activeViewSubject = new Subject<IgxCalendarView>();
+
+    /**
+     * @hidden
+     */
+    protected activeView$ = this.activeViewSubject.asObservable();
+
     /**
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
@@ -316,6 +336,118 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Gets the current active view.
+     * ```typescript
+     * this.activeView = calendar.activeView;
+     * ```
+     */
+    @Input()
+    public get activeView(): IgxCalendarView {
+        return this._activeView;
+    }
+
+    /**
+     * Sets the current active view.
+     * ```html
+     * <igx-calendar [activeView]="year" #calendar></igx-calendar>
+     * ```
+     * ```typescript
+     * calendar.activeView = IgxCalendarView.YEAR;
+     * ```
+     */
+    public set activeView(val: IgxCalendarView) {
+        this._activeView = val;
+        this.activeViewSubject.next(val);
+    }
+
+    /**
+     * @hidden
+     */
+    public get isDefaultView(): boolean {
+        return this._activeView === IgxCalendarView.Month;
+    }
+
+    /**
+     * @hidden
+     */
+    public get isDecadeView(): boolean {
+        return this._activeView === IgxCalendarView.Decade;
+    }
+
+    /**
+     * @hidden
+     */
+    public activeViewDecade(activeViewIdx = 0): void {
+        this.activeView = IgxCalendarView.Decade;
+        this.activeViewIdx = activeViewIdx;
+    }
+
+    /**
+     * @hidden
+     */
+    public activeViewDecadeKB(event: KeyboardEvent, activeViewIdx = 0) {
+        event.stopPropagation();
+
+        if (this.platform.isActivationKey(event)) {
+            event.preventDefault();
+            this.activeViewDecade(activeViewIdx);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @ViewChildren('yearsBtn')
+    public yearsBtns: QueryList<ElementRef>;
+
+    /**
+     * @hidden @internal
+     */
+    public previousViewDate: Date;
+
+    /**
+     * @hidden
+     */
+    public changeYear(date: Date) {
+        this.previousViewDate = this.viewDate;
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
+        this.activeView = IgxCalendarView.Month;
+    }
+
+    /**
+     * Returns the locale representation of the year in the year view if enabled,
+     * otherwise returns the default `Date.getFullYear()` value.
+     *
+     * @hidden
+     */
+    public formattedYear(value: Date | Date[]): string {
+		if (Array.isArray(value)) {
+			return;
+		}
+
+        if (this.formatViews.year) {
+            return this.formatterYear.format(value);
+        }
+
+	    return `${value.getFullYear()}`;
+    }
+
+	public formattedYears(value: Date) {
+		const dates = value as unknown as Date[];
+		return dates.map(date => this.formattedYear(date)).join(' - ');
+	}
+
+	protected getDecadeRange(): { start: string; end: string } {
+        const range = getYearRange(this.viewDate, 15);
+        const start = CalendarDay.from(this.viewDate).set({ date: 1, year: range.start }); 
+        const end = CalendarDay.from(this.viewDate).set({ date: 1, year: range.end });
+
+		return {
+			start: this.formatterYear.format(start.native),
+			end: this.formatterYear.format(end.native)
+		}
+	}
+    /**
      *
      * Gets the selection type.
      * Default value is `"single"`.
@@ -456,7 +588,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set value(value: Date | Date[]) {
         // Check if value is set initially by the user,
         // if it's not set the initial selection to the current date
-        if (!value || !!value && (value as Date[]).length === 0) {
+        if (!value || (Array.isArray(value) && value.length === 0)) {
             this.initialSelection = new Date();
             return;
         }
@@ -465,13 +597,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (!this.initialSelection) {
             // If the value is an array find the earliest date and use it in consequent operations
             // otherwise the value is not an array, use it directly
-            const valueDate = value[0] ? Math.min.apply(null, value) : value;
+            const valueDate = Array.isArray(value) ? Math.min.apply(null, value) : value;
             // getDateOnly always returns a valid date, if valueDate is a valid date it sets the
             // the date part of the date to the first day of the month, otherwise it will set it to the first
             // day in the current month
-            const date = this.getDateOnly(new Date(valueDate)).setDate(1);
             // we then set the viewDate to the generated date value in the previous step
-            this.viewDate = new Date(date);
+            this.viewDate = new Date(valueDate);
         }
 
         // we then call selectDate with either a single date or an array of dates
@@ -616,7 +747,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 return;
             }
 
-            this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            if (selDates.length === 0 || selDates.length > newDates.length) {
+                // deselect the dates that are part of currently selectedDates and not part of updated new values
+                this.selectedDates = newDates.map(v => new Date(v));
+            } else {
+                this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            }
         } else {
             let newSelection = [];
 
@@ -741,7 +877,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else {
                 this.rangeStarted = false;
 
-                if (this.selectedDates[0]?.getTime() === value.getTime()) {
+                if (this.selectedDates.getTime() === value.getTime()) {
                     this.selectedDates = [];
                     this._onChangeCallback(this.selectedDates);
                     return;

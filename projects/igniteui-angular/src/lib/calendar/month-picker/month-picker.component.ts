@@ -11,12 +11,12 @@ import { NgIf, NgStyle, NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
-import { IgxMonthPickerBaseDirective } from "./month-picker-base";
 import { IgxYearsViewComponent } from "../years-view/years-view.component";
 import { IgxDaysViewComponent } from "../days-view/days-view.component";
 import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxCalendarView } from "../calendar";
 import { CalendarDay } from "../common/model";
+import { IgxCalendarBaseDirective } from "../calendar-base";
 
 let NEXT_ID = 0;
 @Component({
@@ -39,7 +39,7 @@ let NEXT_ID = 0;
         IgxYearsViewComponent,
     ],
 })
-export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective implements AfterViewInit {
+export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements AfterViewInit {
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.

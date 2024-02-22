@@ -22,7 +22,6 @@ import {
     IgxCalendarScrollPageDirective,
 } from './calendar.directives';
 import { IgxCalendarView, ScrollDirection } from './calendar';
-import { IgxMonthPickerBaseDirective } from './month-picker/month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
@@ -32,6 +31,7 @@ import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view
 import { IgxIconComponent } from '../icon/icon.component';
 import { areSameMonth, formatToParts, getClosestActiveDate, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
+import { IgxCalendarBaseDirective } from './calendar-base';
 
 let NEXT_ID = 0;
 
@@ -68,7 +68,7 @@ let NEXT_ID = 0;
 	standalone: true,
 	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
 })
-export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
+export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      * @internal
