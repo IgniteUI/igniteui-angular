@@ -214,6 +214,10 @@
         &:empty {
             display: none;
         }
+
+        @if $variant == 'indigo-design' {
+            gap: rem(2px)
+        }
     }
 
     %igx-card-header-subtitle {
@@ -264,10 +268,6 @@
         &:last-child {
             margin-block-start: auto;
         }
-
-        [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
-        }
     }
 
     @if $variant == 'indigo-design' {
@@ -299,10 +299,7 @@
         order: 1;
         color: var-get($theme, 'actions-text-color');
         margin-inline-start: auto;
-
-        @if $variant == 'indigo-design' {
-            gap: rem(8px);
-        }
+        gap: rem(8px);
 
         &:empty {
             display: none;
@@ -313,6 +310,7 @@
         display: flex;
         align-items: center;
         order: 0;
+        gap: rem(8px);
 
         &:empty {
             display: none;
@@ -367,10 +365,7 @@
     %igx-card-actions-bgroup {
         display: flex;
         flex-flow: row nowrap;
-
-        [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
-        }
+        gap: rem(8px);
     }
 
     %igx-card-actions-igroup {
