@@ -128,7 +128,7 @@
     "ng-packagr": "^17.2.0",
     "postcss-scss": "^4.0.6",
     "postcss": "^8.4.31",
-    "puppeteer": "^22.0.0",
+    "puppeteer": "^22.1.0",
     "sass-embedded": "^1.69.1",
     "sass-true": "^6.0.1",
     "sassdoc-plugin-localization": "^1.4.3",

@@ -13,14 +13,14 @@ import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
-export const IgxAvatarSize = mkenum({
+export const IgxAvatarSize = /*@__PURE__*/mkenum({
     SMALL: 'small',
     MEDIUM: 'medium',
     LARGE: 'large'
 });
 export type IgxAvatarSize = (typeof IgxAvatarSize)[keyof typeof IgxAvatarSize];
 
-export const IgxAvatarType = mkenum({
+export const IgxAvatarType = /*@__PURE__*/mkenum({
     INITIALS: 'initials',
     IMAGE: 'image',
     ICON: 'icon',
@@ -121,7 +121,7 @@ export class IgxAvatarComponent implements OnInit {
      * @deprecated in version 15.1.0.
      * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
      * By default the shape of the avatar is a square.
-     * 
+     *
      * @example
      * ```html
      * <igx-avatar [roundShape]="true" ></igx-avatar>
@@ -136,7 +136,7 @@ export class IgxAvatarComponent implements OnInit {
 
     public set roundShape(value: boolean) {
         this.shape = value === true ? 'circle' : 'square';
-    }  
+    }
 
     /**
      * Sets square, rounded or circular shape to the avatar.
@@ -317,7 +317,7 @@ export class IgxAvatarComponent implements OnInit {
     protected get componentSize() {
         if (this._size) {
             return `var(--ig-size-${this._size})`;
-        } 
+        }
     }
 
     /**

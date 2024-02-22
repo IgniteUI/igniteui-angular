@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { HorizontalAnimationType, IgxCarouselComponentBase } from '../carousel/carousel-base';
+import { IgxCarouselComponentBase } from '../carousel/carousel-base';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
@@ -24,6 +24,7 @@ import {
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
 import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { HorizontalAnimationType } from '../carousel/enums';
 
 
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?

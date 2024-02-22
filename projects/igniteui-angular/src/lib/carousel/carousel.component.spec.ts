@@ -3,16 +3,15 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
-    ISlideEventArgs,
-    CarouselIndicatorsOrientation
+    ISlideEventArgs
 } from './carousel.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
-import { HorizontalAnimationType } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { NgFor, NgIf } from '@angular/common';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
 
 describe('Carousel', () => {
     configureTestSuite();
