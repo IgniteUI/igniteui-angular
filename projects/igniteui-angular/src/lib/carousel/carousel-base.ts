@@ -1,18 +1,11 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
-import { mkenum } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
+import { HorizontalAnimationType } from './enums';
 
 export enum Direction { NONE, NEXT, PREV }
-
-export const HorizontalAnimationType = mkenum({
-    none: 'none',
-    slide: 'slide',
-    fade: 'fade'
-});
-export type HorizontalAnimationType = (typeof HorizontalAnimationType)[keyof typeof HorizontalAnimationType];
 
 export interface CarouselAnimationSettings {
     enterAnimation: AnimationReferenceMetadata;
