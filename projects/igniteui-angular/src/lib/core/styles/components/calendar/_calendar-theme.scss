@@ -2188,7 +2188,7 @@
             @if $variant == 'fluent' {
                 background: transparent;
                 border-color: var-get($theme, 'date-range-preview-border-color');
-                border-inline-end-color: transparent !important;
+                border-inline-end-color: transparent;
             }
         }
 
@@ -2205,7 +2205,7 @@
             @if $variant == 'fluent' {
                 background: transparent ;
                 border-color: var-get($theme, 'date-range-preview-border-color');
-                border-inline-start-color: transparent !important;
+                border-inline-start-color: transparent;
             }
         }
 
