@@ -26,7 +26,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButton`
     - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. However, the event is no longer being emitted on initialization. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
 - `IgxRowIsland`
-    - Added template inputs for defining `IgxGridToolbar` and `IgxPaginator`.
+    - Added `toolbarTemplate` and `paginatorTemplate` inputs for defining `IgxGridToolbar` and `IgxPaginator` templates.
 
 
 ### General
