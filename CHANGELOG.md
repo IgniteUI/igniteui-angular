@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
 - New directive -  `igxIconButton` directive that provides a way to use an icon as a fully functional button has been added. The new `igxIconButton` comes in three types - flat, outlined and contained (default). All `igxButton`'s with type `icon` will be automatically migrated to the new `igxIconButton`'s with `ng update`.
 - `IgxButton`
     - **Behavioral Change** `buttonSelected` event is now emitted not only when a button gets selected, but also when it gets deselected. However, the event is no longer being emitted on initialization. If this event was used in a scenario where it is assumed that the button gets selected, it's a good idea the logic to be branched now based on `eventArgs.selected` condition.
+- `IgxRowIsland`
+    - Added template inputs for defining `IgxGridToolbar` and `IgxPaginator`.
 
 
 ### General

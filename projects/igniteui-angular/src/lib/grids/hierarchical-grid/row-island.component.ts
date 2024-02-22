@@ -93,43 +93,39 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     protected paginatorDirectiveTemplate: TemplateRef<any>;
 
     /**
-     * Gets the toolbar template for each child grid created from this row island.
+     * Sets/Gets the toolbar template for each child grid created from this row island.
     */
     @Input()
     public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
         return this._toolbarTemplate || this.toolbarDirectiveTemplate;
     }
 
-    /**
-     * Sets the toolbar template for each child grid created from this row island.
-    */
     public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
         this._toolbarTemplate = template;
     }
 
     /**
-     * Gets the paginator template for each child grid created from this row island.
+     * Sets/Gets the paginator template for each child grid created from this row island.
     */
     @Input()
     public get paginatorTemplate(): TemplateRef<IgxGridPaginatorTemplateContext> {
         return this._paginatorTemplate || this.paginatorDirectiveTemplate;
     }
 
-    /**
-     * Sets the paginator template for each child grid created from this row island.
-    */
-    public set paginatorTemplate(template: TemplateRef<any>) {
+    public set paginatorTemplate(template: TemplateRef<IgxGridPaginatorTemplateContext>) {
         this._paginatorTemplate = template;
     }
 
@@ -189,7 +185,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private layout_id = `igx-row-island-`;
     private isInit = false;
     private _toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-    private _paginatorTemplate: TemplateRef<any>;
+    private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
      * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
