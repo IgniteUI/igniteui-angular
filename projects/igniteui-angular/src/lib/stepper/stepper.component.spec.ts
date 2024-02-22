@@ -5,7 +5,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
-import { HorizontalAnimationType } from '../carousel/carousel-base';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { Direction } from '../services/direction/directionality';
@@ -23,6 +22,7 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
+import { HorizontalAnimationType } from '../carousel/enums';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
