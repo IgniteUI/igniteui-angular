@@ -423,5 +423,3 @@ export interface IMaskEventArgs extends IBaseEventArgs {
     formattedValue: string;
 }
 
-/** @hidden */
-

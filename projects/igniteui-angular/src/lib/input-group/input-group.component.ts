@@ -28,7 +28,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-const IgxInputGroupTheme = mkenum({
+const IgxInputGroupTheme = /*@__PURE__*/mkenum({
     Material: 'material',
     Fluent: 'fluent',
     Bootstrap: 'bootstrap',

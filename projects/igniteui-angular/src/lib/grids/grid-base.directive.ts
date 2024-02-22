@@ -178,7 +178,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-IgcTrialWatermark.register();
+/*@__PURE__*/IgcTrialWatermark.register();
 
 interface IMatchInfoCache {
     row: any;
@@ -3961,6 +3961,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.transactionChange$.next();
         this.transactionChange$.complete();
         this._destroyed = true;
+
+        this.textHighlightService.destroyGroup(this.id);
 
         if (this._advancedFilteringOverlayId) {
             this.overlayService.detach(this._advancedFilteringOverlayId);

@@ -296,8 +296,3 @@ export class IgxBannerComponent implements IToggleView {
         this.closed.emit(this._bannerEvent);
     }
 }
-
-/**
- * @hidden
- */
-
