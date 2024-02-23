@@ -4,8 +4,6 @@
             <h4 class="sample-title">Days View</h4>
             <igx-days-view [(ngModel)]="date" #daysView
                            [showWeekNumbers]="true"
-                           [activeDate]="date"
-                           [viewDate]="date || selection"
                            [locale]="locale"
                            [selection]="'single'"
                            (selected)="onSelection($event)">
