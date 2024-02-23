@@ -541,15 +541,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * @hidden @internal
-     */
-    public override ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-        this.selection.clear(this.id);
-    }
-
-    /**
-     * @hidden @internal
      * Prevent input blur - closing the items container on Header/Footer Template click.
      */
     public mousedownHandler(event) {
