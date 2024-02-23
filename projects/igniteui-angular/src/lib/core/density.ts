@@ -82,19 +82,11 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      */
     @Input()
     public get displayDensity(): DisplayDensity {
-        switch (this.size) {
-            case '1':
-                return DisplayDensity.compact;
-            case '2':
-                return DisplayDensity.cosy;
-            case '3':
-            default:
-                return (
-                    this._displayDensity ??
-                    this.displayDensityOptions?.displayDensity ??
-                    DisplayDensity.comfortable
-                );
-        }
+        return (
+            this._displayDensity ??
+            this.displayDensityOptions?.displayDensity ??
+            DisplayDensity.comfortable
+        );
     }
 
     /**
@@ -112,13 +104,6 @@ export class DisplayDensityBase implements DoCheck, OnInit {
 
             this.densityChanged.emit(densityChangedArgs);
         }
-    }
-
-    public get size() {
-        return globalThis.document?.defaultView
-            .getComputedStyle(this._host.nativeElement)
-            .getPropertyValue('--ig-size')
-            .trim();
     }
 
     /**
@@ -145,6 +130,27 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * @hidden
      */
     public ngOnInit(): void {
+        const el = this._host?.nativeElement;
+
+        if (el instanceof Element) {
+            const size = globalThis.document?.defaultView
+                .getComputedStyle(el)
+                .getPropertyValue("--ig-size")
+                .trim();
+
+            switch (size) {
+                case '1':
+                    this._displayDensity = DisplayDensity.compact;
+                    break;
+                case '2':
+                    this._displayDensity = DisplayDensity.cosy;
+                    break;
+                case '3':
+                    this._displayDensity = DisplayDensity.comfortable;
+                    break;
+            }
+        }
+
         this.initialDensity = this._displayDensity;
     }
 

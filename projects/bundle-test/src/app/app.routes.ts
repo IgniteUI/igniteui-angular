@@ -1,16 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { ChipComponent } from './chip/chip.component';
+import { ButtonGroupComponent } from './button-group/button-group.component';
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: '', redirectTo: '/chip', pathMatch: 'full' },
     { path: 'chip', component: ChipComponent },
+    { path: 'button-group', component: ButtonGroupComponent}
     // { path: 'form', loadComponent: () => import('./form/form.component').then(m => m.FormComponent) },
     // { path: 'stepper', loadComponent: () => import('./stepper/stepper.component').then(m => m.StepperComponent) }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
