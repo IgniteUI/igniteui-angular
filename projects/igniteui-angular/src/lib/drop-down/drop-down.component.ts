@@ -409,8 +409,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-        this.selection.clear(this.id);
-        this.selection.clear(`${this.id}-active`);
+        this.selection.delete(this.id);
+        this.selection.delete(`${this.id}-active`);
     }
 
     /** @hidden @internal */
