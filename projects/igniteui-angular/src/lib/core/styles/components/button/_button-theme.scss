@@ -935,7 +935,7 @@
             @if $variant == 'material' {
                 box-shadow: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
-                box-shadow: $fab-shadow--focus;
+                box-shadow: $contained-shadow--focus;
             }
 
             &:hover {
