@@ -178,13 +178,6 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 
 IgcTrialWatermark.register();
 
-interface IMatchInfoCache {
-    row: any;
-    index: number;
-    column: string;
-    metadata: Map<string, boolean>;
-}
-
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
