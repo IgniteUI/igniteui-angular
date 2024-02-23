@@ -180,12 +180,24 @@
             align-self: unset;
             margin-inline-end: 0;
             margin-bottom: rem(16px);
+
+            @if $variant == 'indigo-design' {
+                margin-bottom: rem(8px);
+            }
         }
     }
 
     %igx-card-header-thumbnail {
         align-self: flex-start;
         margin-inline-end: rem(16px);
+
+        @if $variant == 'indigo-design' {
+            margin-inline-end: rem(8px);
+
+            igx-avatar {
+                --ig-size: 3;
+            }
+        }
 
         &:empty {
             display: none;
@@ -201,6 +213,16 @@
 
         &:empty {
             display: none;
+        }
+
+        @if $variant == 'indigo-design' {
+            gap: rem(2px);
+
+            %igx-card-header-subtitle {
+                @if $variant == 'indigo-design' {
+                    margin-block-end: rem(2px)
+                }
+            }
         }
     }
 
@@ -252,10 +274,21 @@
         &:last-child {
             margin-block-start: auto;
         }
+    }
 
-        [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
+    @if $variant == 'indigo-design' {
+        %igx-card-content,
+        %igx-card-actions {
+            padding: rem(16px);
         }
+
+        %igx-card-actions {
+            padding-block-start: rem(8px); 
+        }
+
+        %igx-card-header + %igx-card-content {
+            padding-block-start: 0;
+        }        
     }
 
     %igx-card-actions--vertical {
@@ -276,6 +309,7 @@
         order: 1;
         color: var-get($theme, 'actions-text-color');
         margin-inline-start: auto;
+        gap: rem(8px);
 
         &:empty {
             display: none;
@@ -286,6 +320,7 @@
         display: flex;
         align-items: center;
         order: 0;
+        gap: rem(8px);
 
         &:empty {
             display: none;
@@ -340,10 +375,7 @@
     %igx-card-actions-bgroup {
         display: flex;
         flex-flow: row nowrap;
-
-        [igxButton] ~ [igxButton] {
-            margin-inline-start: rem(8px);
-        }
+        gap: rem(8px);
     }
 
     %igx-card-actions-igroup {
