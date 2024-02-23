@@ -7214,8 +7214,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
                 const max = Math.max(...cellsContentWidths);
-                if (max === 0) {
-                    // cells not in DOM yet...
+                // in cases with template contains something, like a webcomponent,
+                // that renders fully only after it is already injected in the DOM,
+                // and initially renders as empty, skip measuring it.
+                let emptyCellWithPaddingOnly = 0;
+                if (cells.length > 0 && !!col.bodyTemplate) {
+                    const cellStyle = this.document.defaultView.getComputedStyle(cells[0].nativeElement);
+                    emptyCellWithPaddingOnly = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+                }
+
+                if (max === 0 || max <= emptyCellWithPaddingOnly) {
+                    // cells not in DOM yet or content not fully initialized.
                     continue;
                 }
                 const header = this.headerCellList.find(x => x.column === col);
