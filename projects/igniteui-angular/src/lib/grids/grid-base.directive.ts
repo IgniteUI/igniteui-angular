@@ -7354,7 +7354,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns: IgxColumnComponent[] = [];
 
         config.forEach(column => {
-            var newCol: IgxColumnComponent | undefined;
+            let  newCol: IgxColumnComponent | undefined;
             if (column instanceof IgxColumnComponent) {
                 newCol = column;
             } else {

@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
+import { Directive, Optional, Input, Host, ViewContainerRef, Inject, createComponent, EnvironmentInjector, Injector } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
