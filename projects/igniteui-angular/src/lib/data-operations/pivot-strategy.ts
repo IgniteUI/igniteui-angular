@@ -11,7 +11,7 @@ import { IDataCloneStrategy } from './data-clone-strategy';
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
 
-    public static instance() {
+    public static instance(): NoopPivotDimensionsStrategy {
         return this._instance || (this._instance = new NoopPivotDimensionsStrategy());
     }
 

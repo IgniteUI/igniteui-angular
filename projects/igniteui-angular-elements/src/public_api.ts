@@ -36,7 +36,7 @@ export {
     IgxPivotDateAggregate as IgcPivotDateAggregate,
     IgxPivotTimeAggregate as IgcPivotTimeAggregate,
     IgxPivotAggregate as IgcPivotAggregate,
-    NoopPivotDimensionsStrategy,
+    NoopPivotDimensionsStrategy as IgcNoopPivotDimensionsStrategy,
 
     SortingDirection,
     ColumnPinningPosition,
