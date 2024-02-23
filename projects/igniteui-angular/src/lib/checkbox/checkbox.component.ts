@@ -21,7 +21,7 @@ import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-export const LabelPosition = mkenum({
+export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
     AFTER: 'after'
 });

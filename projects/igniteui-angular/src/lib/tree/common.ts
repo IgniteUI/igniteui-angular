@@ -102,7 +102,7 @@ export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
 }
 
 // Enums
-export const IgxTreeSelectionType = mkenum({
+export const IgxTreeSelectionType = /*@__PURE__*/mkenum({
     None: 'None',
     BiState: 'BiState',
     Cascading: 'Cascading'
@@ -110,5 +110,5 @@ export const IgxTreeSelectionType = mkenum({
 export type IgxTreeSelectionType = (typeof IgxTreeSelectionType)[keyof typeof IgxTreeSelectionType];
 
 // Token
-export const IGX_TREE_COMPONENT = new InjectionToken<IgxTree>('IgxTreeToken');
-export const IGX_TREE_NODE_COMPONENT = new InjectionToken<IgxTreeNode<any>>('IgxTreeNodeToken');
+export const IGX_TREE_COMPONENT = /*@__PURE__*/new InjectionToken<IgxTree>('IgxTreeToken');
+export const IGX_TREE_NODE_COMPONENT = /*@__PURE__*/new InjectionToken<IgxTreeNode<any>>('IgxTreeNodeToken');

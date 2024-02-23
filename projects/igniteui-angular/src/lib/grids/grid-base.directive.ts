@@ -178,7 +178,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-IgcTrialWatermark.register();
+/*@__PURE__*/IgcTrialWatermark.register();
 
 interface IMatchInfoCache {
     row: any;
