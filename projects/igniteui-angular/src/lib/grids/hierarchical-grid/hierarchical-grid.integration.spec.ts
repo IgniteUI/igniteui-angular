@@ -12,6 +12,8 @@ import { take } from 'rxjs/operators';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent,
+    IgxHierarchicalGridTestInputPaginatorComponent,
+    IgxHierarchicalGridTestInputToolbarComponent,
     IgxHierarchicalGridWithTransactionProviderComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
@@ -39,7 +41,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
-                IgxHierarchicalGridWithTransactionProviderComponent
+                IgxHierarchicalGridWithTransactionProviderComponent,
+                IgxHierarchicalGridTestInputPaginatorComponent,
+                IgxHierarchicalGridTestInputToolbarComponent
             ]
         }).compileComponents();
     }))
@@ -639,6 +643,21 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
         }));
+
+        it('should be displayed correctly when using the template input', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestInputPaginatorComponent);
+            tick();
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
+            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const paginators = fixture.debugElement.queryAll(By.css('igx-paginator'));
+            expect(paginators[0].query(By.css('button')).nativeElement.innerText.trim()).toEqual('childData1 Button');
+            expect(paginators[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('childData2 Button');
+        }))
     });
 
     describe('Hiding', () => {
@@ -774,6 +793,21 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
             expect(toolbar.nativeElement.offsetWidth).toEqual(hierarchicalGrid.nativeElement.offsetWidth);
         }));
+
+        it('should be displayed correctly when using the template input', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestInputToolbarComponent);
+            tick();
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
+            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const toolbars = fixture.debugElement.queryAll(By.css('igx-grid-toolbar'));
+            expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('childData1 Button');
+            expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual('childData2 Button');
+        }))
     });
 
     describe('Moving', () => {
