@@ -75,7 +75,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @internal
      */
     @ViewChild("wrapper")
-    private wrapper: ElementRef;
+    public wrapper: ElementRef;
 
 	/**
 	 * Sets/gets the `id` of the calendar.
@@ -882,7 +882,11 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             m.selectedDates = this.selectedDates;
 		});
 
-		this.selected.emit(this.selectedDates);
+        if (this.selection !== 'single') {
+		    this.selected.emit(this.selectedDates);
+        } else {
+		    this.selected.emit(this.selectedDates.at(0));
+        }
 	}
 
 	/**

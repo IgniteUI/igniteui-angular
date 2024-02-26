@@ -905,13 +905,19 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-            if (this._calendar?.daysView?.selectedDates) {
-                return;
-            }
+
+            // INFO: Commented out during the calendar refactoring as I couldn't
+            // determine why this is needed.
+            // if (this._calendar?.daysView?.selectedDates) {
+            //     return;
+            // }
+    
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
-                this._calendar?.daysView?.dates
-                    .find(d => d.date.timestamp === this._targetViewDate.getTime())?.nativeElement.focus();
+                // INFO: We need to set the active date to the target view date so there's something to
+                // navigate when the calendar is opened.
+                this._calendar.activeDate = this._targetViewDate;
+                this._calendar.wrapper.nativeElement.focus();
             }
         });
 
