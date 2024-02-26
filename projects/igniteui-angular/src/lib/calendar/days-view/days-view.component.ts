@@ -369,14 +369,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public generateWeekHeader(): string[] {
-        const dayNames = [];
+    public get weekHeaderLabels(): string[] {
+        const weekdays = [];
 
-        for (const day of this.monthWeeks[0]) {
-            dayNames.push(this.formatterWeekday.format(day.native));
+        for (const day of this.monthWeeks.at(0)) {
+            weekdays.push(this.formatterWeekday.format(day.native));
         }
 
-        return dayNames;
+        return weekdays;
     }
 
     /**

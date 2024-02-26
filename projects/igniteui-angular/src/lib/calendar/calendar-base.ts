@@ -302,7 +302,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Gets the date format options of the days view.
+     * Gets the date format options of the views.
      */
     @Input()
     public get formatOptions(): IFormattingOptions {
@@ -310,11 +310,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Sets the date format options of the days view.
+     * Sets the date format options of the views.
      * Default is { day: 'numeric', month: 'short', weekday: 'short', year: 'numeric' }
      */
     public set formatOptions(formatOptions: IFormattingOptions) {
-        this._formatOptions = Object.assign(this._formatOptions, formatOptions);
+        this._formatOptions = {...this._formatOptions, ...formatOptions};
         this.initFormatters();
     }
 
@@ -328,7 +328,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Gets whether the `day`, `month` and `year` should be rendered
+     * Sets whether the `day`, `month` and `year` should be rendered
      * according to the locale and formatOptions, if any.
      */
     public set formatViews(formatViews: IFormattingViews) {

@@ -843,16 +843,22 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @hidden
 	 * @internal
 	 */
-	public getFormattedDate(): { weekday: string; monthday: string } {
+	protected getFormattedDate(): { weekday: string; monthday: string } {
 		const date = this.headerDate;
+        const monthFormatter = new Intl.DateTimeFormat(this.locale, { month: 'short', day: 'numeric' })
+        const dayFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'short' })
 
 		return {
-			monthday: this.formatterMonthday.format(date),
-			weekday: this.formatterWeekday.format(date),
+			monthday: monthFormatter.format(date),
+			weekday: dayFormatter.format(date),
 		};
 	}
 
-	public getFormattedRange(): { start: string; end: string } {
+	/**
+	 * @hidden
+	 * @internal
+	 */
+	protected getFormattedRange(): { start: string; end: string } {
 		const dates = this.selectedDates as Date[];
 
 		return {

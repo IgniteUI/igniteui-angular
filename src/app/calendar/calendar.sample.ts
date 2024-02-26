@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
 	DateRangeType,
@@ -41,16 +42,17 @@ defineComponents(IgcCalendarComponent);
 		FormsModule,
 		IgxSwitchComponent,
 		IgxIconComponent,
+        NgFor
 	],
 })
 export class CalendarSampleComponent implements OnInit {
 	@ViewChild('calendar', { static: true })
 	private calendar: IgxCalendarComponent;
+
 	@ViewChild('alert', { static: true })
 	private dialog: IgxDialogComponent;
 	protected weekStart: string = 'sunday';
 	protected setLocale = 'en';
-	protected weekDayFormat: IFormattingOptions['weekday'] = 'narrow'
 	protected weekNumber: boolean;
 	protected calendarHeader: boolean;
 	protected outsideDays: boolean;
@@ -72,6 +74,12 @@ export class CalendarSampleComponent implements OnInit {
 		new Date(this.today.getFullYear(), this.today.getMonth(), 10),
 	];
 	public selectionType = 'single';
+    private _formatOptions: IFormattingOptions = {
+        day: 'numeric',
+        month: 'long',
+        weekday: 'narrow',
+        year: 'numeric'
+    };
 
 	public ngOnInit() {
 		this.calendar.disabledDates = [{ type: DateRangeType.Specific, dateRange: this.rangeDisabled }];
@@ -191,13 +199,25 @@ export class CalendarSampleComponent implements OnInit {
 		this.weekStart = stringVal;
 	}
 
-	public setWeekDayFormat(format: IFormattingOptions['weekday']) {
-		this.weekDayFormat = format;
+    protected set formatOptions(value: IFormattingOptions) {
+        this._formatOptions = value;
+    }
 
-		this.calendar.formatOptions = {
-			...this.calendar.formatOptions, weekday: this.weekDayFormat
-		};
+    protected get formatOptions(): IFormattingOptions {
+        return this._formatOptions;
+    }
 
-		console.log(format);
+	public setWeekDayFormat(format: IFormattingOptions['weekday'] | string) {
+        this.formatOptions = {
+            ...this.formatOptions,
+            weekday: format as IFormattingOptions['weekday']
+        }
 	}
+
+    public setMonthFormat(format: IFormattingOptions['month'] | string) {
+        this.formatOptions = {
+            ...this.formatOptions,
+            month: format as IFormattingOptions['month']
+        }
+    }
 }

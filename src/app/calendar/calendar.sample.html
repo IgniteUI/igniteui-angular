@@ -8,13 +8,16 @@
                 (viewDateChanged)="viewDateChanged($event)"
                 (activeViewChanged)="activeViewChanged($event)"
                 (selected)="onSelection($event)"
-                [hideOutsideDays]="false">
+                [formatOptions]="formatOptions"
+                [hideOutsideDays]="false"
+            >
             </igx-calendar>
         </div>
 
         <div class="calendar-wrapper">
             <strong>IGC</strong>
             <igc-calendar
+                [formatOptions]="formatOptions"
                 [headerOrientation]="headerOrientation"
                 [orientation]="orientation"
                 [visibleMonths]="visibleMonths"
@@ -31,49 +34,101 @@
 
     <div class="preview__settings">
         <small>Change locale</small>
-        <igx-buttongroup>
-            <button igxButton [selected]="true" (click)="changeLocale('en-US')">EN</button>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button igxButton [selected]="true" (click)="changeLocale('en-US')">
+                EN
+            </button>
             <button igxButton (click)="changeLocale('bg-BG')">BG</button>
         </igx-buttongroup>
 
-        <small>Weekday format (default is narrow)</small>
-        <igx-buttongroup>
-            <button igxButton (click)="setWeekDayFormat('narrow')">narrow</button>
-            <button igxButton (click)="setWeekDayFormat('short')">short</button>
-            <button igxButton (click)="setWeekDayFormat('long')">long</button>
+        <small>Weekday format</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let option of ['narrow', 'short', 'long']"
+                value="option"
+                (click)="setWeekDayFormat(option)"
+                [selected]="option === formatOptions['weekday']"
+            >
+                {{option}}
+            </button>
+        </igx-buttongroup>
+
+        <small>Month format</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let option of ['numeric', '2-digit', 'narrow', 'short', 'long']"
+                value="option"
+                (click)="setMonthFormat(option)"
+                [selected]="option === formatOptions['month']"
+            >
+                {{option}}
+            </button>
         </igx-buttongroup>
 
         <small>Week Start (default is based on locale)</small>
-        <igx-buttongroup>
-            <button igxButton (click)="changeWeekStart(1, 'monday')">Monday</button>
-            <button igxButton [selected]="true" (click)="changeWeekStart(0, 'sunday')">Sunday</button>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button igxButton (click)="changeWeekStart(1, 'monday')">
+                Monday
+            </button>
+            <button
+                igxButton
+                [selected]="true"
+                (click)="changeWeekStart(0, 'sunday')"
+            >
+                Sunday
+            </button>
         </igx-buttongroup>
 
         <small>Selection type (default is single)</small>
-        <igx-buttongroup>
-            <button igxButton [selected]="true" (click)="setSelection('single')">Single</button>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                [selected]="true"
+                (click)="setSelection('single')"
+            >
+                Single
+            </button>
             <button igxButton (click)="setSelection('multi')">Multi</button>
             <button igxButton (click)="setSelection('range')">Range</button>
         </igx-buttongroup>
 
         <small>Header orientation (default is horizontal)</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button igxButton [selected]="true" (click)="setHeaderOrientation('horizontal')">Horizontal</button>
-            <button igxButton (click)="setHeaderOrientation('vertical')">Vertical</button>
+            <button
+                igxButton
+                [selected]="true"
+                (click)="setHeaderOrientation('horizontal')"
+            >
+                Horizontal
+            </button>
+            <button igxButton (click)="setHeaderOrientation('vertical')">
+                Vertical
+            </button>
         </igx-buttongroup>
-
 
         <small>Calendar orientation (default is horizontal)</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button igxButton [selected]="true" (click)="setOrientation('horizontal')">Horizontal</button>
-            <button igxButton (click)="setOrientation('vertical')">Vertical</button>
+            <button
+                igxButton
+                [selected]="true"
+                (click)="setOrientation('horizontal')"
+            >
+                Horizontal
+            </button>
+            <button igxButton (click)="setOrientation('vertical')">
+                Vertical
+            </button>
         </igx-buttongroup>
 
         <small>Toggle options</small>
         <div class="column gap">
             <igx-switch (click)="hideHeader()">Hide header</igx-switch>
             <igx-switch (click)="showHide()">Hide days</igx-switch>
-            <igx-switch (click)="hideWeekNumber()">Show week numbers</igx-switch>
+            <igx-switch (click)="hideWeekNumber()"
+                >Show week numbers</igx-switch
+            >
         </div>
 
         <small>Select / Deselect </small>
@@ -87,11 +142,23 @@
         <div class="row gap">
             <igx-input-group type="border">
                 <label igxLabel for="mNumber">Months number</label>
-                <input igxInput name="visible-months" id="mNumber" type="number" #monthsviewnumber/>
+                <input
+                    igxInput
+                    name="visible-months"
+                    id="mNumber"
+                    type="number"
+                    #monthsviewnumber
+                />
                 <div igxHint>Enter the number of months to be visible</div>
 
                 <div igxSuffix>
-                    <button  igxButton="flat"  [disabled]="!monthsviewnumber.value" (click)="setMonthsViewNumber(monthsviewnumber)">Enter</button>
+                    <button
+                        igxButton="flat"
+                        [disabled]="!monthsviewnumber.value"
+                        (click)="setMonthsViewNumber(monthsviewnumber)"
+                    >
+                        Enter
+                    </button>
                 </div>
             </igx-input-group>
         </div>
@@ -100,15 +167,24 @@
         <span>{{calendar.activeDate.toLocaleDateString()}}</span>
 
         <div class="preview__info">
-            <a href="https://www.figma.com/file/rPQFTo4Ktj4tMDncnwPtHk/Indigo.Design-UI-Kit-for-Material-1.4-Workfile?type=design&node-id=3264-183625&mode=design&t=gVdJQcROFyukhaUq-0" target="_blank">
+            <a
+                href="https://www.figma.com/file/rPQFTo4Ktj4tMDncnwPtHk/Indigo.Design-UI-Kit-for-Material-1.4-Workfile?type=design&node-id=3264-183625&mode=design&t=gVdJQcROFyukhaUq-0"
+                target="_blank"
+            >
                 <igx-icon>link</igx-icon> Open UI Kit.
             </a>
 
-<a href="https://github.com/IgniteUI/igniteui-angular/wiki/Calendar-Views-Specification" target="_blank">
+            <a
+                href="https://github.com/IgniteUI/igniteui-angular/wiki/Calendar-Views-Specification"
+                target="_blank"
+            >
                 <igx-icon>link</igx-icon> Open wiki.
             </a>
 
-            <a href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar" target="_blank">
+            <a
+                href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar"
+                target="_blank"
+            >
                 <igx-icon>link</igx-icon> Open Docs.
             </a>
         </div>
@@ -125,5 +201,3 @@
 <!--    <div>When switching locale the week day stays unchanged</div>-->
 <!--    <div>By default no date is selected and so there are only placeholders in the header, not sure which one is correct but in IGX calendar by default inside the header are the current year and the curren date</div>-->
 <!--</div>-->
-
-

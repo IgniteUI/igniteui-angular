@@ -2,7 +2,7 @@
     <div role="columnheader" *ngIf="showWeekNumbers" class="igx-days-view__label igx-days-view__label--week-number">
         <span>Wk</span>
     </div>
-    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of generateWeekHeader()" class="igx-days-view__label">
+    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of weekHeaderLabels" class="igx-days-view__label">
         {{ dayName | titlecase }}
     </span>
 </div>

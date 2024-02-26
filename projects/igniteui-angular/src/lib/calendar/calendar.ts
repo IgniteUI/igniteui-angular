@@ -89,7 +89,6 @@ export interface IFormattingOptions {
     year?: 'numeric' | '2-digit';
 }
 
-
 export interface IFormattingViews {
     day?: boolean;
     month?: boolean;
