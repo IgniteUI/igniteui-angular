@@ -101,11 +101,6 @@
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
 
-        @if $variant == 'indigo-design' {
-            padding: rem(4px) rem(16px);
-            min-height: rem(36px);
-        }
-
         [igxButton] {
             @include animation(fade-in .35s ease-out);
             --ig-size: 1;
@@ -113,6 +108,15 @@
             color: var-get($theme, 'button-color');
             -webkit-tap-highlight-color: transparent;
             box-shadow: none;
+        }
+
+        @if $variant == 'indigo-design' {
+            padding: rem(4px) rem(16px);
+            min-height: rem(36px);
+
+            [igxButton] {
+                --ig-size: 2;
+            }
         }
     }
 
