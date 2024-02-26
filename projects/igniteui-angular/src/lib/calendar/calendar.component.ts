@@ -314,13 +314,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```
 	 */
 	public get headerContext() {
-		const date: Date | Date[] = this.headerDate;
-
-		if (Array.isArray(date)) {
-			return;
-		}
-
-		return this.generateContext(date);
+		return this.generateContext(this.headerDate);
 	}
 
 	/**
@@ -343,8 +337,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @hidden
 	 * @internal
 	 */
-	public get headerDate(): Date | Date[] {
-		return this.selectedDates ? this.selectedDates: new Date();
+	public get headerDate(): Date {
+		return this.selectedDates?.at(0) ?? new Date();
 	}
 
     /**

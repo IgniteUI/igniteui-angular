@@ -229,7 +229,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      */
     public override writeValue(value: Date) {
         if (value) {
-            this.viewDate = this.selectedDates = value;
+            this.viewDate = this.selectedDates[0] = value;
         }
     }
 

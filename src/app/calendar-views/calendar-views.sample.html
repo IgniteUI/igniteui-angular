@@ -2,35 +2,59 @@
     <div class="sample-content">
         <article class="sample-column">
             <h4 class="sample-title">Days View</h4>
-            <igx-days-view [(ngModel)]="date" #daysView
-                           [showWeekNumbers]="true"
-                           [locale]="locale"
-                           [selection]="'single'"
-                           (selected)="onSelection($event)">
+            <igx-days-view
+                [(ngModel)]="date"
+                #daysView
+                [showWeekNumbers]="true"
+                [viewDate]="date || selection"
+                [activeDate]="activeDate"
+                [locale]="locale"
+                [selection]="'single'"
+                (selected)="onSelection($event)"
+            >
             </igx-days-view>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Months View</h4>
-            <igx-months-view [(ngModel)]="date"
+            <igx-months-view
+                [(ngModel)]="date"
                 [locale]="locale"
-                (selected)="onSelection($event)">
+                (selected)="onSelection($event)"
+            >
             </igx-months-view>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Years View</h4>
-            <igx-years-view [(ngModel)]="date"
+            <igx-years-view
+                [(ngModel)]="date"
                 [locale]="locale"
-                (selected)="onSelection($event)">
+                (selected)="onSelection($event)"
+            >
             </igx-years-view>
         </article>
         <div class="sample-actions">
-           <div class="sample-actions__inner">
-               <button igxButton="contained" #selectDate igxRipple (click)="selectDV()">Select</button>
-               <button igxButton="flat" [disabled]="isActive" igxRipple (click)="deselectDV()">Deselect</button>
-           </div>
-            {{ date ? date : 'press the select button to print the selected date' }}
+            <div class="sample-actions__inner">
+                <button
+                    igxButton="contained"
+                    #selectDate
+                    igxRipple
+                    (click)="selectDV()"
+                >
+                    Select
+                </button>
+                <button
+                    igxButton="flat"
+                    [disabled]="isActive"
+                    igxRipple
+                    (click)="deselectDV()"
+                >
+                    Deselect
+                </button>
+            </div>
+            {{ date ? date : 'press the select button to print the selected
+            date' }}
         </div>
     </div>
 </div>

@@ -87,6 +87,10 @@ export class CalendarViewsSampleComponent implements OnInit {
         console.log(`selected date: ${date}`);
     }
 
+    public get activeDate() {
+        return Array.isArray(this.date) ? this.date.at(0) : this.date;
+    }
+
     // public select() {
     //     // this.calendar.selectDate(new Date(2019, 1, 13));
     //     this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);

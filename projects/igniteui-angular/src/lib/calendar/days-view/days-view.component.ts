@@ -435,7 +435,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isFirstInRange(date: CalendarDay): boolean {
-        const dates = this.selectedDates as Date[];
+        const dates = this.selectedDates;
 
         if (this.isSingleSelection || dates.length === 0) {
             return false;
@@ -454,7 +454,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isLastInRange(date: CalendarDay): boolean {
-        const dates = this.selectedDates as Date[];
+        const dates = this.selectedDates;
 
         if (this.isSingleSelection || dates.length === 0) {
             return false;
@@ -480,7 +480,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     protected isWithinRange(date: Date, checkForRange: boolean, min?: Date, max?: Date): boolean {
-        const dates = this.selectedDates as Date[];
+        const dates = this.selectedDates;
 
         if (checkForRange && !(Array.isArray(dates) && dates.length > 1)) {
             return false;
@@ -502,7 +502,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected isWithinPreviewRange(date: Date): boolean {
         if (this.selection !== 'range') return false;
 
-        const dates = this.selectedDates as Date[];
+        const dates = this.selectedDates;
 
         if (!(dates.length > 0 && this.previewRangeDate)) {
             return false;

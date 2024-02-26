@@ -115,7 +115,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public selectedDates;
+    public selectedDates: Date[];
 
     /**
      * @hidden
@@ -164,7 +164,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _onChangeCallback: (_: Date) => void = noop;
+    protected _onChangeCallback: (_: Date | Date[]) => void = noop;
 
     /**
       * @hidden
@@ -575,6 +575,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get value(): Date | Date[] {
+        if (this.selection === CalendarSelection.SINGLE) {
+            return this.selectedDates?.at(0);
+        }
+
         return this.selectedDates;
     }
 
@@ -639,7 +643,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public registerOnChange(fn: (v: Date) => void) {
+    public registerOnChange(fn: (v: Date | Date[]) => void) {
         this._onChangeCallback = fn;
     }
 
@@ -714,9 +718,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private selectSingle(value: Date) {
-        if (!isEqual(this.selectedDates, value)) {
-            this.selectedDates = this.getDateOnly(value);
-            this._onChangeCallback(this.selectedDates);
+        if (!isEqual(this.selectedDates?.at(0), value)) {
+            this.selectedDates = [this.getDateOnly(value)];
+            this._onChangeCallback(this.selectedDates.at(0));
         }
     }
 
@@ -727,9 +731,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private deselectSingle(value: Date) {
         if (this.selectedDates !== null &&
-            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0))) {
             this.selectedDates = null;
-            this._onChangeCallback(this.selectedDates);
+            this._onChangeCallback(this.selectedDates.at(0));
         }
     }
 
