@@ -117,6 +117,17 @@ export class IgxCalendarMonthDirective extends IgxCalendarViewBaseDirective {
  * @hidden
  */
 @Directive({
+    selector: '[igxCalendarHeaderTitle]',
+    standalone: true
+})
+export class IgxCalendarHeaderTitleTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
+/**
+ * @hidden
+ */
+@Directive({
     selector: '[igxCalendarHeader]',
     standalone: true
 })

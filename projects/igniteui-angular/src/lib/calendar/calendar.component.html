@@ -1,4 +1,13 @@
-<ng-template let-result #defaultHeader>
+<ng-template let-result #defaultHeaderTitle>
+    <ng-container *ngIf="selection === 'single'">
+        <span>{{ resourceStrings.igx_calendar_select_date }}</span>
+    </ng-container>
+    <ng-container *ngIf="selection === 'range'">
+        <span>{{ resourceStrings.igx_calendar_range_placeholder }}</span>
+    </ng-container>
+</ng-template>
+
+<ng-template let-result #defaultHeaderDate>
     <ng-container *ngIf="selection === 'single'">
         <span>{{ getFormattedDate().weekday }},&nbsp;</span>
         <span>{{ getFormattedDate().monthday }}</span>
@@ -154,19 +163,15 @@
 </ng-template>
 
 
-<!-- TODO: create templates for single, multi and range -->
-<!-- headers and remove the hiding of the full header -->
-<!-- when selection is not single -->
 <header
     aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
     class="igx-calendar__header"
     *ngIf="selection === 'single' && hasHeader || selection === 'range' && hasHeader">
     <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
-<!--        TODO Make sure to localize the 'End' string-->
-        {{ selection === 'single' ? formattedYear(headerDate) : resourceStrings.igx_calendar_range_placeholder }}
+        <ng-container *ngTemplateOutlet="headerTitleTemplate ?? defaultHeaderTitle; context: headerContext"></ng-container>
     </h5>
     <h2 id="igx-aria-calendar-title-month" class="igx-calendar__header-date">
-        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeader; context: headerContext">
+        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeaderDate; context: headerContext">
         </ng-container>
     </h2>
 </header>

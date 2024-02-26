@@ -389,7 +389,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public dateTracker(_, item: CalendarDay): string {
+    public dateTracker(_: number, item: CalendarDay): string {
         return `${item.month}--${item.date}`;
     }
 

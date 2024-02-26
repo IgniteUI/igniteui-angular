@@ -5,6 +5,7 @@ const CalendarResourceStringsPL_: ExpandRequire<ICalendarResourceStrings> = {
     igx_calendar_previous_month: 'Poprzedni miesiąc',
     igx_calendar_next_month: 'W przyszłym miesiącu',
     igx_calendar_select_month: 'Wybierz miesiąc',
+    igx_calendar_select_date: 'Select Date',
     igx_calendar_select_year: 'Wybierz rok',
     igx_calendar_range_start: 'Początek zakresu',
     igx_calendar_range_end: 'Koniec zakresu',

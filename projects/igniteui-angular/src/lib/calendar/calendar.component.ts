@@ -18,6 +18,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
 	IgxCalendarHeaderTemplateDirective,
+    IgxCalendarHeaderTitleTemplateDirective,
 	IgxCalendarSubheaderTemplateDirective,
     IgxCalendarScrollPageDirective,
 } from './calendar.directives';
@@ -253,6 +254,35 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 *
 	 * @example
 	 * ```typescript
+	 * let headerTitleTemplate = this.calendar.headerTitleTeamplate;
+	 * ```
+	 * @memberof IgxCalendarComponent
+	 */
+	public get headerTitleTemplate(): any {
+		if (this.headerTitleTemplateDirective) {
+			return this.headerTitleTemplateDirective.template;
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the header template.
+	 *
+	 * @example
+	 * ```html
+	 * <igx-calendar headerTitleTemplateDirective="igxCalendarHeaderTitle"></igx-calendar>
+	 * ```
+	 * @memberof IgxCalendarComponent
+	 */
+	public set headerTitleTemplate(directive: any) {
+		this.headerTitleTemplateDirective = directive;
+	}
+
+	/**
+	 * Gets the header template.
+	 *
+	 * @example
+	 * ```typescript
 	 * let headerTemplate =  this.calendar.headerTeamplate;
 	 * ```
 	 * @memberof IgxCalendarComponent
@@ -347,6 +377,13 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(forwardRef(() => IgxCalendarHeaderTitleTemplateDirective), { read: IgxCalendarHeaderTitleTemplateDirective, static: true })
+    private headerTitleTemplateDirective: IgxCalendarHeaderTitleTemplateDirective;
 
     /**
      * @hidden
