@@ -10,6 +10,8 @@
                 (activeViewChanged)="activeViewChanged($event)"
                 (selected)="onSelection($event)"
                 [formatOptions]="formatOptions"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
                 [hideOutsideDays]="outsideDays"
                 [monthsViewNumber]="visibleMonths"
                 [weekStart]="getWeekDayNumber(weekStart)"
@@ -29,6 +31,8 @@
                 [hideHeader]="calendarHeader"
                 [formatOptions]="formatOptions"
                 [hideOutsideDays]="outsideDays"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
                 [weekStart]="weekStart"
                 [headerOrientation]="headerOrientation"
                 [orientation]="orientation"
@@ -175,21 +179,21 @@
                 href="https://www.figma.com/file/rPQFTo4Ktj4tMDncnwPtHk/Indigo.Design-UI-Kit-for-Material-1.4-Workfile?type=design&node-id=3264-183625&mode=design&t=gVdJQcROFyukhaUq-0"
                 target="_blank"
             >
-                <igx-icon>link</igx-icon> Open UI Kit.
+                <igx-icon>link</igx-icon> View UI Kit.
             </a>
 
             <a
                 href="https://github.com/IgniteUI/igniteui-angular/wiki/Calendar-Views-Specification"
                 target="_blank"
             >
-                <igx-icon>link</igx-icon> Open wiki.
+                <igx-icon>link</igx-icon> View Spec.
             </a>
 
             <a
                 href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar"
                 target="_blank"
             >
-                <igx-icon>link</igx-icon> Open Docs.
+                <igx-icon>link</igx-icon> View Docs.
             </a>
         </div>
     </div>

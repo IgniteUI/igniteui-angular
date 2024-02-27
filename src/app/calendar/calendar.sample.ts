@@ -1,6 +1,5 @@
 import {
     Component,
-    OnInit,
     ViewChild,
     CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
@@ -14,7 +13,6 @@ import {
     IgxCalendarComponent,
     IgxCalendarView,
     IgxCardComponent,
-    IgxDialogComponent,
     IgxHintDirective,
     IgxIconComponent,
     IgxInputDirective,
@@ -36,13 +34,13 @@ const orientations = ["horizontal", "vertical"] as const;
 type Orientation = (typeof orientations)[number];
 
 export type WeekDays =
-  | 'sunday'
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday';
+    | "sunday"
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday";
 
 const DaysMap = {
     sunday: 0,
@@ -78,12 +76,9 @@ defineComponents(IgcCalendarComponent);
         NgFor,
     ],
 })
-export class CalendarSampleComponent implements OnInit {
+export class CalendarSampleComponent  {
     @ViewChild("calendar", { static: true })
     private calendar: IgxCalendarComponent;
-
-    @ViewChild("alert", { static: true })
-    private dialog: IgxDialogComponent;
 
     private _formatOptions: IFormattingOptions = {
         day: "numeric",
@@ -95,7 +90,6 @@ export class CalendarSampleComponent implements OnInit {
     private _today = new Date();
     private _locale: string;
     private _selectionType: ISelectionType;
-    private _range = [];
 
     protected weekStart: WeekDays = "sunday";
     protected orientations = Array.from(orientations, (o) => o);
@@ -151,31 +145,30 @@ export class CalendarSampleComponent implements OnInit {
         this._locale = this.locales.find((l) => l.text === value).iso;
     }
 
-    protected rangeDisabled = [
-        new Date(this._today.getFullYear(), this._today.getMonth() - 1, 31),
-        new Date(this._today.getFullYear(), this._today.getMonth(), 20),
-        new Date(this._today.getFullYear(), this._today.getMonth(), 21),
+    protected disabledDates = [
+        {
+            type: DateRangeType.Specific,
+            dateRange: [
+                new Date(
+                    this._today.getFullYear(),
+                    this._today.getMonth() - 1,
+                    31,
+                ),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 20),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 21),
+            ],
+        },
     ];
 
     protected specialDates = [
-        new Date(this._today.getFullYear(), this._today.getMonth(), 2),
-        new Date(this._today.getFullYear(), this._today.getMonth(), 10),
+        {
+            type: DateRangeType.Specific,
+            dateRange: [
+                new Date(this._today.getFullYear(), this._today.getMonth(), 2),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 10),
+            ],
+        },
     ];
-
-    public ngOnInit() {
-        this.calendar.disabledDates = [
-            { type: DateRangeType.Specific, dateRange: this.rangeDisabled },
-        ];
-        this.calendar.specialDates = [
-            { type: DateRangeType.Specific, dateRange: this.specialDates },
-        ];
-        this.calendar.selectDate([
-            new Date(this._today.getFullYear(), this._today.getMonth(), 10),
-            new Date(this._today.getFullYear(), this._today.getMonth(), 17),
-            new Date(this._today.getFullYear(), this._today.getMonth(), 27),
-        ]);
-        this.setOrientation("horizontal");
-    }
 
     public toggleLeadingTrailing() {
         this.outsideDays = !this.outsideDays;
