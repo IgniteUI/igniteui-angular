@@ -5,11 +5,13 @@
             <igx-calendar
                 #calendar
                 [selection]="selectionType"
+                [locale]="locale"
                 (viewDateChanged)="viewDateChanged($event)"
                 (activeViewChanged)="activeViewChanged($event)"
                 (selected)="onSelection($event)"
                 [formatOptions]="formatOptions"
                 [hideOutsideDays]="false"
+                [monthsViewNumber]="visibleMonths"
             >
             </igx-calendar>
         </div>
@@ -23,7 +25,7 @@
                 [visibleMonths]="visibleMonths"
                 [showWeekNumbers]="weekNumber"
                 [selection]="webComponentSelection"
-                [locale]="setLocale"
+                [locale]="locale"
                 [hideHeader]="calendarHeader"
                 [hideOutsideDays]="outsideDays"
                 [weekStart]="weekStart"
@@ -35,10 +37,14 @@
     <div class="preview__settings">
         <small>Change locale</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button igxButton [selected]="true" (click)="changeLocale('en-US')">
-                EN
+            <button
+                igxButton
+                *ngFor="let item of locales"
+                [selected]="locale === item.iso"
+                (click)="changeLocale(item.text)"
+            >
+                {{ item.text }}
             </button>
-            <button igxButton (click)="changeLocale('bg-BG')">BG</button>
         </igx-buttongroup>
 
         <small>Weekday format</small>
@@ -147,16 +153,14 @@
                     name="visible-months"
                     id="mNumber"
                     type="number"
-                    #monthsviewnumber
+                    #numMonths
+                    [value]="visibleMonths"
+                    (keydown.enter)="setMonthsViewNumber(numMonths.value)"
                 />
                 <div igxHint>Enter the number of months to be visible</div>
 
                 <div igxSuffix>
-                    <button
-                        igxButton="flat"
-                        [disabled]="!monthsviewnumber.value"
-                        (click)="setMonthsViewNumber(monthsviewnumber)"
-                    >
+                    <button igxButton="flat" (click)="setMonthsViewNumber(numMonths.value)">
                         Enter
                     </button>
                 </div>
@@ -190,14 +194,3 @@
         </div>
     </div>
 </div>
-
-<!--<div>-->
-<!-- TODO -->
-<!--    <small>IGX Problems</small>-->
-<!--    <div> Week day format affect only the calendar header </div> -->
-<!--    <div> The flow should be: Days, months -> days or Days years -> months -> days </div> -->
-<!--    <small>IGC Problems</small>-->
-<!--    <div>switching the locale from EN to BG do not change the week start day, in igx the when switching to bg week starts from monday</div>-->
-<!--    <div>When switching locale the week day stays unchanged</div>-->
-<!--    <div>By default no date is selected and so there are only placeholders in the header, not sure which one is correct but in IGX calendar by default inside the header are the current year and the curren date</div>-->
-<!--</div>-->

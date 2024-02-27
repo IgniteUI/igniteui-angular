@@ -96,6 +96,10 @@ small {
 
 igx-input-group {
     --ig-size: 1;
+
+    [igxSuffix] {
+        padding: 0;
+    }
 }
 
 .row {
