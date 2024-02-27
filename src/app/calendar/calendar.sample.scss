@@ -41,8 +41,8 @@ small {
 
 .preview {
     display: flex;
-    border: 1px solid hsla(var(--ig-gray-300));
     overflow: hidden;
+    height: 100%;
 
     &__sample {
         display: flex;

@@ -139,7 +139,7 @@
             >
         </div>
 
-        <small>Programatic Selection</small>
+        <small>Programmatic Selection</small>
         <div class="row gap">
             <button igxButton="outlined" (click)="select()">Select</button>
             <button igxButton="outlined" (click)="deselect()">Deselect</button>
@@ -151,7 +151,6 @@
                 <input
                     igxInput
                     name="visible-months"
-                    id="mNumber"
                     type="number"
                     #numMonths
                     [value]="visibleMonths"
@@ -159,15 +158,6 @@
                     (keydown.enter)="setMonthsViewNumber(numMonths.value)"
                 />
                 <div igxHint>Enter the number of months to be visible</div>
-
-                <div igxSuffix>
-                    <button
-                        igxButton="flat"
-                        (click)="setMonthsViewNumber(numMonths.value)"
-                    >
-                        Enter
-                    </button>
-                </div>
             </igx-input-group>
         </div>
 
