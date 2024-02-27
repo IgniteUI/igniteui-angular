@@ -67,8 +67,19 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @Input()
     public tabIndex = 0;
 
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'grid';
+
 	@HostBinding('class.igx-days-view')
 	public readonly viewClass = true;
+
+    @HostBinding('attr.aria-activeDescendant')
+    protected get activeDescendant() {
+        if (this.tabIndex === -1) return;
+
+        return this.activeDate.getTime();
+    }
 
     /**
      * Show/hide week numbers
@@ -209,6 +220,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         this.activeDate = date.native;
         this.viewDate = date.native;
         this.clearPreviewRange();
+        this.changePreviewRange(date.native);
         this.cdr.detectChanges();
     }
 
@@ -370,11 +382,15 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public get weekHeaderLabels(): string[] {
+    public get weekHeaderLabels(): {long: string, formatted: string}[] {
         const weekdays = [];
+        const rawFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'long' });
 
         for (const day of this.monthWeeks.at(0)) {
-            weekdays.push(this.formatterWeekday.format(day.native));
+            weekdays.push({
+                long: rawFormatter.format(day.native),
+                formatted: this.formatterWeekday.format(day.native)
+            });
         }
 
         return weekdays;

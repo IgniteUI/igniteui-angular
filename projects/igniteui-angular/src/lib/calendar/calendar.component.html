@@ -176,23 +176,6 @@
     </h2>
 </header>
 
-<span tabindex="-1" class="igx-calendar__aria-off-screen">
-    <ng-container *ngIf="selection === 'multi'">
-        {{ monthsViewNumber && monthsViewNumber > 1 ?
-        resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
-        resourceStrings.igx_calendar_singular_multi_selection}}
-    </ng-container>
-    <ng-container *ngIf="selection === 'range'">
-        {{ monthsViewNumber && monthsViewNumber > 1 ?
-        resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
-        resourceStrings.igx_calendar_singular_range_selection}}
-    </ng-container>
-    <ng-container *ngIf="selection === 'single'">
-        {{ monthsViewNumber && monthsViewNumber > 1 ?
-        resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
-        resourceStrings.igx_calendar_singular_single_selection}}
-    </ng-container>
-</span>
 
 <div
     #wrapper
@@ -200,7 +183,28 @@
     [tabIndex]="0"
     class="igx-calendar__wrapper"
     [class.igx-calendar__wrapper--vertical]="orientation === 'vertical'"
+    [attr.aria-activedescendant]="activeDate.getTime()"
+    [attr.aria-multiselectable]="selection !== 'single'"
+    aria-labelledby="calendar-desc"
+    role="grid"
     >
+    <caption id="calendar-desc" tabindex="-1" class="igx-calendar__aria-off-screen">
+        <ng-container *ngIf="selection === 'multi'">
+            {{ monthsViewNumber && monthsViewNumber > 1 ?
+            resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
+            resourceStrings.igx_calendar_singular_multi_selection}}
+        </ng-container>
+        <ng-container *ngIf="selection === 'range'">
+            {{ monthsViewNumber && monthsViewNumber > 1 ?
+            resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
+            resourceStrings.igx_calendar_singular_range_selection}}
+        </ng-container>
+        <ng-container *ngIf="selection === 'single'">
+            {{ monthsViewNumber && monthsViewNumber > 1 ?
+            resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
+            resourceStrings.igx_calendar_singular_single_selection}}
+        </ng-container>
+    </caption>
     <section
         class="igx-calendar__pickers"
         [class.igx-calendar__pickers--days]="isDefaultView"
@@ -221,12 +225,12 @@
         </ng-container>
     </section>
 
-    <section class="igx-calendar__body" [class.igx-calendar__body--vertical]="orientation === 'vertical'">
+    <section class="igx-calendar__body" [class.igx-calendar__body--vertical]="orientation === 'vertical'" role="presentation">
         <ng-container *ngIf="isDefaultView">
             <ng-container *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i">
                 <igx-days-view
                     #days
-                    role="grid"
+                    role="rowgroup"
                     [tabIndex]="-1"
                     [selection]="selection"
                     [locale]="locale"

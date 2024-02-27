@@ -397,7 +397,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @hidden
 	 * @internal
 	 */
-	public activeDate = new Date();
+	public activeDate = CalendarDay.today.native;
 
 	/**
 	 * @hidden

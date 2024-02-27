@@ -1,31 +1,62 @@
 <div role="row" class="igx-days-view__row">
-    <div role="columnheader" *ngIf="showWeekNumbers" class="igx-days-view__label igx-days-view__label--week-number">
+    <div
+        role="columnheader"
+        *ngIf="showWeekNumbers"
+        class="igx-days-view__label igx-days-view__label--week-number"
+    >
         <span>Wk</span>
     </div>
-    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of weekHeaderLabels" class="igx-days-view__label">
-        {{ dayName | titlecase }}
+    <span
+        role="columnheader"
+        [attr.aria-label]="dayName.long"
+        *ngFor="let dayName of weekHeaderLabels"
+        class="igx-days-view__label"
+    >
+        {{ dayName.formatted | titlecase }}
     </span>
 </div>
 
-<div *ngFor="let week of monthWeeks; last as isLast; index as i; trackBy: rowTracker"
-     class="igx-days-view__row" role="row">
-
-    <div *ngIf="showWeekNumbers" class="igx-days-view__date igx-days-view__date--week-number">
-
-        <span role="rowheader" class="igx-days-view__date-inner igx-days-view__date-inner--week-number">
+<div
+    *ngFor="
+        let week of monthWeeks;
+        last as isLast;
+        index as i;
+        trackBy: rowTracker
+    "
+    class="igx-days-view__row"
+    role="row"
+>
+    <div
+        *ngIf="showWeekNumbers"
+        class="igx-days-view__date igx-days-view__date--week-number"
+    >
+        <span
+            role="rowheader"
+            class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
+        >
             {{ getWeekNumber(week[0]) }}
         </span>
-
     </div>
 
     <igx-day-item
         #item
-        class="igx-days-view__date"
         *ngFor="let day of week; trackBy: dateTracker"
-        [attr.aria-selected]="isSelected(day)"
+        class="igx-days-view__date"
         role="gridcell"
+        [attr.id]="item.isCurrentMonth && day.timestamp"
+        [attr.aria-selected]="isSelected(day)"
         [attr.aria-disabled]="isDateDisabled(day.native)"
-        [attr.aria-label]="isFirstInRange(day) ? day.native.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.native.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.native.toDateString()"
+        [attr.aria-label]="
+            isFirstInRange(day)
+                ? day.native.toDateString() +
+                  ', ' +
+                  resourceStrings.igx_calendar_range_start
+                : isLastInRange(day)
+                  ? day.native.toDateString() +
+                    ', ' +
+                    resourceStrings.igx_calendar_range_end
+                  : day.native.toDateString()
+        "
         [date]="day"
         [viewDate]="viewDate"
         [selection]="selection"
@@ -43,8 +74,7 @@
         (mouseDown)="handleDateClick(item)"
         (mouseEnter)="changePreviewRange(day.native)"
         (mouseLeave)="clearPreviewRange()"
-        >
+    >
         {{ formattedDate(day.native) }}
     </igx-day-item>
 </div>
-
