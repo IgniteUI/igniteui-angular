@@ -56,15 +56,24 @@ export class CalendarSampleComponent implements OnInit {
 
     @ViewChild("alert", { static: true })
     private dialog: IgxDialogComponent;
+
+    private _formatOptions: IFormattingOptions = {
+        day: "numeric",
+        month: "long",
+        weekday: "narrow",
+        year: "numeric",
+    };
+
+    private _locale: string;
     protected weekStart: string = "sunday";
     protected weekNumber: boolean;
     protected calendarHeader: boolean;
     protected outsideDays: boolean;
+    protected selectionType = "single";
     protected webComponentSelection = "single";
     protected visibleMonths: number = 1;
     protected headerOrientation: string;
     protected orientation: string;
-
     protected locales = [
         {
             text: "EN",
@@ -88,7 +97,13 @@ export class CalendarSampleComponent implements OnInit {
         },
     ];
 
-    protected _locale: string;
+    public range = [];
+    public today = new Date();
+    public ppNovember = new Date(
+        this.today.getFullYear(),
+        this.today.getMonth() + 1,
+        10,
+    );
 
     public get locale(): string {
         return this._locale ?? this.locales[0].iso;
@@ -98,30 +113,16 @@ export class CalendarSampleComponent implements OnInit {
         this._locale = this.locales.find((l) => l.text === value).iso;
     }
 
-    public range = [];
-    public today = new Date();
-    public ppNovember = new Date(
-        this.today.getFullYear(),
-        this.today.getMonth() + 1,
-        10,
-    );
-
     public rangeDisabled = [
         new Date(this.today.getFullYear(), this.today.getMonth() - 1, 31),
         new Date(this.today.getFullYear(), this.today.getMonth(), 20),
         new Date(this.today.getFullYear(), this.today.getMonth(), 21),
     ];
+
     public specialDates = [
         new Date(this.today.getFullYear(), this.today.getMonth(), 2),
         new Date(this.today.getFullYear(), this.today.getMonth(), 10),
     ];
-    public selectionType = "single";
-    private _formatOptions: IFormattingOptions = {
-        day: "numeric",
-        month: "long",
-        weekday: "narrow",
-        year: "numeric",
-    };
 
     public ngOnInit() {
         this.calendar.disabledDates = [
