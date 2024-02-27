@@ -270,6 +270,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
     }
 }
 
+/* csSuppress */
 /**
  * Represents a class implementing the IGridSortingStrategy interface with a no-operation sorting strategy.
  * It performs no sorting and returns the data as it is.
@@ -279,11 +280,11 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
     private constructor() { }
 
-    public static instance() {
+    public static instance(): NoopSortingStrategy {
         return this._instance || (this._instance = new NoopSortingStrategy());
     }
 
-    /* blazorSuppress */
+    /* csSuppress */
     public sort(data: any[]): any[] {
         return data;
     }

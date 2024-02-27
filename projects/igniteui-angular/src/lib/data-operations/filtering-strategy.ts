@@ -23,16 +23,18 @@ export class FilterUtil {
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
-        /* blazorSuppress */
+    /* csSuppress */
     getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree) : Promise<IgxFilterItem[]>;
 }
 
+/* csSuppress */
 export interface IgxFilterItem {
     value: any;
     label?: string;
     children?: IgxFilterItem[];
 }
 
+/* csSuppress */
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
@@ -168,6 +170,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridType): any;
 }
 
+/* csSuppress */
 export class NoopFilteringStrategy extends BaseFilteringStrategy {
     protected getFieldValue(rec: any, _fieldName: string) {
         return rec;
