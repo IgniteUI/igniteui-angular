@@ -32,10 +32,9 @@
 @mixin typography() {
     @include banner-typography();
     @include bottom-nav-typography();
-    @include button-typography($categories: (
-        text: 'body-2',
-    ));
-    @include button-group-typography();
+    @include button-typography();
+    @include button-group-typography($categories: (
+        text: 'body-2',));
     @include calendar-typography();
     @include card-typography($categories: (
         title: 'h6',
