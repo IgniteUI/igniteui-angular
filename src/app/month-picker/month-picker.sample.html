@@ -1,3 +1,16 @@
-<igx-card elevated>
-    <igx-month-picker [(ngModel)]="date"></igx-month-picker>
-</igx-card>
+<div class="sample">
+    <small><b> {{date.toDateString()}} </b></small>
+
+    <br />
+
+    <igx-card elevated>
+        <igx-month-picker
+            [(ngModel)]="date"
+            (selected)="onSelected($event)"
+        ></igx-month-picker>
+    </igx-card>
+
+    <br />
+
+    <button igxButton (click)="changeSelection()">Change Selection</button>
+</div>

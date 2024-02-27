@@ -227,15 +227,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     /**
      * @hidden
      */
-    public override writeValue(value: Date) {
-        if (value) {
-            this.viewDate = this.selectedDates[0] = value;
-        }
-    }
-
-    /**
-     * @hidden
-     */
     public getNextYear() {
         return CalendarDay.from(this.viewDate).add('year', 1).year;
     }

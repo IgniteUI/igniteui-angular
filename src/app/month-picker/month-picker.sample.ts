@@ -1,14 +1,22 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxCardComponent, IgxMonthPickerComponent } from 'igniteui-angular';
+import { IgxCardComponent, IgxMonthPickerComponent, IgxButtonDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-monthpicker',
     styleUrls: ['./month-picker.sample.scss'],
     templateUrl: './month-picker.sample.html',
     standalone: true,
-    imports: [IgxCardComponent, IgxMonthPickerComponent, FormsModule]
+    imports: [IgxCardComponent, IgxMonthPickerComponent, IgxButtonDirective, FormsModule]
 })
 export class MonthPickerSampleComponent {
-    public date = new Date();
+    public date = new Date(2024, 1, 1);
+
+    protected onSelected(event: Date | Date[]) {
+        console.log(event);
+    }
+
+    protected changeSelection() {
+        this.date = new Date(2028, this.date.getMonth() + 1, this.date.getDate());
+    }
 }
