@@ -881,7 +881,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else {
                 this.rangeStarted = false;
 
-                if (this.selectedDates.at(0).getTime() === value.getTime()) {
+                if (this.selectedDates?.at(0)?.getTime() === value.getTime()) {
                     this.selectedDates = [];
                     this._onChangeCallback(this.selectedDates);
                     return;
