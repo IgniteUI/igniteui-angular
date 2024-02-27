@@ -96,6 +96,7 @@ small {
 
 igx-input-group {
     --ig-size: 1;
+    flex-grow: 1;
 
     [igxSuffix] {
         padding: 0;
@@ -107,6 +108,7 @@ igx-input-group {
 
     > * {
         align-self: center;
+        flex-grow: 1;
     }
 }
 

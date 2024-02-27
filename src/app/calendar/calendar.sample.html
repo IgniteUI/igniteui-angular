@@ -1,34 +1,37 @@
 <div class="preview sample-min-width">
     <div class="preview__sample">
         <div class="calendar-wrapper">
-            <strong>IGX</strong>
+            <strong>Angular</strong>
             <igx-calendar
                 #calendar
-                [selection]="selectionType"
+                [selection]="selectionType.ng"
                 [locale]="locale"
                 (viewDateChanged)="viewDateChanged($event)"
                 (activeViewChanged)="activeViewChanged($event)"
                 (selected)="onSelection($event)"
                 [formatOptions]="formatOptions"
-                [hideOutsideDays]="false"
+                [hideOutsideDays]="outsideDays"
                 [monthsViewNumber]="visibleMonths"
+                [weekStart]="getWeekDayNumber(weekStart)"
+                [headerOrientation]="headerOrientation"
+                [orientation]="orientation"
             >
             </igx-calendar>
         </div>
 
         <div class="calendar-wrapper">
-            <strong>IGC</strong>
+            <strong>Web Components</strong>
             <igc-calendar
-                [formatOptions]="formatOptions"
-                [headerOrientation]="headerOrientation"
-                [orientation]="orientation"
                 [visibleMonths]="visibleMonths"
                 [showWeekNumbers]="weekNumber"
-                [selection]="webComponentSelection"
+                [selection]="selectionType.wc"
                 [locale]="locale"
                 [hideHeader]="calendarHeader"
+                [formatOptions]="formatOptions"
                 [hideOutsideDays]="outsideDays"
                 [weekStart]="weekStart"
+                [headerOrientation]="headerOrientation"
+                [orientation]="orientation"
             >
             </igc-calendar>
         </div>
@@ -73,81 +76,74 @@
             </button>
         </igx-buttongroup>
 
-        <small>Week Start (default is based on locale)</small>
+        <small>Week Start</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button igxButton (click)="changeWeekStart(1, 'monday')">
-                Monday
-            </button>
             <button
                 igxButton
-                [selected]="true"
-                (click)="changeWeekStart(0, 'sunday')"
+                *ngFor="let ws of ['monday', 'sunday']"
+                (click)="changeWeekStart(ws)"
+                [selected]="ws === weekStart"
             >
-                Sunday
+                {{ ws }}
             </button>
         </igx-buttongroup>
 
-        <small>Selection type (default is single)</small>
+        <small>Selection type</small>
         <igx-buttongroup selectionMode="singleRequired">
             <button
                 igxButton
-                [selected]="true"
-                (click)="setSelection('single')"
+                *ngFor="let type of selectionTypes"
+                (click)="setSelectionType(type)"
+                [selected]="type === selectionType"
             >
-                Single
-            </button>
-            <button igxButton (click)="setSelection('multi')">Multi</button>
-            <button igxButton (click)="setSelection('range')">Range</button>
-        </igx-buttongroup>
-
-        <small>Header orientation (default is horizontal)</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                [selected]="true"
-                (click)="setHeaderOrientation('horizontal')"
-            >
-                Horizontal
-            </button>
-            <button igxButton (click)="setHeaderOrientation('vertical')">
-                Vertical
+                {{ type.wc }}
             </button>
         </igx-buttongroup>
 
-        <small>Calendar orientation (default is horizontal)</small>
+        <small>Header orientation</small>
         <igx-buttongroup selectionMode="singleRequired">
             <button
                 igxButton
-                [selected]="true"
-                (click)="setOrientation('horizontal')"
+                (click)="setHeaderOrientation(ho)"
+                *ngFor="let ho of orientations"
+                [selected]="ho === headerOrientation"
             >
-                Horizontal
+                {{ ho }}
             </button>
-            <button igxButton (click)="setOrientation('vertical')">
-                Vertical
+        </igx-buttongroup>
+
+        <small>View orientation</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                (click)="setOrientation(vo)"
+                *ngFor="let vo of orientations"
+                [selected]="vo === orientation"
+            >
+                {{ vo }}
             </button>
         </igx-buttongroup>
 
         <small>Toggle options</small>
         <div class="column gap">
             <igx-switch (click)="hideHeader()">Hide header</igx-switch>
-            <igx-switch (click)="showHide()">Hide days</igx-switch>
+            <igx-switch (click)="toggleLeadingTrailing()"
+                >Hide leading/trailing days</igx-switch
+            >
             <igx-switch (click)="hideWeekNumber()"
                 >Show week numbers</igx-switch
             >
         </div>
 
-        <small>Select / Deselect </small>
-        <div class="column gap">
-            <igx-buttongroup selectionMode="singleRequired">
-                <button igxButton (click)="select()">Select</button>
-                <button igxButton (click)="deselect()">Deselect</button>
-            </igx-buttongroup>
+        <small>Programatic Selection</small>
+        <div class="row gap">
+            <button igxButton="outlined" (click)="select()">Select</button>
+            <button igxButton="outlined" (click)="deselect()">Deselect</button>
         </div>
 
+        <small>Number of months</small>
         <div class="row gap">
             <igx-input-group type="border">
-                <label igxLabel for="mNumber">Months number</label>
                 <input
                     igxInput
                     name="visible-months"
@@ -155,12 +151,16 @@
                     type="number"
                     #numMonths
                     [value]="visibleMonths"
+                    (focus)="numMonths.select()"
                     (keydown.enter)="setMonthsViewNumber(numMonths.value)"
                 />
                 <div igxHint>Enter the number of months to be visible</div>
 
                 <div igxSuffix>
-                    <button igxButton="flat" (click)="setMonthsViewNumber(numMonths.value)">
+                    <button
+                        igxButton="flat"
+                        (click)="setMonthsViewNumber(numMonths.value)"
+                    >
                         Enter
                     </button>
                 </div>

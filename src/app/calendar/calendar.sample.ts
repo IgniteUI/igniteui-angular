@@ -12,6 +12,7 @@ import {
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxCalendarComponent,
+    IgxCalendarView,
     IgxCardComponent,
     IgxDialogComponent,
     IgxHintDirective,
@@ -25,6 +26,33 @@ import {
 } from "igniteui-angular";
 
 import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
+
+interface ISelectionType {
+    ng: string;
+    wc: string;
+}
+
+const orientations = ["horizontal", "vertical"] as const;
+type Orientation = (typeof orientations)[number];
+
+export type WeekDays =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+const DaysMap = {
+    sunday: 0,
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    friday: 5,
+    saturday: 6,
+};
 
 defineComponents(IgcCalendarComponent);
 
@@ -64,16 +92,19 @@ export class CalendarSampleComponent implements OnInit {
         year: "numeric",
     };
 
+    private _today = new Date();
     private _locale: string;
-    protected weekStart: string = "sunday";
+    private _selectionType: ISelectionType;
+    private _range = [];
+
+    protected weekStart: WeekDays = "sunday";
+    protected orientations = Array.from(orientations, (o) => o);
     protected weekNumber: boolean;
     protected calendarHeader: boolean;
-    protected outsideDays: boolean;
-    protected selectionType = "single";
-    protected webComponentSelection = "single";
+    protected outsideDays = false;
     protected visibleMonths: number = 1;
-    protected headerOrientation: string;
-    protected orientation: string;
+    protected headerOrientation: Orientation = "horizontal";
+    protected orientation: Orientation = "horizontal";
     protected locales = [
         {
             text: "EN",
@@ -97,15 +128,22 @@ export class CalendarSampleComponent implements OnInit {
         },
     ];
 
-    public range = [];
-    public today = new Date();
-    public ppNovember = new Date(
-        this.today.getFullYear(),
-        this.today.getMonth() + 1,
-        10,
-    );
+    protected selectionTypes: ISelectionType[] = [
+        {
+            ng: "single",
+            wc: "single",
+        },
+        {
+            ng: "multi",
+            wc: "multiple",
+        },
+        {
+            ng: "range",
+            wc: "range",
+        },
+    ];
 
-    public get locale(): string {
+    protected get locale(): string {
         return this._locale ?? this.locales[0].iso;
     }
 
@@ -113,15 +151,15 @@ export class CalendarSampleComponent implements OnInit {
         this._locale = this.locales.find((l) => l.text === value).iso;
     }
 
-    public rangeDisabled = [
-        new Date(this.today.getFullYear(), this.today.getMonth() - 1, 31),
-        new Date(this.today.getFullYear(), this.today.getMonth(), 20),
-        new Date(this.today.getFullYear(), this.today.getMonth(), 21),
+    protected rangeDisabled = [
+        new Date(this._today.getFullYear(), this._today.getMonth() - 1, 31),
+        new Date(this._today.getFullYear(), this._today.getMonth(), 20),
+        new Date(this._today.getFullYear(), this._today.getMonth(), 21),
     ];
 
-    public specialDates = [
-        new Date(this.today.getFullYear(), this.today.getMonth(), 2),
-        new Date(this.today.getFullYear(), this.today.getMonth(), 10),
+    protected specialDates = [
+        new Date(this._today.getFullYear(), this._today.getMonth(), 2),
+        new Date(this._today.getFullYear(), this._today.getMonth(), 10),
     ];
 
     public ngOnInit() {
@@ -132,122 +170,86 @@ export class CalendarSampleComponent implements OnInit {
             { type: DateRangeType.Specific, dateRange: this.specialDates },
         ];
         this.calendar.selectDate([
-            new Date(this.today.getFullYear(), this.today.getMonth(), 10),
-            new Date(this.today.getFullYear(), this.today.getMonth(), 17),
-            new Date(this.today.getFullYear(), this.today.getMonth(), 27),
+            new Date(this._today.getFullYear(), this._today.getMonth(), 10),
+            new Date(this._today.getFullYear(), this._today.getMonth(), 17),
+            new Date(this._today.getFullYear(), this._today.getMonth(), 27),
         ]);
         this.setOrientation("horizontal");
     }
 
-    public selectPTOdays(dates: Date | Date[]) {
-        this.range = dates as Date[];
-        console.log(this.range);
-    }
-
-    public submitPTOdays() {
-        this.calendar.specialDates = [
-            { type: DateRangeType.Specific, dateRange: this.range },
-        ];
-
-        this.range.forEach((item) => {
-            this.calendar.selectDate(item);
-        });
-
-        if (this.range.length === 0) {
-            this.dialog.message = "Select dates from the Calendar first.";
-        } else {
-            this.dialog.message = "PTO days submitted.";
-        }
-        this.dialog.open();
-    }
-
-    public showHide() {
-        this.calendar.hideOutsideDays = !this.calendar.hideOutsideDays;
+    public toggleLeadingTrailing() {
         this.outsideDays = !this.outsideDays;
     }
 
     public onSelection(event: Date | Date[]) {
-        console.log(`Selected dates: ${event}`);
+        console.log(`Selected Date(s): ${event}`);
     }
 
-    public viewDateChanged(event: IViewDateChangeEventArgs) {
-        console.log(event);
+    protected viewDateChanged(event: IViewDateChangeEventArgs) {
+        console.table(event);
     }
 
-    public activeViewChanged(event) {
-        const calendarView = event;
-        console.log(`Selected date:${calendarView}`);
+    protected activeViewChanged(view: IgxCalendarView) {
+        console.log(`Selected View: ${view}`);
     }
 
-    public setSelection(args: string) {
-        if (args === "multi") {
-            this.webComponentSelection = "multiple";
-        } else {
-            this.webComponentSelection = this.calendar.selection = args;
-        }
-        return (this.selectionType = this.calendar.selection = args);
+    protected set selectionType(value: ISelectionType) {
+        this._selectionType = this.selectionTypes.find((t) => t === value);
     }
 
-    public setMonthsViewNumber(value: string) {
+    protected get selectionType(): ISelectionType {
+        return this._selectionType ?? this.selectionTypes[0];
+    }
+
+    protected setSelectionType(value: ISelectionType) {
+        return (this.selectionType = value);
+    }
+
+    protected setMonthsViewNumber(value: string) {
         this.visibleMonths = parseInt(value, 10);
     }
 
-    public select() {
+    protected select() {
         if (this.calendar.selection === "single") {
             this.calendar.selectDate(
-                new Date(this.today.getFullYear(), this.today.getMonth(), 7),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 7),
             );
         } else {
             this.calendar.selectDate([
-                new Date(this.today.getFullYear(), this.today.getMonth(), 1),
-                new Date(this.today.getFullYear(), this.today.getMonth(), 14),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 1),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 14),
             ]);
         }
     }
 
-    public deselect() {
+    protected deselect() {
         this.calendar.deselectDate();
     }
 
-    public changeLocale(locale: string) {
+    protected changeLocale(locale: string) {
         this.locale = locale;
     }
 
-    public hideHeader() {
+    protected hideHeader() {
         this.calendar.hasHeader = !this.calendar.hasHeader;
         this.calendarHeader = !this.calendarHeader;
     }
 
-    public setHeaderOrientation(args: string) {
-        if (this.calendar.hasHeader) {
-            if (args === "vertical") {
-                this.calendar.headerOrientation = "vertical";
-                this.headerOrientation = "vertical";
-            } else {
-                this.calendar.headerOrientation = "horizontal";
-                this.headerOrientation = "horizontal";
-            }
-        }
+    protected setHeaderOrientation(orientation: Orientation) {
+        this.headerOrientation = orientation;
     }
 
-    public setOrientation(args: string) {
-        if (args === "vertical") {
-            this.orientation = "vertical";
-            this.calendar.orientation = "vertical";
-        } else {
-            this.orientation = "horizontal";
-            this.calendar.orientation = "horizontal";
-        }
+    protected setOrientation(orientation: Orientation) {
+        this.orientation = orientation;
     }
 
-    public hideWeekNumber() {
+    protected hideWeekNumber() {
         this.calendar.showWeekNumbers = !this.calendar.showWeekNumbers;
         this.weekNumber = !this.weekNumber;
     }
 
-    public changeWeekStart(numVal: number, stringVal: string) {
-        this.calendar.weekStart = numVal;
-        this.weekStart = stringVal;
+    protected changeWeekStart(day: string) {
+        this.weekStart = day as WeekDays;
     }
 
     protected set formatOptions(value: IFormattingOptions) {
@@ -258,17 +260,21 @@ export class CalendarSampleComponent implements OnInit {
         return this._formatOptions;
     }
 
-    public setWeekDayFormat(format: IFormattingOptions["weekday"] | string) {
+    protected setWeekDayFormat(format: IFormattingOptions["weekday"] | string) {
         this.formatOptions = {
             ...this.formatOptions,
             weekday: format as IFormattingOptions["weekday"],
         };
     }
 
-    public setMonthFormat(format: IFormattingOptions["month"] | string) {
+    protected setMonthFormat(format: IFormattingOptions["month"] | string) {
         this.formatOptions = {
             ...this.formatOptions,
             month: format as IFormattingOptions["month"],
         };
+    }
+
+    protected getWeekDayNumber(value: WeekDays | string) {
+        return DaysMap[value];
     }
 }
