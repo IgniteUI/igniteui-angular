@@ -74,6 +74,12 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      * @internal
      */
+    private _activeDescendant: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild("wrapper")
     public wrapper: ElementRef;
 
@@ -445,6 +451,18 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     protected get showActiveDay() {
         return this._showActiveDay;
+    }
+
+    protected get activeDescendant(): number {
+        if (this.activeView === 'month') {
+            return this.activeDate.getTime();
+        }
+
+        return this._activeDescendant ?? this.viewDate.getTime();
+    }
+
+    protected set activeDescendant(date: Date) {
+        this._activeDescendant = date.getTime();
     }
 
 	public ngAfterViewInit() {
@@ -918,6 +936,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		this.previousViewDate = this.viewDate;
         this.viewDate = CalendarDay.from(date).add('year', -this.activeViewIdx).native;
 	}
+
+    public updateActiveDescendant(date: Date) {
+        this.activeDescendant = date;
+    }
 
 	/**
 	 * @hidden

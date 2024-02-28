@@ -49,9 +49,20 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     protected abstract tagName: string;
 
+    @HostBinding("attr.role")
+    @Input()
+    public role = 'grid';
+
     @HostBinding("attr.tabIndex")
     @Input()
     public tabIndex = 0;
+
+    @HostBinding('attr.aria-activeDescendant')
+    protected get activeDescendant() {
+        if (this.tabIndex === -1) return;
+
+        return this.date.getTime();
+    }
 
     /**
      * Gets/sets whether the view should be rendered
@@ -84,6 +95,14 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     public pageChanged = new EventEmitter<Date>();
 
     /**
+     * Emits an event when the active date has changed.
+     * @memberof IgxCalendarViewDirective
+     * @hidden @internal
+     */
+    @Output()
+    public activeDateChanged = new EventEmitter<Date>();
+
+    /**
      * @hidden
      * @internal
      */
@@ -95,7 +114,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _formatter: any;
+    protected _formatter: Intl.DateTimeFormat;
 
     /**
      * @hidden
@@ -179,6 +198,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event: KeyboardEvent) {
+        console.log(event);
         this.navigateTo(event, Direction.NEXT, 3);
     }
 
@@ -215,6 +235,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         event.stopPropagation();
 
         this.date = this.range.at(0);
+        this.activeDateChanged.emit(this.date);
     }
 
     /**
@@ -226,6 +247,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         event.stopPropagation();
 
         this.date = this.range.at(-1);
+        this.activeDateChanged.emit(this.date);
     }
 
     /**
@@ -316,6 +338,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         }
 
         this.date = date.native;
+        this.activeDateChanged.emit(this.date);
     }
 
     /**

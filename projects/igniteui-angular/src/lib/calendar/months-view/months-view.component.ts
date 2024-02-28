@@ -115,9 +115,9 @@ export class IgxMonthsViewComponent
         const start = CalendarDay.from(this.date).set({ date: 1, month: 0 });
         const end = start.add(this.dayInterval, 12);
 
-        return Array.from(calendarRange({ start, end, unit: this.dayInterval })).map(
-            (m) => m.native,
-        );
+        return Array.from(
+            calendarRange({ start, end, unit: this.dayInterval }),
+        ).map((m) => m.native);
     }
 
     /**
@@ -137,12 +137,23 @@ export class IgxMonthsViewComponent
      *
      * @hidden
      */
-    public formattedMonth(value: Date): string {
+    public formattedMonth(value: Date): { long: string; formatted: string } {
+        const rawFormatter = new Intl.DateTimeFormat(this.locale, {
+            month: "long",
+            year: "numeric",
+        });
+
         if (this.formatView) {
-            return this._formatter.format(value);
+            return {
+                long: rawFormatter.format(value),
+                formatted: this._formatter.format(value),
+            };
         }
 
-        return `${value.getMonth()}`;
+        return {
+            long: rawFormatter.format(value),
+            formatted: `${value.getMonth()}`,
+        };
     }
 
     /**

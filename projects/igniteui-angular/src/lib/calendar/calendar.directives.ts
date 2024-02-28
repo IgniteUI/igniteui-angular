@@ -66,6 +66,7 @@ export abstract class IgxCalendarViewBaseDirective {
     providers: [
         { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarYearDirective }
     ],
+    exportAs: 'igxCalendarYear',
     standalone: true
 })
 export class IgxCalendarYearDirective extends IgxCalendarViewBaseDirective {
@@ -90,6 +91,7 @@ export class IgxCalendarYearDirective extends IgxCalendarViewBaseDirective {
     providers: [
         { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarMonthDirective }
     ],
+    exportAs: 'igxCalendarMonth',
     standalone: true
 })
 export class IgxCalendarMonthDirective extends IgxCalendarViewBaseDirective {

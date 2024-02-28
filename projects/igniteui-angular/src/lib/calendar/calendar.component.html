@@ -61,9 +61,7 @@
 
 <!-- Decade -->
 <ng-template #defaultDecade>
-    <span>{{ getDecadeRange().start }}</span>
-    <span>&nbsp;-&nbsp;</span>
-    <span>{{ getDecadeRange().end }}</span>
+    <span>{{ getDecadeRange().start }} - {{ getDecadeRange().end }}</span>
 </ng-template>
 
 <!-- TODO: Make arrows templatable via external templates and based on theme -->
@@ -135,7 +133,7 @@
 <!-- PICKER IN MONTHS -->
 <ng-template #calendarYearPicker>
     <section class="igx-calendar-picker">
-        <div class="igx-calendar-picker__dates">
+        <div class="igx-calendar-picker__dates" aria-live="polite">
             <ng-container
                 *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(0)">
             </ng-container>
@@ -150,7 +148,7 @@
 <!-- PICKER IN YEARS -->
 <ng-template #calendarDecadePicker>
     <section class="igx-calendar-picker">
-        <div class="igx-calendar-picker__dates">
+        <div class="igx-calendar-picker__dates" aria-live="polite">
             <ng-container
                     *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultDecade;">
             </ng-container>
@@ -183,7 +181,7 @@
     [tabIndex]="0"
     class="igx-calendar__wrapper"
     [class.igx-calendar__wrapper--vertical]="orientation === 'vertical'"
-    [attr.aria-activedescendant]="activeDate.getTime()"
+    [attr.aria-activedescendant]="activeDescendant"
     [attr.aria-multiselectable]="selection !== 'single'"
     aria-labelledby="calendar-desc"
     role="grid"
@@ -259,6 +257,7 @@
         <ng-container *ngIf="isYearView">
             <igx-months-view
                 #months
+                role="rowgroup"
                 [tabIndex]="-1"
                 [date]="viewDate"
                 [locale]="locale"
@@ -268,6 +267,7 @@
                 (swiperight)="previousPage()"
                 (swipeleft)="nextPage()"
                 (pageChanged)="updateYear($event)"
+                (activeDateChanged)="updateActiveDescendant($event)"
                 (selected)="changeMonth($event)"
                 (mousedown)="$event.preventDefault()">
             </igx-months-view>
@@ -276,6 +276,7 @@
         <ng-container *ngIf="isDecadeView">
             <igx-years-view
                 #decade
+                role="rowgroup"
                 [tabIndex]="-1"
                 [date]="viewDate"
                 [locale]="locale"
@@ -285,6 +286,7 @@
                 (swiperight)="previousPage()"
                 (swipeleft)="nextPage()"
                 (pageChanged)="updateYear($event)"
+                (activeDateChanged)="updateActiveDescendant($event)"
                 (selected)="changeYear($event)"
                 (mousedown)="$event.preventDefault()">
             </igx-years-view>

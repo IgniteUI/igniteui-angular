@@ -116,12 +116,20 @@ export class IgxYearsViewComponent
      *
      * @hidden
      */
-    public formattedYear(value: Date): string {
+    public formattedYear(value: Date): {long: string, formatted: string} {
+        const rawFormatter = new Intl.DateTimeFormat(this.locale, { year: 'numeric' });
+
         if (this.formatView) {
-            return this._formatter.format(value);
+            return {
+                long: rawFormatter.format(value),
+                formatted: this._formatter.format(value)
+            }
         }
 
-        return `${value.getFullYear()}`;
+        return {
+            long: rawFormatter.format(value),
+            formatted: `${value.getFullYear()}`
+        }
     }
 
     /**
