@@ -1,6 +1,7 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet, DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -23,7 +24,7 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { merge, Subject } from 'rxjs';
+import { merge, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
@@ -38,6 +39,18 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 
 let NEXT_ID = 0;
+
+const CarouselTheme = mkenum({
+    Material: 'material',
+    Fluent: 'fluent',
+    Bootstrap: 'bootstrap',
+    IndigoDesign: 'indigo-design'
+});
+
+/**
+ * Determines the carousel component theme.
+ */
+export type IgxCarouselTheme = (typeof CarouselTheme)[keyof typeof CarouselTheme];
 
 export const CarouselIndicatorsOrientation = mkenum({
     bottom: 'bottom',
@@ -90,7 +103,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit, AfterViewChecked {
 
     /**
      * Sets the `id` of the carousel.
@@ -379,6 +392,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    @ViewChild('indigoNextButton', { read: TemplateRef, static: true })
+    private indigoNextButton: TemplateRef<any>;
+
+    @ViewChild('indigoPrevButton', { read: TemplateRef, static: true })
+    private indigoPrevButton: TemplateRef<any>;
+
     /**
      * @hidden
      * @internal
@@ -394,6 +413,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
+    private _theme: IgxCarouselTheme;
+    private _theme$ = new Subject();
+    private _subscription: Subscription;
 
     /**
      * An accessor that sets the resource strings.
@@ -424,7 +446,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.nextButtonTemplate) {
             return this.nextButtonTemplate;
         }
-        return this.defaultNextButton;
+
+        return this.isTypeIndigo ? this.indigoNextButton : this.defaultNextButton
     }
 
     /** @hidden */
@@ -432,7 +455,33 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.prevButtonTemplate) {
             return this.prevButtonTemplate;
         }
-        return this.defaultPrevButton;
+
+        return this.isTypeIndigo ? this.indigoPrevButton : this.defaultPrevButton
+    }
+
+    /**
+     * Sets the theme of the carousel component.
+     * Allowed values of type IgxCarouselTheme.
+     * 
+     * ```typescript
+     * @ViewChild("carousel")
+     * public carousel: IgxCarouselComponent;
+     * 
+     * ngAfterViewInit() {
+     *  let carouselTheme = 'fluent';
+     * }
+     */
+    @Input()
+    public set theme(value: IgxCarouselTheme) {
+        this._theme = value;
+    }
+
+    /**
+     * Returns the theme of the carousel component.
+     * The returned value is of type IgxCarouselTheme.
+     */
+    public get theme(): IgxCarouselTheme {
+        return this._theme;
     }
 
     /** @hidden */
@@ -546,9 +595,17 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private element: ElementRef,
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private platformUtil: PlatformUtil) {
+        private platformUtil: PlatformUtil,
+        @Inject(DOCUMENT)
+        private document: any
+    ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+
+        this._subscription = this._theme$.asObservable().subscribe(value => {
+            this._theme = value as IgxCarouselTheme;
+            cdr.detectChanges();
+        });
     }
 
 
@@ -680,6 +737,23 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
     }
 
+    /**
+    * Returns true if the `IgxCarouselComponent` theme is Indigo.
+    * 
+    * ```typescript
+    * @ViewChild("carousel")
+    * public carousel: IgxCarouselComponent;
+    * 
+    * ngAfterViewInit(){
+    *    let isTypeIndigo = this.carousel.isTypeIndigo;
+    * }
+    * ```
+    */
+    @HostBinding('class.igx-carousel--indigo')
+    public get isTypeIndigo() {
+        return this._theme === 'indigo-design';
+    }
+
     /** @hidden */
     public ngAfterContentInit() {
         this.slides.changes
@@ -689,8 +763,25 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.initSlides(this.slides);
     }
 
+    /** @hidden @internal */
+    public ngAfterViewChecked() {
+        if (!this._theme) {
+            const cssProp = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue('--theme')
+                .trim();
+
+            if (cssProp !== '') {
+                Promise.resolve().then(() => {
+                    this._theme$.next(cssProp);
+                });
+            }
+        }
+    }
+
     /** @hidden */
     public ngOnDestroy() {
+        this._subscription.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.complete();
         this.destroyed = true;
