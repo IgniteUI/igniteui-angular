@@ -136,8 +136,8 @@
     "stylelint": "^15.1.0",
     "stylelint-scss": "^4.1.0",
     "ts-node": "^10.8.1",
+    "typedoc-plugin-localization": "^3.0.4",
     "typedoc": "^0.25.3",
-    "typedoc-plugin-localization": "^3.0.3",
     "typescript": "5.2.2"
   }
 }
