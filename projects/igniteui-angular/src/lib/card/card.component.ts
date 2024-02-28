@@ -199,7 +199,7 @@ export class IgxCardFooterDirective {
  * @deprecated in 17.0.0. To switch betweet `outlined` and `elevated` card use the `elevated` property.
  * Since version 17.0.0 the card component is `outlined` by default.
  */
-export const IgxCardType = mkenum({
+export const IgxCardType = /*@__PURE__*/mkenum({
     ELEVATED: 'elevated',
     OUTLINED: 'outlined'
 });
@@ -253,7 +253,7 @@ export class IgxCardComponent {
 
     /**
      * @deprecated in version 17.0.0. Use `elevated` property instead.
-     * 
+     *
      * An @Input property that sets the value of the `type` attribute of the card.
      * By default the value is set to `outlined`. You can make the card use the
      * elevated style by setting the value to `elevated`.
@@ -324,7 +324,7 @@ export class IgxCardComponent {
     private _elevated = false;
 }
 
-export const IgxCardActionsLayout = mkenum({
+export const IgxCardActionsLayout = /*@__PURE__*/mkenum({
     START: 'start',
     JUSTIFY: 'justify'
 });

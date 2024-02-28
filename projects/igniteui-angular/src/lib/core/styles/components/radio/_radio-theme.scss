@@ -16,16 +16,19 @@
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $label-color-hover [null]- The text color used for the label text on hover.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and dot colors.
 /// @param {Color} $disabled-color [null] - The disabled border and dot colors.
 /// @param {Color} $disabled-label-color [null] - The disabled label color.
 /// @param {Color} $hover-color [null] - The border and dot colors on hover.
-/// @param {Color} $fill-color-hover [null] - The checked border and dot colors on hover.
-/// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
+/// @param {Color} $fill-color-hover [null] - The checked dot color on hover.
+/// @param {Color} $fill-hover-border-color [null] - The checked border color on hover.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
+/// @param {Color} $focus-outline-color-checked [null] - The focus outline color when radio is filled.
 /// @param {Color} $error-color [null] - The label, border and dot color in invalid state.
 /// @param {Color} $error-color-hover [null] - The label, border and dot color in invalid state on hover.
+/// @param {Color} $focus-outline-color-error [null] - The focus outline color in invalid state.
 ///
 /// @requires $light-material-schema
 ///
@@ -38,16 +41,19 @@
     $schema: $light-material-schema,
 
     $label-color: null,
+    $label-color-hover: null,
     $empty-color: null,
     $fill-color: null,
     $fill-hover-border-color: null,
     $focus-outline-color: null,
+    $focus-outline-color-checked: null,
     $disabled-color: null,
     $disabled-label-color: null,
     $hover-color: null,
     $fill-color-hover: null,
     $error-color: null,
     $error-color-hover: null,
+    $focus-outline-color-error: null,
 ) {
     $name: 'igx-radio';
     $radio-schema: ();
@@ -64,6 +70,7 @@
     @return extend($theme, (
         name: $name,
         label-color: $label-color,
+        label-color-hover: $label-color-hover,
         empty-color: $empty-color,
         fill-color: $fill-color,
         fill-hover-border-color: $fill-hover-border-color,
@@ -72,8 +79,10 @@
         hover-color: $hover-color,
         fill-color-hover: $fill-color-hover,
         focus-outline-color: $focus-outline-color,
+        focus-outline-color-checked: $focus-outline-color-checked,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        focus-outline-color-error: $focus-outline-color-error,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -106,7 +115,7 @@
         material: rem(40px),
         fluent: rem(20px),
         bootstrap: rem(16px),
-        indigo-design: rem(20px),
+        indigo-design: rem(16px),
     ), $variant);
 
     $scale: map.get((
@@ -182,6 +191,14 @@
 
     %radio-label--invalid {
         color: var-get($theme, 'error-color');
+
+        @if $variant == 'indigo-design' {
+            color: var-get($theme, 'label-color');
+
+            &:hover {
+                color: var-get($theme, 'label-color-hover');
+            }
+        }
     }
 
     %radio-label--disabled {
@@ -262,11 +279,24 @@
             background: var-get($theme, 'hover-color');
             transform: $radio-hover-scale;
         }
+
+        @if $variant == 'indigo-design' {
+            &::after {
+                border: $border-width $border-style var-get($theme, 'hover-color');
+                transition: $transition;
+            }
+        }
     }
 
     %igx-radio-hover__composite--invalid {
         &::before {
             background: var-get($theme, 'error-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            &::after {
+                border-color: var-get($theme, 'error-color-hover');
+            }
         }
     }
 
@@ -275,18 +305,14 @@
             &::before {
                 background: white;
             }
-        } @else if $variant == 'indigo-design' {
-            &::before {
-                background: var-get($theme, 'error-color');
-            }
-        } @else {
-            &::before {
-                background: var-get($theme, 'error-color-hover');
-            }
+        }
 
-            &::after {
-                border: $border-width $border-style var-get($theme, 'error-color-hover');
-            }
+        &::before {
+            background: var-get($theme, 'error-color-hover');
+        }
+
+        &::after {
+            border: $border-width $border-style var-get($theme, 'error-color-hover');
         }
     }
 
@@ -372,13 +398,19 @@
     }
 
     %radio-label {
-        color: currentColor;
+        color: var-get($theme, 'label-color');
         cursor: pointer;
         user-select: none;
         word-wrap: break-all;
 
         &:empty {
             display: none;
+        }
+    }
+
+    %radio-label--hover {
+        @if $variant == 'indigo-design' {
+            color: var-get($theme, 'label-color-hover');
         }
     }
 
@@ -467,7 +499,7 @@
 
         @if $variant == 'indigo-design' {
             %radio-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-filled');
             }
         }
     }
@@ -479,7 +511,7 @@
             }
         } @else if $variant == 'indigo-design' {
             %radio-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
             }
         } @else if $variant == 'fluent' {
             %radio-composite {
@@ -508,6 +540,17 @@
             @if $variant == 'bootstrap' {
                 &::before {
                     background: white;
+                }
+            }
+
+            @if $variant == 'indigo-design' {
+                &::after {
+                    border-color: var-get($theme, 'error-color-hover');
+                }
+
+                &::before {
+                    background: var-get($theme, 'error-color-hover');
+                    border-color: var-get($theme, 'error-color-hover');
                 }
             }
         }

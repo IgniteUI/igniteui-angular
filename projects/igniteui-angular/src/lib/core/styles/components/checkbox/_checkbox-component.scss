@@ -18,8 +18,16 @@
                 @extend %cbx-ripple--hover !optional;
             }
 
+            @include e(composite) {
+                @extend %cbx-composite--hover !optional;
+            }
+
             @include e(composite-mark) {
                 @extend %cbx-composite-mark--fluent !optional;
+            }
+
+            @include e(label) {
+                @extend %cbx-label--hover !optional;
             }
         }
 

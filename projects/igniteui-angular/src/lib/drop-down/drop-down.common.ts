@@ -11,7 +11,7 @@ export enum Navigate {
 }
 
 /** Key actions that have designated handlers in IgxDropDownComponent */
-export const DropDownActionKey = mkenum({
+export const DropDownActionKey = /*@__PURE__*/mkenum({
     ESCAPE: 'escape',
     ENTER: 'enter',
     SPACE: 'space'
@@ -42,7 +42,7 @@ export interface IDropDownNavigationDirective {
     onHomeKeyDown(event?: KeyboardEvent): void;
 }
 
-export const IGX_DROPDOWN_BASE = new InjectionToken<IDropDownBase>('IgxDropDownBaseToken');
+export const IGX_DROPDOWN_BASE = /*@__PURE__*/new InjectionToken<IDropDownBase>('IgxDropDownBaseToken');
 
 /**
  * @hidden

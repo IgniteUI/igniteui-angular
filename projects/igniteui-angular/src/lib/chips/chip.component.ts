@@ -24,7 +24,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-export const IgxChipTypeVariant = mkenum({
+export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',

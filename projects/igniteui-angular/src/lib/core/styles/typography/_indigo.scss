@@ -1,6 +1,7 @@
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
+@use '../components/button-group/button-group-theme' as *;
 @use '../components/calendar/calendar-theme' as *;
 @use '../components/card/card-theme' as *;
 @use '../components/checkbox/checkbox-theme' as *;
@@ -32,15 +33,24 @@
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
+    @include button-group-typography($categories: (
+        text: 'body-2',));
     @include calendar-typography();
-    @include card-typography();
+    @include card-typography($categories: (
+        title: 'h6',
+        title-small: 'body-2',
+        subtitle: 'body-2',
+        content: 'body-2'
+    ));
     @include checkbox-typography($categories: (
         label: 'body-1',
     ));
     @include chip-typography();
     @include column-actions-typography();
     @include date-range-typography();
-    @include dialog-typography();
+    @include dialog-typography($categories: (
+        title: 'h5',
+    ));
     @include dock-manager-typography();
     @include drop-down-typography();
     @include expansion-panel-typography($categories: (
@@ -52,7 +62,7 @@
     @include icon-button-typography();
     @include input-group-typography($categories: (
         helper-text: 'caption',
-        input-text: 'body-1'
+        input-text: 'body-2'
     ));
     @include list-typography($categories: (
         header: 'overline',
@@ -62,7 +72,9 @@
     ));
     @include navbar-typography();
     @include navdrawer-typography();
-    @include radio-typography();
+    @include radio-typography($categories: (
+        label: 'body-2'
+    ));
     @include slider-typography();
     @include snackbar-typography();
     @include switch-typography();

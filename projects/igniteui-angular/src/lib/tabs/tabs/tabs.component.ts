@@ -9,7 +9,7 @@ import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 
-export const IgxTabsAlignment = mkenum({
+export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
     end: 'end',
     center: 'center',
@@ -17,7 +17,7 @@ export const IgxTabsAlignment = mkenum({
 });
 
 /** @hidden */
-enum TabScrollButtonStyle {
+const enum TabScrollButtonStyle {
     Enabled = 'enabled',
     Disabled = 'disabled',
     NotDisplayed = 'not_displayed'
