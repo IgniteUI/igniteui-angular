@@ -437,6 +437,28 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 		return dates.map(date => this.formattedYear(date)).join(' - ');
 	}
 
+    protected prevNavLabel(detail?: string): string {
+        switch (this.activeView) {
+            case 'month':
+                return `${this.resourceStrings.igx_calendar_previous_month}, ${detail}`
+            case 'year':
+                return this.resourceStrings.igx_calendar_previous_year.replace('{0}', '15');
+            case 'decade':
+                return this.resourceStrings.igx_calendar_previous_years.replace('{0}', '15');
+        }
+    }
+
+    protected nextNavLabel(detail?: string): string {
+        switch (this.activeView) {
+            case 'month':
+                return `${this.resourceStrings.igx_calendar_next_month}, ${detail}`
+            case 'year':
+                return this.resourceStrings.igx_calendar_next_year.replace('{0}', '15');
+            case 'decade':
+                return this.resourceStrings.igx_calendar_next_years.replace('{0}', '15');
+        }
+    }
+
 	protected getDecadeRange(): { start: string; end: string } {
         const range = getYearRange(this.viewDate, 15);
         const start = CalendarDay.from(this.viewDate).set({ date: 1, year: range.start });

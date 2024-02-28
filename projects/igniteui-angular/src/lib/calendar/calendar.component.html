@@ -25,7 +25,7 @@
         #monthsBtn
         tabindex="0"
         role="button"
-        [attr.aria-label]="(obj.date | date: 'LLLL') + ' ' + resourceStrings.igx_calendar_select_month"
+        [attr.aria-label]="(obj.date | date: 'LLLL') + ', ' + resourceStrings.igx_calendar_select_month"
         (keydown)="onActiveViewYearKB(obj.date, $event, obj.index)"
         (mousedown)="onActiveViewYear($event, obj.date, obj.index)"
         class="igx-calendar-picker__date">
@@ -35,11 +35,12 @@
 
 <!-- Year -->
 <ng-template #defaultYear let-obj>
+    <span *ngIf="activeView === 'year'" class="igx-calendar__aria-off-screen" aria-live="polite">{{ formattedYear(obj.date) }}</span>
     <span
         #yearsBtn
         tabindex="0"
         role="button"
-        [attr.aria-label]="(obj.date | date: 'yyyy') + ' ' + resourceStrings.igx_calendar_select_year"
+        [attr.aria-label]="(obj.date | date: 'yyyy') + ', ' + resourceStrings.igx_calendar_select_year"
         (keydown)="onActiveViewDecadeKB(obj.date, $event, obj.index)"
         (mousedown)="onActiveViewDecade($event, obj.date, obj.index)"
         class="igx-calendar-picker__date">
@@ -75,7 +76,6 @@
     <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
 </ng-template>
 
-<!-- TODO: The aria-label should have different text based on the current view -->
 <!-- Previous picker button -->
 <ng-template #prevPageButton let-obj>
     <div
@@ -83,7 +83,7 @@
         tabindex="0"
         class="igx-calendar-picker__prev"
         role="button"
-        [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
+        [attr.aria-label]="prevNavLabel((getPrevMonth(viewDate) | date: 'LLLL'))"
         data-action="prev"
         igxCalendarScrollPage
         [startScroll]="startPrevPageScroll"
@@ -101,7 +101,7 @@
         tabindex="0"
         class="igx-calendar-picker__next"
         role="button"
-        [attr.aria-label]="resourceStrings.igx_calendar_next_month + ', ' +  (getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
+        [attr.aria-label]="nextNavLabel((getNextMonth(viewDate, monthsViewNumber) | date: 'LLLL'))"
         data-action="next"
         igxCalendarScrollPage
         [startScroll]="startNextPageScroll"
@@ -133,7 +133,7 @@
 <!-- PICKER IN MONTHS -->
 <ng-template #calendarYearPicker>
     <section class="igx-calendar-picker">
-        <div class="igx-calendar-picker__dates" aria-live="polite">
+        <div class="igx-calendar-picker__dates">
             <ng-container
                 *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultYear; context: getContext(0)">
             </ng-container>

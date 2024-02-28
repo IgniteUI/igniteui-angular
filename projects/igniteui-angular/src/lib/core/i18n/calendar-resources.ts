@@ -1,6 +1,10 @@
 export interface ICalendarResourceStrings {
  igx_calendar_previous_month?: string;
  igx_calendar_next_month?: string;
+ igx_calendar_previous_year?: string;
+ igx_calendar_next_year?: string;
+ igx_calendar_previous_years?: string;
+ igx_calendar_next_years?: string;
  igx_calendar_select_date?: string;
  igx_calendar_select_month?: string;
  igx_calendar_select_year?: string;
@@ -22,6 +26,10 @@ export interface ICalendarResourceStrings {
 export const CalendarResourceStringsEN: ICalendarResourceStrings = {
  igx_calendar_previous_month: 'Previous Month',
  igx_calendar_next_month: 'Next Month',
+ igx_calendar_previous_year: 'Previous Year',
+ igx_calendar_next_year: 'Next Year',
+ igx_calendar_previous_years: 'Previous {0} Years',
+ igx_calendar_next_years: 'Next {0} Years',
  igx_calendar_select_date: 'Select Date',
  igx_calendar_select_month: 'Select Month',
  igx_calendar_select_year: 'Select Year',

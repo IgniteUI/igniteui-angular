@@ -4,6 +4,10 @@ import { ICalendarResourceStrings } from 'igniteui-angular';
 const CalendarResourceStringsDE_: ExpandRequire<ICalendarResourceStrings> = {
     igx_calendar_previous_month: 'Vorheriger Monat',
     igx_calendar_next_month: 'Nächster Monat',
+    igx_calendar_previous_year: 'Previous Year',
+    igx_calendar_next_year: 'Next Year',
+    igx_calendar_previous_years: 'Previous {0} Years',
+    igx_calendar_next_years: 'Next {0} Years',
     igx_calendar_select_date: 'Select Date',
     igx_calendar_select_month: 'Wähle Monat',
     igx_calendar_select_year: 'Wähle Jahr',
