@@ -424,10 +424,6 @@
             }
         }
 
-        &:focus {
-            z-index: 3;
-        }
-
         &[igxButton] {
             border-color: var-get($theme, 'item-selected-border-color');
         }
@@ -439,12 +435,14 @@
         &:hover {
             border-color: var-get($theme, 'item-selected-hover-border-color');
             color: var-get($theme, 'item-selected-hover-text-color');
+
             igx-icon {
                 color: var-get($theme, 'item-selected-hover-icon-color');
             }
         }
 
         &:focus {
+            z-index: 3;
             background: var-get($theme, 'item-selected-background');
             box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
 
