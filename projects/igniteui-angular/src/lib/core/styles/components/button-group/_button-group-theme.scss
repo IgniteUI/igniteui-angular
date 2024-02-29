@@ -257,6 +257,10 @@
             }
         }
 
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
+        }
+
         &:not(:nth-child(1)) {
             margin-inline-start: rem(-1px);
         }
@@ -276,10 +280,8 @@
             background: var-get($theme, 'disabled-background-color');
             border-color: var-get($theme, 'item-disabled-border');
 
-            @if $variant == 'indigo-design' {
-                igx-icon {
-                    color: var-get($theme, 'disabled-text-color');
-                }
+            igx-icon {
+                color: var-get($theme, 'disabled-text-color');
             }
         }
 
@@ -287,6 +289,10 @@
         &:focus {
             color: var-get($theme, 'item-hover-text-color');
             background: var-get($theme, 'item-hover-background');
+
+            igx-icon {
+                color: var-get($theme, 'item-hover-icon-color');
+            }
         }
 
         &:focus {
@@ -296,6 +302,12 @@
 
             @if $indigo-theme {
                 z-index: 2;
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($theme, 'item-hover-icon-color');
+                }
             }
         }
 
@@ -353,7 +365,6 @@
             padding-inline: pad-inline(rem(8px));
 
             igx-icon {
-                color: var-get($theme, 'item-icon-color');
                 $icon-size: rem(16px);
 
                 --ig-icon-size: #{$icon-size};
@@ -362,10 +373,6 @@
 
             &:hover {
                 border-color: var-get($theme, 'item-hover-border-color');
-
-                igx-icon {
-                    color: var-get($theme, 'item-hover-icon-color');
-                }
             }
 
             &:focus {
@@ -376,10 +383,6 @@
                     color: var-get($theme, 'item-hover-text-color');
                     background: var-get($theme, 'item-hover-background');
                     border-color: var-get($theme, 'item-hover-border-color');
-
-                    igx-icon {
-                        color: var-get($theme, 'item-hover-icon-color');
-                    }
                 }
             }
         }
@@ -429,32 +432,33 @@
             border-color: var-get($theme, 'item-selected-border-color');
         }
 
-        @if $indigo-theme {
+        igx-icon {
+            color: var-get($theme, 'item-selected-icon-color');
+        }
+
+        &:hover {
+            border-color: var-get($theme, 'item-selected-hover-border-color');
+            color: var-get($theme, 'item-selected-hover-text-color');
+            igx-icon {
+                color: var-get($theme, 'item-selected-hover-icon-color');
+            }
+        }
+
+        &:focus {
+            background: var-get($theme, 'item-selected-background');
+            box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
+
             igx-icon {
                 color: var-get($theme, 'item-selected-icon-color');
             }
-
+            
             &:hover {
                 border-color: var-get($theme, 'item-selected-hover-border-color');
                 color: var-get($theme, 'item-selected-hover-text-color');
+                background: var-get($theme, 'item-selected-hover-background');
 
                 igx-icon {
                     color: var-get($theme, 'item-selected-hover-icon-color');
-                }
-            }
-
-            &:focus {
-                background: var-get($theme, 'item-selected-background');
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
-                
-                &:hover {
-                    border-color: var-get($theme, 'item-selected-hover-border-color');
-                    color: var-get($theme, 'item-selected-hover-text-color');
-                    background: var-get($theme, 'item-selected-hover-background');
-    
-                    igx-icon {
-                        color: var-get($theme, 'item-selected-hover-icon-color');
-                    }
                 }
             }
         }

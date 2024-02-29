@@ -50,6 +50,7 @@
     @include date-range-typography();
     @include dialog-typography($categories: (
         title: 'h5',
+        content: 'body-1',
     ));
     @include dock-manager-typography();
     @include drop-down-typography();
