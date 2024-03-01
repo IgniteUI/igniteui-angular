@@ -137,20 +137,6 @@
 /// @param {Color} $date-selected-current-range-focus-foreground [null] - The :focus foreground of the current date in the selected range.
 /// @param {Color} $date-selected-current-range-focus-background [null] - The :focus background of the current date in the selected range.
 ///
-/// @param {Color} $date-selected-range-start-foreground [null] - The foreground of the first date in the selected range.
-/// @param {Color} $date-selected-range-start-background [null] - The background of the first date in the selected range.
-/// @param {Color} $date-selected-range-start-hover-foreground [null] - The :hover foreground of the first date in the selected range.
-/// @param {Color} $date-selected-range-start-hover-background [null] - The :hover background of the first date in the selected range.
-/// @param {Color} $date-selected-range-start-focus-foreground [null] - The :focus foreground of the first date in the selected range.
-/// @param {Color} $date-selected-range-start-focus-background [null] - The :focus background of the first date in the selected range.
-
-/// @param {Color} $date-selected-range-end-foreground [null] - The background of the last date in the selected range.
-/// @param {Color} $date-selected-range-end-background [null] - The background of the last date in the selected range.
-/// @param {Color} $date-selected-range-end-hover-foreground [null] - The :hover foreground of the last date in the selected range.
-/// @param {Color} $date-selected-range-end-hover-background [null] - The :hover background of the last date in the selected range.
-/// @param {Color} $date-selected-range-end-focus-foreground [null] - The :focus foreground of the last date in the selected range.
-/// @param {Color} $date-selected-range-end-focus-background [null] - The :focus background of the last date in the selected range.
-///
 /// @param {Color} $date-current-outline [null] - The outline of the current date.
 /// @param {Color} $date-current-hover-outline [null] - The :hover outline of the current date.
 /// @param {Color} $date-current-focus-outline [null] - The :focus outline of the current date.
@@ -321,20 +307,6 @@
     $date-selected-range-hover-background: null,
     $date-selected-range-focus-foreground: null,
     $date-selected-range-focus-background: null,
-
-    $date-selected-range-start-foreground: null,
-    $date-selected-range-start-background: null,
-    $date-selected-range-start-hover-foreground: null,
-    $date-selected-range-start-hover-background: null,
-    $date-selected-range-start-focus-foreground: null,
-    $date-selected-range-start-focus-background: null,
-
-    $date-selected-range-end-foreground: null,
-    $date-selected-range-end-background: null,
-    $date-selected-range-end-hover-foreground: null,
-    $date-selected-range-end-hover-background: null,
-    $date-selected-range-end-focus-foreground: null,
-    $date-selected-range-end-focus-background: null,
 
     $date-selected-current-foreground: null,
     $date-selected-current-background: null,
@@ -732,20 +704,6 @@
         date-selected-range-hover-background: $date-selected-range-hover-background,
         date-selected-range-focus-foreground: $date-selected-range-focus-foreground,
         date-selected-range-focus-background: $date-selected-range-focus-background,
-
-        date-selected-range-start-foreground: $date-selected-range-start-foreground,
-        date-selected-range-start-background: $date-selected-range-start-background,
-        date-selected-range-start-hover-foreground: $date-selected-range-start-hover-foreground,
-        date-selected-range-start-hover-background: $date-selected-range-start-hover-background,
-        date-selected-range-start-focus-foreground: $date-selected-range-start-focus-foreground,
-        date-selected-range-start-focus-background: $date-selected-range-start-focus-background,
-
-        date-selected-range-end-foreground: $date-selected-range-end-foreground,
-        date-selected-range-end-background: $date-selected-range-end-background,
-        date-selected-range-end-hover-foreground: $date-selected-range-end-hover-foreground,
-        date-selected-range-end-hover-background: $date-selected-range-end-hover-background,
-        date-selected-range-end-focus-foreground: $date-selected-range-end-focus-foreground,
-        date-selected-range-end-focus-background: $date-selected-range-end-focus-background,
 
         date-selected-current-range-foreground: $date-selected-current-range-foreground,
         date-selected-current-range-background: $date-selected-current-range-background,
@@ -1341,6 +1299,7 @@
         }
     }
 
+
     %years-view__year-selected-current {
         %years-view__year-inner {
             color: var-get($theme, 'year-selected-current-foreground');
@@ -1531,6 +1490,8 @@
             height: $date-height;
         }
 
+        min-width: $date-size;
+
         color: var-get($theme, 'weekday-color');
 
         &:hover,
@@ -1546,6 +1507,11 @@
             font-style: italic !important;
         }
     }
+
+    %weekday-label-inner {
+        @include ellipsis();
+    }
+
 
     // The size of the inner element when it is inside a special or current date
     // hase different size smaller then the date
@@ -1697,9 +1663,8 @@
         }
     }
 
-    // TODO See if this can be removed
     @if $variant != 'fluent' {
-        %date-special-selected {
+        %date-special-selected:not(%date-range) {
             %date-inner {
                 &::after {
                     border-color: var-get($theme, 'date-selected-foreground');
@@ -1757,19 +1722,6 @@
 
         %date-inner {
             color: var-get($theme, 'inactive-color');
-
-            &:hover {
-                color: var-get($theme, 'inactive-color');
-            }
-        }
-    }
-
-    %date-inactive-special,
-    %date-inactive-selected,
-    %date-inactive-current {
-        %date-inner {
-            background: transparent;
-            border-color: transparent;
         }
     }
 
@@ -1874,15 +1826,15 @@
 
     %date-range-selected-active-first {
         %date-inner {
-            color: var-get($theme, 'date-selected-range-start-focus-foreground');
-            background: var-get($theme, 'date-selected-range-start-focus-background');
+            color: var-get($theme, 'date-selected-focus-foreground');
+            background: var-get($theme, 'date-selected-focus-background');
         }
     }
 
     %date-range-selected-active-last {
         %date-inner {
-            color: var-get($theme, 'date-selected-range-end-focus-foreground');
-            background: var-get($theme, 'date-selected-range-end-focus-background');
+            color: var-get($theme, 'date-selected-focus-foreground');
+            background: var-get($theme, 'date-selected-focus-background');
         }
     }
 
@@ -1953,26 +1905,26 @@
 
     %date-range-selected-first {
         %date-inner {
-            color: var-get($theme, 'date-selected-range-start-foreground');
-            background: var-get($theme, 'date-selected-range-start-background');
+            color: var-get($theme, 'date-selected-foreground');
+            background: var-get($theme, 'date-selected-background');
             border-radius: var-get($theme, 'date-range-border-radius');
 
             &:hover {
-                color: var-get($theme, 'date-selected-range-start-hover-foreground');
-                background: var-get($theme, 'date-selected-range-start-hover-background');
+                color: var-get($theme, 'date-selected-hover-foreground');
+                background: var-get($theme, 'date-selected-hover-background');
             }
         }
     }
 
     %date-range-selected-last {
         %date-inner {
-            color: var-get($theme, 'date-selected-range-end-foreground');
-            background: var-get($theme, 'date-selected-range-end-background');
+            color: var-get($theme, 'date-selected-foreground');
+            background: var-get($theme, 'date-selected-background');
             border-radius: var-get($theme, 'date-range-border-radius');
 
             &:hover {
-                color: var-get($theme, 'date-selected-range-end-hover-foreground');
-                background: var-get($theme, 'date-selected-range-end-hover-background');
+                color: var-get($theme, 'date-selected-hover-foreground');
+                background: var-get($theme, 'date-selected-hover-background');
             }
         }
     }
@@ -2197,6 +2149,19 @@
         }
     }
 
+    %date-last-preview-first-special {
+        %date-inner {
+            &::after {
+                width: var-get($theme, 'inner-size');
+                height: var-get($theme, 'inner-size');
+
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-foreground');
+                }
+            }
+        }
+    }
+
     %date-last-preview {
         background: transparent;
         border-block-color: transparent ;
@@ -2213,7 +2178,74 @@
             inset-inline-end: 50%;
         }
     }
+
+    %date-last-preview-last-special {
+        %date-inner {
+            &::after {
+                width: var-get($theme, 'inner-size');
+                height: var-get($theme, 'inner-size');
+
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-foreground');
+                }
+            }
+        }
+    }
     // PREVIEW END
+
+    %date-inactive-special,
+    %date-inactive-selected,
+    %date-inactive-current {
+        %date-inner {
+            background: transparent;
+            border-color: transparent;
+
+            &:hover {
+                color: var-get($theme, 'date-hover-foreground');
+                background: var-get($theme, 'date-hover-background');
+                border-color: var-get($theme, 'date-hover-border-color');
+            }
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %date-inactive-selected:not(%date-range) {
+            %date-inner {
+                color: var-get($theme, 'inactive-color');
+            }
+        }
+
+        %date-inactive-current {
+            &date-range-preview,
+            &%date-range {
+                %date-inner {
+                    color: var-get($theme, 'date-selected-range-foreground');
+                }
+            }
+
+            &%date-range {
+                %date-inner {
+                    color: var-get($theme, 'date-selected-range-foreground');
+
+                    &:hover {
+                        color: var-get($theme, 'date-selected-range-hover-foreground');
+                    }
+                }
+            }
+
+            %date-inner {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    %date-selected-current-range-inactive {
+        %date-inner {
+            border-color: transparent;
+        }
+    }
 
     %date-disabled {
         pointer-events: none;

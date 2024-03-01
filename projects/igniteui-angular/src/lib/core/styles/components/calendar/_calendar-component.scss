@@ -251,6 +251,10 @@
             @extend %date-selected-current-range-special-last !optional;
         }
 
+        @include e(date, $mods: ('range', 'selected', 'current', 'inactive')) {
+            @extend %date-selected-current-range-inactive !optional;
+        }
+
         @include e(date, 'weekend') {
             @extend %date-weekend !optional;
         }
@@ -291,14 +295,6 @@
             @extend %date-special-selected !optional;
         }
 
-        @include e(date, $mods: ('special', 'selected', 'current')) {
-            @extend %date-special-selected-current !optional;
-        }
-
-        @include e(date, $mods: ('special', 'selected', 'range')) {
-            @extend %date-special-selected-range !optional;
-        }
-
         @include e(date, $mods: ('special' 'active')) {
             @extend %date-special-active !optional;
         }
@@ -309,10 +305,6 @@
 
         @include e(date, $mods: ('special', 'current', 'active', 'range')) {
             @extend %date-special-current !optional;
-        }
-
-        @include e(date, 'single') {
-            @extend %date-single !optional;
         }
 
         @include e(date, 'first') {
@@ -355,13 +347,13 @@
             @extend %date-last !optional;
         }
 
-        @include e(date, 'selected', $mods: ('first', 'last')) {
-            @extend %date-single !optional;
-        }
-
         @include e(label) {
             @extend %date !optional;
             @extend %weekday-label !optional;
+        }
+
+        @include e(label-inner) {
+            @extend %weekday-label-inner !optional;
         }
 
         @include e(label, 'week-number') {

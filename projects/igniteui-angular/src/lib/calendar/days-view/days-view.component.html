@@ -12,7 +12,9 @@
         *ngFor="let dayName of weekHeaderLabels"
         class="igx-days-view__label"
     >
-        {{ dayName.formatted | titlecase }}
+        <span class="igx-days-view__label-inner">
+            {{ dayName.formatted | titlecase }}
+        </span>
     </span>
 </div>
 
