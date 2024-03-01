@@ -319,6 +319,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     protected handleDateClick(item: IgxDayItemComponent) {
         const date = item.date.native;
+        this.viewDate = date;
 
         if (item.isPreviousMonth) {
             this.pageChanged.emit({

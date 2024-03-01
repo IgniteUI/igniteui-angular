@@ -532,7 +532,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
         this.activeDate = date.native;
 
-        const dates = this.monthViews.toArray().flatMap(view => view.dates.toArray()).filter(d => d.isCurrentMonth);
+        const dates = this.viewDates;
         const isDateInView = dates.some(d => d.date.equalTo(this.activeDate));
         this.monthViews.forEach(view => view.clearPreviewRange());
 
@@ -886,13 +886,30 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	}
 
 	/**
+	 * @hidden
+	 * @internal
+	 */
+    protected get viewDates() {
+        return this.monthViews.toArray()
+            .flatMap(view => view.dates.toArray())
+            .filter(d => d.isCurrentMonth);
+    }
+
+	/**
 	 * Handles invoked on date selection
 	 *
 	 * @hidden
 	 * @internal
 	 */
 	protected handleDateSelection(date: Date) {
-        this.viewDate = date;
+        const outOfRange = !this.viewDates.some(d => {
+            return d.date.equalTo(date)
+        });
+
+        if (outOfRange) {
+            this.viewDate = date;
+        }
+
 		this.selectDate(date);
 
         // keep views in sync
