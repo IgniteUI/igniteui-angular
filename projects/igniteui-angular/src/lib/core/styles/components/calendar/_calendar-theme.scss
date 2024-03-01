@@ -1895,10 +1895,6 @@
             &::after {
                 width: $date-inner-size;
                 height: $date-inner-size;
-
-                @if $variant != 'fluent' {
-                    border-color: var-get($theme, 'date-selected-range-end-foreground');
-                }
             }
         }
     }
