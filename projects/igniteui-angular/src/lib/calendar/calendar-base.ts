@@ -184,7 +184,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+    private _weekStart: WEEKDAYS | number;
 
     /**
      * @hidden
@@ -296,7 +296,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
-        this._weekStart = getLocaleFirstDayOfWeek(this._locale);
+        if (!this.weekStart) {
+            this.weekStart = getLocaleFirstDayOfWeek(this._locale);
+        }
 
         this.initFormatters();
     }
@@ -755,7 +757,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (this.selectedDates !== null &&
             this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0))) {
             this.selectedDates = null;
-            this._onChangeCallback(this.selectedDates.at(0));
+            this._onChangeCallback(this.selectedDates);
         }
     }
 

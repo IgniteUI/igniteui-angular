@@ -503,6 +503,11 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
         this.activeView$.subscribe((view) => {
 			this.activeViewChanged.emit(view);
+
+            this.viewDateChanged.emit({
+                previousValue: this.previousViewDate,
+                currentValue: this.viewDate
+            });
         });
     }
 

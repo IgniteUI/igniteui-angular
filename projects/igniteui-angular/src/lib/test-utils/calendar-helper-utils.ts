@@ -9,6 +9,7 @@ export class HelperTestFunctions {
     public static MODAL_OVERLAY_CSSCLASS = 'igx-overlay__wrapper--modal';
 
     public static CALENDAR_CSSCLASS = '.igx-calendar';
+    public static CALENDAR_WRAPPER_CLASS = '.igx-calendar__wrapper';
     public static CALENDAR_WEEK_NUMBER_CLASS = '.igx-days-view__date--week-number';
     public static CALENDAR_WEEK_NUMBER_ITEM_CLASS = '.igx-days-view__date-inner--week-number';
     public static CALENDAR_WEEK_NUMBER_LABEL_CLASS = '.igx-days-view__label--week-number';
@@ -26,10 +27,10 @@ export class HelperTestFunctions {
     public static RANGE_CSSCLASS = 'igx-days-view__date--range';
     public static CALENDAR_ROW_CSSCLASS = '.igx-days-view__row';
     public static CALENDAR_ROW_WRAP_CSSCLASS = '.igx-days-view__row--wrap';
-    public static MONTH_CSSCLASS = '.igx-calendar__month';
-    public static CURRENT_MONTH_CSSCLASS = '.igx-months-view__month--current';
-    public static YEAR_CSSCLASS = '.igx-calendar__year';
-    public static CURRENT_YEAR_CSSCLASS = '.igx-years-view__year--current';
+    public static MONTH_CSSCLASS = '.igx-months-view__month';
+    public static CURRENT_MONTH_CSSCLASS = '.igx-months-view__month--selected';
+    public static YEAR_CSSCLASS = '.igx-years-view__year';
+    public static CURRENT_YEAR_CSSCLASS = '.igx-years-view__year--selected';
 
     public static CALENDAR_PREV_BUTTON_CSSCLASS = '.igx-calendar-picker__prev';
     public static CALENDAR_NEXT_BUTTON_CSSCLASS = '.igx-calendar-picker__next';
@@ -127,7 +128,7 @@ export class HelperTestFunctions {
 
     public static getMonthsFromMonthView(fixture) {
         return fixture.nativeElement.querySelector('igx-months-view')
-            .querySelectorAll('.igx-calendar__month, .igx-months-view__month--current');
+            .querySelectorAll('.igx-months-view__month, .igx-months-view__month--current');
     }
 
     public static getYearsFromYearView(fixture) {

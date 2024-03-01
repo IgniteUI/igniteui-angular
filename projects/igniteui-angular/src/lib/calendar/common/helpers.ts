@@ -96,8 +96,10 @@ export function getClosestActiveDate(
     delta: number,
     disabled: DateRangeDescriptor[] = [],
 ): CalendarDay {
-    const range = getLargestRange(disabled)?.dateRange;
-    const maxAttempts = Math.max(Math.abs(delta), (range ?? []).length);
+    // TODO: implement a more robust logic for max attempts,
+    // i.e. the amount of days to jump between before giving up
+    // currently it will try to find the closest date for a year
+    const maxAttempts = 366;
     let date = start;
     let attempts = 0;
 
@@ -153,17 +155,6 @@ export function getYearRange(current: DayParameter, range: number) {
     const year = toCalendarDay(current).year;
     const start = Math.floor(year / range) * range;
     return { start, end: start + range - 1 };
-}
-
-export function getLargestRange(ranges: DateRangeDescriptor[] = []) {
-    return ranges.reduce(
-        (prev, current) => {
-            const c = current?.dateRange ?? [];
-            const p = prev?.dateRange ?? [];
-            return c.length > p.length ? current : prev;
-        },
-        [] as unknown as DateRangeDescriptor,
-    );
 }
 
 export function isDateInRanges(
