@@ -2223,6 +2223,7 @@
                 %date-inner {
                     color: var-get($theme, 'date-selected-range-foreground');
 
+                    // stylelint-disable-next-line
                     &:hover {
                         color: var-get($theme, 'date-selected-range-hover-foreground');
                     }
