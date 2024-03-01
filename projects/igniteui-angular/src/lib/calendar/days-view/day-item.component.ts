@@ -110,7 +110,8 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--selected')
     public get isSelectedCSS(): boolean {
-        return !this.isDisabled && this.selected;
+        const selectable = (!this.isInactive || this.isWithinRange);
+        return !this.isDisabled && selectable && this.selected;
     }
 
     @HostBinding('class.igx-days-view__date--inactive')
@@ -125,7 +126,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-days-view__date--current')
     public get isToday(): boolean {
-        return this.date.equalTo(CalendarDay.today);
+        return !this.isInactive && this.date.equalTo(CalendarDay.today);
     }
 
     @HostBinding('class.igx-days-view__date--weekend')
@@ -174,7 +175,7 @@ export class IgxDayItemComponent {
             return false;
         }
 
-        return isDateInRanges(this.date, this.specialDates);
+        return !this.isInactive && isDateInRanges(this.date, this.specialDates);
     }
 
     @HostBinding('class.igx-days-view__date--disabled')

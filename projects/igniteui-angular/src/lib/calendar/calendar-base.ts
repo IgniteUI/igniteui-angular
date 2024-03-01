@@ -130,32 +130,32 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected formatterWeekday;
+    protected formatterWeekday: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterDay;
+    protected formatterDay: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterMonth;
+    protected formatterMonth: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterYear;
+    protected formatterYear: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterMonthday;
+    protected formatterMonthday: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterRangeday;
+    protected formatterRangeday: Intl.DateTimeFormat;
 
     /**
      * @hidden
@@ -174,7 +174,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private initialSelection;
+    private initialSelection: Date | Date[];
 
     /**
      * @hidden
@@ -204,12 +204,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _disabledDates: DateRangeDescriptor[];
+    private _disabledDates: DateRangeDescriptor[] = [];
 
     /**
      * @hidden
      */
-    private _specialDates: DateRangeDescriptor[];
+    private _specialDates: DateRangeDescriptor[] = [];
 
     /**
      * @hidden

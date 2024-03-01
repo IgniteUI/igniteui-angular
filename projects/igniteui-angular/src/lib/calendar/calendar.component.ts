@@ -892,6 +892,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	protected handleDateSelection(date: Date) {
+        this.viewDate = date;
 		this.selectDate(date);
 
         // keep views in sync
