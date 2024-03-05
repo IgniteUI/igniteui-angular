@@ -33,7 +33,7 @@ const DATE_PICKER_CLEAR_ICON = 'clear';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 
-fdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
