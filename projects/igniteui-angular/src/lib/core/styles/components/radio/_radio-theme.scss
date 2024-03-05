@@ -21,6 +21,7 @@
 /// @param {Color} $fill-color [null] - The checked border and dot colors.
 /// @param {Color} $disabled-color [null] - The disabled border and dot colors.
 /// @param {Color} $disabled-label-color [null] - The disabled label color.
+/// @param {Color} disabled-fill-color [null] - The disabled checked border and dot colors.
 /// @param {Color} $hover-color [null] - The border and dot colors on hover.
 /// @param {Color} $fill-color-hover [null] - The checked dot color on hover.
 /// @param {Color} $fill-hover-border-color [null] - The checked border color on hover.
@@ -49,6 +50,7 @@
     $focus-outline-color-checked: null,
     $disabled-color: null,
     $disabled-label-color: null,
+    $disabled-fill-color: null,
     $hover-color: null,
     $fill-color-hover: null,
     $error-color: null,
@@ -76,6 +78,7 @@
         fill-hover-border-color: $fill-hover-border-color,
         disabled-color: $disabled-color,
         disabled-label-color: $disabled-label-color,
+        disabled-fill-color: $disabled-fill-color,
         hover-color: $hover-color,
         fill-color-hover: $fill-color-hover,
         focus-outline-color: $focus-outline-color,
@@ -148,7 +151,7 @@
         material: rem(16px),
         fluent: rem(12px),
         bootstrap: rem(8px),
-        indigo-design: rem(8px),
+        indigo-design: rem(16px),
     ), $variant);
 
     $vertical-group-margin: map.get((
@@ -300,22 +303,6 @@
         }
     }
 
-    %radio-composite--x--invalid--hover {
-        @if $bootstrap-theme {
-            &::before {
-                background: white;
-            }
-        }
-
-        &::before {
-            background: var-get($theme, 'error-color-hover');
-        }
-
-        &::after {
-            border: $border-width $border-style var-get($theme, 'error-color-hover');
-        }
-    }
-
     %igx-radio--checked-active__composite {
         &::before {
             background: var-get($theme, 'fill-color-hover');
@@ -377,11 +364,11 @@
 
     %radio-composite--x--disabled {
         &::after {
-            border: $border-width $border-style var-get($theme, 'disabled-color');
+            border: $border-width $border-style var-get($theme, 'disabled-fill-color');
         }
 
         &::before {
-            background: var-get($theme, 'disabled-color');
+            background: var-get($theme, 'disabled-fill-color');
             border: $border-width $border-style transparent;
         }
 
@@ -543,16 +530,16 @@
                 }
             }
 
-            @if $variant == 'indigo-design' {
-                &::after {
-                    border-color: var-get($theme, 'error-color-hover');
-                }
+            // @if $variant == 'indigo-design' {
+            //     &::after {
+            //         border-color: var-get($theme, 'error-color-hover');
+            //     }
 
-                &::before {
-                    background: var-get($theme, 'error-color-hover');
-                    border-color: var-get($theme, 'error-color-hover');
-                }
-            }
+            //     &::before {
+            //         background: var-get($theme, 'error-color-hover');
+            //         border-color: var-get($theme, 'error-color-hover');
+            //     }
+            // }
         }
 
         @if $variant == 'fluent' {
@@ -565,6 +552,23 @@
                     background: var-get($theme, 'error-color-hover');
                 }
             }
+        }
+    }
+
+    %radio-composite--x--invalid--hover {
+        @if $bootstrap-theme {
+            &::before {
+                background: white;
+            }
+        }
+
+        &::before {
+            background: var-get($theme, 'error-color-hover');
+            border-color: var-get($theme, 'error-color-hover');
+        }
+
+        &::after {
+            border: $border-width $border-style var-get($theme, 'error-color-hover');
         }
     }
 

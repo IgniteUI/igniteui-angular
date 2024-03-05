@@ -829,7 +829,9 @@
     %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            padding-inline: rem(4px);
+            @if $variant != 'indigo-design' {
+                padding-inline: rem(4px);
+            }
         }
     }
 
@@ -1069,8 +1071,12 @@
             color: var-get($theme, 'placeholder-color');
             opacity: 1;
             line-height: normal; /* Fix placeholder position in Safari */
+        }
 
-            @if $variant == 'indigo-design' {
+        @if $variant == 'indigo-design' {
+            height: calc(var-get($theme, 'size') - 1px);
+
+            &::placeholder {
                 font-style: italic;
             }
         }
@@ -1402,14 +1408,25 @@
 
     // INDIGO START
     @if $variant == 'indigo-design' {
-        %form-group-display.igx-input-group--prefixed {
+        %form-group-display--search {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+            }
+        }
+
+        %form-group-display.igx-input-group--prefixed,
+        %form-group-display--search.igx-input-group--prefixed {
             input,
             textarea {
                 padding-inline-start: 0;
             }
         }
 
-        %form-group-display.igx-input-group--suffixed {
+        %form-group-display.igx-input-group--suffixed,
+        %form-group-display--search.igx-input-group--suffixed {
             input,
             textarea {
                 padding-inline-end: 0;
@@ -1435,6 +1452,10 @@
     %form-group-input--indigo {
         padding-block: rem(6px);
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+    }
+
+    %form-group-input--search {
+        padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
     }
 
     %indigo--box-focused {

@@ -190,6 +190,10 @@
         }
 
         @if $variant == 'indigo-design' {
+            .igx-button {
+                --ig-size: 2;
+            }
+
             button + button {
                 margin-inline-start: rem(16px);
             }

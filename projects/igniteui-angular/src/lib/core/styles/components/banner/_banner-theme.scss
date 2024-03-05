@@ -167,6 +167,14 @@
         align-self: flex-end;
         gap: rem(8px);
         min-height: rem(40px);
+
+        @if $variant == 'indigo-design' {
+            min-height: initial;
+
+            [igxButton] {
+                --ig-size: 2;
+            }
+        }
     }
 }
 

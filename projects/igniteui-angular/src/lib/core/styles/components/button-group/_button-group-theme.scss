@@ -362,6 +362,12 @@
         }
 
         @if $variant == 'indigo-design' {
+            // Required in order to override the button typography 
+            font-size: rem(12px) !important;
+            line-height: rem(16px) !important;
+            font-weight: 400 !important;
+            text-transform: none !important;
+
             padding-inline: pad-inline(rem(8px));
 
             igx-icon {
@@ -378,6 +384,10 @@
             &:focus {
                 color: var-get($theme, 'item-focused-text-color');
                 background: var-get($theme, 'item-focused-background'); 
+
+                igx-icon {
+                    color: var-get($theme, 'item-icon-color');
+                }
 
                 &:hover {
                     color: var-get($theme, 'item-hover-text-color');

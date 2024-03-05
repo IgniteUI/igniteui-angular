@@ -193,6 +193,7 @@
 
         @if $variant == 'indigo-design' {
             margin-inline-end: rem(8px);
+            margin-block: auto;
 
             igx-avatar {
                 --ig-size: 3;
@@ -267,6 +268,13 @@
         align-items: center;
         padding: $card-actions-padding;
 
+        @if $variant == 'indigo-design' {
+            [igxButton],
+            [igxIconButton] {
+                --ig-size: 2;
+            }
+        }
+
         &:first-child {
             margin-block-end: auto;
         }
@@ -282,8 +290,8 @@
             padding: rem(16px);
         }
 
-        %igx-card-actions {
-            padding-block-start: rem(8px); 
+        %igx-card-content + %igx-card-actions {
+            padding-block-start: rem(8px);
         }
 
         %igx-card-header + %igx-card-content {

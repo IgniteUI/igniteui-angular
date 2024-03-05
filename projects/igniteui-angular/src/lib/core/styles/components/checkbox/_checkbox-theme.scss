@@ -225,7 +225,7 @@
     }
 
     %cbx-composite--invalid--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
+        @if $variant != 'bootstrap' {
             border-color: var-get($theme, 'error-color-hover');
         } @else {
             border-color: var-get($theme, 'error-color');
@@ -243,7 +243,7 @@
     }
 
     %cbx-composite--x--invalid--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
+        @if $variant != 'bootstrap' {
             border-color: var-get($theme, 'error-color-hover');
             background: var-get($theme, 'error-color-hover');
         } @else {
@@ -351,7 +351,18 @@
 
     %igx-checkbox--indeterminate--invalid {
         %cbx-composite--x {
+            border-color: var-get($theme, 'error-color');
             background: var-get($theme, 'error-color');
+        }
+
+        %cbx-composite--x--hover {
+            @if $variant != 'bootstrap' {
+                border-color: var-get($theme, 'error-color-hover');
+                background: var-get($theme, 'error-color-hover');
+            } @else {
+                border-color: var-get($theme, 'error-color');
+                background: var-get($theme, 'error-color');
+            }
         }
 
         @if $variant == 'fluent' {
@@ -452,7 +463,9 @@
     }
 
     %cbx-label--invalid {
-        color: var-get($theme, 'error-color');
+        @if $variant != 'indigo-design' {
+            color: var-get($theme, 'error-color');
+        }
     }
 
     %cbx-label--disabled {
@@ -541,7 +554,7 @@
 
         @if $variant == 'indigo-design' {
             %cbx-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
             }
         }
     }

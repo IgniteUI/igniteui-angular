@@ -853,6 +853,14 @@
                 /* stylelint-enable */
             }
         }
+
+        @if ($variant == 'indigo-design') {
+            gap: pad-inline(
+                map.get($items-gap, 'compact'),
+                map.get($items-gap, 'cosy'),
+                $items-gap-indigo-comfortable
+            );
+        }
     }
 
     %igx-button--round {

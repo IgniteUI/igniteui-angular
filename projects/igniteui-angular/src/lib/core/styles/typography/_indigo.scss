@@ -34,7 +34,8 @@
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography($categories: (
-        text: 'body-2',));
+        text: 'body-2',
+    ));
     @include calendar-typography();
     @include card-typography($categories: (
         title: 'h6',
@@ -43,7 +44,7 @@
         content: 'body-2'
     ));
     @include checkbox-typography($categories: (
-        label: 'body-1',
+        label: 'body-2',
     ));
     @include chip-typography();
     @include column-actions-typography();
