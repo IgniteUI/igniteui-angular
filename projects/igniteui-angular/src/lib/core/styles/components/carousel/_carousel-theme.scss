@@ -20,10 +20,15 @@
 /// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
 /// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
 /// @param {Color} $button-disabled-arrow-color [null] - The previous/next buttons disabled arrow color.
+/// @param {Color} $button-border-color [null] - The previous/next buttons idle border color.
+/// @param {Color} $button-hover-border-color [null] - The previous/next buttons hover border color.
+/// @param {Color} $button-disabled-border-color [null] - The previous/next buttons disabled border color.
 /// @param {Color} $indicator-dot-color [null] - The idle indicator dot color.
+/// @param {Color} $indicator-hover-dot-color [null] - The hover indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
+/// @param {Color} $indicator-active-hover-dot-color [null] - The active indicator dot color on hover.
 /// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
 /// @param {List} $border-radius [null] - The border radius used for carousel component.
@@ -52,11 +57,16 @@
     $button-arrow-color: null,
     $button-hover-arrow-color: null,
     $button-disabled-arrow-color: null,
+    $button-border-color: null,
+    $button-hover-border-color: null,
+    $button-disabled-border-color: null,
 
     $indicator-dot-color: null,
+    $indicator-hover-dot-color: null,
     $indicator-border-color: null,
     $indicator-active-dot-color: null,
     $indicator-active-border-color: null,
+    $indicator-active-hover-dot-color: null,
 ){
     $name: 'igx-carousel';
     $carousel-schema: ();
@@ -103,11 +113,16 @@
         button-arrow-color: $button-arrow-color,
         button-hover-arrow-color: $button-hover-arrow-color,
         button-disabled-arrow-color: $button-disabled-arrow-color,
+        button-border-color: $button-border-color,
+        button-hover-border-color: $button-hover-border-color,
+        button-disabled-border-color: $button-disabled-border-color,
 
         indicator-dot-color: $indicator-dot-color,
+        indicator-hover-dot-color: $indicator-hover-dot-color,
         indicator-border-color: $indicator-border-color,
         indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
+        indicator-active-hover-dot-color: $indicator-active-hover-dot-color,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -131,6 +146,10 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
+    igx-carousel {
+        --theme: #{$variant};
+    }
+
     %igx-carousel-display {
         display: flex;
         position: relative;
@@ -148,10 +167,17 @@
         width: rem(46px);
         height: rem(46px);
         cursor: pointer;
+
         @if $not-bootstrap-theme {
             border-radius: border-radius(50%);
         } @else {
             border-radius: var-get($theme, 'border-radius');
+        }
+
+        @if $variant == 'indigo-design' {
+            width: rem(28px);
+            height: rem(28px);
+            border: rem(2px) solid var-get($theme, 'button-border-color');
         }
 
         outline-style: none;
@@ -168,6 +194,7 @@
     %igx-nav-arrow--disabled {
         background: var-get($theme, 'button-disabled-background');
         color: var-get($theme, 'button-disabled-arrow-color');
+        border-color: var-get($theme, 'button-disabled-border-color');
         pointer-events: none;
         box-shadow: none;
 
@@ -179,6 +206,7 @@
     %igx-nav-arrow--hover {
         color: var-get($theme, 'button-hover-arrow-color');
         background: var-get($theme, 'button-hover-background');
+        border-color: var-get($theme, 'button-hover-border-color');
     }
 
     %igx-carousel-arrow {
@@ -193,10 +221,26 @@
 
     %igx-carousel-arrow--next {
         inset-inline-end: 0;
+
+        @if $variant == 'indigo-design' {
+            %igx-nav-arrow {
+                &::after {
+                    transform: rotate(-135deg);
+                }
+            }
+        }
     }
 
     %igx-carousel-arrow--prev {
         inset-inline-start: 0;
+
+        @if $variant == 'indigo-design' {
+            %igx-nav-arrow {
+                &::after {
+                    transform: rotate(45deg);
+                }
+            }
+        }
     }
 
     %igx-carousel-arrow--next,
@@ -221,6 +265,11 @@
         [dir='rtl'] & {
             transform: translateX(50%);
         }
+
+        @if $variant == 'indigo-design' {
+            gap: rem(10px);
+            margin-block-start: 0;
+        }
     }
 
     %igx-carousel-indicators--bottom {
@@ -243,6 +292,10 @@
         justify-content: center;
         margin: $carousel-indicator-margin;
         cursor: pointer;
+
+        @if $variant == 'indigo-design' {
+            margin: 0;
+        }
     }
 
     %igx-nav-dot {
@@ -256,28 +309,51 @@
             border-color: var-get($theme, 'indicator-border-color');
             box-shadow: elevation(1);
             opacity: .7;
+        } @else {
+            width: rem(20px);
+            height: rem(20px);
         }
 
         border-radius: border-radius(50%);
         transition: all .15s $ease-out-quad;
 
         &::after {
-            @if $variant != 'indigo-design' {
-                @include animation('scale-out-center' .15s $ease-out-quad forwards);
-            }
             content: '';
             position: absolute;
-            @if $variant != 'indigo-design' {
-                inset: rem(1px);
-            } @else {
-                inset: 0;
-            }
             border-radius: inherit;
             background: var-get($theme, 'indicator-dot-color');
+
+            @if $variant != 'indigo-design' {
+                @include animation('scale-out-center' .15s $ease-out-quad forwards);
+                inset: rem(1px);
+            } @else {
+                width: rem(8px);
+                height: rem(8px);
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
         }
 
         &:hover {
             opacity: 1;
+
+            @if $variant == 'indigo-design' {
+                &::after {
+                    background: var-get($theme, 'indicator-hover-dot-color');
+                }
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: rem(20px);
+                    height: rem(20px);
+                    border: rem(2px) solid var-get($theme, 'indicator-hover-dot-color');
+                    inset-inline-start: 0;
+                    top: 0;
+                    border-radius: border-radius(50%);
+                }  
+            }
         }
     }
 
@@ -285,6 +361,17 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-active-border-color');
+        } @else {
+            &::before {
+                position: absolute;
+                content: '';
+                width: rem(20px);
+                height: rem(20px);
+                border: rem(2px) solid var-get($theme, 'indicator-active-dot-color');
+                inset-inline-start: 0;
+                top: 0;
+                border-radius: border-radius(50%);
+            }  
         }
 
         opacity: 1;
@@ -295,6 +382,19 @@
                 @include animation('scale-in-center' .15s $ease-out-quad forwards);
             }
         }
+
+        @if $variant == 'indigo-design' {
+            &:hover {
+                &::after {
+                    background: var-get($theme, 'indicator-active-hover-dot-color');
+                }
+
+                &::before {
+                    border-color: var-get($theme, 'indicator-active-hover-dot-color');
+                } 
+            }
+        }
+
     }
 
     %igx-carousel-slide-wrapper {
