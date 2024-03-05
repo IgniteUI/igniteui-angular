@@ -529,17 +529,6 @@
                     background: white;
                 }
             }
-
-            // @if $variant == 'indigo-design' {
-            //     &::after {
-            //         border-color: var-get($theme, 'error-color-hover');
-            //     }
-
-            //     &::before {
-            //         background: var-get($theme, 'error-color-hover');
-            //         border-color: var-get($theme, 'error-color-hover');
-            //     }
-            // }
         }
 
         @if $variant == 'fluent' {
