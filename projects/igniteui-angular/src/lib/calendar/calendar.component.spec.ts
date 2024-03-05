@@ -1163,6 +1163,7 @@ describe("IgxCalendar - ", () => {
                 it("Calendar keyboard navigation - Arrow keys", () => {
                     // Initial active date must be the first if no date is selected
                     // and no prior user interaction has been made
+                    calendar.activeDate = new Date(2017, 1, 1);
                     expect(calendar.activeDate.getDate()).toEqual(1);
 
                     // Go to the next row

@@ -921,6 +921,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		this.monthViews.forEach((m) => {
 			m.shiftKey = this.shiftKey;
             m.selectedDates = this.selectedDates;
+            m.cdr.markForCheck();
 		});
 
         if (this.selection !== 'single') {
@@ -1007,6 +1008,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		this.monthViews.forEach((m) => {
 			m.selectedDates = this.selectedDates;
 			m.rangeStarted = false;
+            m.cdr.markForCheck();
 		});
 
 		this._onChangeCallback(this.selectedDates);
@@ -1047,8 +1049,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 */
 	public ngOnDestroy(): void {
         this.keyboardNavigation.detachKeyboardHandlers();
-        this.wrapper.nativeElement.removeEventListener('focus', this.onWrapperFocus);
-        this.wrapper.nativeElement.removeEventListener('blur', this.onWrapperBlur);
+        this.wrapper?.nativeElement.removeEventListener('focus', this.onWrapperFocus);
+        this.wrapper?.nativeElement.removeEventListener('blur', this.onWrapperBlur);
 	}
 
 	/**

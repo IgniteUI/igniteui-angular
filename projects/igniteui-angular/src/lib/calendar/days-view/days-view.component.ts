@@ -191,7 +191,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         platform: PlatformUtil,
         @Inject(LOCALE_ID) _localeId: string,
         protected el: ElementRef,
-        protected cdr: ChangeDetectorRef,
+        public cdr: ChangeDetectorRef,
     ) {
         super(platform, _localeId);
     }

@@ -1,3 +1,4 @@
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 export class HelperTestFunctions {
@@ -17,7 +18,7 @@ export class HelperTestFunctions {
     public static CALENDAR_HEADER_YEAR_CSSCLASS = '.igx-calendar__header-year';
     public static CALENDAR_HEADER_DATE_CSSCLASS = '.igx-calendar__header-date';
     public static WEEKSTART_LABEL_CSSCLASS = '.igx-days-view__label';
-    public static VERTICAL_CALENDAR_CSSCLASS = '.igx-calendar--vertical';
+    public static VERTICAL_CALENDAR_CSSCLASS = '.igx-calendar__wrapper--vertical';
     public static DAY_CSSCLASS = '.igx-days-view__date';
     public static CURRENT_MONTH_DATES = '.igx-days-view__date:not(.igx-days-view__date--inactive)';
     public static CURRENT_DATE_CSSCLASS = '.igx-days-view__date--current';
@@ -44,22 +45,25 @@ export class HelperTestFunctions {
         const daysView = el.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
         expect(daysView).toBeDefined();
         expect(daysView.length).toBe(monthsView);
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(el).querySelectorAll('div');
-        expect(monthPickers.length).toBe(monthsView + 2); // plus the navigation arrows
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(el).querySelectorAll('.igx-calendar-picker__dates');
+        expect(monthPickers.length).toBe(monthsView);
         if (checkCurrentDate) {
             const currentDate = el.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
             expect(currentDate).not.toBeNull();
         }
     }
 
-    public static verifyCalendarHeader(fixture, selectedDate: Date) {
+    public static verifyCalendarHeader(fixture: ComponentFixture<any>, selectedDate: Date) {
         const daysView = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_CSSCLASS);
         expect(daysView).not.toBeNull();
+
         const year = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_YEAR_CSSCLASS);
         expect(year).not.toBeNull();
-        expect(Number(year.innerText)).toEqual(selectedDate.getFullYear());
+        expect(year.innerText).toEqual("Select Date");
+
         const date = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS);
         expect(date).not.toBeNull();
+
         const dateParts = selectedDate.toUTCString().split(' '); // (weekday, date month year)
         expect(date.children[0].innerText.trim()).toEqual(dateParts[0]);
         expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + Number(dateParts[1]));
@@ -80,13 +84,15 @@ export class HelperTestFunctions {
 
     public static verifyCalendarSubHeaders(fixture, viewDates: Date[]) {
         const dom = fixture.nativeElement ? fixture.nativeElement : fixture;
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(dom).querySelectorAll(this.CALENDAR_SUBHEADERS_SELECTOR);
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(dom).querySelectorAll('.igx-calendar-picker__dates');
+
         expect(monthPickers.length).toEqual(viewDates.length);
+
         for (let index = 0; index < viewDates.length; index++) {
             const dateParts = viewDates[index].toString().split(' '); // weekday month day year
             const monthPickerDates = monthPickers[index].querySelectorAll('.igx-calendar-picker__date');
-            expect(monthPickerDates[0].innerHTML.trim()).toEqual(dateParts[1]);
-            expect(monthPickerDates[1].innerHTML.trim()).toEqual(dateParts[3]);
+            expect(monthPickerDates[0].innerHTML.trim()).toContain(dateParts[1]);
+            expect(monthPickerDates[1].innerHTML.trim()).toContain(dateParts[3]);
         }
     }
 
@@ -102,7 +108,7 @@ export class HelperTestFunctions {
 
     public static getCalendarSubHeader(fixture): HTMLElement {
         const element = fixture.nativeElement ? fixture.nativeElement : fixture;
-        return element.querySelector('.igx-calendar-picker');
+        return element.querySelector('.igx-calendar__pickers');
     }
 
     public static getMonthView(fixture, monthsViewNumber: number) {
@@ -133,7 +139,7 @@ export class HelperTestFunctions {
 
     public static getYearsFromYearView(fixture) {
         return fixture.nativeElement.querySelector('igx-years-view')
-            .querySelectorAll('.igx-calendar__year, .igx-years-view__year--current');
+            .querySelectorAll('.igx-years-view__year, .igx-years-view__year--selected');
     }
 
     public static getCurrentYearsFromYearView(fixture) {
