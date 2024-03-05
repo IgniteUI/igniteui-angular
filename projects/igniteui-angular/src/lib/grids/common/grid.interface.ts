@@ -1388,6 +1388,10 @@ export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
 }
 
+export interface IgxGridPaginatorTemplateContext {
+    $implicit: GridType;
+}
+
 /**
  * An interface describing settings for row/column pinning position.
  */

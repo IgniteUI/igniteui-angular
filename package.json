@@ -128,7 +128,7 @@
     "ng-packagr": "^17.2.0",
     "postcss-scss": "^4.0.6",
     "postcss": "^8.4.31",
-    "puppeteer": "^22.0.0",
+    "puppeteer": "^22.1.0",
     "sass-embedded": "^1.69.1",
     "sass-true": "^6.0.1",
     "sassdoc-plugin-localization": "^1.4.3",
@@ -136,7 +136,7 @@
     "stylelint-scss": "^4.1.0",
     "stylelint": "^15.1.0",
     "ts-node": "^10.8.1",
-    "typedoc-plugin-localization": "^3.0.3",
+    "typedoc-plugin-localization": "^3.0.4",
     "typedoc": "^0.25.3",
     "typescript": "5.2.2"
   }

@@ -44,7 +44,7 @@ describe('IgxDropDown ', () => {
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
@@ -178,6 +178,13 @@ describe('IgxDropDown ', () => {
 
             dropdown.toggle();
             expect(dropdown.close).toHaveBeenCalledTimes(1);
+        });
+        it('should remove selection on destroy', () => {
+            const selectionService = new IgxSelectionAPIService();
+            const selectionDeleteSpy = spyOn(selectionService, 'delete');
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown.ngOnDestroy();
+            expect(selectionDeleteSpy).toHaveBeenCalled();
         });
     });
     describe('User interaction tests', () => {

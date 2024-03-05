@@ -23,7 +23,7 @@ export function DIR_DOCUMENT_FACTORY(): Document {
  *
  * @hidden
  */
-export const DIR_DOCUMENT = new InjectionToken<Document>('dir-doc', {
+export const DIR_DOCUMENT = /*@__PURE__*/new InjectionToken<Document>('dir-doc', {
     providedIn: 'root',
     factory: DIR_DOCUMENT_FACTORY
 });

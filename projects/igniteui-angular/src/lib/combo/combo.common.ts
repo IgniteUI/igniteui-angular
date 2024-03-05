@@ -47,7 +47,7 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
+export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
@@ -96,7 +96,7 @@ const ItemHeights = {
 };
 
 /** @hidden @internal */
-export enum DataTypes {
+export const enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
@@ -1009,7 +1009,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.clear(this.id);
+        this.selectionService.delete(this.id);
     }
 
     /**
