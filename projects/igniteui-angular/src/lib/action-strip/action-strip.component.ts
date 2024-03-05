@@ -90,7 +90,7 @@ export class IgxActionStripMenuItemDirective {
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
 
-    /* blazorCSSuppress */
+    /* blazorSuppress */
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
