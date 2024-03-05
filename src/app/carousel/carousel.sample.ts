@@ -19,7 +19,7 @@ export class CarouselSampleComponent {
     public slides = [];
     public interval = 3000;
     public pause = true;
-    public loop = true;
+    public loop = false;
 
     constructor() {
         this.addNewSlide();
