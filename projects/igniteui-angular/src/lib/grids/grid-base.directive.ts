@@ -40,7 +40,7 @@ import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy } from './grid.common';
 import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -178,7 +178,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-IgcTrialWatermark.register();
+/*@__PURE__*/IgcTrialWatermark.register();
 
 interface IMatchInfoCache {
     row: any;
@@ -3306,6 +3306,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public navigation: IgxGridNavigationService,
         /** @hidden @internal */
         public filteringService: IgxFilteringService,
+        protected textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         /** @hidden @internal */
         public summaryService: IgxGridSummaryService,
@@ -3960,6 +3961,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.transactionChange$.next();
         this.transactionChange$.complete();
         this._destroyed = true;
+
+        this.textHighlightService.destroyGroup(this.id);
 
         if (this._advancedFilteringOverlayId) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
@@ -5072,7 +5075,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.rebuildMatchCache();
 
             if (updateActiveInfo) {
-                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+                const activeInfo = this.textHighlightService.highlightGroupsMap.get(this.id);
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
@@ -7527,7 +7530,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.scrollTo(matchInfo.row, matchInfo.column);
             }
 
-            IgxTextHighlightDirective.setActiveHighlight(this.id, {
+            this.textHighlightService.setActiveHighlight(this.id, {
                 column: matchInfo.column,
                 row: matchInfo.row,
                 index: matchInfo.index,
@@ -7535,7 +7538,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         } else {
-            IgxTextHighlightDirective.clearActiveHighlight(this.id);
+            this.textHighlightService.clearActiveHighlight(this.id);
         }
 
         return this.lastSearchInfo.matchCount;

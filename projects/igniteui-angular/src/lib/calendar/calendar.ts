@@ -3,7 +3,7 @@ import { mkenum } from '../core/utils';
 /**
  * Sets the selection type - single, multi or range.
  */
-export const CalendarSelection = mkenum({
+export const CalendarSelection = /*@__PURE__*/mkenum({
     SINGLE: 'single',
     MULTI: 'multi',
     RANGE: 'range'
@@ -21,7 +21,7 @@ export interface IViewDateChangeEventArgs {
     currentValue: Date;
 }
 
-export const IgxCalendarView = mkenum({
+export const IgxCalendarView = /*@__PURE__*/mkenum({
     Month: 'month',
     Year: 'year',
     Decade: 'decade'
@@ -96,13 +96,13 @@ export interface IFormattingViews {
 }
 
 export enum WEEKDAYS {
-    SUNDAY = 0,
-    MONDAY = 1,
-    TUESDAY = 2,
-    WEDNESDAY = 3,
-    THURSDAY = 4,
-    FRIDAY = 5,
-    SATURDAY = 6
+    SUNDAY,
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY
 }
 
 export class Calendar {

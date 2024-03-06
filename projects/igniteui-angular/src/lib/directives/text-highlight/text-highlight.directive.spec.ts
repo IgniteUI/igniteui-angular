@@ -4,6 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxTextHighlightService } from './text-highlight.service';
 
 describe('IgxHighlight', () => {
     configureTestSuite();
@@ -321,6 +322,8 @@ class HighlightLoremIpsumComponent {
     // eslint-disable-next-line max-len
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
 
+    constructor(private highlightService: IgxTextHighlightService) { }
+
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean) {
         return this.highlight.highlight(text, caseSensitive, exactMatch);
     }
@@ -339,6 +342,6 @@ class HighlightLoremIpsumComponent {
             column: 0,
             index
         };
-        IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
+        this.highlightService.setActiveHighlight(this.groupName, activeHighlightInfo);
     }
 }

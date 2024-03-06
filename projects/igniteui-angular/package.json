@@ -69,8 +69,6 @@
         "tree"
     ],
     "dependencies": {
-        "@types/hammerjs": "^2.0.40",
-        "hammerjs": "^2.0.8",
         "fflate": "^0.8.1",
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^3.0.2",
@@ -83,15 +81,26 @@
         "@angular/common": "17",
         "@angular/core": "17",
         "@angular/animations": "17",
-        "@angular/forms": "17"
+        "@angular/forms": "17",
+        "hammerjs": "^2.0.8",
+        "@types/hammerjs": "^2.0.40"
+    },
+    "peerDependenciesMeta": {
+        "hammerjs": {
+            "optional": true
+        },
+        "@types/hammerjs": {
+            "optional": true
+        }
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~17.1.1316-rc.0"
+        "@igniteui/angular-schematics": "~17.1.1316"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",
         "packageGroup": [
             "igniteui-angular",
+            "igniteui-angular-extras",
             "igniteui-angular-i18n"
         ]
     },

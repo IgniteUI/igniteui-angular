@@ -41,13 +41,15 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripToken } from '../../action-strip/token';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,15 +91,47 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
-    public islandToolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+    protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
-    public islandPaginatorTemplate: TemplateRef<any>;
+    protected paginatorDirectiveTemplate: TemplateRef<any>;
+
+    /**
+     * Sets/Gets the toolbar template for each child grid created from this row island.
+    */
+    @Input()
+    public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
+        return this._toolbarTemplate || this.toolbarDirectiveTemplate;
+    }
+
+    public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
+        this._toolbarTemplate = template;
+    }
+
+    /**
+     * Sets/Gets the paginator template for each child grid created from this row island.
+    */
+    @Input()
+    public get paginatorTemplate(): TemplateRef<IgxGridPaginatorTemplateContext> {
+        return this._paginatorTemplate || this.paginatorDirectiveTemplate;
+    }
+
+    public set paginatorTemplate(template: TemplateRef<IgxGridPaginatorTemplateContext>) {
+        this._paginatorTemplate = template;
+    }
 
     /** @hidden @internal **/
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    public actionStrips: QueryList<IgxActionStripToken>;
+    protected actionStrips: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
@@ -150,6 +184,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;
+    private _toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+    private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
      * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
@@ -234,6 +270,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
@@ -256,6 +293,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             envInjector,
             navigation,
             filteringService,
+            textHighlightService,
             overlayService,
             summaryService,
             _displayDensityOptions,
@@ -330,12 +368,19 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
         // Create the child toolbar if the parent island has a toolbar definition
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
-            grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
-                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
-            grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
+            grid.rendered$.pipe(first(), filter(() => !!this.toolbarTemplate))
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.toolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
+            grid.rendered$.pipe(first(), filter(() => !!this.paginatorTemplate))
                 .subscribe(() => {
-                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());
-                    grid.paginatorOutlet.createEmbeddedView(this.islandPaginatorTemplate);
+                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxPaginatorComponent>) => {
+                        changes.forEach(p => {
+                            if (p.nativeElement.offsetParent?.id === grid.id) {
+                                // Optimize update only for those grids that have related changed paginator.
+                                grid.setUpPaginator()
+                            }
+                        });
+                    });
+                    grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate, { $implicit: grid });
                 });
         });
     }
@@ -354,7 +399,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override ngOnDestroy() {
-        // Override the base destroy because we don't have rendered anything to use removeEventListener on
+        // Override the base destroy because we have not rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;
@@ -380,6 +425,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override calculateGridHeight() { }
+
+    /**
+     * @hidden
+     */
+    public override calculateGridWidth() { }
 
     protected _childColumns = [];
 

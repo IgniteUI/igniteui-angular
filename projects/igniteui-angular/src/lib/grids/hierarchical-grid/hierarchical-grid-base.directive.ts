@@ -40,6 +40,7 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -156,6 +157,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
@@ -178,6 +180,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             envInjector,
             navigation,
             filteringService,
+            textHighlightService,
             overlayService,
             summaryService,
             _displayDensityOptions,

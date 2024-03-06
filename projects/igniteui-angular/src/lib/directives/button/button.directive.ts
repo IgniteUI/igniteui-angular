@@ -16,7 +16,7 @@ import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = mkenum({
+const IgxButtonType = /*@__PURE__*/mkenum({
     ...IgxBaseButtonType,
     FAB: 'fab'
 });

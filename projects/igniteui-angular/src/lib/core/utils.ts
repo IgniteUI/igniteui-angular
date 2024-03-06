@@ -71,7 +71,7 @@ export const copyDescriptors = (obj) => {
         return Object.create(
             Object.getPrototypeOf(obj),
             Object.getOwnPropertyDescriptors(obj)
-            );
+        );
     }
 }
 
