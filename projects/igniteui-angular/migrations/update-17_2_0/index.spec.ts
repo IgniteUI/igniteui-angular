@@ -212,4 +212,20 @@ describe(`Update to ${version}`, () => {
         );
 
     });
+
+    it('should replace calendar property `vertical` with `orientation`', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-calendar [vertical]="true"></igx-calendar>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-calendar orientation="vertical"></igx-calendar>
+        `
+        );
+    });
 });
