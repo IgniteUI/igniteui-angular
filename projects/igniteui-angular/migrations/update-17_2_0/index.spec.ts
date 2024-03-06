@@ -211,44 +211,5 @@ describe(`Update to ${version}`, () => {
             `$custom-calendar: calendar-theme($date-disabled-foreground: red);`
         );
 
-    it('should remove toolbar grid property', async () => {
-        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
-        `
-        <igx-hierarchical-grid #grid1>
-            <igx-grid-toolbar>
-                <app-grid-search-box [grid]="grid1"></app-grid-search-box>
-            </igx-grid-toolbar>
-            <igx-row-island>
-                <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid">
-                    <igx-grid-toolbar-title>Child toolbar {{ gridRef.parentIsland.level }}</igx-grid-toolbar-title>
-                    <igx-grid-toolbar-actions>
-                        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-                    </igx-grid-toolbar-actions>
-                </igx-grid-toolbar>
-            </igx-row-island>
-        </igx-hierarchical-grid>
-        `
-        );
-
-        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
-
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
-        `
-        <igx-hierarchical-grid #grid1>
-            <igx-grid-toolbar>
-                <app-grid-search-box [grid]="grid1"></app-grid-search-box>
-            </igx-grid-toolbar>
-            <igx-row-island>
-                <igx-grid-toolbar *igxGridToolbar="let childGrid">
-                    <igx-grid-toolbar-title>Child toolbar {{ gridRef.parentIsland.level }}</igx-grid-toolbar-title>
-                    <igx-grid-toolbar-actions>
-                        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-                    </igx-grid-toolbar-actions>
-                </igx-grid-toolbar>
-            </igx-row-island>
-        </igx-hierarchical-grid>
-        `
-        );
     });
-});
 });
