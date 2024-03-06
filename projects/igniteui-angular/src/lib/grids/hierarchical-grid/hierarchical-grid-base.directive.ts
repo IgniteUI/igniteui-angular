@@ -48,6 +48,10 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
