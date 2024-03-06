@@ -17,6 +17,7 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 /* blazorElement */
 /* omitModule */
 /* wcElementTag: igc-column-group */
+/* additionalIdentifier: Children.Field */
 /* jsonAPIManageCollectionInMarkup */
 /* blazorIndirectRender */
 /**

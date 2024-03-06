@@ -64,6 +64,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 /* blazorElement */
 /* contentParent: ColumnGroup */
 /* wcElementTag: igc-column */
+/* additionalIdentifier: Field */
 /* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column** -
@@ -700,6 +701,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /* blazorAlternateType: SummaryValueFormatterEventHandler */
     /* blazorOnlyScript */
+    /* forceCastDelegate */
     /**
      * The summaryFormatter is used to format the display of the column summaries.
      *
@@ -1560,7 +1562,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._visibleWhenCollapsed;
     }
 
-    /* mustSetInCodePlatforms: WebComponents;Blazor */
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * @remarks
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
