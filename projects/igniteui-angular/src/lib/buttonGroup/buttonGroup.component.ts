@@ -460,15 +460,20 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             });
         };
 
-        this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
-        this.templateButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
-        initButtons();
-
-        this._cdr.detectChanges();
-
         this.mutationObserver = this.setMutationsObserver();
 
-        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
+        this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
+            this.mutationObserver.disconnect();
+            initButtons();
+        });
+        this.templateButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
+            this.mutationObserver.disconnect();
+            initButtons();
+        });
+
+        initButtons();
+        this._cdr.detectChanges();
+        this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
     }
 
     /**
