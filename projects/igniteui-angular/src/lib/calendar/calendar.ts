@@ -10,7 +10,7 @@ export const CalendarSelection = /*@__PURE__*/mkenum({
 });
 export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
 
-export enum ScrollDirection {
+export const enum ScrollDirection {
     PREV = 'prev',
     NEXT = 'next',
     NONE = 'none'
@@ -35,7 +35,7 @@ export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarV
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
 
-export const range = (start = 0, stop, step = 1) => {
+export const range = (start = 0, stop: number, step = 1) => {
     const res = [];
     const cur = (stop === undefined) ? 0 : start;
     const max = (stop === undefined) ? start : stop;
