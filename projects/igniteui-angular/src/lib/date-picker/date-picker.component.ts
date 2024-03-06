@@ -911,13 +911,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // if (this._calendar?.daysView?.selectedDates) {
             //     return;
             // }
-    
+
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
                 // INFO: We need to set the active date to the target view date so there's something to
                 // navigate when the calendar is opened.
                 this._calendar.activeDate = this._targetViewDate;
-                this._calendar.wrapper.nativeElement.focus();
             }
         });
 

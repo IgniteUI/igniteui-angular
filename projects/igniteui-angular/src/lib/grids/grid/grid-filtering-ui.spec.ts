@@ -2006,11 +2006,15 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
+            // Select the first month
+            const firstMonth: HTMLElement = calendar.querySelectorAll('.igx-months-view__month')[0] as HTMLElement;
+            firstMonth.dispatchEvent(new Event('mousedown'));
+            tick(100);
             fix.detectChanges();
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
+            
             firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);

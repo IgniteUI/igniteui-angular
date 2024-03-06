@@ -323,9 +323,9 @@ describe('IgxDateRangePicker', () => {
             if (startIndex === -1) {
                 throw new Error('Start date not found in calendar. Aborting.');
             }
-            UIInteractions.simulateClickAndSelectEvent(calendarDays[startIndex]);
+            UIInteractions.simulateMouseDownEvent(calendarDays[startIndex].firstChild as HTMLElement);
             if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
-                UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex]);
+                UIInteractions.simulateMouseDownEvent(calendarDays[endIndex].firstChild as HTMLElement);
             }
             fixture.detectChanges();
             dateRange.close();
@@ -1165,9 +1165,8 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.dateRange.projectedInputs
-                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
-                    .toBeTruthy();
+                const input = fixture.componentInstance.dateRange.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
+                expect(input.isFocused).toBeTruthy();
             }));
 
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {

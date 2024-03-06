@@ -496,7 +496,6 @@ describe('IgxDatePicker', () => {
 
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(document.activeElement).toEqual(wrapper);
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
             }));
 
@@ -512,7 +511,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeFalsy();
 
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(document.activeElement).toEqual(wrapper);
                 expect(wrapper.getAttribute('aria-activedescendant')).not.toEqual('test');
             }));
         });
@@ -537,6 +535,7 @@ describe('IgxDatePicker', () => {
         let mockNgControl: any;
         let mockControlInstance: any;
         let renderer2: Renderer2;
+
         beforeEach(() => {
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             mockControlInstance = {
@@ -712,7 +711,7 @@ describe('IgxDatePicker', () => {
             datePicker?.ngOnDestroy();
             UIInteractions.clearOverlay();
         });
-        xdescribe('API tests', () => {
+        describe('API tests', () => {
             registerLocaleData(localeES);
             it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
