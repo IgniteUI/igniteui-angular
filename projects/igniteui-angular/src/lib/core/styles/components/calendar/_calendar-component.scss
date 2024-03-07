@@ -344,11 +344,43 @@
         }
 
         @include e(date, $mods: ('first', 'range-preview', 'special')) {
-            @extend %date-last-preview-first-special !optional;
+            @extend %date-first-preview-special !optional;
         }
 
         @include e(date, $mods: ('last', 'range-preview', 'special')) {
-            @extend %date-last-preview-last-special !optional;
+            @extend %date-last-preview-special !optional;
+        }
+
+        @include e(date, $mods: ('first', 'range-preview', 'special', 'current')) {
+            @extend %date-first-preview-special-current !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview', 'special', 'current')) {
+            @extend %date-last-preview-special-current !optional;
+        }
+
+        @include e(date, $mods: ('first', 'range-preview', 'special', 'active')) {
+            @extend %date-first-preview-special-active !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview', 'special', 'active')) {
+            @extend %date-last-preview-special-active !optional;
+        }
+
+        @include e(date, $mods: ('first', 'range-preview', 'special', 'active', 'selected')) {
+            @extend %date-first-preview-special-active-selected !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview', 'special', 'active', 'selected')) {
+            @extend %date-last-preview-special-active-selected !optional;
+        }
+
+        @include e(date, $mods: ('first', 'range-preview', 'special', 'active', 'current')) {
+            @extend %date-first-preview-special-active-current !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview', 'special', 'active', 'current')) {
+            @extend %date-last-preview-special-active-current !optional;
         }
 
         @include e(date, 'last') {

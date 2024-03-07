@@ -1785,17 +1785,6 @@
         }
     }
 
-    // TODO test all themes and see if this can be removed
-    //@if $variant != 'fluent' or $variant != 'indigo-design' {
-    //    %date-special-selected:not(%date-range) {
-    //        %date-inner {
-    //            &::after {
-    //                border-color: var-get($theme, 'date-selected-foreground');
-    //            }
-    //        }
-    //    }
-    //}
-
     %date-selected {
         %date-inner {
             color: var-get($theme, 'date-selected-foreground');
@@ -2383,7 +2372,7 @@
         }
     }
 
-    %date-last-preview-first-special {
+    %date-first-preview-special {
         %date-inner {
             &::after {
                 @if $variant != 'fluent' {
@@ -2396,6 +2385,16 @@
 
                 @if $variant == 'material' or $variant == 'bootstrap' {
                     border-color: var-get($theme, 'date-selected-foreground');
+                }
+            }
+
+            &:hover {
+                &::after {
+                    @if $variant == 'material' {
+                        width: $date-size;
+                        height: $date-size;
+                        border-color: var-get($theme, 'date-special-border-color');
+                    }
                 }
             }
         }
@@ -2418,7 +2417,7 @@
         }
     }
 
-    %date-last-preview-last-special {
+    %date-last-preview-special {
         %date-inner {
             &::after {
                 @if $variant != 'fluent' {
@@ -2433,64 +2432,70 @@
                     border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
+
+            &:hover {
+                &::after {
+                    @if $variant == 'material' {
+                        width: $date-size;
+                        height: $date-size;
+                        border-color: var-get($theme, 'date-special-border-color');
+                    }
+                }
+            }
         }
     }
-    // PREVIEW END
 
-    //%date-inactive-special,
-    //%date-inactive-selected,
-    //%date-inactive-current {
-    //    %date-inner {
-    //        background: transparent;
-    //        border-color: transparent;
-    //
-    //        &:hover {
-    //            color: var-get($theme, 'date-hover-foreground');
-    //            background: var-get($theme, 'date-hover-background');
-    //            border-color: var-get($theme, 'date-hover-border-color');
-    //        }
-    //    }
-    //}
+    %date-first-preview-special-current,
+    %date-last-preview-special-current {
+        %date-inner {
+            &:hover {
+                &::after {
+                    @if $variant == 'material' {
+                        width: $date-inner-size;
+                        height: $date-inner-size;
+                    }
+                }
+            }
+        }
+    }
 
-    //@if $variant == 'fluent' {
-    //    %date-inactive-selected:not(%date-range) {
-    //        %date-inner {
-    //            color: var-get($theme, 'inactive-color');
-    //        }
-    //    }
-    //
-    //    %date-inactive-current {
-    //        &date-range-preview,
-    //        &%date-range {
-    //            %date-inner {
-    //                color: var-get($theme, 'date-selected-range-foreground');
-    //            }
-    //        }
-    //
-    //        &%date-range {
-    //            %date-inner {
-    //                color: var-get($theme, 'date-selected-range-foreground');
-    //
-    //                // stylelint-disable-next-line
-    //                &:hover {
-    //                    color: var-get($theme, 'date-selected-range-hover-foreground');
-    //                }
-    //            }
-    //        }
-    //
-    //        %date-inner {
-    //            &::before {
-    //                display: none;
-    //            }
-    //        }
-    //    }
-    //}
+    %date-first-preview-special-active,
+    %date-last-preview-special-active {
+        %date-inner {
+            &::after {
+                @if $variant == 'material' {
+                    width: $date-size;
+                    height: $date-size;
+                    border-color: var-get($theme, 'date-special-border-color');
+                }
+            }
+        }
+    }
 
-    //%date-selected-current-range-inactive {
-    //    %date-inner {
-    //        border-color: transparent;
-    //    }
-    //}
+    %date-first-preview-special-active-selected,
+    %date-last-preview-special-active-selected {
+        %date-inner {
+            &::after {
+                @if $variant == 'material' {
+                    width: $date-inner-size;
+                    height: $date-inner-size;
+                    border-color: var-get($theme, 'date-selected-foreground');
+                }
+            }
+        }
+    }
+
+    %date-first-preview-special-active-current,
+    %date-last-preview-special-active-current {
+        %date-inner {
+            &::after {
+                @if $variant == 'material' {
+                    width: $date-inner-size;
+                    height: $date-inner-size;
+                }
+            }
+        }
+    }
 
     %date-disabled {
         pointer-events: none;
