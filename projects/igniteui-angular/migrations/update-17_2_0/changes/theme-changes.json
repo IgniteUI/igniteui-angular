@@ -21,13 +21,13 @@
     },
     {
       "name": "$picker-arrow-color",
-      "replaceWith": "$month-nav-arrow-color",
+      "replaceWith": "$navigation-color",
       "owner": "calendar-theme",
       "type":"property"
     },
     {
       "name": "$picker-arrow-hover-color",
-      "replaceWith": "$month-nav-arrow-hover-color",
+      "replaceWith": "$navigation-hover-color",
       "owner": "calendar-theme",
       "type":"property"
     },
@@ -62,14 +62,20 @@
       "type":"property"
     },
     {
+      "name": "$month-current-text-color",
+      "replaceWith": "$month-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
       "name": "$date-selected-text-color",
       "replaceWith": "$date-selected-foreground",
       "owner": "calendar-theme",
       "type":"property"
     },
     {
-      "name": "$date-current-text-color",
-      "replaceWith": "$date-current-foreground",
+      "name": "$date-current-bg-color",
+      "replaceWith": "$date-current-background",
       "owner": "calendar-theme",
       "type":"property"
     },
