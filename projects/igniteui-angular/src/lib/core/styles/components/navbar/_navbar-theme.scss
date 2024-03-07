@@ -144,7 +144,7 @@
             --component-size: 3;
 
             cursor: pointer;
-            color: var-get($theme, 'idle-icon-color');
+            $foreground: var-get($theme, 'idle-icon-color');
             transition: color .15s $out-quad;
 
             &:hover {
