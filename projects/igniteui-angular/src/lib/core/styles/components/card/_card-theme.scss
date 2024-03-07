@@ -220,19 +220,13 @@
             gap: rem(2px);
 
             %igx-card-header-subtitle {
-                @if $variant == 'indigo-design' {
-                    margin-block-end: rem(2px)
-                }
+                margin-block-end: rem(2px)
             }
         }
     }
 
     %igx-card-header-subtitle {
         color: var-get($theme, 'subtitle-text-color');
-    }
-
-    %igx-card-tgroup {
-        margin: $card-tgroup-margin;
     }
 
     %igx-card-content {
