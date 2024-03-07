@@ -69,20 +69,20 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    it('should rename the $picker-arrow-color property to the $month-nav-arrow-color', async () => {
+    it('should rename the $picker-arrow-color property to the $navigation-color', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
-            `$custom-calendar: calendar-theme($picker-arrow-color: red);`
+            `$custom-calendar: calendar-theme$picker-arrow-color: red);`
         );
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$custom-calendar: calendar-theme($month-nav-arrow-color: red);`
+            `$custom-calendar: calendar-theme($navigation-color: red);`
         );
     });
 
-    it('should rename the $picker-arrow-hover-color property to the $month-nav-arrow-hover-color', async () => {
+    it('should rename the $picker-arrow-hover-color property to the $navigation-hover-color', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
             `$custom-calendar: calendar-theme($picker-arrow-hover-color: red);`
@@ -91,7 +91,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$custom-calendar: calendar-theme($month-nav-arrow-hover-color: red);`
+            `$custom-calendar: calendar-theme($navigation-hover-color: red);`
         );
     });
 
@@ -209,6 +209,20 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-calendar: calendar-theme($date-disabled-foreground: red);`
+        );
+
+    });
+
+    it('should rename the $$month-current-text-color property to the $month-current-foreground', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($month-current-foreground: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($month-current-foreground: red);`
         );
 
     });
