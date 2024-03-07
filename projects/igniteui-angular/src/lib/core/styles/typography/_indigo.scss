@@ -57,6 +57,7 @@
     @include drop-down-typography();
     @include expansion-panel-typography($categories: (
         title: 'body-2',
+        body: 'body-2',
         description: 'body-2',
     ));
     @include excel-filtering-typography();
