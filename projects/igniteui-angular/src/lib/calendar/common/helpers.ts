@@ -9,7 +9,6 @@ import { DateRangeDescriptor, DateRangeType, WeekDays } from "./types";
 import { first, last, modulo } from "../../core/utils";
 
 /* Constants */
-
 export const MONTHS_PER_ROW = 3;
 export const YEARS_PER_ROW = 3;
 
@@ -30,7 +29,6 @@ interface IFormattedParts {
 }
 
 /* Converter functions */
-
 export function dateFromISOString(value: string | null) {
     return value ? new Date(value) : null;
 }
