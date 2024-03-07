@@ -179,7 +179,7 @@
 ///
 /// @param {Color} $date-range-border-color [null] - The border color of range selection.
 /// @param {Color} $date-range-preview-border-color [null] - The border color of the range selection in preview state(visible before selecting the end of the range).
-///
+/// @param {Color} $date-disabled-foreground [color: ('gray', 500)] - The foreground color of disabled dates.
 /// @param {Number} $size [null] - The size of the days, months, and years views.
 /// @param {List} $border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
@@ -356,6 +356,7 @@
     $date-special-range-foreground: null,
     $date-special-range-outline: null,
     $date-special-current-outline: null,
+    $date-disabled-foreground: null,
 
     $border-radius: null,
     $date-border-radius: null,
@@ -767,6 +768,7 @@
         date-selected-current-focus-border-color: $date-selected-current-focus-border-color,
         date-range-preview-border-color: $date-range-preview-border-color,
         date-range-border-color: $date-range-border-color,
+        date-disabled-foreground: $date-disabled-foreground,
         size: $size,
         inner-size: $inner-size,
         _meta: map.merge(if($meta, $meta, ()), (
@@ -2249,7 +2251,14 @@
         cursor: not-allowed;
 
         %date-inner {
+            color: var-get($theme, 'date-disabled-foreground');
             opacity: .38;
+        }
+    }
+
+    %date-disabled-special {
+        %date-inner {
+            color: var-get($theme, 'date-special-foreground');
         }
     }
 

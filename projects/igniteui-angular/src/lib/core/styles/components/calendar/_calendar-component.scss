@@ -368,6 +368,10 @@
             @extend %date-disabled !optional;
         }
 
+        @include e(date, 'disabled', 'special') {
+            @extend %date-disabled-special !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'inactive')) {
             @extend %date-disabled !optional;
         }
