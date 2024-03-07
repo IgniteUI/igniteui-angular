@@ -72,7 +72,7 @@ describe(`Update to ${version}`, () => {
     it('should rename the $picker-arrow-color property to the $navigation-color', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
-            `$custom-calendar: calendar-theme$picker-arrow-color: red);`
+            `$custom-calendar: calendar-theme($picker-arrow-color: red);`
         );
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
