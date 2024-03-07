@@ -173,6 +173,19 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should rename the $date-current-bg-color property to the $date-current-background', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($date-current-bg-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($date-current-background: red);`
+        );
+    });
+
     it('should rename the $date-current-text-color property to the $date-current-foreground', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,

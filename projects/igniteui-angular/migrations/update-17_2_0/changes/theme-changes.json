@@ -80,6 +80,12 @@
       "type":"property"
     },
     {
+      "name": "$date-current-text-color",
+      "replaceWith": "$date-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
       "name": "$date-special-text-color",
       "replaceWith": "$date-special-foreground",
       "owner": "calendar-theme",
