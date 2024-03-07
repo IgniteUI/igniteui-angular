@@ -26,7 +26,7 @@
 /// @param {Color} $fill-color-hover [null] - The checked dot color on hover.
 /// @param {Color} $fill-hover-border-color [null] - The checked border color on hover.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
-/// @param {Color} $focus-outline-color-checked [null] - The focus outline color when radio is filled.
+/// @param {Color} $focus-outline-color-filled [null] - The focus outline color when radio is filled.
 /// @param {Color} $error-color [null] - The label, border and dot color in invalid state.
 /// @param {Color} $error-color-hover [null] - The label, border and dot color in invalid state on hover.
 /// @param {Color} $focus-outline-color-error [null] - The focus outline color in invalid state.
@@ -47,7 +47,7 @@
     $fill-color: null,
     $fill-hover-border-color: null,
     $focus-outline-color: null,
-    $focus-outline-color-checked: null,
+    $focus-outline-color-filled: null,
     $disabled-color: null,
     $disabled-label-color: null,
     $disabled-fill-color: null,
@@ -82,7 +82,7 @@
         hover-color: $hover-color,
         fill-color-hover: $fill-color-hover,
         focus-outline-color: $focus-outline-color,
-        focus-outline-color-checked: $focus-outline-color-checked,
+        focus-outline-color-filled: $focus-outline-color-filled,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
         focus-outline-color-error: $focus-outline-color-error,

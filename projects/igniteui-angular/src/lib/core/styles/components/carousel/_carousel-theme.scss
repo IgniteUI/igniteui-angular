@@ -167,6 +167,15 @@
         width: rem(46px);
         height: rem(46px);
         cursor: pointer;
+        outline-style: none;
+        transition: all .15s ease-in-out;
+        color: var-get($theme, 'button-arrow-color');
+        background: var-get($theme, 'button-background');
+        box-shadow: var-get($theme, 'button-shadow');
+
+        igx-icon {
+            --component-size: 3;
+        }
 
         @if $not-bootstrap-theme {
             border-radius: border-radius(50%);
@@ -178,16 +187,10 @@
             width: rem(28px);
             height: rem(28px);
             border: rem(2px) solid var-get($theme, 'button-border-color');
-        }
 
-        outline-style: none;
-        transition: all .15s ease-in-out;
-        color: var-get($theme, 'button-arrow-color');
-        background: var-get($theme, 'button-background');
-        box-shadow: var-get($theme, 'button-shadow');
-
-        igx-icon {
-            --component-size: 3;
+            igx-icon {
+                --component-size: 1;
+            }
         }
     }
 
