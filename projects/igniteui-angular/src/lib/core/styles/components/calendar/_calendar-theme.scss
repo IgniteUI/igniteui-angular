@@ -181,7 +181,7 @@
 /// @param {Color} $date-range-preview-border-color [null] - The border color of the range selection in preview state(visible before selecting the end of the range).
 ///
 /// @param {Number} $size [null] - The size of the days, months, and years views.
-/// @param {List} $calendar-border-radius [null] - The border radius used for the calendar.
+/// @param {List} $border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
 /// @param {List} $month-year-border-radius [null] - The border radius used for the month/year in month/year view.
@@ -357,9 +357,9 @@
     $date-special-range-outline: null,
     $date-special-current-outline: null,
 
-    $calendar-border-radius: null,
-    $week-number-border-radius: null,
+    $border-radius: null,
     $date-border-radius: null,
+    $week-number-border-radius: null,
     $date-range-border-radius: null,
 
     $date-range-border-color: null,
@@ -748,7 +748,7 @@
         inactive-color: $inactive-color,
         weekday-color: $weekday-color,
 
-        calendar-border-radius: $calendar-border-radius,
+        border-radius: $border-radius,
         date-border-radius: $date-border-radius,
         date-range-border-radius: $date-range-border-radius,
         month-year-border-radius: $month-year-border-radius,
