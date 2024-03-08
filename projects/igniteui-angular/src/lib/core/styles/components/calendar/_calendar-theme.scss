@@ -162,7 +162,7 @@
 ///
 /// @param {Color} $date-special-current-border-color [null] - The outline color of a special current date.
 ///
-/// @param {Color} $calendar-border-color [null] - The calendar border color.
+/// @param {Color} $border-color [null] - The calendar border color.
 ///
 /// @param {Color} $date-border-color [null] - The border color of the date.
 /// @param {Color} $date-hover-border-color [null] - The :hover border color of the date.
@@ -201,7 +201,7 @@
 
     $content-background: null,
     $content-foreground: null,
-    $calendar-border-color: null,
+    $border-color: null,
 
     $header-background: null,
     $header-foreground: null,
@@ -596,7 +596,7 @@
 
         content-background: $content-background,
         content-foreground: $content-foreground,
-        calendar-border-color: $calendar-border-color,
+        border-color: $border-color,
 
         header-background: $header-background,
         header-foreground: $header-foreground,
@@ -2551,7 +2551,7 @@
 /// Uses the 'h4', 'subtitle-1' and 'body-1'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
 @mixin calendar-typography(
     $categories: (
         header-year: 'overline',
