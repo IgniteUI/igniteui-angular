@@ -1807,6 +1807,16 @@
         }
     }
 
+    %date-selected-special {
+        %date-inner {
+            &::after {
+                @if $variant == 'bootstrap' or $variant == 'material' {
+                    border-color: var-get($theme, 'date-selected-foreground');
+                }
+            }
+        }
+    }
+
     %date-selected-current {
         %date-inner {
             color: var-get($theme, 'date-selected-current-foreground');
