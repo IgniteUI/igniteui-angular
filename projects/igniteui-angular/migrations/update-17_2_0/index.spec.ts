@@ -85,13 +85,13 @@ describe(`Update to ${version}`, () => {
     it('should rename the $week-number-color property to the $week-number-foreground', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
-            `$custom-calendar: calendar-theme($week-number-foreground: red);`
+            `$custom-calendar: calendar-theme($week-number-color: red);`
         );
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$custom-calendar: calendar-theme($weekday-color: red);`
+            `$custom-calendar: calendar-theme($week-number-foreground: red);`
         );
     });
 
