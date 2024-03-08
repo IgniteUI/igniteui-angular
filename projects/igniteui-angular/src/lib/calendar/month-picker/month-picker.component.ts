@@ -117,37 +117,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     /**
      * @hidden
      */
-    @HostListener("keydown.home", ["$event"])
-    public onKeydownHome(event: KeyboardEvent) {
-        if (this.monthsView) {
-            this.monthsView.el.nativeElement.focus();
-            this.monthsView.onKeydownHome(event);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.end", ["$event"])
-    public onKeydownEnd(event: KeyboardEvent) {
-        if (this.monthsView) {
-            this.monthsView.el.nativeElement.focus();
-            this.monthsView.onKeydownEnd(event);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public viewRendered(event) {
-        if (event.fromState !== "void") {
-            this.activeViewChanged.emit(this.activeView);
-        }
-    }
-
-    /**
-     * @hidden
-     */
     public override activeViewDecadeKB(event: KeyboardEvent) {
         super.activeViewDecadeKB(event);
 

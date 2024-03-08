@@ -246,6 +246,28 @@ describe('IgxMonthPicker', () => {
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
     });
 
+    it('should navigate to the previous/next years.', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
+        yearBtn.nativeElement.click();
+        fixture.detectChanges();
+
+        const prev = dom.query(By.css('.igx-calendar-picker__prev'));
+        const next = dom.query(By.css('.igx-calendar-picker__next'));
+        next.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2034);
+
+        prev.nativeElement.click();
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2019);
+    });
+
     it('should navigate to the previous/next year via KB.', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
@@ -467,6 +489,56 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getMonth()).toEqual(8);
+    });
+
+    it('should update the view date and throw viewDateChanged event on page changes', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        const monthPicker = fixture.componentInstance.monthPicker;
+        spyOn(monthPicker.viewDateChanged, 'emit');
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const view = dom.query(By.css('igx-months-view'));
+        view.nativeElement.focus();
+        fixture.detectChanges();
+
+        // Change the current page to the previous year using keyboard navigation
+        UIInteractions.triggerEventHandlerKeyDown('Home', view);
+        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', view);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDateChanged.emit).toHaveBeenCalled();
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2018);
+
+        // Change the current page to the next year using keyboard
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', view);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDateChanged.emit).toHaveBeenCalled();
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2019);
+    });
+
+    it('should emit an activeViewChanged event whenever the view changes', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        const monthPicker = fixture.componentInstance.monthPicker;
+        spyOn(monthPicker.activeViewChanged, 'emit');
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
+
+        UIInteractions.simulateClickEvent(yearBtn.nativeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeViewChanged.emit).toHaveBeenCalled();
+        expect(monthPicker.activeView).toEqual('decade');
+
+        const selectedYear = dom.query(By.css('.igx-years-view__year--selected'));
+        UIInteractions.simulateMouseDownEvent(selectedYear.nativeElement.firstChild);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeViewChanged.emit).toHaveBeenCalled();
+        expect(monthPicker.activeView).toEqual('month');
     });
 });
 

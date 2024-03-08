@@ -19,4 +19,12 @@ export class MonthPickerSampleComponent {
     protected changeSelection() {
         this.date = new Date(2028, this.date.getMonth() + 1, this.date.getDate());
     }
+
+    protected onViewChanged(event) {
+        console.log(event);
+    }
+
+    protected onActiveViewChanged(event: string) {
+        console.log(event);
+    }
 }

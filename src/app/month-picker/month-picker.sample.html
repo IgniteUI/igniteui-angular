@@ -7,6 +7,8 @@
         <igx-month-picker
             [(ngModel)]="date"
             (selected)="onSelected($event)"
+            (viewDateChanged)="onViewChanged($event)"
+            (activeViewChanged)="onActiveViewChanged($event)"
         ></igx-month-picker>
     </igx-card>
 

@@ -124,6 +124,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @Input({ transform: booleanAttribute })
     public set hideLeadingDays(value: boolean) {
         this._hideLeadingDays = value;
+        this.cdr.detectChanges();
     }
 
     public get hideLeadingDays() {
@@ -133,6 +134,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @Input({ transform: booleanAttribute })
     public set hideTrailingDays(value: boolean) {
         this._hideTrailingDays = value;
+        this.cdr.detectChanges();
     }
 
     public get hideTrailingDays() {
