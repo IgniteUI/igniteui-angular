@@ -2585,7 +2585,7 @@
     }
 
     %date-inner {
-        @include type-style($content) {
+        @include type-style($content, false) {
             font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
             margin: 0;
         }
