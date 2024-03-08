@@ -32,7 +32,12 @@
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
-    @include calendar-typography();
+    @include calendar-typography($categories: (
+        header-year: 'body-2',
+        header-date: 'h5',
+        weekday-label: 'body-2',
+        picker-date: 'subtitle-2',
+    ));
     @include card-typography();
     @include checkbox-typography($categories: (
         label: 'body-1',

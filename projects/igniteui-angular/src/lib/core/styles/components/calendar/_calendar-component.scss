@@ -1,7 +1,6 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
@@ -59,6 +58,10 @@
         @include m(vertical) {
             @extend %calendar !optional;
             @extend %calendar-vertical !optional;
+
+            @include e(header) {
+                @extend %header-display-vertical !optional;
+            }
 
             @include e(header-date) {
                 @extend %header-date !optional;
@@ -123,16 +126,8 @@
             @extend %date-inactive !optional;
         }
 
-        @include e(date, $mods: ('inactive', 'selected')) {
-            @extend %date-inactive-selected !optional;
-        }
-
         @include e(date, $mods: ('inactive', 'special')) {
             @extend %date-inactive-special !optional;
-        }
-
-        @include e(date, $mods: ('inactive', 'current')) {
-            @extend %date-inactive-current !optional;
         }
 
         @include e(date, 'active') {
@@ -157,6 +152,7 @@
 
         @include e(date, $mods: ('selected', 'special', 'active', 'range')) {
             @extend %date-selected-special-range !optional;
+            @extend %date-selected-special-range-active !optional;
         }
 
         @include e(date, 'hidden') {
@@ -219,6 +215,10 @@
             @extend %date-range-selected-special-last !optional;
         }
 
+        @include e(date, $mods: ('selected', 'special', 'first', 'last')) {
+            @extend %date-selected-special-first-last !optional;
+        }
+
         @include e(date, $mods: ('range', 'selected', 'active')) {
             @extend %date-range-selected-active !optional;
         }
@@ -243,16 +243,32 @@
             @extend %date-selected-current-range-special !optional;
         }
 
+        @include e(date, $mods: ('range', 'selected', 'current', 'special', 'active')) {
+            @extend %date-selected-current-range-special-active !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
+            @extend %date-selected-current-range-first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'current', 'last')) {
+            @extend %date-selected-current-range-last !optional;
+        }
+
         @include e(date, $mods: ('range', 'selected', 'current', 'first', 'special')) {
             @extend %date-selected-current-range-special-first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'current', 'first', 'special', 'active')) {
+            @extend %date-selected-current-range-special-active-first !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'current', 'last', 'special')) {
             @extend %date-selected-current-range-special-last !optional;
         }
 
-        @include e(date, $mods: ('range', 'selected', 'current', 'inactive')) {
-            @extend %date-selected-current-range-inactive !optional;
+        @include e(date, $mods: ('range', 'selected', 'current', 'last', 'special', 'active')) {
+            @extend %date-selected-current-range-special-active-last !optional;
         }
 
         @include e(date, 'weekend') {
@@ -279,20 +295,12 @@
             @extend %date-selected-current-active !optional;
         }
 
-        @include e(date, $mods: ('current' 'special')) {
-            @extend %date-special-current !optional;
-        }
-
         @include e(date, 'special') {
             @extend %date-special !optional;
         }
 
         @include e(date, $mods: ('special', 'current')) {
             @extend %date-special-current !optional;
-        }
-
-        @include e(date, $mods: ('special', 'selected')) {
-            @extend %date-special-selected !optional;
         }
 
         @include e(date, $mods: ('special' 'active')) {
