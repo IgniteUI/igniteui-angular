@@ -2,6 +2,48 @@
   "$schema": "../../common/schema/theme-changes.schema.json",
   "changes": [
     {
+      "name": "$content-text-color",
+      "replaceWith": "$content-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-border-radius",
+      "replaceWith": "$month-year-border-radius",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-hover-current-text-color",
+      "replaceWith": "$month-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$label-color",
+      "replaceWith": "$weekday-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$week-number-color",
+      "replaceWith": "$week-number-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-disabled-background",
+      "remove": true,
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$border-width",
+      "remove": true,
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
       "name": "$header-text-color",
       "replaceWith": "$header-foreground",
       "owner": "calendar-theme",
@@ -10,6 +52,12 @@
     {
       "name": "$picker-text-color",
       "replaceWith": "$picker-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-background-color",
+      "replaceWith": "$picker-background",
       "owner": "calendar-theme",
       "type":"property"
     },

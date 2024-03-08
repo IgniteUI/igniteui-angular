@@ -30,6 +30,71 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-34';
 
+    it('should rename the $content-text-color property to the $content-text-color', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($content-text-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($content-foreground: red);`
+        );
+    });
+
+    it('should rename the $month-border-radius property to the $month-year-border-radius', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($month-border-radius: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($month-year-border-radius: red);`
+        );
+    });
+
+    it('should rename the $month-hover-current-text-color property to the $month-current-hover-foreground', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($month-hover-current-text-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($month-current-hover-foreground: red);`
+        );
+    });
+
+    it('should rename the $label-color property to the $weekday-color', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($label-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($weekday-color: red);`
+        );
+    });
+
+    it('should rename the $week-number-color property to the $week-number-foreground', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($week-number-foreground: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($weekday-color: red);`
+        );
+    });
+
     it('should rename the $header-text-color property to the $header-foreground', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
@@ -53,6 +118,19 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-calendar: calendar-theme($picker-foreground: red);`
+        );
+    });
+
+    it('should rename the $picker-background-color property to the $picker-background', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-calendar: calendar-theme($picker-background-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-calendar: calendar-theme($picker-background: red);`
         );
     });
 
@@ -226,7 +304,7 @@ describe(`Update to ${version}`, () => {
 
     });
 
-    it('should rename the $$month-current-text-color property to the $month-current-foreground', async () => {
+    it('should rename the $month-current-text-color property to the $month-current-foreground', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
             `$custom-calendar: calendar-theme($month-current-foreground: red);`
