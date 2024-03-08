@@ -2577,7 +2577,7 @@
         @include type-style($header-date);
     }
 
-    %picker-dates,
+    %views-navigation,
     %picker-date {
         @include type-style($picker-date) {
             margin: 0;
