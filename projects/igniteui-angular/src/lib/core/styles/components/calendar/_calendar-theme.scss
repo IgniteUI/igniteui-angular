@@ -899,6 +899,7 @@
         border-radius: var-get($theme, 'border-radius');
         border-color: var-get($theme, 'border-color');
 
+        %years-view,
         %months-view {
             border-start-start-radius: 0;
             border-start-end-radius: 0;
