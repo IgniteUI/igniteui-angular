@@ -193,7 +193,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         platform: PlatformUtil,
         @Inject(LOCALE_ID) _localeId: string,
         protected el: ElementRef,
-        public cdr: ChangeDetectorRef,
+        public override cdr: ChangeDetectorRef,
     ) {
         super(platform, _localeId);
     }
@@ -321,7 +321,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     protected handleDateClick(item: IgxDayItemComponent) {
         const date = item.date.native;
-        this.viewDate = date;
 
         if (item.isPreviousMonth) {
             this.pageChanged.emit({

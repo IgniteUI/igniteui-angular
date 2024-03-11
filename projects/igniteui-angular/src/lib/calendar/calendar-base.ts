@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -646,7 +646,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected platform: PlatformUtil,
         @Inject(LOCALE_ID)
         protected _localeId: string,
-        protected keyboardNavigation?: KeyboardNavigationService
+        protected keyboardNavigation?: KeyboardNavigationService,
+        protected cdr?: ChangeDetectorRef
     ) {
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();

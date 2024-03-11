@@ -319,7 +319,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
             fixture.detectChanges();
             expect(calendar.activeDate.getDate()).toEqual(22);
-            
+
             UIInteractions.triggerKeyDownEvtUponElem('End', document.activeElement);
             fixture.detectChanges();
             expect(calendar.activeDate.getDate()).toEqual(31);
@@ -330,7 +330,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
             fixture.detectChanges();
             expect(calendar.activeDate.getDate()).toEqual(1);
-            
+
             // Verify months are changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [nov2019, dec2019, jan2020]);
         });
@@ -668,7 +668,7 @@ describe('Multi-View Calendar - ', () => {
 
             const years = HelperTestFunctions.getYearsFromYearView(fixture);
             expect(years.length).toBe(15);
-            
+
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
             fixture.detectChanges();
             expect(document.activeElement.getAttribute('aria-activeDescendant')).toEqual(years[6].id);

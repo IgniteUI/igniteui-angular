@@ -2,6 +2,7 @@ import {
     Component,
     ViewChild,
     CUSTOM_ELEMENTS_SCHEMA,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { NgFor } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -60,6 +61,7 @@ defineComponents(IgcCalendarComponent);
     styleUrls: ["calendar.sample.scss"],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
@@ -216,7 +218,9 @@ export class CalendarSampleComponent  {
     }
 
     protected deselect() {
-        this.calendar.deselectDate();
+        this.calendar.deselectDate([
+            new Date(this._today.getFullYear(), this._today.getMonth(), 14),
+        ]);
     }
 
     protected changeLocale(locale: string) {
