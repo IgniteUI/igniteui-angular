@@ -19,10 +19,13 @@ export interface IGridStateInfo {
     sorting?: ISortingExpression[];
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
+    /* blazorPrimitiveValue */
     rowSelection?: any[];
     columnSelection?: string[];
+    /* blazorPrimitiveValue */
     rowPinning?: any[];
     pinningConfig?: IPinningConfig;
+    /* blazorPrimitiveValue */
     expansion?: any[];
     rowIslands?: IGridStateCollection[];
     id?: string;

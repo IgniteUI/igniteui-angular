@@ -24,6 +24,7 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
 }
 
 /* marshalByValue */
+/* jsonAPIPlainObject */
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**

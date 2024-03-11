@@ -32,10 +32,13 @@ export interface IGridState {
     sorting?: ISortingExpression[];
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
+    /* blazorPrimitiveValue */
     rowSelection?: any[];
     columnSelection?: string[];
+    /* blazorPrimitiveValue */
     rowPinning?: any[];
     pinningConfig?: IPinningConfig;
+    /* blazorPrimitiveValue */
     expansion?: any[];
     rowIslands?: IGridStateCollection[];
     id?: string;
@@ -68,6 +71,7 @@ export interface IGridStateOptions {
 }
 
 /* marshalByValue */
+/* tsPlainInterface */
 export interface IColumnState {
     pinned: boolean;
     sortable: boolean;
