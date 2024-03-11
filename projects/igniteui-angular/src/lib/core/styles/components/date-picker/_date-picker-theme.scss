@@ -13,8 +13,6 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The calendar theme used to style the component.
 @mixin date-picker($theme) {
-    @include css-vars($theme);
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
