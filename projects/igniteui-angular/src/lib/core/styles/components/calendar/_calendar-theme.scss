@@ -797,6 +797,12 @@
         indigo-design: var-get($theme, 'inner-size'),
     ), $variant);
 
+
+    $pad-block: pad-block(rem(16px));
+
+    $pad-inline: pad-inline(rem(12px));
+
+
     $border-size: map.get((
         material: rem(1px),
         fluent: rem(1px),
@@ -837,6 +843,7 @@
         %days-view,
         %months-view,
         %years-view {
+            padding-block-start: 0;
             border: none;
         }
     }
@@ -851,10 +858,11 @@
 
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
+        border-radius: var-get($theme, 'border-radius');
 
         @if not $bootstrap-theme {
-            padding-block-end: pad-block(rem(16px));
-            padding-inline: pad-inline(rem(12px));
+            padding-block: $pad-block;
+            padding-inline: $pad-inline;
         }
 
         &:focus,
@@ -869,15 +877,7 @@
             padding-block-end: pad-block(rem(4px));
         }
 
-        %months-view,
-        %years-view {
-            padding-block: pad-block(rem(16px));
-            padding-inline: pad-inline(rem(12px));
-        }
-    }
-
-    .igx-date-picker {
-        @if $bootstrap-theme {
+        .igx-date-picker {
             %calendar {
                 border: 0;
                 border-radius: 0;
@@ -896,6 +896,8 @@
     }
 
     %month-picker {
+        border-radius: var-get($theme, 'border-radius');
+
         %views-navigation {
             @if $bootstrap-theme {
                 border-bottom: rem(1px) solid var-get($theme, 'border-color');
@@ -979,6 +981,13 @@
         outline-style: none;
     }
 
+    %header-display + %calendar-wrapper {
+        %views-navigation {
+            border-start-start-radius: 0;
+            border-start-end-radius: 0;
+        }
+    }
+
     %calendar-wrapper--vertical {
         display: grid;
         grid-template-rows: repeat(calc(var(--calendar-months) * 2), auto);
@@ -1044,8 +1053,6 @@
         display: flex;
         gap: $date-view-row-gap;
         grid-row: var(--calendar-row-start);
-        border-end-start-radius: var-get($theme, 'border-radius');
-        border-end-end-radius: var-get($theme, 'border-radius');
 
         @if $variant == 'bootstrap' {
             %days-view-row {
