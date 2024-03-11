@@ -1,0 +1,138 @@
+@use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+// Typography
+$typeface: "'Public Sans', sans-serif";
+$h1: type-style(
+    $font-size: rem(38px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(46px),
+    $text-transform: none,
+    $margin-top: rem(8px),
+    $margin-bottom: rem(16px),
+);
+$h2: type-style(
+    $font-size: rem(30px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(38px),
+    $text-transform: none,
+    $margin-top: rem(8px),
+    $margin-bottom: rem(8px),
+);
+$h3: type-style(
+    $font-size: rem(24px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(32px),
+    $text-transform: none,
+    $margin-top: rem(8px),
+    $margin-bottom: 0,
+);
+$h4: type-style(
+    $font-size: rem(20px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(28px),
+    $text-transform: none,
+    $margin-top: rem(8px),
+    $margin-bottom: 0,
+);
+$h5: type-style(
+    $font-size: rem(16px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(24px),
+    $text-transform: none,
+    $margin-top: rem(8px),
+    $margin-bottom: 0,
+);
+$h6: type-style(
+    $font-size: rem(14px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: 0,
+    $line-height: rem(22px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0,
+);
+$body-1: type-style(
+    $font-size: rem(16px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(.5px),
+    $line-height: rem(28px),
+    $text-transform: none,
+    $margin-top: rem(28px),
+    $margin-bottom: rem(16),
+);
+$body-2: type-style(
+    $font-size: rem(14px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(.25px),
+    $line-height: rem(20px),
+    $text-transform: none,
+);
+$subtitle-1: type-style(
+    $font-size: rem(16px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(.15px),
+    $line-height: rem(24px),
+    $text-transform: none,
+);
+$subtitle-2: type-style(
+    $font-size: rem(14px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(.1px),
+    $line-height: rem(24px),
+    $text-transform: none,
+);
+$button: type-style(
+    $font-size: rem(14px),
+    $font-weight: 600,
+    $font-style: normal,
+    $letter-spacing: rem(.75px),
+    $line-height: rem(16px),
+    $text-transform: none,
+);
+$caption: type-style(
+    $font-size: rem(12px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(.4px),
+    $line-height: rem(16px),
+    $text-transform: none,
+);
+$overline: type-style(
+    $font-size: rem(10px),
+    $font-weight: 400,
+    $font-style: normal,
+    $letter-spacing: rem(1.5px),
+    $line-height: rem(16px),
+    $text-transform: uppercase,
+);
+$type-scale: type-scale(
+    $_theme: 'bootstrap',
+    $h1: $h1,
+    $h2: $h2,
+    $h3: $h3,
+    $h4: $h4,
+    $h5: $h5,
+    $h6: $h6,
+    $body-1: $body-1,
+    $body-2: $body-2,
+    $subtitle-1: $subtitle-1,
+    $subtitle-2: $subtitle-2,
+    $button: $button,
+    $caption: $caption,
+    $overline: $overline,
+);

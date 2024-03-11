@@ -158,6 +158,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown - Density'
         },
         {
+            link: '/dotmatics',
+            icon: 'horizontal_split',
+            name: 'Dotmatics sample'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
