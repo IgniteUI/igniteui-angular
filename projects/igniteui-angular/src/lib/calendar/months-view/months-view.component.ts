@@ -41,14 +41,6 @@ export class IgxMonthsViewComponent
     protected tagName = "igx-months-view";
 
     /**
-     * The default css class applied to the component.
-     *
-     * @hidden
-     */
-    @HostBinding("class.igx-calendar")
-    public styleClass = true;
-
-    /**
      * Sets/gets the `id` of the months view.
      * If not set, the `id` will have value `"igx-months-view-0"`.
      * ```html
