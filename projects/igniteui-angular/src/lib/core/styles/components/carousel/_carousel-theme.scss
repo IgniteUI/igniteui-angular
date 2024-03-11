@@ -355,7 +355,7 @@
                     inset-inline-start: 0;
                     top: 0;
                     border-radius: border-radius(50%);
-                }  
+                }
             }
         }
     }
@@ -374,7 +374,7 @@
                 inset-inline-start: 0;
                 top: 0;
                 border-radius: border-radius(50%);
-            }  
+            }
         }
 
         opacity: 1;
@@ -394,10 +394,9 @@
 
                 &::before {
                     border-color: var-get($theme, 'indicator-active-hover-dot-color');
-                } 
+                }
             }
         }
-
     }
 
     %igx-carousel-slide-wrapper {
