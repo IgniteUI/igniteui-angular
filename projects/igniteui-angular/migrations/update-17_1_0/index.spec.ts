@@ -153,4 +153,17 @@ describe(`Update to ${version}`, () => {
         `
         );
     });
+
+    it('should rename the expansion-panel $disabled-color property to $disabled-text-color', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-expansion-panel: expansion-panel-theme($disabled-color: color($default-palette, 'gray', 200));`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-expansion-panel: expansion-panel-theme($disabled-text-color: color($default-palette, 'gray', 200));`
+        );
+    });
 });
