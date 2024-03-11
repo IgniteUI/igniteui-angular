@@ -426,6 +426,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public override calculateGridHeight() { }
 
+    /**
+     * @hidden
+     */
+    public override calculateGridWidth() { }
+
     protected _childColumns = [];
 
     protected updateColumnList() {

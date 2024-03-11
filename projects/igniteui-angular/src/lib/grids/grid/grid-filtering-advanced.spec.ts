@@ -14,7 +14,8 @@ import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
-    IgxGridAdvancedFilteringBindingComponent
+    IgxGridAdvancedFilteringBindingComponent,
+    IgxGridAdvancedFilteringOverlaySettingsComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -3041,6 +3042,29 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
+        }));
+    });
+
+    describe('Overlay settings - ', () => {
+        it('Should respect the overlay settings set in the component.', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridAdvancedFilteringOverlaySettingsComponent);
+            const grid: IgxGridComponent = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Verify context menu is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            // Press 'Escape' on the context menu.
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', GridFunctions.getRowEditingOverlay(fix));
+            tick();
+            fix.detectChanges();
+
+            // Verify context menu is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         }));
     });
 });
