@@ -1,4 +1,4 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet, DOCUMENT } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewChecked,
@@ -24,11 +24,10 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { merge, Subject, Subscription } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, PlatformUtil, mkenum } from '../core/utils';
-
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
@@ -38,20 +37,10 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { ThemeService } from '../services/theme/theme.service';
 
 let NEXT_ID = 0;
 
-const CarouselTheme = mkenum({
-    Material: 'material',
-    Fluent: 'fluent',
-    Bootstrap: 'bootstrap',
-    IndigoDesign: 'indigo-design'
-});
-
-/**
- * Determines the carousel component theme.
- */
-export type IgxCarouselTheme = (typeof CarouselTheme)[keyof typeof CarouselTheme];
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
@@ -153,6 +142,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
+
+    /**
+     * Sets the theme of the carousel component.
+     */
+    @Input('theme')
+    public theme: string;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -408,9 +403,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
-    private _theme: IgxCarouselTheme;
-    private _theme$ = new Subject();
-    private _subscription: Subscription;
 
     /**
      * An accessor that sets the resource strings.
@@ -452,31 +444,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
 
         return this.isTypeIndigo ? this.indigoPrevButton : this.defaultPrevButton
-    }
-
-    /**
-     * Sets the theme of the carousel component.
-     * Allowed values of type IgxCarouselTheme.
-     * 
-     * ```typescript
-     * @ViewChild("carousel")
-     * public carousel: IgxCarouselComponent;
-     * 
-     * ngAfterViewInit() {
-     *  let carouselTheme = 'fluent';
-     * }
-     */
-    @Input()
-    public set theme(value: IgxCarouselTheme) {
-        this._theme = value;
-    }
-
-    /**
-     * Returns the theme of the carousel component.
-     * The returned value is of type IgxCarouselTheme.
-     */
-    public get theme(): IgxCarouselTheme {
-        return this._theme;
     }
 
     /** @hidden */
@@ -591,16 +558,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        @Inject(DOCUMENT)
-        private document: any
+        private themeService: ThemeService
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
-
-        this._subscription = this._theme$.asObservable().subscribe(value => {
-            this._theme = value as IgxCarouselTheme;
-            cdr.detectChanges();
-        });
+        this.theme = this.themeService.theme;
     }
 
 
@@ -746,7 +708,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     */
     @HostBinding('class.igx-carousel--indigo')
     public get isTypeIndigo() {
-        return this._theme === 'indigo-design';
+        return this.theme ? this.theme === 'indigo-design' : this.themeService.theme === 'indigo-design';
     }
 
     /** @hidden */
@@ -760,23 +722,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden @internal */
     public ngAfterViewChecked() {
-        if (!this._theme) {
-            const cssProp = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--theme')
-                .trim();
-
-            if (cssProp !== '') {
-                Promise.resolve().then(() => {
-                    this._theme$.next(cssProp);
-                });
-            }
-        }
+        this.themeService.getCssProp(this.element);
     }
 
     /** @hidden */
     public ngOnDestroy() {
-        this._subscription.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.complete();
         this.destroyed = true;
