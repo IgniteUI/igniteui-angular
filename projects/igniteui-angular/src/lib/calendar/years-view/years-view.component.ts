@@ -40,6 +40,7 @@ export class IgxYearsViewComponent
      * @internal
      */
     protected tagName = "igx-years-view";
+    #standalone = true;
 
     /**
      * The default css class applied to the component.
@@ -48,6 +49,19 @@ export class IgxYearsViewComponent
      */
     @HostBinding("class.igx-years-view")
     public readonly viewClass = true;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+	@HostBinding('class.igx-years-view--standalone')
+	public get standalone() {
+        return this.#standalone;
+    }
+
+	public set standalone(value: boolean) {
+        this.#standalone = value;
+    }
 
     /**
      * @hidden

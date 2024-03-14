@@ -49,6 +49,8 @@ let NEXT_ID = 0;
     imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+    #standalone = true;
+
     /**
      * Sets/gets the `id` of the days view.
      * If not set, the `id` will have value `"igx-days-view-0"`.
@@ -73,6 +75,16 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
 
 	@HostBinding('class.igx-days-view')
 	public readonly viewClass = true;
+
+    @Input()
+	@HostBinding('class.igx-days-view--standalone')
+	public get standalone() {
+        return this.#standalone;
+    }
+
+	public set standalone(value: boolean) {
+        this.#standalone = value;
+    }
 
     @HostBinding('attr.aria-activeDescendant')
     protected get activeDescendant() {

@@ -39,6 +39,7 @@ export class IgxMonthsViewComponent
     extends IgxCalendarViewDirective
     implements ControlValueAccessor {
     protected tagName = "igx-months-view";
+    #standalone = true;
 
     /**
      * Sets/gets the `id` of the months view.
@@ -63,6 +64,19 @@ export class IgxMonthsViewComponent
      */
     @HostBinding("class.igx-months-view")
     public readonly viewClass = true;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    @HostBinding("class.igx-months-view--standalone")
+    public get standalone() {
+        return this.#standalone;
+    }
+
+    public set standalone(value: boolean) {
+        this.#standalone = value;
+    }
 
     /**
      * Gets the month format option of the months view.
