@@ -170,10 +170,6 @@
             &:hover {
                 @extend %date-range-hover !optional;
             }
-
-            &:focus {
-                @extend %date-range-focus !optional;
-            }
         }
 
         @include e(date, 'range-preview') {
@@ -198,6 +194,10 @@
 
         @include e(date, $mods: ('range', 'selected', 'first')) {
             @extend %date-range-selected-first !optional;
+        }
+
+        @include e(date, $mods: ('first', 'last')) {
+            @extend %date-first-last !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
@@ -417,6 +417,14 @@
             @extend %date-disabled-special !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'selected')) {
+            @extend %date-disabled-selected !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'current')) {
+            @extend %date-disabled-current !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'inactive')) {
             @extend %date-disabled !optional;
         }
@@ -429,8 +437,12 @@
             @extend %years-grid !optional;
         }
 
+        @include e(year) {
+            @extend %view-item !optional;
+        }
+
         @include e(year, 'active') {
-            @extend %year-focus !optional;
+            @extend %year-active !optional;
         }
 
         @include e(year, 'current') {
@@ -442,7 +454,7 @@
         }
 
         @include e(year, $mods: ('current', 'active')) {
-            @extend %years-view__year-current-focus !optional;
+            @extend %years-view__year-current-active !optional;
         }
 
         @include e(year, 'selected') {
@@ -462,11 +474,11 @@
         }
 
         @include e(year, $mods: ('selected', 'active')) {
-            @extend %years-view__year-selected-focus !optional;
+            @extend %years-view__year-selected-active !optional;
         }
 
         @include e(year, $mods: ('selected', 'current', 'active')) {
-            @extend %years-view__year-selected-current-focus !optional;
+            @extend %years-view__year-selected-current-active !optional;
         }
 
         @include e(year-inner) {
@@ -485,8 +497,12 @@
             @extend %months-grid !optional;
         }
 
+        @include e(year) {
+            @extend %view-item !optional;
+        }
+
         @include e(month, 'active') {
-            @extend %month-focus !optional;
+            @extend %month-active !optional;
         }
 
         @include e(month, 'current') {
@@ -498,7 +514,7 @@
         }
 
         @include e(month, $mods: ('current', 'active')) {
-            @extend %months-view__month-current-focus !optional;
+            @extend %months-view__month-current-active !optional;
         }
 
         @include e(month, 'selected') {
@@ -510,7 +526,7 @@
         }
 
         @include e(month, $mods: ('selected', 'active')) {
-            @extend %months-view__month-selected-focus !optional;
+            @extend %months-view__month-selected-active !optional;
         }
 
         @include e(month, $mods: ('selected', 'current')) {
@@ -522,7 +538,7 @@
         }
 
         @include e(month, $mods: ('selected', 'current', 'active')) {
-            @extend %months-view__month-selected-current-focus !optional;
+            @extend %months-view__month-selected-current-active !optional;
         }
 
         @include e(month-inner) {

@@ -47,6 +47,10 @@
         igx-input-group {
             flex: 1;
         }
+
+        igx-calendar {
+            box-shadow: none;
+        }
     }
 
     igx-date-range-start,

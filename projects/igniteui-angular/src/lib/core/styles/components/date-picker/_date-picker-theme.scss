@@ -15,110 +15,21 @@
 @mixin date-picker($theme) {
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
+    $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
     %date-picker {
         // TODO move the shadow in the schemas
-        box-shadow: elevation(24);
+        box-shadow: $border-shadow, elevation(24),;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
 
-        %display {
-            background: var-get($theme, 'content-background');
-        }
-
-        %header-display {
-            background: var-get($theme, 'header-background');
-            color: var-get($theme, 'header-foreground');
-        }
-
-        %picker-arrow {
-            color: var-get($theme, 'navigation-color');
-
-            &:hover {
-                color: var-get($theme, 'navigation-hover-color');
-            }
-        }
-
-        %picker-date {
-            color: var-get($theme, 'picker-foreground');
-
-            &:hover {
-                color: var-get($theme, 'picker-hover-foreground');
-            }
-
-            &:focus {
-                color: var-get($theme, 'picker-focus-foreground');
-            }
-        }
-
-        %value {
-            color: var-get($theme, 'content-foreground');
-            min-width: 14.28%;
-
-            @if $bootstrap-theme {
-                &:hover,
-                &:focus {
-                    color: var-get($theme, 'date-selected-foreground');
-                }
-            }
-        }
-
-        %value--label {
-            color: var-get($theme, 'weekday-color');
-
-            &:hover,
-            &:focus {
-                color: var-get($theme, 'weekday-color');
-            }
-        }
-
-        %value--weekend {
-            color: var-get($theme, 'weekend-color');
-        }
-
-        %value--disabled {
-            color: var-get($theme, 'date-disabled-foreground');
-        }
-
-        %value--year-current {
-            color: var-get($theme, 'year-current-foreground');
-
-            @if $bootstrap-theme {
-                &:hover,
-                &:focus {
-                    color: var-get($theme, 'year-hover-foreground');
-                }
-            }
-        }
-
-        %value--year-hover {
-            color: var-get($theme, 'year-hover-foreground');
-        }
-
-        %value--month-focus,
-        %value--month-hover {
-            color: var-get($theme, 'month-hover-foreground');
-        }
-
-        %value--month-current {
-            color: var-get($theme, 'month-current-foreground');
-        }
-
-        %value--inactive {
-            color: var-get($theme, 'inactive-color');
-
-            &:hover {
-                color: var-get($theme, 'inactive-color');
-            }
-        }
-
-        %value--selected {
-            color: var-get($theme, 'date-selected-foreground');
-        }
-
-        %value--current {
-            color: var-get($theme, 'date-current-foreground');
+        igx-calendar,
+        %days-view,
+        %months-view,
+        %years-view {
+            box-shadow: none;
+            border-radius: 0;
         }
     }
 
@@ -130,7 +41,7 @@
         display: flex;
         flex: 1 0 0;
         flex-direction: column;
-        box-shadow: elevation(3);
+        box-shadow: $border-shadow, elevation(3);
     }
 
     %date-picker__buttons {
