@@ -830,7 +830,7 @@
     %parent-container {
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
-        box-shadow: 0 0 0 $border-size var-get($theme, 'border-color');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
         outline: none;
@@ -850,7 +850,7 @@
         %years-view {
             background: inherit;
             color: inherit;
-            border: none;
+            box-shadow: none;
         }
 
         %days-view,
@@ -871,10 +871,11 @@
 
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
-        border: $border-size solid var-get($theme, 'border-color');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
         padding-block: pad-block(rem(16px));
         padding-inline: pad-inline(rem(12px));
+        border-radius: var-get($theme, 'border-radius');
 
         &:focus,
         &:focus-within,
@@ -955,7 +956,6 @@
         } @else {
             min-width: rem(168px);
         }
-
 
         @if $variant == 'indigo-design' {
             &::after {
