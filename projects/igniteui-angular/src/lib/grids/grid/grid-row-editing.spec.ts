@@ -316,14 +316,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             // check event args
-            const rowAddArgs: any = {
+            const rowAddArgs: IGridEditEventArgs = {
                 cancel: false,
-                oldValue: { ProductID: generatedId},
+                oldValue: null,
                 rowData: { ProductID: generatedId, ProductName: "NewValue"},
-                data: { ProductID: generatedId, ProductName: "NewValue"},
+                newValue: { ProductID: generatedId, ProductName: "NewValue"},
                 rowID: generatedId,
                 primaryKey: generatedId,
-                rowKey: generatedId,
                 valid: true,
                 event: jasmine.anything() as any,
                 owner: grid,
