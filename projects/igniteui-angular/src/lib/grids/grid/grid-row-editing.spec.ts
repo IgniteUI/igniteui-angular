@@ -299,8 +299,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             // enter edit mode of cell
-            const cell = GridFunctions.getRowCells(fix, 0)[2];
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            const prodCell = GridFunctions.getRowCells(fix, 0)[2];
+            UIInteractions.simulateDoubleClickAndSelectEvent(prodCell);
             fix.detectChanges();
 
             // input value
