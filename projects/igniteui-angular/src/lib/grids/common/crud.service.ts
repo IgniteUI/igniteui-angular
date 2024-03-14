@@ -31,7 +31,6 @@ export class IgxEditRow {
         };
         if (includeNewValue) {
             args.newValue = this.newData ?? this.data;
-            args.rowData = this.newData ?? this.data;
         }
         return args;
     }
@@ -410,6 +409,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
             const rowAddArgs = this.row.createEditEventArgs(true, event);
+            rowAddArgs.rowData = this.row.newData ?? this.row.data;
             this.grid.rowAdd.emit(rowAddArgs);
             if (rowAddArgs.cancel) {
                 return rowAddArgs;
