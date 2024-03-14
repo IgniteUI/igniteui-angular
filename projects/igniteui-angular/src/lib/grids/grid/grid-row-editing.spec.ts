@@ -311,7 +311,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             // input value
-            const cellInput = (cell as any).nativeElement.querySelector('[igxinput]');
+            const cellInput = (prodCell as any).nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, "NewValue");
             fix.detectChanges();
 
