@@ -292,6 +292,44 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
+        it('Emit rowAdd event with proper arguments', () => {
+            spyOn(grid.rowAdd, 'emit').and.callThrough();
+            // start add row
+            grid.beginAddRowById(null);
+            fix.detectChanges();
+
+            // enter edit mode of cell
+            const cell = GridFunctions.getRowCells(fix, 0)[2];
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            // input value
+            const cellInput = (cell as any).nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, "NewValue");
+            fix.detectChanges();
+
+            // Done button click
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
+            fix.detectChanges();
+
+            // check event args
+            const rowAddArgs: any = {
+                cancel: false,
+                oldValue: { ProductID: -1},
+                rowData: { ProductID: -1, ProductName: "NewValue"},
+                data: { ProductID: -1, ProductName: "NewValue"},
+                rowID: -1,
+                primaryKey: -1,
+                rowKey: -1,
+                valid: true,
+                event: jasmine.anything() as any,
+                owner: grid,
+                isAddRow: true
+            }
+            expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
+        });
+
         it('Should display the banner below the edited row if it is not the last one', () => {
             cell.editMode = true;
 
