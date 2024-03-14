@@ -298,6 +298,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.beginAddRowById(null);
             fix.detectChanges();
 
+            const generatedId = grid.getRowByIndex(0).cells[0].value;
+
             // enter edit mode of cell
             const prodCell = GridFunctions.getRowCells(fix, 0)[2];
             UIInteractions.simulateDoubleClickAndSelectEvent(prodCell);
@@ -316,12 +318,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             // check event args
             const rowAddArgs: any = {
                 cancel: false,
-                oldValue: { ProductID: -1},
-                rowData: { ProductID: -1, ProductName: "NewValue"},
-                data: { ProductID: -1, ProductName: "NewValue"},
-                rowID: -1,
-                primaryKey: -1,
-                rowKey: -1,
+                oldValue: { ProductID: generatedId},
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                rowID: generatedId,
+                primaryKey: generatedId,
+                rowKey: generatedId,
                 valid: true,
                 event: jasmine.anything() as any,
                 owner: grid,
