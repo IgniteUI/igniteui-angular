@@ -839,6 +839,11 @@
     %calendar {
         @extend %parent-container;
 
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
@@ -917,12 +922,13 @@
         %months-view {
             color: inherit;
             background: inherit;
-            border: none;
+            box-shadow: none;
+            border-radius: 0;
         }
 
         %views-navigation {
             @if $bootstrap-theme {
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-block-end: rem(1px) solid var-get($theme, 'border-color');
             }
         }
     }
