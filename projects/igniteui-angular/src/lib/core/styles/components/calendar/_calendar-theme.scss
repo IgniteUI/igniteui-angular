@@ -63,8 +63,6 @@
 ///
 /// @param {Color} $month-hover-foreground [null] - The :hover foreground of the month inside the months view.
 /// @param {Color} $month-hover-background [null] - The :hover background of the month inside the months view.
-/// @param {Color} $month-focus-foreground [null] - The :focus foreground of the month inside the months view.
-/// @param {Color} $month-focus-background [null] - The :focus background of the month inside the months view.
 ///
 /// @param {Color} $month-current-foreground [null]- The foreground of the current month in month view.
 /// @param {Color} $month-current-background [null]- The background of the current month in month view.
@@ -230,8 +228,6 @@
 
     $month-hover-foreground: null,
     $month-hover-background: null,
-    $month-focus-foreground: null,
-    $month-focus-background: null,
 
     $month-current-foreground: null,
     $month-current-background: null,
@@ -601,9 +597,6 @@
         year-selected-current-background: $year-selected-current-background,
         year-selected-current-hover-foreground: $year-selected-current-hover-foreground,
         year-selected-current-hover-background: $year-selected-current-hover-background,
-
-        month-hover-foreground: $month-hover-foreground,
-        month-focus-foreground: $month-focus-foreground,
 
         navigation-color: $navigation-color,
         navigation-hover-color: $navigation-hover-color,
