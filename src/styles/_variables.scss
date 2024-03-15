@@ -1,16 +1,18 @@
+@use 'sass:map';
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
 $palette: $light-material-palette;
 $schema: $light-material-schema;
 $typeface: $material-typeface;
 $type-scale: $material-type-scale;
+$variant: map.get($schema, '_meta', 'variant');
 
 :root {
     --ig-theme: material;
 }
 
-$background-color: contrast-color($palette, 'gray', 900);
-$foreground-color: color($palette, 'gray', 900);
+$background-color: var(--ig-gray-900-contrast);
+$foreground-color: hsl(var(--ig-gray-900));
 
 // $handmade-palette: (
 //     primary: (

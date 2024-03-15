@@ -783,6 +783,10 @@
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
             }
+
+            @include e(upload-button) {
+                @extend %indigo-upload-button !optional;
+            }
         }
 
         @include mx(indigo, focused) {
@@ -792,18 +796,6 @@
 
             @include e(label) {
                 @extend %indigo-label--focused !optional;
-            }
-        }
-
-        @include mx(indigo, invalid) {
-            @include e(label) {
-                @extend %indigo-label--invalid !optional;
-            }
-        }
-
-        @include mx(indigo, valid) {
-            @include e(label) {
-                @extend %indigo-label--success !optional;
             }
         }
 
