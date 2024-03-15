@@ -28,7 +28,7 @@ describe(`Update to ${version}`, () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    const migrationName = 'migration-34';
+    const migrationName = 'migration-35';
 
     it('should rename the $content-text-color property to the $content-text-color', async () => {
         appTree.create(
