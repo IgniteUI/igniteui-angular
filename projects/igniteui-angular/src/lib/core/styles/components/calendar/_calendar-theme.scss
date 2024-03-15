@@ -363,7 +363,6 @@
             }
         }
     } @else {
-
         @if not($picker-background) and $content-background {
             @if meta.type-of($picker-background) == 'color' {
                 $picker-background: $content-background;
@@ -375,7 +374,20 @@
                 $weekday-color: text-contrast($content-background);
             }
         }
+
+        @if not($navigation-color) and $content-background {
+            @if meta.type-of($content-background) == 'color' {
+                $navigation-color: text-contrast($content-background);
+            }
+        }
+
+        @if not($navigation-focus-color) and $navigation-hover-color {
+            @if meta.type-of($navigation-hover-color) == 'color' {
+                $navigation-focus-color: $navigation-hover-color;
+            }
+        }
     }
+
 
     @if not($header-foreground) and $header-background {
         @if meta.type-of($header-background) == 'color' {
@@ -423,29 +435,9 @@
         }
     }
 
-    @if not($picker-background) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $picker-background: $content-background;
-        }
-    }
-
     @if not($weekend-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
             $weekend-color: rgba($content-foreground, .5);
-        }
-    }
-
-    @if $variant != 'bootstrap' {
-        @if not($navigation-color) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $navigation-color: text-contrast($content-background);
-            }
-        }
-
-        @if not($navigation-focus-color) and $navigation-hover-color {
-            @if meta.type-of($navigation-hover-color) == 'color' {
-                $navigation-focus-color: $navigation-hover-color;
-            }
         }
     }
 
@@ -776,9 +768,9 @@
     ), $variant);
 
     $date-view-row-gap: map.get((
-        material: rem(6px),
-        fluent: rem(6px),
-        bootstrap: rem(6px),
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(4px),
         indigo-design: rem(4px)
     ), $variant);
 
@@ -855,9 +847,28 @@
 
     @if $bootstrap-theme {
         %days-view {
-            padding-block-end: pad-block(rem(4px));
+            padding-block-end: pad-block(rem(8px));
             padding-block-start: 0;
             padding-inline: 0;
+        }
+
+        %days-view + %days-view {
+            %days-view-row {
+                padding-inline-start: rem(22px);
+            }
+        }
+
+        %days-view:first-child,
+        %days-view:nth-child(even) {
+            %days-view-row {
+                padding-inline-end: rem(22px);
+            }
+        }
+
+        %days-view:first-child:only-child {
+            %days-view-row {
+                padding-inline-end: rem(12px);
+            }
         }
 
         .igx-date-picker {
@@ -985,6 +996,10 @@
         display: flex;
         flex-grow: 1;
 
+        @if not $bootstrap-theme {
+            gap: rem(40px);
+        }
+
         > * {
             flex-grow: 1;
         }
@@ -993,6 +1008,10 @@
     %pickers-display--days {
         display: grid;
         grid-template-columns: repeat(var(--calendar-months), 1fr);
+
+        @if not $bootstrap-theme {
+            gap: rem(40px);
+        }
     }
 
     %pickers-display--vertical,
@@ -1112,6 +1131,10 @@
             @if $bootstrap-theme {
                 margin-bottom: 0;
             }
+        }
+
+        @if $bootstrap-theme {
+            padding-inline: pad-inline(rem(12px));
         }
     }
 
