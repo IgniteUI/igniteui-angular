@@ -5,7 +5,9 @@ import { InjectionToken } from '@angular/core';
 export interface GridSelectionRange {
     rowStart: number;
     rowEnd: number;
+    /* blazorAlternateType: double */
     columnStart: string | number;
+    /* blazorAlternateType: double */
     columnEnd: string | number;
 }
 

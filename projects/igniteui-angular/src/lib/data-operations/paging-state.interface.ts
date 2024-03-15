@@ -5,6 +5,7 @@ export enum PagingError {
 }
 
 /* marshalByValue */
+/* tsPlainInterface */
 export declare interface IPagingState {
     index: number;
     recordsPerPage: number;
