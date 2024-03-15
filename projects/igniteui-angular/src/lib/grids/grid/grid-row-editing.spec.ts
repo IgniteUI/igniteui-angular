@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditDoneEventArgs, IGridEditEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -297,6 +297,46 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith(rowEditArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+        });
+
+        it('Emit rowAdd event with proper arguments', () => {
+            spyOn(grid.rowAdd, 'emit').and.callThrough();
+            // start add row
+            grid.beginAddRowById(null);
+            fix.detectChanges();
+
+            const generatedId = grid.getRowByIndex(0).cells[0].value;
+
+            // enter edit mode of cell
+            const prodCell = GridFunctions.getRowCells(fix, 0)[2];
+            UIInteractions.simulateDoubleClickAndSelectEvent(prodCell);
+            fix.detectChanges();
+
+            // input value
+            const cellInput = (prodCell as any).nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, "NewValue");
+            fix.detectChanges();
+
+            // Done button click
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
+            fix.detectChanges();
+
+            // check event args
+            const rowAddArgs: IRowDataCancelableEventArgs = {
+                cancel: false,
+                oldValue: { ProductID: generatedId},
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                rowID: generatedId,
+                primaryKey: generatedId,
+                rowKey: generatedId,
+                valid: true,
+                event: jasmine.anything() as any,
+                owner: grid,
+                isAddRow: true
+            }
+            expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
