@@ -773,12 +773,7 @@
         indigo-design: rem(8px)
     ), $variant);
 
-    $date-view-row-gap: map.get((
-        material: rem(4px),
-        fluent: rem(4px),
-        bootstrap: rem(4px),
-        indigo-design: rem(4px)
-    ), $variant);
+    $date-view-row-gap: rem(4px);
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
@@ -803,8 +798,8 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: rem(290px);
         overflow: hidden;
+        min-width: min-content;
 
         %days-view,
         %months-view,
@@ -886,6 +881,19 @@
 
             %picker-arrow {
                 top: $cal-picker-padding;
+            }
+        }
+    }
+
+    @if not $bootstrap-theme {
+        %body-display:not(%body-display--vertical) {
+            %days-view + %days-view {
+                padding-inline-start: 0;
+            }
+
+            %days-view:first-child,
+            %days-view:nth-child(even) {
+                padding-inline-end: 0;
             }
         }
     }
@@ -982,12 +990,17 @@
     %calendar-wrapper--vertical {
         display: grid;
         grid-template-rows: repeat(calc(var(--calendar-months) * 2), auto);
+
+        %days-view {
+            grid-row: var(--calendar-row-start);
+        }
     }
 
     %pickers-display {
         display: flex;
         flex-grow: 1;
         grid-row: var(--calendar-row-start);
+        background: var-get($theme, 'picker-background');
 
         &:focus-visible {
             outline: none;
@@ -999,15 +1012,11 @@
     }
 
     %body-display {
-        display: flex;
-        flex-grow: 1;
+        display: grid;
+        grid-template-columns: repeat(var(--calendar-months), 1fr);
 
         @if not $bootstrap-theme {
-            gap: rem(40px);
-        }
-
-        > * {
-            flex-grow: 1;
+            column-gap: rem(40px);
         }
     }
 
@@ -1034,7 +1043,6 @@
         height: rem(56px);
         padding-inline: rem(16px);
         color: var-get($theme, 'picker-foreground');
-        background: var-get($theme, 'picker-background');
 
         &:focus,
         &:focus-within {
@@ -1047,9 +1055,7 @@
     }
 
     %days-view {
-        display: flex;
         gap: $date-view-row-gap;
-        grid-row: var(--calendar-row-start);
 
         @if $variant == 'bootstrap' {
             %days-view-row {
