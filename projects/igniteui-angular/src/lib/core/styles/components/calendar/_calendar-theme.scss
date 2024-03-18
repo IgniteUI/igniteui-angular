@@ -1043,6 +1043,7 @@
         height: rem(56px);
         padding-inline: rem(16px);
         color: var-get($theme, 'picker-foreground');
+        background: var-get($theme, 'picker-background');
 
         &:focus,
         &:focus-within {
