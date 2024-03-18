@@ -16,10 +16,6 @@
 
         @extend %igx-card-display !optional;
 
-        @include e(tgroup) {
-            @extend %igx-card-tgroup !optional;
-        }
-
         @include e(media) {
             @extend %igx-card-media !optional;
         }

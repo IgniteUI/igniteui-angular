@@ -16,7 +16,9 @@
 /// Checkbox Theme
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $label-color-hover [null]- The text color used for the label text on hover.
 /// @param {Color} $empty-color [null] - The unchecked border color.
+/// @param {Color} $empty-color-hover [null] - The unchecked border color on hover.
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
 /// @param {Color} $tick-color [null] - The checked mark color.
@@ -42,7 +44,9 @@
 
     $border-radius: null,
     $label-color: null,
+    $label-color-hover: null,
     $empty-color: null,
+    $empty-color-hover: null,
     $fill-color: null,
     $fill-color-hover: null,
     $tick-color: null,
@@ -70,7 +74,9 @@
     @return extend($theme, (
         name: $name,
         label-color: $label-color,
+        label-color-hover: $label-color-hover,
         empty-color: $empty-color,
+        empty-color-hover: $empty-color-hover,
         fill-color: $fill-color,
         fill-color-hover: $fill-color-hover,
         tick-color: $tick-color,
@@ -114,7 +120,7 @@
         material: $size,
         fluent: $size,
         bootstrap: $size-bs,
-        indigo-design: $size,
+        indigo-design: $size-bs,
     ), $variant);
 
     $border-width: map.get((
@@ -203,6 +209,12 @@
         overflow: hidden;
     }
 
+    %cbx-composite--hover {
+        @if $variant == 'indigo-design' {
+            border-color: var-get($theme, 'empty-color-hover');
+        }
+    }
+
     %cbx-composite--x {
         border-color: var-get($theme, 'fill-color');
         background: var-get($theme, 'fill-color');
@@ -213,7 +225,7 @@
     }
 
     %cbx-composite--invalid--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
+        @if $variant != 'bootstrap' {
             border-color: var-get($theme, 'error-color-hover');
         } @else {
             border-color: var-get($theme, 'error-color');
@@ -231,7 +243,7 @@
     }
 
     %cbx-composite--x--invalid--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
+        @if $variant != 'bootstrap' {
             border-color: var-get($theme, 'error-color-hover');
             background: var-get($theme, 'error-color-hover');
         } @else {
@@ -256,7 +268,8 @@
 
         @if $variant == 'indigo-design' {
             background: var-get($theme, 'disabled-indeterminate-color');
-            border-color: var-get($theme, 'disabled-indeterminate-color');
+            border-color: transparent;
+            stroke-opacity: 40%;
         }
 
         @if $bootstrap-theme {
@@ -338,7 +351,18 @@
 
     %igx-checkbox--indeterminate--invalid {
         %cbx-composite--x {
+            border-color: var-get($theme, 'error-color');
             background: var-get($theme, 'error-color');
+        }
+
+        %cbx-composite--x--hover {
+            @if $variant != 'bootstrap' {
+                border-color: var-get($theme, 'error-color-hover');
+                background: var-get($theme, 'error-color-hover');
+            } @else {
+                border-color: var-get($theme, 'error-color');
+                background: var-get($theme, 'error-color');
+            }
         }
 
         @if $variant == 'fluent' {
@@ -416,6 +440,12 @@
         }
     }
 
+    %cbx-label--hover {
+        @if $variant == 'indigo-design' {
+            color: var-get($theme, 'label-color-hover');
+        }
+    }
+
     %cbx-label-pos--before,
     %cbx-label-pos--after {
         &:empty {
@@ -433,7 +463,9 @@
     }
 
     %cbx-label--invalid {
-        color: var-get($theme, 'error-color');
+        @if $variant != 'indigo-design' {
+            color: var-get($theme, 'error-color');
+        }
     }
 
     %cbx-label--disabled {
@@ -522,7 +554,7 @@
 
         @if $variant == 'indigo-design' {
             %cbx-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
             }
         }
     }
