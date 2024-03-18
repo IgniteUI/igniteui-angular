@@ -1954,7 +1954,7 @@
     }
 
     %date-selected-current-range-special-active:not(%date-selected-current-range-special-first),
-    %date-selected-current-range-special-active:not(%date-selected-current-range-special-lasr) {
+    %date-selected-current-range-special-active:not(%date-selected-current-range-special-last) {
         @if $variant == 'indigo-design' {
             %date-inner {
                 background: var-get($theme, 'date-special-focus-background');
@@ -2374,6 +2374,7 @@
 
             &:hover {
                 &::after {
+                    /* stylelint-disable-next-line */
                     @if $variant == 'material' {
                         width: $date-size;
                         height: $date-size;
@@ -2427,6 +2428,7 @@
 
             &:hover {
                 &::after {
+                    /* stylelint-disable-next-line */
                     @if $variant == 'material' {
                         width: $date-size;
                         height: $date-size;
@@ -2442,6 +2444,7 @@
         %date-inner {
             &:hover {
                 &::after {
+                    /* stylelint-disable-next-line */
                     @if $variant == 'material' {
                         width: $date-inner-size;
                         height: $date-inner-size;
