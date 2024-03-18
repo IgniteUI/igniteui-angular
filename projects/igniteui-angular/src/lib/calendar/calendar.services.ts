@@ -13,15 +13,7 @@ export class KeyboardNavigationService {
         private ngZone: NgZone,
     ) {}
 
-    public registerKeyHandler(key: string, handler: (event: KeyboardEvent) => void) {
-        this.keyHandlers.set(key, handler);
-    }
-
-    public unregisterKeyHandler(key: string) {
-        this.keyHandlers.delete(key);
-    }
-
-    public attachKeyboardHandlers(elementRef: ElementRef) {
+    public attachKeyboardHandlers(elementRef: ElementRef, context: any) {
         this.detachKeyboardHandlers(); // Clean up any existing listeners
 
         this.ngZone.runOutsideAngular(() => {
@@ -29,7 +21,7 @@ export class KeyboardNavigationService {
                 elementRef.nativeElement,
                 'keydown',
                 (event: KeyboardEvent) => {
-                    const handler = this.keyHandlers.get(event.key);
+                    const handler = this.keyHandlers.get(event.key).bind(context);
 
                     if (handler) {
                         this.ngZone.run(() => handler(event));
@@ -37,6 +29,8 @@ export class KeyboardNavigationService {
                 }
             );
         });
+
+        return this;
     }
 
     public detachKeyboardHandlers() {
@@ -46,5 +40,15 @@ export class KeyboardNavigationService {
         }
 
         this.keyHandlers.clear();
+    }
+
+    public set(key : string, handler: (event: KeyboardEvent) => void) {
+        this.keyHandlers.set(key, handler);
+        return this;
+    }
+
+    public unset(key: string) {
+        this.keyHandlers.delete(key);
+        return this;
     }
 }

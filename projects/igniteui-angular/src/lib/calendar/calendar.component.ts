@@ -467,17 +467,18 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
 	public ngAfterViewInit() {
-        this.keyboardNavigation.attachKeyboardHandlers(this.wrapper);
-        this.keyboardNavigation.registerKeyHandler('ArrowUp', (event) => this.onArrowUp(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowDown', (event) => this.onArrowDown(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowLeft', (event) => this.onArrowLeft(event));
-        this.keyboardNavigation.registerKeyHandler('ArrowRight', (event) => this.onArrowRight(event));
-        this.keyboardNavigation.registerKeyHandler('Enter', (event) => this.onEnter(event));
-        this.keyboardNavigation.registerKeyHandler(' ', (event) => this.onEnter(event));
-        this.keyboardNavigation.registerKeyHandler('Home', (event) => this.onHome(event));
-        this.keyboardNavigation.registerKeyHandler('End', (event) => this.onEnd(event));
-        this.keyboardNavigation.registerKeyHandler('PageUp', (event) => this.handlePageUpDown(event, -1));
-        this.keyboardNavigation.registerKeyHandler('PageDown', (event) => this.handlePageUpDown(event, 1));
+        this.keyboardNavigation
+            .attachKeyboardHandlers(this.wrapper, this)
+            .set("ArrowUp", this.onArrowUp)
+            .set("ArrowDown", this.onArrowDown)
+            .set("ArrowLeft", this.onArrowLeft)
+            .set("ArrowRight", this.onArrowRight)
+            .set("Enter", this.onEnter)
+            .set(" ", this.onEnter)
+            .set("Home", this.onHome)
+            .set("End", this.onEnd)
+            .set("PageUp", this.handlePageUp)
+            .set("PageDown", this.handlePageDown);
 
         this.wrapper.nativeElement.addEventListener('focus', (event: FocusEvent) => this.onWrapperFocus(event));
         this.wrapper.nativeElement.addEventListener('blur', (event: FocusEvent) => this.onWrapperBlur(event));
@@ -560,6 +561,14 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         } else {
             this.changePage(false, dir);
         }
+    }
+
+    private handlePageUp(event: KeyboardEvent) {
+        this.handlePageUpDown(event, -1);
+    }
+
+    private handlePageDown(event: KeyboardEvent) {
+        this.handlePageUpDown(event, 1);
     }
 
     private onArrowUp(event: KeyboardEvent) {
