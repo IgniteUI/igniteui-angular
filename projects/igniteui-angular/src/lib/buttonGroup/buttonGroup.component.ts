@@ -467,10 +467,12 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
             this.mutationObserver.disconnect();
             initButtons();
+            this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
         });
         this.templateButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
             this.mutationObserver.disconnect();
             initButtons();
+            this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
         });
 
         initButtons();
