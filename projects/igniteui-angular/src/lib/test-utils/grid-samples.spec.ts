@@ -14,7 +14,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
+import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -41,6 +41,7 @@ import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibl
 import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/public_api';
 import { IgxGridComponent } from '../grids/grid/public_api';
+import { OverlaySettings } from '../services/public_api';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '',
@@ -1170,6 +1171,35 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
     }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-advanced-filtering
+                #filtering
+                [overlaySettings]="filteringOverlaySettings">
+            </igx-grid-toolbar-advanced-filtering>
+        </igx-grid-toolbar>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent]
+})
+export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public hidingOverlaySettings: OverlaySettings = {};
+    public override data = SampleTestData.excelFilteringData();
+
+    public filteringOverlaySettings: OverlaySettings = {
+        closeOnEscape: false
+    };
 }
 
 @Component({

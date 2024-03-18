@@ -1111,7 +1111,7 @@ export interface GridType extends IGridDataBindable {
     getVisibleContentHeight(): number;
     getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
-    openAdvancedFilteringDialog(): void;
+    openAdvancedFilteringDialog(overlaySettings?: OverlaySettings): void;
     showSnackbarFor(index: number): void;
     getColumnByName(name: string): any;
     getColumnByVisibleIndex(index: number): ColumnType;
