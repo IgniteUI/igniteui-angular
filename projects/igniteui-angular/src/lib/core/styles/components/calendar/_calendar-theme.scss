@@ -1016,7 +1016,7 @@
         grid-template-columns: repeat(var(--calendar-months), 1fr);
 
         @if not $bootstrap-theme {
-            column-gap: rem(40px);
+            column-gap: rem(44px);
         }
     }
 
