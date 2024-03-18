@@ -21,10 +21,10 @@ export class KeyboardNavigationService {
                 elementRef.nativeElement,
                 'keydown',
                 (event: KeyboardEvent) => {
-                    const handler = this.keyHandlers.get(event.key).bind(context);
+                    const handler = this.keyHandlers.get(event.key);
 
                     if (handler) {
-                        this.ngZone.run(() => handler(event));
+                        this.ngZone.run(handler.bind(context, event));
                     }
                 }
             );
