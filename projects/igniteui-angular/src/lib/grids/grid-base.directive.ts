@@ -5286,7 +5286,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
@@ -7452,6 +7452,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
+    }
+
+    protected get renderedActualRowHeight() {
+        let border = 1;
+        if (this.rowList.toArray().length > 0) {
+            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            border = Math.ceil(parseFloat(rowStyles.borderBottomWidth));
+        }
+        return this.rowHeight + border;
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
