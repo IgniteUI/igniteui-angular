@@ -64,9 +64,9 @@ export interface OutOfViewPort {
 
 export interface PositionSettings {
     /**
-     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
-     *
      * Attaching target for the component to show
+     *
+     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
      */
     target?: Point | HTMLElement;
     /** Direction in which the component should show */

@@ -200,7 +200,7 @@ export interface ColumnType extends FieldType {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
-    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
+    /** @deprecated in version 13.1.0. Use the Grid's `moving` property instead. */
     movable: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -878,7 +878,9 @@ export interface IgxCellTemplateContext {
 /* jsonAPIComplexObject */
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /** @deprecated Use `key` */
+    /**
+     * @deprecated Use the `key` property instead.
+     */
     rowID: any;
     key: any;
     selected: boolean;
