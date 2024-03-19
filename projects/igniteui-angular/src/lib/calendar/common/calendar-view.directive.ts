@@ -12,7 +12,6 @@ import {
     Inject,
 } from "@angular/core";
 import { noop } from "rxjs";
-import { Calendar } from "../calendar";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import {
     IGX_CALENDAR_VIEW_ITEM,
@@ -21,7 +20,7 @@ import {
 } from "../calendar.directives";
 import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
-import { DateRangeType } from "igniteui-webcomponents";
+import { DateRangeType } from "../../core/dates";
 
 export enum Direction {
     NEXT = 1,
@@ -43,12 +42,6 @@ export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
     standalone: true,
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
-    /**
-     * @hidden
-     * @internal
-     */
-    protected abstract tagName: string;
-
     @HostBinding("attr.role")
     @Input()
     public role = 'grid';
@@ -123,11 +116,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
 
     /**
      * @hidden
-     */
-    protected _calendarModel: Calendar;
-
-    /**
-     * @hidden
      * @internal
      */
     private _date = new Date();
@@ -190,7 +178,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
 
     constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
         this.initFormatter();
-        this._calendarModel = new Calendar();
     }
 
     /**
@@ -198,7 +185,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event: KeyboardEvent) {
-        console.log(event);
         this.navigateTo(event, Direction.NEXT, 3);
     }
 

@@ -32,14 +32,7 @@ import { calendarRange } from "../common/helpers";
     standalone: true,
     imports: [NgFor, IgxCalendarYearDirective],
 })
-export class IgxYearsViewComponent
-    extends IgxCalendarViewDirective
-    implements ControlValueAccessor {
-    /**
-     * @hidden
-     * @internal
-     */
-    protected tagName = "igx-years-view";
+export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
 
     /**

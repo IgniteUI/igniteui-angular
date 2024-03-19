@@ -623,14 +623,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         // Value is provided, but there's no initial selection, set the initial selection to the passed value
         if (!this.initialSelection) {
-            // If the value is an array find the earliest date and use it in consequent operations
-            // otherwise the value is not an array, use it directly
-            const valueDate = Array.isArray(value) ? Math.min.apply(null, value) : value;
-            // getDateOnly always returns a valid date, if valueDate is a valid date it sets the
-            // the date part of the date to the first day of the month, otherwise it will set it to the first
-            // day in the current month
-            // we then set the viewDate to the generated date value in the previous step
-            this.viewDate = new Date(valueDate);
+            this.viewDate = Array.isArray(value) ? new Date(Math.min(...value as unknown as number[])) : value;
         }
 
         // we then call selectDate with either a single date or an array of dates

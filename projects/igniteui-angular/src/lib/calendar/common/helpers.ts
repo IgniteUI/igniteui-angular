@@ -5,46 +5,13 @@ import {
     daysInWeek,
     toCalendarDay,
 } from "./model";
-import { DateRangeDescriptor, DateRangeType, WeekDays } from "./types";
+import { DateRangeDescriptor, DateRangeType } from "./types";
 import { first, last, modulo } from "../../core/utils";
-
-/* Constants */
-export const MONTHS_PER_ROW = 3;
-export const YEARS_PER_ROW = 3;
-
-const DaysMap = {
-    sunday: 0,
-    monday: 1,
-    tuesday: 2,
-    wednesday: 3,
-    thursday: 4,
-    friday: 5,
-    saturday: 6,
-};
 
 interface IFormattedParts {
     value: string;
     literal: string;
     combined: string;
-}
-
-/* Converter functions */
-export function dateFromISOString(value: string | null) {
-    return value ? new Date(value) : null;
-}
-
-export function datesFromISOStrings(value: string | null) {
-    return value
-        ? value
-              .split(",")
-              .map((v) => v.trim())
-              .filter((v) => v)
-              .map((v) => new Date(v))
-        : null;
-}
-
-export function getWeekDayNumber(value: WeekDays) {
-    return DaysMap[value];
 }
 
 export function areSameMonth(

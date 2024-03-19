@@ -35,10 +35,7 @@ let NEXT_ID = 0;
     standalone: true,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe],
 })
-export class IgxMonthsViewComponent
-    extends IgxCalendarViewDirective
-    implements ControlValueAccessor {
-    protected tagName = "igx-months-view";
+export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
 
     /**
