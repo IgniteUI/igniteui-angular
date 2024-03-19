@@ -1,12 +1,18 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { Component, ViewChild, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    Output, EventEmitter,
+    HostListener,
+    HostBinding
+} from '@angular/core';
 import { IBaseEventArgs } from '../../core/utils';
 import { PickerInteractionMode } from '../../date-common/types';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
-import {IgxDividerDirective} from "igniteui-angular";
+import { IgxDividerDirective } from "../../directives/divider/divider.directive";
 
 /** @hidden */
 @Component({
@@ -14,7 +20,14 @@ import {IgxDividerDirective} from "igniteui-angular";
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxCalendarComponent, NgTemplateOutlet, IgxDividerDirective]
+    imports: [
+        NgIf,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxCalendarComponent,
+        NgTemplateOutlet,
+        IgxDividerDirective,
+    ]
 })
 export class IgxCalendarContainerComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
