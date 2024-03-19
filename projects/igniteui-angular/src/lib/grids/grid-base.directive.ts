@@ -3223,7 +3223,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get template(): TemplateRef<any> {
+    public get template(): TemplateRef<IgxGridTemplateContext> {
         if (this.isLoading && (this.hasZeroResultFilter || this.hasNoData)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
