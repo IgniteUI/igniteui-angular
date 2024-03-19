@@ -1190,7 +1190,7 @@ describe('IgxDatePicker', () => {
                 expect(mockCalendar.formatOptions).toEqual((datePicker as any).pickerCalendarFormat);
                 expect(mockCalendar.formatViews).toEqual((datePicker as any).pickerFormatViews);
                 expect(mockCalendar.locale).toEqual(datePicker.locale);
-                expect(mockCalendar.vertical).toEqual(datePicker.headerOrientation === PickerHeaderOrientation.Vertical);
+                expect(mockCalendar.headerOrientation).toEqual(datePicker.headerOrientation);
                 expect(mockCalendar.weekStart).toEqual(datePicker.weekStart);
                 expect(mockCalendar.specialDates).toEqual(datePicker.specialDates);
                 expect(mockCalendar.hideOutsideDays).toEqual(datePicker.hideOutsideDays);
