@@ -964,16 +964,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        const isVertical = this.headerOrientation === PickerHeaderOrientation.Vertical;
         this._calendar.hasHeader = !this.isDropdown;
         this._calendar.formatOptions = this.pickerCalendarFormat;
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
-        this._calendar.vertical = isVertical;
         this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
         this._calendar.showWeekNumbers = this.showWeekNumbers;
@@ -987,7 +986,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.setCalendarViewDate();
 
         componentInstance.mode = this.mode;
-        componentInstance.vertical = isVertical;
+        // componentInstance.headerOrientation = this.headerOrientation;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;

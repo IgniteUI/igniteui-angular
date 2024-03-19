@@ -6,6 +6,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import {IgxDividerDirective} from "igniteui-angular";
 
 /** @hidden */
 @Component({
@@ -13,7 +14,7 @@ import { IgxCalendarComponent } from '../../calendar/calendar.component';
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxCalendarComponent, NgTemplateOutlet]
+    imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxCalendarComponent, NgTemplateOutlet, IgxDividerDirective]
 })
 export class IgxCalendarContainerComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
@@ -31,11 +32,6 @@ export class IgxCalendarContainerComponent {
     @HostBinding('class.igx-date-picker--dropdown')
     public get dropdownCSS(): boolean {
         return this.mode === PickerInteractionMode.DropDown;
-    }
-
-    @HostBinding('class.igx-date-picker--vertical')
-    public get verticalCSS(): boolean {
-        return this.vertical && this.mode === PickerInteractionMode.Dialog;
     }
 
     public vertical = false;
