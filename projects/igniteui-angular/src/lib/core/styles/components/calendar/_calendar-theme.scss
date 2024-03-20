@@ -173,6 +173,8 @@
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
 /// @param {List} $month-year-border-radius [null] - The border radius used for the month/year in month/year view.
 ///
+/// @param {Color} $actions-divider-color [null] - The border color used for the date-picker actions divider.
+///
 /// @requires $light-material-schema
 ///
 /// @example scss Change the header and content background colors
@@ -329,15 +331,16 @@
     $date-special-current-border-color: null,
     $date-disabled-foreground: null,
 
+    $date-range-border-color: null,
+    $date-range-preview-border-color: null,
+
     $border-radius: null,
     $date-border-radius: null,
     $week-number-border-radius: null,
     $date-range-border-radius: null,
-
-    $date-range-border-color: null,
-    $date-range-preview-border-color: null,
-
     $month-year-border-radius: null,
+
+    $actions-divider-color: null,
 
     $size: null,
     $inner-size: null,
@@ -387,7 +390,6 @@
             }
         }
     }
-
 
     @if not($header-foreground) and $header-background {
         @if meta.type-of($header-background) == 'color' {
@@ -709,6 +711,7 @@
         date-range-preview-border-color: $date-range-preview-border-color,
         date-range-border-color: $date-range-border-color,
         date-disabled-foreground: $date-disabled-foreground,
+        actions-divider-color: $actions-divider-color,
         size: $size,
         inner-size: $inner-size,
         _meta: map.merge(if($meta, $meta, ()), (
@@ -956,7 +959,7 @@
             &::after {
                 inset-inline-start: calc(100% - #{rem(1px)});
                 inset-block-start: 0;
-                height: calc(100% - #{rem(1px)});
+                height: 100%;
                 width: rem(1px);
             }
         }
@@ -1137,13 +1140,22 @@
         display: flex;
         justify-content: space-between;
 
+        @if $variant != 'indigo-design' {
+            &:nth-child(2) {
+                %date-inner-week-number {
+                    border-start-start-radius: var-get($theme, 'week-number-border-radius');
+                    border-start-end-radius: var-get($theme, 'week-number-border-radius');
+                }
+            }
+        }
+
         &:last-of-type {
             %date-inner-week-number {
-                border-bottom-left-radius: var-get($theme, 'week-number-border-radius');
-                border-bottom-right-radius: var-get($theme, 'week-number-border-radius');
+                border-end-start-radius: var-get($theme, 'week-number-border-radius');
+                border-end-end-radius: var-get($theme, 'week-number-border-radius');
 
                 &::before {
-                    height: auto;
+                    display: none;
                 }
             }
 
@@ -1197,10 +1209,10 @@
             content: '';
             position: absolute;
             background: var-get($theme, 'week-number-background');
-            border-inline: rem(1px) solid var-get($theme, 'week-number-background');
+            //border-inline: rem(1px) solid var-get($theme, 'week-number-background');
             inset-inline-start: rem(-1px);
             inset-block-start: 100%;
-            height: 100%;
+            height: calc($date-size  / 2);
             width: $date-size;
         }
     }
@@ -1220,9 +1232,9 @@
                 color: var-get($theme, 'weekday-color');
             } @else {
                 color: var-get($theme, 'week-number-foreground');
+                background: var-get($theme, 'week-number-background');
             }
 
-            background: var-get($theme, 'week-number-background');
             border-top-left-radius: var-get($theme, 'week-number-border-radius');
             border-top-right-radius: var-get($theme, 'week-number-border-radius');
             border: rem(1px) solid transparent;
@@ -1252,6 +1264,7 @@
             }
         }
     }
+
 
     %years-grid,
     %months-grid {
@@ -1517,9 +1530,9 @@
 
         &%label-week-number,
         &%date-week-number {
-            @if not $bootstrap-theme {
-                margin-inline-end: rem(4px);
-            }
+            margin-inline-end: rem(4px);
+            justify-content: flex-start;
+            width: var-get($theme, 'size');
         }
 
         %date-inner-week-number {

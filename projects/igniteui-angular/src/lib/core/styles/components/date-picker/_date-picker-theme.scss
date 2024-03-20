@@ -31,6 +31,10 @@
             box-shadow: none;
             border-radius: 0;
         }
+
+        igx-divider {
+            --color: #{var-get($theme, 'actions-divider-color')};
+        }
     }
 
     %date-picker--vertical {
