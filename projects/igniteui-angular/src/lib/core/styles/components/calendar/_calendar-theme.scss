@@ -866,6 +866,8 @@
             }
         }
 
+
+        %days-view:last-child,
         %days-view:first-child:only-child {
             %days-view-row {
                 padding-inline-end: rem(12px);
@@ -894,6 +896,10 @@
             %days-view:first-child,
             %days-view:nth-child(even) {
                 padding-inline-end: 0;
+            }
+
+            %days-view:last-child {
+                padding-inline-end: pad-block(rem(12px));
             }
         }
     }
@@ -1508,6 +1514,13 @@
         width: 100%;
         border-block-start: rem(1px) solid transparent;
         border-block-end: rem(1px) solid transparent;
+
+        &%label-week-number,
+        &%date-week-number {
+            @if not $bootstrap-theme {
+                margin-inline-end: rem(4px);
+            }
+        }
 
         %date-inner-week-number {
             border-radius: 0;
