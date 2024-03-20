@@ -60,10 +60,10 @@
         </igc-grid-toolbar>
         <igc-grid-state id="state"></igc-grid-state>
 
-        <igc-column-group header="Test">
+
         <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false"></igc-column>
-        <igc-column field="ProductName" header="Product Name" sortable="true"></igc-column>
-        </igc-column-group>
+        <igc-column field="ProductName" header="Product Name" sortable="true" width="auto"></igc-column>
+
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
         <igc-column field="InStock" header="In Stock" data-type="number"></igc-column>
 
@@ -119,10 +119,10 @@
   <script src="assets/data/nw-products.js"></script>
   <script type="module">
     import { html } from "/lit-html.js";
-    import { defineComponents, IgcSelectComponent, IgcComboComponent } from "igniteui-webcomponents";
+    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent } from "igniteui-webcomponents";
     // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
-    defineComponents(IgcSelectComponent, IgcComboComponent);
+    defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent);
     const grid1 = document.getElementById('grid1');
     const grid2 = document.getElementById('grid2');
     grid1.data = northwindProducts;
@@ -142,6 +142,12 @@
         grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
         grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
         grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.implicit}`;
+        grid1.querySelector('igc-column[field="ProductName"]').bodyTemplate = (context) => {
+            return html`
+            <igc-button size="large" class="button">
+            ${context.implicit}
+            </igc-button>`;
+        };
         grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
             html`<div class="range-wrapper">
                 <input autofocus id="range" type="range"
