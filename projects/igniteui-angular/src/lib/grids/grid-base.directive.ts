@@ -3074,6 +3074,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _defaultExpandState = false;
     protected _headerFeaturesWidth = NaN;
     protected _init = true;
+    protected _firstAutoResize = true;
+    protected _autoSizeColumnsNotify = new EventEmitter<boolean>();
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
     protected _transactions: TransactionService<Transaction, State>;
@@ -3673,6 +3675,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.summaryService.summaryHeight = 0;
             }
             this.notifyChanges(true);
+        });
+
+        // notifier for column autosize requests
+        this._autoSizeColumnsNotify.pipe(
+            throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
+            destructor
+        )
+        .subscribe(() => {
+            this.autoSizeColumnsInView();
+            this._firstAutoResize = false;
         });
     }
 
@@ -6757,7 +6769,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
-                this.autoSizeColumnsInView();
+                this._autoSizeColumnsNotify.next();
             });
         }
     }
@@ -7231,7 +7243,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     emptyCellWithPaddingOnly = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
                 }
 
-                if (max === 0 || (max <= emptyCellWithPaddingOnly && !this._init)) {
+                if (max === 0 || (max <= emptyCellWithPaddingOnly && this._firstAutoResize)) {
                     // cells not in DOM yet or content not fully initialized.
                     continue;
                 }
