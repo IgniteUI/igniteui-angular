@@ -51,6 +51,8 @@ export interface IGridDataBindable {
     get filteredData(): any[];
 }
 
+/* marshalByValue */
+/* jsonAPIComplexObject */
 export interface CellType {
     value: any;
     editValue: any;
@@ -58,8 +60,10 @@ export interface CellType {
     active: boolean;
     editable: boolean;
     editMode: boolean;
+    /* blazorSuppress */
     nativeElement?: HTMLElement;
     column: ColumnType;
+    /* blazorCSSuppress */
     row: RowType;
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
@@ -72,12 +76,17 @@ export interface CellType {
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
+    /* blazorSuppress */
     activate?(event: FocusEvent | KeyboardEvent): void;
+    /* blazorSuppress */
     onDoubleClick?(event: MouseEvent): void;
+    /* blazorSuppress */
     onClick?(event: MouseEvent): void;
 }
 
+/* jsonAPIComplexObject */
 export interface HeaderType {
+    /* blazorSuppress */
     nativeElement: HTMLElement;
     column: ColumnType;
     density: DisplayDensity;
@@ -88,12 +97,16 @@ export interface HeaderType {
     sortDirection: SortingDirection;
 }
 
+/* jsonAPIComplexValue */
+/* marshalByValue */
 export interface RowType {
+    /* blazorSuppress */
     nativeElement?: HTMLElement;
     index: number;
     viewIndex: number;
     isGroupByRow?: boolean;
     isSummaryRow?: boolean;
+    /* blazorSuppress */
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
@@ -101,6 +114,7 @@ export interface RowType {
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
+    /* blazorSuppress */
     virtDirRow?: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     pinned?: boolean;
     selected?: boolean;
@@ -108,14 +122,18 @@ export interface RowType {
     deleted?: boolean;
     inEditMode?: boolean;
     children?: RowType[];
+    /* blazorAlternateName: RowParent */
     parent?: RowType;
     hasChildren?: boolean;
     treeRow?: ITreeGridRecord;
     addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
+    /* blazorSuppress */
     onRowSelectorClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     onClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     beginAddRow?: () => void;
     update?: (value: any) => void;
     delete?: () => any;
@@ -137,6 +155,7 @@ export interface FieldType {
     label?: string;
     field: string;
     header?: string;
+    /* alternateType: GridColumnDataType */
     dataType: DataType;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
@@ -181,7 +200,7 @@ export interface ColumnType extends FieldType {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
-    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
+    /** @deprecated in version 13.1.0. Use the Grid's `moving` property instead. */
     movable: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -212,6 +231,7 @@ export interface ColumnType extends FieldType {
     columnLayoutChild: boolean;
     width: string;
     topLevelParent?: ColumnType;
+    /* alternateName: parentColumn */
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
@@ -220,6 +240,7 @@ export interface ColumnType extends FieldType {
     isFirstPinned: boolean;
     applySelectableClass: boolean;
     title: string;
+    /* blazorSuppress */
     groupingComparer: (a: any, b: any) => number;
 
     filterCellTemplate: TemplateRef<any>;
@@ -236,6 +257,7 @@ export interface ColumnType extends FieldType {
 }
 
 export interface IGridFormGroupCreatedEventArgs {
+    /* blazorSuppress */
     formGroup: FormGroup,
     owner: GridType
 }
@@ -286,6 +308,7 @@ export interface GridServiceType {
     addRowToData(rowData: any, parentID?: any): void;
     deleteRowById(id: any): any;
     get_row_expansion_state(id: any): boolean;
+    /* blazorSuppress */
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[];
 
@@ -300,6 +323,7 @@ export interface GridServiceType {
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
+    /* blazorSuppress */
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
 
     expand_path_to_record?(record: ITreeGridRecord): void;
@@ -323,6 +347,7 @@ export interface GridType extends IGridDataBindable {
     displayDensity: DisplayDensity;
     locale: string;
     resourceStrings: IGridResourceStrings;
+    /* blazorSuppress */
     nativeElement: HTMLElement;
     rowEditable: boolean;
     rootSummariesEnabled: boolean;
@@ -432,6 +457,7 @@ export interface GridType extends IGridDataBindable {
 
     validationTrigger: GridValidationTrigger;
     pinning: IPinningConfig;
+    /* blazorSuppress */
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
     tbody: any;
@@ -497,9 +523,12 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     /** @hidden @internal */
     hasEditableColumns: boolean;
+    /* blazorSuppress */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    /* blazorSuppress */
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
+    /* blazorSuppress */
     readonly cdr: ChangeDetectorRef;
     /** @hidden @internal */
     document: Document;
@@ -526,9 +555,12 @@ export interface GridType extends IGridDataBindable {
     childDataKey?: any;
     foreignKey?: any;
     cascadeOnDelete?: boolean;
+    /* blazorSuppress */
     loadChildrenOnDemand?: (parentID: any, done: (children: any[]) => void) => void;
     hasChildrenKey?: any;
+    /* blazorSuppress */
     loadingRows?: Set<any>;
+    /* blazorAlternateName: GridParent */
     parent?: GridType;
     highlightedRowID?: any;
     updateOnRender?: boolean;
@@ -537,8 +569,10 @@ export interface GridType extends IGridDataBindable {
     rootGrid?: GridType;
     processedRootRecords?: ITreeGridRecord[];
     rootRecords?: ITreeGridRecord[];
+    /* blazorSuppress */
     records?: Map<any, ITreeGridRecord>;
     processedExpandedFlatData?: any[] | null;
+    /* blazorSuppress */
     processedRecords?: Map<any, ITreeGridRecord>;
     treeGroupArea?: any;
 
@@ -566,8 +600,10 @@ export interface GridType extends IGridDataBindable {
     densityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IGridEditEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowAddedNotifier: Subject<IRowDataEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
     cellEditEnter: EventEmitter<IGridEditEventArgs>;
     cellEdit: EventEmitter<IGridEditEventArgs>;
@@ -584,7 +620,9 @@ export interface GridType extends IGridDataBindable {
     validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
+    /* blazorSuppress */
     rendered$: Observable<boolean>;
+    /* blazorSuppress */
     resizeNotify: Subject<void>;
 
     sortStrategy: IGridSortingStrategy;
@@ -633,6 +671,7 @@ export interface GridType extends IGridDataBindable {
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
+    /* blazorSuppress */
     getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
     openAdvancedFilteringDialog(): void;
@@ -664,8 +703,11 @@ export interface GridType extends IGridDataBindable {
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;
+    /* blazorSuppress */
     navigateTo(rowIndex: number, visibleColumnIndex: number, callback?: (e: any) => any): void;
+    /* blazorSuppress */
     getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
+    /* blazorSuppress */
     getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
     clearCellSelection(): void;
     selectRange(range: GridSelectionRange | GridSelectionRange[]): void;
@@ -713,6 +755,7 @@ export interface FlatGridType extends GridType {
  * An interface describing a Tree Grid type
  */
 export interface TreeGridType extends GridType {
+    /* blazorSuppress */
     records: Map<any, ITreeGridRecord>;
     isTreeRow(rec: any): boolean;
 }
@@ -793,6 +836,7 @@ export interface IgxGridRowDragGhostContext {
 }
 
 export interface IgxGridEmptyTemplateContext {
+    /* blazorSuppress */
     $implicit: undefined
 }
 
@@ -807,6 +851,8 @@ export interface IgxGridRowEditTextTemplateContext {
 }
 
 export interface IgxGridRowEditActionsTemplateContext {
+    /* blazorCSSuppress */
+    /* blazorAlternateType: RowEditActionsImplicit */
     $implicit: (commit: boolean, event?: Event) => void
 }
 
@@ -822,14 +868,19 @@ export interface IgxColumnTemplateContext {
 export interface IgxCellTemplateContext {
     $implicit: any,
     additionalTemplateContext: any,
+    /* blazorSuppress */
     formControl?: FormControl<any>,
+    /* blazorSuppress */
     defaultErrorTemplate?: TemplateRef<any>,
     cell: CellType
 }
 
+/* jsonAPIComplexObject */
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /** @deprecated Use `key` */
+    /**
+     * @deprecated Use the `key` property instead.
+     */
     rowID: any;
     key: any;
     selected: boolean;
@@ -841,6 +892,7 @@ export interface IgxRowSelectorTemplateContext {
     $implicit: IgxRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxGroupByRowSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
@@ -850,6 +902,7 @@ export interface IgxGroupByRowSelectorTemplateContext {
     $implicit: IgxGroupByRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxHeadSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
@@ -864,10 +917,34 @@ export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
 }
 
+/* marshalByValue */
+/* tsPlainInterface */
 /**
  * An interface describing settings for row/column pinning position.
  */
 export interface IPinningConfig {
     columns?: ColumnPinningPosition;
     rows?: RowPinningPosition;
+}
+
+/**
+ * An interface describing settings for clipboard options
+ */
+export interface IClipboardOptions {
+    /**
+     * Enables/disables the copy behavior
+     */
+    enabled: boolean;
+    /**
+     * Include the columns headers in the clipboard output.
+     */
+    copyHeaders: boolean;
+    /**
+     * Apply the columns formatters (if any) on the data in the clipboard output.
+     */
+    copyFormatters: boolean;
+    /**
+     * The separator used for formatting the copy output. Defaults to `\t`.
+     */
+    separator: string;
 }

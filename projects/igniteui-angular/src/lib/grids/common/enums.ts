@@ -43,21 +43,25 @@ export const ColumnDisplayOrder = mkenum({
 });
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
+/* mustCoerceToInt */
 export enum ColumnPinningPosition {
     Start,
     End
 }
 
+/* mustCoerceToInt */
 export enum RowPinningPosition {
     Top,
     Bottom
 }
 
+/* mustCoerceToInt */
 export enum GridPagingMode {
     Local,
     Remote
 }
 
+/* mustCoerceToInt */
 export enum GridInstanceType {
     Grid,
     TreeGrid

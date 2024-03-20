@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { IGridState, IColumnState, IgxGridStateDirective } from './state.directive';
+import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -18,6 +18,7 @@ import { GridSelectionRange } from './common/types';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from './public_api';
+import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();

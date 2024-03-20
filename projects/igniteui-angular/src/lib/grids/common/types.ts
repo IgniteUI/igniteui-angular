@@ -1,9 +1,13 @@
 import { InjectionToken } from '@angular/core';
 
+/* tsPlainInterface */
+/* marshalByValue */
 export interface GridSelectionRange {
     rowStart: number;
     rowEnd: number;
+    /* blazorAlternateType: double */
     columnStart: string | number;
+    /* blazorAlternateType: double */
     columnEnd: string | number;
 }
 

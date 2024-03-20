@@ -62,6 +62,21 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -373,6 +388,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    /* treatAsRef */
     @Input()
     public get data(): any[] | null {
         return this._data;
@@ -425,6 +441,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private childDetailTemplates: Map<any, any> = new Map();
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * Gets/Sets the group by state.
      *
@@ -1234,7 +1251,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.perPage) : allItems);
     }
 

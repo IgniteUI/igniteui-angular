@@ -207,6 +207,7 @@ enum TemplateOutletAction {
 
 export interface IViewChangeEventArgs extends IBaseEventArgs {
     owner: IgxTemplateOutletDirective;
+    /* blazorSuppress */
     view: EmbeddedViewRef<any>;
     context: any;
 }

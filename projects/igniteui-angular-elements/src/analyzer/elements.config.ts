@@ -22,6 +22,7 @@ import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/a
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
+import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
   IgxGridComponent,
@@ -78,6 +79,7 @@ export var registerConfig = [
       { name: "gridColumnSpan" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
+      { name: "columnChildren", writable: true },
       { name: "grid", writable: true },
       { name: "topLevelParent" },
       { name: "headerCell" },
@@ -144,6 +146,7 @@ export var registerConfig = [
       { name: "gridColumnSpan" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
+      { name: "columnChildren", writable: true },
       { name: "grid", writable: true },
       { name: "topLevelParent" },
       { name: "headerCell" },
@@ -205,6 +208,7 @@ export var registerConfig = [
       { name: "gridColumnSpan" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
+      { name: "columnChildren", writable: true },
       { name: "grid", writable: true },
       { name: "topLevelParent" },
       { name: "headerCell" },
@@ -252,7 +256,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,
@@ -427,6 +435,23 @@ export var registerConfig = [
     provideAs: IgxGridActionsBaseDirective,
   },
   {
+    component: IgxGridStateComponent,
+    parents: [
+      IgxGridComponent,
+      IgxTreeGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxPivotGridComponent,
+    ],
+    contentQueries: [],
+    additionalProperties: [{ name: "grid", writable: true }],
+    methods: [
+      "applyState",
+      "applyStateFromString",
+      "getState",
+      "getStateAsString",
+    ],
+  },
+  {
     component: IgxGridToolbarActionsComponent,
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
@@ -519,7 +544,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,
@@ -818,6 +847,11 @@ export var registerConfig = [
         isQueryList: true,
       },
       {
+        property: "childLayoutList",
+        childType: IgxRowIslandComponent,
+        isQueryList: true,
+      },
+      {
         property: "childColumns",
         childType: IgxColumnComponent,
         isQueryList: true,
@@ -833,11 +867,13 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
     ],
     additionalProperties: [
-      { name: "islandToolbarTemplate", writable: true },
-      { name: "islandPaginatorTemplate", writable: true },
       { name: "data" },
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
@@ -921,6 +957,8 @@ export var registerConfig = [
       "beginAddRowByIndex",
     ],
     templateProps: [
+      "toolbarTemplate",
+      "paginatorTemplate",
       "emptyGridTemplate",
       "addRowEmptyTemplate",
       "loadingGridTemplate",
@@ -971,7 +1009,11 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStrip", childType: IgxActionStripComponent },
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripComponent,
+        isQueryList: true,
+      },
       {
         property: "toolbar",
         childType: IgxGridToolbarComponent,

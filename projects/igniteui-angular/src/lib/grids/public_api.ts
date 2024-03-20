@@ -26,6 +26,7 @@ export {
     IgxRowEditActionsDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
+export { IGridState, IColumnState, IGridStateCollection, IGridStateOptions, GridFeatures } from './state-base.directive';
 export * from './state.directive';
 export * from './columns/public_api';
 export * from './common/public_api';

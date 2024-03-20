@@ -125,6 +125,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
     public errorIcon: IgxIconComponent;
 
+    /* blazorSuppress */
     /**
      * Gets the default error template.
      * @hidden @internal
@@ -857,7 +858,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: {} /* don't disable user-select, etc */
-            } as HammerOptions);
+            });
         }
 
     }

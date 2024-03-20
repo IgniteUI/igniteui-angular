@@ -196,6 +196,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     @Output()
     public dataChanged = new EventEmitter<any>();
 
+    /* blazorSuppress */
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 
@@ -438,7 +439,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true }),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
@@ -862,7 +863,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     public resetScrollPosition() {
         this.scrollPosition = 0;
         this.scrollComponent.scrollAmount = 0;
-        this.state.startIndex = 0;
     }
 
     /**
@@ -1035,6 +1035,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
+        if (!node) {
+            return;
+        }
         const document = node.getRootNode() as Document | ShadowRoot;
         const activeElement = document.activeElement as HTMLElement;
 

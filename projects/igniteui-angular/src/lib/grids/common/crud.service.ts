@@ -17,6 +17,7 @@ export class IgxEditRow {
         this.rowFormGroup = this.grid.validation.create(id, data);
     }
 
+    /* blazorSuppress */
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
@@ -35,6 +36,7 @@ export class IgxEditRow {
         return args;
     }
 
+    /* blazorSuppress */
     public createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
@@ -70,6 +72,7 @@ export class IgxAddRow extends IgxEditRow {
         super(id, index, data, grid);
     }
 
+    /* blazorSuppress */
     public override createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args = super.createEditEventArgs(includeNewValue, event);
         args.oldValue = null;
@@ -77,6 +80,7 @@ export class IgxAddRow extends IgxEditRow {
         return args;
     }
 
+    /* blazorSuppress */
     public override createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const args = super.createDoneEditEventArgs(null, event);
         args.isAddRow = true;
@@ -134,6 +138,7 @@ export class IgxCell {
         return value;
     }
 
+    /* blazorSuppress */
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
@@ -154,6 +159,7 @@ export class IgxCell {
         return args;
     }
 
+    /* blazorSuppress */
     public createDoneEditEventArgs(value: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
@@ -205,6 +211,7 @@ export class IgxCellCrudState {
         return !!this.cell;
     }
 
+    /* blazorSuppress */
     public beginCellEdit(event?: Event) {
         const args = this.cell.createEditEventArgs(false, event);
         this.grid.cellEditEnter.emit(args);
@@ -215,12 +222,14 @@ export class IgxCellCrudState {
 
     }
 
+    /* blazorSuppress */
     public cellEdit(event?: Event) {
         const args = this.cell.createEditEventArgs(true, event);
         this.grid.cellEdit.emit(args);
         return args;
     }
 
+    /* blazorSuppress */
     public updateCell(exit: boolean, event?: Event): IGridEditEventArgs {
         if (!this.cell) {
             return;
@@ -264,6 +273,7 @@ export class IgxCellCrudState {
         return { ...args, ...doneArgs };
     }
 
+    /* blazorSuppress */
     public cellEditDone(event, addRow: boolean): IGridEditDoneEventArgs {
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const doneArgs = this.cell.createDoneEditEventArgs(newValue, event);
@@ -274,6 +284,7 @@ export class IgxCellCrudState {
         return doneArgs;
     }
 
+    /* blazorSuppress */
     /** Exit cell edit mode */
     public exitCellEdit(event?: Event): IGridEditDoneEventArgs {
         if (!this.cell) {
@@ -334,6 +345,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
         this._rowEditingBlocked = val;
     }
 
+    /* blazorSuppress */
     /** Enters row edit mode */
     public beginRowEdit(event?: Event) {
         if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
@@ -359,12 +371,14 @@ export class IgxRowCrudState extends IgxCellCrudState {
         }
     }
 
+    /* blazorSuppress */
     public rowEdit(event: Event): IGridEditEventArgs {
         const args = this.row.createEditEventArgs(true, event);
         this.grid.rowEdit.emit(args);
         return args;
     }
 
+    /* blazorSuppress */
     public updateRow(commit: boolean, event?: Event): IGridEditEventArgs {
         if (!this.grid.rowEditable ||
             this.grid.rowEditingOverlay &&
@@ -428,6 +442,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
         return { ...nonCancelableArgs, ...rowEditArgs };
     }
 
+    /* blazorSuppress */
     public rowEditDone(cachedRowData, event: Event) {
         const doneArgs = this.row.createDoneEditEventArgs(cachedRowData, event);
         this.grid.rowEditDone.emit(doneArgs);
@@ -435,6 +450,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
     }
 
 
+    /* blazorSuppress */
     /** Exit row edit mode */
     public exitRowEdit(cachedRowData, event?: Event): IGridEditDoneEventArgs {
         const nonCancelableArgs = this.row.createDoneEditEventArgs(cachedRowData, event);
@@ -582,6 +598,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 @Injectable()
 export class IgxGridCRUDService extends IgxRowAddCrudState {
 
+    /* blazorSuppress */
     public enterEditMode(cell, event?: Event) {
         if (this.isInCompositionMode) {
             return;
@@ -625,6 +642,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Enters add row mode by creating temporary dummy so the user can fill in new row cells.
      *
@@ -675,6 +693,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         });
     }
 
+    /* blazorSuppress */
     /**
      * Finishes the row transactions on the current row.
      *

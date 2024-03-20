@@ -14,14 +14,17 @@ const DATE_TIME_TYPE = 'dateTime';
 const STRING_TYPE = 'string';
 
 export interface IGridSortingStrategy {
+    /* blazorCSSuppress */
     sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
 }
 
 export interface IGridGroupingStrategy extends IGridSortingStrategy {
+    /* blazorCSSuppress */
     groupBy(data: any[], state: IGroupingState, grid?: any, groupsRecords?: any[], fullResult?: IGroupByResult): IGroupByResult;
 }
 
 export class IgxSorting implements IGridSortingStrategy {
+    /* blazorSuppress */
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
         return this.sortDataRecursive(data, expressions, 0, grid);
     }
@@ -188,6 +191,7 @@ export class IgxSorting implements IGridSortingStrategy {
 }
 
 export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
+    /* blazorSuppress */
     public groupBy(data: any[], state: IGroupingState, grid?: any,
         groupsRecords?: any[], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
@@ -208,6 +212,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
         return this._instance || (this._instance = new NoopSortingStrategy());
     }
 
+    /* blazorSuppress */
     public sort(data: any[]): any[] {
         return data;
     }

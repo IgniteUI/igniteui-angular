@@ -5,6 +5,10 @@ import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-e
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-pinning-actions */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Grid Pinning Actions for the Action Strip
  *
