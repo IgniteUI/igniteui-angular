@@ -786,6 +786,7 @@
         background: var-get($theme, 'content-background');
         box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
+        min-width: sizable(rem(272px), rem(314px), rem(360px));
         overflow: hidden;
         outline: none;
     }
@@ -802,7 +803,6 @@
         flex-flow: column nowrap;
         width: 100%;
         overflow: hidden;
-        min-width: min-content;
 
         %days-view,
         %months-view,
@@ -831,16 +831,19 @@
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
         box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
-
-        padding-block: pad-block(rem(16px));
-        padding-inline: pad-inline(rem(12px));
         border-radius: var-get($theme, 'border-radius');
+        padding-block: pad-block(rem(16px));
 
         &:focus,
         &:focus-within,
         &:focus-visible {
             outline: none;
         }
+    }
+
+    %months-view,
+    %years-view {
+        padding-inline: pad-inline(rem(4px), rem(4px), rem(12px));
     }
 
     %view-item {
@@ -1065,6 +1068,7 @@
     }
 
     %days-view {
+        padding-inline: pad-inline(rem(12px));
         gap: $date-view-row-gap;
 
         @if $variant == 'bootstrap' {
