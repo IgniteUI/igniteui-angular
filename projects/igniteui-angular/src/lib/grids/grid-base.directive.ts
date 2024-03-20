@@ -7231,7 +7231,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     emptyCellWithPaddingOnly = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
                 }
 
-                if (max === 0 || max <= emptyCellWithPaddingOnly) {
+                if (max === 0 || (max <= emptyCellWithPaddingOnly && !this._init)) {
                     // cells not in DOM yet or content not fully initialized.
                     continue;
                 }
