@@ -73,6 +73,8 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
+    @include schema-order($schema);
+
     #{$scope} {
         --ig-size-small: 1;
         --ig-size-medium: 2;
@@ -123,13 +125,13 @@
         @include ripple($ripple-theme-map);
     }
 
-    @if is-used('igx-avatar', $exclude) {
-        $avatar-theme-map: avatar-theme(
-            $schema: $schema,
-        );
-        $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
-        @include avatar($avatar-theme-map);
-    }
+    // @if is-used('igx-avatar', $exclude) {
+    //     $avatar-theme-map: avatar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
+    //     @include avatar($avatar-theme-map);
+    // }
 
     @if is-used('igx-action-strip', $exclude) {
         $action-strip-theme-map: action-strip-theme(
