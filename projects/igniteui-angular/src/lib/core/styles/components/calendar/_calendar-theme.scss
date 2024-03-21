@@ -843,6 +843,10 @@
 
     %months-view,
     %years-view {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
         padding-inline: pad-inline(rem(4px), rem(4px), rem(12px));
     }
 
@@ -1277,14 +1281,6 @@
         row-gap: rem(4px);
         column-gap: rem(8px);
         width: 100%;
-    }
-
-    %years-view,
-    %months-view {
-        display: flex;
-        justify-content: center;
-        position: relative;
-        z-index: 1;
     }
 
     %years-view__year-inner,
