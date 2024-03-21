@@ -149,32 +149,27 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
     protected actionStrips: QueryList<IgxActionStripComponent>;
 
+    /* csSuppress */
     /**
-     * Gets the toolbar template for each child grid created from this row island.
+     * Sets/Gets the toolbar template for each child grid created from this row island.
     */
     @Input()
     public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
         return this._toolbarTemplate || this.toolbarDirectiveTemplate;
     }
-
-    /**
-     * Sets the toolbar template for each child grid created from this row island.
-    */
     public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
         this._toolbarTemplate = template;
     }
 
+
+    /* csSuppress */
     /**
-     * Gets the paginator template for each child grid created from this row island.
+     * Sets/Gets the paginator template for each child grid created from this row island.
     */
     @Input()
     public get paginatorTemplate(): TemplateRef<any> {
         return this._paginatorTemplate || this.paginatorDirectiveTemplate;
     }
-
-    /**
-     * Sets the paginator template for each child grid created from this row island.
-    */
     public set paginatorTemplate(template: TemplateRef<any>) {
         this._paginatorTemplate = template;
     }
