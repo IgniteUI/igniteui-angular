@@ -161,7 +161,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
-     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -172,7 +172,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public childDataKey;
 
     /**
-     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
+     * Sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
      * </igx-tree-grid>
@@ -184,7 +184,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public foreignKey;
 
     /**
-     * An @Input property that sets the key indicating whether a row has children.
+     * Sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
@@ -235,7 +235,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public role = 'treegrid';
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
@@ -374,7 +374,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
+     * Sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>

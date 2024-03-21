@@ -60,7 +60,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public ariaHidden = true;
 
     /**
-     * An @Input property that sets the value of the `family`. By default it's "material".
+     * Sets the value of the `family`. By default it's "material".
      *
      * @example
      * ```html

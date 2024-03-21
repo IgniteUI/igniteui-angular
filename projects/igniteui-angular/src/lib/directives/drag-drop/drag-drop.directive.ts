@@ -313,7 +313,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostTemplate: TemplateRef<any>;
 
     /**
-     * An @Input property that sets the element to which the dragged element will be appended.
+     * Sets the element to which the dragged element will be appended.
      * By default it's set to null and the dragged element is appended to the body.
      * ```html
      * <div #hostDiv></div>

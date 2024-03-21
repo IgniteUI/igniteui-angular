@@ -128,7 +128,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /**
-     * An @Input property that sets input placeholder.
+     * Sets input placeholder.
      *
      */
     @Input() public placeholder;
@@ -143,7 +143,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom OverlaySettings `IgxSelectComponent`.
      * ```html
      * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
      * ```
@@ -310,7 +310,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /**
-     * An @Input property that sets how the select will be styled.
+     * Sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>

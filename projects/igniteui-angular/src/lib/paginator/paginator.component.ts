@@ -186,7 +186,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     }
 
     /**
-     * An @Input property that sets the total records.
+     * Sets the total records.
      * ```typescript
      * let totalRecords = this.paginator.totalRecords;
      * ```
@@ -208,7 +208,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     }
 
     /**
-     * An @Input property that sets custom options in the select of the paginator
+     * Sets custom options in the select of the paginator
      * ```typescript
      * let options = this.paginator.selectOptions;
      * ```
@@ -226,7 +226,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     }
 
     /**
-     * An @Input property that sets custom OverlaySettings.
+     * Sets custom OverlaySettings.
      * ```html
      * <igx-paginator [overlaySettings] = "customOverlaySettings"></igx-paginator>
      * ```
@@ -381,7 +381,7 @@ export class IgxPageNavigationComponent {
     public cssClass = 'igx-page-nav';
 
     /**
-     * An @Input property that sets the `role` attribute of the element.
+     * Sets the `role` attribute of the element.
      */
     @HostBinding('attr.role')
     @Input()

@@ -103,7 +103,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     AfterViewInit,
     Validator {
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * Sets the value of the `id` attribute.
      * ```html
      * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm tt" ></igx-time-picker>
      * ```

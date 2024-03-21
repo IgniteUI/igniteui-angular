@@ -74,7 +74,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
+     * Sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
      *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
      * ```

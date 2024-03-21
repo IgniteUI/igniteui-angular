@@ -103,7 +103,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     @Input()
     public variant: string | typeof IgxChipTypeVariant;
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      *
      * @example
      * ```html
@@ -126,7 +126,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public role = 'option';
 
     /**
-     * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
+     * Sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
      *
      * @example
      * ```html
@@ -305,7 +305,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * An @Input property that sets the `IgxChipComponent` background color.
+     * Sets the `IgxChipComponent` background color.
      * The `color` property supports string, rgb, hex.
      *
      * @example

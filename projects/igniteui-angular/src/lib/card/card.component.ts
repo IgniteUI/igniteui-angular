@@ -30,7 +30,7 @@ export class IgxCardMediaDirective {
     public cssClass = 'igx-card__media';
 
     /**
-     * An @Input property that sets the `width` and `min-width` style property
+     * Sets the `width` and `min-width` style property
      * of the media container. If not provided it will be set to `auto`.
      *
      * @example
@@ -44,7 +44,7 @@ export class IgxCardMediaDirective {
     public width = 'auto';
 
     /**
-     * An @Input property that sets the `height` style property of the media container.
+     * Sets the `height` style property of the media container.
      * If not provided it will be set to `auto`.
      *
      * @example
@@ -57,7 +57,7 @@ export class IgxCardMediaDirective {
     public height = 'auto';
 
     /**
-     * An @Input property that sets the `role` attribute of the media container.
+     * Sets the `role` attribute of the media container.
      */
     @HostBinding('attr.role')
     @Input()
@@ -78,7 +78,7 @@ export class IgxCardHeaderComponent {
     public cssClass = 'igx-card-header';
 
     /**
-     * An @Input property that sets the layout style of the header.
+     * Sets the layout style of the header.
      * By default the header elements(thumbnail and title/subtitle) are aligned horizontally.
      *
      * @example
@@ -152,7 +152,7 @@ export class IgxCardContentDirective {
 })
 export class IgxCardFooterDirective {
     /**
-     * An @Input property that sets the value of the `role` attribute of the card footer.
+     * Sets the value of the `role` attribute of the card footer.
      * By default the value is set to `footer`.
      *
      * @example
@@ -239,7 +239,7 @@ export class IgxCardComponent {
     public cssClass = 'igx-card';
 
     /**
-     * An @Input property that sets the value of the `role` attribute of the card.
+     * Sets the value of the `role` attribute of the card.
      * By default the value is set to `group`.
      *
      * @example
@@ -278,7 +278,7 @@ export class IgxCardComponent {
     }
 
     /**
-     * An @Input property that sets/gets whether the card is elevated.
+     * Sets/gets whether the card is elevated.
      * Default value is `false`.
      *
      * @example
@@ -299,7 +299,7 @@ export class IgxCardComponent {
     }
 
     /**
-     * An @Input property that sets the value of the `horizontal` attribute of the card.
+     * Sets the value of the `horizontal` attribute of the card.
      * Setting this to `true` will make the different card sections align horizontally,
      * essentially flipping the card to the side.
      *
@@ -336,7 +336,7 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
     /**
-     * An @Input property that sets the layout style of the actions.
+     * Sets the layout style of the actions.
      * You can justify the elements slotted in the igx-card-action container
      * so that they are positioned equally from one another taking up all the
      * space available along the card actions axis.
@@ -351,7 +351,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public layout: IgxCardActionsLayout | string = IgxCardActionsLayout.START;
 
     /**
-     * An @Input property that sets the vertical attribute of the actions.
+     * Sets the vertical attribute of the actions.
      * When set to `true` the actions will be layed out vertically.
      */
     @HostBinding('class.igx-card-actions--vertical')

@@ -30,7 +30,7 @@ export class IgxDividerDirective {
     public id = `igx-divider-${NEXT_ID++}`;
 
     /**
-     * An @Input property that sets the value of `role` attribute.
+     * Sets the value of `role` attribute.
      * If not the default value of `separator` will be used.
      */
     @HostBinding('attr.role')
@@ -100,7 +100,7 @@ export class IgxDividerDirective {
     }
 
     /**
-     * An @Input property that sets the value of the `inset` attribute.
+     * Sets the value of the `inset` attribute.
      * If not provided it will be set to `'0'`.
      * ```html
      * <igx-divider inset="16px"></igx-divider>
