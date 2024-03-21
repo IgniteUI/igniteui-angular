@@ -24,7 +24,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-export const IgxChipTypeVariant = mkenum({
+export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',
@@ -616,7 +616,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @hidden
      * @internal
      */
-    public destroy$ = new Subject();
+    public destroy$ = new Subject<void>();
 
     protected _tabIndex = null;
     protected _selected = false;

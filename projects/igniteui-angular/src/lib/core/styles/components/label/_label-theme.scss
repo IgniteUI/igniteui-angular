@@ -35,6 +35,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin label($theme) {
     // The --variant CSS produced by css-vars is needed also

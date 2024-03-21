@@ -67,9 +67,9 @@ describe('IgxSimpleCombo', () => {
         const elementRef = { nativeElement: null };
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
-        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
+        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register', 'clear']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
@@ -434,6 +434,17 @@ describe('IgxSimpleCombo', () => {
             combo.select(item);
             combo.handleClear(spyObj);
             expect(combo.displayValue).toEqual(item[0]);
+        });
+
+        it('should delete the selection on destroy', () => {
+            const selectionService = new IgxSelectionAPIService();
+            const comboClearSpy = spyOn(mockComboService, 'clear');
+            const selectionDeleteSpy = spyOn(selectionService, 'delete');
+            combo = new IgxSimpleComboComponent(elementRef, mockCdr, selectionService, mockComboService,
+                mockIconService, platformUtil, null, null, mockInjector);
+            combo.ngOnDestroy();
+            expect(comboClearSpy).toHaveBeenCalled();
+            expect(selectionDeleteSpy).toHaveBeenCalled();
         });
     });
 
@@ -1490,6 +1501,33 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.displayValue).toEqual('Ohio ');
         }));
+
+        it('should properly filter dropdown when pasting from clipboard in input', () => {
+            spyOn(combo, 'handleInputChange').and.callThrough();
+            combo.open();
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            const target = {
+                value: combo.data[1].field
+            }
+            combo.comboInput.value = target.value
+            const pasteData = new DataTransfer();
+            const pasteEvent = new ClipboardEvent('paste', { clipboardData: pasteData });
+            Object.defineProperty(pasteEvent, 'target', {
+                writable: false,
+                value: target
+            })
+            input.triggerEventHandler('paste', pasteEvent);
+            fixture.detectChanges();
+
+            expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
+            expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
+                target: jasmine.objectContaining({ value: target.value })
+            }));
+            expect(combo.filteredData.length).toBeLessThan(combo.data.length)
+            expect(combo.filteredData[0].field).toBe(target.value)
+        });
     });
 
     describe('Display density', () => {

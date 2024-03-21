@@ -1,6 +1,7 @@
 @use 'base' as *;
 @use '../schemas' as *;
 @use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/elevations/presets' as elevations;
 
 ////
 /// @group themes
@@ -41,6 +42,7 @@
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
+        $elevations: elevations.$indigo-elevations,
     );
 }
 
@@ -77,5 +79,6 @@
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
+        $elevations: elevations.$indigo-elevations,
     );
 }

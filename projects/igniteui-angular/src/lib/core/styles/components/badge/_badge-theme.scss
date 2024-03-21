@@ -52,6 +52,7 @@
     }
 
     $theme: digest-schema($badge-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
@@ -74,16 +75,22 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
-        border-width: $border-width
+        border-width: $border-width,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+        )),
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin badge($theme) {
     @include css-vars($theme);
 
-    $badge-font-weight: normal;
+    $variant: map.get($theme, '_meta', 'variant');
 
+    $badge-font-weight: normal;
     $badge-value-padding: rem(4px);
     $border-type: solid;
 
@@ -116,6 +123,19 @@
             align-items: center;
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(11px);
+            line-height: rem(15px);
+            font-weight: 700;
+
+            igx-icon {
+                $icon-size: rem(12px);
+
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            }
         }
     }
 

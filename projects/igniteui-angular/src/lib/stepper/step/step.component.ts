@@ -18,7 +18,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { Direction, HorizontalAnimationType, IgxSlideComponentBase } from '../../carousel/carousel-base';
+import { Direction, IgxSlideComponentBase } from '../../carousel/carousel-base';
 import { PlatformUtil } from '../../core/utils';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
@@ -29,6 +29,7 @@ import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.d
 import { IgxStepperService } from '../stepper.service';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
+import { HorizontalAnimationType } from '../../carousel/enums';
 
 let NEXT_ID = 0;
 
@@ -561,7 +562,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         this.stepperService.expand(this);
 
         if (!this.animationSettings.closeAnimation) {
-            this.stepperService.previousActiveStep.openAnimationPlayer?.finish();
+            this.stepperService.previousActiveStep?.openAnimationPlayer?.finish();
         }
 
         if (!this.animationSettings.openAnimation) {

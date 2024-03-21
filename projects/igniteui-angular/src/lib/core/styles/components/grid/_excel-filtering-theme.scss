@@ -12,6 +12,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
 
@@ -456,6 +458,11 @@
     %grid-excel-menu__add-filter {
         margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
         margin-block-start: 0;
+
+        @if $bootstrap-theme {
+            // important is needed to override the typography margins
+            margin-block-end: rem(4px) !important;
+        }
 
         igx-icon {
             width: var(--igx-icon-size, #{rem(18px)});

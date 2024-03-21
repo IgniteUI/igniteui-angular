@@ -44,6 +44,9 @@
         scrollbar-size: $scrollbar-size
     ));
 }
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin scrollbar($theme) {
     @include css-vars($theme);

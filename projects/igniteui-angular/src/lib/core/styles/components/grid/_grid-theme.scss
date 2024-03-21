@@ -591,6 +591,8 @@
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
@@ -2657,6 +2659,12 @@
 
         [igxIconButton] {
             --ig-size: 1;
+        }
+
+        @if ($variant == 'bootstrap') {
+            [igxButton] {
+                margin: rem(4px);
+            }
         }
     }
 

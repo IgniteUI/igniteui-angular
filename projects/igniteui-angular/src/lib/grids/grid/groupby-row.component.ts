@@ -117,7 +117,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden
      */
-    protected destroy$ = new Subject<any>();
+    protected destroy$ = new Subject<void>();
 
     /**
      * @hidden
@@ -160,6 +160,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     @HostListener('pointerdown')
     public activate() {
         this.grid.navigation.setActiveNode({ row: this.index });
+    }
+
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        this.grid.rowClick.emit({
+            row: this.grid.createRow(this.index),
+            event
+        });
     }
 
     /**

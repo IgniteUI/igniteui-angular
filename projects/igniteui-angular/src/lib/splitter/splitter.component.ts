@@ -349,8 +349,6 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 }
 
-export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
-
 /**
  * @hidden @internal
  * Represents the draggable bar that visually separates panes and allows for changing their sizes.
@@ -444,6 +442,8 @@ export class IgxSplitBarComponent {
      */
     private startPoint!: number;
 
+    private interactionKeys = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
+
     /**
      * @hidden @internal
      */
@@ -459,7 +459,7 @@ export class IgxSplitBarComponent {
         const key = event.key.toLowerCase();
         const ctrl = event.ctrlKey;
         event.stopPropagation();
-        if (SPLITTER_INTERACTION_KEYS.has(key)) {
+        if (this.interactionKeys.has(key)) {
             event.preventDefault();
         }
         switch (key) {

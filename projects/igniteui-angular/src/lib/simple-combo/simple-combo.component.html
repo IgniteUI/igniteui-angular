@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup [displayDensity]="displayDensity" [suppressInputAutofocus]="true" [type]="type">
+<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type">
 
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
@@ -18,7 +18,7 @@
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
         (input)="handleInputChange($event)" (click)="handleInputClick()"
-        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
+        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
@@ -65,7 +65,7 @@
         <igx-combo-item [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
                 | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
-                | comboGrouping:groupKey:valueKey:groupSortingDirection;
+                | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
                 index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
                 [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item?.isHeader">

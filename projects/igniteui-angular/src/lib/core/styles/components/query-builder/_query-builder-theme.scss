@@ -70,6 +70,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin query-builder($theme) {
     @include css-vars($theme);

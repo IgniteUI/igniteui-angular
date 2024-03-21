@@ -14,14 +14,14 @@ import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
-export const IgxAvatarSize = mkenum({
+export const IgxAvatarSize = /*@__PURE__*/mkenum({
     SMALL: 'small',
     MEDIUM: 'medium',
     LARGE: 'large'
 });
 export type IgxAvatarSize = (typeof IgxAvatarSize)[keyof typeof IgxAvatarSize];
 
-export const IgxAvatarType = mkenum({
+export const IgxAvatarType = /*@__PURE__*/mkenum({
     INITIALS: 'initials',
     IMAGE: 'image',
     ICON: 'icon',

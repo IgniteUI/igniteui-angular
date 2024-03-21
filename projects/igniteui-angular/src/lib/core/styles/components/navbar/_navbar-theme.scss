@@ -81,6 +81,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
     @include css-vars($theme);
@@ -106,6 +108,10 @@
         box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
+
+        @if $variant == 'bootstrap' {
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
+        }
     }
 
     %igx-navbar-part {

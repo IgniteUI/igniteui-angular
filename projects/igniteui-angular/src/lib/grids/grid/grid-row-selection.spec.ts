@@ -543,6 +543,53 @@ describe('IgxGrid - Row Selection #grid', () => {
             }
         });
 
+        it('Should select the correct rows with Shift + Click when grouping is activated', () => {
+            expect(grid.selectRowOnClick).toBe(true);
+            spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+
+            fix.detectChanges();
+
+            const firstGroupRow = grid.gridAPI.get_row_by_index(1);
+            const lastGroupRow = grid.gridAPI.get_row_by_index(4);
+
+            // Clicking on the first row within a group
+            UIInteractions.simulateClickEvent(firstGroupRow.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstGroupRow);
+
+            // Simulate Shift+Click on a row within another group
+            const mockEvent = new MouseEvent('click', { shiftKey: true });
+            lastGroupRow.nativeElement.dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(grid.selectedRows).toEqual([5, 14, 8]); // ids
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
+                added: [grid.dataView[2], grid.dataView[4]],
+                cancel: false,
+                event: jasmine.anything(),
+                newSelection: [grid.dataView[1], grid.dataView[2], grid.dataView[4]],
+                oldSelection: [grid.dataView[1]],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            });
+
+            const expectedSelectedRowIds = [5, 14, 8];
+            grid.dataView.forEach((rowData, index) => {
+                if (expectedSelectedRowIds.includes(rowData.ProductID)) {
+                    const row = grid.gridAPI.get_row_by_index(index);
+                    GridSelectionFunctions.verifyRowSelected(row);
+                }
+            });
+
+        });
+
         it('Should NOT select multiple rows with Shift + Click when selectRowOnClick has false value', () => {
             grid.selectRowOnClick = false;
             spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();

@@ -17,7 +17,8 @@ import {
     ContentChildren,
     QueryList,
     RendererStyleFlags2,
-    booleanAttribute
+    booleanAttribute,
+    EmbeddedViewRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
@@ -624,7 +625,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _ghostStartY;
     protected _ghostHostX = 0;
     protected _ghostHostY = 0;
-    protected _dynamicGhostRef;
+    protected _dynamicGhostRef: EmbeddedViewRef<any>;
 
     protected _pointerDownId = null;
     protected _clicked = false;
@@ -1130,6 +1131,25 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public onPointerLost(event) {
         if (!this._clicked) {
             return;
+        }
+
+        // When the base element is moved to previous index, angular reattaches the ghost template as a sibling by default.
+        // This is the defaut place for the EmbededViewRef when recreated.
+        // That's why we need to move it to the proper place and set pointer capture again.
+        if (this._pointerDownId && this.ghostElement && this._dynamicGhostRef && !this._dynamicGhostRef.destroyed) {
+            let ghostReattached = false;
+            if (this.ghostHost && !Array.from(this.ghostHost.children).includes(this.ghostElement)) {
+                ghostReattached = true;
+                this.ghostHost.appendChild(this.ghostElement);
+            } else if (!this.ghostHost && !Array.from(document.body.children).includes(this.ghostElement)) {
+                ghostReattached = true;
+                document.body.appendChild(this.ghostElement);
+            }
+
+            if (ghostReattached) {
+                this.ghostElement.setPointerCapture(this._pointerDownId);
+                return;
+            }
         }
 
         const eventArgs = {

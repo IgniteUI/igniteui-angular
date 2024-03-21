@@ -389,6 +389,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
+        this.grid.rowClick.emit({
+            row: this,
+            event
+        });
+
         if (this.grid.rowSelection === 'none' || this.deleted || !this.grid.selectRowOnClick) {
             return;
         }

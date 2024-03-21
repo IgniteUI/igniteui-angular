@@ -34,7 +34,7 @@ export class IgxGridSelectionService {
     /**
      * @hidden @internal
      */
-    public selectedRowsChange = new Subject();
+    public selectedRowsChange = new Subject<void>();
 
     /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
@@ -689,7 +689,8 @@ export class IgxGridSelectionService {
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
         let allData;
-        if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
+        // V.T. Jan 17th, 2024 #13757 Adding an additional conditional check to take account WITHIN range of groups
+        if (this.isFilteringApplied() || this.grid.sortingExpressions.length || this.grid.groupingExpressions?.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
             allData = this.grid.gridAPI.get_all_data(true);

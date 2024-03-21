@@ -8,14 +8,15 @@ import {
     Renderer2,
     Optional,
     Inject,
-    booleanAttribute
+    booleanAttribute,
+    AfterContentInit
 } from '@angular/core';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = mkenum({
+const IgxButtonType = /*@__PURE__*/mkenum({
     ...IgxBaseButtonType,
     FAB: 'fab'
 });
@@ -48,7 +49,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective {
+export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -106,13 +107,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
         if (this._selected !== value) {
-            if (!this._selected) {
-                this.buttonSelected.emit({
-                    button: this
-                });
-            }
-
             this._selected = value;
+            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
         }
     }
 
@@ -127,6 +123,14 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
         private _renderer: Renderer2,
     ) {
         super(element, _displayDensityOptions);
+    }
+
+    public ngAfterContentInit() {
+        this.nativeElement.addEventListener('click', () => {
+            this.buttonSelected.emit({
+                button: this
+            });
+        });
     }
 
     /**
@@ -247,7 +251,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * @internal
      */
     public deselect() {
-        this._selected = false;
+        this.selected = false;
     }
 }
 
