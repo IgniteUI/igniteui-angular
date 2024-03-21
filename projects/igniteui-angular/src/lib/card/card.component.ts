@@ -196,7 +196,7 @@ export class IgxCardFooterDirective {
  */
 
 /**
- * @deprecated in 17.0.0. To switch betweet `outlined` and `elevated` card use the `elevated` property.
+ * @deprecated in 17.0.0. To switch between `outlined` and `elevated` card use the `elevated` property.
  * Since version 17.0.0 the card component is `outlined` by default.
  */
 export const IgxCardType = /*@__PURE__*/mkenum({
@@ -252,16 +252,11 @@ export class IgxCardComponent {
     public role = 'group';
 
     /**
-     * @deprecated in version 17.0.0. Use `elevated` property instead.
-     *
-     * An @Input property that sets the value of the `type` attribute of the card.
+     * Sets the value of the `type` attribute of the card.
      * By default the value is set to `outlined`. You can make the card use the
      * elevated style by setting the value to `elevated`.
      *
-     * @example
-     * ```html
-     * <igx-card type="elevated"></igx-card>
-     * ```
+     * @deprecated in version 17.0.0. Use `elevated` property instead.
      */
     @Input()
     public type: IgxCardType | string = IgxCardType.OUTLINED;
@@ -373,14 +368,9 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 
     /**
+     * Reverses the order of the buttons in the actions area.
+     *
      * @deprecated in version 15.1.0.
-     *
-     * An @Input property that reverses the order of the buttons in the actions area.
-     *
-     * @example
-     * ```html
-     * <igx-card-actions [reverse]="true"></igx-card-actions>
-     * ```
      */
     @HostBinding('class.igx-card-actions--reverse')
     @Input({ transform: booleanAttribute })

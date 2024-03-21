@@ -105,8 +105,7 @@ export class IgxAddRow extends IgxEditRow {
 
 export interface IgxAddRowParent {
     /**
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
+     * @deprecated since version 17.1.0. Use `rowKey` instead
      */
     rowID: string;
     rowKey: any;

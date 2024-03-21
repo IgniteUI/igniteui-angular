@@ -135,12 +135,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
-     * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
+     * Enables/disables filtering in the list. The default is `true`.
      *
-     * An @Input property that enabled/disables filtering in the list. The default is `true`.
-     * ```html
-     * <igx-combo [filterable]="false">
-     * ```
+     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
      */
     @Input({ transform: booleanAttribute })
     public get filterable(): boolean {
