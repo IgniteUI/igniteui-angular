@@ -100,6 +100,45 @@
         height: 100%;
     }
 
+    %aria-orientation-indigo {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        &:hover {
+            %igx-splitter-handle,
+            %igx-splitter-expander {
+                opacity: 1;
+                transition: opacity .25s ease;
+            }
+        }
+
+        [aria-orientation='horizontal'] & {
+            width: rem(1px);
+            margin: 0 rem(2.5px);
+
+            &:hover {
+                transition: width .25s ease;
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        [aria-orientation='vertical'] & {
+            height: rem(1px);
+            width: 100%;
+            margin: rem(2.5px) 0;
+
+            &:hover {
+                transition: height .25s ease;
+                height: 100%;
+                margin: 0;
+            }
+        }
+    }    
+
     %igx-splitter-bar {
         position: relative;
         display: flex;
@@ -111,6 +150,11 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
+
+        @if $variant == 'indigo-design' {
+            @extend %aria-orientation-indigo;
+            border-width: 0;
+        }
 
         &::before {
             @extend %handle-area;
@@ -125,6 +169,10 @@
         &:hover {
             transition: all .25s ease-out;
             opacity: 1;
+
+            @if $variant == 'indigo-design' {
+                border-width: rem(1px)
+            }
         }
     }
 
@@ -135,6 +183,19 @@
 
         @if $variant == 'indigo-design' {
             background: var-get($theme, 'focus-color');
+            %aria-orientation-indigo {
+                border-width: rem(1px);
+                
+                [aria-orientation='horizontal'] & {
+                    width: 100%;
+                    margin: 0;
+                }
+
+                [aria-orientation='vertical'] & {
+                    height: 100%;
+                    margin: 0;
+                }   
+            }
         }
     }
 
