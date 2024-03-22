@@ -199,7 +199,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public hasChildrenKey;
 
     /**
-     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
+     * Whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
@@ -212,7 +212,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public cascadeOnDelete = true;
 
     /**
-     * An @Input property that provides a callback for loading child rows on demand.
+     * Sets a callback for loading child rows on demand.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
      * </igx-tree-grid>
@@ -337,7 +337,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _expansionDepth = Infinity;
 
     /**
-     * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -393,7 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
+     * Template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
      *     <igx-icon>loop</igx-icon>

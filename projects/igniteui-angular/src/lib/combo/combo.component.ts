@@ -127,8 +127,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, DoCheck, EditorProvider {
     /**
-     * An @Input property that controls whether the combo's search box
-     * should be focused after the `opened` event is called
+     * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
      */
     @Input({ transform: booleanAttribute })

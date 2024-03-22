@@ -54,7 +54,6 @@ export class IgxDividerDirective {
     }
 
     /**
-     * An @Input that sets the `middle` attribute of the divider.
      * If set to `true` and an `inset` value has been provided,
      * the divider will start shrinking from both ends.
      * ```html
@@ -66,7 +65,7 @@ export class IgxDividerDirective {
     public middle = false;
 
     /**
-     * An @Input that sets the vertical attribute of the divider.
+     * Sets the divider in vertical orientation.
      * ```html
      * <igx-divider [vertical]="true"></igx-divider>
      * ```

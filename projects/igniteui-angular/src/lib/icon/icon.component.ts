@@ -71,7 +71,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public family: string;
 
     /**
-     * An @Input property that allows you to disable the `active` property. By default it's applied.
+     * Gets/Sets whether the active state is applied. By default it's true.
      *
      * @example
      * ```html
@@ -82,7 +82,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public active = true;
 
     /**
-     *  An @Input property that allows you to set the `name` of the icon.
+     *  Set the `name` of the icon.
      *
      *  @example
      * ```html

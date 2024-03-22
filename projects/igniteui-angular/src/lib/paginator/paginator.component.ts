@@ -128,7 +128,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     }
 
     /**
-     * An @Input property, sets current page of the `IgxPaginatorComponent`.
+     * Gets/Sets the current page of the paginator.
      * The default is 0.
      * ```typescript
      * let page = this.paginator.page;
@@ -159,7 +159,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     }
 
     /**
-     * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
+     * Gets/Sets the number of visible items per page in the paginator.
      * The default is 15.
      * ```typescript
      * let itemsPerPage = this.paginator.perPage;

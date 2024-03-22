@@ -161,7 +161,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that gets the type of the `IgxSliderComponent`.
+     * Gets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * @ViewChild("slider2")
@@ -291,9 +291,9 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that disables or enables UI interaction.
+     * Disables the component.
      * ```html
-     * <igx-slider #slider [disabled]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * <igx-slider #slider [disabled]="true" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
      */
     public set disabled(disable: boolean) {
@@ -320,7 +320,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that marks the {@link IgxSliderComponent} as continuous.
+     * Marks the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
      * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.

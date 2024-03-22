@@ -141,7 +141,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that get/set the selection mode 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
+     * Gets/Sets the selection mode to 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
      * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
      * ```
@@ -162,7 +162,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that allows setting the buttons in the button group.
+     * Property that allows setting the buttons in the button group.
      * ```typescript
      *  public ngOnInit() {
      *      this.cities = [
@@ -190,7 +190,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     @Input() public values: any;
 
     /**
-     * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
+     * Disables the `igx-buttongroup` component. By default it's false.
      * ```html
      * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
      * ```

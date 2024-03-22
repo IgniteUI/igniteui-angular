@@ -135,7 +135,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
 
     /**
-     * An @Input property that disables the `IgxSelectComponent`.
+     * Disables the component.
      * ```html
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
@@ -282,7 +282,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _type = null;
 
     /**
-     * An @Input property that gets/sets the component value.
+     * Gets/Sets the component value.
      *
      * ```typescript
      * // get

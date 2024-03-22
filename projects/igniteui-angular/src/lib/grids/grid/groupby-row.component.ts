@@ -79,7 +79,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public gridID: string;
 
     /**
-     * An @Input property that specifies the group record the component renders for.
+     * The group record the component renders for.
      * ```typescript
      * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
      * ```

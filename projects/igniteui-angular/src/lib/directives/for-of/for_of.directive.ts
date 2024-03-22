@@ -126,7 +126,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForSizePropName;
 
     /**
-     * An @Input property that specifies the scroll orientation.
+     * Specifies the scroll orientation.
      * Scroll orientation can be "vertical" or "horizontal".
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>

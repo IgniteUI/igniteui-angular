@@ -123,7 +123,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public focusTrap = true;
 
     /**
-     * An @Input property controlling the `title` of the dialog.
+     * Title of the dialog.
      * ```html
      * <igx-dialog title="Notification" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -132,7 +132,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public title = '';
 
     /**
-     *  An @Input property controlling the `message` of the dialog.
+     *  Message text of the dialog.
      * ```html
      * <igx-dialog message="Your email was sent!" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -239,7 +239,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonRipple = '';
 
     /**
-     * An @Input property that allows you to enable the "close on click outside the dialog". By default it's disabled.
+     * Gets/Sets whether the dialog should close on click outside the component. By default it's false.
      * ```html
      * <igx-dialog closeOnOutsideSelect="true" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()"
      * rightButtonLabel="OK" rightButtonRipple="#4CAF50" (rightButtonSelect)="onDialogOKSelected($event)">

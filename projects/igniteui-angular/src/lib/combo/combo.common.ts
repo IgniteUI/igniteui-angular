@@ -421,7 +421,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public cssClass = 'igx-combo'; // Independent of display density for the time being
 
     /**
-     * An @Input property that enabled/disables combo. The default is `false`.
+     * Disables the combo. The default is `false`.
      * ```html
      * <igx-combo [disabled]="'true'">
      * ```

@@ -205,7 +205,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * An @Input property that indicates when the drag should start.
+     * Indicates when the drag should start.
      * By default the drag starts after the draggable element is moved by 5px.
      * ```html
      * <div igxDrag [dragTolerance]="100">
@@ -219,7 +219,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragTolerance = 5;
 
     /**
-     * An @Input property that indicates the directions that the element can be dragged.
+     * Indicates the directions that the element can be dragged.
      * By default it is set to both horizontal and vertical directions.
      * ```html
      * <div igxDrag [dragDirection]="dragDir">
@@ -236,7 +236,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragDirection = DragDirection.BOTH;
 
     /**
-     * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
+     * A property that provides a way for igxDrag and igxDrop to be linked through channels.
      * It accepts single value or an array of values and evaluates then using strict equality.
      * ```html
      * <div igxDrag [dragChannel]="'odd'">
@@ -253,7 +253,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragChannel: number | string | number[] | string[];
 
     /**
-     * An @Input property that specifies if the base element should not be moved and a ghost element should be rendered that represents it.
+     * Specifies if the base element should not be moved and a ghost element should be rendered that represents it.
      * By default it is set to `true`.
      * If it is set to `false` when dragging the base element is moved instead and no ghost elements are rendered.
      * ```html
@@ -294,7 +294,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostStyle = {};
 
     /**
-     * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
+     * Specifies a template for the ghost element created when dragging starts and `ghost` is true.
      * By default a clone of the base element the igxDrag is instanced is created.
      * ```html
      * <div igxDrag [ghostTemplate]="customGhost">
@@ -328,7 +328,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostHost;
 
     /**
-     * An @Input assigning a scroll container to the dragged element. By default its the window.
+     * Overrides the scroll container of the dragged element. By default its the window.
      */
     @Input()
     public scrollContainer: HTMLElement = null
@@ -643,7 +643,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _containerScrollIntervalId = null;
 
     /**
-     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
+     * Specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -664,7 +664,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
+     * Specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -1618,7 +1618,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     }
 
     /**
-     * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
+     * A property that provides a way for igxDrag and igxDrop to be linked through channels.
      * It accepts single value or an array of values and evaluates then using strict equality.
      * ```html
      * <div igxDrag [dragChannel]="'odd'">
@@ -1635,7 +1635,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public dropChannel: number | string | number[] | string[];
 
     /**
-     * An @Input property that specifies a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     * Specifies a drop strategy type that will be executed when an `IgxDrag` element is released inside
      *  the current drop area. The provided strategies are:
      *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
      *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
