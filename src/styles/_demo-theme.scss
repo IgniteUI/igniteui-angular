@@ -28,9 +28,9 @@ body {
 }
 
 .nav-header {
-    @if luminance($background-color) < .5 {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $background-color);
+    @if $variant == 'light' {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg');
     } @else {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $background-color);
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg');
     }
 }
