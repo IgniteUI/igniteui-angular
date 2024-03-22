@@ -850,6 +850,7 @@
         padding-inline: pad-inline(rem(4px), rem(4px), rem(12px));
     }
 
+
     %view-item {
         display: flex;
         justify-content: center;
@@ -885,7 +886,7 @@
         }
 
         .igx-date-picker {
-            margin-bottom: 0;
+            margin-block-end: 0;
 
             %views-navigation {
                 padding-bottom: 0;
@@ -937,12 +938,20 @@
     }
 
     %header-display {
+        display: flex;
+        flex-direction: column;
         color: var-get($theme, 'header-foreground');
         background: var-get($theme, 'header-background');
         padding: $header-padding;
         position: relative;
 
+        @if $variant == 'material' {
+            gap: rem(24px);
+        }
+
         @if $variant == 'indigo-design' {
+            gap: rem(2px);
+
             &::after {
                 content: '';
                 position: absolute;
@@ -1168,7 +1177,7 @@
             }
 
             @if $bootstrap-theme {
-                margin-bottom: 0;
+                margin-block-end: 0;
             }
         }
 
@@ -1744,6 +1753,8 @@
     }
 
     %date-special {
+        font-weight: 700;
+
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
             background: var-get($theme, 'date-special-background');
@@ -2532,6 +2543,7 @@
     %date-disabled-special {
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
+            background: var-get($theme, 'date-special-background');
         }
     }
 
@@ -2544,6 +2556,7 @@
     %date-disabled-current {
         %date-inner {
             color: var-get($theme, 'date-current-foreground');
+            background: var-get($theme, 'date-current-background');
         }
     }
 
@@ -2598,7 +2611,9 @@
     }
 
     %header-date {
-        @include type-style($header-date);
+        @include type-style($header-date) {
+            margin: 0;
+        };
     }
 
     %views-navigation,

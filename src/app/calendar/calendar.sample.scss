@@ -50,7 +50,7 @@ small {
         padding: $padding;
         gap: $padding;
         overflow: auto;
-        flex: 1;
+        flex-grow: 1;
     }
 
     &__settings {
