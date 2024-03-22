@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,7 +23,7 @@ import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, NgFor, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, NgIf, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]
 })
-export class GridRowEditSampleComponent {
+export class GridRowEditSampleComponent implements AfterViewInit {
     @ViewChild(IgxToggleDirective, { static: true })
     public toggle: IgxToggleDirective;
     @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true })
@@ -86,7 +86,9 @@ export class GridRowEditSampleComponent {
     private cssBig = `font-size: 16px; font-weight: 800;`;
     private addProductId: number;
 
-    constructor() {
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit(): void {
         const enhancedData = data.map((e) => Object.assign(e, {
             UnitPrice2: this.getRandomInt(10, 1000),
             UnitsInStock2: this.getRandomInt(1, 100),
@@ -100,6 +102,7 @@ export class GridRowEditSampleComponent {
         this.addProductId = this.data.length + 1;
         this.generatePerformanceData(10000, 100);
         this.selectionMode = GridSelectionMode.multiple;
+        this.cdr.detectChanges();
     }
 
     public addRow(gridID) {
