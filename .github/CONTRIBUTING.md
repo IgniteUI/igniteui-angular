@@ -12,7 +12,7 @@ In order to perform all the necessary checks before pulling your changes in, you
     npm install
     npm test
 
-[Naming Convention](../../../wiki/General-Naming-Guidelines-for-Ignite-UI-for-Angular)  
+[General Naming and Coding Guidelines](../../../wiki/General-Naming-and-Coding-Guidelines-for-Ignite-UI-for-Angular)  
 [CSS Naming Convention](../css-naming-convention.md)  
 
 # Workflow
