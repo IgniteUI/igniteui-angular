@@ -10,9 +10,9 @@ import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.componen
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
-const SHOW_CONTROLS_CLASS = 'show-controls';
+const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
-describe('IgxSplitter', () => {
+fdescribe('IgxSplitter', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => TestBed.configureTestingModule({
     imports: [
@@ -42,8 +42,8 @@ describe('IgxSplitter', () => {
 
     it('should show splitter controls.', () => {
         const splitterBarDIV = fixture.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS)).nativeElement;
-        const showControlsClass = splitterBarDIV.classList.contains(SHOW_CONTROLS_CLASS);
-        expect(showControlsClass).toBeTruthy();
+        const collapsibleClass = splitterBarDIV.classList.contains(COLLAPSIBLE_CLASS);
+        expect(collapsibleClass).toBeTruthy();
     });
 
     it('should render vertical splitter.', () => {

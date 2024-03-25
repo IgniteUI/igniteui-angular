@@ -181,12 +181,12 @@ export class IgxSplitterComponent implements AfterContentInit {
      * 
      * @example
      * ```html
-     * <igx-splitter [showControls]='false''>
+     * <igx-splitter [collapsible]='false''>
      * </igx-splitter>
      * ```
      */
     @Input()
-    public showControls: boolean = true; // Input to toggle showing/hiding controls
+    public collapsible: boolean = true; // Input to toggle showing/hiding expanders
 
     /**
      * @hidden @internal
@@ -383,7 +383,7 @@ export class IgxSplitBarComponent {
      * Sets the visibility of the handle and expanders in the splitter bar.
      */
     @Input()
-    public showControls: boolean;
+    public collapsible: boolean;
 
 
     /**

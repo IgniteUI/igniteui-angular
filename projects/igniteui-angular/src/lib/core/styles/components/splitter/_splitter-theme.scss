@@ -132,10 +132,10 @@
         border-inline-width: 0;
     }
 
-    %handle-controls {
+    %indigo-splitter-bar {
         @extend %hide-controls;
 
-        &.show-controls {
+        &.igx-splitter-bar--collapsible {
             &:hover {
                 @extend %show-controls;
             }
@@ -146,7 +146,7 @@
             margin: 0 rem(2.5px);
             border-inline-width: 0;
 
-            &.show-controls {
+            &.igx-splitter-bar--collapsible {
                 &:hover {
                     @extend %expand-bar-horizontal;
                 }
@@ -159,7 +159,7 @@
             margin: rem(2.5px) 0;
             border-block-width: 0;
 
-            &.show-controls {
+            &.igx-splitter-bar--collapsible {
                 &:hover {
                     @extend %expand-bar-vertical;
                 }
@@ -178,9 +178,17 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
+        
+        &.igx-splitter-bar--collapsible {
+            @if $variant != 'indigo-design' {
+                @extend %show-controls;
+            }
+        }
+
+        @extend %hide-controls;
 
         @if $variant == 'indigo-design' {
-            @extend %handle-controls;
+            @extend %indigo-splitter-bar;
         }
 
         &::before {
@@ -206,14 +214,13 @@
         
         @if $variant == 'indigo-design' {
             box-shadow: none;
-            opacity: 1;
             
-            %handle-controls {
+            %indigo-splitter-bar {
                 background: var-get($theme, 'focus-color');
                 border-color: var-get($theme, 'focus-color');
                 opacity: 1;
 
-                &.show-controls {
+                &.igx-splitter-bar--collapsible {
                     @extend %show-controls;
 
                     [aria-orientation='horizontal'] & {
