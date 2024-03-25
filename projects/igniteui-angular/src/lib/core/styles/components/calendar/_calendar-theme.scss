@@ -1081,7 +1081,10 @@
     }
 
     %days-view {
-        padding-inline: pad-inline(rem(12px));
+        @if not $bootstrap-theme {
+            padding-inline: pad-inline(rem(12px));
+        }
+
         gap: $date-view-row-gap;
 
         @if $variant == 'bootstrap' {
