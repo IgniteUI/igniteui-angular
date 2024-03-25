@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
@@ -19,8 +19,9 @@ describe('IgxSplitter', () => {
         SplitterTestComponent
     ]
 }).compileComponents()));
-
-    let fixture; let splitter;
+    let fixture: ComponentFixture<SplitterTestComponent>;
+    let splitter: IgxSplitterComponent;
+    
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
@@ -40,10 +41,16 @@ describe('IgxSplitter', () => {
         expect(secondPane.style.order).toBe('2');
     });
 
-    it('should show splitter controls.', () => {
+    it('should correctly add the collapsible class.', () => {
         const splitterBarDIV = fixture.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS)).nativeElement;
         const collapsibleClass = splitterBarDIV.classList.contains(COLLAPSIBLE_CLASS);
         expect(collapsibleClass).toBeTruthy();
+
+        splitter.collapsible = false;
+        fixture.detectChanges();
+
+        const noCollapsibleClass = splitterBarDIV.classList.contains(COLLAPSIBLE_CLASS);
+        expect(noCollapsibleClass).toBeFalsy();
     });
 
     it('should render vertical splitter.', () => {

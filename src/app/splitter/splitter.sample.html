@@ -1,24 +1,6 @@
-<div>Simple sample</div>
-<igx-splitter style='height: 30vh;' [type]='typeHorizontal'>
-    <igx-splitter-pane size='20%'>
-        <div style='width:100%;'>
-           Pane 1
-        </div>
-    </igx-splitter-pane>
-    <igx-splitter-pane size='200px'>
-        <div style='width:100%;'>
-            Pane 2
-         </div>
-    </igx-splitter-pane>
-    <igx-splitter-pane>
-        <div style='width:100%;'>
-            Pane 3
-         </div>
-    </igx-splitter-pane>
-</igx-splitter>
-
-<div>Splitter with hidden controls</div>
-<igx-splitter [collapsible]='false' style='height: 30vh;'>
+<button (click)='splitter.collapsible = !splitter.collapsible'>Toggle collapsible</button>
+<div>Simple Sample</div>
+<igx-splitter #splitter [collapsible]='false' style='height: 40vh;'>
     <igx-splitter-pane size='20%'>
         <div style='width:100%;'>
            Pane 1
@@ -37,7 +19,7 @@
 </igx-splitter>
  
 <div>Nested splitters sample</div>
-<igx-splitter style='height: 30vh;' [type]='0' >
+<igx-splitter style='height: 40vh;' [type]='0' >
     <igx-splitter-pane>
         <igx-splitter [type]='1' [style.width]='"100%"'>
             <igx-splitter-pane>

@@ -178,14 +178,14 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
-        
-        &.igx-splitter-bar--collapsible {
-            @if $variant != 'indigo-design' {
+
+        @if $variant != 'indigo-design' {
+            @extend %hide-controls;
+
+            &.igx-splitter-bar--collapsible {
                 @extend %show-controls;
             }
         }
-
-        @extend %hide-controls;
 
         @if $variant == 'indigo-design' {
             @extend %indigo-splitter-bar;

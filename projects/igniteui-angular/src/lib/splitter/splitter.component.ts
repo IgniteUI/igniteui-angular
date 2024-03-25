@@ -181,7 +181,7 @@ export class IgxSplitterComponent implements AfterContentInit {
      * 
      * @example
      * ```html
-     * <igx-splitter [collapsible]='false''>
+     * <igx-splitter [collapsible]='false'>
      * </igx-splitter>
      * ```
      */
@@ -384,7 +384,6 @@ export class IgxSplitBarComponent {
      */
     @Input()
     public collapsible: boolean;
-
 
     /**
      * Gets/Sets the orientation.
