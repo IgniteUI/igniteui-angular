@@ -176,6 +176,19 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * Sets the visibility of the handle and expanders in the splitter bar.
+     * True by default
+     * 
+     * @example
+     * ```html
+     * <igx-splitter [showControls]='false''>
+     * </igx-splitter>
+     * ```
+     */
+    @Input()
+    public showControls: boolean = true; // Input to toggle showing/hiding controls
+
+    /**
      * @hidden @internal
      * Gets the `flex-direction` property of the current `SplitterComponent`.
      */
@@ -365,6 +378,13 @@ export class IgxSplitBarComponent {
      */
     @HostBinding('class.igx-splitter-bar-host')
     public cssClass = 'igx-splitter-bar-host';
+
+     /**
+     * Sets the visibility of the handle and expanders in the splitter bar.
+     */
+    @Input()
+    public showControls: boolean;
+
 
     /**
      * Gets/Sets the orientation.

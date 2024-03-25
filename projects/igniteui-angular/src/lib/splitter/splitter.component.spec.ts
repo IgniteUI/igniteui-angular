@@ -10,6 +10,7 @@ import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.componen
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
+const SHOW_CONTROLS_CLASS = 'show-controls';
 
 describe('IgxSplitter', () => {
     configureTestSuite();
@@ -37,6 +38,12 @@ describe('IgxSplitter', () => {
         expect(firstPane.style.order).toBe('0');
         expect(splitterBar.style.order).toBe('1');
         expect(secondPane.style.order).toBe('2');
+    });
+
+    it('should show splitter controls.', () => {
+        const splitterBarDIV = fixture.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS)).nativeElement;
+        const showControlsClass = splitterBarDIV.classList.contains(SHOW_CONTROLS_CLASS);
+        expect(showControlsClass).toBeTruthy();
     });
 
     it('should render vertical splitter.', () => {

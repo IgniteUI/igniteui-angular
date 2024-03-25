@@ -6,6 +6,7 @@
                     [siblings]="getPaneSiblingsByOrder(pane.order + 1, index)"
                     (moveStart)="onMoveStart($event)"
                     (moving)="onMoving($event)"
-                    (movingEnd)="onMoveEnd($event)">
+                    (movingEnd)="onMoveEnd($event)"
+                    [showControls] = "showControls">
     </igx-splitter-bar>
 </ng-container>

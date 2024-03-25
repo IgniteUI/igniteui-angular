@@ -100,29 +100,56 @@
         height: 100%;
     }
 
-    %aria-orientation-indigo {
+    %hide-controls {
         %igx-splitter-handle,
         %igx-splitter-expander {
             opacity: 0;
             transition: opacity .25s ease;
         }
+    }
 
-        &:hover {
-            %igx-splitter-handle,
-            %igx-splitter-expander {
-                opacity: 1;
-                transition: opacity .25s ease;
+    %show-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 1;
+            transition: opacity .25s ease;
+        }
+    }
+
+    %expand-bar-horizontal {
+        transition: width .25s ease;
+        width: 100%;
+        margin: 0;
+        border-inline-width: rem(1px);
+        border-block-width: 0;
+    }
+
+    %expand-bar-vertical {
+        transition: height .25s ease;
+        height: 100%;
+        margin: 0;
+        border-block-width: rem(1px);
+        border-inline-width: 0;
+    }
+
+    %handle-controls {
+        @extend %hide-controls;
+
+        &.show-controls {
+            &:hover {
+                @extend %show-controls;
             }
         }
-
+        
         [aria-orientation='horizontal'] & {
             width: rem(1px);
             margin: 0 rem(2.5px);
+            border-inline-width: 0;
 
-            &:hover {
-                transition: width .25s ease;
-                width: 100%;
-                margin: 0;
+            &.show-controls {
+                &:hover {
+                    @extend %expand-bar-horizontal;
+                }
             }
         }
 
@@ -130,11 +157,12 @@
             height: rem(1px);
             width: 100%;
             margin: rem(2.5px) 0;
+            border-block-width: 0;
 
-            &:hover {
-                transition: height .25s ease;
-                height: 100%;
-                margin: 0;
+            &.show-controls {
+                &:hover {
+                    @extend %expand-bar-vertical;
+                }
             }
         }
     }    
@@ -152,8 +180,7 @@
         transition: opacity .15s $out-quad !important;
 
         @if $variant == 'indigo-design' {
-            @extend %aria-orientation-indigo;
-            border-width: 0;
+            @extend %handle-controls;
         }
 
         &::before {
@@ -169,10 +196,6 @@
         &:hover {
             transition: all .25s ease-out;
             opacity: 1;
-
-            @if $variant == 'indigo-design' {
-                border-width: rem(1px)
-            }
         }
     }
 
@@ -180,21 +203,27 @@
         // Remove the default browser outline styles
         outline: transparent solid rem(1px);
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
-
+        
         @if $variant == 'indigo-design' {
-            background: var-get($theme, 'focus-color');
-            %aria-orientation-indigo {
-                border-width: rem(1px);
-                
-                [aria-orientation='horizontal'] & {
-                    width: 100%;
-                    margin: 0;
-                }
+            box-shadow: none;
+            opacity: 1;
+            
+            %handle-controls {
+                background: var-get($theme, 'focus-color');
+                border-color: var-get($theme, 'focus-color');
+                opacity: 1;
 
-                [aria-orientation='vertical'] & {
-                    height: 100%;
-                    margin: 0;
-                }   
+                &.show-controls {
+                    @extend %show-controls;
+
+                    [aria-orientation='horizontal'] & {
+                        @extend %expand-bar-horizontal;
+                    }
+                    
+                    [aria-orientation='vertical'] & {
+                        @extend %expand-bar-vertical;
+                    }
+                }
             }
         }
     }

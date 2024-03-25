@@ -7,8 +7,9 @@
     (dragStart)="onDragStart($event)"
     (dragMove)="onDragMove($event)"
     (dragEnd)="onDragEnd($event)"
+    [class.show-controls]="showControls"
 >
     <div class="igx-splitter-bar__expander--start" igxDragIgnore (click)="onCollapsing(false)" [hidden]="prevButtonHidden"></div>
-    <div class="igx-splitter-bar__handle" ></div>
+    <div class="igx-splitter-bar__handle"></div>
     <div class="igx-splitter-bar__expander--end" igxDragIgnore (click)="onCollapsing(true)" [hidden]="nextButtonHidden"></div>
 </div>
