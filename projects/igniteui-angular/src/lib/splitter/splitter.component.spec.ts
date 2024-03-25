@@ -12,7 +12,7 @@ const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
-fdescribe('IgxSplitter', () => {
+describe('IgxSplitter', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => TestBed.configureTestingModule({
     imports: [
