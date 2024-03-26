@@ -11,6 +11,7 @@ import {
     IFormattingOptions,
     IgxButtonDirective,
     IgxButtonGroupComponent,
+    IgxDateRangePickerModule,
     IgxCalendarComponent,
     IgxCalendarView,
     IgxCardComponent,
@@ -22,6 +23,8 @@ import {
     IgxRippleDirective,
     IgxSwitchComponent,
     IViewDateChangeEventArgs,
+    DateRange,
+    DateRangeDescriptor,
 } from "igniteui-angular";
 
 import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
@@ -65,6 +68,7 @@ defineComponents(IgcCalendarComponent);
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
+        IgxDateRangePickerModule,
         IgxCardComponent,
         IgxCalendarComponent,
         IgxButtonGroupComponent,
@@ -78,7 +82,7 @@ defineComponents(IgcCalendarComponent);
         NgFor,
     ],
 })
-export class CalendarSampleComponent  {
+export class CalendarSampleComponent {
     @ViewChild("calendar", { static: true })
     private calendar: IgxCalendarComponent;
 
@@ -151,26 +155,44 @@ export class CalendarSampleComponent  {
         {
             type: DateRangeType.Specific,
             dateRange: [
-                new Date(
-                    this._today.getFullYear(),
-                    this._today.getMonth() - 1,
-                    31,
-                ),
+                new Date(this._today.getFullYear(), this._today.getMonth(), 0),
                 new Date(this._today.getFullYear(), this._today.getMonth(), 20),
                 new Date(this._today.getFullYear(), this._today.getMonth(), 21),
             ],
         },
     ];
 
-    protected specialDates = [
-        {
-            type: DateRangeType.Specific,
-            dateRange: [
-                new Date(this._today.getFullYear(), this._today.getMonth(), 2),
-                new Date(this._today.getFullYear(), this._today.getMonth(), 10),
-            ],
-        },
-    ];
+    private _specialRange: DateRange = {
+        start: new Date(this._today.getFullYear(), this._today.getMonth(), 8),
+        end: new Date(this._today.getFullYear(), this._today.getMonth(), 10),
+    };
+
+    protected set specialRange(value: DateRange) {
+        this.specialDates = value;
+        this._specialRange = value;
+    };
+
+    protected get specialRange(): DateRange {
+        return this._specialRange;
+    }
+
+    private _specialDates: DateRangeDescriptor[] = [{
+        type: DateRangeType.Between,
+        dateRange: [this.specialRange.start as Date, this.specialRange.end as Date]
+    }]
+
+    protected get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+
+    protected set specialDates(dates: DateRange) {
+        this._specialDates = [
+            {
+                type: DateRangeType.Between,
+                dateRange: [dates.start as Date, dates.end as Date]
+            }
+        ]
+    }
 
     public toggleLeadingTrailing() {
         this.outsideDays = !this.outsideDays;
