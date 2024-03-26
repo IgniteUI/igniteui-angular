@@ -33,6 +33,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { areSameMonth, formatToParts, getClosestActiveDate, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 import { IgxCalendarBaseDirective } from './calendar-base';
+import { KeyboardNavigationService } from './calendar.services';
 
 let NEXT_ID = 0;
 
@@ -63,6 +64,10 @@ let NEXT_ID = 0;
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: IgxCalendarComponent,
 		},
+        {
+            multi: false,
+            provide: KeyboardNavigationService,
+        },
 	],
 	selector: 'igx-calendar',
 	templateUrl: 'calendar.component.html',

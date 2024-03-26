@@ -15,7 +15,8 @@ import { CalendarDay } from './common/model';
 /** @hidden @internal */
 @Directive({
     selector: '[igxCalendarBase]',
-    standalone: true
+    standalone: true,
+    providers: [KeyboardNavigationService]
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**

@@ -1,9 +1,7 @@
 import { Injectable, ElementRef, NgZone } from "@angular/core";
 import { EventManager } from "@angular/platform-browser";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class KeyboardNavigationService {
     private keyHandlers = new Map<string, (event: KeyboardEvent) => void>();
     private eventUnsubscribeFn: Function | null = null;
