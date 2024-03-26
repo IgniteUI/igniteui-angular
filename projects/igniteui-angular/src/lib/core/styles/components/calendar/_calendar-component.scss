@@ -426,7 +426,7 @@
         }
 
         @include e(date, $mods: ('disabled', 'inactive')) {
-            @extend %date-disabled !optional;
+            @extend %date-disabled-inactive !optional;
         }
     }
 

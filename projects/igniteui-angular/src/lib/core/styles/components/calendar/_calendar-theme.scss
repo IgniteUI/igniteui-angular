@@ -1066,13 +1066,19 @@
         gap: rem(24px);
         position: relative;
         height: rem(56px);
-        padding-inline: rem(16px);
+        padding-inline: rem(24px);
         color: var-get($theme, 'picker-foreground');
         background: var-get($theme, 'picker-background');
 
         &:focus,
         &:focus-within {
             outline: none;
+        }
+
+        @if $variant != 'indigo-design' {
+            igx-icon {
+                --size: #{rem(24px)}
+            }
         }
     }
 
@@ -1128,10 +1134,6 @@
 
         [dir='rtl'] & {
             transform: scaleX(-1);
-        }
-
-        igx-icon {
-            --component-size: var(--ig-size, var(--ig-size-medium));
         }
     }
 
@@ -1829,7 +1831,7 @@
     %date-selected-special {
         %date-inner {
             &::after {
-                @if $variant == 'bootstrap' or $variant == 'material' {
+                @if $variant == 'material' {
                     border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
@@ -2540,6 +2542,13 @@
         %date-inner {
             color: var-get($theme, 'date-disabled-foreground');
             opacity: .38;
+        }
+    }
+
+    %date-disabled-inactive {
+        %date-inner {
+            color: var-get($theme, 'inactive-color');
+            opacity: 1;
         }
     }
 
