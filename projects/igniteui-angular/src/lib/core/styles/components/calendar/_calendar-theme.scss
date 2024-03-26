@@ -946,7 +946,7 @@
         position: relative;
 
         @if $variant == 'material' {
-            gap: rem(24px);
+            gap: rem(28px);
         }
 
         @if $variant == 'indigo-design' {
