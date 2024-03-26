@@ -1080,6 +1080,10 @@
             igx-icon {
                 --size: #{rem(24px)}
             }
+        } @else {
+            igx-icon {
+                --size: #{rem(14px)};
+            }
         }
     }
 
@@ -1120,6 +1124,10 @@
         user-select: none;
         outline: none;
         cursor: pointer;
+
+        @if $variant == 'indigo-design' {
+            padding: rem(5px);
+        }
 
         @if $bootstrap-theme {
             top: math.div($cal-picker-padding, 2);
@@ -1645,10 +1653,6 @@
                 @if $variant != 'fluent' {
                     width: $date-inner-size;
                     height: $date-inner-size;
-                } @else {
-                    // TODO see if this can be moved it the schemas
-                    width: sizable(rem(22px), rem(24px), rem(28px));
-                    height: sizable(rem(22px), rem(24px), rem(28px));
                 }
             }
         }
@@ -2406,9 +2410,6 @@
                 @if $variant != 'fluent' {
                     width: var-get($theme, 'inner-size');
                     height: var-get($theme, 'inner-size');
-                } @else {
-                    width: sizable(rem(22px), rem(24px), rem(28px));
-                    height: sizable(rem(22px), rem(24px), rem(28px));
                 }
 
                 @if $variant == 'material' or $variant == 'bootstrap' {
@@ -2460,9 +2461,6 @@
                 @if $variant != 'fluent' {
                     width: var-get($theme, 'inner-size');
                     height: var-get($theme, 'inner-size');
-                } @else {
-                    width: sizable(rem(22px), rem(24px), rem(28px));
-                    height: sizable(rem(22px), rem(24px), rem(28px));
                 }
 
                 @if $variant == 'material' or $variant == 'bootstrap' {
@@ -2649,7 +2647,9 @@
     }
 
     %weekday-label {
-        @include type-style($weekday-label, false);
-        margin: 0;
+        @include type-style($weekday-label, false) {
+            font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
+            margin: 0;
+        }
     }
 }

@@ -1,14 +1,14 @@
 @use 'sass:map';
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typeface: $material-typeface;
-$type-scale: $material-type-scale;
+$palette: $light-fluent-palette;
+$schema: $light-fluent-schema;
+$typeface: $fluent-typeface;
+$type-scale: $fluent-type-scale;
 $variant: map.get($schema, '_meta', 'variant');
 
 :root {
-    --ig-theme: material;
+    --ig-theme: fluent;
 }
 
 $background-color: var(--ig-gray-900-contrast);
