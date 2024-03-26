@@ -103,10 +103,7 @@
         align-items: center;
         min-width: var(--_badge-size);
         min-height: var(--_badge-size);
-        font-size: calc(var(--_badge-size) / 2);
-        font-weight: $badge-font-weight;
         color: var-get($theme, 'text-color');
-        line-height: 1;
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'shadow');
@@ -126,10 +123,6 @@
         }
 
         @if $variant == 'indigo-design' {
-            font-size: rem(11px);
-            line-height: rem(15px);
-            font-weight: 700;
-
             igx-icon {
                 $icon-size: rem(12px);
 
@@ -166,5 +159,19 @@
 
     %igx-badge--hidden {
         visibility: hidden;
+    }
+}
+
+/// Adds typography styles for the igx-badge component.
+/// Uses the 'caption' category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(text: 'caption')] - The categories from the typographic scale used for type styles.
+@mixin badge-typography($categories: (text: 'caption')) {
+    $text: map.get($categories, 'text');
+
+    %igx-badge-display {
+        @include type-style($text) {
+            margin: 0;
+        }
     }
 }
