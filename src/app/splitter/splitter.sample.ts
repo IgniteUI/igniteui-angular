@@ -16,6 +16,6 @@ export class SplitterSampleComponent {
     public typeVertical = SplitterType.Vertical;
 
     public toggleCollapsible() {
-        this.splitterComponent.collapsible = !this.splitterComponent.collapsible;
+        this.splitterComponent.nonCollapsible = !this.splitterComponent.nonCollapsible;
     }
 }

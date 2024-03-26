@@ -46,7 +46,7 @@ describe('IgxSplitter', () => {
         const collapsibleClass = splitterBarDIV.classList.contains(COLLAPSIBLE_CLASS);
         expect(collapsibleClass).toBeTruthy();
 
-        splitter.collapsible = false;
+        splitter.nonCollapsible = true;
         fixture.detectChanges();
 
         const noCollapsibleClass = splitterBarDIV.classList.contains(COLLAPSIBLE_CLASS);
