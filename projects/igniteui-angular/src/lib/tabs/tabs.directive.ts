@@ -31,7 +31,7 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     /**
-     * An @Input property that gets/sets the index of the selected item.
+     * Gets/Sets the index of the selected item.
      * Default value is 0 if contents are defined otherwise defaults to -1.
      */
     @Input()

@@ -44,13 +44,11 @@ export interface IGridRowEventArgs extends IBaseEventArgs {
 /** Represents event arguments related to grid editing completion. */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     /**
-     * @deprecated since version 17.1.0
-     * Use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     primaryKey: any;
     rowKey: any;
@@ -171,16 +169,14 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  */
 export interface IRowDataEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use`rowData` instead
+     * @deprecated since version 17.1.0. Use the `rowData` property instead.
      */
     data: any;
     rowData: any
     /**
-     * @deprecated since version 17.1.0
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
-     * use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     primaryKey: any;
     rowKey: any;
@@ -396,8 +392,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     /**
      * Represents the ID of the row that emitted the event (which state is changed)
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     rowKey: any;
@@ -425,10 +420,9 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     readonly rowID: any;
     readonly rowKey: any;

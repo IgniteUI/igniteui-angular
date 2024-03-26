@@ -140,7 +140,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the fields.
+     * Sets the fields.
      */
     @Input()
     public set fields(fields: FieldType[]) {
@@ -164,7 +164,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the expression tree.
+     * Sets the expression tree.
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {

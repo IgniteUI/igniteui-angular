@@ -151,7 +151,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     protected defaultExcelFilterOperations: TemplateRef<any>;
 
     /**
-     * An @Input property that sets the column.
+     * Sets the column.
      */
     @Input()
     public set column(value: ColumnType) {

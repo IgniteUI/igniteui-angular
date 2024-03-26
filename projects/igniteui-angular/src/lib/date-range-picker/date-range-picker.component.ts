@@ -130,11 +130,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public formatter: (val: DateRange) => string;
 
     /**
-     * The default text of the calendar dialog `done` button.
+     * Overrides the default text of the calendar dialog **Done** button.
      *
      * @remarks
-     * Default value is `Done`.
-     * An @Input property that renders Done button with custom text. By default `doneButtonText` is set to Done.
+     * Defaults to the value from resource strings, `"Done"` for the built-in EN.
      * The button will only show up in `dialog` mode.
      *
      * @example

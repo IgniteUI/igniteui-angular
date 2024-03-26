@@ -21,7 +21,7 @@ export const DisplayDensity = mkenum({
     compact: 'compact',
 });
 /**
- * @deprecated since version 16.1.x.
+ * @deprecated since version 16.1.0.
  * Please use the `--ig-size` CSS custom property.
  * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
  */
@@ -29,9 +29,9 @@ export type DisplayDensity =
     (typeof DisplayDensity)[keyof typeof DisplayDensity];
 
 /**
- * @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property.
- *
  * Describes the object used to configure the DisplayDensity in Angular DI.
+ *
+ * @deprecated since version 16.1.0. Please use the `--ig-size` CSS custom property.
  */
 export interface IDisplayDensityOptions {
     displayDensity: DisplayDensity;
@@ -43,12 +43,13 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
 }
 
 /**
- * @deprecated since version 16.1.x.
+ * Defines the DisplayDensity DI token.
+ *
+ * @deprecated since version 16.1.0.
  * Please use the `--ig-size` CSS custom property.
  * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
  *
  * @hidden
- * Defines the DisplayDensity DI token.
  */
 export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>(
     'DisplayDensity'
@@ -69,16 +70,16 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
-     * @deprecated since version 16.1.x.
-     * Please use the `--ig-size` CSS custom property.
-     * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
-     *
      * Returns the theme of the component.
      * The default theme is `comfortable`.
      * Available options are `comfortable`, `cosy`, `compact`.
      * ```typescript
      * let componentTheme = this.component.displayDensity;
      * ```
+     *
+     * @deprecated since version 16.1.0.
+     * Please use the `--ig-size` CSS custom property.
+     * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
      */
     @Input()
     public get displayDensity(): DisplayDensity {

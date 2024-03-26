@@ -356,7 +356,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     }
 
     /**
-     * An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
+     * Sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
      * ```html
      * <igx-linear-bar role="progressbar"></igx-linear-bar>
      * ```
@@ -366,7 +366,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public role = 'progressbar';
 
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
      * ```
@@ -510,7 +510,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public cssClass = 'igx-circular-bar';
 
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-circular-bar [id]="'igx-circular-bar-55'" [value]="50"></igx-circular-bar>
      * ```

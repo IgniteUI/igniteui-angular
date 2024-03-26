@@ -86,7 +86,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     /**
-     * An @Input property that sets the grid.
+     * Sets the grid.
      */
     @Input()
     public set grid(grid: GridType) {

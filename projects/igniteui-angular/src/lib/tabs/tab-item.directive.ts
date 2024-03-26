@@ -28,7 +28,7 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * An @Input property that allows you to enable/disable the item.
+     * Disables the item.
      */
     @Input({ transform: booleanAttribute })
     public disabled = false;
@@ -41,7 +41,7 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     private _selected = false;
 
     /**
-     * An @Input property which determines whether an item is selected.
+     * Gets/Sets whether an item is selected.
      */
     @Input({ transform: booleanAttribute })
     public get selected(): boolean {

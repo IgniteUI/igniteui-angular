@@ -103,7 +103,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     @Input()
     public variant: string | typeof IgxChipTypeVariant;
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      *
      * @example
      * ```html
@@ -126,7 +126,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public role = 'option';
 
     /**
-     * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
+     * Sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
      *
      * @example
      * ```html
@@ -147,7 +147,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
-     * An @Input property that stores data related to the chip.
+     * Stores data related to the chip.
      *
      * @example
      * ```html
@@ -158,7 +158,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public data: any;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
+     * Defines if the `IgxChipComponent` can be dragged in order to change it's position.
      * By default it is set to false.
      *
      * @example
@@ -170,7 +170,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public draggable = false;
 
     /**
-     * An @Input property that enables/disables the draggable element animation when the element is released.
+     * Enables/disables the draggable element animation when the element is released.
      * By default it's set to true.
      *
      * @example
@@ -182,7 +182,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public animateOnRelease = true;
 
     /**
-     * An @Input property that enables/disables the hiding of the base element that has been dragged.
+     * Enables/disables the hiding of the base element that has been dragged.
      * By default it's set to true.
      *
      * @example
@@ -194,7 +194,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public hideBaseOnDrag = true;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
+     * Defines if the `IgxChipComponent` should render remove button and throw remove events.
      * By default it is set to false.
      *
      * @example
@@ -206,7 +206,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public removable = false;
 
     /**
-     * An @Input property that overrides the default icon that the chip applies to the remove button.
+     * Overrides the default icon that the chip applies to the remove button.
      *
      * @example
      * ```html
@@ -218,7 +218,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public removeIcon: TemplateRef<any>;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` can be selected on click or through navigation,
+     * Defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
      *
      * @example
@@ -230,7 +230,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public selectable = false;
 
     /**
-     * An @Input property that overrides the default icon that the chip applies when it is selected.
+     * Overrides the default icon that the chip applies when it is selected.
      *
      * @example
      * ```html
@@ -249,7 +249,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public class = '';
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
+     * Disables the `IgxChipComponent`. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
      *
@@ -305,7 +305,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * An @Input property that sets the `IgxChipComponent` background color.
+     * Sets the `IgxChipComponent` background color.
      * The `color` property supports string, rgb, hex.
      *
      * @example

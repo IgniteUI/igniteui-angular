@@ -118,7 +118,6 @@ export class IgxAvatarComponent implements OnInit {
     public id = `igx-avatar-${NEXT_ID++}`;
 
     /**
-     * @deprecated in version 15.1.0.
      * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
      * By default the shape of the avatar is a square.
      *
@@ -126,8 +125,9 @@ export class IgxAvatarComponent implements OnInit {
      * ```html
      * <igx-avatar [roundShape]="true" ></igx-avatar>
      * ```
+     * @deprecated in version 15.1.0.
+     * @hidden
      */
-    /** @hidden @internal */
     @Input()
     @HostBinding('class.igx-avatar--circle')
     public get roundShape() {

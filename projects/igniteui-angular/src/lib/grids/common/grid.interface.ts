@@ -46,8 +46,7 @@ export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridService
 export interface IPathSegment {
     /**
      * The unique identifier of the row within the segment.
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     rowKey: any;
@@ -389,7 +388,7 @@ export interface ColumnType extends FieldType {
     searchable: boolean;
     /** Specifies whether the column belongs to a group of columns. */
     columnGroup: boolean;
-    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
+    /** @deprecated in version 13.1.0. Use the Grid's `moving` property instead. */
     movable: boolean;
     /** Indicades whether a column can be put in a group. If the value is true, the column can be put in a group */
     groupable: boolean;
@@ -662,9 +661,9 @@ export interface GridServiceType {
  * Extends `IGridDataBindable`
  */
 export interface GridType extends IGridDataBindable {
-    /** @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property. */
+    /** @deprecated since version 16.1.0. Please use the `--ig-size` CSS custom property. */
     displayDensity: DisplayDensity;
-    /** Represents the locale of the drig: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
+    /** Represents the locale of the Grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
     resourceStrings: IGridResourceStrings;
     /** Represents the native HTML element itself */
@@ -1353,7 +1352,9 @@ export interface IgxCellTemplateContext {
 
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /** @deprecated Use `key` */
+    /**
+     * @deprecated in version 15.1.0. Use the `key` property instead.
+     */
     rowID: any;
     key: any;
     selected: boolean;

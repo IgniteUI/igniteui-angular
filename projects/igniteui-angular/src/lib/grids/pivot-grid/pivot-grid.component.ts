@@ -1105,7 +1105,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * An @Input property that lets you fill the `IgxPivotGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-pivot-grid [data]="Data"></igx-pivot-grid>
      * ```
