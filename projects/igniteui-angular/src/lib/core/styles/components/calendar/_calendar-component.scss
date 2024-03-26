@@ -146,7 +146,6 @@
             @extend %date-selected-special !optional;
         }
 
-
         @include e(date, $mods: ('selected', 'range')) {
             @extend %date-selected-range !optional;
         }
@@ -413,8 +412,20 @@
             @extend %date-disabled !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'range')) {
+            @extend %date-disabled-range !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'range-preview')) {
+            @extend %date-disabled-range-preview !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'special')) {
             @extend %date-disabled-special !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'special', 'selected')) {
+            @extend %date-disabled-special-selected !optional;
         }
 
         @include e(date, $mods: ('disabled', 'selected')) {
@@ -425,8 +436,20 @@
             @extend %date-disabled-current !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'current', 'selected')) {
+            @extend %date-disabled-current-selected !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'inactive')) {
             @extend %date-disabled-inactive !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'first', 'disabled')) {
+            @extend %date-range-selected-first-disabled !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'last', 'disabled')) {
+            @extend %date-range-selected-first-disabled !optional;
         }
     }
 
@@ -439,10 +462,6 @@
 
         @include e(year) {
             @extend %view-item !optional;
-        }
-
-        @include e(year, 'active') {
-            @extend %year-active !optional;
         }
 
         @include e(year, 'current') {

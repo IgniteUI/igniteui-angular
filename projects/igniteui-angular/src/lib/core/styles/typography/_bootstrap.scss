@@ -36,7 +36,7 @@
     @include button-typography();
     @include button-group-typography();
     @include calendar-typography($categories: (
-        header-year: 'subtitle-1',
+        header-year: 'body-2',
         header-date: 'h4',
         weekday-label: 'body-2',
         picker-date: 'subtitle-1',
