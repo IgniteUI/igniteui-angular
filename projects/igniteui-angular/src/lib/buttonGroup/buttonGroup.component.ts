@@ -357,8 +357,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             return;
         }
 
-        this.updateSelected(index);
-
         const button = this.buttons[index];
         button.select();
     }
@@ -382,15 +380,31 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.values[indexInViewButtons].selected = true;
         }
 
-        // deselect other buttons if selectionMode is not multi
+        //deselect other buttons if selectionMode is not multi
         if (this.selectionMode !== 'multi' && this.selectedIndexes.length > 1) {
             this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
+                    this.updateDeselected(i);
                 }
             });
         }
 
+    }
+
+    public updateDeselected(index: number) {
+        const button = this.buttons[index];
+        if (this.selectedIndexes.indexOf(index) !== -1) {
+            this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
+        }
+
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
+        this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
+
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = false;
+        }
     }
 
     /**
@@ -412,16 +426,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         }
 
         const button = this.buttons[index];
-        this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
-
-        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
-        this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
         button.deselect();
-
-        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
-        if (indexInViewButtons !== -1) {
-            this.values[indexInViewButtons].selected = false;
-        }
     }
 
     /**
@@ -497,8 +502,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public _clickHandler(index: number) {
-        this.mutationObserver.disconnect();
-
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { owner: this, button, index };
 
@@ -519,8 +522,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 this.deselected.emit(args);
             }
         }
-
-        this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
     }
 
     private setMutationsObserver() {
@@ -530,13 +531,14 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 observer.disconnect();
 
                 const updatedButtons = this.getUpdatedButtons(records);
+                const initialSelectionState = JSON.parse(JSON.stringify(this.selectedIndexes));
 
                 if (updatedButtons.length > 0) {
                     updatedButtons.forEach((button) => {
                         const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
                         const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
 
-                        this.updateButtonSelectionState(index, args);
+                        this.updateButtonSelectionState(index, initialSelectionState, args);
                     });
                 }
 
@@ -544,7 +546,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 observer.observe(this._el.nativeElement, this.observerConfig);
 
                 // Cleanup function
-                this._renderer.listen(this._el.nativeElement, 'DOMNodeRemoved', () => {
+                this._renderer.listen(this._el.nativeElement, 'DOMAttrModified', () => {
                     observer.disconnect();
                 });
             });
@@ -566,12 +568,12 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         return updated;
     }
 
-    private updateButtonSelectionState(index: number, args: IButtonGroupEventArgs) {
-        if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selectButton(index);
+    private updateButtonSelectionState(index: number, initialSelectionState: number[], args: IButtonGroupEventArgs) {
+        if (initialSelectionState.indexOf(index) === -1) {
+            this.updateSelected(index);
             this.selected.emit(args);
         } else {
-            this.deselectButton(index);
+            this.updateDeselected(index);
             this.deselected.emit(args);
         }
     }
