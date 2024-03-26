@@ -2542,7 +2542,12 @@
 
         %date-inner {
             color: var-get($theme, 'date-disabled-foreground');
-            opacity: .38;
+
+            @if $variant == 'indigo-desing' {
+                opacity: .2;
+            } @else {
+                opacity: .5;
+            }
         }
     }
 
