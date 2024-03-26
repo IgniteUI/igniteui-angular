@@ -41,8 +41,8 @@ const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
-const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
-const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
+const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
+const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -279,7 +279,6 @@ describe('IgxDateRangePicker', () => {
             expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
             expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
             expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
-            expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
@@ -324,9 +323,9 @@ describe('IgxDateRangePicker', () => {
             if (startIndex === -1) {
                 throw new Error('Start date not found in calendar. Aborting.');
             }
-            UIInteractions.simulateClickAndSelectEvent(calendarDays[startIndex]);
+            UIInteractions.simulateMouseDownEvent(calendarDays[startIndex].firstChild as HTMLElement);
             if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
-                UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex]);
+                UIInteractions.simulateMouseDownEvent(calendarDays[endIndex].firstChild as HTMLElement);
             }
             fixture.detectChanges();
             dateRange.close();
@@ -1166,9 +1165,8 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.dateRange.projectedInputs
-                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
-                    .toBeTruthy();
+                const input = fixture.componentInstance.dateRange.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
+                expect(input.isFocused).toBeTruthy();
             }));
 
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {

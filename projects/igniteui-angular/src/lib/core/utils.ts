@@ -22,7 +22,7 @@ export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T)
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver;
+export const getResizeObserver = () => globalThis.window?.ResizeObserver;
 
 /**
  * @hidden
@@ -573,11 +573,50 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
+    const base = parseFloat(globalThis.window?.getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
 }
 
 /** Get the size of the component as derived from the CSS size variable */
 export function getComponentSize(el: Element) {
     return globalThis.window?.getComputedStyle(el).getPropertyValue('--component-size');
+}
+
+/** Get the first item in an array */
+export function first<T>(arr: T[]) {
+    return arr.at(0) as T;
+}
+
+/** Get the last item in an array */
+export function last<T>(arr: T[]) {
+    return arr.at(-1) as T;
+}
+
+/** Calculates the modulo of two numbers, ensuring a non-negative result. */
+export function modulo(n: number, d: number) {
+    return ((n % d) + d) % d;
+}
+
+/**
+ * Splits an array into chunks of length `size` and returns a generator
+ * yielding each chunk.
+ * The last chunk may contain less than `size` elements.
+ *
+ * @example
+ * ```typescript
+ * const arr = [0,1,2,3,4,5,6,7,8,9];
+ *
+ * Array.from(chunk(arr, 2)) // [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
+ * Array.from(chunk(arr, 3)) // [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+ * Array.from(chunk([], 3)) // []
+ * Array.from(chunk(arr, -3)) // Error
+ * ```
+ */
+export function* intoChunks<T>(arr: T[], size: number) {
+  if (size < 1) {
+    throw new Error('size must be an integer >= 1');
+  }
+  for (let i = 0; i < arr.length; i += size) {
+    yield arr.slice(i, i + size);
+  }
 }

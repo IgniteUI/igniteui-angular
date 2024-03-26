@@ -9,3 +9,21 @@
         margin-right: 8px;
     }
 }
+
+.sample-column {
+    border: 1px solid hsla(var(--ig-gray-200));
+    padding: 24px;
+}
+
+.sample-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.sample-actions__inner {
+    display: flex;
+    gap: 8px;
+}

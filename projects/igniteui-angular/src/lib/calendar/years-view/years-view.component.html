@@ -1,12 +1,21 @@
-<div class="igx-calendar__body">
-    <div class="igx-calendar__body-column" (wheel)="scroll($event)" (pan)="pan($event)">
-        <span class="igx-calendar__year"
-            [igxCalendarYear]="year"
-            [date]="date"
-            (yearSelection)="selectYear($event)"
-            *ngFor="let year of decade; trackBy: yearTracker">
-
-            {{ formattedYear(year) }}
+<div class="igx-years-view__grid" role="row">
+    <span
+        igxCalendarYear
+        #item="igxCalendarYear"
+        *ngFor="let year of range; trackBy: yearTracker"
+        class="igx-years-view__year"
+        role="gridcell"
+        [attr.id]="year.getTime()"
+        [attr.aria-label]="formattedYear(year).long"
+        [attr.aria-selected]="item.isSelected"
+        [attr.aria-current]="item.isCurrent"
+        [value]="year"
+        [date]="date"
+        [showActive]="showActive"
+        (itemSelection)="selectDate($event)"
+    >
+        <span class="igx-years-view__year-inner" aria-hidden="true">
+            {{ formattedYear(year).formatted }}
         </span>
-    </div>
+    </span>
 </div>

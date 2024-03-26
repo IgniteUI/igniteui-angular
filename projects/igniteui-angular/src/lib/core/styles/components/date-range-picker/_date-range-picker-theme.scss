@@ -14,7 +14,7 @@
     $schema: $light-material-schema,
     $label-color: null
 ) {
-    $name: 'igx-date-range';
+    $name: 'igx-date-range-picker';
     $date-range-schema: ();
 
     @if map.has-key($schema, 'date-range') {
@@ -46,6 +46,10 @@
 
         igx-input-group {
             flex: 1;
+        }
+
+        igx-calendar {
+            box-shadow: none;
         }
     }
 

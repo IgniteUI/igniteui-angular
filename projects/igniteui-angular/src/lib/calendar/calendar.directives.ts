@@ -11,6 +11,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    InjectionToken,
     Output,
     TemplateRef,
     ElementRef,
@@ -21,100 +22,108 @@ import {
 import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
 import { PlatformUtil } from '../core/utils';
+import { CalendarDay } from './common/model';
+
+export const IGX_CALENDAR_VIEW_ITEM =
+    new InjectionToken<IgxCalendarMonthDirective | IgxCalendarYearDirective>('IgxCalendarViewItem');
+
+@Directive()
+export abstract class IgxCalendarViewBaseDirective {
+    @Input()
+    public value: Date;
+
+    @Input()
+    public date: Date;
+
+    @Input()
+    public showActive = false;
+
+    @Output()
+    public itemSelection = new EventEmitter<Date>();
+
+    public get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+
+    constructor(public elementRef: ElementRef) { }
+
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event: MouseEvent) {
+        event.preventDefault();
+        this.itemSelection.emit(this.value);
+    }
+
+    public abstract get isCurrent(): boolean;
+    public abstract get isSelected(): boolean;
+    public abstract get isActive(): boolean;
+}
 
 /**
  * @hidden
  */
 @Directive({
     selector: '[igxCalendarYear]',
+    providers: [
+        { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarYearDirective }
+    ],
+    exportAs: 'igxCalendarYear',
     standalone: true
 })
-export class IgxCalendarYearDirective {
-
-    @Input('igxCalendarYear')
-    public value: Date;
-
-    @Input()
-    public date: Date;
-
-    @Output()
-    public yearSelection = new EventEmitter<Date>();
-
-    @HostBinding('class.igx-calendar__year--current')
-    public get currentCSS(): boolean {
-        return this.isCurrentYear;
+export class IgxCalendarYearDirective extends IgxCalendarViewBaseDirective {
+    @HostBinding('class.igx-years-view__year--current')
+    public get isCurrent(): boolean {
+        return CalendarDay.today.year === this.value.getFullYear();
     }
 
-    @HostBinding('attr.role')
-    public get role(): string {
-        return this.isCurrentYear ? 'spinbutton' : null;
+    @HostBinding('class.igx-years-view__year--selected')
+    public get isSelected(): boolean {
+        return this.value.getFullYear() === this.date.getFullYear();
     }
 
-    @HostBinding('attr.aria-valuenow')
-    public get valuenow(): number {
-        return this.isCurrentYear ? this.date.getFullYear() : null;
-    }
-
-    @HostBinding('attr.tabindex')
-    public get tabIndex(): number {
-        return this.isCurrentYear ? 0 : -1;
-    }
-
-
-    public get isCurrentYear(): boolean {
-        return this.date.getFullYear() === this.value.getFullYear();
-    }
-
-    public get nativeElement() {
-        return this.elementRef.nativeElement;
-    }
-
-    constructor(public elementRef: ElementRef) { }
-
-    @HostListener('click')
-    public onClick() {
-        this.yearSelection.emit(this.value);
+    @HostBinding('class.igx-years-view__year--active')
+    public get isActive(): boolean {
+        return this.isSelected && this.showActive;
     }
 }
 
 @Directive({
     selector: '[igxCalendarMonth]',
+    providers: [
+        { provide: IGX_CALENDAR_VIEW_ITEM, useExisting: IgxCalendarMonthDirective }
+    ],
+    exportAs: 'igxCalendarMonth',
     standalone: true
 })
-export class IgxCalendarMonthDirective {
-
-    @Input('igxCalendarMonth')
-    public value: Date;
-
-    @Input()
-    public date: Date;
-
-    @Input()
-    public index;
-
-    @Output()
-    public monthSelection = new EventEmitter<Date>();
-
-    @HostBinding('class.igx-calendar__month--current')
-    public get currentCSS(): boolean {
-        return this.isCurrentMonth;
+export class IgxCalendarMonthDirective extends IgxCalendarViewBaseDirective {
+    @HostBinding('class.igx-months-view__month--current')
+    public get isCurrent(): boolean {
+        const today = CalendarDay.today;
+        const date = CalendarDay.from(this.value);
+        return date.year === today.year && date.month === today.month;
     }
 
-    public get isCurrentMonth(): boolean {
-        return this.date.getMonth() === this.value.getMonth();
+    @HostBinding('class.igx-months-view__month--selected')
+    public get isSelected(): boolean {
+        return (this.value.getFullYear() === this.date.getFullYear() &&
+            this.value.getMonth() === this.date.getMonth()
+        );
     }
 
-    public get nativeElement() {
-        return this.elementRef.nativeElement;
+    @HostBinding('class.igx-months-view__month--active')
+    public get isActive(): boolean {
+        return this.isSelected && this.showActive;
     }
+}
 
-    constructor(public elementRef: ElementRef) { }
-
-    @HostListener('click')
-    public onClick() {
-        const date = new Date(this.value.getFullYear(), this.value.getMonth(), this.date.getDate());
-        this.monthSelection.emit(date);
-    }
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxCalendarHeaderTitle]',
+    standalone: true
+})
+export class IgxCalendarHeaderTitleTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -125,7 +134,6 @@ export class IgxCalendarMonthDirective {
     standalone: true
 })
 export class IgxCalendarHeaderTemplateDirective {
-
     constructor(public template: TemplateRef<any>) { }
 }
 
@@ -144,13 +152,12 @@ export class IgxCalendarSubheaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarScrollMonth]',
+    selector: '[igxCalendarScrollPage]',
     standalone: true
 })
-export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
-
+export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy {
     /**
-     * A callback function to be invoked when month increment/decrement starts.
+     * A callback function to be invoked when increment/decrement page is triggered.
      *
      * @hidden
      */
@@ -158,7 +165,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     public startScroll: (keydown?: boolean) => void;
 
     /**
-     * A callback function to be invoked when month increment/decrement stops.
+     * A callback function to be invoked when increment/decrement page stops.
      *
      * @hidden
      */
@@ -175,8 +182,9 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     /**
      * @hidden
      */
-    @HostListener('mousedown')
-    public onMouseDown() {
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event: MouseEvent) {
+        event.preventDefault();
         this.startScroll();
     }
 
@@ -192,7 +200,6 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
      * @hidden
      */
     public ngAfterViewInit() {
-
         fromEvent(this.element.nativeElement, 'keyup').pipe(
             debounce(() => interval(100)),
             takeUntil(this.destroy$)
@@ -216,7 +223,6 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
                 }
             });
         });
-
     }
 
     /**

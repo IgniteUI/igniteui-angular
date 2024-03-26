@@ -422,6 +422,11 @@ export class AppComponent implements OnInit {
             name: 'List Performance'
         },
         {
+            link: '/monthPicker',
+            icon: 'event',
+            name: 'Month Picker',
+        },
+        {
             link: '/navbar',
             icon: 'arrow_back',
             name: 'Navbar'

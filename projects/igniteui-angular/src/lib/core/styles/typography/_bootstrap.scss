@@ -31,8 +31,6 @@
 @use '../components/tree/tree-theme' as *;
 
 @mixin typography($type-scale) {
-    $calendar-labels: map.get($type-scale, 'calendar-labels');
-
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
@@ -40,7 +38,7 @@
     @include calendar-typography($categories: (
         header-year: 'subtitle-1',
         header-date: 'h4',
-        weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
+        weekday-label: 'body-2',
         picker-date: 'subtitle-1',
         content: 'body-1',
     ));

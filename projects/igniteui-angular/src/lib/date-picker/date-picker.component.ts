@@ -37,8 +37,9 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges, IFormattingViews, IFormattingOptions
+     IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
+import { isDateInRanges } from '../calendar/common/helpers';
 import {
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
 } from '../input-group/public_api';
@@ -904,14 +905,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-            if (this._calendar?.daysView?.selectedDates) {
-                this._calendar?.daysView?.focusActiveDate();
-                return;
-            }
+
+            // INFO: Commented out during the calendar refactoring as I couldn't
+            // determine why this is needed.
+            // if (this._calendar?.daysView?.selectedDates) {
+            //     return;
+            // }
+
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
-                this._calendar?.daysView?.dates
-                    .find(d => d.date.date.getTime() === this._targetViewDate.getTime())?.nativeElement.focus();
+                // INFO: We need to set the active date to the target view date so there's something to
+                // navigate when the calendar is opened.
+                this._calendar.activeDate = this._targetViewDate;
             }
         });
 
@@ -959,16 +964,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        const isVertical = this.headerOrientation === PickerHeaderOrientation.Vertical;
         this._calendar.hasHeader = !this.isDropdown;
         this._calendar.formatOptions = this.pickerCalendarFormat;
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
-        this._calendar.vertical = isVertical;
         this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
         this._calendar.showWeekNumbers = this.showWeekNumbers;
@@ -982,7 +986,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.setCalendarViewDate();
 
         componentInstance.mode = this.mode;
-        componentInstance.vertical = isVertical;
+        // componentInstance.headerOrientation = this.headerOrientation;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;

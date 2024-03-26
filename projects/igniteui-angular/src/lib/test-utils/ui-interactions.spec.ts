@@ -293,7 +293,7 @@ export class UIInteractions {
         element.dispatchEvent(event);
     }
 
-    public static simulateMouseEvent(eventName: string, element, clientX, clientY) {
+    public static simulateMouseEvent(eventName: string, element, clientX?, clientY?) {
         const options: MouseEventInit = {
             view: window,
             bubbles: true,
@@ -302,6 +302,13 @@ export class UIInteractions {
             clientY
         };
         element.dispatchEvent(new MouseEvent(eventName, options));
+    }
+
+    public static simulateMouseDownEvent(element: HTMLElement, shift = false, ctrl = false) {
+        const event = new MouseEvent('mousedown', { bubbles: true });
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', element, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', element);
+        element.dispatchEvent(event);
     }
 
     public static createPointerEvent(eventName: string, point: Point) {

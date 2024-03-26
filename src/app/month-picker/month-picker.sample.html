@@ -1,0 +1,12 @@
+<div class="sample">
+    <small><b> {{date.toDateString()}} </b></small>
+
+    <igx-month-picker
+        [(ngModel)]="date"
+        (selected)="onSelected($event)"
+        (viewDateChanged)="onViewChanged($event)"
+        (activeViewChanged)="onActiveViewChanged($event)"
+    ></igx-month-picker>
+
+    <button igxButton (click)="changeSelection()">Change Selection</button>
+</div>

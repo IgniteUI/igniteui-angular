@@ -13,8 +13,9 @@
 
 .action-buttons {
     display: flex;
-    flex-flow: row;
-    margin: 10px;
+    align-items: center;
+    justify-content: flex-end;
+    padding-block: 10px;
 }
 
 igx-date-picker {

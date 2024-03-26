@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener, booleanAttribute } from '@angular/core';
-import { CalendarSelection, ICalendarDate, isDateInRanges } from '../calendar';
+import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
+import { CalendarSelection } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
+import { CalendarDay } from '../common/model'
+import { areSameMonth, isNextMonth, isPreviousMonth, isDateInRanges } from '../common/helpers';
 
 /**
  * @hidden
@@ -8,11 +10,15 @@ import { DateRangeDescriptor } from '../../core/dates';
 @Component({
     selector: 'igx-day-item',
     templateUrl: 'day-item.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true
 })
 export class IgxDayItemComponent {
     @Input()
-    public date: ICalendarDate;
+    public date: CalendarDay;
+
+    @Input()
+    public viewDate: Date;
 
     @Input()
     public selection: string;
@@ -37,120 +43,148 @@ export class IgxDayItemComponent {
     public disabledDates: DateRangeDescriptor[];
 
     @Input()
-    public outOfRangeDates: DateRangeDescriptor[];
-
-    @Input()
     public specialDates: DateRangeDescriptor[];
 
     @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-calendar__date--last')
+    @HostBinding('class.igx-days-view__date--last')
     public isLastInRange = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-calendar__date--first')
+    @HostBinding('class.igx-days-view__date--first')
     public isFirstInRange = false;
 
     @Input({ transform: booleanAttribute })
     public isWithinRange = false;
 
+    @Input({ transform: booleanAttribute })
+    public isWithinPreviewRange = false;
+
+    @Input({ transform: booleanAttribute })
+    public hideLeadingDays = false;
+
+    @Input({ transform: booleanAttribute })
+    public hideTrailingDays = false;
+
+    private get hideLeading() {
+        return this.hideLeadingDays && this.isPreviousMonth;
+    }
+
+    private get hideTrailing() {
+        return this.hideTrailingDays && this.isNextMonth;
+    }
+
     @Output()
-    public dateSelection = new EventEmitter<ICalendarDate>();
+    public dateSelection = new EventEmitter<CalendarDay>();
+
+    @Output()
+    public mouseEnter = new EventEmitter<void>();
+
+    @Output()
+    public mouseLeave = new EventEmitter<void>();
+
+    @Output()
+    public mouseDown = new EventEmitter<void>();
 
     public get isCurrentMonth(): boolean {
-        return this.date.isCurrentMonth;
+        return areSameMonth(this.date, this.viewDate);
     }
 
     public get isPreviousMonth(): boolean {
-        return this.date.isPrevMonth;
+        return isPreviousMonth(this.date, this.viewDate);
     }
 
     public get isNextMonth(): boolean {
-        return this.date.isNextMonth;
+        return isNextMonth(this.date, this.viewDate);
     }
 
     public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding('class.igx-calendar__date--selected')
+    @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-days-view__date--active')
+    public isActive = false;
+
+    @HostBinding('class.igx-days-view__date--selected')
     public get isSelectedCSS(): boolean {
-        return (!this.isDisabled && this.selected);
+    const selectable =
+        !this.isInactive || (this.isWithinRange && this.selection === "range");
+    return !this.isDisabled && selectable && this.selected;
     }
 
-    @HostBinding('class.igx-calendar__date--inactive')
+    @HostBinding('class.igx-days-view__date--inactive')
     public get isInactive(): boolean {
-        return this.date.isNextMonth || this.date.isPrevMonth;
+        return !this.isCurrentMonth;
     }
 
-    @HostBinding('class.igx-calendar__date--hidden')
+    @HostBinding('class.igx-days-view__date--hidden')
     public get isHidden(): boolean {
-        return this.hideOutsideDays && this.isInactive;
+        return (this.hideLeading || this.hideTrailing) && this.isInactive;
     }
 
-    @HostBinding('class.igx-calendar__date--current')
+    @HostBinding('class.igx-days-view__date--current')
     public get isToday(): boolean {
-        const today = new Date(Date.now());
-        const date = this.date.date;
-
-        if (date.getDate() === today.getDate()) {
-            this.nativeElement.setAttribute('aria-current', 'date');
-        }
-
-        return (date.getFullYear() === today.getFullYear() &&
-            date.getMonth() === today.getMonth() &&
-            date.getDate() === today.getDate()
-        );
+        return !this.isInactive && this.date.equalTo(CalendarDay.today);
     }
 
-    @HostBinding('class.igx-calendar__date--weekend')
+    @HostBinding('class.igx-days-view__date--weekend')
     public get isWeekend(): boolean {
-        const day = this.date.date.getDay();
-        return day === 0 || day === 6;
+        return this.date.weekend;
     }
 
     public get isDisabled(): boolean {
-        if (this.disabledDates === null) {
+        if (!this.disabledDates) {
             return false;
         }
 
-        return isDateInRanges(this.date.date, this.disabledDates);
-    }
-
-    public get isOutOfRange(): boolean {
-        if (!this.outOfRangeDates) {
-            return false;
-        }
-
-        return isDateInRanges(this.date.date, this.outOfRangeDates);
+        return isDateInRanges(this.date, this.disabledDates);
     }
 
     public get isFocusable(): boolean {
-        return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
+        return this.isCurrentMonth && !this.isHidden && !this.isDisabled;
     }
 
-    @HostBinding('class.igx-calendar__date--range')
+    protected onMouseEnter() {
+        this.mouseEnter.emit();
+    }
+
+    protected onMouseLeave() {
+        this.mouseLeave.emit();
+    }
+
+    protected onMouseDown(event: MouseEvent) {
+        event.preventDefault();
+        this.mouseDown.emit();
+    }
+
+    @HostBinding('class.igx-days-view__date--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
     }
 
-    @HostBinding('class.igx-calendar__date--special')
+    @HostBinding('class.igx-days-view__date--range-preview')
+    public get isWithinPreviewRangeCSS(): boolean {
+        return !this.isSingleSelection && this.isWithinPreviewRange;
+    }
+
+    @HostBinding('class.igx-days-view__date--special')
     public get isSpecial(): boolean {
-        if (this.specialDates === null) {
+        if (!this.specialDates) {
             return false;
         }
 
-        return isDateInRanges(this.date.date, this.specialDates);
+        return !this.isInactive && isDateInRanges(this.date, this.specialDates);
     }
 
-    @HostBinding('class.igx-calendar__date--disabled')
+    @HostBinding('class.igx-days-view__date--disabled')
     public get isDisabledCSS(): boolean {
-        return this.isHidden || this.isDisabled || this.isOutOfRange;
+        return this.isHidden || this.isDisabled;
     }
 
-    @HostBinding('class.igx-calendar__date--single')
+    @HostBinding('class.igx-days-view__date--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
     }
@@ -158,11 +192,4 @@ export class IgxDayItemComponent {
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
-
-    @HostListener('click', ['$event'])
-    @HostListener('keydown.enter', ['$event'])
-    public onSelect(event) {
-        event.stopPropagation();
-        this.dateSelection.emit(this.date);
-    }
 }
