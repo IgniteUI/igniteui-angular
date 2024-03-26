@@ -1296,7 +1296,6 @@
         }
     }
 
-
     %years-grid,
     %months-grid {
         display: grid;
@@ -2540,12 +2539,6 @@
 
         %date-inner {
             color: var-get($theme, 'date-disabled-foreground');
-
-            @if $variant == 'indigo-desing' {
-                opacity: .2;
-            } @else {
-                opacity: .5;
-            }
         }
     }
 
@@ -2560,12 +2553,14 @@
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
             background: var-get($theme, 'date-special-background');
+            opacity: .38;
         }
     }
 
     %date-disabled-selected {
         %date-inner {
             color: var-get($theme, 'date-selected-foreground');
+            opacity: .38;
         }
     }
 
@@ -2573,6 +2568,7 @@
         %date-inner {
             color: var-get($theme, 'date-current-foreground');
             background: var-get($theme, 'date-current-background');
+            opacity: .38;
         }
     }
 
