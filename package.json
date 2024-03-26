@@ -68,7 +68,7 @@
     "@angular/ssr": "^17.2.0",
     "@igniteui/material-icons-extended": "^3.0.0",
     "@types/source-map": "0.5.2",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "fflate": "^0.8.1",
     "igniteui-theming": "^5.0.1",
     "igniteui-trial-watermark": "^3.0.2",
