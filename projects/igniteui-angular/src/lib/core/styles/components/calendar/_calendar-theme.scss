@@ -400,6 +400,12 @@
         }
     }
 
+    @if not($weekend-color) and $content-foreground {
+        @if meta.type-of($content-foreground) == 'color' {
+            $weekend-color: $content-foreground;
+        }
+    }
+
     @if $variant != 'fluent' and $variant != 'bootstrap' {
         @if not($date-current-background) and $content-background {
             @if meta.type-of($content-background) == 'color' {
@@ -1011,7 +1017,7 @@
         flex-wrap: wrap;
 
         > span {
-            white-space: initial;
+            white-space: nowrap;
             text-overflow: initial;
             overflow: initial;
         }
@@ -2691,7 +2697,7 @@
 
     %date-disabled-special-selected {
         %date-inner {
-            @if not $bootstrap-theme {
+            @if $variant == 'indigo' or $variant == 'fluent' {
                 color: var-get($theme, 'date-selected-foreground');
             }
         }
