@@ -1711,6 +1711,7 @@
                 &:hover {
                     color: var-get($theme, 'date-special-hover-foreground');
 
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
@@ -2037,6 +2038,7 @@
                 }
 
                 @if $variant != 'fluent' {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
