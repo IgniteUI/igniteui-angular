@@ -3107,7 +3107,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsSelected(sortAsc, false);
         });
 
-        fit('Should sort the grid properly, when clicking Descending button.', async () => {
+        it('Should sort the grid properly, when clicking Descending button.', async () => {
             grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
@@ -4690,7 +4690,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsSelected(orButton, false);
         }));
 
-        fit('Should select the button operator in custom expression when pressing \'Enter\' on it.', async () => {
+        it('Should select the button operator in custom expression when pressing \'Enter\' on it.', async () => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
 
