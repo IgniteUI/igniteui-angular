@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DateRangeType, IgxButtonDirective, IgxCalendarComponent, IgxCardComponent, IgxRippleDirective, IViewDateChangeEventArgs } from 'igniteui-angular';
+import { DateRangeType, IgxButtonDirective, IgxCalendarComponent, IgxCardComponent, IgxDialogComponent, IgxRippleDirective, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 
 @Component({
@@ -7,15 +7,15 @@ import { DateRangeType, IgxButtonDirective, IgxCalendarComponent, IgxCardCompone
     templateUrl: 'calendar.sample.html',
     styleUrls: ['calendar.sample.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxCardComponent, IgxCalendarComponent]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxCardComponent, IgxCalendarComponent, IgxDialogComponent]
 })
 export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true })
     private calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true })
     private calendar1: IgxCalendarComponent;
-    // @ViewChild('alert', { static: true })
-    // private dialog: IgxDialogComponent;
+    @ViewChild('alert', { static: true })
+    private dialog: IgxDialogComponent;
 
     public range = [];
     public today = new Date();
@@ -46,12 +46,12 @@ export class CalendarSampleComponent implements OnInit {
             this.calendar1.selectDate(item);
         });
 
-        // if (this.range.length === 0) {
-        //     this.dialog.message = 'Select dates from the Calendar first.';
-        // } else {
-        //     this.dialog.message = 'PTO days submitted.';
-        // }
-        // this.dialog.open();
+        if (this.range.length === 0) {
+            this.dialog.message = 'Select dates from the Calendar first.';
+        } else {
+            this.dialog.message = 'PTO days submitted.';
+        }
+        this.dialog.open();
     }
 
     public showHide() {
@@ -75,8 +75,13 @@ export class CalendarSampleComponent implements OnInit {
         return this.selectionType = this.calendar.selection = args;
     }
 
-    public setMonthsViewNumber(args: HTMLInputElement) {
-        this.calendar.monthsViewNumber = parseInt(args.value, 10);
+    public setMonthsViewNumber(monthsNumber: string) {
+        const inputNumber = parseInt(monthsNumber, 10);
+        if (!isNaN(inputNumber)) {
+            this.calendar.monthsViewNumber = inputNumber;
+        } else {
+            console.warn("Invalid number input.");
+        }
     }
 
     public select() {
