@@ -380,7 +380,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.values[indexInViewButtons].selected = true;
         }
 
-        //deselect other buttons if selectionMode is not multi
+        // deselect other buttons if selectionMode is not multi
         if (this.selectionMode !== 'multi' && this.selectedIndexes.length > 1) {
             this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
