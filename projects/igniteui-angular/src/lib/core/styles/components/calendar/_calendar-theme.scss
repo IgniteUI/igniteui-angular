@@ -1730,6 +1730,12 @@
                     background: var-get($theme, 'date-special-hover-background');
                 }
             }
+
+            @if $variant == 'bootstrap' {
+                &::after {
+                    border-color: var-get($theme, 'date-special-border-color');
+                }
+            }
         }
     }
 
@@ -1880,7 +1886,7 @@
     %date-selected-special {
         %date-inner {
             &::after {
-                @if $variant == 'material' {
+                @if $variant == 'material' or $variant == 'bootstrap' {
                     border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
