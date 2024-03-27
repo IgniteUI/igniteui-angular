@@ -520,10 +520,6 @@
             @extend %view-item !optional;
         }
 
-        @include e(month, 'active') {
-            @extend %month-active !optional;
-        }
-
         @include e(month, 'current') {
             @extend %months-view__month-current !optional;
 

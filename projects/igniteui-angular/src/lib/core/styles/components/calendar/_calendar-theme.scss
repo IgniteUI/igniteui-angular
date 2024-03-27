@@ -1085,9 +1085,15 @@
         justify-content: space-between;
         gap: rem(24px);
         position: relative;
-        height: rem(56px);
 
-        @if $variant == 'bootstrap' {
+        @if $variant == 'indigo-design' {
+            height: rem(50px);
+        } @else {
+            height: rem(56px);
+        }
+
+
+        @if $variant == 'bootstrap' or $variant == 'indigo-design' {
             padding-inline: rem(16px);
         } @else {
             padding-inline: rem(24px);
@@ -2035,11 +2041,21 @@
                 @if $variant != 'fluent' {
                     width: $date-inner-size;
                     height: $date-inner-size;
-                    border-color: var-get($theme, 'date-special-range-border-color');
                 } @else {
                     width: sizable(rem(22px), rem(24px), rem(28px));
                     height: sizable(rem(22px), rem(24px), rem(28px));
+                }
+
+                @if $variant == 'fluent' {
                     border-color: var-get($theme, 'date-current-foreground');
+                }
+
+                @if $variant == 'material' or $variant == 'bootstrap' {
+                    border-color: var-get($theme, 'date-special-range-border-color');
+                }
+
+                @if $variant == 'indigo-design' {
+                    border-color: transparent;
                 }
             }
         }
@@ -2656,6 +2672,11 @@
     %date-disabled-special {
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
+
+            @if $variant == 'indigo-design' {
+                background: var-get($theme, 'date-special-background');
+            }
+
             opacity: .38;
         }
     }
@@ -2670,7 +2691,9 @@
 
     %date-disabled-current {
         %date-inner {
-            color: var-get($theme, 'date-current-foreground');
+            @if $variant != 'material' {
+                color: var-get($theme, 'date-current-foreground');
+            }
             opacity: .38;
         }
     }
@@ -2746,6 +2769,8 @@
         }
     }
 
+    %years-view,
+    %months-view,
     %date-inner {
         @include type-style($content, false) {
             font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
