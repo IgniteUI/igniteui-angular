@@ -18,15 +18,13 @@
     $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
     $action-area-height: map.get((
-        material: 'rem(40px), rem(46px), rem(52px)',
-        fluent: 'rem(40px), rem(48px), rem(54px)',
-        bootstrap: 'rem(47px), rem(54px), rem(64px)',
-        indigo-design: 'rem(40px), rem(44px), rem(48px)',
+        material: (rem(40px), rem(46px), rem(52px)),
+        fluent: (rem(40px), rem(48px), rem(54px)),
+        bootstrap: (rem(47px), rem(54px), rem(64px)),
+        indigo-design: (rem(40px), rem(44px), rem(48px)),
     ), $variant);
 
     %date-picker {
-        @include sizable();
-
         // TODO move the shadow in the schemas
         box-shadow: $border-shadow, elevation(24),;
         border-radius: var-get($theme, 'border-radius');
@@ -61,7 +59,11 @@
     }
 
     %date-picker__actions {
-        height: sizable($action-area-height);
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        height: sizable($action-area-height...);
         display: flex;
         justify-content: flex-end;
 
