@@ -5,11 +5,9 @@
                     <igx-icon>alarm</igx-icon>
                 </igx-suffix>
                 <ng-template igxPickerActions let-calendar>
-                    <div>
-                        <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
-                        <button igxButton="flat" (click)="calendar.viewDate = nextYear">Next Year</button>
-                        <button igxButton="flat" (click)="dp5.selectToday()">Select Today</button>
-                    </div>
+                    <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+                    <button igxButton="flat" (click)="calendar.viewDate = nextYear">Next Year</button>
+                    <button igxButton="flat" (click)="dp5.selectToday()">Select Today</button>
                 </ng-template>
             </igx-date-picker>
             <div class="date-picker-sample-buttons">

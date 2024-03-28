@@ -27,8 +27,8 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
-<igx-divider></igx-divider>
-<div class="igx-date-picker__actions">
+<igx-divider *ngIf="pickerActions"></igx-divider>
+<div class="igx-date-picker__actions" *ngIf="pickerActions">
     <ng-container
         *ngTemplateOutlet="
             pickerActions?.template || defaultPickerActions;
