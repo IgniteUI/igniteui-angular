@@ -1852,7 +1852,7 @@
         %date-inner {
             @if $variant == 'material' or $variant == 'indigo-design' {
                 &:hover {
-                    color: var-get($theme, 'date-special-foreground');
+                    color: var-get($theme, 'date-special-hover-foreground');
                 }
             }
 
@@ -2705,9 +2705,7 @@
 
     %date-disabled-current {
         %date-inner {
-            @if $variant != 'material' {
-                color: var-get($theme, 'date-current-foreground');
-            }
+            color: var-get($theme, 'date-current-foreground');
             opacity: .38;
         }
     }
