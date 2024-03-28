@@ -213,7 +213,7 @@
         // Remove the default browser outline styles
         outline: transparent solid rem(1px);
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
-        
+
         @if $variant == 'indigo-design' {
             box-shadow: none;
             
