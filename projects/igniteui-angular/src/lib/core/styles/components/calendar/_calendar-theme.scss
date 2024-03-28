@@ -1100,11 +1100,10 @@
             height: rem(56px);
         }
 
-
-        @if $variant == 'bootstrap' or $variant == 'indigo-design' {
-            padding-inline: rem(16px);
-        } @else {
+        @if $variant == 'material' {
             padding-inline: rem(24px);
+        } @else {
+            padding-inline: rem(16px);
         }
 
         color: var-get($theme, 'picker-foreground');
