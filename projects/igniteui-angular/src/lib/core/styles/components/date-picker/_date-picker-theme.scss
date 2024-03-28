@@ -63,7 +63,7 @@
 
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
-        height: sizable($action-area-height...);
+        min-height: sizable($action-area-height...);
         display: flex;
         justify-content: flex-end;
 
