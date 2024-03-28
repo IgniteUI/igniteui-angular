@@ -46,6 +46,13 @@
 
     %date-picker__buttons {
         display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: rem(8px);
+    }
+
+    %date-picker__actions {
+        display: flex;
         justify-content: flex-end;
         padding: rem(8px);
     }
