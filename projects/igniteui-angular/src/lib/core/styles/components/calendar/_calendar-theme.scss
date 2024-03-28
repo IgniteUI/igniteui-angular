@@ -1712,10 +1712,10 @@
 
     %date-selected-special-range {
         %date-inner {
-            @if $variant == 'material' {
-                color: var-get($theme, 'date-special-range-foreground');
-                background: var-get($theme, 'date-special-range-background');
+            color: var-get($theme, 'date-special-range-foreground');
+            background: var-get($theme, 'date-special-range-background');
 
+            @if $variant == 'material' {
                 &:hover {
                     color: var-get($theme, 'date-special-hover-foreground');
 
@@ -1731,9 +1731,6 @@
             }
 
             @if $variant == 'indigo-design' {
-                color: var-get($theme, 'date-special-foreground');
-                background: var-get($theme, 'date-special-background');
-
                 &:hover {
                     color: var-get($theme, 'date-special-hover-foreground');
                     background: var-get($theme, 'date-special-hover-background');
