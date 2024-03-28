@@ -1383,14 +1383,12 @@
             color: var-get($theme, 'year-current-foreground');
             background: var-get($theme, 'year-current-background');
             box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-color');
-        }
-    }
 
-    %years-view__year-current-hover {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-current-hover-foreground');
-            background: var-get($theme, 'year-current-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
+            &:hover {
+                color: var-get($theme, 'year-current-hover-foreground');
+                background: var-get($theme, 'year-current-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
+            }
         }
     }
 
@@ -1413,14 +1411,12 @@
             @if not $bootstrap-theme and $variant != 'fluent' {
                 box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-outline-color');
             }
-        }
-    }
 
-    %years-view__year-selected-hover {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-hover-foreground');
-            background: var-get($theme, 'year-selected-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
+            &:hover {
+                color: var-get($theme, 'year-selected-hover-foreground');
+                background: var-get($theme, 'year-selected-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
+            }
         }
     }
 
@@ -1442,19 +1438,19 @@
                     border-color: var-get($theme, 'selected-current-outline-color');
                 }
             }
-        }
-    }
 
-    %years-view__year-selected-current-hover {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-current-hover-foreground');
-            background: var-get($theme, 'year-selected-current-hover-background');
+            &:hover {
+                color: var-get($theme, 'year-selected-current-hover-foreground');
+                background: var-get($theme, 'year-selected-current-hover-background');
 
-            @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
-            } @else {
-                &::after {
-                    border-color: var-get($theme, 'selected-current-outline-hover-color');
+                // stylelint-disable-next-line
+                @if $variant != 'indigo-design' {
+                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
+                } @else {
+                    // stylelint-disable-next-line
+                    &::after {
+                        border-color: var-get($theme, 'selected-current-outline-hover-color');
+                    }
                 }
             }
         }
@@ -1487,14 +1483,12 @@
             color: var-get($theme, 'month-current-foreground');
             background: var-get($theme, 'month-current-background');
             box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-color');
-        }
-    }
 
-    %months-view__month-current-hover {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-current-hover-foreground');
-            background: var-get($theme, 'month-current-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
+            &:hover {
+                color: var-get($theme, 'month-current-hover-foreground');
+                background: var-get($theme, 'month-current-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
+            }
         }
     }
 
@@ -1517,15 +1511,14 @@
             @if not $bootstrap-theme and $variant != 'fluent' {
                 box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-outline-color');
             }
-        }
-    }
 
-    %months-view__month-selected-hover {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-hover-foreground');
-            background: var-get($theme, 'month-selected-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
+            &:hover {
+                color: var-get($theme, 'month-selected-hover-foreground');
+                background: var-get($theme, 'month-selected-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
+            }
         }
+
     }
 
     %months-view__month-selected-active {
@@ -1546,19 +1539,19 @@
                     border-color: var-get($theme, 'selected-current-outline-color');
                 }
             }
-        }
-    }
 
-    %months-view__month-selected-current-hover {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-current-hover-foreground');
-            background: var-get($theme, 'month-selected-current-hover-background');
+            &:hover {
+                color: var-get($theme, 'month-selected-current-hover-foreground');
+                background: var-get($theme, 'month-selected-current-hover-background');
 
-            @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
-            } @else {
-                &::after {
-                    border-color: var-get($theme, 'selected-current-outline-hover-color');
+                // stylelint-disable-next-line
+                @if $variant != 'indigo-design' {
+                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
+                } @else {
+                    // stylelint-disable-next-line
+                    &::after {
+                        border-color: var-get($theme, 'selected-current-outline-hover-color');
+                    }
                 }
             }
         }
