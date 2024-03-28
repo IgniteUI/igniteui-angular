@@ -100,6 +100,75 @@
         height: 100%;
     }
 
+    %hide-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 0;
+            transition: opacity .25s ease;
+            pointer-events: none;
+        }
+    }
+
+    %show-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 1;
+            transition: opacity .25s ease;
+            pointer-events: auto;
+        }
+    }
+
+    %expand-bar-horizontal {
+        transition: width .25s ease;
+        width: 100%;
+        margin: 0;
+        border-inline-width: rem(1px);
+        border-block-width: 0;
+    }
+
+    %expand-bar-vertical {
+        transition: height .25s ease;
+        height: 100%;
+        margin: 0;
+        border-block-width: rem(1px);
+        border-inline-width: 0;
+    }
+
+    %indigo-splitter-bar {
+        @extend %hide-controls;
+
+        &.igx-splitter-bar--collapsible {
+            &:hover {
+                @extend %show-controls;
+            }
+        }
+        
+        [aria-orientation='horizontal'] & {
+            width: rem(1px);
+            margin: 0 rem(2.5px);
+            border-inline-width: 0;
+
+            &.igx-splitter-bar--collapsible {
+                &:hover {
+                    @extend %expand-bar-horizontal;
+                }
+            }
+        }
+
+        [aria-orientation='vertical'] & {
+            height: rem(1px);
+            width: 100%;
+            margin: rem(2.5px) 0;
+            border-block-width: 0;
+
+            &.igx-splitter-bar--collapsible {
+                &:hover {
+                    @extend %expand-bar-vertical;
+                }
+            }
+        }
+    }    
+
     %igx-splitter-bar {
         position: relative;
         display: flex;
@@ -111,6 +180,18 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
+
+        @if $variant != 'indigo-design' {
+            @extend %hide-controls;
+
+            &.igx-splitter-bar--collapsible {
+                @extend %show-controls;
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            @extend %indigo-splitter-bar;
+        }
 
         &::before {
             @extend %handle-area;
@@ -134,7 +215,25 @@
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
 
         @if $variant == 'indigo-design' {
-            background: var-get($theme, 'focus-color');
+            box-shadow: none;
+            
+            %indigo-splitter-bar {
+                background: var-get($theme, 'focus-color');
+                border-color: var-get($theme, 'focus-color');
+                opacity: 1;
+
+                &.igx-splitter-bar--collapsible {
+                    @extend %show-controls;
+
+                    [aria-orientation='horizontal'] & {
+                        @extend %expand-bar-horizontal;
+                    }
+                    
+                    [aria-orientation='vertical'] & {
+                        @extend %expand-bar-vertical;
+                    }
+                }
+            }
         }
     }
 
