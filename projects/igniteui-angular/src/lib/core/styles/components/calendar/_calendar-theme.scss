@@ -975,8 +975,10 @@
     %header-display-vertical {
         @if $variant == 'indigo-design' {
             min-width: rem(136px);
+            width: rem(136px);
         } @else {
             min-width: rem(168px);
+            width: rem(168px);
         }
 
         @if $variant == 'indigo-design' {
