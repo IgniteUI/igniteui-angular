@@ -37,11 +37,12 @@ import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridEditingActionsComponent } from '../action-strip/grid-actions/grid-editing-actions.component';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
 import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/public_api';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { OverlaySettings } from '../services/public_api';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '',
@@ -1729,6 +1730,38 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         this.grid.groupingExpressions = [
             { fieldName: 'ProductName', dir: SortingDirection.Desc }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [editable]="true" field="fullName">
+            </igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'">   
+            </igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+            <igx-column [editable]="true" field="personNumber" [dataType]="'number'">
+            </igx-column>
+        </igx-grid>
+        <ng-template #cellEdit igxCellEditor let-cell="cell">
+            <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
+        </ng-template>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
+})
+export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
+    @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;
+    public override data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+
+    public onChange(event: any, cell: CellType) {
+        cell.editValue = event.target.value;
     }
 }
 
