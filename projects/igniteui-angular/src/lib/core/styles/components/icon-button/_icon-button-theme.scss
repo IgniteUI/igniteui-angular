@@ -15,6 +15,7 @@
 
     $background: null,
     $foreground: null,
+    $shadow-color: null,
 
     $hover-background: null,
     $hover-foreground: null,
@@ -94,6 +95,7 @@
                 name: $name,
                 background: $background,
                 foreground: $foreground,
+                shadow-color: $shadow-color,
 
                 hover-background: $hover-background,
                 hover-foreground: $hover-foreground,
@@ -228,11 +230,9 @@
             color: var-get($flat-theme, 'hover-foreground');
         }
 
-        &:focus,
         &:focus-visible {
             background: var-get($flat-theme, 'focus-background');
             color: var-get($flat-theme, 'focus-foreground');
-            border-color: var-get($flat-theme, 'focus-border-color');
 
             &:hover {
                 background: var-get($flat-theme, 'focus-hover-background');
@@ -240,13 +240,7 @@
             }
         }
 
-        @if ($variant == 'indigo-design') {
-            border: none;
-        }
-
         @if ($variant == 'fluent') {
-            border: none;
-
             &:focus-visible::after {
                 box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-border-color');
             }
@@ -257,11 +251,11 @@
             color: var-get($flat-theme, 'active-foreground');
         }
 
-        &:focus,
-        &:focus-visible,
-        &:active {
+        &:focus-visible {
+            border-color: var-get($flat-theme, 'focus-border-color');
+
             @if ($variant == 'bootstrap') {
-                box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'focus-border-color');
+                box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
             }
 
             @if ($variant == 'indigo-design') {
@@ -289,7 +283,6 @@
             color: var-get($contained-theme, 'hover-foreground');
         }
 
-        &:focus,
         &:focus-visible {
             background: var-get($contained-theme, 'focus-background');
             color: var-get($contained-theme, 'focus-foreground');
@@ -315,11 +308,9 @@
             color: var-get($contained-theme, 'active-foreground');
         }
 
-        &:focus,
-        &:focus-visible,
-        &:active {
+        &:focus-visible {
             @if ($variant == 'bootstrap') {
-                box-shadow: 0 0 0 rem(4px) var-get($contained-theme, 'focus-border-color');
+                box-shadow: 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color');
             }
 
             @if ($variant == 'indigo-design') {
@@ -352,17 +343,11 @@
             }
         }
 
-        @if ($variant == 'bootstrap') {
-            border: none;
-            box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
-        }
-
         &:hover {
             background: var-get($outlined-theme, 'hover-background');
             color: var-get($outlined-theme, 'hover-foreground');
         }
 
-        &:focus,
         &:focus-visible {
             background: var-get($outlined-theme, 'focus-background');
             color: var-get($outlined-theme, 'focus-foreground');
@@ -394,11 +379,9 @@
             color: var-get($outlined-theme, 'active-foreground');
         }
 
-        &:focus,
-        &:focus-visible,
-        &:active {
+        &:focus-visible {
             @if ($variant == 'bootstrap') {
-                box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'focus-border-color');
+                box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
             }
 
             @if ($variant == 'indigo-design') {
