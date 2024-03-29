@@ -1104,7 +1104,7 @@
         }
 
         igx-icon {
-            --size: if($variant == 'indigo-design', rem(14px), rem(24px));
+            --size: #{if($variant == 'indigo-design', rem(14px), rem(24px))};
         }
     }
 
