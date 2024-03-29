@@ -434,7 +434,7 @@ describe('IgxButtonGroup', () => {
         });
     }));
 
-    fit('should correctly change the selection state of a button group and styling of its buttons when bound to another component\'s selection', async () => {
+    it('should correctly change the selection state of a button group and styling of its buttons when bound to another component\'s selection', async () => {
         const fixture = TestBed.createComponent(ButtonGroupSelectionBoundToAnotherComponent);
         fixture.detectChanges();
 
