@@ -12,10 +12,10 @@
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $banner-background [null]- The background color used banner background.
-/// @param {Color} $banner-message-color [null]- The color used for banner label.
-/// @param {Color} $banner-border-color [null] - The border color used banner border.
-/// @param {Color} $banner-illustration-color [null] - The color used banner illustration.
+/// @param {Color} $banner-background [null] - The color used for the banner background.
+/// @param {Color} $banner-message-color [null] - The color used for the banner label.
+/// @param {Color} $banner-border-color [null] - The color used for the banner border.
+/// @param {Color} $banner-illustration-color [null] - The color used for the banner illustration.
 ///
 /// @requires $light-material-schema
 ///
@@ -101,6 +101,12 @@
         padding-inline-end: pad-inline($padding);
         padding-block: pad-block($padding);
         background: var-get($theme, 'banner-background');
+
+        @if $variant == 'indigo-design' {
+            border: 1px solid var-get($theme, 'banner-border-color');
+            padding: rem(16px);
+            border-radius: rem(6px);
+        }
     }
 
     %igx-banner__illustration {
@@ -109,6 +115,19 @@
         min-width: rem(40px);
         height: rem(40px);
         color: var-get($theme, 'banner-illustration-color');
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                $icon-size: rem(16px);
+
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            }
+
+            width: initial;
+            height: initial;
+            min-width: initial;
+        }
     }
 
     %igx-banner__border-top {
@@ -130,11 +149,14 @@
         }
     }
 
-
     %igx-banner__message {
         min-width: rem(150px);
         flex: 1 0 0%;
         gap: rem(16px);
+
+        @if $variant == 'indigo-design' {
+            gap: rem(8px);
+        }
     }
 
     %igx-banner__actions,
@@ -145,6 +167,14 @@
         align-self: flex-end;
         gap: rem(8px);
         min-height: rem(40px);
+
+        @if $variant == 'indigo-design' {
+            min-height: initial;
+
+            [igxButton] {
+                --ig-size: 2;
+            }
+        }
     }
 }
 

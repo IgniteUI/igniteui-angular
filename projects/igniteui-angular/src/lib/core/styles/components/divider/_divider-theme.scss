@@ -32,11 +32,15 @@
     }
 
     $theme: digest-schema($divider-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
         color: $color,
-        inset: $inset
+        inset: $inset,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+        )),
     ));
 }
 
@@ -45,6 +49,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin divider($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
 
     %igx-divider-display {
         position: relative;
@@ -93,6 +99,16 @@
                 transparent rem(10px),
                 transparent rem(20px)
             );
+
+            @if $variant == 'indigo-design' {
+                background: repeating-linear-gradient(
+                    to right,
+                    var-get($theme, 'color'),
+                    var-get($theme, 'color') rem(3px),
+                    transparent rem(3px),
+                    transparent rem(6px)
+                );
+            }
         }
     }
 
@@ -105,6 +121,16 @@
                 transparent rem(10px),
                 transparent rem(20px)
             );
+
+            @if $variant == 'indigo-design' {
+                background: repeating-linear-gradient(
+                    to bottom,
+                    var-get($theme, 'color'),
+                    var-get($theme, 'color') rem(3px),
+                    transparent rem(3px),
+                    transparent rem(6px)
+                );
+            }
         }
     }
 
