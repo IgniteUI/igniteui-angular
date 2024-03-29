@@ -1075,9 +1075,9 @@
     }
 
     %pickers-display--vertical {
-        @if $variant == 'material' {
+        @if $variant != 'fluent' {
             %picker-arrow {
-                transform: rotate(-90deg)
+                transform: rotate(90deg)
             }
         }
     }
