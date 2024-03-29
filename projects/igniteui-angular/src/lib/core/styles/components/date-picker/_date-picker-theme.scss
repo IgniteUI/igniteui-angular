@@ -74,5 +74,10 @@
         }
 
         gap: rem(8px);
+
+        // TODO remove this line after the override (--component-size: var(--ig-size, var(--ig-size-large)) is removed
+        [igxButton] {
+            --component-size: var(--ig-size, #{var-get($theme, 'default-size')}) !important;
+        }
     }
 }
