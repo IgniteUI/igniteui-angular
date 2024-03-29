@@ -7,6 +7,8 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getComponentSize } from '../core/utils';
 import { NgFor } from '@angular/common';
+import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
+import { IgxRadioComponent } from '../radio/radio.component';
 
 interface IButton {
     type?: string;
@@ -432,6 +434,37 @@ describe('IgxButtonGroup', () => {
         });
     }));
 
+    fit('should correctly change the selection state of a button group and styling of its buttons when bound to another component\'s selection', async () => {
+        const fixture = TestBed.createComponent(ButtonGroupSelectionBoundToAnotherComponent);
+        fixture.detectChanges();
+
+        const radioGroup = fixture.componentInstance.radioGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup;
+        expect(radioGroup.radioButtons.last.checked).toBe(true);
+        expect(buttonGroup.buttons[1].selected).toBe(true);
+        expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
+
+        radioGroup.radioButtons.first.select();
+        fixture.detectChanges();
+        await wait();
+
+        expect(radioGroup.radioButtons.first.checked).toBe(true);
+        expect(buttonGroup.buttons[0].selected).toBe(true);
+        expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
+        expect(buttonGroup.buttons[1].selected).toBe(false);
+        expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
+
+        radioGroup.radioButtons.last.select();
+        fixture.detectChanges();
+        await wait();
+
+        expect(radioGroup.radioButtons.last.checked).toBe(true);
+        expect(buttonGroup.buttons[1].selected).toBe(true);
+        expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
+        expect(buttonGroup.buttons[0].selected).toBe(false);
+        expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
+    });
+
 });
 
 @Component({
@@ -578,4 +611,43 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
     ];
 
     public selectedValue = 1;
+}
+
+@Component({
+    template: `
+    <igx-radio-group #radioGroup name="radioGroup">
+        <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar']" value="{{item}}" (change)="onRadioChange($event)" [checked]="selectedValue === item">
+            {{ item }}
+        </igx-radio>
+    </igx-radio-group>
+
+    <igx-buttongroup #buttonGroup style="display: inline-block; margin-bottom: 10px;" selectionMode="singleRequired">
+        <button igxButton
+            [selected]="isFirstRadioButtonSelected"
+        >
+            <span>{{'test button 1'}}</span>
+        </button>
+        <button igxButton
+            [selected]="!isFirstRadioButtonSelected"
+        >
+            <span>{{'test button 2'}}</span>
+        </button>
+    </igx-buttongroup>
+    `,
+    standalone: true,
+    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor, IgxRadioGroupDirective, IgxRadioComponent ]
+})
+class ButtonGroupSelectionBoundToAnotherComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('buttonGroup', { static: true }) public buttonGroup: IgxButtonGroupComponent;
+
+    public selectedValue = 'Bar';
+
+    public onRadioChange(event: { value: string; }) {
+        this.selectedValue = event.value;
+    }
+
+    public get isFirstRadioButtonSelected() {
+        return this.selectedValue === 'Foo';
+    }
 }
