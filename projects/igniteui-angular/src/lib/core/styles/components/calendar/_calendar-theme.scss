@@ -1093,19 +1093,8 @@
         justify-content: space-between;
         gap: rem(24px);
         position: relative;
-
-        @if $variant == 'indigo-design' {
-            height: rem(50px);
-        } @else {
-            height: rem(56px);
-        }
-
-        @if $variant == 'material' {
-            padding-inline: rem(24px);
-        } @else {
-            padding-inline: rem(16px);
-        }
-
+        height: if($variant == 'indigo-design', rem(50px), rem(56px));
+        padding-inline: if($variant == 'material', rem(24px), rem(16px));
         color: var-get($theme, 'picker-foreground');
         background: var-get($theme, 'picker-background');
 
@@ -1114,14 +1103,8 @@
             outline: none;
         }
 
-        @if $variant != 'indigo-design' {
-            igx-icon {
-                --size: #{rem(24px)}
-            }
-        } @else {
-            igx-icon {
-                --size: #{rem(14px)};
-            }
+        igx-icon {
+            --size: if($variant == 'indigo-design', rem(14px), rem(24px));
         }
     }
 
@@ -1518,7 +1501,6 @@
                 box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
             }
         }
-
     }
 
     %months-view__month-selected-active {
