@@ -1,6 +1,8 @@
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
+@use '../components/button-group/button-group-theme' as *;
 @use '../components/calendar/calendar-theme' as *;
 @use '../components/card/card-theme' as *;
 @use '../components/checkbox/checkbox-theme' as *;
@@ -29,9 +31,11 @@
 @use '../components/tree/tree-theme' as *;
 
 @mixin typography() {
+    @include badge-typography();
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
+    @include button-group-typography();
     @include calendar-typography();
     @include card-typography();
     @include checkbox-typography();

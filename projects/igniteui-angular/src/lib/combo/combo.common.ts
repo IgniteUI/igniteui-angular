@@ -47,7 +47,7 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
+export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
@@ -96,7 +96,7 @@ const ItemHeights = {
 };
 
 /** @hidden @internal */
-export enum DataTypes {
+export const enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
@@ -928,11 +928,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
-    protected destroy$ = new Subject<any>();
+    protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
-    protected compareCollator = new Intl.Collator(); 
-    
+    protected compareCollator = new Intl.Collator();
+
     private _type = null;
     private _dataType = '';
     private _itemHeight = null;
@@ -1009,7 +1009,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.clear(this.id);
+        this.selectionService.delete(this.id);
     }
 
     /**

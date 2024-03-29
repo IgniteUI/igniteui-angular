@@ -8,7 +8,7 @@ let NEXT_ID = 0;
 /**
  * Determines the igxBadge type
  */
-export const IgxBadgeType = mkenum({
+export const IgxBadgeType = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',

@@ -227,15 +227,15 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             // verify row is expanded
             expect(row1.expanded).toBe(true);
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             expect(childGrid).not.toBeNull();
             const childState = new Map<any, boolean>();
             childState.set(fixture.componentInstance.data[0].childData[0], true);
             childGrid.expansionStates = childState;
             childGrid.cdr.detectChanges();
             const grandChildGrid = hierarchicalGrid.gridAPI.getChildGrid([
-                { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
-                { rowID: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
+                { rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
+                { rowID: fixture.componentInstance.data[0].childData[0], rowKey: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
             ]);
             expect(grandChildGrid).not.toBeNull();
 
@@ -304,7 +304,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(fixture.componentInstance.rowIsland.expandChildren).toBeFalsy();
             fixture.componentInstance.rowIsland.expandChildren = true;
             fixture.detectChanges();
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             const childRow = childGrid.getRowByIndex(0);
             expect(childRow.expanded).toBe(true);
             let rows = childGrid.dataRowList.toArray();
@@ -464,21 +464,24 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 
-            let childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-            let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            // check by adding multiple rows
+            for (let i = 0; i < 3; i++) {
+                let childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+                let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            fixture.componentInstance.data[0].childData = [...hierarchicalGrid.data[0].childData ?? [], { ID: 10, ProductName: 'New child' }];
-            fixture.componentInstance.data = [...fixture.componentInstance.data];
-            fixture.detectChanges();
+                fixture.componentInstance.data[0].childData = [...hierarchicalGrid.data[0].childData ?? [], { ID: i * 10, ProductName: 'New child' + i.toString() }];
+                fixture.componentInstance.data = [...fixture.componentInstance.data];
+                fixture.detectChanges();
 
-            childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-            childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+                childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+                childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            const length = fixture.componentInstance.data[0].childData.length;
-            const newRow = childGrid.gridAPI.get_row_by_index(length - 1) as IgxHierarchicalRowComponent;
+                const length = fixture.componentInstance.data[0].childData.length;
+                const newRow = childGrid.gridAPI.get_row_by_index(length - 1) as IgxHierarchicalRowComponent;
 
-            expect(newRow).not.toBeUndefined();
-            expect(childGrid.data).toBe(fixture.componentInstance.data[0].childData);
+                expect(newRow).not.toBeUndefined();
+                expect(childGrid.data).toBe(fixture.componentInstance.data[0].childData);
+            }
         });
 
         it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
@@ -986,6 +989,32 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid1.data[0].ID).toBe(11);
             expect(childGrid2.data[0].ID).toBe(21);
         });
+
+        it('should expose the (child) grid instance as context of the empty grid template', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridEmptyTemplateComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(fixture.componentInstance.childGridRef).toBe(null);
+
+            const firstDataItem = fixture.componentInstance.data[0];
+            firstDataItem.childData = [];
+            fixture.componentInstance.data[0] = firstDataItem;
+            fixture.detectChanges();
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[0]);
+            fixture.detectChanges();
+
+            const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+            const gridBody = child1Grid.query(By.css('.igx-grid__tbody'));
+            expect(gridBody.nativeElement.innerText).toBe('Get child grid ref'); //text from custom template button
+
+            const button = gridBody.nativeElement.querySelector('button');
+            button.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
+        });
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1182,6 +1211,32 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(iconTxt).toBe('unfold_less');
             expect(icon.getActive).toBe(false);
         });
+
+        it('should keep already expanded child grids\' data when expanding subsequent ones', fakeAsync(() => {
+            const hierarchicalGrid = fixture.componentInstance.instance;
+
+            fixture.componentInstance.databind();
+            fixture.detectChanges();
+
+            const row0 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row0.expander);
+            fixture.detectChanges();
+            tick();
+
+            let childGrids = hierarchicalGrid.gridAPI.getChildGrids();
+            expect(childGrids.length).toBe(1);
+            expect(childGrids[0].data.length).toBeGreaterThan(0);
+
+            const row1 = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+            tick();
+
+            childGrids = hierarchicalGrid.gridAPI.getChildGrids();
+            expect(childGrids.length).toBe(2);
+            expect(childGrids[0].data.length).toBeGreaterThan(0);
+            expect(childGrids[1].data.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
@@ -2258,5 +2313,38 @@ export class IgxHierarchicalGridMCHComponent {
 
     public pinnedChange(args: any) {
         this.pinnedArgs = args;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid
+        [emptyGridTemplate]="emptyTemplate">
+    <igx-column field="ID"></igx-column>
+    <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [emptyGridTemplate]="emptyTemplate">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <ng-template #emptyTemplate let-grid>
+                <button (click)="getChildGridRef(grid)">
+                    Get child grid ref
+                </button>
+      </ng-template>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGridTestBaseComponent {
+    public childGridRef: IgxHierarchicalGridComponent = null;
+    constructor() {
+        super();
+        const firstDataItem = this.data[0];
+        firstDataItem.childData = [];
+        this.data[0] = firstDataItem;
+    }
+
+    public getChildGridRef(grid: IgxHierarchicalGridComponent) {
+        this.childGridRef = grid;
     }
 }

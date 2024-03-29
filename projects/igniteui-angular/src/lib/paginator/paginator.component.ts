@@ -13,6 +13,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxPaginatorToken } from './token';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -30,9 +31,13 @@ export class IgxPaginatorContentDirective {
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
     standalone: true,
-    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)]
+    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    providers: [
+        { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
+    ]
 })
-export class IgxPaginatorComponent extends DisplayDensityBase {
+// switch IgxPaginatorToken to extends once density is dropped
+export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPaginatorToken {
 
     /**
      * @hidden

@@ -1,6 +1,7 @@
 import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -26,28 +27,25 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { HammerGesturesManager } from '../core/touch';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { ThemeService } from '../services/theme/theme.service';
 
 let NEXT_ID = 0;
 
-export const CarouselIndicatorsOrientation = mkenum({
-    bottom: 'bottom',
-    top: 'top'
-});
-export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
     };
 }
 /**
@@ -89,7 +87,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit, AfterViewChecked {
 
     /**
      * Sets the `id` of the carousel.
@@ -144,6 +142,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
+
+    /**
+     * Sets the theme of the carousel component.
+     */
+    @Input('theme')
+    public theme: string;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -378,6 +382,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    @ViewChild('indigoNextButton', { read: TemplateRef, static: true })
+    private indigoNextButton: TemplateRef<any>;
+
+    @ViewChild('indigoPrevButton', { read: TemplateRef, static: true })
+    private indigoPrevButton: TemplateRef<any>;
+
     /**
      * @hidden
      * @internal
@@ -423,7 +433,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.nextButtonTemplate) {
             return this.nextButtonTemplate;
         }
-        return this.defaultNextButton;
+
+        return this.isTypeIndigo ? this.indigoNextButton : this.defaultNextButton
     }
 
     /** @hidden */
@@ -431,7 +442,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.prevButtonTemplate) {
             return this.prevButtonTemplate;
         }
-        return this.defaultPrevButton;
+
+        return this.isTypeIndigo ? this.indigoPrevButton : this.defaultPrevButton
     }
 
     /** @hidden */
@@ -545,9 +557,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private element: ElementRef,
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private platformUtil: PlatformUtil) {
+        private platformUtil: PlatformUtil,
+        private themeService: ThemeService
+    ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        this.theme = this.themeService.theme;
     }
 
 
@@ -679,6 +694,23 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
     }
 
+    /**
+    * Returns true if the `IgxCarouselComponent` theme is Indigo.
+    * 
+    * ```typescript
+    * @ViewChild("carousel")
+    * public carousel: IgxCarouselComponent;
+    * 
+    * ngAfterViewInit(){
+    *    let isTypeIndigo = this.carousel.isTypeIndigo;
+    * }
+    * ```
+    */
+    @HostBinding('class.igx-carousel--indigo')
+    public get isTypeIndigo() {
+        return this.theme ? this.theme === 'indigo-design' : this.themeService.theme === 'indigo-design';
+    }
+
     /** @hidden */
     public ngAfterContentInit() {
         this.slides.changes
@@ -686,6 +718,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             .subscribe((change: QueryList<IgxSlideComponent>) => this.initSlides(change));
 
         this.initSlides(this.slides);
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewChecked() {
+        this.themeService.getCssProp(this.element);
     }
 
     /** @hidden */

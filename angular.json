@@ -21,8 +21,7 @@
             "main": "./src/main.ts",
             "index": "src/index.html",
             "polyfills": [
-                "zone.js",
-                "hammerjs"
+                "zone.js"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
@@ -270,6 +269,11 @@
               "includePaths": [
                 "node_modules"
               ]
+            },
+            "server": "projects/bundle-test/src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {

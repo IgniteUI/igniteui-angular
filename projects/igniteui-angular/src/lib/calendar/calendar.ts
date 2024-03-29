@@ -4,14 +4,14 @@ import { mkenum } from '../core/utils';
 /**
  * Sets the selection type - single, multi or range.
  */
-export const CalendarSelection = mkenum({
+export const CalendarSelection = /*@__PURE__*/mkenum({
     SINGLE: 'single',
     MULTI: 'multi',
     RANGE: 'range'
 });
 export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
 
-export enum ScrollMonth {
+export const enum ScrollMonth {
     PREV = 'prev',
     NEXT = 'next',
     NONE = 'none'
@@ -22,7 +22,7 @@ export interface IViewDateChangeEventArgs {
     currentValue: Date;
 }
 
-export const IgxCalendarView = mkenum({
+export const IgxCalendarView = /*@__PURE__*/mkenum({
     Month: 'month',
     Year: 'year',
     Decade: 'decade'
@@ -36,7 +36,7 @@ export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarV
 /**
  * @hidden
  */
-enum TimeDeltaInterval {
+const enum TimeDeltaInterval {
     Month = 'month',
     Year = 'year'
 }
@@ -177,13 +177,13 @@ export interface IFormattingViews {
 }
 
 export enum WEEKDAYS {
-    SUNDAY = 0,
-    MONDAY = 1,
-    TUESDAY = 2,
-    WEDNESDAY = 3,
-    THURSDAY = 4,
-    FRIDAY = 5,
-    SATURDAY = 6
+    SUNDAY,
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY
 }
 
 export class Calendar {
@@ -396,10 +396,10 @@ export class Calendar {
         firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
         const dayInMilSeconds = 86400000;
         // day number in the year
-        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - 
+        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() -
         (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
         let weekNumber;
-        // if 01 Jan is Monday to Thursday, is considered 1st week of the year 
+        // if 01 Jan is Monday to Thursday, is considered 1st week of the year
         // if 01 Jan starts Friday to Sunday, is considered last week of previous year
         if (firstDayOfTheYear < 4) {
             // when calculating the week number we add 1 for the 1st week
@@ -415,7 +415,7 @@ export class Calendar {
             // first day of the next year
             let nextYearFirstDay = nextYear.getDay() - weekStart;
             nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
-            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year 
+            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year
             // if 01 Jan is Friday to Sunday, is considered 53rd week of the current year
             weekNumber = nextYearFirstDay < 4 ? 1 : 53;
         }

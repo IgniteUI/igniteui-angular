@@ -80,9 +80,9 @@ describe('igxCombo', () => {
         const elementRef = { nativeElement: null };
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
-        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
+        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register', 'clear']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
@@ -835,6 +835,14 @@ describe('igxCombo', () => {
             expect([...selectionService.get(combo.id)][1]).toBe(subParams.newValue);
             sub.unsubscribe();
         }));
+
+        it('should delete the selection on destroy', () => {
+            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
+                mockIconService, null, null, mockInjector);
+            combo.ngOnDestroy();
+            expect(mockComboService.clear).toHaveBeenCalled();
+            expect(mockSelection.delete).toHaveBeenCalled();
+        });
     });
 
     describe('Combo feature tests: ', () => {
@@ -1413,11 +1421,11 @@ describe('igxCombo', () => {
                 await wait();
                 fixture.detectChanges();
                 combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
-                Object.assign(expectedResults,  {
+                Object.assign(expectedResults, {
                     newValue: [0, 1, 31, 32],
                     oldValue: [0, 1],
-                    newSelection: [{[valueKey]: 0}, {[valueKey]: 1}, combo.data[0], combo.data[1]],
-                    oldSelection: [{[valueKey]: 0}, {[valueKey]: 1}],
+                    newSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }, combo.data[0], combo.data[1]],
+                    oldSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }],
                     added: [combo.data[0], combo.data[1]],
                     removed: [],
                     event: undefined,

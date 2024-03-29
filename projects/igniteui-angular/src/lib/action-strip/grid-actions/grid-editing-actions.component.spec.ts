@@ -15,7 +15,7 @@ import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-comp
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { IgxColumnComponent } from '../../grids/public_api';
+import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -203,6 +203,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 rowID : row.key,
+                rowKey: row.key,
                 insertAtIndex: 0,
                 isPinned: true,
                 row,
@@ -220,6 +221,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 rowID : row5.key,
+                rowKey: row5.key,
                 insertAtIndex: 1,
                 isPinned: true,
                 row: row5,
@@ -355,18 +357,22 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editActions[3].componentInstance.iconName).toBe('delete');
             const deleteChildBtn = editActions[3].componentInstance;
 
-            const rowDeleteArgs = {
+            const rowDeleteArgs: IRowDataCancelableEventArgs = {
                 rowID: row.key,
                 primaryKey: row.key,
+                rowKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
+                data: treeGrid.getRowData(row.key),
                 oldValue: null,
-                owner: treeGrid
+                owner: treeGrid,
             };
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
+                rowData: treeGrid.getRowData(row.key),
                 primaryKey: row.key,
+                rowKey: row.key,
                 owner: treeGrid
             };
 

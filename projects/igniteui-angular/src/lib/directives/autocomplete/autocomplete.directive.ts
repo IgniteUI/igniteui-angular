@@ -217,7 +217,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _shouldBeOpen = false;
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
     private defaultSettings: OverlaySettings;
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,

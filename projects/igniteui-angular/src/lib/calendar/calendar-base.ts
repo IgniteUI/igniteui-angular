@@ -3,7 +3,7 @@ import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingView
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, PlatformUtil } from '../core/utils';
+import { isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
@@ -77,7 +77,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public scrollMonth$ = new Subject();
+    public scrollMonth$ = new Subject<void>();
 
     /**
      * @hidden
@@ -87,7 +87,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public startMonthScroll$ = new Subject();
+    public startMonthScroll$ = new Subject<void>();
 
     /**
      * @hidden
@@ -649,8 +649,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private selectSingle(value: Date) {
-        this.selectedDates = this.getDateOnly(value);
-        this._onChangeCallback(this.selectedDates);
+        if (!isEqual(this.selectedDates, value)) {
+            this.selectedDates = this.getDateOnly(value);
+            this._onChangeCallback(this.selectedDates);
+        }
     }
 
     /**

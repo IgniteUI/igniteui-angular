@@ -2,7 +2,7 @@ import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Inject,
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 
-export const IgxBaseButtonType = mkenum({
+export const IgxBaseButtonType = /*@__PURE__*/mkenum({
     Flat: 'flat',
     Contained: 'contained',
     Outlined: 'outlined'
@@ -62,7 +62,7 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
         public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken)
         protected _displayDensityOptions: IDisplayDensityOptions
-    ) { 
+    ) {
         super(_displayDensityOptions, element);
     }
 

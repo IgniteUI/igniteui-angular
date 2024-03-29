@@ -1,12 +1,13 @@
 import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
 import {
-    ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
+    ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
     IRowDragEndEventArgs, IColumnMovingStartEventArgs, IColumnMovingEndEventArgs,
-    IGridEditDoneEventArgs, IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
+    IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, IGridRowEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs,
+    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -43,8 +44,13 @@ export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridService
 
 /** Interface representing a segment of a path in a hierarchical grid. */
 export interface IPathSegment {
-    /** The unique identifier of the row within the segment. */
+    /**
+     * The unique identifier of the row within the segment.
+     * @deprecated since version 17.1.0
+     * Use `rowKey` instead
+     */
     rowID: any;
+    rowKey: any;
     /** The key representing the row's 'hierarchical level. */
     rowIslandKey: string;
 }
@@ -332,8 +338,8 @@ export interface ColumnType extends FieldType {
      /** Represents custom CSS styles applied to the header group. When added, they take different styling */
     headerGroupStyles: any;
 
-    /** 
-     * Custom CSS styling, appplied to every column 
+    /**
+     * Custom CSS styling, appplied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;
@@ -1041,9 +1047,10 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
     densityChanged: EventEmitter<IDensityChangedEventArgs>;
-    rowAdd: EventEmitter<IGridEditEventArgs>;
+    rowAdd: EventEmitter<IRowDataCancelableEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     rowAddedNotifier: Subject<IRowDataEventArgs>;
+    rowDelete: EventEmitter<IRowDataCancelableEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
     cellEditEnter: EventEmitter<IGridEditEventArgs>;
@@ -1112,7 +1119,7 @@ export interface GridType extends IGridDataBindable {
     getVisibleContentHeight(): number;
     getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
-    openAdvancedFilteringDialog(): void;
+    openAdvancedFilteringDialog(overlaySettings?: OverlaySettings): void;
     showSnackbarFor(index: number): void;
     getColumnByName(name: string): any;
     getColumnByVisibleIndex(index: number): ColumnType;
@@ -1379,6 +1386,10 @@ export interface IgxHeadSelectorTemplateContext {
 
 export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
+}
+
+export interface IgxGridPaginatorTemplateContext {
+    $implicit: GridType;
 }
 
 /**
