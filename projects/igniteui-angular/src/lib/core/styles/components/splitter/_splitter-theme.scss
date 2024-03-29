@@ -104,7 +104,7 @@
         %igx-splitter-handle,
         %igx-splitter-expander {
             opacity: 0;
-            transition: opacity .25s ease;
+            transition: opacity .25s .5s ease;
             pointer-events: none;
         }
     }
@@ -118,53 +118,34 @@
         }
     }
 
-    %expand-bar-horizontal {
-        transition: width .25s ease;
-        width: 100%;
-        margin: 0;
-        border-inline-width: rem(1px);
-        border-block-width: 0;
-    }
-
-    %expand-bar-vertical {
-        transition: height .25s ease;
-        height: 100%;
-        margin: 0;
-        border-block-width: rem(1px);
-        border-inline-width: 0;
+    %expand-bars {
+        [aria-orientation='horizontal'] & {
+            transform: scaleX(1);
+        }
+        
+        [aria-orientation='vertical'] & {
+            transform: scaleY(1);
+        }
+        transition-delay: 0s !important;
     }
 
     %indigo-splitter-bar {
         @extend %hide-controls;
 
-        &.igx-splitter-bar--collapsible {
-            &:hover {
-                @extend %show-controls;
-            }
-        }
-        
         [aria-orientation='horizontal'] & {
-            width: rem(1px);
-            margin: 0 rem(2.5px);
-            border-inline-width: 0;
-
-            &.igx-splitter-bar--collapsible {
-                &:hover {
-                    @extend %expand-bar-horizontal;
-                }
-            }
+            transform: scaleX(.17);
         }
 
         [aria-orientation='vertical'] & {
-            height: rem(1px);
-            width: 100%;
-            margin: rem(2.5px) 0;
-            border-block-width: 0;
+            transform: scaleY(.17);
+        }
 
-            &.igx-splitter-bar--collapsible {
-                &:hover {
-                    @extend %expand-bar-vertical;
-                }
+        &.igx-splitter-bar--collapsible {
+            transition: all .25s .5s $in-out-quad !important;
+
+            &:hover {
+                @extend %show-controls;
+                @extend %expand-bars;
             }
         }
     }    
@@ -224,14 +205,7 @@
 
                 &.igx-splitter-bar--collapsible {
                     @extend %show-controls;
-
-                    [aria-orientation='horizontal'] & {
-                        @extend %expand-bar-horizontal;
-                    }
-                    
-                    [aria-orientation='vertical'] & {
-                        @extend %expand-bar-vertical;
-                    }
+                    @extend %expand-bars;
                 }
             }
         }
