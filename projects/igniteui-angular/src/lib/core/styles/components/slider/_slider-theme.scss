@@ -146,6 +146,9 @@
         indigo-design: 12px
     ), $variant);
     $thumb-radius: math.div($thumb-size, 2);
+    
+    $thumb-indigo-idle: ($thumb-size / ($thumb-size * 0 + 1));
+    $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
 
     $thumb-border-width: map.get((
         material: 0,
@@ -460,11 +463,11 @@
         }
 
         @if $variant == 'indigo-design' {
-            transition: all .2s $out-quad;
+            transition: transform .2s $out-quad;
 
             &:hover,
             &:active {
-                transform: scale(1.33);
+                transform: scale($thumb-indigo-hover);
 
                 div::before {
                     border-color: var-get($theme, 'thumb-border-hover-color');
