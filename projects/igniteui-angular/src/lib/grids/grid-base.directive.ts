@@ -2686,7 +2686,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return `${this.getComponentDensityClass('igx-banner')} ${position}`;
     }
 
-    /* mustSetInCodePlatforms: WebComponents;Blazor */
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * Gets/Sets the sorting state.
      *

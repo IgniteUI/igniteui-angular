@@ -106,9 +106,7 @@ interface Feature {
 }
 
 /* blazorElement */
-/* contentParent: GridBaseDirective */
 /* wcElementTag: igc-grid-state-base-directive */
-/* jsonAPIManageCollectionInMarkup */
 /* blazorIndirectRender */
 @Directive()
 export class IgxGridStateBaseDirective {
