@@ -1,9 +1,20 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, booleanAttribute } from '@angular/core';
-import { IgxIconService } from './icon.service';
-import { first, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { SafeHtml } from '@angular/platform-browser';
-import { NgTemplateOutlet } from '@angular/common';
+import {
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ChangeDetectorRef,
+    OnDestroy,
+    booleanAttribute,
+} from "@angular/core";
+import { IgxIconService } from "./icon.service";
+import { first, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { SafeHtml } from "@angular/platform-browser";
+import { NgTemplateOutlet } from "@angular/common";
 
 /**
  * Icon provides a way to include material icons to markup
@@ -28,10 +39,10 @@ import { NgTemplateOutlet } from '@angular/common';
  * ```
  */
 @Component({
-    selector: 'igx-icon',
-    templateUrl: 'icon.component.html',
+    selector: "igx-icon",
+    templateUrl: "icon.component.html",
     standalone: true,
-    imports: [NgTemplateOutlet]
+    imports: [NgTemplateOutlet],
 })
 export class IgxIconComponent implements OnInit, OnDestroy {
     /**
@@ -40,8 +51,8 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-icon')
-    public cssClass = 'igx-icon';
+    @HostBinding("class.igx-icon")
+    public cssClass = "igx-icon";
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
@@ -56,7 +67,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    @HostBinding('attr.aria-hidden')
+    @HostBinding("attr.aria-hidden")
     public ariaHidden = true;
 
     /**
@@ -67,7 +78,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon family="material">settings</igx-icon>
      * ```
      */
-    @Input('family')
+    @Input("family")
     public family: string;
 
     /**
@@ -78,7 +89,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input({ alias: 'active', transform: booleanAttribute })
+    @Input({ alias: "active", transform: booleanAttribute })
     public active = true;
 
     /**
@@ -89,16 +100,13 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon name="contains" family="filter-icons"></igx-icon>
      * ```
      */
-    @Input('name')
+    @Input("name")
     public name: string;
 
-    @ViewChild('noLigature', { read: TemplateRef, static: true })
-    private noLigature: TemplateRef<HTMLElement>;
+    @ViewChild("default", { read: TemplateRef, static: true })
+    private default: TemplateRef<HTMLElement>;
 
-    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
-    private explicitLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('svgImage', { read: TemplateRef, static: true })
+    @ViewChild("svgImage", { read: TemplateRef, static: true })
     private svgImage: TemplateRef<HTMLElement>;
 
     private destroy$ = new Subject<void>();
@@ -108,12 +116,16 @@ export class IgxIconComponent implements OnInit, OnDestroy {
         private iconService: IgxIconService,
         private ref: ChangeDetectorRef,
     ) {
-        this.family = this.iconService.defaultFamily;
-        this.iconService.registerFamilyAlias('material', 'material-icons');
+        this.family = "material";
+        this.iconService.registerFamilyAlias(
+            this.family,
+            "material-icons",
+            "liga",
+        );
         this.iconService.iconLoaded
             .pipe(
                 first((e) => e.name === this.name && e.family === this.family),
-                takeUntil(this.destroy$)
+                takeUntil(this.destroy$),
             )
             .subscribe(() => this.ref.detectChanges());
     }
@@ -123,7 +135,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @internal
      */
     public ngOnInit() {
-        this.updateIconClass();
+        this.updateIcon();
     }
 
     /**
@@ -179,7 +191,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    @HostBinding('class.igx-icon--inactive')
+    @HostBinding("class.igx-icon--inactive")
     public get getInactive(): boolean {
         return !this.active;
     }
@@ -233,27 +245,36 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     public get template(): TemplateRef<HTMLElement> {
-        if (this.name) {
-            if (this.iconService.isSvgIconCached(this.name, this.family)) {
-                return this.svgImage;
-            }
-
-            return this.noLigature;
+        if (this.iconService.isSvgIconCached(this.name, this.family)) {
+            return this.svgImage;
         }
 
-        return this.explicitLigature;
+        return this.default;
     }
 
     /**
      * @hidden
      * @internal
      */
-    private updateIconClass() {
-        const className = this.iconService.familyClassName(this.family);
+    private updateIcon() {
+        const { className, type, name } = this.iconService.getIcon(
+            this.family,
+            this.name,
+        );
+
         this.el.nativeElement.classList.add(className);
 
-        if (this.name && !this.iconService.isSvgIconCached(this.name, this.family)) {
-            this.el.nativeElement.classList.add(this.name);
+        if (name && type === 'svg') {
+            this.family = className;
+            this.name = name;
+        }
+
+        if (name && type === 'font') {
+            this.el.nativeElement.classList.add(name);
+        }
+
+        if (name && type === 'liga') {
+            this.el.nativeElement.textContent = name;
         }
     }
 }

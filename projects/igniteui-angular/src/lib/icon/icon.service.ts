@@ -5,6 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { PlatformUtil } from '../core/utils';
 
+type IconType = "svg" | "font" | "liga";
+
+interface Icon {
+    name: string;
+    familyAlias: string;
+    type?: IconType;
+}
+
 /**
  * Event emitted when a SVG icon is loaded through
  * a HTTP request.
@@ -45,8 +53,9 @@ export class IgxIconService {
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
-    private _family = 'material-icons';
-    private _familyAliases = new Map<string, string>();
+    private _family = 'material';
+    private _defaultIcons = new Map<string, Map<string, Icon>>;
+    private _familyAliases = new Map<string, { className: string, type: IconType }>();
     private _cachedSvgIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
@@ -90,8 +99,8 @@ export class IgxIconService {
      *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
      */
-    public registerFamilyAlias(alias: string, className: string = alias): this {
-        this._familyAliases.set(alias, className);
+    public registerFamilyAlias(alias: string, className: string = alias, type: IconType = "font"): this {
+        this._familyAliases.set(alias, { className, type });
         return this;
     }
 
@@ -102,7 +111,29 @@ export class IgxIconService {
      * ```
      */
     public familyClassName(alias: string): string {
-        return this._familyAliases.get(alias) || alias;
+        return this._familyAliases.get(alias)?.className || alias;
+    }
+
+    public familyType(alias: string): IconType {
+        return this._familyAliases.get(alias)?.type;
+    }
+
+    public mapIcons(alias: string, name: string, reference: { familyAlias: string, name: string }) {
+        const ref = new Map<string, {familyAlias: string, name: string}>();
+        ref.set(name, reference);
+        this._defaultIcons.set(alias, ref);
+    }
+
+    public getIcon(alias: string, name: string) {
+        const mapping = this._defaultIcons.get(alias)?.get(name);
+        const className = this.familyClassName(mapping?.familyAlias || alias);
+        const type = this.familyType(mapping?.familyAlias || alias);
+
+        return {
+            className,
+            type,
+            name: mapping?.name || name
+        }
     }
 
     /**
@@ -124,6 +155,7 @@ export class IgxIconService {
             }
 
             if (!this.isSvgIconCached(name, family)) {
+                this._familyAliases.set(family, { className: family, type: 'svg' });
                 this.fetchSvg(url).subscribe((res) => {
                     this.cacheSvgIcon(name, res, family, stripMeta);
                     this._iconLoaded.next({ name, value: res, family });
