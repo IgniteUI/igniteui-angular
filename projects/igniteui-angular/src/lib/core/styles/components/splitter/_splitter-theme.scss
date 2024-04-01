@@ -78,6 +78,9 @@
     $hitbox-debug-color: rgba(coral, .24);
 
     $variant: map.get($theme, '_meta', 'variant');
+    $size: map-get($theme, 'size');
+    $splitter-size: ($size / ($size * 0 + 1) + 2);
+    $slim-splitter: calc( 1 / $splitter-size);
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {
@@ -93,11 +96,19 @@
         width: 100%;
         height: $hitbox-size;
         background: if($debug-hitbox, $hitbox-debug-color, transparent);
+
+        @if $variant == 'indigo-design' {
+            height: rem($splitter-size * 3px);
+        }
     }
 
     %handle-area--vertical {
         width: $hitbox-size;
         height: 100%;
+
+        @if $variant == 'indigo-design' {
+            width: rem($splitter-size * 3px);
+        }
     }
 
     %hide-controls {
@@ -133,11 +144,11 @@
         @extend %hide-controls;
 
         [aria-orientation='horizontal'] & {
-            transform: scaleX(.17);
+            transform: scaleX($slim-splitter);
         }
 
         [aria-orientation='vertical'] & {
-            transform: scaleY(.17);
+            transform: scaleY($slim-splitter);
         }
 
         &.igx-splitter-bar--collapsible {
