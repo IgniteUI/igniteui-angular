@@ -1045,14 +1045,6 @@
         %days-view {
             grid-row: var(--calendar-row-start);
         }
-
-        %days-view-row {
-            &:last-of-type {
-                %date-hidden {
-                    display: none;
-                }
-            }
-        }
     }
 
     %pickers-display {
@@ -1229,6 +1221,14 @@
                 margin-block-end: 0;
             }
         }
+
+        // TODO hide the 7 row anly of all the children have hidden class on them,
+        //  I need a wat to know if the calendar is in multi view to achieve this
+        //&:nth-child(7) {
+        //    > %date:has(:not(%date-hidden)) {
+        //        display: none;
+        //    }
+        //}
 
         @if $bootstrap-theme {
             padding-inline: pad-inline(rem(12px));
