@@ -2669,10 +2669,6 @@
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
 
-            @if $variant == 'indigo-design' {
-                background: var-get($theme, 'date-special-background');
-            }
-
             opacity: .38;
         }
     }
