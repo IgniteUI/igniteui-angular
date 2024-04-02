@@ -98,7 +98,7 @@
         background: if($debug-hitbox, $hitbox-debug-color, transparent);
 
         @if $variant == 'indigo-design' {
-            height: rem($splitter-size * 3px);
+            height: rem($splitter-size * 4px);
         }
     }
 
@@ -107,7 +107,7 @@
         height: 100%;
 
         @if $variant == 'indigo-design' {
-            width: rem($splitter-size * 3px);
+            width: rem($splitter-size * 4px);
         }
     }
 
@@ -154,9 +154,29 @@
         &.igx-splitter-bar--collapsible {
             transition: all .25s .5s $in-out-quad !important;
 
+            &::before,
+            &::after {
+                transition-delay: 2s;
+            }
+
             &:hover {
                 @extend %show-controls;
                 @extend %expand-bars;
+
+                &::before,
+                &::after {
+                    height: $hitbox-size;
+                    width: 100%;
+                    transition-delay: .5s;
+                }
+
+                &.igx-splitter-bar--vertical {
+                    &::before,
+                    &::after {
+                        width: $hitbox-size;
+                        height: 100%;
+                    }
+                }
             }
         }
     }    
