@@ -1894,10 +1894,8 @@
 
                 @if $variant != 'indigo-design' {
                     border-color: var-get($theme, 'date-selected-current-hover-border-color');
-                }
-
-                &::after {
-                    @if $variant == 'indigo-design' {
+                } @else {
+                    &::after {
                         border-color: var-get($theme, 'date-selected-current-hover-border-color');
                     }
                 }
@@ -1961,7 +1959,7 @@
                 border-color: transparent;
 
                 &::after {
-                    border-color: var-get($theme, 'date-selected-current-border-color');
+                    border-color: var-get($theme, 'date-current-border-color');
                 }
             }
 
@@ -1974,7 +1972,30 @@
                 }
 
                 @if $variant == 'indigo-design' {
-                    border-color: var-get($theme, 'date-current-hover-border-color');
+                    border-color: transparent;
+
+                    &::after {
+                        border-color: var-get($theme, 'date-current-hover-border-color');
+                    }
+                }
+            }
+        }
+    }
+
+    %date-selected-current-range-active {
+        %date-inner {
+            color: var-get($theme, 'date-selected-current-range-focus-foreground');
+            background: var-get($theme, 'date-selected-current-range-focus-background');
+
+            @if $variant == 'material' or $variant == 'bootstrap' {
+                border-color: var-get($theme, 'date-selected-current-focus-border-color');
+            }
+
+            @if $variant == 'indigo-design' {
+                border-color: transparent;
+
+                &::after {
+                    border-color: var-get($theme, 'date-current-focus-border-color');
                 }
             }
         }
@@ -1987,25 +2008,6 @@
                 &::after {
                     border-color: var-get($theme, 'date-selected-current-border-color');
                 }
-            }
-        }
-    }
-
-    %date-selected-current-range-active {
-        %date-inner {
-            color: var-get($theme, 'date-selected-current-range-focus-foreground');
-            background: var-get($theme, 'date-selected-current-range-focus-background');
-
-            @if $variant == 'indigo-design' {
-                border-color: transparent;
-
-                &::after {
-                    border-color: var-get($theme, 'date-selected-current-border-color');
-                }
-            }
-
-            @if $variant == 'material' or $variant == 'bootstrap' {
-                border-color: var-get($theme, 'date-selected-current-focus-border-color');
             }
         }
     }
