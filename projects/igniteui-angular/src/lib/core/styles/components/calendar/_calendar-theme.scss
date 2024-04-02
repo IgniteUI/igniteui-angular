@@ -1045,6 +1045,14 @@
         %days-view {
             grid-row: var(--calendar-row-start);
         }
+
+        %days-view-row {
+            &:last-of-type {
+                %date-hidden {
+                    display: none;
+                }
+            }
+        }
     }
 
     %pickers-display {
@@ -1226,6 +1234,7 @@
             padding-inline: pad-inline(rem(12px));
         }
     }
+
 
     %label-week-number,
     %date-inner-week-number {
