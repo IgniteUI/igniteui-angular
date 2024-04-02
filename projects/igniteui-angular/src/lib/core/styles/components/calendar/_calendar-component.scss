@@ -440,6 +440,14 @@
             @extend %date-disabled-current !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'current', 'special')) {
+            @extend %date-disabled-current-special !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'single', 'current', 'special', 'selected')) {
+            @extend %date-disabled-current-special-selected !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'current', 'selected')) {
             @extend %date-disabled-current-selected !optional;
         }

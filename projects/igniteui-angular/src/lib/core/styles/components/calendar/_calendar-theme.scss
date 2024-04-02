@@ -2026,17 +2026,19 @@
             }
 
             &:hover {
-                @if $variant != 'fluent' {
-                    color: var-get($theme, 'date-special-hover-foreground');
-                } @else {
+                @if $variant == 'fluent' {
                     color: var-get($theme, 'date-selected-current-range-foreground');
-                }
+                } @else {
+                    color: var-get($theme, 'date-special-hover-foreground');
 
-                @if $variant != 'fluent' {
                     // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
+                }
+
+                @if $variant == 'indigo-design' {
+                    border-color: var-get($theme, 'date-current-hover-border-color');
                 }
             }
 
@@ -2099,9 +2101,17 @@
                 color: var-get($theme, 'date-selected-foreground');
                 background: var-get($theme, 'date-selected-background');
 
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-border-color');
+                }
+
                 &:hover {
                     color: var-get($theme, 'date-selected-hover-foreground');
                     background: var-get($theme, 'date-selected-hover-background');
+
+                    &::after {
+                        border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                    }
                 }
             }
         }
@@ -2113,6 +2123,10 @@
             %date-inner {
                 color: var-get($theme, 'date-selected-focus-foreground');
                 background: var-get($theme, 'date-selected-focus-background');
+
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-focus-border-color');
+                }
             }
         }
     }
@@ -2685,6 +2699,22 @@
         %date-inner {
             color: var-get($theme, 'date-current-foreground');
             opacity: .38;
+        }
+    }
+
+    %date-disabled-current-special {
+        @if $variant == 'indigo-design' {
+            %date-inner {
+                color: var-get($theme, 'date-special-foreground');
+            }
+        }
+    }
+
+    %date-disabled-current-special-selected {
+        @if $variant == 'indigo-design' {
+            %date-inner {
+                color: var-get($theme, 'date-selected-foreground');
+            }
         }
     }
 
