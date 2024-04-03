@@ -17,6 +17,7 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxCalendarView } from "../calendar";
 import { CalendarDay } from "../common/model";
 import { IgxCalendarBaseDirective } from "../calendar-base";
+import { KeyboardNavigationService } from "../calendar.services";
 
 let NEXT_ID = 0;
 @Component({
@@ -25,6 +26,10 @@ let NEXT_ID = 0;
             multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxMonthPickerComponent,
+        },
+        {
+            multi: false,
+            provide: KeyboardNavigationService
         },
     ],
     selector: "igx-month-picker",

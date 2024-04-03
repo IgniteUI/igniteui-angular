@@ -27,8 +27,8 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
-<igx-divider *ngIf="pickerActions"></igx-divider>
-<div class="igx-date-picker__actions" *ngIf="pickerActions">
+<igx-divider *ngIf="pickerActions?.template || (closeButtonLabel || todayButtonLabel)"></igx-divider>
+<div class="igx-date-picker__actions" *ngIf="pickerActions?.template || (closeButtonLabel || todayButtonLabel)">
     <ng-container
         *ngTemplateOutlet="
             pickerActions?.template || defaultPickerActions;
