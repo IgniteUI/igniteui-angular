@@ -24,6 +24,7 @@
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
 /// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
 /// @param {Color} $background-color [null] - The time-picker panel background color.
+/// @param {Color} $time-item-size [null] - The height of the time item.
 /// @param {box-shadow} $modal-shadow [null] - The custom shadow to be used for the time picker in modal mode.
 /// @param {box-shadow} $dropdown-shadow [null] - The custom shadow to be used for the time picker in dropdown mode.
 /// @param {List} $border-radius [null] - The border radius used for the outline of the picker.
@@ -58,6 +59,7 @@
     $dropdown-shadow: null,
     $border-color: null,
     $divider-color: null,
+    $time-item-size: null,
 ) {
     $name: 'igx-time-picker';
     $selector: '.igx-time-picker';
@@ -137,6 +139,7 @@
         border-radius: $border-radius,
         border-color: $border-color,
         divider-color: $divider-color,
+        time-item-size: $time-item-size,
         active-item-border-radius: $active-item-border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -160,7 +163,18 @@
         indigo-design: rem(8px) rem(16px),
     ), $variant);
 
+    $picker-header-padding: map.get((
+        material: rem(24px) rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(16px),
+        indigo-design: rem(16px) rem(24px) ,
+    ), $variant);
+
     %time-picker-display {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
         display: flex;
         flex-flow: column nowrap;
         border-radius: var-get($theme, 'border-radius');
@@ -170,14 +184,9 @@
         overflow: hidden;
         min-width: fit-content;
 
+
         igx-divider {
             --color: #{var-get($theme, 'divider-color')}
-        }
-
-        @if $variant != 'indigo-design' {
-            igx-divider--vertical {
-                display: none;
-            }
         }
     }
 
@@ -196,12 +205,17 @@
 
     %time-picker--dropdown {
         min-width: rem(200px);
-        box-shadow: var-get($theme, 'dropdown-shadow');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color'),
+        var-get($theme, 'dropdown-shadow');
+
+        %time-picker__body {
+            min-width: auto;
+        }
     }
 
     %time-picker__body {
         display: flex;
-        min-width: sizable(rem(272px), rem(314px), rem(360px));
+        min-width: sizable(rem(290px), rem(314px), rem(360px));
         padding-block: rem(16px);
         justify-content: center;
     }
@@ -253,8 +267,7 @@
     }
 
     %time-picker__column {
-        max-width: rem(64px);
-        height: rem(325px);
+        width: rem(64px);
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -263,6 +276,7 @@
         align-items: center;
         color: var-get($theme, 'text-color');
         overflow: hidden;
+        gap: rem(4px);
 
         &:focus,
         &:active {
@@ -274,7 +288,7 @@
         width: rem(54px);
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
-        height: sizable(rem(28px), rem(32px), rem(36px));
+        height: var-get($theme, 'time-item-size');
         display: flex;
         justify-content: center;
         align-items: center;
@@ -289,11 +303,16 @@
         }
     }
 
-    %time-picker__item--selected {
-        @if $variant != 'indigo-design' {
-            font-size: rem(24px);
-        }
+    %time-picker__item:not(%time-picker__item--selected) {
+        font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
+        font-weight: sizable(var(--ig-body-2-font-weight), var(--ig-body-2-font-weight), var(--ig-body-1-font-weight));
+        font-style: sizable(var(--ig-body-2-font-style), var(--ig-body-2-font-style), var(--ig-body-1-font-style));
+        line-height: sizable(var(--ig-body-2-line-height), var(--ig-body-2-line-height), var(--ig-body-1-line-height));
+        letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
+        text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
+    }
 
+    %time-picker__item--selected {
         color: var-get($theme, 'selected-text-color');
     }
 
@@ -317,12 +336,21 @@
         display: flex;
         flex-direction: column;
 
+        padding: $picker-header-padding;
+
         @if $variant == 'indigo-design' {
             gap: rem(2px);
         }
 
         background: var-get($theme, 'header-background');
-        padding: rem(24px) rem(16px);
+    }
+
+    %time-picker-display:not(%time-picker-display--vertical) {
+        %time-picker__header {
+            @if $variant == 'indigo-design' {
+                border-block-end: rem(1px) solid var-get($theme, 'divider-color');
+            }
+        }
     }
 
     %time-picker__header-ampm {
@@ -332,6 +360,7 @@
     %time-picker__header--vertical {
         @if $variant == 'indigo-design' {
             min-width: rem(136px);
+            border-inline-end: rem(1px) solid var-get($theme, 'divider-color');
         } @else {
             min-width: rem(168px);
         }
@@ -354,13 +383,9 @@
 
     %time-picker__buttons {
         display: flex;
+        min-height: sizable(rem(40px), rem(44px), rem(48px));
         justify-content: flex-end;
         align-items: center;
-
-        @if $not-bootstrap-theme {
-            height: rem(48px);
-        }
-
         padding: $picker-buttons-padding;
         gap: rem(8px);
     }
@@ -378,11 +403,12 @@
 @mixin time-picker-typography($categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',
-    content: 'body-1'
+    selected-time: 'h5'
 )) {
     $time-period: map.get($categories, 'header-time-period');
     $header-hour: map.get($categories, 'header-hour');
-    $content: map.get($categories, 'content');
+    $selected-time: map.get($categories, 'selected-time');
+
 
     %time-picker__header-ampm {
         @include type-style($time-period);
@@ -394,10 +420,9 @@
         }
     }
 
-    %time-picker__column {
-        @include type-style($content, false) {
-            font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
-            margin: 0;
+    %time-picker__item--selected {
+        @include type-style($selected-time) {
+            margin-top: 0;
         }
     }
 }

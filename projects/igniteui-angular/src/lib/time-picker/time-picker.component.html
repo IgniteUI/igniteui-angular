@@ -49,8 +49,6 @@
                 <span>{{ selectedDate | timeFormatPipe }}</span>
             </h2>
         </div>
-        <igx-divider *ngIf="!isVertical"></igx-divider>
-        <igx-divider *ngIf="isVertical" vertical></igx-divider>
         <div class="igx-time-picker__body">
             <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
             <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
