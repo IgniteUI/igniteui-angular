@@ -1,8 +1,13 @@
-<!-- this is here only for backward compatibility -->
-<ng-content></ng-content>
+<!-- This is only here for backwards compatibility in case  -->
+<!-- ligatures are used and the name is provided as content -->
+@if (!iconRef.name) {
+    <ng-content></ng-content>
+}
 
 @switch (iconRef.type) {
-    @case ("liga") {{{ iconRef.name }}}
+    @case ("liga") {
+        {{ iconRef.name }}
+    }
 
     @case ("svg") {
         <div [innerHTML]="getSvg"></div>

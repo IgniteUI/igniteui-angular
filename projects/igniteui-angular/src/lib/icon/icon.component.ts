@@ -136,13 +136,10 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
         private iconService: IgxIconService,
         private ref: ChangeDetectorRef,
     ) {
-        this.iconService.setFamily(
-            this.family,
-            {
-                className: "material-icons",
-                type: "liga",
-            }
-        );
+        this.iconService.setFamily(this.family, {
+            className: "material-icons",
+            type: "liga",
+        });
 
         this.iconService.iconLoaded
             .pipe(
