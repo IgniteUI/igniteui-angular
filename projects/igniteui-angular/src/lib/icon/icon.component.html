@@ -5,9 +5,7 @@
 }
 
 @switch (iconRef.type) {
-    @case ("liga") {
-        {{ iconRef.name }}
-    }
+    @case ("liga") {{{ iconRef.name }}}
 
     @case ("svg") {
         <div [innerHTML]="getSvg"></div>
