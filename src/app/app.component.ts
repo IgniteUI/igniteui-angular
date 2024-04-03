@@ -678,8 +678,8 @@ export class AppComponent implements OnInit {
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
-        iconService.registerFamilyAlias('fa-solid', 'fa');
-        iconService.registerFamilyAlias('fa-brands', 'fab');
+        iconService.setFamily('fa-solid', { className: 'fa', type: 'font' });
+        iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             for (const component of this.componentLinks) {

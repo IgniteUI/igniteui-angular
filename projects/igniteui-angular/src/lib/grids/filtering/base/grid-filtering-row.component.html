@@ -4,7 +4,7 @@
         [value]="condition"
         [selected]="isConditionSelected(condition)">
         <div class="igx-grid__filtering-dropdown-items">
-            <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <igx-icon family="default" [name]="getCondition(condition).iconName"></igx-icon>
             <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
         </div>
     </igx-drop-down-item>
@@ -17,7 +17,7 @@
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon family="imx-icons" [name]="getIconName()"></igx-icon>
+            <igx-icon family="default" [name]="getIconName()"></igx-icon>
         </igx-prefix>
         <input
             #input

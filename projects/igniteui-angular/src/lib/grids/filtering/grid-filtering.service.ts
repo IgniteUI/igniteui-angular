@@ -319,7 +319,10 @@ export class IgxFilteringService implements OnDestroy {
      */
     public registerSVGIcons(): void {
         const editorIcons = editor as any[];
-        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+        editorIcons.forEach(icon => {
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+            this.iconService.addIconRef(icon.name, 'default', { family: 'imx-icons', name: icon.name });
+        });
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }

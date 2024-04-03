@@ -1,9 +1,10 @@
-<ng-template #default>
-    <ng-content></ng-content>
-</ng-template>
+<!-- this is here only for backward compatibility -->
+<ng-content></ng-content>
 
-<ng-template #svgImage>
-    <div [innerHTML]="getSvg"></div>
-</ng-template>
+@switch (iconRef.type) {
+    @case ("liga") {{{ iconRef.name }}}
 
-<ng-container *ngTemplateOutlet="template"></ng-container>
+    @case ("svg") {
+        <div [innerHTML]="getSvg"></div>
+    }
+}
