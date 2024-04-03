@@ -4,8 +4,8 @@ import {
     HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, noop, Observable, Subject, timer } from 'rxjs';
-import { takeUntil, throttleTime } from 'rxjs/operators';
+import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
+import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { EditorProvider } from '../core/edit-provider';
 import { resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
@@ -774,6 +774,7 @@ export class IgxSliderComponent implements
     // ticks
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
+    private _sliding = false;
 
     private _labels = new Array<number | string | boolean | null | undefined>();
     private _type: IgxSliderType = IgxSliderType.SLIDER;
@@ -804,6 +805,7 @@ export class IgxSliderComponent implements
             return;
         }
 
+        this._sliding = true;
         const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
         this.showSliderIndicators();
@@ -811,6 +813,14 @@ export class IgxSliderComponent implements
         $event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
+    public onPointerMove($event: PointerEvent) {
+        if (this._sliding) {
+            this.update($event.clientX);
+        }
+    }
 
     /**
      * @hidden
@@ -824,6 +834,7 @@ export class IgxSliderComponent implements
         const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
+        this._sliding = false;
         this.hideSliderIndicators();
         this.dragFinished.emit(this.value);
     }
@@ -834,14 +845,6 @@ export class IgxSliderComponent implements
     @HostListener('focus')
     public onFocus() {
         this.toggleSliderIndicators();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('pan', ['$event'])
-    public onPanListener($event) {
-        this.update($event.srcEvent.clientX);
     }
 
     /**
@@ -1053,6 +1056,11 @@ export class IgxSliderComponent implements
                 throttleTime(40),
                 takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run(() => {
                     this.stepDistance = this.calculateStepDistance();
+                }));
+            fromEvent(this._el.nativeElement, 'pointermove').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroyer$)).subscribe(($event: PointerEvent) => this._ngZone.run(() => {
+                    this.onPointerMove($event);
                 }));
         });
     }
