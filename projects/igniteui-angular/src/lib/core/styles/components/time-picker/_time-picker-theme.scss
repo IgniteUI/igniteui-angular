@@ -206,7 +206,7 @@
     %time-picker--dropdown {
         min-width: rem(200px);
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color'),
-        var-get($theme, 'dropdown-shadow');
+            var-get($theme, 'dropdown-shadow');
 
         %time-picker__body {
             min-width: auto;
