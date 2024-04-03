@@ -22,12 +22,6 @@
 
         @include e(wrapper) {
             @extend %node-wrapper !optional;
-
-            &:hover {
-                &::after {
-                    @extend %indigo-opacity !optional;
-                }
-            }
         }
 
         // STATES START
