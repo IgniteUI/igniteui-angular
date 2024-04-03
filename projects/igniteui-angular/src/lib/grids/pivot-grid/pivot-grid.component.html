@@ -1,4 +1,3 @@
-<ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 <!-- Toolbar area -->
 <ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 
@@ -171,4 +170,8 @@
             <igx-excel-style-search></igx-excel-style-search>
         </igx-excel-style-filter-operations>
     </igx-grid-excel-style-filtering>
+</div>
+
+<div #sink style="display: none;">
+    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 </div>
