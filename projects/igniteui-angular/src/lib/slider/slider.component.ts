@@ -1299,21 +1299,21 @@ export class IgxSliderComponent implements
     }
 
     private setTickInterval() {
-        let interval;
+        let tickInterval;
         const trackProgress = 100;
 
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
-            interval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
+            tickInterval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
         } else {
             const trackRange = this.maxValue - this.minValue;
-            interval = this.step > 1 ?
+            tickInterval = this.step > 1 ?
                 (trackProgress / ((trackRange / this.step)) * 10) / 10
                 : null;
         }
 
-        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${interval * Math.sqrt(2)}%`);
-        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || interval === null ? 'hidden' : 'visible');
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${tickInterval * Math.sqrt(2)}%`);
+        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || tickInterval === null ? 'hidden' : 'visible');
     }
 
     private showSliderIndicators() {
