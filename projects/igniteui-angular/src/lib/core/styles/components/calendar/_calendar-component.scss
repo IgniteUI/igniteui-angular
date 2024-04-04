@@ -199,10 +199,6 @@
             @extend %date-first-last !optional;
         }
 
-        @include e(date, $mods: ('first', 'last', 'current')) {
-            @extend %date-first-last-current !optional;
-        }
-
         @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
             @extend %date-range-selected-current-first !optional;
         }
@@ -516,7 +512,7 @@
             @extend %months-grid !optional;
         }
 
-        @include e(year) {
+        @include e(month) {
             @extend %view-item !optional;
         }
 
