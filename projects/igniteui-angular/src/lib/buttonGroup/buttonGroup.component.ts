@@ -531,14 +531,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 observer.disconnect();
 
                 const updatedButtons = this.getUpdatedButtons(records);
-                const initialSelectionState = JSON.parse(JSON.stringify(this.selectedIndexes));
 
                 if (updatedButtons.length > 0) {
                     updatedButtons.forEach((button) => {
                         const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
                         const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
 
-                        this.updateButtonSelectionState(index, initialSelectionState, args);
+                        this.updateButtonSelectionState(index, args);
                     });
                 }
 
@@ -568,8 +567,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         return updated;
     }
 
-    private updateButtonSelectionState(index: number, initialSelectionState: number[], args: IButtonGroupEventArgs) {
-        if (initialSelectionState.indexOf(index) === -1) {
+    private updateButtonSelectionState(index: number, args: IButtonGroupEventArgs) {
+        if (this.buttons[index].selected) {
             this.updateSelected(index);
             this.selected.emit(args);
         } else {
