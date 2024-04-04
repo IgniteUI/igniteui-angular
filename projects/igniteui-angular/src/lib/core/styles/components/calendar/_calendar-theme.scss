@@ -1904,6 +1904,7 @@
                 @if $variant != 'indigo-design' {
                     border-color: var-get($theme, 'date-selected-current-hover-border-color');
                 } @else {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-selected-current-hover-border-color');
                     }
@@ -1983,6 +1984,7 @@
                 @if $variant == 'indigo-design' {
                     border-color: transparent;
 
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-current-hover-border-color');
                     }
@@ -2118,6 +2120,7 @@
                     color: var-get($theme, 'date-selected-hover-foreground');
                     background: var-get($theme, 'date-selected-hover-background');
 
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-selected-current-hover-border-color');
                     }
