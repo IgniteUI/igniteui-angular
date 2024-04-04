@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
@@ -78,9 +79,15 @@
     $hitbox-debug-color: rgba(coral, .24);
 
     $variant: map.get($theme, '_meta', 'variant');
-    $size: map-get($theme, 'size');
-    $splitter-size: ($size / ($size * 0 + 1) + 2);
-    $slim-splitter: calc( 1 / $splitter-size);
+
+    //remove unit from size
+    $size: math.div(map-get($theme, 'size'), map-get($theme, 'size') * 0 + 1);
+
+    //splitter size + borders
+    $splitter-size: $size + 2;
+
+    //calculate the value for the slim(indigo) splitter
+    $slim-splitter: calc( 1 / $splitter-size); 
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {
