@@ -136,6 +136,27 @@ export class IgxIconService {
         this._families.set(name, meta);
     }
 
+    /**
+     *  Adds an icon reference meta for an icon in a meta family.
+     *  Executes only if no icon reference is found.
+     * ```typescript
+     *   this.iconService.addIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
+     * ```
+     */
+    public addIconRef(name: string, family: string, icon: IconMeta) {
+        const iconRef = this._defaults.get(family)?.get(name);
+
+        if (!iconRef) {
+            this.setIconRef(name, family, icon);
+        }
+    }
+
+    /**
+     *  Similar to addIconRef, but always sets the icon reference meta for an icon in a meta family.
+     * ```typescript
+     *   this.iconService.setIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
+     * ```
+     */
     public setIconRef(name: string, family: string, icon: IconMeta) {
         let familyRef = this._defaults.get(family);
 
@@ -148,11 +169,25 @@ export class IgxIconService {
         familyRef.set(name, {...icon, type: icon.type ?? familyType });
     }
 
-    public addIconRef(name: string, family: string, icon: IconMeta) {
-        const iconRef = this._defaults.get(family)?.get(name);
+    /**
+     *  Returns the icon reference meta for an icon in a given family.
+     * ```typescript
+     *   const iconRef = this.iconService.getIconRef('aruba', 'default');
+     * ```
+     */
+    public getIconRef(name: string, family: string): IconReference {
+        const icon = this._defaults.get(family)?.get(name);
 
-        if (!iconRef) {
-            this.setIconRef(name, family, icon);
+        const iconFamily = icon?.family ?? family;
+        const iconName = icon?.name ?? name;
+        const type = icon?.type ?? this.familyType(iconFamily);
+        const className = this.familyClassName(iconFamily);
+
+        return {
+            className,
+            type,
+            name: iconName,
+            family: iconFamily
         }
     }
 
@@ -220,28 +255,6 @@ export class IgxIconService {
         }
 
         return false;
-    }
-
-    /**
-     *  Returns the icon reference meta for an icon in a given family.
-     * ```typescript
-     *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
-     * ```
-     */
-    public getIcon(family: string, name: string): IconReference {
-        const icon = this._defaults.get(family)?.get(name);
-
-        const iconFamily = icon?.family ?? family;
-        const iconName = icon?.name ?? name;
-        const type = icon?.type ?? this.familyType(iconFamily);
-        const className = this.familyClassName(iconFamily);
-
-        return {
-            className,
-            type,
-            name: iconName,
-            family: iconFamily
-        }
     }
 
     /**

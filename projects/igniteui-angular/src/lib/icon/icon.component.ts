@@ -257,7 +257,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     private setIcon() {
-        this.iconRef = this.iconService.getIcon(this.family, this.name);
+        this.iconRef = this.iconService.getIconRef(this.name, this.family);
         this.clearIconClasses();
 
         const { name, type, className } = this.iconRef;
