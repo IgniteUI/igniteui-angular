@@ -146,8 +146,8 @@
         indigo-design: 12px
     ), $variant);
     $thumb-radius: math.div($thumb-size, 2);
-    
-    $thumb-indigo-idle: ($thumb-size / ($thumb-size * 0 + 1));
+
+    $thumb-indigo-idle: math.div($thumb-size , $thumb-size * 0 + 1);
     $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
 
     $thumb-border-width: map.get((
