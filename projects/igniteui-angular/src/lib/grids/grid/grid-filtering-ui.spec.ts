@@ -359,7 +359,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const currentDay = calendar.querySelector('.igx-calendar__date--current');
+            const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
             currentDay.dispatchEvent(new Event('click'));
 
@@ -393,7 +393,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            calendar.querySelector('.igx-calendar__date--current');
+            calendar.querySelector('.igx-days-view__date--current');
             const monthView = calendar.querySelector('.igx-calendar-picker__date');
 
             monthView.dispatchEvent(new Event('click'));
@@ -1161,7 +1161,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+            const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
         }));
@@ -1962,9 +1962,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click the today date.
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
-            todayDayItem.focus();
-            todayDayItem.click();
+            const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
+            todayDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
@@ -1997,20 +1996,26 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // View years
             const yearView: HTMLElement = calendar.querySelectorAll('.igx-calendar-picker__date')[1] as HTMLElement;
-            yearView.click();
+            yearView.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
             // Select the first year
-            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar__year')[0] as HTMLElement;
-            firstYear.click();
+            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-years-view__year')[0] as HTMLElement;
+            firstYear.dispatchEvent(new Event('mousedown'));
+            tick(100);
+            fix.detectChanges();
+
+            // Select the first month
+            const firstMonth: HTMLElement = calendar.querySelectorAll('.igx-months-view__month')[0] as HTMLElement;
+            firstMonth.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
             // Select the first day
-            const firstDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date');
-            firstDayItem.focus();
-            firstDayItem.click();
+            const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
+            
+            firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
             fix.detectChanges();
@@ -2108,9 +2113,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const currentDay = document.querySelector('.igx-calendar__date--current');
+            const currentDay = document.querySelector('.igx-days-view__date--current');
 
-            currentDay.dispatchEvent(new Event('click'));
+            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
             tick();
             fix.detectChanges();
 
@@ -2806,9 +2811,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const currentDay = calendar.querySelector('.igx-calendar__date--current');
+            const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
-            currentDay.dispatchEvent(new Event('click'));
+            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
 
             flush();
             fix.detectChanges();
@@ -4803,8 +4808,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4853,7 +4858,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Get Calendar component.
             const calendar = document.querySelector('igx-calendar');
 
-            const daysOfWeek = calendar.querySelector('.igx-calendar__body-row');
+            const daysOfWeek = calendar.querySelector('.igx-days-view__row');
             const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
 
             expect(weekStart.innerText).toMatch('Fri');
@@ -4885,8 +4890,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4932,8 +4937,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4984,8 +4989,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -5037,8 +5042,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick();
             fix.detectChanges();
 
@@ -5457,7 +5462,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeFalse();
             expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
-            
+
             // on arrow up the first item should be active again
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
             fix.detectChanges();
