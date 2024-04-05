@@ -81,7 +81,7 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     //remove unit from size
-    $size: math.div(map-get($theme, 'size'), map-get($theme, 'size') * 0 + 1);
+    $size: math.div(map.get($theme, 'size'), map.get($theme, 'size') * 0 + 1);
 
     //splitter size + borders
     $splitter-size: $size + 2;
