@@ -150,13 +150,13 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     }
 
     /**
-     * @deprecated in version 17.1.0.
      * Sets the button text color.
      *
      * @example
      * ```html
      * <button type="button" igxButton igxButtonColor="orange"></button>
      * ```
+     * @deprecated in version 17.1.0.
      */
     @Input('igxButtonColor')
     public set color(value: string) {
@@ -165,13 +165,13 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     }
 
     /**
-     * @deprecated in version 17.1.0.
      * Sets the background color of the button.
      *
      * @example
      *  ```html
      * <button type="button" igxButton igxButtonBackground="red"></button>
      * ```
+     * @deprecated in version 17.1.0.
      */
     @Input('igxButtonBackground')
     public set background(value: string) {

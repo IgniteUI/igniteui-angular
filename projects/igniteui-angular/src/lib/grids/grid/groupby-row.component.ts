@@ -61,7 +61,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public rowDraggable: boolean;
 
     /**
-     * An @Input property that sets the index of the row.
+     * Sets the index of the row.
      * ```html
      * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
      * ```
@@ -70,7 +70,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public index: number;
 
     /**
-     * An @Input property that sets the id of the grid the row belongs to.
+     * Sets the id of the grid the row belongs to.
      * ```html
      * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
      * ```
@@ -79,7 +79,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public gridID: string;
 
     /**
-     * An @Input property that specifies the group record the component renders for.
+     * The group record the component renders for.
      * ```typescript
      * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
      * ```
