@@ -170,7 +170,7 @@ describe('IgxDateTimeEditor', () => {
             });
 
             it('should prioritize Date for spinning, if it is set in format', () => {
-                inputFormat = 'dd/M/yy HH:mm:ss tt';
+                inputFormat = 'dd/M/yy HH:mm:ss aa';
                 inputDate = '11/03/2020 00:00:00 AM';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -240,7 +240,7 @@ describe('IgxDateTimeEditor', () => {
             });
 
             it('should correctly increment / decrement time portions without passed in DatePart', () => {
-                inputFormat = 'HH:mm:ss tt';
+                inputFormat = 'HH:mm:ss aa';
                 inputDate = '';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -335,7 +335,7 @@ describe('IgxDateTimeEditor', () => {
             });
 
             it('should properly parse AM/PM no matter where it is in the format', () => {
-                inputFormat = 'dd tt yyyy-MM mm-ss-hh';
+                inputFormat = 'dd aa yyyy-MM mm-ss-hh';
                 inputDate = '12 AM 2020-06 14-15-11';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -348,6 +348,24 @@ describe('IgxDateTimeEditor', () => {
 
                 dateTimeEditor.increment(DatePart.AmPm);
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
+            });
+
+            it('should support AM/PM part formats as Angular\'s DatePipe Period - a, aa, aaa, aaaa & aaaaa', () => {
+                inputFormat = 'HH:mm:ss ';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                for (let i = 0; i < 5; i++) {
+                    inputFormat += 'a';
+                    dateTimeEditor.inputFormat = inputFormat;
+                    const expectedMask = '00:00:00 ' + 'L'.repeat(i === 4 ? 1 : 2);
+                    expect(dateTimeEditor.mask).toEqual(expectedMask);
+                }
+                // make sure it works for multiple occurrences of the AmPm part variations at once and at last position
+                inputFormat = 'a aaa aa aaaaa HH:mm:ss a';
+                const expectedMask = 'LL LL LL L 00:00:00 LL';
+                dateTimeEditor.inputFormat = inputFormat;
+                expect(dateTimeEditor.mask).toEqual(expectedMask);
             });
         });
     });

@@ -792,7 +792,7 @@ describe('IgxTimePicker', () => {
             });
 
             it('should scroll trough hours/minutes/seconds/AM PM based on default or set itemsDelta', fakeAsync(() => {
-                timePicker.inputFormat = 'hh:mm:ss tt';
+                timePicker.inputFormat = 'hh:mm:ss a';
                 fixture.detectChanges();
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
@@ -843,7 +843,7 @@ describe('IgxTimePicker', () => {
             it('should scroll trough hours/minutes/seconds/AM PM based on custom itemsDelta', fakeAsync(() => {
                 const newDate = new Date(2021, 24, 2, 10, 20, 0);
                 fixture.componentInstance.date = newDate;
-                timePicker.inputFormat = 'hh:mm:ss tt';
+                timePicker.inputFormat = 'hh:mm:ss a';
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 20 };
                 fixture.detectChanges();
 
@@ -1387,7 +1387,7 @@ describe('IgxTimePicker', () => {
                 expect(selectedAMPM).toEqual('PM');
             }));
             it('should select hour/minute/second/AMPM via the drop down list (throw onItemClick event)', fakeAsync(() => {
-                timePicker.inputFormat = 'hh:mm:ss tt';
+                timePicker.inputFormat = 'hh:mm:ss a';
                 fixture.detectChanges();
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));

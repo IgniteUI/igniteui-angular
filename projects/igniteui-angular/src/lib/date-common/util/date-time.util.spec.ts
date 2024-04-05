@@ -9,7 +9,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
 describe(`DateTimeUtil Unit tests`, () => {
     describe('Date Time Parsing', () => {
         it('should correctly parse all date time parts (base)', () => {
-            const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss tt');
+            const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss a');
             const expected = [
                 { start: 0, end: 2, type: DatePart.Date, format: 'dd' },
                 { start: 2, end: 3, type: DatePart.Literal, format: '/' },
@@ -23,7 +23,7 @@ describe(`DateTimeUtil Unit tests`, () => {
                 { start: 16, end: 17, type: DatePart.Literal, format: ':' },
                 { start: 17, end: 19, type: DatePart.Seconds, format: 'ss' },
                 { start: 19, end: 20, type: DatePart.Literal, format: ' ' },
-                { start: 20, end: 22, type: DatePart.AmPm, format: 'tt' }
+                { start: 20, end: 22, type: DatePart.AmPm, format: 'aa' }
             ];
             expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
         });
@@ -112,7 +112,7 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(result).toEqual(new Date(2020, 9, 31));
         });
 
-        it('should correctly parse values in h:m:s tt format', () => {
+        it('should correctly parse values in h:m:s a format', () => {
             const verifyTime = (val: Date, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) => {
                 expect(val.getHours()).toEqual(hours);
                 expect(val.getMinutes()).toEqual(minutes);
@@ -120,7 +120,7 @@ describe(`DateTimeUtil Unit tests`, () => {
                 expect(val.getMilliseconds()).toEqual(milliseconds);
             };
 
-            const parts = DateTimeUtil.parseDateTimeFormat('h:m:s tt');
+            const parts = DateTimeUtil.parseDateTimeFormat('h:m:s a');
             let result = DateTimeUtil.parseValueFromMask('11:34:12 AM', parts);
             verifyTime(result, 11, 34, 12);
             result = DateTimeUtil.parseValueFromMask('04:12:15 PM', parts);
@@ -159,7 +159,7 @@ describe(`DateTimeUtil Unit tests`, () => {
             { start: 5, end: 6, type: DatePart.Literal, format: ':' },
             { start: 6, end: 8, type: DatePart.Seconds, format: 'ss' },
             { start: 8, end: 9, type: DatePart.Literal, format: ' ' },
-            { start: 9, end: 11, type: DatePart.AmPm, format: 'tt' }
+            { start: 9, end: 11, type: DatePart.AmPm, format: 'a' }
         ];
 
         result = DateTimeUtil.parseValueFromMask(input, dateParts);
@@ -404,7 +404,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(date.getTime()).toEqual(new Date(2015, 4, 20, 12, 59, 57).getTime());
     });
 
-    it('should spin AM/PM portion correctly', () => {
+    it('should spin AM/PM and a/p portion correctly', () => {
         const currentDate = new Date(2015, 4, 31, 4, 59, 59);
         const newDate = new Date(2015, 4, 31, 4, 59, 59);
         // spin from AM to PM
@@ -413,6 +413,12 @@ describe(`DateTimeUtil Unit tests`, () => {
 
         // spin from PM to AM
         DateTimeUtil.spinAmPm(currentDate, newDate, 'AM');
+        expect(currentDate.getHours()).toEqual(4);
+
+        DateTimeUtil.spinAmPm(currentDate, newDate, 'p');
+        expect(currentDate.getHours()).toEqual(16);
+
+        DateTimeUtil.spinAmPm(currentDate, newDate, 'a');
         expect(currentDate.getHours()).toEqual(4);
     });
 
