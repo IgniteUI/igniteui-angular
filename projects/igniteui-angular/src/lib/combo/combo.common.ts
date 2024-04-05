@@ -378,7 +378,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * An @Input property that sets groups sorting order.
+     * Sets groups sorting order.
      *
      * @example
      * ```html
@@ -408,7 +408,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
-     * An @Input property that set aria-labelledby attribute
+     * Sets aria-labelledby attribute value.
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
      * ```
@@ -421,7 +421,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public cssClass = 'igx-combo'; // Independent of display density for the time being
 
     /**
-     * An @Input property that enabled/disables combo. The default is `false`.
+     * Disables the combo. The default is `false`.
      * ```html
      * <igx-combo [disabled]="'true'">
      * ```
@@ -430,7 +430,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public disabled = false;
 
     /**
-     * An @Input property that sets how the combo will be styled.
+     * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
      * <igx-combo [type]="'line'">

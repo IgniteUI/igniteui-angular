@@ -47,10 +47,10 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
     public showProgress = false;
 
     /**
-     * @deprecated since version 17.1.0
-     * No longer required to be set for the Hierarchical Grid child grid template
-     *
      * Gets/sets the grid component for the toolbar component.
+     *
+     * @deprecated since version 17.1.0.
+     * No longer required to be set for the Hierarchical Grid child grid template
      *
      * @remarks
      * Usually you should not set this property in the context of the default grid/tree grid.

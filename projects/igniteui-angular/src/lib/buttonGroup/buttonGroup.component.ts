@@ -74,7 +74,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
+     * Gets/Sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
      *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
      * ```
@@ -120,9 +120,9 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * @deprecated in version 16.1.0. Set/Use selectionMode property instead.
-     *
      * Enables selecting multiple buttons. By default, multi-selection is false.
+     *
+     * @deprecated in version 16.1.0. Use the `selectionMode` property instead.
      */
     @Input()
     public get multiSelection() {
@@ -141,7 +141,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that get/set the selection mode 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
+     * Gets/Sets the selection mode to 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
      * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
      * ```
@@ -162,7 +162,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that allows setting the buttons in the button group.
+     * Property that configures the buttons in the button group using a collection of `Button` objects.
      * ```typescript
      *  public ngOnInit() {
      *      this.cities = [
@@ -190,7 +190,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     @Input() public values: any;
 
     /**
-     * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
+     * Disables the `igx-buttongroup` component. By default it's false.
      * ```html
      * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
      * ```
