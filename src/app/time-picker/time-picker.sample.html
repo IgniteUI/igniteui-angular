@@ -14,7 +14,7 @@
         <p class="sample-description">{{showDate(val)}}</p>
         <div class="preview">
             <igx-time-picker #tp1 [value]="val" [spinLoop]="false" [itemsDelta]="{ hours: 1, minutes: 30, seconds: 20 }"
-                [inputFormat]="'hh:mm tt'" (valueChange)="updateValue($event)"
+                [inputFormat]="'hh:mm a'" (valueChange)="updateValue($event)"
                 (validationFailed)="validationFailed($event)">
             </igx-time-picker>
         </div>
@@ -24,7 +24,7 @@
         <p class="sample-description">{{showDate(date1)}}</p>
         <div class="preview">
             <igx-time-picker #hourModeTimePicker #model="ngModel" [(ngModel)]="date1" [minValue]="min" [maxValue]="max"
-                [inputFormat]="'hh:mm tt'" [displayFormat]="'hh tt'">
+                [inputFormat]="'hh:mm a'" [displayFormat]="'hh a'">
                 <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">Value is outside the range.
                 </igx-hint>
             </igx-time-picker>
@@ -34,7 +34,7 @@
         <h4 class="sample-title">Horizontal Time Picker</h4>
         <p class="sample-description">AM/PM Time format</p>
         <div class="preview">
-            <igx-time-picker [mode]="'dialog'" [inputFormat]="'hh:mm tt'"></igx-time-picker>
+            <igx-time-picker [mode]="'dialog'" [inputFormat]="'hh:mm aa'"></igx-time-picker>
         </div>
     </article>
     <article class="timepicker-column">
@@ -49,7 +49,7 @@
         <h4 class="sample-title">Templated Action Buttons Time Picker</h4>
         <p class="sample-description">Time picker with custom action button</p>
         <div class="preview">
-            <igx-time-picker #picker [(ngModel)]="date1" [inputFormat]="'hh:mm tt'">
+            <igx-time-picker #picker [(ngModel)]="date1" [inputFormat]="'hh:mm aaaaa'">
                 <ng-template igxPickerActions>
                     <div class="action-buttons">
                         <button igxButton="flat" (click)="selectCurrentTime(picker)">Current Time</button>
@@ -62,7 +62,7 @@
         <h4 class="sample-title">Time Picker with custom spin buttons</h4>
         <p class="sample-description">Time Picker with custom spin buttons</p>
         <div class="preview">
-            <igx-time-picker #tempPicker [value]="'10:00:00'" [inputFormat]="'hh tt'">
+            <igx-time-picker #tempPicker [value]="'10:00:00'" [inputFormat]="'hh aaaaa'">
                 <igx-picker-toggle igxPrefix>
                     <igx-icon>alarm</igx-icon>
                  </igx-picker-toggle>
