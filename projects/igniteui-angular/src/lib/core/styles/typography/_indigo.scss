@@ -85,7 +85,10 @@
     @include snackbar-typography();
     @include switch-typography();
     @include tabs-typography();
-    @include time-picker-typography();
+    @include time-picker-typography($categories: (
+        header-hour: 'h5',
+        selected-time: 'h6'
+    ));
     @include stepper-typography();
     @include toast-typography();
     @include tooltip-typography();

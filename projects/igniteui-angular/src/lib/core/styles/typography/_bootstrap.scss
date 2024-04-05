@@ -96,7 +96,9 @@
     @include snackbar-typography();
     @include switch-typography();
     @include tabs-typography();
-    @include time-picker-typography();
+    @include time-picker-typography($categories: (
+        selected-time: 'h4'
+    ));
     @include stepper-typography();
     @include toast-typography();
     @include tooltip-typography();
