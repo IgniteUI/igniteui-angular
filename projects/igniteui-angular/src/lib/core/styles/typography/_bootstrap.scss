@@ -87,7 +87,9 @@
         title: 'h5'
     ));
     @include navdrawer-typography();
-    @include radio-typography();
+    @include radio-typography($categories: (
+        label: 'body-1'
+    ));
     @include slider-typography();
     @include snackbar-typography();
     @include switch-typography();

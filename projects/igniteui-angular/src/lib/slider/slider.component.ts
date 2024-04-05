@@ -109,7 +109,7 @@ export class IgxSliderComponent implements
     public slierClass = true;
 
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * Sets the value of the `id` attribute.
      * If not provided it will be automatically generated.
      * ```html
      * <igx-slider [id]="'igx-slider-32'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
@@ -120,7 +120,7 @@ export class IgxSliderComponent implements
     public id = `igx-slider-${NEXT_ID++}`;
 
     /**
-     * An @Input property that sets the duration visibility of thumbs labels. The default value is 750 milliseconds.
+     * Sets the duration visibility of thumbs labels. The default value is 750 milliseconds.
      * ```html
      * <igx-slider #slider [thumbLabelVisibilityDuration]="3000" [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
@@ -161,7 +161,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that gets the type of the `IgxSliderComponent`.
+     * Gets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * @ViewChild("slider2")
@@ -176,7 +176,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the type of the `IgxSliderComponent`.
+     * Sets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
@@ -242,7 +242,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the incremental/decremental step of the value when dragging the thumb.
+     * Sets the incremental/decremental step of the value when dragging the thumb.
      * The default step is 1, and step should not be less or equal than 0.
      * ```html
      * <igx-slider #slider [(ngModel)]="task.percentCompleted" [step]="5">
@@ -291,9 +291,9 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that disables or enables UI interaction.
+     * Disables the component.
      * ```html
-     * <igx-slider #slider [disabled]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * <igx-slider #slider [disabled]="true" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
      */
     public set disabled(disable: boolean) {
@@ -320,7 +320,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that marks the {@link IgxSliderComponent} as continuous.
+     * Sets the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
      * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
@@ -1072,7 +1072,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public writeValue(value: IRangeSliderValue | number): void {
-        if (!value) {
+        if (this.isNullishButNotZero(value)) {
             return;
         }
 
@@ -1372,6 +1372,10 @@ export class IgxSliderComponent implements
 
     private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {
         return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
+    }
+
+    private isNullishButNotZero(value: any): boolean {
+        return !value && value !== 0;
     }
 
     /**
