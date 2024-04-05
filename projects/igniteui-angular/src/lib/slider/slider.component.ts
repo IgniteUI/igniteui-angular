@@ -1080,7 +1080,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public writeValue(value: IRangeSliderValue | number): void {
-        if (!value) {
+        if (this.isNullishButNotZero(value)) {
             return;
         }
 
@@ -1380,6 +1380,10 @@ export class IgxSliderComponent implements
 
     private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {
         return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
+    }
+
+    private isNullishButNotZero(value: any): boolean {
+        return !value && value !== 0;
     }
 
     /**
