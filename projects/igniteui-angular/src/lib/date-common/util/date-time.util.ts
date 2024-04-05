@@ -9,8 +9,8 @@ const enum FormatDesc {
     TwoDigits = '2-digit'
 }
 
-const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
-const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
+const TIME_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
+const DATE_CHARS = ['d', 'D', 'M', 'y', 'Y'];
 
 /** @hidden */
 const enum DateParts {
