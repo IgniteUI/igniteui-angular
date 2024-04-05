@@ -111,7 +111,7 @@ export abstract class IgxForOfToken<T, U extends T[] = T[]> {
 export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
-     * An @Input property that sets the data to be rendered.
+     * Sets the data to be rendered.
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
      * ```
@@ -120,13 +120,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForOf: U & T[] | null;
 
     /**
-     * An @Input property that sets the property name from which to read the size in the data object.
+     * Sets the property name from which to read the size in the data object.
      */
     @Input()
     public igxForSizePropName;
 
     /**
-     * An @Input property that specifies the scroll orientation.
+     * Specifies the scroll orientation.
      * Scroll orientation can be "vertical" or "horizontal".
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
@@ -158,7 +158,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForScrollContainer: any;
 
     /**
-     * An @Input property that sets the px-affixed size of the container along the axis of scrolling.
+     * Sets the px-affixed size of the container along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the container and for "vertical" is the height.
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForContainerSize]="'500px'"
@@ -170,7 +170,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForContainerSize: any;
 
     /**
-     * An @Input property that sets the px-affixed size of the item along the axis of scrolling.
+     * Sets the px-affixed size of the item along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" [igxForItemSize]="'50px'"></ng-template>
