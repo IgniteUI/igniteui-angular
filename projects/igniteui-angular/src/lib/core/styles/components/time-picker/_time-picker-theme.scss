@@ -184,9 +184,8 @@
         overflow: hidden;
         min-width: fit-content;
 
-
         igx-divider {
-            --color: #{var-get($theme, 'divider-color')}
+            --color: #{var-get($theme, 'divider-color')};
         }
     }
 
@@ -411,7 +410,7 @@
 
 
     %time-picker__header-ampm {
-        @include type-style($time-period);
+        @include type-style($time-period, false);
     }
 
     %time-picker__header-hour {
