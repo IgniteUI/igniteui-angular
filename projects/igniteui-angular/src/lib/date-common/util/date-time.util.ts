@@ -566,10 +566,6 @@ export abstract class DateTimeUtil {
             case 'S':
                 return DatePart.Seconds;
             case 'a':
-            case 'aa':
-            case 'aaa':
-            case 'aaaa':
-            case 'aaaaa':
                 return DatePart.AmPm;
             default:
                 return DatePart.Literal;
