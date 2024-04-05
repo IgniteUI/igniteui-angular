@@ -91,17 +91,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
-    /**
-     * @hidden
-     * @internal
-     */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
-    /**
-     * @hidden
-     * @internal
-     */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     protected paginatorDirectiveTemplate: TemplateRef<any>;
 
@@ -129,7 +121,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._paginatorTemplate = template;
     }
 
-    /** @hidden @internal **/
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
     protected actionStrips: QueryList<IgxActionStripToken>;
 
@@ -140,7 +131,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public layoutChange = new EventEmitter<any>();
 
     /**
-     * Event emmited when a grid is being created based on this row island.
+     * Event emitted when a grid is being created based on this row island.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
      *      <igx-row-island [key]="'childData'" (gridCreated)="gridCreated($event)" #rowIsland>
