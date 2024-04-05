@@ -301,7 +301,7 @@ export class IgxPivotDataSelectorComponent {
     }
 
     /**
-     * An @Input property that sets the grid.
+     * Sets the grid.
      */
     @Input()
     public set grid(value: PivotGridType) {
