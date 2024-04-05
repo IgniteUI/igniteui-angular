@@ -320,7 +320,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Marks the {@link IgxSliderComponent} as continuous.
+     * Sets the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
      * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.

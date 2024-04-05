@@ -123,7 +123,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public focusTrap = true;
 
     /**
-     * Title of the dialog.
+     * Sets the title of the dialog.
      * ```html
      * <igx-dialog title="Notification" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -132,7 +132,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public title = '';
 
     /**
-     *  Message text of the dialog.
+     *  Sets the message text of the dialog.
      * ```html
      * <igx-dialog message="Your email was sent!" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -141,7 +141,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public message = '';
 
     /**
-     * Set the `label` of the left button of the dialog.
+     * Sets the `label` of the left button of the dialog.
      * ```html
      * <igx-dialog leftButtonLabel="OKAY" #alert title="Notification"  (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -150,7 +150,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonLabel = '';
 
     /**
-     * Set the left button `type`. The types are `flat`, `contained` and `fab`.
+     * Sets the left button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
      * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
@@ -162,7 +162,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Input()
     public leftButtonType: IgxButtonType = 'flat';
     /**
-     * Set the left button color. The property accepts all valid CSS color property values.
+     * Sets the left button color. The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog leftButtonColor="yellow" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -171,7 +171,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonColor = '';
 
     /**
-     * Set the left button `background-color`. The property accepts all valid CSS color property values.
+     * Sets the left button `background-color`. The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog leftButtonBackgroundColor="black" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -180,7 +180,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonBackgroundColor = '';
 
     /**
-     * Set the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
+     * Sets the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
      * The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog leftButtonRipple="green" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
@@ -190,7 +190,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonRipple = '';
 
     /**
-     * Set the `label` of the right button of the dialog.
+     * Sets the `label` of the right button of the dialog.
      * ```html
      * <igx-dialog rightButtonLabel="OKAY" #alert title="Notification"  (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -199,7 +199,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonLabel = '';
 
     /**
-     * Set the right button `type`. The types are `flat`, `contained` and `fab`.
+     * Sets the right button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
      * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
@@ -212,7 +212,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonType: IgxButtonType = 'flat';
 
     /**
-     * Set the right button `color`. The property accepts all valid CSS color property values.
+     * Sets the right button `color`. The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog rightButtonColor="yellow" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -221,7 +221,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonColor = '';
 
     /**
-     * Set the right button `background-color`. The property accepts all valid CSS color property values.
+     * Sets the right button `background-color`. The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog rightButtonBackgroundColor="black" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -230,7 +230,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonBackgroundColor = '';
 
     /**
-     * Set the right button `ripple`.
+     * Sets the right button `ripple`.
      * ```html
      * <igx-dialog rightButtonRipple="green" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```

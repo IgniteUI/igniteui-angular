@@ -116,7 +116,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements IgxAc
     public actionButtons: QueryList<IgxGridActionsBaseDirective>;
 
     /**
-     * Set the visibility of the Action Strip.
+     * Gets/Sets the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
      *
      * @example

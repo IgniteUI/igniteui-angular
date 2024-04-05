@@ -74,7 +74,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Sets the value of the `id` attribute. If not set it will be automatically generated.
+     * Gets/Sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
      *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
      * ```
@@ -162,7 +162,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Property that allows setting the buttons in the button group.
+     * Property that configures the buttons in the button group using a collection of `Button` objects.
      * ```typescript
      *  public ngOnInit() {
      *      this.cities = [

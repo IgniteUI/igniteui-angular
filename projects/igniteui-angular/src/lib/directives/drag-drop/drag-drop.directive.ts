@@ -205,7 +205,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Indicates when the drag should start.
+     * Sets the tolerance in pixels before drag starts.
      * By default the drag starts after the draggable element is moved by 5px.
      * ```html
      * <div igxDrag [dragTolerance]="100">
@@ -219,7 +219,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragTolerance = 5;
 
     /**
-     * Indicates the directions that the element can be dragged.
+     * Sets the directions that the element can be dragged.
      * By default it is set to both horizontal and vertical directions.
      * ```html
      * <div igxDrag [dragDirection]="dragDir">
@@ -253,7 +253,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragChannel: number | string | number[] | string[];
 
     /**
-     * Specifies if the base element should not be moved and a ghost element should be rendered that represents it.
+     * Sets whether the base element should be moved, or a ghost element should be rendered that represents it instead.
      * By default it is set to `true`.
      * If it is set to `false` when dragging the base element is moved instead and no ghost elements are rendered.
      * ```html
@@ -643,7 +643,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _containerScrollIntervalId = null;
 
     /**
-     * Specifies the offset of the dragged element relative to the mouse in pixels.
+     * Sets the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -664,7 +664,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Specifies the offset of the dragged element relative to the mouse in pixels.
+     * Sets the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -1635,7 +1635,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public dropChannel: number | string | number[] | string[];
 
     /**
-     * Specifies a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     * Sets a drop strategy type that will be executed when an `IgxDrag` element is released inside
      *  the current drop area. The provided strategies are:
      *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
      *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.

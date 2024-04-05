@@ -408,7 +408,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
-     * Set aria-labelledby attribute
+     * Sets aria-labelledby attribute value.
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
      * ```
@@ -430,7 +430,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public disabled = false;
 
     /**
-     * Sets how the combo will be styled.
+     * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
      * <igx-combo [type]="'line'">

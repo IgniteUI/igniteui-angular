@@ -220,7 +220,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Whether the seconds, minutes and hour spinning will loop back around when end value is reached.
+     * Sets whether the seconds, minutes and hour spinning will loop back around when end value is reached.
      * By default it's set to true.
      * ```html
      * <igx-time-picker [spinLoop]="false"></igx-time-picker>

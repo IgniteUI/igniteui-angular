@@ -127,7 +127,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public allowItemsFocus = false;
 
     /**
-     * Set aria-labelledby attribute
+     * Sets aria-labelledby attribute value.
      * ```html
      * <igx-drop-down [labelledby]="labelId"></igx-drop-down>
      * ```

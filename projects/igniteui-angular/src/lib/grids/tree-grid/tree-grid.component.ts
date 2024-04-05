@@ -199,7 +199,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public hasChildrenKey;
 
     /**
-     * Whether child records should be deleted when their parent gets deleted.
+     * Sets whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">

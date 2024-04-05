@@ -86,7 +86,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     /**
-     * Sets the grid.
+     * Assigns the grid instance corresponding to the advanced filtering dialog instance.
      */
     @Input()
     public set grid(grid: GridType) {
