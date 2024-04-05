@@ -13,7 +13,7 @@ export class TimeFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     public transform(value: Date): string {
-        const format = this.timePicker.inputFormat.replace('tt', 'aa');
+        const format = this.timePicker.inputFormat;
         const datePipe = new DatePipe(this.timePicker.locale);
         return datePipe.transform(value, format);
     }
@@ -48,8 +48,8 @@ export class TimeItemPipe implements PipeTransform {
                 part = DatePart.Seconds;
                 break;
             case 'ampm':
-                list = this.generateAmPm(min, max);
                 const selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
+                list = this.generateAmPm(min, max, selectedAmPm);
                 list = this.scrollListItem(selectedAmPm, list);
                 part = DatePart.AmPm;
                 break;
@@ -180,17 +180,17 @@ export class TimeItemPipe implements PipeTransform {
         return secondsItems;
     }
 
-    private generateAmPm(min: Date, max: Date): any[] {
+    private generateAmPm(min: Date, max: Date, selectedAmPm: string): any[] {
         const ampmItems = [];
         const minHour = min.getHours();
         const maxHour = max.getHours();
 
         if (minHour < 12) {
-            ampmItems.push('AM');
+            ampmItems.push(selectedAmPm.length === 1 ? 'a' : 'AM');
         }
 
         if (minHour >= 12 || maxHour >= 12) {
-            ampmItems.push('PM');
+            ampmItems.push(selectedAmPm.length === 1 ? 'p' : 'PM');
         }
 
         for (let i = 0; i < 5; i++) {

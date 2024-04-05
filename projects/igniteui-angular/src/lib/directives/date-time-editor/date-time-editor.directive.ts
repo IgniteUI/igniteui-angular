@@ -34,7 +34,7 @@ import { DateTimeUtil } from '../../date-common/util/date-time.util';
  *
  * The Ignite UI Date Time Editor Directive makes it easy for developers to manipulate date/time user input.
  * It requires input in a specified or default input format which is visible in the input element as a placeholder.
- * It allows the input of only date (ex: 'dd/MM/yyyy'), only time (ex:'HH:mm tt') or both at once, if needed.
+ * It allows the input of only date (ex: 'dd/MM/yyyy'), only time (ex:'HH:mm a') or both at once, if needed.
  * Supports display format that may differ from the input format.
  * Provides methods to increment and decrement any specific/targeted `DatePart`.
  *
@@ -521,7 +521,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             }
             const format = this.displayFormat || this.inputFormat;
             if (format) {
-                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
+                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format, this.locale);
             } else {
                 this.inputValue = this.dateValue.toLocaleString();
             }
@@ -533,9 +533,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
         const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
-            .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
-        this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
-
+        .replace(new RegExp(/(?=[^a])[\w]/, 'g'), '0');
+        this.mask = mask.replaceAll(/a{1,2}/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || oldFormat === placeholder) {
             this.renderer.setAttribute(this.nativeElement, 'placeholder', inputFormat);
@@ -692,7 +691,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
                 maskedValue = this.dateValue.getSeconds();
                 break;
             case DatePart.AmPm:
-                maskedValue = this.dateValue.getHours() >= 12 ? 'PM' : 'AM';
+                if (this.dateValue.getHours() >= 12) {
+                    maskedValue = partLength === 1 ? 'p' : 'PM';
+                } else {
+                    maskedValue = partLength === 1 ? 'a' : 'AM';
+                }
                 break;
         }
 

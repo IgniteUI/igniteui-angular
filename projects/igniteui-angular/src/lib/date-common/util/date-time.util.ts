@@ -22,7 +22,7 @@ const enum DateParts {
 /** @hidden */
 export abstract class DateTimeUtil {
     public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
-    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm tt';
+    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm a';
     private static readonly SEPARATOR = 'literal';
     private static readonly DEFAULT_LOCALE = 'en';
 
@@ -86,7 +86,7 @@ export abstract class DateTimeUtil {
         const formatArray = Array.from(format);
         let currentPart: DatePartInfo = null;
         let position = 0;
-
+        let lastPartAdded = false;
         for (let i = 0; i < formatArray.length; i++, position++) {
             const type = DateTimeUtil.determineDatePart(formatArray[i]);
             if (currentPart) {
@@ -97,8 +97,15 @@ export abstract class DateTimeUtil {
                     }
                 }
 
+                if (currentPart.type === DatePart.AmPm) {
+                    currentPart = DateTimeUtil.simplifyAmPmFormat(currentPart);
+                }
                 DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
+                lastPartAdded = true;
                 position = currentPart.end;
+                if(i === formatArray.length - 1 && currentPart.type !== type) {
+                    lastPartAdded = false;
+                }
             }
 
             currentPart = {
@@ -110,7 +117,10 @@ export abstract class DateTimeUtil {
         }
 
         // make sure the last member of a format like H:m:s is not omitted
-        if (!dateTimeParts.filter(p => p.format.includes(currentPart.format)).length) {
+        if (!lastPartAdded) {
+            if (currentPart.type === DatePart.AmPm) {
+                currentPart = DateTimeUtil.simplifyAmPmFormat(currentPart);
+            }
             DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
         }
         // formats like "y" or "yyy" are treated like "yyyy" while editing
@@ -121,6 +131,13 @@ export abstract class DateTimeUtil {
         }
 
         return dateTimeParts;
+    }
+
+    /** Simplifies the AmPm part to as many chars as will be displayed */
+    private static simplifyAmPmFormat(currentPart: DatePartInfo){
+            currentPart.format = currentPart.format.length === 5 ? 'a' : 'aa';
+            currentPart.end = currentPart.start +  currentPart.format.length;
+            return { ...currentPart };
     }
 
     public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
@@ -157,7 +174,11 @@ export abstract class DateTimeUtil {
                 maskedValue = value.getSeconds();
                 break;
             case DatePart.AmPm:
-                maskedValue = value.getHours() >= 12 ? 'PM' : 'AM';
+                if (value.getHours() >= 12) {
+                    maskedValue = partLength === 1 ? 'p' : 'PM';
+                } else {
+                    maskedValue = partLength === 1 ? 'a' : 'AM';
+                }
                 break;
         }
 
@@ -315,9 +336,11 @@ export abstract class DateTimeUtil {
     public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string): Date {
         switch (amPmFromMask) {
             case 'AM':
+            case 'a':
                 newDate = new Date(newDate.setHours(newDate.getHours() + 12));
                 break;
             case 'PM':
+            case 'p':
                 newDate = new Date(newDate.setHours(newDate.getHours() - 12));
                 break;
         }
@@ -542,8 +565,11 @@ export abstract class DateTimeUtil {
             case 's':
             case 'S':
                 return DatePart.Seconds;
-            case 't':
-            case 'T':
+            case 'a':
+            case 'aa':
+            case 'aaa':
+            case 'aaaa':
+            case 'aaaaa':
                 return DatePart.AmPm;
             default:
                 return DatePart.Literal;

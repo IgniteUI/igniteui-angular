@@ -1617,13 +1617,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    public defaultTimeFormat = 'hh:mm:ss tt';
+    public defaultTimeFormat = 'hh:mm:ss a';
 
     /**
      * @hidden
      * @internal
      */
-    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
+    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss a';
 
 
     /**

@@ -105,7 +105,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * An @Input property that sets the value of the `id` attribute.
      * ```html
-     * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm tt" ></igx-time-picker>
+     * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm a" ></igx-time-picker>
      * ```
      */
     @HostBinding('attr.id')
@@ -131,7 +131,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `hh:mm tt`
+     * Default is `hh:mm a`
      *
      * @example
      * ```html
@@ -500,7 +500,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```html
      * public date: Date = new Date(Date.now());
      *  //...
-     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker [value]="date" format="h:mm a"></igx-time-picker>
      * ```
      */
     @Input()
@@ -542,7 +542,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
      * ```html
-     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm a"></igx-time-picker>
      * ```
      */
     @Input()
@@ -564,7 +564,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * An @Input property that renders cancel button with custom text.
      * By default `cancelButtonLabel` is set to Cancel.
      * ```html
-     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm a"></igx-time-picker>
      * ```
      */
     @Input()
@@ -929,7 +929,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             }
             case 'ampmList': {
                 let hour = this._selectedDate.getHours();
-                hour = item === 'AM' ? hour - 12 : hour + 12;
+                hour = item === 'AM' || item === 'a' ? hour - 12 : hour + 12;
                 date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
                 this.setSelectedValue(date);
@@ -1011,7 +1011,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public nextAmPm(delta?: number) {
         const ampm = this.getPartValue(this._selectedDate, 'ampm');
-        if (!delta || (ampm === 'AM' && delta > 0) || (ampm === 'PM' && delta < 0)) {
+        if (!delta || ((ampm === 'AM' || ampm === 'a') && delta > 0)
+                   || ((ampm === 'PM' || ampm === 'p') && delta < 0)) {
             let hours = this._selectedDate.getHours();
             const sign = hours < 12 ? 1 : -1;
             hours = hours + sign * 12;
@@ -1191,9 +1192,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private toTwentyFourHourFormat(hour: number, ampm: string): number {
-        if (ampm === 'PM' && hour < 12) {
+        if ((ampm === 'PM' || ampm === 'p') && hour < 12) {
             hour += 12;
-        } else if (ampm === 'AM' && hour === 12) {
+        } else if ((ampm === 'AM' || ampm === 'a') && hour === 12) {
             hour = 0;
         }
 
