@@ -175,6 +175,7 @@
         flex-grow: 1;
         align-items: center;
         transition: all .2s $out-quad;
+        touch-action: pan-y pinch-zoom;
 
         &:hover {
             %igx-slider-track-fill {
