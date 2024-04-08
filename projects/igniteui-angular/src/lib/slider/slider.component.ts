@@ -1175,8 +1175,6 @@ export class IgxSliderComponent implements
     }
 
     private onPointerMove($event: PointerEvent) {
-        console.log(this._sliding);
-        console.log($event.clientX);
         if (this._sliding) {
             this.update($event.clientX);
         }
