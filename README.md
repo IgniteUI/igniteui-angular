@@ -64,11 +64,6 @@ Ignite UI for Angular arrives with an extensive library of data visualizations t
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
 
-### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Create](https://github.com/IgniteUI/igniteui-angular/assets/52001020/8f40a0a6-44f8-43fa-8407-c8800a7eae89)
-### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Generate](https://github.com/IgniteUI/igniteui-angular/assets/52001020/78628738-6752-4ff3-b201-8a6b8cf279cf)
-
 ### Current List of Components Include:
 
 |Components|Status|||Added in|Directives|Status|||Added in|
