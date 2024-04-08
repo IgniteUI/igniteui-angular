@@ -38,7 +38,13 @@
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
-    @include calendar-typography();
+    @include calendar-typography($categories: (
+        header-year: 'overline',
+        header-date: 'h4',
+        weekday-label: 'body-1',
+        picker-date: 'subtitle-2',
+        content: 'body-1',
+    ));
     @include card-typography($categories: (
         title: 'subtitle-1',
         title-small: 'subtitle-2',

@@ -69,7 +69,7 @@ let NEXT_TAB_ID = 0;
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
 
     /**
-     * An @Input property which determines the tab alignment. Defaults to `start`.
+     * Gets/Sets the tab alignment. Defaults to `start`.
      */
     @Input()
     public get tabAlignment(): string | IgxTabsAlignment {

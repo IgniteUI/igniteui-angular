@@ -40,7 +40,12 @@
     @include button-group-typography($categories: (
         text: 'body-2',
     ));
-    @include calendar-typography();
+    @include calendar-typography($categories: (
+        header-year: 'body-2',
+        header-date: 'h5',
+        weekday-label: 'body-2',
+        picker-date: 'subtitle-2',
+    ));
     @include card-typography($categories: (
         title: 'h6',
         title-small: 'body-2',
