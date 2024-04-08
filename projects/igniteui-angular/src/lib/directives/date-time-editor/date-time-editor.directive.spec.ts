@@ -367,6 +367,15 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditor.inputFormat = inputFormat;
                 expect(dateTimeEditor.mask).toEqual(expectedMask);
             });
+
+            it('should use \'tt\' format as an alias to a, aa, etc. Period formats', () => {
+                inputFormat = 'HH:mm:ss tt';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+                const expectedMask = '00:00:00 LL';
+                dateTimeEditor.inputFormat = inputFormat;
+                expect(dateTimeEditor.mask).toEqual(expectedMask);
+            });
         });
     });
 

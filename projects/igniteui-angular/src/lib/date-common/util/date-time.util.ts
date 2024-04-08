@@ -65,8 +65,11 @@ export abstract class DateTimeUtil {
             parts[DatePart.Hours] %= 12;
         }
 
-        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
-            parts[DatePart.Hours] += 12;
+        if (amPm) {
+            const cleanVal = DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase();
+            if (cleanVal === 'pm' || cleanVal === 'p') {
+                parts[DatePart.Hours] += 12;
+            }
         }
 
         return new Date(
@@ -566,6 +569,8 @@ export abstract class DateTimeUtil {
             case 'S':
                 return DatePart.Seconds;
             case 'a':
+            case 't':
+            case 'T':
                 return DatePart.AmPm;
             default:
                 return DatePart.Literal;

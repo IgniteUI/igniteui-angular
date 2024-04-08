@@ -843,7 +843,7 @@ describe('IgxTimePicker', () => {
             it('should scroll trough hours/minutes/seconds/AM PM based on custom itemsDelta', fakeAsync(() => {
                 const newDate = new Date(2021, 24, 2, 10, 20, 0);
                 fixture.componentInstance.date = newDate;
-                timePicker.inputFormat = 'hh:mm:ss a';
+                timePicker.inputFormat = 'hh:mm:ss tt';
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 20 };
                 fixture.detectChanges();
 

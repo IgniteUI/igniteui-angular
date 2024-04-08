@@ -13,7 +13,7 @@ export class TimeFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     public transform(value: Date): string {
-        const format = this.timePicker.inputFormat;
+        const format = this.timePicker.inputFormat.replace('tt', 'aa');
         const datePipe = new DatePipe(this.timePicker.locale);
         return datePipe.transform(value, format);
     }

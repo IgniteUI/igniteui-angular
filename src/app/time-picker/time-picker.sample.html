@@ -24,7 +24,7 @@
         <p class="sample-description">{{showDate(date1)}}</p>
         <div class="preview">
             <igx-time-picker #hourModeTimePicker #model="ngModel" [(ngModel)]="date1" [minValue]="min" [maxValue]="max"
-                [inputFormat]="'hh:mm a'" [displayFormat]="'hh a'">
+                [inputFormat]="'hh:mm tt'" [displayFormat]="'hh a'">
                 <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">Value is outside the range.
                 </igx-hint>
             </igx-time-picker>

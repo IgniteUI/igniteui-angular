@@ -112,7 +112,7 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(result).toEqual(new Date(2020, 9, 31));
         });
 
-        it('should correctly parse values in h:m:s a format', () => {
+        it('should correctly parse values in h:m:s a, aa,.. or h:m:s tt format', () => {
             const verifyTime = (val: Date, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) => {
                 expect(val.getHours()).toEqual(hours);
                 expect(val.getMinutes()).toEqual(minutes);
@@ -120,19 +120,29 @@ describe(`DateTimeUtil Unit tests`, () => {
                 expect(val.getMilliseconds()).toEqual(milliseconds);
             };
 
-            const parts = DateTimeUtil.parseDateTimeFormat('h:m:s a');
-            let result = DateTimeUtil.parseValueFromMask('11:34:12 AM', parts);
-            verifyTime(result, 11, 34, 12);
-            result = DateTimeUtil.parseValueFromMask('04:12:15 PM', parts);
-            verifyTime(result, 16, 12, 15);
-            result = DateTimeUtil.parseValueFromMask('11:00:00 AM', parts);
-            verifyTime(result, 11, 0, 0);
-            result = DateTimeUtil.parseValueFromMask('10:00:00 PM', parts);
-            verifyTime(result, 22, 0, 0);
-            result = DateTimeUtil.parseValueFromMask('12:00:00 PM', parts);
-            verifyTime(result, 12, 0, 0);
-            result = DateTimeUtil.parseValueFromMask('12:00:00 AM', parts);
-            verifyTime(result, 0, 0, 0);
+            const runTestsForParts = (parts: DatePartInfo[]) => {
+                let result = DateTimeUtil.parseValueFromMask('11:34:12 AM', parts);
+                verifyTime(result, 11, 34, 12);
+                result = DateTimeUtil.parseValueFromMask('04:12:15 PM', parts);
+                verifyTime(result, 16, 12, 15);
+                result = DateTimeUtil.parseValueFromMask('11:00:00 AM', parts);
+                verifyTime(result, 11, 0, 0);
+                result = DateTimeUtil.parseValueFromMask('10:00:00 PM', parts);
+                verifyTime(result, 22, 0, 0);
+                result = DateTimeUtil.parseValueFromMask('12:00:00 PM', parts);
+                verifyTime(result, 12, 0, 0);
+                result = DateTimeUtil.parseValueFromMask('12:00:00 AM', parts);
+                verifyTime(result, 0, 0, 0);
+            }
+
+            const inputFormat = 'h:m:s';
+            let parts = DateTimeUtil.parseDateTimeFormat(`${inputFormat} tt`);
+            runTestsForParts(parts);
+
+            for (let i = 0; i < 5; i++) {
+                parts = DateTimeUtil.parseDateTimeFormat(`${inputFormat} ${'a'.repeat(i + 1)}`);
+                runTestsForParts(parts);
+            }
         });
     });
 
