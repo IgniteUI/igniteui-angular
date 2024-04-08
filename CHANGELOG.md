@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
     - Replaced the `vertical` property with `orientation` that can be set to either `horizontal`(default) or `vertical`.
     - Standalone views support full-blown keyboard navigation, accessibility improvements and the ability to change pages automatically on keyboard navigation.
     - Standalone views now emit `pageChanged` event whenever the active view page changes.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
 
 ## 17.1.0
 ### New Features

@@ -1827,6 +1827,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set advancedFilteringExpressionsTree(value) {
+        const filteringEventArgs: IFilteringEventArgs = {
+            owner: this,
+            filteringExpressions: value, cancel: false
+        };
+
+        this.filtering.emit(filteringEventArgs);
+
+        if (filteringEventArgs.cancel) {
+            return;
+        }
+
         if (value && value instanceof FilteringExpressionsTree) {
             value.type = FilteringExpressionsTreeType.Advanced;
             this._advancedFilteringExpressionsTree = value;
