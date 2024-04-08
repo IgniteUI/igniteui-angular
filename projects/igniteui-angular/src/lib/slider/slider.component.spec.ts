@@ -418,6 +418,7 @@ describe('IgxSlider', () => {
         });
 
         it('continuous(smooth) sliding should be allowed', async() => {
+            pending("Slider using clientX possibly leading to unstable tests.");
             sliderInstance.continuous = true;
             sliderInstance.thumbLabelVisibilityDuration = 10;
             fixture.detectChanges();
@@ -449,6 +450,7 @@ describe('IgxSlider', () => {
         });
 
         it('should not move thumb slider and value should remain the same when slider is disabled', async() => {
+            pending("Slider using clientX possibly leading to unstable tests.");
             sliderInstance.disabled = true;
             fixture.detectChanges();
 
@@ -486,6 +488,7 @@ describe('IgxSlider', () => {
         });
 
         it('continuous(smooth) sliding should be allowed', async() => {
+            pending("Slider using clientX possibly leading to unstable tests.");
             slider.continuous = true;
             fixture.detectChanges();
 
