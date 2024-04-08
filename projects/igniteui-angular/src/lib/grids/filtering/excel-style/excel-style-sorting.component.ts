@@ -52,7 +52,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
      * @hidden @internal
      */
     public onSortButtonClicked(sortDirection) {
-        if (this.sortButtonGroup.selectedIndexes.length === 0) {
+        if (this.sortButtonGroup.buttons.filter(b => b.selected).length === 0) {
             if (this.esf.grid.isColumnGrouped(this.esf.column.field)) {
                 this.sortButtonGroup.selectButton(sortDirection - 1);
             } else {
