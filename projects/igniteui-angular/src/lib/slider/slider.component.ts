@@ -4,8 +4,8 @@ import {
     HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, noop, Observable, Subject, timer } from 'rxjs';
-import { takeUntil, throttleTime } from 'rxjs/operators';
+import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
+import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { EditorProvider } from '../core/edit-provider';
 import { resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
@@ -109,7 +109,7 @@ export class IgxSliderComponent implements
     public slierClass = true;
 
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * Sets the value of the `id` attribute.
      * If not provided it will be automatically generated.
      * ```html
      * <igx-slider [id]="'igx-slider-32'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
@@ -120,7 +120,7 @@ export class IgxSliderComponent implements
     public id = `igx-slider-${NEXT_ID++}`;
 
     /**
-     * An @Input property that sets the duration visibility of thumbs labels. The default value is 750 milliseconds.
+     * Sets the duration visibility of thumbs labels. The default value is 750 milliseconds.
      * ```html
      * <igx-slider #slider [thumbLabelVisibilityDuration]="3000" [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
@@ -161,7 +161,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that gets the type of the `IgxSliderComponent`.
+     * Gets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * @ViewChild("slider2")
@@ -176,7 +176,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the type of the `IgxSliderComponent`.
+     * Sets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
@@ -242,7 +242,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the incremental/decremental step of the value when dragging the thumb.
+     * Sets the incremental/decremental step of the value when dragging the thumb.
      * The default step is 1, and step should not be less or equal than 0.
      * ```html
      * <igx-slider #slider [(ngModel)]="task.percentCompleted" [step]="5">
@@ -291,9 +291,9 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that disables or enables UI interaction.
+     * Disables the component.
      * ```html
-     * <igx-slider #slider [disabled]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * <igx-slider #slider [disabled]="true" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
      */
     public set disabled(disable: boolean) {
@@ -320,7 +320,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that marks the {@link IgxSliderComponent} as continuous.
+     * Sets the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
      * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
@@ -774,6 +774,7 @@ export class IgxSliderComponent implements
     // ticks
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
+    private _sliding = false;
 
     private _labels = new Array<number | string | boolean | null | undefined>();
     private _type: IgxSliderType = IgxSliderType.SLIDER;
@@ -796,52 +797,9 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event: PointerEvent) {
-        this.findClosestThumb($event);
-
-        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
-            return;
-        }
-
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
-        activeThumb.nativeElement.setPointerCapture($event.pointerId);
-        this.showSliderIndicators();
-
-        $event.preventDefault();
-    }
-
-
-    /**
-     * @hidden
-     */
-    @HostListener('pointerup', ['$event'])
-    public onPointerUp($event: PointerEvent) {
-        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
-            return;
-        }
-
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
-        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
-
-        this.hideSliderIndicators();
-        this.dragFinished.emit(this.value);
-    }
-
-    /**
-     * @hidden
-     */
     @HostListener('focus')
     public onFocus() {
         this.toggleSliderIndicators();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('pan', ['$event'])
-    public onPanListener($event) {
-        this.update($event.srcEvent.clientX);
     }
 
     /**
@@ -1054,6 +1012,11 @@ export class IgxSliderComponent implements
                 takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run(() => {
                     this.stepDistance = this.calculateStepDistance();
                 }));
+            fromEvent(this._el.nativeElement, 'pointermove').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroyer$)).subscribe(($event: PointerEvent) => this._ngZone.run(() => {
+                    this.onPointerMove($event);
+                }));
         });
     }
 
@@ -1072,7 +1035,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public writeValue(value: IRangeSliderValue | number): void {
-        if (!value) {
+        if (this.isNullishButNotZero(value)) {
             return;
         }
 
@@ -1195,6 +1158,42 @@ export class IgxSliderComponent implements
         }
     }
 
+    @HostListener('pointerdown', ['$event'])
+    private onPointerDown($event: PointerEvent) {
+        this.findClosestThumb($event);
+
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
+        this._sliding = true;
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
+        activeThumb.nativeElement.setPointerCapture($event.pointerId);
+        this.showSliderIndicators();
+
+        $event.preventDefault();
+    }
+
+    private onPointerMove($event: PointerEvent) {
+        if (this._sliding) {
+            this.update($event.clientX);
+        }
+    }
+
+    @HostListener('pointerup', ['$event'])
+    private onPointerUp($event: PointerEvent) {
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
+
+        this._sliding = false;
+        this.hideSliderIndicators();
+        this.dragFinished.emit(this.value);
+    }
+
     private validateInitialValue(value: IRangeSliderValue) {
         if (value.upper < value.lower) {
             const temp = value.upper;
@@ -1291,21 +1290,21 @@ export class IgxSliderComponent implements
     }
 
     private setTickInterval() {
-        let interval;
+        let tickInterval;
         const trackProgress = 100;
 
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
-            interval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
+            tickInterval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
         } else {
             const trackRange = this.maxValue - this.minValue;
-            interval = this.step > 1 ?
+            tickInterval = this.step > 1 ?
                 (trackProgress / ((trackRange / this.step)) * 10) / 10
                 : null;
         }
 
-        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${interval * Math.sqrt(2)}%`);
-        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || interval === null ? 'hidden' : 'visible');
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${tickInterval * Math.sqrt(2)}%`);
+        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || tickInterval === null ? 'hidden' : 'visible');
     }
 
     private showSliderIndicators() {
@@ -1372,6 +1371,10 @@ export class IgxSliderComponent implements
 
     private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {
         return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
+    }
+
+    private isNullishButNotZero(value: any): boolean {
+        return !value && value !== 0;
     }
 
     /**

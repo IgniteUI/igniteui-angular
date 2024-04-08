@@ -7,7 +7,7 @@
         igxButton
         [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
-        (click)="onSortButtonClicked(1)"
+        (buttonSelected)="onSortButtonClicked(1)"
         >
         <igx-icon>arrow_upwards</igx-icon>
         <span>
@@ -21,7 +21,7 @@
         igxButton
         [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
-        (click)="onSortButtonClicked(2)"
+        (buttonSelected)="onSortButtonClicked(2)"
         >
         <igx-icon>arrow_downwards</igx-icon>
         <span>

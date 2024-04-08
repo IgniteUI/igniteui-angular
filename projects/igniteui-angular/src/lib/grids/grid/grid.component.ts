@@ -367,7 +367,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
 
     /**
-     * Gets/Sets the array of data that populates the `IgxGridComponent`.
+     * Gets/Sets the array of data that populates the component.
      *
      * @example
      * ```html
