@@ -4213,10 +4213,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get isHorizontalScrollHidden() {
-        const diff = this.unpinnedWidth - this.totalWidth;
-        return this.width === null || diff >= 0;
-    }
+    public isHorizontalScrollHidden = false;
 
     /**
      * @hidden @internal
@@ -6639,6 +6636,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetCaches(recalcFeatureWidth);
 
         const hasScroll = this.hasVerticalScroll();
+        const hasHScroll = this.hasHorizontalScroll();
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
@@ -6657,6 +6655,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (hasScroll !== this.hasVerticalScroll()) {
             this.calculateGridWidth();
             this.cdr.detectChanges();
+        }
+
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
         }
         if (this.zone.isStable) {
             this.zone.run(() => {
