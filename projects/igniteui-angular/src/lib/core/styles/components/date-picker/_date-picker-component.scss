@@ -15,6 +15,10 @@
 
         @extend %date-picker !optional;
 
+        @include e(actions) {
+            @extend %date-picker__actions !optional;
+        }
+
         @include e(buttons) {
             @extend %date-picker__buttons !optional;
         }

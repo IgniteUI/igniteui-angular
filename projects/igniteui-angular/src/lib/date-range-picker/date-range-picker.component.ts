@@ -382,7 +382,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get separatorClass(): string {
-        return this.getComponentDensityClass('igx-date-range-picker__label');
+        return 'igx-date-range-picker__label';
     }
 
     private get required(): boolean {
@@ -755,7 +755,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
