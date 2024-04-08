@@ -797,51 +797,6 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event: PointerEvent) {
-        this.findClosestThumb($event);
-
-        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
-            return;
-        }
-
-        this._sliding = true;
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
-        activeThumb.nativeElement.setPointerCapture($event.pointerId);
-        this.showSliderIndicators();
-
-        $event.preventDefault();
-    }
-
-    /**
-     * @hidden
-     */
-    public onPointerMove($event: PointerEvent) {
-        if (this._sliding) {
-            this.update($event.clientX);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('pointerup', ['$event'])
-    public onPointerUp($event: PointerEvent) {
-        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
-            return;
-        }
-
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
-        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
-
-        this._sliding = false;
-        this.hideSliderIndicators();
-        this.dragFinished.emit(this.value);
-    }
-
-    /**
-     * @hidden
-     */
     @HostListener('focus')
     public onFocus() {
         this.toggleSliderIndicators();
@@ -1201,6 +1156,44 @@ export class IgxSliderComponent implements
         if (triggerChange) {
             this._onChangeCallback(res);
         }
+    }
+
+    @HostListener('pointerdown', ['$event'])
+    private onPointerDown($event: PointerEvent) {
+        this.findClosestThumb($event);
+
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
+        this._sliding = true;
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
+        activeThumb.nativeElement.setPointerCapture($event.pointerId);
+        this.showSliderIndicators();
+
+        $event.preventDefault();
+    }
+
+    private onPointerMove($event: PointerEvent) {
+        console.log(this._sliding);
+        console.log($event.clientX);
+        if (this._sliding) {
+            this.update($event.clientX);
+        }
+    }
+
+    @HostListener('pointerup', ['$event'])
+    private onPointerUp($event: PointerEvent) {
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
+
+        this._sliding = false;
+        this.hideSliderIndicators();
+        this.dragFinished.emit(this.value);
     }
 
     private validateInitialValue(value: IRangeSliderValue) {

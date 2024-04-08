@@ -418,23 +418,23 @@ describe('IgxSlider', () => {
         });
 
         it('continuous(smooth) sliding should be allowed', async() => {
-            pending("Slider using clientX possibly leading to unstable tests.");
             sliderInstance.continuous = true;
             sliderInstance.thumbLabelVisibilityDuration = 10;
             fixture.detectChanges();
 
             expect(sliderInstance.continuous).toBe(true);
             expect(sliderInstance.value).toBe(150);
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
             const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
             const startX = sliderX + sliderWidth / 2;
 
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            thumbEl.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
-            await wait();
 
-            sliderEl.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            (sliderInstance as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
             fixture.detectChanges();
             await wait();
 
@@ -442,7 +442,7 @@ describe('IgxSlider', () => {
             expect(activeThumb).not.toBeNull();
             expect(sliderInstance.value).toBeGreaterThan(sliderInstance.minValue);
 
-            sliderEl.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: startX }));
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX }));
             fixture.detectChanges();
             await wait();
 
@@ -450,20 +450,20 @@ describe('IgxSlider', () => {
         });
 
         it('should not move thumb slider and value should remain the same when slider is disabled', async() => {
-            pending("Slider using clientX possibly leading to unstable tests.");
             sliderInstance.disabled = true;
             fixture.detectChanges();
 
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
             const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
             const startX = sliderX + sliderWidth / 2;
 
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            thumbEl.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
-            await wait();
 
-            sliderEl.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            (sliderInstance as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
             fixture.detectChanges();
             await wait();
 
@@ -488,11 +488,9 @@ describe('IgxSlider', () => {
         });
 
         it('continuous(smooth) sliding should be allowed', async() => {
-            pending("Slider using clientX possibly leading to unstable tests.");
             slider.continuous = true;
             fixture.detectChanges();
 
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const { x: sliderX, width: sliderWidth } = fromThumb.getBoundingClientRect();
             const startX = sliderX + sliderWidth / 2;
@@ -500,11 +498,11 @@ describe('IgxSlider', () => {
             fromThumb.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
             fixture.detectChanges();
             await wait();
 
-            sliderEl.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
             fixture.detectChanges();
             await wait();
 
