@@ -3663,7 +3663,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
 
-        this.headerContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
+        this.headerContainer?.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
             // the horizontal scrollbar showing/hiding
             // update scrollbar visibility and recalc heights
             this.notifyChanges(true);
