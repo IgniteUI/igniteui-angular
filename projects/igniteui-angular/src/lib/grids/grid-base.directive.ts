@@ -3912,7 +3912,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (typeof MutationObserver !== 'undefined') {
             this.observer = new MutationObserver(mutations => {
                 mutations.forEach(_mutation => {
-                    console.log(_mutation.target);
                     const componentSize = this.gridComputedStyles.getPropertyValue('--component-size');
                     if (this._gridSize !== componentSize) {
                         this._gridSize = componentSize; 
