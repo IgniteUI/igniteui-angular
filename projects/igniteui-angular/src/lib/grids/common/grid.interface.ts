@@ -1028,7 +1028,7 @@ export interface GridType extends IGridDataBindable {
     cellClick: EventEmitter<IGridCellEventArgs>;
     rowClick: EventEmitter<IGridRowEventArgs>;
     doubleClick: EventEmitter<IGridCellEventArgs>;
-    contextMenu: EventEmitter<IGridCellEventArgs>;
+    contextMenu: EventEmitter<IGridCellEventArgs | IGridRowEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
     rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;

@@ -840,6 +840,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @HostListener('contextmenu', ['$event'])
     public onContextMenu(event: MouseEvent) {
+        event.stopPropagation();
         this.grid.contextMenu.emit({
             cell: this.getCellType(),
             event

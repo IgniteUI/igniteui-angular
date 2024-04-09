@@ -15,6 +15,10 @@ All notable changes for each version of this project will be documented in this 
     - Standalone views support full-blown keyboard navigation, accessibility improvements and the ability to change pages automatically on keyboard navigation.
     - Standalone views now emit `pageChanged` event whenever the active view page changes.
 
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. In this case the event argument of the event is of type `IGridRowEventArgs`.
+
 ## 17.1.0
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
