@@ -107,7 +107,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      */
     @Input("family")
-    public family = "material";
+    public family: string;
 
     /**
      *  Set the `name` of the icon.
@@ -136,10 +136,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
         private iconService: IgxIconService,
         private ref: ChangeDetectorRef,
     ) {
-        this.iconService.setFamily(this.family, {
-            className: "material-icons",
-            type: "liga",
-        });
+        this.family = this.iconService.defaultFamily.name;
 
         this.iconService.iconLoaded
             .pipe(
