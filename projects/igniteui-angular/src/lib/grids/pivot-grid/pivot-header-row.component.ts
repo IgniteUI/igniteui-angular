@@ -112,7 +112,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public headerContainers: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
     public override get headerForOf() {
-        return this.headerContainers.last;
+        return this.headerContainers?.last;
     }
 
     constructor(
