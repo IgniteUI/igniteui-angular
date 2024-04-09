@@ -16,6 +16,7 @@ export interface IconMeta {
 interface FamilyMeta {
     className: string;
     type: IconType;
+    prefix?: string;
 }
 
 export type IconReference = IconMeta & FamilyMeta;
@@ -179,15 +180,24 @@ export class IgxIconService {
         const icon = this._defaults.get(family)?.get(name);
 
         const iconFamily = icon?.family ?? family;
-        const iconName = icon?.name ?? name;
+        const _name = icon?.name ?? name;
         const type = icon?.type ?? this.familyType(iconFamily);
         const className = this.familyClassName(iconFamily);
+        const prefix = this._families.get(iconFamily)?.prefix;
+
+        // Handle name prefixes
+        let iconName = _name;
+
+        if (iconName && prefix) {
+            iconName = _name.includes(prefix) ? _name : `${prefix}${_name}`;
+        }
 
         return {
             className,
             type,
+            prefix,
             name: iconName,
-            family: iconFamily
+            family: iconFamily,
         }
     }
 
