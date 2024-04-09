@@ -1451,6 +1451,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.componentInstance.initColumnsRows(5, 5);
                 fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
