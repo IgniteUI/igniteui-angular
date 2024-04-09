@@ -110,7 +110,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     public family = "material";
 
     /**
-     *  An @Input property that allows you to set the `name` of the icon.
+     *  Set the `name` of the icon.
      *
      *  @example
      * ```html

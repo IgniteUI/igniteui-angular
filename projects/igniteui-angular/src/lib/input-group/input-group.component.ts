@@ -170,7 +170,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /**
-     * An @Input property that sets how the input will be styled.
+     * Sets how the input will be styled.
      * Allowed values of type IgxInputGroupType.
      * ```html
      * <igx-input-group [type]="'search'">
