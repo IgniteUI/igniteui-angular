@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
@@ -2360,7 +2360,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyContextMenuVisibility(fix, false);
             }));
 
-            it('Should change the group\'s operator when using its context menu buttons.', fakeAsync(() => {
+            it('Should change the group\'s operator when using its context menu buttons.', async () => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2389,7 +2389,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
                 // Click the innner group's operator line.
                 operatorLine.click();
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Click the 'and' button of the button group in the context menu.
@@ -2397,6 +2397,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const andOperatorButton: any = Array.from(buttonGroup.querySelectorAll('.igx-button-group__item'))
                                                     .find((b: any) => b.textContent.toLowerCase() === 'and');
                 andOperatorButton.click();
+                await wait();
                 fix.detectChanges();
 
                 // Verify new operator of inner group.
@@ -2407,12 +2408,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const orOperatorButton: any = Array.from(buttonGroup.querySelectorAll('.igx-button-group__item'))
                                                    .find((b: any) => b.textContent.toLowerCase() === 'or');
                 orOperatorButton.click();
+                await wait();
                 fix.detectChanges();
 
                 // Verify new operator of inner group.
                 operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 verifyOperatorLine(operatorLine, 'or');
-            }));
+            });
 
             it('Should apply changes in the group\'s operator made via its context menu buttons.', fakeAsync(() => {
                 // Apply advanced filter through API.

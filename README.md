@@ -12,7 +12,7 @@
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 [![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch, Adobe XD and Figma [UI kits](https://www.infragistics.com/products/appbuilder/ui-toolkit) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) using Google's [Angular](https://angular.io/) framework.
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete library of Angular-native, Material-based Angular UI components designed to enable developers to build enterprise-ready HTML5 & JavaScript apps for modern desktop browsers. It packs full-featured components, including Pivot Grids, Dock Manager, Hierarchical Grid, Bottom Navigation, etc., 60+ high-performance Angular Charts for all business needs and any app scenario, and more.
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 Or visit [Ignite UI for Angular Discord](https://discord.com/channels/836634487483269200/836636712292581456) and join the dev community there.
@@ -63,11 +63,6 @@ Built for optimization and speed, our [Angular grid](https://www.infragistics.co
 Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts.
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
-
-### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Create](https://github.com/IgniteUI/igniteui-angular/assets/52001020/8f40a0a6-44f8-43fa-8407-c8800a7eae89)
-### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Generate](https://github.com/IgniteUI/igniteui-angular/assets/52001020/78628738-6752-4ff3-b201-8a6b8cf279cf)
 
 ### Current List of Components Include:
 
