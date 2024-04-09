@@ -620,3 +620,19 @@ export function* intoChunks<T>(arr: T[], size: number) {
     yield arr.slice(i, i + size);
   }
 }
+
+/**
+ * @param size 
+ * @returns string that represents the --component-size default value 
+ */
+export function getComponentCssSizeVar(size: string) {
+    switch (size) {
+        case "1":
+            return 'var(--ig-size, var(--ig-size-small))';
+        case "2":
+            return 'var(--ig-size, var(--ig-size-medium))';
+        case "3":
+        default:
+            return 'var(--ig-size, var(--ig-size-large))';
+    }
+}

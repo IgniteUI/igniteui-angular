@@ -115,3 +115,16 @@ export enum GridInstanceType {
     Grid,
     TreeGrid
 }
+
+/**
+ * Enumeration representing the possible predefined size options of the grid.
+ * - Small: This is the smallest size with 32px row height. Left and Right paddings are 12px. Minimal column width is 56px.
+ * - Medium: This is the middle size with 40px row height. Left and Right paddings are 16px. Minimal column width is 64px.
+ * - Large: This is the smallest size with 32px row height. Left and Right paddings are 12px. Minimal column width is 56px.
+ */
+export const Size = /*@__PURE__*/mkenum({
+    Small: '1', 
+    Medium: '2',
+    Large: '3'
+});
+export type Size = (typeof Size)[keyof typeof Size];

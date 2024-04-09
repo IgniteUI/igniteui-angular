@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter } from '@angular/core';
-import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { ExpressionUI, FilterListItem } from './common';
@@ -11,7 +10,6 @@ export abstract class BaseFilteringComponent {
 
     public abstract column: any;
     public abstract get grid(): any;
-    public abstract get displayDensity(): DisplayDensity;
 
     public abstract overlayComponentId: string;
     public abstract mainDropdown: ElementRef<HTMLElement>;

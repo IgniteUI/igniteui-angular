@@ -30,7 +30,6 @@ import {
     IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { DisplayDensity } from '../../core/density';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
@@ -56,6 +55,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
+import { Size } from '../common/enums';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1155,10 +1155,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.grid) {
             return '80';
         }
-        switch (this.grid.displayDensity) {
-            case DisplayDensity.cosy:
+        switch (this.grid.gridSize) {
+            case Size.Medium:
                 return '64';
-            case DisplayDensity.compact:
+            case Size.Small:
                 return '56';
             default:
                 return '80';
