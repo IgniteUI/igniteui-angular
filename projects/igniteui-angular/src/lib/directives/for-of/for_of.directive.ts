@@ -546,7 +546,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange();
+            const prevSize = parseInt(changes[containerSize].previousValue, 10);
+            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            this._recalcOnContainerChange({prevSize, newSize});
         }
     }
 
@@ -1316,10 +1318,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return end;
     }
 
-    protected _recalcScrollBarSize() {
+    protected _recalcScrollBarSize(containerSizeInfo = null) {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
-        const scrollable = this.isScrollable();
+        const scrollable = containerSizeInfo ? this.scrollComponent.size > containerSizeInfo.prevSize : this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this._calcSize() : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
@@ -1356,10 +1358,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return size;
     }
 
-    protected _recalcOnContainerChange() {
+    protected _recalcOnContainerChange(containerSizeInfo = null) {
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+        this._recalcScrollBarSize(containerSizeInfo);
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
         }
@@ -1616,7 +1618,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange();
+            const prevSize = parseInt(changes[containerSize].previousValue, 10);
+            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            this._recalcOnContainerChange({prevSize, newSize});
         }
     }
 
