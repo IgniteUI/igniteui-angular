@@ -14,8 +14,6 @@
         <igx-grid-summary-cell
             class="igx-grid-summary igx-grid-summary--fw"
             role="cell"
-            [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
-            [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"
             [class.igx-grid-summary--empty]="!col.hasSummary"
             [class.igx-grid-summary--pinned-last]="col.isLastPinned"
             [column]="col"
@@ -24,7 +22,6 @@
             [summaryResults]="getColumnSummaries(col.field)"
             [summaryTemplate]="col.summaryTemplate"
             [hasSummary]="col.hasSummary"
-            [density]="grid.displayDensity"
             [summaryFormatter]="col.summaryFormatter"
             [active]="isCellActive(col.visibleIndex)"
             [style.max-height.px]="minHeight"
