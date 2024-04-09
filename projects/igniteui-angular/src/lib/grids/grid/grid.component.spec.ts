@@ -2084,7 +2084,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowClick.emit).toHaveBeenCalledWith(args);
         });
 
-        fit('Should emit contextMenu when clicking outside of the columns area', () => {
+        it('Should emit contextMenu when clicking outside of the columns area', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 5);
             //fix.componentInstance.columns.forEach(c => c.width = '100px');
