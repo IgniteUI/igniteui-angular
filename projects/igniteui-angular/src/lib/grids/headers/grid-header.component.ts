@@ -17,7 +17,6 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
-import { DisplayDensity } from '../../core/density';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { SortingIndexPipe } from './pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
@@ -37,9 +36,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     @Input()
     public column: ColumnType;
-
-    @Input()
-    public density: DisplayDensity;
 
     /**
      * @hidden
@@ -64,24 +60,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostBinding('class.igx-grid-th')
     public get columnGroupStyle() {
         return !this.column.columnGroup;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-th--cosy')
-    public get cosyStyle() {
-        return this.density === 'cosy';
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-th--compact')
-    public get compactStyle() {
-        return this.density === 'compact';
     }
 
     @HostBinding('class.asc')
