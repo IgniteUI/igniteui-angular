@@ -82,7 +82,10 @@
         subtitle: 'body-2'
     ));
     @include navbar-typography();
-    @include navdrawer-typography();
+    @include navdrawer-typography($categories: (
+        item: 'subtitle-2',
+        header: 'overline'
+    ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));

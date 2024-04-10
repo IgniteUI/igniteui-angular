@@ -141,9 +141,7 @@
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
-    $drawer-icon-size: rem(24px);
     $drawer-item-margin: rem(8px);
-    $text-side-padding: rem(8px);
     $drawer-item-min-h: auto;
     $drawer-item-max-h: rem(48px);
     $drawer-item-min-w: rem(32px);
@@ -155,6 +153,12 @@
         transition-duration: .3s;
         transition-timing-function: $out-quad;
         flex-shrink: 0;
+
+        @if $variant == 'indigo-design' {
+            &:has(.igx-nav-drawer__aside--mini) {
+                flex-basis: 48px !important;
+            }
+        }
     }
 
     %aside {
@@ -222,15 +226,15 @@
 
     %aside--mini {
         width: rem(60px);
+
+        @if $variant == 'indigo-design' {
+            max-width: rem(48px);
+        }
+
         transition-duration: .2s, .2s;
 
         %item {
             justify-content: center;
-            @if $variant == 'indigo-design' {
-                max-width: rem(32px);
-                // important is needed to override the typography margins
-                margin: rem(14px) auto !important;
-            }
 
             igx-icon {
                 margin-inline-start: 0;
@@ -291,9 +295,17 @@
             gap: rem(32px);
         } @else {
             // important is needed to override the typography margins
-            margin: rem(15px) $drawer-item-margin !important;
-            padding: rem(4px);
-            gap: calc(rem(32px) - #{$text-side-padding});
+            margin: rem(4px) rem(8px) !important;
+            padding: rem(8px) rem(16px);
+            gap: rem(16px);
+
+            &:first-of-type.igx-nav-drawer__item {
+                margin-top: rem(8px) !important;
+            }
+
+            &:last-of-type.igx-nav-drawer__item {
+                margin-bottom: rem(8px) !important;
+            }
         }
 
         cursor: pointer;
@@ -308,16 +320,10 @@
 
         igx-icon {
             --component-size: 3;
-
             color: var-get($theme, 'item-icon-color');
-            @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
-            }
-        }
 
-        span {
             @if $variant == 'indigo-design' {
-                padding-inline-start: $text-side-padding;
+                --component-size: 2;
             }
         }
 
@@ -375,9 +381,6 @@
             box-shadow: none;
 
             igx-icon {
-                width: var(--igx-icon-size, #{$drawer-icon-size});
-                height: var(--igx-icon-size, #{$drawer-icon-size});
-                font-size: var(--igx-icon-size, #{$drawer-icon-size});
                 margin: 0;
             }
 
@@ -394,6 +397,10 @@
         padding: rem(12px) rem(16px);
         white-space: nowrap;
         color: var-get($theme, 'item-header-text-color');
+
+        @if $variant == 'indigo-design' {
+            padding-block: rem(8px);
+        }
     }
 
     %style-dummy {
