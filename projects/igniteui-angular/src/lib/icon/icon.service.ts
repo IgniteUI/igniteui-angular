@@ -108,6 +108,7 @@ export class IgxIconService {
      */
     public set defaultFamily(family: IconFamily) {
         this._defaultFamily = family;
+        this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
     }
 
     /**
