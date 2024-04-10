@@ -9,7 +9,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
 describe(`DateTimeUtil Unit tests`, () => {
     describe('Date Time Parsing', () => {
         it('should correctly parse all date time parts (base)', () => {
-            const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss a');
+            const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss:SS a');
             const expected = [
                 { start: 0, end: 2, type: DatePart.Date, format: 'dd' },
                 { start: 2, end: 3, type: DatePart.Literal, format: '/' },
@@ -22,8 +22,10 @@ describe(`DateTimeUtil Unit tests`, () => {
                 { start: 14, end: 16, type: DatePart.Minutes, format: 'mm' },
                 { start: 16, end: 17, type: DatePart.Literal, format: ':' },
                 { start: 17, end: 19, type: DatePart.Seconds, format: 'ss' },
-                { start: 19, end: 20, type: DatePart.Literal, format: ' ' },
-                { start: 20, end: 22, type: DatePart.AmPm, format: 'aa' }
+                { start: 19, end: 20, type: DatePart.Literal, format: ':' },
+                { start: 20, end: 23, type: DatePart.FractionalSeconds, format: 'SSS' },
+                { start: 23, end: 24, type: DatePart.Literal, format: ' ' },
+                { start: 24, end: 26, type: DatePart.AmPm, format: 'aa' }
             ];
             expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
         });
@@ -235,6 +237,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(DateTimeUtil.isDateOrTimeChar('h')).toBeTrue();
         expect(DateTimeUtil.isDateOrTimeChar('m')).toBeTrue();
         expect(DateTimeUtil.isDateOrTimeChar('s')).toBeTrue();
+        expect(DateTimeUtil.isDateOrTimeChar('S')).toBeTrue();
         expect(DateTimeUtil.isDateOrTimeChar(':')).toBeFalse();
         expect(DateTimeUtil.isDateOrTimeChar('/')).toBeFalse();
         expect(DateTimeUtil.isDateOrTimeChar('.')).toBeFalse();
@@ -412,6 +415,34 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(date.getTime()).toEqual(new Date(2015, 4, 20, 12, 59, 2).getTime());
         DateTimeUtil.spinSeconds(-5, date, true);
         expect(date.getTime()).toEqual(new Date(2015, 4, 20, 12, 59, 57).getTime());
+    });
+
+    it('should spin fractional seconds portion correctly', () => {
+        // base
+        let date = new Date(2024, 3, 10, 6, 10, 5, 555);
+        DateTimeUtil.spinFractionalSeconds(1, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 556).getTime());
+        DateTimeUtil.spinFractionalSeconds(-1, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 555).getTime());
+
+        // delta !== 1
+        DateTimeUtil.spinFractionalSeconds(5, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 560).getTime());
+        DateTimeUtil.spinFractionalSeconds(-6, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 554).getTime());
+
+        // without looping over
+        date = new Date(2024, 3, 10, 6, 10, 5, 999);
+        DateTimeUtil.spinFractionalSeconds(1, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 999).getTime());
+        DateTimeUtil.spinFractionalSeconds(-1000, date, false);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 0).getTime());
+
+        // with looping over (seconds are not affected)
+        DateTimeUtil.spinFractionalSeconds(1001, date, true);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 1).getTime());
+        DateTimeUtil.spinFractionalSeconds(-5, date, true);
+        expect(date.getTime()).toEqual(new Date(2024, 3, 10, 6, 10, 5, 996).getTime());
     });
 
     it('should spin AM/PM and a/p portion correctly', () => {

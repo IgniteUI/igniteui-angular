@@ -56,7 +56,8 @@ export abstract class DateTimeUtil {
             return null;
         }
 
-        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59 || parts[DatePart.Seconds] > 59) {
+        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59
+            || parts[DatePart.Seconds] > 59 || parts[DatePart.FractionalSeconds] > 999) {
             return null;
         }
 
@@ -78,7 +79,8 @@ export abstract class DateTimeUtil {
             parts[DatePart.Date] || 1,
             parts[DatePart.Hours] || 0,
             parts[DatePart.Minutes] || 0,
-            parts[DatePart.Seconds] || 0
+            parts[DatePart.Seconds] || 0,
+            parts[DatePart.FractionalSeconds] || 0
         );
     }
 
@@ -175,6 +177,9 @@ export abstract class DateTimeUtil {
                 break;
             case DatePart.Seconds:
                 maskedValue = value.getSeconds();
+                break;
+            case DatePart.FractionalSeconds:
+                maskedValue = value.getMilliseconds();
                 break;
             case DatePart.AmPm:
                 if (value.getHours() >= 12) {
@@ -333,6 +338,20 @@ export abstract class DateTimeUtil {
         }
 
         newDate.setSeconds(seconds);
+    }
+
+     /** Spins the fractional seconds (milliseconds) portion in a date-time editor. */
+    public static spinFractionalSeconds(delta: number, newDate: Date, spinLoop: boolean) {
+        const maxMs = 999;
+        const minMs = 0;
+        let ms = newDate.getMilliseconds() + delta;
+        if (ms > maxMs) {
+            ms = spinLoop ? ms % maxMs - 1 : maxMs;
+        } else if (ms < minMs) {
+            ms = spinLoop ? maxMs + (ms % maxMs) + 1 : minMs;
+        }
+
+        newDate.setMilliseconds(ms);
     }
 
     /** Spins the AM/PM portion in a date-time editor. */
@@ -543,6 +562,9 @@ export abstract class DateTimeUtil {
                     part.format = part.format.repeat(2);
                 }
                 break;
+            case DatePart.FractionalSeconds:
+                part.format = part.format[0].repeat(3);
+                break;
         }
     }
 
@@ -566,8 +588,9 @@ export abstract class DateTimeUtil {
             case 'm':
                 return DatePart.Minutes;
             case 's':
-            case 'S':
                 return DatePart.Seconds;
+            case 'S':
+                return DatePart.FractionalSeconds;
             case 'a':
             case 't':
             case 'T':

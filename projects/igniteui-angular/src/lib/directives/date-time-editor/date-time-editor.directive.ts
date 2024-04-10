@@ -228,7 +228,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         year: 1,
         hours: 1,
         minutes: 1,
-        seconds: 1
+        seconds: 1,
+        fractionalSeconds: 1
     };
     private onTouchCallback: (...args: any[]) => void = noop;
     private onChangeCallback: (...args: any[]) => void = noop;
@@ -268,7 +269,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         return this._inputDateParts.some(
             p => p.type === DatePart.Hours
                 || p.type === DatePart.Minutes
-                || p.type === DatePart.Seconds);
+                || p.type === DatePart.Seconds
+                || p.type === DatePart.FractionalSeconds);
     }
 
     private get dateValue(): Date {
@@ -609,6 +611,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             case DatePart.Seconds:
                 DateTimeUtil.spinSeconds(delta, newDate, this.spinLoop);
                 break;
+            case DatePart.FractionalSeconds:
+                DateTimeUtil.spinFractionalSeconds(delta, newDate, this.spinLoop);
+                break;
             case DatePart.AmPm:
                 const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
                 const amPmFromMask = this.inputValue.substring(formatPart.start, formatPart.end);
@@ -689,6 +694,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
                 break;
             case DatePart.Seconds:
                 maskedValue = this.dateValue.getSeconds();
+                break;
+            case DatePart.FractionalSeconds:
+                partLength = 3;
+                maskedValue = this.prependValue(this.dateValue.getMilliseconds(), 3, '00');
                 break;
             case DatePart.AmPm:
                 if (this.dateValue.getHours() >= 12) {

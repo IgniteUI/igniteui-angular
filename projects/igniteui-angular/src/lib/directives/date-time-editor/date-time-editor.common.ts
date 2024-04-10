@@ -14,6 +14,7 @@ export enum DatePart {
     Hours = 'hours',
     Minutes = 'minutes',
     Seconds = 'seconds',
+    FractionalSeconds = 'fractionalSeconds',
     AmPm = 'ampm',
     Literal = 'literal'
 }
@@ -34,4 +35,5 @@ export interface DatePartDeltas {
     hours?: number;
     minutes?: number;
     seconds?: number;
+    fractionalSeconds?: number;
 }
