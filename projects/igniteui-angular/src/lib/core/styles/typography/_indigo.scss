@@ -88,7 +88,9 @@
     ));
     @include slider-typography();
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-2'
+    ));
     @include tabs-typography();
     @include time-picker-typography();
     @include stepper-typography();

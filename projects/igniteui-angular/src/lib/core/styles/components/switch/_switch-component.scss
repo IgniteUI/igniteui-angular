@@ -22,6 +22,10 @@
             @include e(composite) {
                 @extend %switch-composite--hover !optional;
             }
+
+            @include e(label) {
+                @extend %switch-label--hover !optional;
+            }
         }
 
         &:active {
