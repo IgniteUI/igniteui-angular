@@ -624,14 +624,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
 
         if (this.parent) {
-            this._displayDensity = this.rootGrid.displayDensity;
-            this.summaryService.summaryHeight = 0;
-            this.rootGrid.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this._displayDensity = this.rootGrid.displayDensity;
-                this.summaryService.summaryHeight = 0;
-                this.notifyChanges(true);
-                this.cdr.markForCheck();
-            });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
 
