@@ -257,12 +257,6 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $chip-height: (
-        comfortable: rem(32px),
-        cosy: rem(24px),
-        compact: rem(20px)
-    );
-
     $chip-padding: (
         comfortable: rem(12px),
         cosy: rem(6px),
