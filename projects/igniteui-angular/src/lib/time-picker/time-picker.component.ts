@@ -104,7 +104,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     AfterViewInit,
     Validator {
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * Sets the value of the `id` attribute.
      * ```html
      * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm tt" ></igx-time-picker>
      * ```
@@ -221,8 +221,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * An @Input property that determines the spin behavior. By default `spinLoop` is set to true.
-     * The seconds, minutes and hour spinning will wrap around by default.
+     * Sets whether the seconds, minutes and hour spinning will loop back around when end value is reached.
+     * By default it's set to true.
      * ```html
      * <igx-time-picker [spinLoop]="false"></igx-time-picker>
      * ```
@@ -541,9 +541,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
+     * Overrides the default text of the **OK** button.
+     *
+     * @remarks
+     * Defaults to the value from resource strings, `"OK"` for the built-in EN.
+     *
      * ```html
-     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker okButtonLabel="SET" [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
@@ -562,10 +566,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * An @Input property that renders cancel button with custom text.
-     * By default `cancelButtonLabel` is set to Cancel.
+     * Overrides the default text of the **Cancel** button.
+     * @remarks
+     * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
      * ```html
-     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker cancelButtonLabel="Exit" [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
