@@ -1420,6 +1420,8 @@
 
     %years-view__year-selected-active {
         %years-view__year-inner {
+            color: var-get($theme, 'year-selected-hover-foreground');
+            background: var-get($theme, 'year-selected-hover-background');
             box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-focus-outline-color');
         }
     }
@@ -1456,6 +1458,9 @@
 
     %years-view__year-selected-current-active {
         %years-view__year-inner {
+            color: var-get($theme, 'year-selected-current-hover-foreground');
+            background: var-get($theme, 'year-selected-current-hover-background');
+
             @if $variant != 'indigo-design' {
                 box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-focus-color');
             } @else {
@@ -1520,6 +1525,8 @@
 
     %months-view__month-selected-active {
         %months-view__month-inner {
+            color: var-get($theme, 'month-selected-hover-foreground');
+            background: var-get($theme, 'month-selected-hover-background');
             box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-focus-outline-color');
         }
     }
@@ -1556,6 +1563,9 @@
 
     %months-view__month-selected-current-active {
         %months-view__month-inner {
+            color: var-get($theme, 'month-selected-current-hover-foreground');
+            background: var-get($theme, 'month-selected-current-hover-background');
+
             @if $variant != 'indigo-design' {
                 box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-focus-color');
             } @else {
