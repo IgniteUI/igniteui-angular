@@ -1454,8 +1454,10 @@
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
     }
 
-    %form-group-input--search {
-        padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+    @if $variant == 'indigo-design' {
+        %form-group-input--search {
+            padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+        }
     }
 
     %indigo--box-focused {

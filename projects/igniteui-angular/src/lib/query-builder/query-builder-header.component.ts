@@ -14,7 +14,7 @@ export class IgxQueryBuilderHeaderComponent {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
-     * An @Input property that sets the title of the `IgxQueryBuilderHeaderComponent`.
+     * Sets the title of the `IgxQueryBuilderHeaderComponent`.
      *
      * @example
      * ```html
@@ -25,7 +25,7 @@ export class IgxQueryBuilderHeaderComponent {
     public title: string;
 
     /**
-     * An @Input property to show/hide the legend.
+     * Show/hide the legend.
      *
      * @example
      * ```html

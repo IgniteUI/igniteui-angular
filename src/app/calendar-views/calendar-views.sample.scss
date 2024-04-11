@@ -9,3 +9,20 @@
         margin-right: 8px;
     }
 }
+
+.sample-title {
+    text-align: center;
+}
+
+.sample-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.sample-actions__inner {
+    display: flex;
+    gap: 8px;
+}

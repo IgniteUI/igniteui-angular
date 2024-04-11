@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
@@ -31,16 +32,15 @@
 @use '../components/tree/tree-theme' as *;
 
 @mixin typography($type-scale) {
-    $calendar-labels: map.get($type-scale, 'calendar-labels');
-
+    @include badge-typography();
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
     @include calendar-typography($categories: (
-        header-year: 'subtitle-1',
+        header-year: 'body-2',
         header-date: 'h4',
-        weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
+        weekday-label: 'body-2',
         picker-date: 'subtitle-1',
         content: 'body-1',
     ));
@@ -87,7 +87,9 @@
         title: 'h5'
     ));
     @include navdrawer-typography();
-    @include radio-typography();
+    @include radio-typography($categories: (
+        label: 'body-1'
+    ));
     @include slider-typography();
     @include snackbar-typography();
     @include switch-typography();

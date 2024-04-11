@@ -1,62 +1,128 @@
+<!-- Picker Info -->
+
+<!-- Month -->
+<ng-template #defaultMonth>
+    <span
+        #yearsBtn
+        tabindex="0"
+        aria-live="polite"
+        class="igx-calendar-picker__date"
+        (keydown)="activeViewDecadeKB($event)"
+        (click)="activeViewDecade()"
+    >
+        {{ formattedYear(viewDate) }}
+    </span>
+</ng-template>
+
+<!-- Years -->
+<ng-template #defaultYears>
+    <span>{{ getDecadeRange().start }}</span>
+    <span>&nbsp;-&nbsp;</span>
+    <span>{{ getDecadeRange().end }}</span>
+</ng-template>
+
+<!-- Picker Arrows -->
+
+<!-- Months -->
+<ng-template #calendarMonthPicker>
+    <section class="igx-calendar-picker">
+        <div [style.width.%]="100">
+            <ng-container *ngTemplateOutlet="defaultMonth"></ng-container>
+        </div>
+        <div class="igx-calendar-picker__nav">
+            <div
+                role="button"
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                [attr.aria-label]="'Previous Year ' + getPreviousYear()"
+                (click)="previousPage()"
+                (keydown)="changePageKB($event, false)"
+                data-action="prev"
+            >
+                <igx-icon>keyboard_arrow_left</igx-icon>
+            </div>
+            <div
+                role="button"
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                [attr.aria-label]="'Next Year ' + getNextYear()"
+                (click)="nextPage()"
+                (keydown)="changePageKB($event)"
+                data-action="next"
+            >
+                <igx-icon>keyboard_arrow_right</igx-icon>
+            </div>
+        </div>
+    </section>
+</ng-template>
+
+<!-- Years -->
+<ng-template #calendarYearsPicker>
+    <section class="igx-calendar-picker">
+        <div [style.width.%]="100">
+            <ng-container *ngTemplateOutlet="defaultYears"></ng-container>
+        </div>
+        <div class="igx-calendar-picker__nav">
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__prev"
+                role="button"
+                data-action="prev"
+                (click)="previousPage()"
+                (keydown)="changePageKB($event, false)"
+                data-action="prev"
+            >
+                <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
+            </div>
+            <div
+                tabindex="0"
+                class="igx-calendar-picker__next"
+                role="button"
+                data-action="next"
+                (click)="nextPage()"
+                (keydown)="changePageKB($event)"
+                data-action="next"
+            >
+                <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
+            </div>
+        </div>
+    </section>
+</ng-template>
+
+<!-- Outlets -->
+
+<!-- Months -->
 <div
     *ngIf="isDefaultView"
-    [@animateView]="activeView"
-    (@animateView.done)="viewRendered($event)"
-    class="igx-calendar__body"
-    (swiperight)="previousYear()"
-    (swipeleft)="nextYear()">
-
-    <div role="rowheader" class="igx-calendar-picker">
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__prev"
-            (click)="previousYear()"
-            (keydown)="changeYearKB($event, false)"
-            [ngStyle]="{'min-width.%': 25, 'left': 0}"
-            role="button"
-            [attr.aria-label]="'Previous Year ' + getPreviousYear()"
-            data-action="prev">
-            <igx-icon>keyboard_arrow_left</igx-icon>
-        </div>
-        <div [style.width.%]="100">
-            <span
-                tabindex="0"
-                aria-live="polite"
-                #yearsBtn
-                (keydown)="activeViewDecadeKB($event)"
-                (click)="activeViewDecade()"
-                class="igx-calendar-picker__date">
-                {{ formattedYear(viewDate) }}
-            </span>
-        </div>
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__next"
-            (click)="nextYear()"
-            (keydown)="changeYearKB($event)"
-            [ngStyle]="{'min-width.%': 25,'right': 0}"
-            role="button"
-            [attr.aria-label]="'Next Year ' + getNextYear()"
-            data-action="next">
-
-            <igx-icon>keyboard_arrow_right</igx-icon>
-        </div>
-    </div>
-
-    <igx-months-view [@animateChange]="yearAction" #months
-                     (@animateChange.done)="animationDone($event)"
-                     (@animateView.done)="viewRendered($event)"
-                     [date]="viewDate"
-                     [locale]="locale"
-                     [formatView]="formatViews.month"
-                     [monthFormat]="formatOptions.month"
-                     (selected)="selectMonth($event)">
+    class="igx-months-view__body"
+    (swiperight)="previousPage()"
+    (swipeleft)="nextPage()"
+>
+    <ng-container *ngTemplateOutlet="calendarMonthPicker"></ng-container>
+    <igx-months-view
+        #months
+        [date]="viewDate"
+        [locale]="locale"
+        [formatView]="formatViews.month"
+        [monthFormat]="formatOptions.month"
+        (selected)="selectMonth($event)"
+        (pageChanged)="updateDate($event)"
+    >
     </igx-months-view>
 </div>
-<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade (@animateView.done)="viewRendered($event)"
-                [date]="viewDate"
-                [locale]="locale"
-                [formatView]="formatViews.year"
-                [yearFormat]="formatOptions.year"
-                (selected)="selectYear($event)">
-</igx-years-view>
+
+<!-- Years -->
+<div *ngIf="isDecadeView">
+    <ng-container *ngTemplateOutlet="calendarYearsPicker"></ng-container>
+    <igx-years-view
+        #decade
+        *ngIf="isDecadeView"
+        [date]="viewDate"
+        [locale]="locale"
+        [formatView]="formatViews.year"
+        [yearFormat]="formatOptions.year"
+        (selected)="selectYear($event)"
+        (pageChanged)="updateDate($event)"
+    >
+    </igx-years-view>
+</div>
