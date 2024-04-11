@@ -148,23 +148,29 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
+    $drawer-width: rem(240px);
+    $drawer-mini-width: map.get((
+        material: rem(68px),
+        fluent: rem(68px),
+        bootstrap: rem(68px),
+        indigo-design: rem(48px)
+    ), $variant);
+
     %navdrawer-display {
         transition: flex-basis;
         transition-duration: .3s;
         transition-timing-function: $out-quad;
         flex-shrink: 0;
+        flex-basis: $drawer-width;
 
-        @if $variant == 'indigo-design' {
-            &:has(.igx-nav-drawer__aside--mini) {
-                flex-basis: 48px !important;
-            }
+        &:has(.igx-nav-drawer__aside--mini) {
+            flex-basis: $drawer-mini-width;
         }
     }
 
     %aside {
         position: fixed;
         height: 100%;
-        max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
         background: var-get($theme, 'background');
@@ -177,6 +183,10 @@
         box-shadow: var-get($theme, 'shadow');
         border-inline-end: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
+
+        @if $variant == 'indigo-design' {
+            padding: 8px;
+        }
     }
 
     %aside-panning {
@@ -225,12 +235,7 @@
     }
 
     %aside--mini {
-        width: rem(60px);
-
-        @if $variant == 'indigo-design' {
-            max-width: rem(48px);
-        }
-
+        width: $drawer-mini-width;
         transition-duration: .2s, .2s;
 
         %item {
@@ -243,7 +248,7 @@
     }
 
     %aside--normal {
-        width: rem(242px);
+        width: $drawer-width;
         transition-duration: .3s, .3s;
     }
 
@@ -287,28 +292,6 @@
         color: var-get($theme, 'item-text-color');
         max-height: $drawer-item-max-h;
         min-width: $drawer-item-min-w;
-
-        @if $variant != 'indigo-design' {
-            // important is needed to override the typography margins
-            margin: $drawer-item-margin !important;
-            padding: rem(12px) rem(8px);
-            gap: rem(32px);
-        } @else {
-            // important is needed to override the typography margins
-            margin-block-end: rem(4px) !important;
-            margin-inline: rem(8px)!important;
-            padding: rem(8px) rem(16px);
-            gap: rem(16px);
-
-            &:first-of-type.igx-nav-drawer__item {
-                margin-block-start: rem(8px) !important;
-            }
-
-            &:last-of-type.igx-nav-drawer__item {
-                margin-block-end: rem(8px) !important;
-            }
-        }
-
         cursor: pointer;
         user-select: none;
         outline: transparent;
@@ -318,6 +301,20 @@
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
         justify-content: flex-start;
+
+        @if $variant != 'indigo-design' {
+            // important is needed to override the typography margins
+            margin: $drawer-item-margin !important;
+            padding: rem(12px) rem(8px);
+            gap: rem(32px);
+        } @else {
+            // important is needed to override the typography margins
+            margin: 0 !important;
+            margin-block-end: rem(4px) !important;
+            padding: rem(8px) rem(16px);
+            gap: rem(16px);
+            width: 100%;
+        }
 
         igx-icon {
             --component-size: 3;
