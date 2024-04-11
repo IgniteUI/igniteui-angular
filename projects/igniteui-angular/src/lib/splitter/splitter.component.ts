@@ -177,7 +177,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Sets the visibility of the handle and expanders in the splitter bar.
-     * True by default
+     * False by default
      * 
      * @example
      * ```html
