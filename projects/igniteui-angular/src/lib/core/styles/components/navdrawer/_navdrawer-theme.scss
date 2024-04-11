@@ -295,16 +295,17 @@
             gap: rem(32px);
         } @else {
             // important is needed to override the typography margins
-            margin: rem(4px) rem(8px) !important;
+            margin-block-end: rem(4px) !important;
+            margin-inline: rem(8px)!important;
             padding: rem(8px) rem(16px);
             gap: rem(16px);
 
             &:first-of-type.igx-nav-drawer__item {
-                margin-top: rem(8px) !important;
+                margin-block-start: rem(8px) !important;
             }
 
             &:last-of-type.igx-nav-drawer__item {
-                margin-bottom: rem(8px) !important;
+                margin-block-end: rem(8px) !important;
             }
         }
 
