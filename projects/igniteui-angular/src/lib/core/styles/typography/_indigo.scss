@@ -91,6 +91,7 @@
     @include switch-typography();
     @include tabs-typography();
     @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
         header-hour: 'h5',
         selected-time: 'h6'
     ));
