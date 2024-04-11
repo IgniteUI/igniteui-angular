@@ -202,14 +202,10 @@ describe('Dialog', () => {
         dialog.open();
         expect(dialog.leftButtonLabel).toEqual('left button');
         expect(dialog.leftButtonType).toEqual('contained');
-        expect(dialog.leftButtonColor).toEqual('black');
-        expect(dialog.leftButtonBackgroundColor).toEqual('darkblue');
         expect(dialog.leftButtonRipple).toEqual('pink');
 
         expect(dialog.rightButtonLabel).toEqual('right button');
         expect(dialog.rightButtonType).toEqual('contained');
-        expect(dialog.rightButtonColor).toEqual('orange');
-        expect(dialog.rightButtonBackgroundColor).toEqual('lightblue');
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 

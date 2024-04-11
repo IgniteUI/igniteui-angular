@@ -54,23 +54,20 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.roundShape).toBeTruthy();
+        expect(instance.shape).toEqual('square');
+        expect(hostEl.classList).not.toContain(classes.circle);
+        expect(hostEl.classList).not.toContain(classes.round);
+
+        instance.shape = "circle";
+
+        fixture.detectChanges();
         expect(instance.shape).toEqual('circle');
         expect(hostEl.classList).toContain(classes.circle);
         expect(hostEl.classList).not.toContain(classes.round);
 
-        instance.shape = "square";
-
-        fixture.detectChanges();
-        expect(instance.roundShape).toBeFalsy();
-        expect(instance.shape).toEqual('square');
-        expect(hostEl.classList).not.toContain(classes.round);
-        expect(hostEl.classList).not.toContain(classes.circle);
-
         instance.shape = "rounded";
 
         fixture.detectChanges();
-        expect(instance.roundShape).toBeFalsy();
         expect(instance.shape).toEqual('rounded');
         expect(hostEl.classList).toContain(classes.round);
         expect(hostEl.classList).not.toContain(classes.circle);
@@ -151,23 +148,6 @@ describe('Avatar', () => {
         expect(hostEl.classList).toContain(classes.image);
     });
 
-    it('Sets background and foreground colors', () => {
-        const fixture = TestBed.createComponent(AvatarWithAttribsComponent);
-        fixture.detectChanges();
-        const instance = fixture.componentInstance.avatar;
-        const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
-
-        expect(hostEl.style.background).toEqual(instance.bgColor);
-        expect(hostEl.style.color).toEqual(instance.color);
-
-        instance.bgColor = '#000';
-        instance.color = '#fff';
-
-        fixture.detectChanges();
-        expect(hostEl.style.background).toEqual('rgb(0, 0, 0)');
-        expect(hostEl.style.color).toEqual('rgb(255, 255, 255)');
-    });
-
     it('Sets ARIA attributes', () => {
         const fixture = TestBed.createComponent(InitImageAvatarComponent);
         fixture.detectChanges();
@@ -192,13 +172,7 @@ class InitAvatarComponent {
 
 @Component({
     template: `
-    <igx-avatar
-        [initials]="initials"
-        [bgColor]="bgColor"
-        [color]="color"
-        size="small"
-        [roundShape]="true">
-    </igx-avatar>`,
+    <igx-avatar [initials]="initials" size="small"></igx-avatar>`,
     standalone: true,
     imports: [IgxAvatarComponent]
 })
@@ -206,8 +180,6 @@ class AvatarWithAttribsComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 
     public initials = 'ZK';
-    public color = 'orange';
-    public bgColor = 'royalblue';
 }
 
 @Component({
