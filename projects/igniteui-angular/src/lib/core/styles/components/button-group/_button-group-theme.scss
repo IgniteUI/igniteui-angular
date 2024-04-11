@@ -323,9 +323,6 @@
 
         @if $variant == 'fluent' {
             min-width: rem(50px);
-            min-height: rem(32px);
-            padding-inline: pad-inline(rem(16px));
-            padding-block: pad-block(rem(6px));
 
             igx-icon {
                 $icon-size: rem(18px);
