@@ -552,7 +552,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private getMaskedValue(): string {
     let mask = this.emptyMask;
-    if (DateTimeUtil.isValidDate(this.value)) {
+    if (DateTimeUtil.isValidDate(this.value) || DateTimeUtil.parseIsoDate(this.value)) {
       for (const part of this._inputDateParts) {
         if (part.type === DatePart.Literal) {
           continue;
