@@ -269,7 +269,7 @@
     }
 
     %time-picker__column {
-        width: rem(64px);
+        width: if($variant == 'indigo-design', rem(54px), rem(64px));
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -287,7 +287,7 @@
     }
 
     %time-picker__item {
-        width: rem(54px);
+        width: if($variant == 'indigo-design', rem(46px), rem(54px));
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
         height: var-get($theme, 'time-item-size');
@@ -390,6 +390,12 @@
         align-items: center;
         padding: $picker-buttons-padding;
         gap: rem(8px);
+
+        @if $variant == 'indigo-design' {
+            [igxbutton] {
+                min-width: rem(88px);
+            }
+        }
     }
 
     %time-picker__buttons--vertical {
