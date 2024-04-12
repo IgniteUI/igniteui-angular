@@ -129,7 +129,7 @@
         material: 0,
         fluent: 0,
         bootstrap: 3px,
-        indigo-design: 2px
+        indigo-design: 3px
     ), $variant);
 
     // Slider ticks
@@ -532,7 +532,7 @@
         justify-content: center;
         white-space: nowrap;
         margin-inline-start: -50%;
-        padding: 0 rem(2px);
+        padding: 0 rem(8px);
         background: var-get($theme, 'label-background-color');
         color: var-get($theme, 'label-text-color');
         min-width: $thumb-label-width;

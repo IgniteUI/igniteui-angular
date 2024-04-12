@@ -86,7 +86,10 @@
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography();
+    @include slider-typography($categories: (
+        ticks-label: 'body-2',
+        thumb-label: 'subtitle-2',
+    ));
     @include snackbar-typography();
     @include switch-typography();
     @include tabs-typography();
