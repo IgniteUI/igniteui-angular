@@ -740,10 +740,11 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should change date parts correctly and emit valueChange with increment() and decrement() methods', () => {
-                const date = new Date(2020, 12, 12, 10, 30, 30);
+                const date = new Date(2020, 12, 12, 10, 30, 30, 999);
+                timePicker.inputFormat = 'hh:mm:ss:SS a';
                 timePicker.value = new Date(date);
-                timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
-                timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
+                timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0, 0);
+                timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0, 0);
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 fixture.detectChanges();
                 spyOn(timePicker.valueChange, 'emit').and.callThrough();
@@ -764,6 +765,12 @@ describe('IgxTimePicker', () => {
                 date.setSeconds(date.getSeconds() - timePicker.itemsDelta.seconds);
                 expect(timePicker.value).toEqual(date);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(3);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+
+                timePicker.decrement(DatePart.FractionalSeconds);
+                date.setMilliseconds(date.getMilliseconds() - timePicker.itemsDelta.fractionalSeconds);
+                expect(timePicker.value).toEqual(date);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(4);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
             });
 
@@ -1114,6 +1121,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.itemsDelta.hours).toEqual(1);
                 expect(timePicker.itemsDelta.minutes).toEqual(1);
                 expect(timePicker.itemsDelta.seconds).toEqual(1);
+                expect(timePicker.itemsDelta.fractionalSeconds).toEqual(1);
                 expect(timePicker.disabled).toEqual(false);
             });
 
@@ -1754,7 +1762,7 @@ export class IgxTimePickerTestComponent {
     @ViewChild('picker', { read: IgxTimePickerComponent, static: true })
     public timePicker: IgxTimePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
-    public date = new Date(2021, 24, 2, 11, 45, 0);
+    public date = new Date(2021, 24, 2, 11, 45, 0, 0);
     public minValue;
     public maxValue;
 }
