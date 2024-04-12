@@ -26,6 +26,10 @@
             @include e(label) {
                 @extend %switch-label--hover !optional;
             }
+
+            @include e(label, $m: before) {
+                @extend %switch-label--hover !optional;
+            }
         }
 
         &:active {
@@ -132,6 +136,10 @@
             }
 
             @include e(label) {
+                @extend %switch-label--invalid !optional;
+            }
+
+            @include e(label, $m: before) {
                 @extend %switch-label--invalid !optional;
             }
 
