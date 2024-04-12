@@ -30,6 +30,7 @@ export class IgxPaginatorContentDirective {
 /* mustUseNGParentAnchor */
 /* wcElementTag: igc-paginator */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */

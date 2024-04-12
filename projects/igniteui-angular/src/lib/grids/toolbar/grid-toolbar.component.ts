@@ -23,6 +23,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
 /* mustUseNGParentAnchor */
 /* wcElementTag: igc-grid-toolbar */
 /* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */

@@ -57,6 +57,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 /* jsonAPIManageCollectionInMarkup */
 /* jsonAPIManageItemInMarkup */
 /* mustUseNGParentAnchor */
+/* additionalIdentifier: ChildDataKey */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /**
