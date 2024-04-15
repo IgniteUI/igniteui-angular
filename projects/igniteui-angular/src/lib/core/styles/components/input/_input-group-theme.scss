@@ -979,6 +979,26 @@
         will-change: font-size, color, transform;
     }
 
+    @if $variant == 'material' {
+        %textarea-group:not(%suffixed) {
+            %form-group-bundle-main {
+                grid-area: 1 / 2 / span 1 / span 3;
+                padding-inline-end: 0;
+            }
+
+            textarea {
+                padding-inline-end: rem(4px);
+                width: calc(100% - #{rem(1px)});
+            }
+        }
+
+        %textarea-group--outlined:not(%suffixed) {
+            textarea {
+                width: calc(100% - #{rem(2px)});
+            }
+        }
+    }
+
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
         --textarea-size: #{sizable(
@@ -1191,6 +1211,7 @@
 
         @if $material-theme {
             padding: 0;
+            inset-block-start: rem(-3px);
         }
 
         // resets typography styles
