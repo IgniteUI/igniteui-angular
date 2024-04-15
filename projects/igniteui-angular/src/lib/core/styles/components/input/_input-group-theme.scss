@@ -1689,8 +1689,9 @@
     }
 
     %indigo-textarea {
-        padding-block: rem(8px);
+        padding-block: rem(10px);
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        inset-block-end: rem(2px);
     }
 
     %fluent-textarea {
