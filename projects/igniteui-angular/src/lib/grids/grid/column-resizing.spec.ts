@@ -14,6 +14,8 @@ import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../col
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
+import { setElementSize } from '../../core/utils';
+import { Size } from "../common/enums";
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -162,7 +164,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(column.width).toEqual('50px');
         }));
 
-        it('should change the defaultMinWidth on density change', fakeAsync(() => {
+        it('should change the defaultMinWidth on grid size change', fakeAsync(() => {
             const column = grid.getColumnByName('ID');
 
             expect(column.defaultMinWidth).toBe('80');
@@ -177,7 +179,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
-            grid.displayDensity = 'cosy';
+            setElementSize(grid.nativeElement, Size.Medium)
             tick(200);
             fixture.detectChanges();
 
@@ -192,7 +194,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('64px');
-            grid.displayDensity = 'compact';
+            setElementSize(grid.nativeElement, Size.Small)
             tick(200);
             fixture.detectChanges();
 

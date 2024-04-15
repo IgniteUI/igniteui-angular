@@ -1310,7 +1310,7 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" displayDensity="compact">
+    <igx-grid #grid [data]="data" height="500px" [style.--ig-size]="1">
         <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'

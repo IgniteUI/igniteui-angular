@@ -636,3 +636,10 @@ export function getComponentCssSizeVar(size: string) {
             return 'var(--ig-size, var(--ig-size-large))';
     }
 }
+
+/**
+ * Sets element size as a inline style
+ */
+export function setElementSize(element: HTMLElement, size: string) {
+    element.style.setProperty('--ig-size', size);
+}

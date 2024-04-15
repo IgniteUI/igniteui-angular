@@ -3914,7 +3914,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 mutations.forEach(_mutation => {
                     const componentSize = this.gridComputedStyles.getPropertyValue('--component-size');
                     if (this._gridSize !== componentSize) {
-                        this._gridSize = componentSize; 
+                        this._gridSize = componentSize;
+                        this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+                        this.crudService.endEdit(false);
+                        if (this._summaryRowHeight === 0) {
+                            this.summaryService.summaryHeight = 0;
+                        }
                         this.notifyChanges(true);   
                     }
                 });

@@ -18,10 +18,10 @@ import {
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
-import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
+import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DisplayDensity } from '../../core/density';
+import { setElementSize } from '../../core/utils';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -453,8 +453,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
         }));
 
-        it('should size summaries for parent and child grids correctly when display density is changed and summaryRowHeight is set to falsy value', () => {
-            hierarchicalGrid.displayDensity = DisplayDensity.comfortable;
+        it('should size summaries for parent and child grids correctly when grid size is changed and summaryRowHeight is set to falsy value', () => {
+            setElementSize(hierarchicalGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
@@ -468,7 +468,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
-            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+
+            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             hierarchicalGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
@@ -479,7 +480,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
-            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             hierarchicalGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 

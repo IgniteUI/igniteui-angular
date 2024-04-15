@@ -3,7 +3,6 @@ import { fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
-import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxExpansionPanelHeaderComponent } from '../../expansion-panel/expansion-panel-header.component';
 import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
@@ -18,6 +17,8 @@ import {
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
+import { setElementSize } from '../../core/utils';
+import { Size } from '../common/enums';
 
 describe("Pivot data selector", () => {
 
@@ -62,10 +63,10 @@ describe("Pivot data selector integration", () => {
         ];
     }));
 
-    it("should set its display density based on the passed grid instance", () => {
-        grid.displayDensity = DisplayDensity.compact;
+    it("should set its size based on the passed grid instance size", () => {
+        setElementSize(grid.nativeElement, Size.Small)
         fixture.detectChanges();
-        expect(selector.displayDensity).toEqual(DisplayDensity.compact);
+        expect((selector as any).size).toEqual(Size.Small);
     });
 
     it("should set through API expand states for panels with two way data binding", () => {

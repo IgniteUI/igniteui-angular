@@ -19,6 +19,8 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
+import { setElementSize } from '../../core/utils';
+import { Size } from '../common/enums';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -511,7 +513,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnDimensions.length).toEqual(0);
         });
 
-        it('should change display density', fakeAsync(() => {
+        it('should change grid size', fakeAsync(() => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const minWidthComf = '80';
             const minWidthSupercompact = '56';
@@ -522,7 +524,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             tick();
             fixture.detectChanges();
 
-            expect(pivotGrid.displayDensity).toBe('compact')
+            setElementSize(pivotGrid.nativeElement, Size.Small)
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
@@ -530,12 +532,11 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             pivotGrid.superCompactMode = false;
             fixture.detectChanges();
-
-            pivotGrid.displayDensity = 'comfortable';
+            setElementSize(pivotGrid.nativeElement, Size.Large)
             tick();
             fixture.detectChanges();
 
-            expect(pivotGrid.displayDensity).toBe('comfortable')
+            expect(pivotGrid.gridSize).toBe(Size.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
             expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
@@ -589,7 +590,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             fixture.detectChanges();
 
-            // all should take density default min-width (200 for default density) as they exceed the size of the grid
+            // all should take grid size default min-width (200 for default grid size) as they exceed the size of the grid
             const colGroups = pivotGrid.columns.filter(x => x.columnGroup);
             const childCols = pivotGrid.columns.filter(x => !x.columnGroup);
             expect(colGroups.every(x => x.width === '400px')).toBeTrue();
