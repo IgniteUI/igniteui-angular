@@ -20,14 +20,8 @@
 /// @param {Color} $icon-color [null] - The icon color used in idle state
 /// @param {Color} $label-selected-color [null] - The label color used in selected state
 /// @param {Color} $icon-selected-color [null] - The icon color used in selected state
-
-/// @param {Color} $idle-item-color [null] - The color used in idle state.
-/// @param {Color} $selected-item-color [null] - The color used in selected state.
-
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the bar.
-///
 /// @requires $light-material-schema
-///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
 ///   // Pass the theme to the css-vars() mixin
@@ -153,7 +147,7 @@
         position: relative;
         flex-flow: column nowrap;
         flex: 1;
-        gap: if($variant == 'indigo-design', rem(6px), rem(4px));
+        gap: rem(4px);
         align-items: center;
         justify-content: center;
         min-width: $item-min-width;
@@ -184,6 +178,7 @@
 
     %igx-bottom-nav-menu-item--selected {
         transition: color .15s $in-out-quad, opacity .25s $in-out-quad;
+        gap: if($variant == 'indigo-design', rem(6px), rem(4px));
     }
 
     %igx-tab-label {
