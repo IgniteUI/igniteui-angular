@@ -13,7 +13,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { CellType } from '../common/grid.interface';
 import { NgFor } from '@angular/common';
-import { IGridCellEventArgs, IGridContextMenuEventArgs, IgxColumnComponent } from '../public_api';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
 
