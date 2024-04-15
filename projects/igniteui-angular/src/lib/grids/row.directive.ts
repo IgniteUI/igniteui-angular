@@ -417,8 +417,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('contextmenu', ['$event'])
     public onContextMenu(event: MouseEvent) {
+        const cell = (event.target as HTMLElement).closest('.igx-grid__td');
         this.grid.contextMenu.emit({
             row: this,
+            cell: this.cells.find(c => c.nativeElement === cell),
             event
         });
     }

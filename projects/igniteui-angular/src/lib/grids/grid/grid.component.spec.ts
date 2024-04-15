@@ -2094,7 +2094,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.columnList.forEach(c => c.width = '100px');
             fix.detectChanges();
             const spy = spyOn(grid.contextMenu, 'emit').and.callThrough();
-            const event = new Event('contextmenu');
+            const event = new Event('contextmenu', { bubbles: true });
             const row = grid.rowList.get(0);
             const cell = row.cells.get(0);
             cell.nativeElement.dispatchEvent(event);

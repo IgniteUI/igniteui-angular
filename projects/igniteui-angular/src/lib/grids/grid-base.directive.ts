@@ -121,7 +121,8 @@ import {
     IGridEditEventArgs,
     IRowDataCancelableEventArgs,
     IGridEditDoneEventArgs,
-    IGridRowEventArgs
+    IGridRowEventArgs,
+    IGridContextMenuEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -845,7 +846,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public contextMenu = new EventEmitter<IGridCellEventArgs | IGridRowEventArgs>();
+    public contextMenu = new EventEmitter<IGridContextMenuEventArgs>();
 
     /**
      * Emitted when a cell is double clicked.
