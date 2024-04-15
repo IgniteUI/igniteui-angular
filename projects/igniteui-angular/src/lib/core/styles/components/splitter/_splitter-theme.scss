@@ -236,7 +236,6 @@
             %indigo-splitter-bar {
                 background: var-get($theme, 'focus-color');
                 border-color: var-get($theme, 'focus-color');
-                opacity: 1;
 
                 &.igx-splitter-bar--collapsible {
                     @extend %show-controls;
