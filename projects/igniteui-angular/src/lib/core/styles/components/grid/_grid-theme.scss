@@ -2946,6 +2946,7 @@
 
     // Pivot grid
     %igx-grid__pivot--super-compact {
+        --ig-size: 1 !important;
         %grid-cell-display,
         %grid-cell-header {
             padding: 0 rem(4px) !important;

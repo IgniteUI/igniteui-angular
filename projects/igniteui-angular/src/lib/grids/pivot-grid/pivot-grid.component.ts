@@ -41,7 +41,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
-import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition, Size } from '../common/enums';
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
@@ -60,7 +60,6 @@ import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTempl
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/density';
 import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
@@ -334,14 +333,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Enables a super compact theme for the component.
      * @remarks
-     * Overrides the displayDensity option if one is set.
+     * Overrides the grid size option if one is set.
      * @example
      * ```html
      * <igx-pivot-grid [superCompactMode]="true"></igx-pivot-grid>
      * ```
      */
     @HostBinding('class.igx-grid__pivot--super-compact')
-    @Input({ transform: booleanAttribute })
+    @Input()
     public get superCompactMode() {
         return this._superCompactMode;
     }
@@ -354,40 +353,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
     }
 
-    /**
-    * Returns the theme of the component.
-    * The default theme is `comfortable`.
-    * Available options are `comfortable`, `cosy`, `compact`.
-    * @remarks
-    * If set while superCompactMode is enabled will have no affect.
-    * ```typescript
-    * let componentTheme = this.component.displayDensity;
-    * ```
-    */
-    @Input()
-    public override get displayDensity(): DisplayDensity {
-        if (this.superCompactMode) {
-            return DisplayDensity.compact;
+    public override get gridSize() {
+        if (this._superCompactMode) {
+            return Size.Small;
         }
-        return super.displayDensity;
+        return super.gridSize;
     }
 
-    /**
-    * Sets the theme of the component.
-    */
-    public override set displayDensity(val: DisplayDensity) {
-        const currentDisplayDensity = this._displayDensity;
-        this._displayDensity = val as DisplayDensity;
-
-        if (currentDisplayDensity !== this._displayDensity) {
-            const densityChangedArgs: IDensityChangedEventArgs = {
-                oldDensity: currentDisplayDensity,
-                newDensity: this._displayDensity
-            };
-
-            this.densityChanged.emit(densityChangedArgs);
-        }
-    }
 
     /**
      * Gets/Sets the values clone strategy of the pivot grid when assigning them to different dimensions.
@@ -980,7 +952,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
@@ -1003,7 +974,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             textHighlightService,
             overlayService,
             summaryService,
-            _displayDensityOptions,
             localeId,
             platform,
             _diTransactions);
@@ -1889,7 +1859,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden
     */
     public get excelStyleFilterMaxHeight() {
-        // max 10 rows, row size depends on density
+        // max 10 rows, row size depends on grid size
         const maxHeight = this.renderedRowHeight * 10;
         return `${maxHeight}px`;
     }
@@ -1898,7 +1868,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden
     */
     public get excelStyleFilterMinHeight(): string {
-        // min 5 rows, row size depends on density
+        // min 5 rows, row size depends on grid size
         const minHeight = this.renderedRowHeight * 5;
         return `${minHeight}px`;
     }
@@ -2016,12 +1986,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
-    protected override getComponentDensityClass(baseStyleClass: string): string {
-        if (this.superCompactMode) {
-            return `${baseStyleClass}--${DisplayDensity.compact} igx-grid__pivot--super-compact`;
-        }
-        return super.getComponentDensityClass(baseStyleClass);
-    }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
         const rootFields = this.allDimensions.map(x => x.memberName);

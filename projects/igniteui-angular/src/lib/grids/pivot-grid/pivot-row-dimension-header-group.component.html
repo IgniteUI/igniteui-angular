@@ -20,7 +20,6 @@
         (pointerdown)="pointerdown($event)"
         [igxColumnMovingDrop]="column"
         [column]="column"
-        [density]="grid.displayDensity"
     >
     </igx-pivot-row-dimension-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
