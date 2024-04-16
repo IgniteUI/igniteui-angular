@@ -80,19 +80,24 @@
     @include list-typography($categories: (
         item: 'body-2',
         title: 'body-1',
-        subtitle: 'subtitle-1',
+        subtitle: 'body-2',
         header: 'overline',
     ));
     @include navbar-typography($categories: (
         title: 'h5'
     ));
-    @include navdrawer-typography();
+    @include navdrawer-typography($categories: (
+        item: 'body-2',
+        header: 'caption'
+    ));
     @include radio-typography($categories: (
         label: 'body-1'
     ));
     @include slider-typography();
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-1'
+    ));
     @include tabs-typography();
     @include time-picker-typography();
     @include stepper-typography();
