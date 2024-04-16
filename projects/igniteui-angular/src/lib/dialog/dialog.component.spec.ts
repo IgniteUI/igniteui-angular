@@ -543,8 +543,6 @@ class AlertComponent {
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -565,8 +563,6 @@ class DialogComponent {
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -587,8 +583,6 @@ class DialogTwoWayDataBindingComponent {
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
             <div class="custom-sample">
                 <h2>Custom Sample</h2>
