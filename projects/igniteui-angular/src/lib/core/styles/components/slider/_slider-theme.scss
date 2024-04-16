@@ -115,8 +115,20 @@
     $slider-height: rem(48px);
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
-    $thumb-label-width: rem(40px);
-    $thumb-label-height: rem(30px);
+
+    $thumb-label-width: map.get((
+        material: rem(40px),
+        fluent: rem(40px),
+        bootstrap: rem(40px),
+        indigo-design: rem(36px)
+    ), $variant);
+
+    $thumb-label-height: map.get((
+        material: rem(30px),
+        fluent: rem(30px),
+        bootstrap: rem(30px),
+        indigo-design: rem(22px)
+    ), $variant);
 
     $slider-track-height: map.get((
         material: 6px,
@@ -537,6 +549,10 @@
         color: var-get($theme, 'label-text-color');
         min-width: $thumb-label-width;
         opacity: 0;
+
+        @if $variant == 'indigo-design' {
+            border-radius: rem(3px);
+        }
 
         &::after {
             content: '';
