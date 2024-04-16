@@ -185,7 +185,8 @@
         border-radius: var-get($theme, 'border-radius');
 
         @if $variant == 'indigo-design' {
-            padding: 8px;
+            transition: padding, width, transform;
+            padding: rem(8px);
         }
     }
 
@@ -225,6 +226,10 @@
         }
 
         box-shadow: none;
+
+        @if $variant == 'indigo-design' {
+            padding: 0;
+        }
     }
 
     %aside--right {
