@@ -28,8 +28,6 @@ this.button.displayDensity = "compact";
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `igxButton` |  string | Set the type of igxButton to be used. Default is set to flat. |
-| `igxButtonColor` |    string   |   Set the button text color. You can pass any CSS valid color value. |
-| `igxButtonBackground` | string | Set the button background color. You can pass any CSS valid color value. |
 | `displayDensity` | DisplayDensity | Determines the display density of the button. |
 | `buttonSelected` | EventEmitter<IButtonEventArgs> | Emitted only when a button gets selected, or deselected, and not on initialization. |
 | `selected` | boolean | Gets or sets whether the button is selected. Mainly used in the IgxButtonGroup component and it will have no effect if set separately. |
