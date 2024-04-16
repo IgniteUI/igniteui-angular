@@ -409,11 +409,26 @@ describe('IgxDateTimeEditor', () => {
                 inputElement = fixture.debugElement.query(By.css('input'));
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
             });
+
             it('should properly update mask with inputFormat onInit', () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorBaseTestComponent);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateEditor.elementRef.nativeElement.value).toEqual('09/11/2009');
             });
+
+            it('should update value and mask according to the display format and ISO string date as value', () => {
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.componentInstance.displayFormat = 'shortDate';
+                dateTimeEditorDirective.value = new Date(2003, 3, 5).toISOString();
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.mask).toEqual('00/00/00');
+                expect(inputElement.nativeElement.value).toEqual('05/04/03');
+                UIInteractions.simulateTyping('1', inputElement);
+                expect(inputElement.nativeElement.value).toEqual('15/04/03');
+            });
+
             it('should correctly display input format during user input', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
