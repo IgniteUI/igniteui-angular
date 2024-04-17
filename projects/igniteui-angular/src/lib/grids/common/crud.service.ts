@@ -32,6 +32,7 @@ export class IgxEditRow {
         };
         if (includeNewValue) {
             args.newValue = this.newData ?? this.data;
+            args.rowData = this.newData ?? this.data;
         }
         return args;
     }
