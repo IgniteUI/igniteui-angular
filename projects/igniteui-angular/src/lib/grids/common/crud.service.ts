@@ -31,7 +31,6 @@ export class IgxEditRow {
         };
         if (includeNewValue) {
             args.newValue = this.newData ?? this.data;
-            args.rowData = this.newData ?? this.data;
         }
         return args;
     }
@@ -75,6 +74,7 @@ export class IgxAddRow extends IgxEditRow {
         const args = super.createEditEventArgs(includeNewValue, event);
         args.oldValue = null;
         args.isAddRow = true;
+        args.rowData = this.newData ?? this.data;
         return args;
     }
 
