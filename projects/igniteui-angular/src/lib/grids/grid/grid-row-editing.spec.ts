@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -330,8 +330,16 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid,
                 isAddRow: true
             }
+
+            const rowAddedArgs: IRowDataEventArgs = {
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                primaryKey: generatedId,
+                rowKey: generatedId,
+                owner: grid
+            };
             expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
-            expect(grid.rowAdded.emit).toHaveBeenCalledWith(rowAddArgs);
+            expect(grid.rowAdded.emit).toHaveBeenCalledWith(rowAddedArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
