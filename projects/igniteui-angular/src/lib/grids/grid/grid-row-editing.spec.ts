@@ -299,8 +299,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
-        it('Emit rowAdd event with proper arguments', () => {
+        it('Emit rowAdd and rowAdded event with proper arguments', () => {
             spyOn(grid.rowAdd, 'emit').and.callThrough();
+            spyOn(grid.rowAdded, 'emit').and.callThrough();
             // start add row
             grid.beginAddRowById(null);
             fix.detectChanges();
@@ -337,6 +338,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 isAddRow: true
             }
             expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
+            expect(grid.rowAdded.emit).toHaveBeenCalledWith(rowAddArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
