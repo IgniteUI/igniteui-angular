@@ -366,7 +366,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * a single `Date` object.
      * Otherwise it is an array of `Date` objects.
      */
-    public set value(value: Date | Date[]) {
+    public set value(value: Date | Date[] | string) {
+        // Validate the date if it is of type string and it is IsoDate
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
+        }
+
         if (!value || !!value && (value as Date[]).length === 0) {
             this.selectedDatesWithoutFocus = new Date();
             return;
@@ -392,9 +397,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Sets the date that will be presented in the default view when the component renders.
      */
-    public set viewDate(value: Date) {
+    public set viewDate(value: Date | string) {
         if (Array.isArray(value)) {
             return;
+        }
+
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
         }
 
         const validDate = this.validateDate(value);
@@ -528,9 +537,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      *
      * @hidden
      */
-    public isDateDisabled(date: Date) {
+    public isDateDisabled(date: Date | string) {
         if (this.disabledDates === null) {
             return false;
+        }
+
+        if (typeof date === 'string') {
+            date = DateTimeUtil.parseIsoDate(date);
         }
 
         return isDateInRanges(date, this.disabledDates);
@@ -539,7 +552,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Selects date(s) (based on the selection type).
      */
-    public selectDate(value: Date | Date[]) {
+    public selectDate(value: Date | Date[] | string) {
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
+        }
+
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
             return;
         }
@@ -562,9 +579,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Deselects date(s) (based on the selection type).
      */
-    public deselectDate(value?: Date | Date[]) {
+    public deselectDate(value?: Date | Date[] | string) {
         if (!this.selectedDates || this.selectedDates.length === 0) {
             return;
+        }
+
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
         }
 
         if (value === null || value === undefined) {
