@@ -229,7 +229,7 @@ Default Component Icons:
 - [ ] Path: input-group/input-group.component.html
   - clear
 
-- [ ] Path: navbar/navbar.component.html
+- [x] Path: navbar/navbar.component.html
   * no built-in, just configurable child icon
 
 - [ ] Path: paginator/pager.component.html

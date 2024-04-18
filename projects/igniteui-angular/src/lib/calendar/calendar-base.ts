@@ -681,7 +681,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this.viewDate = this.viewDate ? this.viewDate : new Date();
 
         for (const icon of this._icons) {
-            this.iconService.addIconRef(icon.name, icon.family, icon.ref);
+            this.iconService?.addIconRef(icon.name, icon.family, icon.ref);
         }
 
         this.initFormatters();
@@ -726,7 +726,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (typeof value === 'string') {
             value = DateTimeUtil.parseIsoDate(value);
         }
- 
+
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
             return;
         }
