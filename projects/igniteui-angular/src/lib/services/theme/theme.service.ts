@@ -37,7 +37,7 @@ export class ThemeService {
         this.init();
     }
 
-    public init() {
+    private init() {
         const theme = globalThis
             .getComputedStyle(this.document.body)
             .getPropertyValue("--ig-theme")
