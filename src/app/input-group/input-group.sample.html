@@ -182,6 +182,19 @@
                 <igx-hint>Textarea hint</igx-hint>
             </igx-input-group>
 
+            <!-- textarea -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Textarea</label>
+                <textarea
+                        name="inputTextareaTest"
+                        [required]="isRequired"
+                        igxInput
+                        [disabled]="isDisabled"
+                        [(ngModel)]="inputValue"
+                ></textarea>
+                <igx-hint>Textarea hint</igx-hint>
+            </igx-input-group>
+
             <!-- required date field -->
             <igx-date-picker *ngIf="isRequired" #requiredDatePicker
                              required
