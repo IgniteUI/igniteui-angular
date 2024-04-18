@@ -1,4 +1,4 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewChecked,
@@ -38,6 +38,8 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
 import { ThemeService } from '../services/theme/theme.service';
+import type { IgxTheme } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -84,7 +86,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         outline-style: none;
     }`],
     standalone: true,
-    imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
+    imports: [AsyncPipe, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit, AfterViewChecked {
@@ -144,10 +146,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /**
-     * Sets the theme of the carousel component.
+     * @hidden @internal
      */
-    @Input('theme')
-    public theme: string;
+    protected theme: IgxTheme;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -552,17 +553,48 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
+    private _icons = [
+        {
+            name: 'carousel_prev',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_back',
+                    family: 'material'
+                },
+                'indigo-design': {
+                    name: 'keyboard_arrow_left',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'carousel_next',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_forward',
+                    family: 'material'
+                },
+                'indigo-design': {
+                    name: 'keyboard_arrow_right',
+                    family: 'material'
+                }
+            }))
+        }
+    ]
+
     constructor(
         cdr: ChangeDetectorRef,
         private element: ElementRef,
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private iconService: IgxIconService
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
-        this.theme = this.themeService.theme;
     }
 
 
@@ -696,11 +728,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
     * Returns true if the `IgxCarouselComponent` theme is Indigo.
-    * 
+    *
     * ```typescript
     * @ViewChild("carousel")
     * public carousel: IgxCarouselComponent;
-    * 
+    *
     * ngAfterViewInit(){
     *    let isTypeIndigo = this.carousel.isTypeIndigo;
     * }
@@ -720,9 +752,31 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.initSlides(this.slides);
     }
 
+    public ngAfterViewInit() {
+        this.setIcons();
+    }
+
     /** @hidden @internal */
     public ngAfterViewChecked() {
         this.themeService.getCssProp(this.element);
+
+        if (!this.theme) {
+            this.theme = this.themeService.theme;
+            this.setIcons();
+        }
+    }
+
+    private setIcons() {
+        if (this.theme) {
+            for (const icon of this._icons) {
+                this.iconService.addIconRef(
+                    icon.name,
+                    icon.family,
+                    icon.ref.get(this.theme),
+                );
+            }
+            this.cdr.detectChanges();
+        }
     }
 
     /** @hidden */

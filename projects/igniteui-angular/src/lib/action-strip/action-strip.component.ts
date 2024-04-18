@@ -32,15 +32,14 @@ import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
     standalone: true
 })
 export class IgxActionStripMenuItemDirective {
-    constructor(
-        public templateRef: TemplateRef<any>
-    ) { }
+    constructor(public templateRef: TemplateRef<any>) {}
 }
 
 /**
@@ -185,10 +184,18 @@ export class IgxActionStripComponent extends DisplayDensityBase implements IgxAc
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         protected el: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(DisplayDensityToken)
+        protected _displayDensityOptions: IDisplayDensityOptions,
         /** @hidden @internal **/
-        public cdr: ChangeDetectorRef) {
+        public cdr: ChangeDetectorRef,
+        protected _iconService: IgxIconService,
+    ) {
         super(_displayDensityOptions, el);
+
+        this._iconService.addIconRef('more_vert', 'default', {
+            name: 'more_vert',
+            family: 'material',
+        });
     }
 
     /**

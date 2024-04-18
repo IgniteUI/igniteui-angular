@@ -4,34 +4,6 @@
     </div>
 </ng-template>
 
-<ng-template #defaultNextButton let-disabled>
-    <span class="igx-nav-arrow"
-          [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>arrow_forward</igx-icon>
-    </span>
-</ng-template>
-
-<ng-template #defaultPrevButton let-disabled>
-    <span class="igx-nav-arrow"
-          [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>arrow_back</igx-icon>
-    </span>
-</ng-template>
-
-<ng-template #indigoPrevButton let-disabled>
-    <span class="igx-nav-arrow"
-        [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>chevron_left</igx-icon>
-    </span>
-</ng-template>
-
-<ng-template #indigoNextButton let-disabled>
-    <span class="igx-nav-arrow"
-        [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>chevron_right</igx-icon>
-    </span>
-</ng-template>
-
 <div *ngIf="showIndicators" [ngClass]="indicatorsOrientationClass" [attr.role]="'tablist'">
     <div *ngFor="let slide of slides"
         class="igx-carousel-indicators__indicator"
@@ -54,9 +26,15 @@
 </div>
 
 <div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (keydown.enter)="prev()" (click)="prev()">
-    <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
+    <span class="igx-nav-arrow"
+          [class.igx-nav-arrow--disabled]="prevButtonDisabled">
+        <igx-icon *ngIf="theme" aria-hidden="true" family="default" name="carousel_prev"></igx-icon>
+    </span>
 </div>
 
 <div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (keydown.enter)="next()" (click)="next()">
-    <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
+    <span class="igx-nav-arrow"
+          [class.igx-nav-arrow--disabled]="nextButtonDisabled">
+        <igx-icon *ngIf="theme" aria-hidden="true" family="default" name="carousel_next"></igx-icon>
+    </span>
 </div>
