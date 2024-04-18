@@ -112,7 +112,7 @@
 
     <!--New York City Card Begins-->
     <article class="card">
-        <igx-card class="my-cool-card" type="outlined">
+        <igx-card class="my-cool-card">
             <igx-card-media>
                 <img [src]="cards[0].imageUrl">
             </igx-card-media>
@@ -140,7 +140,7 @@
 
     <!--Incepient Dawn Card Begins-->
     <article class="card">
-        <igx-card type="elevated">
+        <igx-card elevated>
             <div style="overflow: hidden; line-height: 0">
                 <img width="100%" height="100%" [src]="cards[2].imageUrl">
             </div>
@@ -218,7 +218,7 @@
 
     <!--Album Pattern Start-->
     <article class="card">
-        <igx-card type="outlined">
+        <igx-card>
             <igx-card-header>
                 <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
                 <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
@@ -227,7 +227,7 @@
                 </igx-card-media>
             </igx-card-header>
 
-            <igx-divider type="dashed" [middle]="true" inset="16px"></igx-divider>
+            <igx-divider type="dashed" [middle]="true"></igx-divider>
 
             <igx-card-actions layout="justify">
                 <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
@@ -240,7 +240,7 @@
 
     <!--Album Pattern Start-->
     <article class="card">
-        <igx-card type="outlined" [horizontal]="true">
+        <igx-card [horizontal]="true">
             <igx-card-actions layout="justify">
                 <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
                     <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>

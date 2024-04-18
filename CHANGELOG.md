@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 17.2.0
 ### New Features
+- `IgxAvatar`
+    - Removed deprecated property `roundShape`; Deprecated `color` and `bgColor` properties.
+- `IgxButton`
+    - Removed deprecated properties `color` and `background`;
 - `IgxCalendar`
     - Completely revamped calendar themes.
     - New years view.
@@ -14,8 +18,10 @@ All notable changes for each version of this project will be documented in this 
     - Replaced the `vertical` property with `orientation` that can be set to either `horizontal`(default) or `vertical`.
     - Standalone views support full-blown keyboard navigation, accessibility improvements and the ability to change pages automatically on keyboard navigation.
     - Standalone views now emit `pageChanged` event whenever the active view page changes.
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
+- `IgxCard`
+    - Removed deprecated properties `type` and `reverse`;
+- `IgxDialog`
+    - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
 
 ## 17.1.0
 ### New Features

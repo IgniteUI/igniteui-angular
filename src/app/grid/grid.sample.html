@@ -170,10 +170,10 @@
                 <option value="TAB">TAB</option>
             </select>
             <br>
-            <button igxButton="flat" (click)="exportData()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Data</button>
-            <button igxButton="flat" (click)="exportRaw()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Raw Grid Data</button>
-            <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>
-            <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
+            <button igxButton="flat" (click)="exportData()" igxRipple="#FBB13C">Export Data</button>
+            <button igxButton="flat" (click)="exportRaw()" igxRipple="#FBB13C">Export Raw Grid Data</button>
+            <button igxButton="flat" (click)="export()" igxRipple="#FBB13C">Export Grid</button>
+            <button igxButton="flat" (click)="exportFilteredGrid()" igxRipple="#FBB13C">Export Cheese Products Report</button>
             <br>
             <input class="igx-form-group__input--search" #searchInput type="text" placeholder="Search Grid" (input)="onSearchChange(searchInput.value)" (keydown)="onSearch($event)" />
         </div>
