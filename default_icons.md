@@ -23,7 +23,7 @@ Default Component Icons:
   - keyboard_arrow_left
   - keyboard_arrow_right
 
-- [ ] Path: carousel/carousel.component.html
+- [x] Path: carousel/carousel.component.html
   - arrow_forward
   - arrow_back
   - chevron_left
@@ -277,13 +277,15 @@ Default Component Icons:
   - keyboard_arrow_down
 
 
-| Name       | Ref Family | Ref Name             | Used By                | Theme    |
-|------------|------------|----------------------|------------------------|----------|
-| expand     | material   | expand_more          | ExpansionPanel         | All      |
-| collapse   | material   | expand_less          | ExpansionPanel         | All      |
-| arrow_next | material   | keyboard_arrow_right | Month Picker, Calendar | All      |
-| arrow_prev | material   | keyboard_arrow_left  | Month Picker, Calendar | All      |
-| arrow_next | material   | keyboard_arrow_right | Carousel               | Indigo   |
-| arrow_prev | material   | keyboard_arrow_left  | Carousel               | Indigo   |
-| arrow_next | material   | arrow_forward        | Carousel               | Material |
-| arrow_prev | material   | arrow_back           | Carousel               | Material |
+| Name          | Ref Family | Ref Name             | Used By                | Theme    |
+|---------------|------------|----------------------|------------------------|----------|
+| expand        | material   | expand_more          | ExpansionPanel         | All      |
+| collapse      | material   | expand_less          | ExpansionPanel         | All      |
+| arrow_next    | material   | keyboard_arrow_right | Month Picker, Calendar | All      |
+| arrow_prev    | material   | keyboard_arrow_left  | Month Picker, Calendar | All      |
+| carousel_next | material   | keyboard_arrow_right | Carousel               | Indigo   |
+| carousel_prev | material   | keyboard_arrow_left  | Carousel               | Indigo   |
+| carousel_next | material   | arrow_forward        | Carousel               | Material |
+| carousel_prev | material   | arrow_back           | Carousel               | Material |
+| selected      | material   | done                 | Chip                   | All      |
+| remove        | material   | cancel               | Chip                   | All      |
