@@ -941,8 +941,66 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
-    public abstract dropdown: IgxComboDropDownComponent;
+    private _icons = [
+        {
+            name: 'expand',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_more',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_down',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'collapse',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_less',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_up',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'clear',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'cancel',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'clear',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'case-sensitive',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'case-sensitive',
+                    family: 'imx-icons'
+                },
+                'all': {
+                    name: 'case-sensitive',
+                    family: 'imx-icons'
+                }
+            }))
+        }
+    ];
 
+    public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
 
     constructor(
@@ -984,9 +1042,28 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public override ngOnInit() {
         super.ngOnInit();
+
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+
+        for (const icon of this._icons) {
+            switch (this.inputGroup.theme) {
+                case "material":
+                    this._iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("material"),
+                    );
+                    break;
+                default:
+                    this._iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("all"),
+                    );
+            }
+        }
     }
 
     /** @hidden @internal */
@@ -1094,22 +1171,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        if (this.inputGroup.theme === 'material') {
-            return this.dropdown.collapsed
-                ? 'expand_more'
-                : 'expand_less';
-        }
-
-        return this.dropdown.collapsed
-            ? 'arrow_drop_down'
-            : 'arrow_drop_up';
-    }
-
-    /** @hidden @internal */
-    public get clearIcon(): string {
-        return this.inputGroup.theme === 'material'
-            ? 'cancel'
-            : 'clear';
+        return this.dropdown.collapsed ? 'expand' : 'collapse';
     }
 
     /** @hidden @internal */

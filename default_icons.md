@@ -29,11 +29,11 @@ Default Component Icons:
   - chevron_left
   - chevron_right
 
-- [ ] Path: chips/chip.component.html
+- [x] Path: chips/chip.component.html
   - done
   - cancel
 
-- [ ] Path: combo/combo.component.html
+- [x] Path: combo/combo.component.html
   - cancel
   - clear
   - expand_more
@@ -255,7 +255,7 @@ Default Component Icons:
   - arrow_drop_down
   - arrow_drop_up
 
-- [ ] Path: simple-combo/simple-combo.component.html
+- [x] Path: simple-combo/simple-combo.component.html
   - cancel
   - clear
   - imx-icons:case-sensitive
@@ -277,15 +277,22 @@ Default Component Icons:
   - keyboard_arrow_down
 
 
-| Name          | Ref Family | Ref Name             | Used By                | Theme    |
-|---------------|------------|----------------------|------------------------|----------|
-| expand        | material   | expand_more          | ExpansionPanel         | All      |
-| collapse      | material   | expand_less          | ExpansionPanel         | All      |
-| arrow_next    | material   | keyboard_arrow_right | Month Picker, Calendar | All      |
-| arrow_prev    | material   | keyboard_arrow_left  | Month Picker, Calendar | All      |
-| carousel_next | material   | keyboard_arrow_right | Carousel               | Indigo   |
-| carousel_prev | material   | keyboard_arrow_left  | Carousel               | Indigo   |
-| carousel_next | material   | arrow_forward        | Carousel               | Material |
-| carousel_prev | material   | arrow_back           | Carousel               | Material |
-| selected      | material   | done                 | Chip                   | All      |
-| remove        | material   | cancel               | Chip                   | All      |
+| Family  | Name           | Ref Family | Ref Name             | Used By                | Theme                     |
+|---------|----------------|------------|----------------------|------------------------|---------------------------|
+| default | expand         | material   | expand_more          | ExpansionPanel         | All                       |
+| default | collapse       | material   | expand_less          | ExpansionPanel         | All                       |
+| default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar | All                       |
+| default | arrow_prev     | material   | keyboard_arrow_left  | Month Picker, Calendar | All                       |
+| default | carousel_next  | material   | keyboard_arrow_right | Carousel               | Indigo                    |
+| default | carousel_prev  | material   | keyboard_arrow_left  | Carousel               | Indigo                    |
+| default | carousel_next  | material   | arrow_forward        | Carousel               | Material                  |
+| default | carousel_prev  | material   | arrow_back           | Carousel               | Material                  |
+| default | selected       | material   | done                 | Chip                   | All                       |
+| default | remove         | material   | cancel               | Chip                   | All                       |
+| combo   | expand         | material   | expand_more          | Combo, Simple Combo    | Material                  |
+| combo   | collapse       | material   | expand_less          | Combo, Simple Combo    | Material                  |
+| combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
+| combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
+| combo   | clear          | material   | cancel               | Combo, Simple Combo    | Material                  |
+| combo   | clear          | material   | clear                | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
+| combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo    | All                       |

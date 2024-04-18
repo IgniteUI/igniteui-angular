@@ -22,17 +22,13 @@
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!clearIconTemplate">
-            {{ clearIcon }}
-        </igx-icon>
+        <igx-icon *ngIf="!clearIconTemplate" family="combo" name="clear"></igx-icon>
     </igx-suffix>
     <igx-suffix class="igx-combo__toggle-button">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate">
-            {{ toggleIcon }}
-        </igx-icon>
+        <igx-icon *ngIf="!toggleIconTemplate" family="combo" [name]="toggleIcon"></igx-icon>
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
@@ -47,7 +43,11 @@
                    aria-autocomplete="list" role="searchbox" aria-label="search"/>
             <igx-suffix *ngIf="showSearchCaseIcon" (click)="toggleCaseSensitive()">
                 <span [ngClass]="filteringOptions.caseSensitive? 'igx-combo__case-icon--active' : 'igx-combo__case-icon'">
-                    <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"></igx-icon>
+                    <igx-icon
+                        family="combo"
+                        name="case-sensitive"
+                        [active]="filteringOptions.caseSensitive">
+                    </igx-icon>
                 </span>
             </igx-suffix>
         </igx-input-group>
