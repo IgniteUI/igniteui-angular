@@ -155,6 +155,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |16.0.0|15-May-23|
 |16.1.0|02-Oct-23|
 |17.0.0|09-Nov-23|
+|17.1.0|26-Feb-24|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
