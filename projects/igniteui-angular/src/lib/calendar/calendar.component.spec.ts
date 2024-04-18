@@ -197,6 +197,21 @@ describe("IgxCalendar - ", () => {
                 );
 
                 expect(() => (calendar.selection = "non-existant")).toThrow();
+
+                const todayIsoDate = new Date(Date.now()).toISOString();
+
+                calendar.viewDate = todayIsoDate;
+                fixture.detectChanges();
+
+                calendar.value = new Date(todayIsoDate);
+                fixture.detectChanges();
+
+                expect(
+                    (fixture.componentInstance.model as Date).toDateString(),
+                ).toMatch(new Date(todayIsoDate).toDateString());
+                expect((calendar.value as Date).toDateString()).toMatch(
+                    new Date(todayIsoDate).toDateString(),
+                );
             });
 
             describe("Rendered Component - ", () => {
@@ -360,6 +375,20 @@ describe("IgxCalendar - ", () => {
 
                     expect(calendar.viewDate.getMonth()).toEqual(
                         date.getMonth(),
+                    );
+
+                    const isoStringDate = new Date(2020, 10, 10).toISOString();
+                    calendar.viewDate = isoStringDate;
+                    fixture.detectChanges();
+                    expect(calendar.viewDate.getMonth()).toEqual(
+                        new Date(isoStringDate).getMonth(),
+                    );
+
+                    calendar.value = new Date(2020, 11, 15).toISOString();
+                    fixture.detectChanges();
+
+                    expect(calendar.viewDate.getMonth()).toEqual(
+                        new Date(isoStringDate).getMonth(),
                     );
                 });
 
@@ -534,10 +563,10 @@ describe("IgxCalendar - ", () => {
                                 `${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`,
                             ),
                         ).length +
-                            dom.queryAll(
-                                By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} >
+                        dom.queryAll(
+                            By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} >
                             ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_CLASS}`),
-                            ).length,
+                        ).length,
                     ).toEqual(48);
 
                     expect(
@@ -546,11 +575,11 @@ describe("IgxCalendar - ", () => {
                                 `${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`,
                             ),
                         ).length +
-                            dom.queryAll(
-                                By.css(
-                                    `${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`,
-                                ),
-                            ).length,
+                        dom.queryAll(
+                            By.css(
+                                `${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`,
+                            ),
+                        ).length,
                     ).toEqual(8);
                 });
 
@@ -802,7 +831,7 @@ describe("IgxCalendar - ", () => {
                     const weekDays = weekDiv.queryAll(
                         By.css(HelperTestFunctions.DAY_CSSCLASS),
                     );
-                    const nextDay = new Date(2017, 5, 14);
+                    let nextDay = new Date(2017, 5, 14);
 
                     expect((calendar.value as Date).toDateString()).toMatch(
                         new Date(2017, 5, 13).toDateString(),
@@ -819,6 +848,14 @@ describe("IgxCalendar - ", () => {
                         (fixture.componentInstance.model as Date).toDateString(),
                     ).toMatch(nextDay.toDateString());
                     HelperTestFunctions.verifyDateNotSelected(target);
+
+                    nextDay = new Date(2017, 6, 15);
+                    calendar.selectDate(new Date(2017, 6, 15).toISOString());
+                    fixture.detectChanges();
+
+                    expect((calendar.value as Date).toDateString()).toMatch(
+                        nextDay.toDateString(),
+                    );
                 });
 
                 it("Calendar selection - multiple with event", () => {
@@ -1784,6 +1821,25 @@ describe("IgxCalendar - ", () => {
                     calendar.deselectDate(dateToDeselect);
                     fixture.detectChanges();
                     expect(calendar.value).toEqual(date);
+
+                    // Select date with ISOString as value
+                    const isoDate = new Date(2024, 10, 10).toISOString();
+                    calendar.selectDate(isoDate);
+                    fixture.detectChanges();
+                    expect(calendar.value).toEqual(new Date(isoDate));
+
+                    calendar.deselectDate(isoDate);
+                    fixture.detectChanges();
+                    expect(calendar.value).toBeUndefined();
+
+                    // Deselect with date different than selected date
+                    calendar.selectDate(isoDate);
+                    fixture.detectChanges();
+                    expect(calendar.value).toEqual(new Date(isoDate));
+
+                    calendar.deselectDate(new Date(2024, 10, 11).toISOString());
+                    fixture.detectChanges();
+                    expect(calendar.value).toEqual(new Date(isoDate));
                 });
 
                 it('Deselect using API. Should deselect in "multi" selection mode.', () => {
