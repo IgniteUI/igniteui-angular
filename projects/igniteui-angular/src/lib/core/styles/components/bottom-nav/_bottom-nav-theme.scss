@@ -12,16 +12,16 @@
 ////
 
 /// If only background color is specified,
-/// the idle item color will be assigned automatically to a contrasting color.
+/// the label and icon colors will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
-/// @param {Color} $active-item-color [null] - The text-color used for the active color.
+/// @param {Color} $label-color [null] - The label color used in idle state
+/// @param {Color} $icon-color [null] - The icon color used in idle state
+/// @param {Color} $label-selected-color [null] - The label color used in selected state
+/// @param {Color} $icon-selected-color [null] - The icon color used in selected state
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the bar.
-///
 /// @requires $light-material-schema
-///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
 ///   // Pass the theme to the css-vars() mixin
@@ -29,11 +29,12 @@
 @function bottom-nav-theme(
     $schema: $light-material-schema,
     $elevations: null,
-
     $background: null,
-    $idle-item-color: null,
-    $active-item-color: null,
-    $shadow: null
+    $icon-color: null,
+    $icon-selected-color: null,
+    $label-color: null,
+    $label-selected-color: null,
+    $shadow: null,
 ) {
     $name: 'igx-bottom-nav';
     $bottom-nav-schema: ();
@@ -46,9 +47,29 @@
 
     $theme: digest-schema($bottom-nav-schema);
 
-    @if not($idle-item-color) and $background {
+    $meta: map.get($theme, '_meta');
+
+    @if not($label-color) and $background {
         @if meta.type-of($background) == 'color' {
-            $idle-item-color: rgba(text-contrast($background), .7);
+            $label-color: text-contrast($background);
+        }
+    }
+
+    @if not($icon-color) and $label-color {
+        @if meta.type-of($background) == 'color' {
+            $icon-color: $label-color;
+        }
+    }
+
+    @if not($icon-selected-color) and $label-selected-color {
+        @if meta.type-of($background) == 'color' {
+            $icon-selected-color: $label-selected-color;
+        }
+    }
+
+    @if not($icon-color) and $background {
+        @if meta.type-of($background) == 'color' {
+            $icon-color: text-contrast($background);
         }
     }
 
@@ -60,9 +81,15 @@
     @return extend($theme, (
         name: $name,
         background: $background,
-        idle-item-color: $idle-item-color,
-        active-item-color: $active-item-color,
-        shadow: $shadow
+        icon-color: $icon-color,
+        icon-selected-color: $icon-selected-color,
+        label-color: $label-color,
+        label-selected-color: $label-selected-color,
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
+        )),
     ));
 }
 
@@ -72,6 +99,7 @@
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
 
+    $variant: map.get($theme, '_meta', 'variant');
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);
@@ -119,21 +147,26 @@
         position: relative;
         flex-flow: column nowrap;
         flex: 1;
+        gap: rem(4px);
         align-items: center;
         justify-content: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
         height: 100%;
-        color: var-get($theme, 'idle-item-color');
         cursor: pointer;
         user-select: none;
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
         outline-style: none;
+        color: var-get($theme, 'label-color');
 
         igx-icon {
             --component-size: 3;
+
+            @if $variant == 'indigo-design' {
+                --size: rem(16px);
+            }
         }
     }
 
@@ -144,13 +177,14 @@
     }
 
     %igx-bottom-nav-menu-item--selected {
-        color: var-get($theme, 'active-item-color');
         transition: color .15s $in-out-quad, opacity .25s $in-out-quad;
+        gap: if($variant == 'indigo-design', rem(6px), rem(4px));
     }
 
     %igx-tab-label {
         @include ellipsis();
-        padding-block-start: rem(4px);
+
+        color: var-get($theme, 'label-color');
         max-width: 100%;
         text-align: center;
         transform: translateZ(0);
@@ -162,19 +196,34 @@
         display: flex;
         position: relative;
         justify-content: center;
-        height: rem(24px);
-        padding: 0 rem(8px);
-        transform: translateZ(0);
-        transition: transform .15s $in-out-quad;
+        color: var-get($theme, 'icon-color');
+
+        @if $variant != 'indigo-design' {
+            padding: 0 rem(8px);
+            height: rem(24px);
+            transform: translateZ(0);
+            transition: transform .15s $in-out-quad;
+        }
+
         z-index: 1;
     }
 
     %igx-tab-icon--selected {
-        transform: translateY(-2px);
+        color: var-get($theme, 'icon-selected-color');
     }
 
     %igx-tab-label--selected {
-        transform: translateY(-2px) scale(1.166667);
+        color: var-get($theme, 'label-selected-color');
+    }
+
+    @if $variant != 'indigo-design' {
+        %igx-tab-icon--selected {
+            transform: translateY(-2px);
+        }
+
+        %igx-tab-label--selected {
+            transform: translateY(-2px) scale(1.166667);
+        }
     }
 }
 
