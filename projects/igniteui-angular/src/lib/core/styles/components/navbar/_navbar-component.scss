@@ -23,6 +23,10 @@
             @extend %igx-navbar-left !optional;
         }
 
+        @include e(middle) {
+            @extend %igx-navbar-middle !optional;
+        }
+
         @include e(right) {
             @extend %igx-navbar-right !optional;
         }
