@@ -22,6 +22,8 @@ All notable changes for each version of this project will be documented in this 
     - Removed deprecated properties `type` and `reverse`;
 - `IgxDialog`
     - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
 
 ## 17.1.0
 ### New Features
