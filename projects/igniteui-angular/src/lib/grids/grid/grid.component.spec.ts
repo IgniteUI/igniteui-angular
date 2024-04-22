@@ -3020,7 +3020,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
-    public display: string = "";
+    public display = "";
 }
 
 @Component({
