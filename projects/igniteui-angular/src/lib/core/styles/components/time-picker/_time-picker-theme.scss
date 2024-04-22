@@ -18,12 +18,16 @@
 /// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
 /// @param {Color} $selected-text-color [null] -  The text color of a selected item in time picker.
 /// @param {Color} $active-item-background [null] - The background color for current item in focused column inside the time picker.
+/// @param {Color} $active-item-foreground [null] - The foreground color for current item in focused column inside the time picker.
 /// @param {Color} $disabled-text-color [null] - The text color for disabled values.
 /// @param {Color} $disabled-item-background [null] - The background color for disabled values .
 /// @param {Color} $header-background [null] - The header background color of a time picker.
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
 /// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
 /// @param {Color} $background-color [null] - The time-picker panel background color.
+/// @param {Number} $time-item-size [null] - The height of the time item.
+/// @param {Color} $divider-color [null] - The color for the actions area divider.
+/// @param {Color} $border-color [null] - The border color around the time picker.
 /// @param {box-shadow} $modal-shadow [null] - The custom shadow to be used for the time picker in modal mode.
 /// @param {box-shadow} $dropdown-shadow [null] - The custom shadow to be used for the time picker in dropdown mode.
 /// @param {List} $border-radius [null] - The border radius used for the outline of the picker.
@@ -47,6 +51,7 @@
     $hover-text-color: null,
     $selected-text-color: null,
     $active-item-background: null,
+    $active-item-foreground: null,
     $disabled-text-color: null,
     $disabled-item-background: null,
     $header-background: null,
@@ -54,7 +59,10 @@
     $header-time-period-color: null,
     $background-color: null,
     $modal-shadow: null,
-    $dropdown-shadow: null
+    $dropdown-shadow: null,
+    $border-color: null,
+    $divider-color: null,
+    $time-item-size: null,
 ) {
     $name: 'igx-time-picker';
     $selector: '.igx-time-picker';
@@ -99,6 +107,12 @@
         }
     }
 
+    @if not($divider-color) and $border-color {
+        @if meta.type-of($border-color) == 'color' {
+            $divider-color: $border-color;
+        }
+    }
+
     @if not($modal-shadow) {
         $elevation: map.get($time-picker-schema, 'modal-elevation');
         $modal-shadow: elevation($elevation);
@@ -115,6 +129,7 @@
         text-color: $text-color,
         hover-text-color: $hover-text-color,
         selected-text-color: $selected-text-color,
+        active-item-foreground: $active-item-foreground,
         active-item-background: $active-item-background,
         disabled-text-color: $disabled-text-color,
         disabled-item-background: $disabled-item-background,
@@ -125,6 +140,9 @@
         modal-shadow: $modal-shadow,
         dropdown-shadow: $dropdown-shadow,
         border-radius: $border-radius,
+        border-color: $border-color,
+        divider-color: $divider-color,
+        time-item-size: $time-item-size,
         active-item-border-radius: $active-item-border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -141,43 +159,72 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    $vertical-header-width: rem(168px);
-
     $picker-buttons-padding: map.get((
         material: rem(8px),
         fluent: rem(8px),
-        bootstrap: rem(16px)
+        bootstrap: rem(16px),
+        indigo-design: rem(8px) rem(16px),
+    ), $variant);
+
+    $picker-header-padding: map.get((
+        material: rem(24px) rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(16px),
+        indigo-design: rem(16px) rem(24px) ,
     ), $variant);
 
     %time-picker-display {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
         display: flex;
         flex-flow: column nowrap;
-        max-width: rem(340px);
-        min-width: rem(320px);
         border-radius: var-get($theme, 'border-radius');
-        box-shadow: var-get($theme, 'modal-shadow');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color'),
+            var-get($theme, 'modal-shadow');
+        background: var-get($theme, 'background-color');
         overflow: hidden;
-    }
+        min-width: fit-content;
 
-    %time-picker-display--vertical {
-        flex-flow: row nowrap;
-        min-width: rem(540px);
+        igx-divider {
+            --color: #{var-get($theme, 'divider-color')};
+        }
     }
 
     %time-picker__main {
-        background: var-get($theme, 'background-color');
         flex: 1 1 auto;
     }
 
+    %time-picker__main--vertical {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    %time-picker__body--vertical {
+        flex-grow: 1;
+    }
+
     %time-picker--dropdown {
-        min-width: rem(200px);
-        box-shadow: var-get($theme, 'dropdown-shadow');
+        min-width: sizable(rem(290px), rem(314px), rem(360px));
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color'),
+            var-get($theme, 'dropdown-shadow');
+
+        %time-picker__body {
+            min-width: auto;
+        }
     }
 
     %time-picker__body {
         display: flex;
-        padding: rem(10px) 0;
+        min-width: sizable(rem(290px), rem(314px), rem(360px));
+        padding-block: rem(16px);
         justify-content: center;
+    }
+
+    %time-picker__wrapper {
+        display: flex;
+        flex-direction: column;
     }
 
     %time-picker-content {
@@ -189,10 +236,6 @@
 
     %time-picker-dialog-title {
         display: none;
-    }
-
-    %time-picker-dialog-actions {
-        margin: 0;
     }
 
     %time-picker__hourList {
@@ -226,8 +269,7 @@
     }
 
     %time-picker__column {
-        max-width: rem(64px);
-        height: rem(325px);
+        width: if($variant == 'indigo-design', rem(54px), rem(64px));
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -236,6 +278,7 @@
         align-items: center;
         color: var-get($theme, 'text-color');
         overflow: hidden;
+        gap: rem(4px);
 
         &:focus,
         &:active {
@@ -244,10 +287,10 @@
     }
 
     %time-picker__item {
-        width: rem(54px);
+        width: if($variant == 'indigo-design', rem(46px), rem(54px));
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
-        height: rem(48px);
+        height: var-get($theme, 'time-item-size');
         display: flex;
         justify-content: center;
         align-items: center;
@@ -262,13 +305,27 @@
         }
     }
 
+    %time-picker__item:not(%time-picker__item--selected) {
+        font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
+        font-weight: sizable(var(--ig-body-2-font-weight), var(--ig-body-2-font-weight), var(--ig-body-1-font-weight));
+        font-style: sizable(var(--ig-body-2-font-style), var(--ig-body-2-font-style), var(--ig-body-1-font-style));
+        line-height: sizable(var(--ig-body-2-line-height), var(--ig-body-2-line-height), var(--ig-body-1-line-height));
+        letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
+        text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
+    }
+
     %time-picker__item--selected {
-        font-size: rem(24px);
         color: var-get($theme, 'selected-text-color');
     }
 
     %time-picker__item--active {
+        color: var-get($theme, 'active-item-foreground');
         background: var-get($theme, 'active-item-background');
+
+        &:hover,
+        &:focus {
+            color: var-get($theme, 'active-item-foreground');
+        }
     }
 
     %time-picker__item--disabled {
@@ -278,8 +335,24 @@
     }
 
     %time-picker__header {
+        display: flex;
+        flex-direction: column;
+
+        padding: $picker-header-padding;
+
+        @if $variant == 'indigo-design' {
+            gap: rem(2px);
+        }
+
         background: var-get($theme, 'header-background');
-        padding: rem(24px) rem(16px);
+    }
+
+    %time-picker-display:not(%time-picker-display--vertical) {
+        %time-picker__header {
+            @if $variant == 'indigo-design' {
+                border-block-end: rem(1px) solid var-get($theme, 'divider-color');
+            }
+        }
     }
 
     %time-picker__header-ampm {
@@ -287,7 +360,12 @@
     }
 
     %time-picker__header--vertical {
-        width: $vertical-header-width;
+        @if $variant == 'indigo-design' {
+            min-width: rem(136px);
+            border-inline-end: rem(1px) solid var-get($theme, 'divider-color');
+        } @else {
+            min-width: rem(168px);
+        }
     }
 
     %time-picker__header-hour {
@@ -307,16 +385,21 @@
 
     %time-picker__buttons {
         display: flex;
+        min-height: sizable(rem(40px), rem(44px), rem(48px));
         justify-content: flex-end;
-        @if $not-bootstrap-theme {
-            height: rem(52px);
-        }
-
+        align-items: center;
         padding: $picker-buttons-padding;
+        gap: rem(8px);
 
-        [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+        @if $variant == 'indigo-design' {
+            [igxbutton] {
+                min-width: rem(88px);
+            }
         }
+    }
+
+    %time-picker__buttons--vertical {
+        align-items: flex-end;
     }
 }
 
@@ -328,26 +411,26 @@
 @mixin time-picker-typography($categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',
-    content: 'body-1')
-) {
+    selected-time: 'h5'
+)) {
     $time-period: map.get($categories, 'header-time-period');
     $header-hour: map.get($categories, 'header-hour');
-    $content: map.get($categories, 'content');
+    $selected-time: map.get($categories, 'selected-time');
+
 
     %time-picker__header-ampm {
-        @include type-style($time-period);
+        @include type-style($time-period, false);
     }
 
     %time-picker__header-hour {
-        @include type-style($header-hour) {
+        @include type-style($header-hour, false) {
             margin-top: 0;
         }
     }
 
-    %time-picker__column {
-        @include type-style($content) {
+    %time-picker__item--selected {
+        @include type-style($selected-time) {
             margin-top: 0;
-            margin-bottom: 0;
         }
     }
 }
