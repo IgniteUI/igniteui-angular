@@ -131,10 +131,17 @@
 
     %igx-navbar-icon-display,
     %igx-navbar-part {
-        igx-icon {
+        > igx-icon {
             --component-size: 3;
 
             cursor: pointer;
+
+            color: var-get($theme, 'idle-icon-color');
+            transition: color .15s $out-quad;
+
+            &:hover {
+                color: var-get($theme, 'hover-icon-color');
+            }
         }
 
         @if $variant == 'indigo-design' {
