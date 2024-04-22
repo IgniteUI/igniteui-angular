@@ -6823,7 +6823,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !parentElement ||
             parentElement.clientHeight === 0 ||
             parentElement.clientHeight === renderedHeight;
-        if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
+        if (res || this._autoSize) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             this._autoSize = false;
