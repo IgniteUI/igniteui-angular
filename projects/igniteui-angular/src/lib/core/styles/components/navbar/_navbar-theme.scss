@@ -91,14 +91,13 @@
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
     $navbar-title-lh: rem(18px, 16px);
-    $navbar-title-margin: 0;
 
     %igx-navbar-display {
         display: flex;
         position: relative;
         flex-flow: row nowrap;
         align-items: center;
-        justify-content: space-between;
+        gap: rem(16px);
         width: 100%;
         min-height: rem(56px);
         max-height: rem(128px);
@@ -108,10 +107,7 @@
         box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
-
-        @if $variant == 'bootstrap' {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        }
+        border-bottom: rem(1px) solid var-get($theme, 'border-color');
     }
 
     %igx-navbar-part {
@@ -121,7 +117,7 @@
 
     %igx-navbar-title {
         @include line-clamp(4, true, true);
-        margin: $navbar-title-margin;
+        margin: 0;
         flex-grow: 1;
         user-select: text;
         display: flex;
@@ -131,24 +127,22 @@
     %igx-navbar-bundle {
         @extend %igx-navbar-part;
         user-select: none;
-
-        > * + * {
-            margin-inline-start: rem(16px);
-        }
     }
 
     %igx-navbar-icon-display,
     %igx-navbar-part {
-        igx-icon,
-        [igxIconButton] {
+        igx-icon {
             --component-size: 3;
 
             cursor: pointer;
-            color: var-get($theme, 'idle-icon-color');
-            transition: color .15s $out-quad;
+        }
 
-            &:hover {
-                color: var-get($theme, 'hover-icon-color');
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                --size: rem(16px);
+                padding: rem(6px);
+                width: auto;
+                height: auto;
             }
         }
     }
@@ -156,12 +150,30 @@
     %igx-navbar-left {
         @extend %igx-navbar-bundle;
         @extend %igx-navbar-icon-display;
+
+        &:not(:empty) {
+            @if $variant != 'indigo-design' {
+                margin-inline-end: rem(16px)
+            }
+        }
+    }
+
+    %igx-navbar-middle {
         flex-grow: 1;
     }
 
     %igx-navbar-right {
         @extend %igx-navbar-bundle;
         @extend %igx-navbar-icon-display;
+
+        gap: if($variant == 'indigo-desing', rem(8px), rem(16px));
+    }
+
+    %igx-navbar-left,
+    %igx-navbar-right {
+        &:empty {
+            display: none;
+        }
     }
 
     igx-navbar-action,
