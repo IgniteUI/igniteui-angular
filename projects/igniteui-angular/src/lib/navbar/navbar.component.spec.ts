@@ -9,7 +9,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
-fdescribe('IgxNavbar', () => {
+describe('IgxNavbar', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
