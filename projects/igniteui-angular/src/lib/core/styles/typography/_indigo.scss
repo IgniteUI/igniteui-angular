@@ -81,7 +81,9 @@
         title: 'subtitle-1',
         subtitle: 'body-2'
     ));
-    @include navbar-typography();
+    @include navbar-typography($categories: (
+        title: 'h5',
+    ));
     @include navdrawer-typography($categories: (
         item: 'subtitle-2',
         header: 'overline'

@@ -108,6 +108,17 @@
         z-index: 4;
         overflow: hidden;
         border-bottom: rem(1px) solid var-get($theme, 'border-color');
+
+        igx-avatar,
+        igx-input-group,
+        [igxButton],
+        [igxIconButton],
+        igc-avatar,
+        igc-input,
+        igc-button,
+        igc-icon-button,{
+            --ig-size: 1;
+        }
     }
 
     %igx-navbar-part {
@@ -124,40 +135,7 @@
         flex-direction: row;
     }
 
-    %igx-navbar-bundle {
-        @extend %igx-navbar-part;
-        user-select: none;
-    }
-
-    %igx-navbar-icon-display,
-    %igx-navbar-part {
-        > igx-icon {
-            --component-size: 3;
-
-            cursor: pointer;
-
-            color: var-get($theme, 'idle-icon-color');
-            transition: color .15s $out-quad;
-
-            &:hover {
-                color: var-get($theme, 'hover-icon-color');
-            }
-        }
-
-        @if $variant == 'indigo-design' {
-            igx-icon {
-                --size: rem(16px);
-                padding: rem(6px);
-                width: auto;
-                height: auto;
-            }
-        }
-    }
-
     %igx-navbar-left {
-        @extend %igx-navbar-bundle;
-        @extend %igx-navbar-icon-display;
-
         &:not(:empty) {
             @if $variant != 'indigo-design' {
                 margin-inline-end: rem(16px)
@@ -170,16 +148,44 @@
     }
 
     %igx-navbar-right {
-        @extend %igx-navbar-bundle;
-        @extend %igx-navbar-icon-display;
-
-        gap: if($variant == 'indigo-desing', rem(8px), rem(16px));
+        gap: if($variant == 'indigo-design', rem(8px), rem(16px));
     }
 
     %igx-navbar-left,
     %igx-navbar-right {
         &:empty {
             display: none;
+        }
+    }
+
+    %igx-navbar-left,
+    %igx-navbar-middle,
+    %igx-navbar-right {
+        display: flex;
+        align-items: center;
+
+        > igx-icon,
+        > igc-icon {
+            --component-size: 3;
+
+            cursor: pointer;
+            transition: color .15s $out-quad;
+            color: var-get($theme, 'idle-icon-color');
+
+            &:hover {
+                color: var-get($theme, 'hover-icon-color');
+            }
+
+            user-select: none;
+        }
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                --size: rem(16px);
+                padding: rem(6px);
+                width: auto;
+                height: auto;
+            }
         }
     }
 
