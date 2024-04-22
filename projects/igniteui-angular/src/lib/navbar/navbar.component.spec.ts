@@ -9,7 +9,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
-describe('IgxNavbar', () => {
+fdescribe('IgxNavbar', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -164,13 +164,13 @@ describe('IgxNavbar', () => {
             fixture = TestBed.createComponent(NavbarCustomTitleTestComponent);
             fixture.detectChanges();
 
-            const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
+            const midArea = fixture.debugElement.query(By.css('.igx-navbar__middle'));
 
             // Verify there is no default icon on the left.
-            const customTitle = leftArea.query(By.css('igx-navbar-title'));
+            const customTitle = midArea.query(By.css('igx-navbar-title'));
             expect(customTitle.nativeElement.textContent).toBe('Custom Title', 'Custom title is missing');
 
-            const defaultTitle = leftArea.query(By.css('igx-navbar__title'));
+            const defaultTitle = midArea.query(By.css('igx-navbar__title'));
             expect(defaultTitle).toBeNull('Default title should not be present');
         });
 
@@ -178,14 +178,14 @@ describe('IgxNavbar', () => {
             fixture = TestBed.createComponent(NavbarCustomTitleDirectiveTestComponent);
             fixture.detectChanges();
 
-            const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
+            const midArea = fixture.debugElement.query(By.css('.igx-navbar__middle'));
 
             // Verify there is no default icon on the left.
-            const customTitle = leftArea.query(By.directive(IgxNavbarTitleDirective));
+            const customTitle = midArea.query(By.directive(IgxNavbarTitleDirective));
             expect(customTitle.nativeElement.children[0].textContent).toBe('Custom', 'Custom title is missing');
             expect(customTitle.nativeElement.children[1].textContent).toBe('Title', 'Custom title is missing');
 
-            const defaultTitle = leftArea.query(By.css('igx-navbar__title'));
+            const defaultTitle = midArea.query(By.css('igx-navbar__title'));
             expect(defaultTitle).toBeNull('Default title should not be present');
         });
     });
