@@ -2205,13 +2205,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const count = this.values.length;
         const childWidth = parseInt(parentWidth, 10) / count;
         const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
+        const isAuto = parentWidth && parentWidth.indexOf('auto') !== -1;
         this.values.forEach(val => {
             const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + this.pivotKeys.columnDimensionSeparator + val.member;
             ref.instance.parent = parent;
             if (parentWidth) {
-                ref.instance.width = isPercent ? childWidth + '%' : childWidth + 'px';
+                ref.instance.width = isAuto ? 'auto' : isPercent ? childWidth + '%' : childWidth + 'px';
             }
             ref.instance.hidden = hidden;
             ref.instance.sortable = true;
