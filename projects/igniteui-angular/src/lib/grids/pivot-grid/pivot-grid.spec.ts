@@ -1972,9 +1972,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 fixture.detectChanges();
                 rowDimension = pivotGrid.pivotConfiguration.rows[0];
-                expect(rowDimension.autoWidth).toBe(186);
+                expect(rowDimension.autoWidth).toBe(158);
                 expect(rowDimension.width).toBe('auto');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
         });
     });
