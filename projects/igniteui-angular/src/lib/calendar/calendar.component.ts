@@ -1025,7 +1025,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 *  this.calendar.deselectDate(new Date(`2018-06-12`));
 	 * ````
 	 */
-	public override deselectDate(value?: Date | Date[]) {
+	public override deselectDate(value?: Date | Date[] | string) {
 		super.deselectDate(value);
 
 		this.monthViews.forEach((m) => {
