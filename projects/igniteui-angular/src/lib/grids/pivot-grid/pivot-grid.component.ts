@@ -1159,6 +1159,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
+    public rowDimensionWidth(dim, ignoreBeforeInit = false ): string {
+        const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
+        if (isAuto) {
+            return dim.autoWidth ? dim.autoWidth + 'px' : 'fit-content';
+        } else {
+            return this.rowDimensionWidthToPixels(dim, ignoreBeforeInit) + 'px';
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit = false): number {
         if (!ignoreBeforeInit && this.shouldGenerate) {
             return 0;
@@ -1168,8 +1180,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return MINIMUM_COLUMN_WIDTH;
         }
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
+        const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
         if (isPercent) {
             return parseFloat(dim.width) / 100 * this.calcWidth;
+        } else if (isAuto) {
+            return dim.autoWidth;
         } else {
             return parseInt(dim.width, 10);
         }
@@ -2034,6 +2049,36 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         return columns;
     }
+
+    protected override autoSizeColumnsInView() {
+        super.autoSizeColumnsInView();
+        this.autoSizeDimensionsInView();
+    }
+
+    protected autoSizeDimensionsInView() {
+        if (!this.hasDimensionsToAutosize) return;
+        for (const dim of this.rowDimensions) {
+            if (dim.width === 'auto') {
+                const contentWidths = [];
+                const relatedDims = PivotUtil.flatten([dim]).map(x => x.memberName);
+                const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
+                const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
+                headers.forEach((header) => contentWidths.push(header?.nativeElement?.offsetWidth || 0));
+                const max = Math.max(...contentWidths);
+                if (max === 0) {
+                    // cells not in DOM yet...
+                    continue;
+                }
+                const maxSize = Math.ceil(Math.max(...contentWidths)) + 1;
+                dim.autoWidth = maxSize;
+            }
+        }
+    }
+
+        /** @hidden @internal */
+        public get hasDimensionsToAutosize() {
+            return this.rowDimensions.some(x => x.width === 'auto' && !x.autoWidth);
+        }
 
     protected generateFromData(fields: string[]) {
         const separator = this.pivotKeys.columnDimensionSeparator;

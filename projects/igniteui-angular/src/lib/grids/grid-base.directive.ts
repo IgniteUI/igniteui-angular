@@ -6671,12 +6671,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
         this.resetCaches(recalcFeatureWidth);
-        if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.autoSizeColumnsInView();
             });
-        }
     }
 
     /**
