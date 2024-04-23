@@ -1932,6 +1932,50 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimension.width).toBe('186px');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
             });
+
+            it('should auto-size row dimension when width is set to auto.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                let rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.width).toBeUndefined();
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
+                fixture.componentInstance.pivotConfigHierarchy = {
+                    columns: [{
+                        memberName: 'Country',
+                        enabled: true
+                    },
+                    ],
+                    rows: [{
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "auto",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }],
+                    values: [
+                        {
+                            member: 'UnitPrice',
+                            aggregate: {
+                                aggregator: IgxPivotNumericAggregate.sum,
+                                key: 'SUM',
+                                label: 'Sum',
+                            },
+                            enabled: true,
+                            dataType: 'currency'
+                        }
+                    ],
+                    filters: []
+                };
+
+                fixture.detectChanges();
+                rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.autoWidth).toBe(186);
+                expect(rowDimension.width).toBe('auto');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
+            });
         });
     });
 

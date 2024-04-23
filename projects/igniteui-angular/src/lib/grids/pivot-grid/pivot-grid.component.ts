@@ -2069,7 +2069,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     // cells not in DOM yet...
                     continue;
                 }
-                const maxSize = Math.ceil(Math.max(...contentWidths)) + 1;
+                const maxSize = Math.ceil(Math.max(...contentWidths));
                 dim.autoWidth = maxSize;
             }
         }
