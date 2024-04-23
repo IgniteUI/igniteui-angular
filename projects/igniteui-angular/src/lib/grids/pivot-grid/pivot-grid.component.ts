@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 
+import { first} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -2050,9 +2051,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return columns;
     }
 
-    protected override autoSizeColumnsInView() {
-        super.autoSizeColumnsInView();
-        this.autoSizeDimensionsInView();
+    protected override calculateGridSizes(recalcFeatureWidth = true) {
+        super.calculateGridSizes(recalcFeatureWidth);
+        if (this.hasDimensionsToAutosize) {
+            this.cdr.detectChanges();
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.autoSizeDimensionsInView();
+            });
+        }
     }
 
     protected autoSizeDimensionsInView() {
