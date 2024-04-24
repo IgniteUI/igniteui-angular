@@ -471,10 +471,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             hierarchicalGrid.summaryRowHeight = 0;
+            childGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
             childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
@@ -482,10 +483,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             hierarchicalGrid.summaryRowHeight = 0;
+            childGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
             childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);

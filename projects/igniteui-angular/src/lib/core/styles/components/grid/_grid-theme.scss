@@ -1431,6 +1431,11 @@
         color: inherit;
         text-align: start;
         background-clip: border-box !important;
+        min-height: sizable(
+            rem(32px),
+            rem(40px),
+            rem(50px)
+        );
     }
 
     // This is no longer being extended and is left

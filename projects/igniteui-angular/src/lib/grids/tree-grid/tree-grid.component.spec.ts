@@ -94,12 +94,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 expect(grid.rowList.length).toEqual(6);
         });
 
-        it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, () => {
+        it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, async () => {
             grid.height = '100%';
+            fix.detectChanges();
             setElementSize(grid.nativeElement, Size.Small);
             fix.detectChanges();
-            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            await wait(100);
             fix.detectChanges();
+
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();

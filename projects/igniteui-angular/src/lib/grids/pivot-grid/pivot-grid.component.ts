@@ -346,15 +346,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public set superCompactMode(value) {
-        Promise.resolve().then(() => {
-            // wait for the current detection cycle to end before triggering a new one.
-            this._superCompactMode = value;
-            this.cdr.detectChanges();
-        });
+        this._superCompactMode = value;
     }
 
     public override get gridSize() {
-        if (this._superCompactMode) {
+        if (this.superCompactMode) {
             return Size.Small;
         }
         return super.gridSize;
@@ -916,21 +912,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return selectedRowIds;
-    }
-
-    /**
-     * Gets the default row height.
-     *
-     * @example
-     * ```typescript
-     * const rowHeigh = this.grid.defaultRowHeight;
-     * ```
-     */
-    public override get defaultRowHeight(): number {
-        if (this.superCompactMode) {
-            return 24;
-        }
-        return super.defaultRowHeight;
     }
 
     constructor(

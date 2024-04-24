@@ -524,22 +524,23 @@ describe('IgxPivotGrid #pivotGrid', () => {
             tick();
             fixture.detectChanges();
 
-            setElementSize(pivotGrid.nativeElement, Size.Small)
+            expect(pivotGrid.gridSize).toBe(Size.Small);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightSuperCompact);
+            expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightSuperCompact);
 
             pivotGrid.superCompactMode = false;
             fixture.detectChanges();
-            setElementSize(pivotGrid.nativeElement, Size.Large)
             tick();
+            
+            setElementSize(pivotGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
             expect(pivotGrid.gridSize).toBe(Size.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
+            expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightComf);
         }));
 
         it('should render correct auto-widths for dimensions with no width', () => {
