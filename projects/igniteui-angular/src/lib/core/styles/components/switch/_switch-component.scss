@@ -44,6 +44,10 @@
             @extend %switch-composite-thumb !optional;
         }
 
+        @include e(thumb) {
+            @extend %switch-thumb !optional;
+        }
+
         @include e(ripple) {
             @extend %switch-ripple !optional;
         }
@@ -64,10 +68,23 @@
             @include e(ripple) {
                 @extend %switch-ripple--focused !optional;
             }
+
+            &:hover {
+                @include e(composite) {
+                    @extend %igx-switch--focused--hover !optional;
+                }
+            }
         }
 
         @include mx(focused, checked) {
             @extend  %igx-switch--focused-checked !optional;
+
+            &:hover {
+                @include e(composite) {
+                    @extend %switch-composite--hover !optional;
+                    @extend %switch-composite--x--hover !optional;
+                }
+            }
         }
 
         @include mx(disabled, checked) {
@@ -81,6 +98,10 @@
 
             @include e(composite-thumb) {
                 @extend %switch-composite-thumb--x !optional;
+            }
+
+            @include e(thumb) {
+                @extend %switch-thumb--x !optional;
             }
 
             &:hover {
@@ -131,14 +152,14 @@
                 @extend %switch-label--invalid !optional;
             }
 
-            @include e(composite-thumb) {
-                @extend %switch-composite-thumb--invalid !optional;
+            @include e(thumb) {
+                @extend %switch-thumb--invalid !optional;
             }
         }
 
         @include mx(invalid, checked) {
-            @include e(composite-thumb) {
-                @extend %switch-composite-thumb--x--invalid !optional;
+            @include e(thumb) {
+                @extend %switch-thumb--x--invalid !optional;
             }
 
             &:hover {
@@ -156,8 +177,8 @@
                 @extend %switch-composite--disabled !optional;
             }
 
-            @include e(composite-thumb) {
-                @extend %switch-composite-thumb--disabled !optional;
+            @include e(thumb) {
+                @extend %switch-thumb--disabled !optional;
             }
 
             @include e(label) {
@@ -170,8 +191,8 @@
         }
 
         @include mx(disabled, invalid) {
-            @include e(composite-thumb) {
-                @extend %switch-composite-thumb--disabled !optional;
+            @include e(thumb) {
+                @extend %switch-thumb--disabled !optional;
             }
         }
 

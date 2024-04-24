@@ -39,6 +39,7 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
+/// @param {Color} $focus-fill-hover-color [null] - The focus fill color on hover.
 /// @param {Color} $label-invalid-color [null] - The color of the switch label in invalid state.
 /// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
 /// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
@@ -84,6 +85,7 @@
     $focus-outline-color: null,
     $focus-outline-color-focused: null,
     $focus-fill-color: null,
+    $focus-fill-hover-color: null,
     $track-error-color: null,
     $thumb-on-error-color: null,
     $error-color: null,
@@ -162,6 +164,7 @@
         focus-outline-color: $focus-outline-color,
         focus-outline-color-focused: $focus-outline-color-focused,
         focus-fill-color: $focus-fill-color,
+        focus-fill-hover-color: $focus-fill-hover-color,
         track-error-color: $track-error-color,
         thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
@@ -253,7 +256,12 @@
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $label-margin: rem(8px);
+    $label-margin: map.get((
+        material: rem(12px),
+        fluent: rem(8px),
+        bootstrap: rem(8px),
+        indigo-design: rem(8px)
+    ), $variant);
 
     $input-transition: all .2s $ease-in-out-quad;
 
@@ -297,16 +305,16 @@
     }
 
     %switch-composite--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
+        @if $variant != 'indigo-design' {
             border-color: var-get($theme, 'border-hover-color');
         }
 
-        @if $variant == 'fluent' {
-            %switch-composite-thumb {
+        @if $variant == 'fluent' or $variant == 'bootstrap' {
+            %switch-thumb {
                 background: var-get($theme, 'border-hover-color');
             }
 
-            %switch-composite-thumb--x {
+            %switch-thumb--x {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -325,7 +333,7 @@
         @if $variant == 'fluent' {
             border-color: var-get($theme, 'error-color-hover');
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'error-color-hover');
             }
         }
@@ -337,14 +345,12 @@
     }
 
     %switch-composite--x--hover {
-        @if $variant != 'bootstrap' {
-            border-color: var-get($theme, 'border-on-hover-color');
-        }
+        border-color: var-get($theme, 'border-on-hover-color');
 
-        @if $variant == 'fluent' {
+        @if $variant == 'fluent' or $variant == 'bootstrap' {
             background: var-get($theme, 'track-on-hover-color');
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -356,6 +362,27 @@
     }
 
     %switch-composite-thumb {
+        width: rem($switch-thumb-width);
+        height: $switch-thumb-height;
+        min-width: rem($switch-thumb-width);
+        border-radius: var-get($theme, 'border-radius-thumb');
+        transition: $input-transition;
+        transform: translateX(#{rem($switch-off-offset)});
+
+        [dir='rtl'] & {
+            transform: translateX(#{rem(-1 * $switch-off-offset)});
+        }
+    }
+
+    %switch-composite-thumb--x {
+        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
+
+        [dir='rtl'] & {
+            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
+        }
+    }
+
+    %switch-thumb {
         position: relative;
         display: block;
         width: rem($switch-thumb-width);
@@ -364,12 +391,6 @@
         border-radius: var-get($theme, 'border-radius-thumb');
         background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
-        transition: $input-transition;
-        transform: translateX(#{rem($switch-off-offset)});
-
-        [dir='rtl'] & {
-            transform: translateX(#{rem(-1 * $switch-off-offset)});
-        }
 
         @if $variant != 'bootstrap' {
             &:hover {
@@ -378,24 +399,19 @@
         }
     }
 
-    %switch-composite-thumb--x {
+    %switch-thumb--x {
         background: var-get($theme, 'thumb-on-color');
-        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
-
-        [dir='rtl'] & {
-            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
-        }
     }
 
-    %switch-composite-thumb--invalid {
+    %switch-thumb--invalid {
         background: var-get($theme, 'error-color');
     }
 
-    %switch-composite-thumb--x--invalid {
+    %switch-thumb--x--invalid {
         background: var-get($theme, 'thumb-on-error-color');
     }
 
-    %switch-composite-thumb--disabled {
+    %switch-thumb--disabled {
         background: var-get($theme, 'thumb-disabled-color');
         box-shadow: $thumb-disabled-shadow;
     }
@@ -432,6 +448,10 @@
                     height: calc(100% + (#{$focus-outline-offset-top} * 2));
                 }
             }
+
+            .igx-checkbox--focused::after {
+                opacity: 0;
+            }
         }
 
         @if $variant == 'bootstrap' {
@@ -440,7 +460,7 @@
                 box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
             }
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'focus-fill-color');
             }
         }
@@ -453,6 +473,16 @@
         }
     }
 
+    %igx-switch--focused--hover {
+        @if $variant == 'bootstrap' {
+            border-color: var-get($theme, 'focus-fill-hover-color');
+
+            %switch-thumb {
+                background: var-get($theme, 'focus-fill-hover-color');
+            }
+        }
+    }
+
     %igx-switch--focused--invalid {
         @if $variant == 'bootstrap' {
             %switch-composite {
@@ -460,7 +490,7 @@
                 box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
             }
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'error-color');
             }
         }
@@ -478,7 +508,7 @@
                 border-color: var-get($theme, 'border-on-color');
             }
 
-            %switch-composite-thumb--x {
+            %switch-thumb--x {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -496,7 +526,7 @@
                 background: var-get($theme, 'track-on-disabled-color');
             }
 
-            %switch-composite-thumb--x {
+            %switch-thumb--x {
                 background: var-get($theme, 'thumb-on-disabled-color');
             }
         }
