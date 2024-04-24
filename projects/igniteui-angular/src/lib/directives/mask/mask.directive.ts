@@ -143,7 +143,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
-    private _onTouchedCallback: () => void = noop;
+    protected _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
 
     constructor(
