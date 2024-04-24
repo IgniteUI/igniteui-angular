@@ -42,18 +42,18 @@ Default Component Icons:
   - arrow_drop_up
   - imx-icons: case-sensitive
 
-- [ ] Path: date-picker/date-picker.component.html
+- [x] Path: date-picker/date-picker.component.html
   - today
   - clear
 
-- [ ] Path: date-range-picker/date-range-picker.component.html
+- [x] Path: date-range-picker/date-range-picker.component.html
   - date_range
 
 - [x] Path: expansion-panel/expansion-panel-header.component.html
   - expand_more
   - expand_less
 
-- [ ] Path: grids/filtering/base/grid-filtering-cell.component.html
+- [x] Path: grids/filtering/base/grid-filtering-cell.component.html
  - filter_list
   * multiple built-in from imx-icons & item.expression.condition.iconName; possibly user-configurable too
  - filter_list
@@ -64,8 +64,8 @@ Default Component Icons:
   - done
   - clear
   - navigate_before
-  - expand_more
   - navigate_next
+  - expand_more
   - close
   - refresh
 
@@ -233,9 +233,9 @@ Default Component Icons:
   * no built-in, just configurable child icon
 
 - [ ] Path: paginator/pager.component.html
-  - first_page
   - chevron_left
   - chevron_right
+  - first_page
   - last_page
 
 - [ ] Path: query-builder/query-builder.component.html
@@ -249,7 +249,7 @@ Default Component Icons:
   - delete
   - imx-icons:ungroup
 
-- [ ] Path: select/select.component.html
+- [x] Path: select/select.component.html
   - expand_more
   - expand_less
   - arrow_drop_down
@@ -264,35 +264,41 @@ Default Component Icons:
   - arrow_drop_down
   - arrow_drop_up
 
-- [ ] Path: tabs/tabs/tabs.component.html
+- [x] Path: tabs/tabs/tabs.component.html
   - navigate_before
   - navigate_next
 
-- [ ] Path: time-picker/time-picker.component.html
+- [x] Path: time-picker/time-picker.component.html
   - access_time
   - clear
 
-- [ ] Path: tree/tree-node/tree-node.component.html
+- [x] Path: tree/tree-node/tree-node.component.html
   - keyboard_arrow_right
   - keyboard_arrow_down
 
 
-| Family  | Name           | Ref Family | Ref Name             | Used By                | Theme                     |
-|---------|----------------|------------|----------------------|------------------------|---------------------------|
-| default | expand         | material   | expand_more          | ExpansionPanel         | All                       |
-| default | collapse       | material   | expand_less          | ExpansionPanel         | All                       |
-| default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar | All                       |
-| default | arrow_prev     | material   | keyboard_arrow_left  | Month Picker, Calendar | All                       |
-| default | carousel_next  | material   | keyboard_arrow_right | Carousel               | Indigo                    |
-| default | carousel_prev  | material   | keyboard_arrow_left  | Carousel               | Indigo                    |
-| default | carousel_next  | material   | arrow_forward        | Carousel               | Material                  |
-| default | carousel_prev  | material   | arrow_back           | Carousel               | Material                  |
-| default | selected       | material   | done                 | Chip                   | All                       |
-| default | remove         | material   | cancel               | Chip                   | All                       |
-| combo   | expand         | material   | expand_more          | Combo, Simple Combo    | Material                  |
-| combo   | collapse       | material   | expand_less          | Combo, Simple Combo    | Material                  |
-| combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
-| combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
-| combo   | clear          | material   | cancel               | Combo, Simple Combo    | Material                  |
-| combo   | clear          | material   | clear                | Combo, Simple Combo    | Indigo, Fluent, Bootstrap |
-| combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo    | All                       |
+| Family  | Name           | Ref Family | Ref Name             | Used By                          | Theme                     |
+|---------|----------------|------------|----------------------|----------------------------------|---------------------------|
+| default | expand         | material   | expand_more          | ExpansionPanel                   | All                       |
+| default | collapse       | material   | expand_less          | ExpansionPanel                   | All                       |
+| default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar           | All                       |
+| default | arrow_prev     | material   | keyboard_arrow_left  | Month Picker, Calendar           | All                       |
+| default | carousel_next  | material   | keyboard_arrow_right | Carousel                         | Indigo                    |
+| default | carousel_prev  | material   | keyboard_arrow_left  | Carousel                         | Indigo                    |
+| default | carousel_next  | material   | arrow_forward        | Carousel                         | Material                  |
+| default | carousel_prev  | material   | arrow_back           | Carousel                         | Material                  |
+| default | next           | material   | navigate_next        | Tabs                             | Indigo                    |
+| default | prev           | material   | navigate_before      | Tabs                             | Indigo                    |
+| default | selected       | material   | done                 | Chip                             | All                       |
+| default | remove         | material   | cancel               | Chip                             | All                       |
+| default | clear          | material   | cancel               | Combo, Simple Combo, Time Picker | Material                  |
+| default | clear          | material   | clear                | Combo, Simple Combo, Time Picker | Indigo, Fluent, Bootstrap |
+| default | clock          | material   | access_time          | Time Picker                      | All                       |
+| combo   | expand         | material   | expand_more          | Combo, Simple Combo, Select      | Material                  |
+| combo   | collapse       | material   | expand_less          | Combo, Simple Combo, Select      | Material                  |
+| combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo, Select      | Indigo, Fluent, Bootstrap |
+| combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo, Select      | Indigo, Fluent, Bootstrap |
+| combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo              | All                       |
+| tree    | expand         | material   | keyboard_arrow_right | TreeNode                         | All                       |
+| tree    | collapse       | material   | expand_less          | TreeNode                         | All                       |
+| default | filter_list    | material   | filter_list          | Grid Filtering Cell              | All                       |

@@ -41,6 +41,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
+import { IgxIconService } from '../../icon/icon.service';
 
 // TODO: Implement aria functionality
 /**
@@ -93,10 +94,23 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 
     private _parentNode: IgxTreeNode<any> = null;
 
-    constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
-    private node: IgxTreeNode<any>,
+    constructor(
+        @Optional() @Inject(IGX_TREE_NODE_COMPONENT)
+        private node: IgxTreeNode<any>,
         private navService: IgxTreeNavigationService,
-        public elementRef: ElementRef) {
+        public elementRef: ElementRef,
+        @Optional() @Inject(IgxIconService)
+        protected iconService?: IgxIconService,
+    ) {
+        iconService.addIconRef('expand', 'tree', {
+            name: 'keyboard_arrow_right',
+            family: 'material'
+        });
+
+        iconService.addIconRef('collapse', 'tree', {
+            name: 'keyboard_arrow_down',
+            family: 'material'
+        });
     }
 
     /** @hidden @internal */

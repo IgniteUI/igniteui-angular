@@ -61,6 +61,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
+import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -325,7 +326,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private inputDirective: IgxInputDirective;
 
-    @ViewChild(IgxInputGroupComponent)
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })
     private _inputGroup: IgxInputGroupComponent;
 
     @ViewChild(IgxDateTimeEditorDirective, { static: true })
@@ -333,6 +334,37 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     @ViewChild(IgxToggleDirective)
     private toggleRef: IgxToggleDirective;
+
+    private _icons = [
+        {
+            name: 'clear',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'cancel',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'clear',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'clock',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'access_time',
+                    family: 'material'
+                },
+                'all': {
+                    name: 'access_time',
+                    family: 'material'
+                }
+            }))
+        }
+    ];
 
     /** @hidden */
     public cleared = false;
@@ -612,7 +644,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef) {
+        private cdr: ChangeDetectorRef,
+        @Optional() @Inject(IgxIconService)
+        protected iconService?: IgxIconService
+    ) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
@@ -719,6 +754,24 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
         super.ngOnInit();
+
+        for (const icon of this._icons) {
+            switch (this.inputGroup?.theme) {
+                case "material":
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("material"),
+                    );
+                    break;
+                default:
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("all"),
+                    );
+            }
+        }
     }
 
     /** @hidden */
@@ -726,6 +779,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
+        console.log(this.inputGroup.theme);
 
         this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
 

@@ -972,7 +972,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         },
         {
             name: 'clear',
-            family: 'combo',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'cancel',
@@ -1046,21 +1046,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
-    }
-
-    /** @hidden @internal */
-    public ngAfterViewInit(): void {
-        this.filteredData = [...this.data];
-
-        if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
-            this.manageRequiredAsterisk();
-            this.cdr.detectChanges();
-        }
-        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
-            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
-            this.dataPreLoad.emit(eventArgs);
-        });
 
         for (const icon of this._icons) {
             switch (this.inputGroup.theme) {
@@ -1079,6 +1064,21 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
                     );
             }
         }
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit(): void {
+        this.filteredData = [...this.data];
+
+        if (this.ngControl) {
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
+            this.manageRequiredAsterisk();
+            this.cdr.detectChanges();
+        }
+        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
+            this.dataPreLoad.emit(eventArgs);
+        });
     }
 
     /** @hidden @internal */

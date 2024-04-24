@@ -22,6 +22,7 @@ import { IgxBadgeComponent } from '../../../badge/badge.component';
 import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxIconService } from 'igniteui-angular';
 
 /**
  * @hidden
@@ -31,7 +32,17 @@ import { IgxIconComponent } from '../../../icon/icon.component';
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html',
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor, NgIf, NgClass, IgxBadgeComponent, NgTemplateOutlet]
+    imports: [
+        IgxChipsAreaComponent,
+        IgxChipComponent,
+        IgxIconComponent,
+        IgxPrefixDirective,
+        NgFor,
+        NgIf,
+        NgClass,
+        IgxBadgeComponent,
+        NgTemplateOutlet
+    ]
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     @Input()
@@ -81,8 +92,16 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
+    constructor(
+        public cdr: ChangeDetectorRef,
+        public filteringService: IgxFilteringService,
+        protected iconService?: IgxIconService,
+    ) {
         this.filteringService.subscribeToEvents();
+        this.iconService.addIconRef('filter_list', 'default', {
+            name: 'filter_list',
+            family: 'material'
+        });
     }
 
     public ngOnInit(): void {
