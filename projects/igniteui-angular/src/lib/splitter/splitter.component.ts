@@ -1,5 +1,5 @@
 import { DOCUMENT, NgFor, NgIf } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, forwardRef } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
@@ -174,6 +174,19 @@ export class IgxSplitterComponent implements AfterContentInit {
         this.resetPaneSizes();
         this.panes?.notifyOnChanges();
     }
+
+    /**
+     * Sets the visibility of the handle and expanders in the splitter bar.
+     * False by default
+     * 
+     * @example
+     * ```html
+     * <igx-splitter [nonCollapsible]='true'>
+     * </igx-splitter>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public nonCollapsible = false; // Input to toggle showing/hiding expanders
 
     /**
      * @hidden @internal
@@ -365,6 +378,12 @@ export class IgxSplitBarComponent {
      */
     @HostBinding('class.igx-splitter-bar-host')
     public cssClass = 'igx-splitter-bar-host';
+
+     /**
+     * Sets the visibility of the handle and expanders in the splitter bar.
+     */
+    @Input({ transform: booleanAttribute })
+    public nonCollapsible;
 
     /**
      * Gets/Sets the orientation.

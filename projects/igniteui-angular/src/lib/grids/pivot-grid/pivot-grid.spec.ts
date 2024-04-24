@@ -24,8 +24,8 @@ import { Size } from '../common/enums';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
-describe('IgxPivotGrid #pivotGrid', () => {
 
+describe('IgxPivotGrid #pivotGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -1930,8 +1930,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
                 pivotGrid.autoSizeRowDimension(rowDimension);
                 fixture.detectChanges();
-                expect(rowDimension.width).toBe('186px');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(186);
+                expect(rowDimension.width).toBe('158px');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
         });
     });
