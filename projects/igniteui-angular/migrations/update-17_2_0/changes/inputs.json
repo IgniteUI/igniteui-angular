@@ -35,6 +35,22 @@
             }
         },
         {
+            "name": "igxButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "igxButtonBackground",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
             "name": "type",
             "remove": true,
             "owner": {
