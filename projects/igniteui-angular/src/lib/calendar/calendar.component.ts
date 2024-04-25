@@ -530,6 +530,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
         this.showActiveDay = false;
         this.monthViews.forEach(view => view.clearPreviewRange());
+        this._onTouchedCallback();
     }
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {

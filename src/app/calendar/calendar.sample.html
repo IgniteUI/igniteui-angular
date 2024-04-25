@@ -17,6 +17,8 @@
                 [weekStart]="getWeekDayNumber(weekStart)"
                 [headerOrientation]="headerOrientation"
                 [orientation]="orientation"
+                [(ngModel)]="date"
+                [ngModelOptions]="{updateOn: 'blur'}"
             >
             </igx-calendar>
         </div>
@@ -169,6 +171,9 @@
 
         <small>Active date</small>
         <span>{{calendar.activeDate.toLocaleDateString()}}</span>
+
+        <small>Selected date</small>
+        <span>{{date.toLocaleDateString()}}</span>
 
         <div class="preview__info">
             <a

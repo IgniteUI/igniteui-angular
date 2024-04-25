@@ -93,6 +93,8 @@ export class CalendarSampleComponent {
         year: "numeric",
     };
 
+    protected date = new Date();
+
     private _today = new Date();
     private _locale: string;
     private _selectionType: ISelectionType;
