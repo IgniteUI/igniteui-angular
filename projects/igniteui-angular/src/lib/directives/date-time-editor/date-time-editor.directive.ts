@@ -166,14 +166,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * ```
    */
   @Input()
-  public set value(value: Date | string) {
+  public set value(value: Date | string | undefined | null) {
     this._value = value;
     this.setDateValue(value);
     this.onChangeCallback(value);
     this.updateMask();
   }
 
-  public get value(): Date | string {
+  public get value(): Date | string | undefined | null {
     return this._value;
   }
 
@@ -218,7 +218,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private document: Document;
   private _isFocused: boolean;
   private _defaultInputFormat: string;
-  private _value: Date | string;
+  private _value?: Date | string;
   private _minValue: Date | string;
   private _maxValue: Date | string;
   private _inputDateParts: DatePartInfo[];
