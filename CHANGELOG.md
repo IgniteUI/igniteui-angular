@@ -24,6 +24,8 @@ All notable changes for each version of this project will be documented in this 
     - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
+- `IgxCombo`, `IgxSimpleCombo`:
+    - Introduced support for hiding the clear icon button when the custom clear icon template is empty.
 
 ## 17.1.0
 ### New Features
