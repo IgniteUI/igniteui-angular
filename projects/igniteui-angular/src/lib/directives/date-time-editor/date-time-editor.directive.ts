@@ -90,7 +90,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set minValue(value: string | Date) {
         this._minValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -111,7 +111,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set maxValue(value: string | Date) {
         this._maxValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -230,9 +230,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         minutes: 1,
         seconds: 1
     };
-    private onTouchCallback: (...args: any[]) => void = noop;
+
     private onChangeCallback: (...args: any[]) => void = noop;
-    private onValidatorChange: (...args: any[]) => void = noop;
+    private _onValidatorChange: (...args: any[]) => void = noop;
 
     private get datePartDeltas(): DatePartDeltas {
         return Object.assign({}, this._datePartDeltas, this.spinDelta);
@@ -392,7 +392,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public registerOnValidatorChange?(fn: () => void): void {
-        this.onValidatorChange = fn;
+        this._onValidatorChange = fn;
     }
 
     /** @hidden @internal */
@@ -402,7 +402,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override registerOnTouched(fn: any): void {
-        this.onTouchCallback = fn;
+        this._onTouchedCallback = fn;
     }
 
     /** @hidden @internal */
@@ -472,7 +472,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
         this._isFocused = true;
-        this.onTouchCallback();
+        this._onTouchedCallback();
         this.updateMask();
         super.onFocus();
         this.nativeElement.select();
