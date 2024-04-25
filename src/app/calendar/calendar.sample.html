@@ -170,10 +170,15 @@
         </div>
 
         <small>Active date</small>
-        <span>{{calendar.activeDate.toLocaleDateString()}}</span>
+        <span>{{calendar.activeDate | date }}</span>
 
-        <small>Selected date</small>
-        <span>{{date.toLocaleDateString()}}</span>
+        <small>Selected date(s)</small>
+
+        <ol class="selected-dates" [class.multiple]="selection.length > 1">
+            @for (item of selection; track item) {
+                <li>{{item | date }}</li>
+            }
+        </ol>
 
         <div class="preview__info">
             <a
