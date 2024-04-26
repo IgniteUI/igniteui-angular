@@ -231,6 +231,12 @@
 
     %cbx-composite--invalid {
         border-color: var-get($theme, 'error-color');
+
+        @if $variant == 'bootstrap' {
+            %cbx-composite-mark {
+                stroke: black;
+            }
+        }
     }
 
     %cbx-composite--invalid--hover {
@@ -240,12 +246,6 @@
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
         background: var-get($theme, 'error-color');
-
-        @if $variant == 'bootstrap' {
-            %cbx-composite-mark {
-                stroke: black;
-            }
-        }
     }
 
     %cbx-composite--x--hover {
