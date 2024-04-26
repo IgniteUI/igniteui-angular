@@ -13,7 +13,7 @@ import {
     Output
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
@@ -164,6 +164,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         return this.collapsed;
     }
 
+    @HostBinding('class.igx-toggle--hidden-webkit')
+    public get hiddenWebkitClass() {
+        const { isSafari, browserVersion } = this.platform;
+
+        return this.collapsed && isSafari && !!browserVersion && browserVersion < 17.5;
+    }
+
     /**
      * @hidden
      */
@@ -192,7 +199,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         private elementRef: ElementRef,
         private cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() private navigationService: IgxNavigationService) {
+        @Optional() private navigationService: IgxNavigationService,
+        @Optional() private platform?: PlatformUtil
+    ) {
     }
 
     /**
