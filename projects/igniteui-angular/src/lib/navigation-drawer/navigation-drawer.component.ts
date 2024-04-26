@@ -156,7 +156,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public pin = false;
 
     /**
-     * Width of the drawer in its open state.
+     * Width of the drawer in its open state. Defaults to "280px".
      *
      * ```typescript
      * // get
@@ -168,7 +168,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public width;
+    @Input() public width = '240px';
 
 
     /**
@@ -181,7 +181,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
 
     /**
-     * Width of the drawer in its mini state.
+     * Width of the drawer in its mini state. Defaults to 68px.
      *
      * ```typescript
      * // get
@@ -193,7 +193,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth;
+    @Input() public miniWidth = '40px';
 
     /**
      * Pinned state change output for two-way binding.
@@ -320,17 +320,17 @@ export class IgxNavigationDrawerComponent implements
      */
     @HostBinding('style.flexBasis')
     public get flexWidth() {
-        if (!this.pin || (!this.isOpen && !this.miniTemplate)) {
+        if (!this.pin) {
             return '0px';
         }
-
         if (this.isOpen) {
             return this.width;
         }
-
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
         }
+
+        return '0px';
     }
 
     /** @hidden */
@@ -648,11 +648,11 @@ export class IgxNavigationDrawerComponent implements
         if (this.platformUtil.isBrowser) {
             requestAnimationFrame(() => {
                 if (this.drawer) {
-                    this.renderer.setStyle(this.drawer, 'width', width);
+                    this.renderer.setStyle(this.drawer, 'min-width', width);
                 }
             });
         } else {
-            this.renderer.setStyle(this.drawer, 'width', width);
+            this.renderer.setStyle(this.drawer, 'min-width', width);
         }
     }
 
