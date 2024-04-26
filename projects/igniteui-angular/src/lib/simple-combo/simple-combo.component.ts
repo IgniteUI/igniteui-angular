@@ -142,8 +142,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this.selectionService.get(this.id).size;
     }
 
-    constructor(
-        elementRef: ElementRef,
+    constructor(elementRef: ElementRef,
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
