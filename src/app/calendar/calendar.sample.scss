@@ -122,3 +122,13 @@ igx-date-range-picker {
 .gap {
     gap: 1rem;
 }
+
+.selected-dates {
+    margin: 0;
+    padding-inline: 1rem;
+
+    &:not(.multiple) {
+        padding: 0;
+        list-style: none;
+    }
+}
