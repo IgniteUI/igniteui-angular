@@ -232,7 +232,7 @@
     %cbx-composite--invalid {
         border-color: var-get($theme, 'error-color');
 
-        @if $variant == 'bootstrap' {
+        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
             %cbx-composite-mark {
                 stroke: black;
             }
