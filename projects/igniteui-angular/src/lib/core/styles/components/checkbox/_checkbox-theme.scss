@@ -19,6 +19,7 @@
 /// @param {Color} $label-color-hover [null]- The text color used for the label text on hover.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $empty-color-hover [null] - The unchecked border color on hover.
+/// @param {Color} $empty-fill-color [null] - The unchecked fill color.
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
 /// @param {Color} $tick-color [null] - The checked mark color.
@@ -47,6 +48,7 @@
     $label-color-hover: null,
     $empty-color: null,
     $empty-color-hover: null,
+    $empty-fill-color: null,
     $fill-color: null,
     $fill-color-hover: null,
     $tick-color: null,
@@ -77,6 +79,7 @@
         label-color-hover: $label-color-hover,
         empty-color: $empty-color,
         empty-color-hover: $empty-color-hover,
+        empty-fill-color: $empty-fill-color,
         fill-color: $fill-color,
         fill-color-hover: $fill-color-hover,
         tick-color: $tick-color,
@@ -205,6 +208,7 @@
         width: $size;
         height: $size;
         min-width: $size;
+        background: var-get($theme, 'empty-fill-color');
         border-width: $border-width;
         border-style: solid;
         border-color: var-get($theme, 'empty-color');
@@ -212,14 +216,6 @@
         -webkit-tap-highlight-color: transparent;
         transition: border-color .2s $ease-out-quad, background .2s $ease-out-quad;
         overflow: hidden;
-
-        @if $variant == 'bootstrap' and $theme-variant == 'light' {
-            background: white;
-        }
-
-        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
-            background: black;
-        }
     }
 
     %cbx-composite--hover {
