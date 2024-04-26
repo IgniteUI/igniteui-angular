@@ -22,7 +22,7 @@
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
 /// @param {Color} $tick-color [null] - The checked mark color.
-/// @param {Color} tick-color-hover [null] - The checked mark color on hover.
+/// @param {Color} $tick-color-hover [null] - The checked mark color on hover.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
@@ -216,6 +216,10 @@
         @if $variant == 'bootstrap' and $theme-variant == 'light' {
             background: white;
         }
+
+        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
+            background: black;
+        }
     }
 
     %cbx-composite--hover {
@@ -240,6 +244,12 @@
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
         background: var-get($theme, 'error-color');
+
+        @if $variant == 'bootstrap' {
+            %cbx-composite-mark {
+                stroke: black;
+            }
+        }
     }
 
     %cbx-composite--x--hover {
@@ -254,6 +264,10 @@
 
     %cbx-composite--disabled {
         border-color: var-get($theme, 'disabled-color');
+
+        @if $variant == 'bootstrap' {
+            background: color($color: 'surface', $variant: 500);
+        }
     }
 
     %cbx-composite--x--disabled {
@@ -320,6 +334,8 @@
             }
 
             %cbx-composite {
+                background: transparent;
+                
                 &::before {
                     content: '';
                     position: absolute;
@@ -369,6 +385,7 @@
 
             &:hover {
                 %cbx-composite {
+                    background: transparent;
                     border-color: var-get($theme, 'error-color-hover');
 
                     &::before {
