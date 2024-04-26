@@ -390,9 +390,10 @@
         min-width: rem($switch-thumb-width);
         border-radius: var-get($theme, 'border-radius-thumb');
         background: var-get($theme, 'thumb-off-color');
-        box-shadow: $thumb-resting-shadow;
 
-        @if $variant != 'bootstrap' {
+        @if $variant == 'material' {
+            box-shadow: $thumb-resting-shadow;
+
             &:hover {
                 box-shadow: $thumb-hover-shadow;
             }
@@ -449,7 +450,7 @@
                 }
             }
 
-            .igx-checkbox--focused::after {
+            &.igx-checkbox--focused::after {
                 opacity: 0;
             }
         }
@@ -457,7 +458,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
             }
 
             %switch-thumb {
@@ -487,7 +488,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'error-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-color-hover');
             }
 
             %switch-thumb {
