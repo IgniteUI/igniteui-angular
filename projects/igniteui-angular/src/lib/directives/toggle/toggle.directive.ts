@@ -166,7 +166,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @HostBinding('class.igx-toggle--hidden-webkit')
     public get hiddenWebkitClass() {
-        const { isSafari, browserVersion } = this.platform;
+        const isSafari = this.platform?.isSafari;
+        const browserVersion = this.platform?.browserVersion;
 
         return this.collapsed && isSafari && !!browserVersion && browserVersion < 17.5;
     }
