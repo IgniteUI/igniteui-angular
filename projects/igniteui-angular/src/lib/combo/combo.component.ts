@@ -1,7 +1,7 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute, ViewContainerRef
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -198,7 +198,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     private _displayText: string;
 
     constructor(
-        viewContainerRef: ViewContainerRef,
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
@@ -207,7 +206,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
-        super(viewContainerRef, elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 

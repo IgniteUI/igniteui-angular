@@ -22,8 +22,7 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild,
-    ViewContainerRef
+    ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -947,7 +946,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract selectionChanging: EventEmitter<any>;
 
     constructor(
-        protected viewContainerRef: ViewContainerRef,
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selectionService: IgxSelectionAPIService,
@@ -1302,19 +1300,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         const searchValue = this.searchValue || this.comboInput?.value;
         return value?.toString().trim().toLowerCase() === searchValue.trim().toLowerCase();
     };
-
-    protected isClearIconTemplateEmpty(): boolean {
-        if (!this.clearIconTemplate) {
-            return false;
-        }
-
-        const embeddedView = this.viewContainerRef.createEmbeddedView(this.clearIconTemplate);
-        const isEmpty = embeddedView.rootNodes.length === 0;
-
-        // Clean up the embedded view
-        embeddedView.destroy();
-        return isEmpty;
-    }
 
     protected manageRequiredAsterisk(): void {
         if (this.ngControl) {
