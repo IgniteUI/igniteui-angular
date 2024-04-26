@@ -168,7 +168,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public width = '280px';
+    @Input() public width = '240px';
 
 
     /**
@@ -193,7 +193,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth = '68px';
+    @Input() public miniWidth = '40px';
 
     /**
      * Pinned state change output for two-way binding.
@@ -648,11 +648,11 @@ export class IgxNavigationDrawerComponent implements
         if (this.platformUtil.isBrowser) {
             requestAnimationFrame(() => {
                 if (this.drawer) {
-                    this.renderer.setStyle(this.drawer, 'width', width);
+                    this.renderer.setStyle(this.drawer, 'min-width', width);
                 }
             });
         } else {
-            this.renderer.setStyle(this.drawer, 'width', width);
+            this.renderer.setStyle(this.drawer, 'min-width', width);
         }
     }
 

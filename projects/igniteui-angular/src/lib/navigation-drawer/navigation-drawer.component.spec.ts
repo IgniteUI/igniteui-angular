@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
 declare let Simulator: any;
 // const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-describe('Navigation Drawer', () => {
+fdescribe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(waitForAsync(() => {
@@ -229,16 +229,16 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside'));
 
-            expect(asideElem.styles['width']).toEqual('68px');
+            expect(asideElem.styles['min-width']).toEqual('40px');
 
             fixture.componentInstance.miniView = false;
             fixture.detectChanges();
 
-            expect(asideElem.styles['width']).toBeFalsy();
+            expect(asideElem.styles['min-width']).toBeFalsy();
             fixture.componentInstance.miniView = true;
             fixture.detectChanges();
 
-            expect(asideElem.styles['width']).toEqual(fixture.componentInstance.navDrawer.miniWidth);
+            expect(asideElem.styles['min-width']).toEqual(fixture.componentInstance.navDrawer.miniWidth);
         }).catch((reason) => Promise.reject(reason));
     }));
 
@@ -470,17 +470,17 @@ describe('Navigation Drawer', () => {
         fixture.detectChanges();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('250px');
+        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('250px');
         fixture.componentInstance.navDrawer.close();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('80px');
+        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('80px');
         fixture.componentInstance.drawerWidth = '350px';
         fixture.detectChanges();
         fixture.componentInstance.navDrawer.open();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('350px');
+        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('350px');
     });
 
     it('should update pin based on window width (pinThreshold)', async () => {
