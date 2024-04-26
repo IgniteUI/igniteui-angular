@@ -94,11 +94,11 @@
         position: relative;
     }
 
-    %igx-toggle--hidden {
-        // WARN: This will not work in Safari.
-        // TODO: Fixed in Safari 17.5.
-        // display: none !important;
+    %igx-toggle--hidden:not(%igx-toggle--hidden-webkit) {
+        display: none !important;
+    }
 
+    %igx-toggle--hidden-webkit {
         // WARN: This is a workaround around a bug in Safari.
         position: absolute;
         visibility: hidden;
