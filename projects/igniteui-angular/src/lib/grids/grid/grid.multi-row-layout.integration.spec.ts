@@ -841,8 +841,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
-            // this is needed because the resize observer calculation are used inside an angular zone so we should wait that
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
             grid.height = '600px';
             grid.groupBy({
@@ -859,7 +858,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -875,8 +874,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async () => {
-            // this is needed because the resize observer calculation are used inside an angular zone so we should wait that
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
             grid.height = '600px';
             fixture.detectChanges();
@@ -893,9 +891,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);

@@ -99,7 +99,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
             setElementSize(grid.nativeElement, Size.Small);
             fix.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;

@@ -1115,7 +1115,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             setElementSize(grid.nativeElement, Size.Medium);
             fix.detectChanges();
-            await wait(100); // needed because the resize observer handler is called inside an angular zone
+            await wait(16); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);

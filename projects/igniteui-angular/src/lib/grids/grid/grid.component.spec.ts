@@ -294,7 +294,7 @@ describe('IgxGrid Component Tests #grid', () => {
             setElementSize(grid.nativeElement, Size.Medium)
             grid.summaryRowHeight = null;
             fixture.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('2');
@@ -306,7 +306,7 @@ describe('IgxGrid Component Tests #grid', () => {
             setElementSize(grid.nativeElement, Size.Small)
             grid.summaryRowHeight = undefined;
             fixture.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('1');
@@ -1206,13 +1206,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
             expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             setElementSize(fix.componentInstance.grid.nativeElement, Size.Small)
             fix.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;

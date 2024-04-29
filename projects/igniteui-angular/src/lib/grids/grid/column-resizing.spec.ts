@@ -180,7 +180,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.width).toEqual('80px');
             setElementSize(grid.nativeElement, Size.Medium)
-            tick(200);
+            tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 
             expect(column.defaultMinWidth).toBe('64');
@@ -195,7 +195,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.width).toEqual('64px');
             setElementSize(grid.nativeElement, Size.Small)
-            tick(200);
+            tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 
             expect(column.defaultMinWidth).toBe('56');
