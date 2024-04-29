@@ -3540,7 +3540,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.resizeNotify.pipe(
             filter(() => !this._init),
-            throttleTime(40, animationFrameScheduler, { leading: false, trailing: true }),
+            throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
         )
         .subscribe(() => {
