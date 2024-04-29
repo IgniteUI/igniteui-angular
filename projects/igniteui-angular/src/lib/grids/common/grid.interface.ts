@@ -97,7 +97,7 @@ export interface HeaderType {
     sortDirection: SortingDirection;
 }
 
-/* jsonAPIComplexValue */
+/* jsonAPIComplexObject */
 /* marshalByValue */
 export interface RowType {
     /* blazorSuppress */
