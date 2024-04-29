@@ -38,6 +38,28 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('blur')
+    protected onBlur() {
+        this.focused = false;
+    }
+
+    /**
+     * Sets/gets whether the button component is on focus.
+     * Default value is `false`.
+     * ```typescript
+     * this.button.focus = true;
+     * ```
+     * ```typescript
+     * let isFocused =  this.button.focused;
+     * ```
+     */
+    @HostBinding('class.igx-button--focused')
+    protected focused = false;
+
+    /**
       * Enables/disables the button.
       *
       * @example
@@ -64,6 +86,17 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
         protected _displayDensityOptions: IDisplayDensityOptions
     ) {
         super(_displayDensityOptions, element);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keyup', ['$event'])
+    protected updateOnKeyUp(event: KeyboardEvent) {
+        if (event.key === "Tab") {
+            this.focused = true;
+        }
     }
 
     /**
