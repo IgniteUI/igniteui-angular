@@ -268,7 +268,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should change grid size runtime correctly', fakeAsync(() => {
+        it('should change grid size runtime correctly', async () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[1].hasSummary = true;
@@ -293,7 +293,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
             setElementSize(grid.nativeElement, Size.Medium)
             grid.summaryRowHeight = null;
-            tick(16);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('2');
@@ -304,7 +305,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
             setElementSize(grid.nativeElement, Size.Small)
             grid.summaryRowHeight = undefined;
-            tick(16);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('1');
@@ -313,7 +315,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(33);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-        }));
+        });
 
         it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
@@ -1205,11 +1207,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
             await wait(100);
+            fix.detectChanges();
             expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             setElementSize(fix.componentInstance.grid.nativeElement, Size.Small)
             fix.detectChanges();
             await wait(100);
+            fix.detectChanges();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);

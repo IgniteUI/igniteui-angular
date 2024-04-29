@@ -1102,7 +1102,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.endEdit).toHaveBeenCalledWith(false);
         });
 
-        it(`Should exit row editing AND COMMIT on grid size change`, () => {
+        it(`Should exit row editing AND COMMIT on grid size change`, async () => {
             setElementSize(grid.nativeElement, Size.Large);
             fix.detectChanges();
 
@@ -1114,6 +1114,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBeTruthy();
 
             setElementSize(grid.nativeElement, Size.Medium);
+            fix.detectChanges();
+            await wait(100); // needed because the resize observer handler is called inside an angular zone
             fix.detectChanges();
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);

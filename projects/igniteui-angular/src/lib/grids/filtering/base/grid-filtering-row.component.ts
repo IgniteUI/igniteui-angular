@@ -45,6 +45,7 @@ import { IgxInputGroupComponent } from '../../../input-group/input-group.compone
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { Size } from '../../common/enums';
 
 /**
  * @hidden
@@ -107,6 +108,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             }
             this.filter();
         }
+    }
+
+    protected get filteringElementsSize(): Size {
+        // needed because we want the size of the chips to be either Medium or Small
+        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
     }
 
     @HostBinding('class.igx-grid__filtering-row')

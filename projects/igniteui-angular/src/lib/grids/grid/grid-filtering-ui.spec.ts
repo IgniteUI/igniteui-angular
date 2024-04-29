@@ -2578,7 +2578,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         // Filtering + Column Groups
-        it('should size correctly the header based on grid size.', () => {
+        it('should size correctly the header based on grid size.', async () => {
             setElementSize(grid.nativeElement, Size.Large);
             fix.detectChanges();
 
@@ -2587,9 +2587,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             setElementSize(grid.nativeElement, Size.Medium);
             fix.detectChanges();
+            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
+            fix.detectChanges();
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
             setElementSize(grid.nativeElement, Size.Small);
+            fix.detectChanges();
+            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 

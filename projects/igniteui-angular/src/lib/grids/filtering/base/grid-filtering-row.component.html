@@ -1,5 +1,5 @@
 <!-- Have to apply styles inline because of the overlay outlet ... -->
-<igx-drop-down #inputGroupConditions [height]="'200px'" (selectionChanging)="onConditionsChanged($event)">
+<igx-drop-down #inputGroupConditions [style.--ig-size]="filteringElementsSize" [height]="'200px'" (selectionChanging)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions"
         [value]="condition"
         [selected]="isConditionSelected(condition)">
@@ -11,7 +11,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" (focusout)="onInputGroupFocusout()" [style.--ig-size]="filteringElementsSize">
         <igx-prefix #inputGroupPrefix
                     (click)="inputGroupPrefixClick($event)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -82,6 +82,7 @@
         [outlet]="filteringService.grid.outlet"
         type="box"
         [readOnly]="true"
+        [style.--ig-size]="filteringElementsSize"
         [placeholder]="placeholder"
         (closed)="focusEditElement()"
         (focusout)="onInputGroupFocusout()"
@@ -105,7 +106,7 @@
 </ng-template>
 
 <ng-template #defaultDateTimeUI>
-    <igx-input-group #inputGroup type="box" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" (focusout)="onInputGroupFocusout()" [style.--ig-size]="filteringElementsSize">
         <igx-prefix #inputGroupPrefix
                     (click)="inputGroupPrefixClick($event)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -149,6 +150,7 @@
                     (remove)="onChipRemoved($event, item)"
                     [selectable]="false"
                     [selected]="item.isSelected"
+                    [style.--ig-size]="filteringElementsSize"
                     [removable]="true">
                     <igx-icon
                         igxPrefix
@@ -159,7 +161,8 @@
                 </igx-chip>
 
                 <span id="operand" *ngIf="!last">
-                    <button igxButton type="button" (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" >
+                    <button igxButton type="button" (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators"
+                        [style.--ig-size]="filteringElementsSize" >
                         <igx-icon>expand_more</igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
@@ -179,20 +182,20 @@
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
     <ng-container *ngIf="!isNarrowWidth">
-        <button igxButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+        <button igxButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled" [style.--ig-size]="filteringElementsSize">
             <igx-icon>refresh</igx-icon>
             <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_reset }}</span>
         </button>
-        <button #closeButton igxButton="flat" type="button" igxRipple (click)="close()">
+        <button #closeButton igxButton="flat" type="button" igxRipple (click)="close()" [style.--ig-size]="filteringElementsSize">
             <igx-icon>close</igx-icon>
             <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_close }}</span>
         </button>
     </ng-container>
     <ng-container *ngIf="isNarrowWidth">
-        <button igxIconButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+        <button igxIconButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled" [style.--ig-size]="filteringElementsSize">
             <igx-icon>refresh</igx-icon>
         </button>
-        <button #closeButton igxIconButton="flat" type="button" igxRipple (click)="close()">
+        <button #closeButton igxIconButton="flat" type="button" igxRipple (click)="close()" [style.--ig-size]="filteringElementsSize">
             <igx-icon>close</igx-icon>
         </button>
     </ng-container>
