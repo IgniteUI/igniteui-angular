@@ -1,27 +1,60 @@
-<div tabindex="0" #dialog class="igx-dialog" igxToggle [igxFocusTrap]="focusTrap" (click)="onDialogSelected($event)">
-    <div #dialogWindow class="igx-dialog__window"  [attr.role]="role" [attr.aria-labelledby]="titleId">
-
+<div
+    tabindex="0"
+    #dialog
+    class="igx-dialog"
+    igxToggle
+    [igxFocusTrap]="focusTrap"
+    (click)="onDialogSelected($event)"
+>
+    <div
+        #dialogWindow
+        class="igx-dialog__window"
+        [attr.role]="role"
+        [attr.aria-labelledby]="titleId"
+    >
         <div *ngIf="title" [attr.id]="titleId" class="igx-dialog__window-title">
             {{ title }}
         </div>
-        <ng-content *ngIf="!title" select="igx-dialog-title,[igxDialogTitle]"></ng-content>
+        <ng-content
+            *ngIf="!title"
+            select="igx-dialog-title,[igxDialogTitle]"
+        ></ng-content>
 
         <div class="igx-dialog__window-content">
-            <span *ngIf="message" class="igx-dialog__window-message">{{ message }}</span>
+            <span *ngIf="message" class="igx-dialog__window-message">{{
+                message
+            }}</span>
             <ng-content *ngIf="!message"></ng-content>
         </div>
 
-        <div *ngIf="leftButtonLabel || rightButtonLabel" class="igx-dialog__window-actions">
-            <button *ngIf="leftButtonLabel" type="button" [igxFocus]="isOpen" [igxButton]="leftButtonType" igxButtonColor="{{ leftButtonColor }}" igxButtonBackground="{{ leftButtonBackgroundColor }}"
-                igxRipple="{{ leftButtonRipple }}" (click)="onInternalLeftButtonSelect($event)">
+        <div
+            *ngIf="leftButtonLabel || rightButtonLabel"
+            class="igx-dialog__window-actions"
+        >
+            <button
+                *ngIf="leftButtonLabel"
+                type="button"
+                [igxFocus]="isOpen"
+                [igxButton]="leftButtonType"
+                igxRipple="{{ leftButtonRipple }}"
+                (click)="onInternalLeftButtonSelect($event)"
+            >
                 {{ leftButtonLabel }}
             </button>
-            <button *ngIf="rightButtonLabel" type="button" [igxFocus]="isOpen" [igxButton]="rightButtonType" igxButtonColor="{{ rightButtonColor }}" igxButtonBackground="{{ rightButtonBackgroundColor }}"
-                igxRipple="{{ rightButtonRipple }}" (click)="onInternalRightButtonSelect($event)">
+            <button
+                *ngIf="rightButtonLabel"
+                type="button"
+                [igxFocus]="isOpen"
+                [igxButton]="rightButtonType"
+                igxRipple="{{ rightButtonRipple }}"
+                (click)="onInternalRightButtonSelect($event)"
+            >
                 {{ rightButtonLabel }}
             </button>
         </div>
-        <ng-content *ngIf="!leftButtonLabel && !rightButtonLabel" select="igx-dialog-actions,[igxDialogActions]"></ng-content>
-
+        <ng-content
+            *ngIf="!leftButtonLabel && !rightButtonLabel"
+            select="igx-dialog-actions,[igxDialogActions]"
+        ></ng-content>
     </div>
 </div>

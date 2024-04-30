@@ -4,7 +4,7 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     ChangeDetectionStrategy,
 } from "@angular/core";
-import { NgFor } from "@angular/common";
+import { NgFor, DatePipe, DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
     DateRangeType,
@@ -65,6 +65,12 @@ defineComponents(IgcCalendarComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: DATE_PIPE_DEFAULT_OPTIONS,
+            useValue: { dateFormat: 'longDate', }
+        }
+    ],
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
@@ -80,6 +86,7 @@ defineComponents(IgcCalendarComponent);
         IgxSwitchComponent,
         IgxIconComponent,
         NgFor,
+        DatePipe
     ],
 })
 export class CalendarSampleComponent {
@@ -92,6 +99,8 @@ export class CalendarSampleComponent {
         weekday: "narrow",
         year: "numeric",
     };
+
+    protected date = new Date();
 
     private _today = new Date();
     private _locale: string;
@@ -295,5 +304,13 @@ export class CalendarSampleComponent {
 
     protected getWeekDayNumber(value: WeekDays | string) {
         return DaysMap[value];
+    }
+
+    protected get selection(): Date[] {
+        if (Array.isArray(this.date)) {
+            return this.date;
+        }
+
+        return [this.date];
     }
 }

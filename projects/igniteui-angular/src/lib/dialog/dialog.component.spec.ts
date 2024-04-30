@@ -202,14 +202,10 @@ describe('Dialog', () => {
         dialog.open();
         expect(dialog.leftButtonLabel).toEqual('left button');
         expect(dialog.leftButtonType).toEqual('contained');
-        expect(dialog.leftButtonColor).toEqual('black');
-        expect(dialog.leftButtonBackgroundColor).toEqual('darkblue');
         expect(dialog.leftButtonRipple).toEqual('pink');
 
         expect(dialog.rightButtonLabel).toEqual('right button');
         expect(dialog.rightButtonType).toEqual('contained');
-        expect(dialog.rightButtonColor).toEqual('orange');
-        expect(dialog.rightButtonBackgroundColor).toEqual('lightblue');
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
@@ -544,13 +540,9 @@ class AlertComponent {
         <igx-dialog #dialog title="dialog" message="message"
             leftButtonLabel="left button"
             leftButtonType="contained"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -568,13 +560,9 @@ class DialogComponent {
             [(isOpen)]="myDialog"
             leftButtonLabel="left button"
             leftButtonType="contained"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -592,13 +580,9 @@ class DialogTwoWayDataBindingComponent {
         <igx-dialog #dialog
             leftButtonLabel="left button"
             leftButtonType="contained"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
             rightButtonType="contained"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
             rightButtonRipple="white">
             <div class="custom-sample">
                 <h2>Custom Sample</h2>
