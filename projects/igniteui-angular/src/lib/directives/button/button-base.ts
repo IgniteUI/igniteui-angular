@@ -35,6 +35,7 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
     @HostListener('click', ['$event'])
     public onClick(ev: MouseEvent) {
         this.buttonClick.emit(ev);
+        this.focused = false;
     }
 
     /**
