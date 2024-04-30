@@ -109,7 +109,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.rowList.length).toEqual(11);
         });
 
-        fit('should display horizontal scroll bar when column width is set in %', () => {
+        it('should display horizontal scroll bar when column width is set in %', () => {
             fix.detectChanges();
 
             grid.columnList.get(0).width = '50%';
