@@ -36,7 +36,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IgxPivotRowDimensionHeaderTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -51,7 +51,13 @@ import {
     IColumnVisibilityChangedEventArgs,
     IGridEditDoneEventArgs,
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
+    IPinColumnCancellableEventArgs,
+    IPinColumnEventArgs,
+    IPinRowEventArgs,
+    IRowDataCancelableEventArgs,
+    IRowDataEventArgs,
+    IRowDragEndEventArgs,
+    IRowDragStartEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -74,7 +80,7 @@ import { IgxActionStripToken } from '../../action-strip/token';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
+import { IgxPivotRowDimensionHeaderTemplateDirective, IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe } from './pivot-grid.pipes';
@@ -279,6 +285,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected valueChipTemplateDirective: IgxPivotValueChipTemplateDirective;
 
     /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxPivotRowDimensionHeaderTemplateDirective, { read: IgxPivotRowDimensionHeaderTemplateDirective })
+    protected rowDimensionHeaderDirective: IgxPivotRowDimensionHeaderTemplateDirective;
+
+    /**
      * Gets/Sets a custom template for the value chips.
      *
      * @example
@@ -288,6 +300,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input()
     public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
+
+    @Input()
+    public rowDimensionHeaderTemplate: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>;
 
     @Input()
     /**
@@ -312,17 +327,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
 
-    @Input({ transform: booleanAttribute })
+    @Input()
     /**
-     * Gets/Sets the pivot configuration ui for the pivot grid - chips and their
+     * Gets/Sets the pivot ui settings for the pivot grid - chips and their
      * corresponding containers for row, filter, column dimensions and values
-     *
+     * as well as headers for the row dimensions values.
      * @example
      * ```html
-     * <igx-pivot-grid [showPivotConfigurationUI]="false"></igx-pivot-grid>
+     * <igx-pivot-grid [pivotUI]="{ showRowHeaders: true }"></igx-pivot-grid>
      * ```
      */
-    public showPivotConfigurationUI = true;
+    public set pivotUI(value: IPivotUISettings) {
+        this._pivotUI = Object.assign(this._pivotUI, value || {});
+    }
+
+    public get pivotUI() {
+        return this._pivotUI;
+    }
 
     /**
      * @hidden @internal
@@ -438,6 +459,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
+
+    /** @hidden @internal */
+    @ViewChild('defaultRowHeader', { read: TemplateRef, static: true })
+    protected defaultRowHeader: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -643,6 +668,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
+    private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false };
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1030,6 +1056,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
         }
+        if (this.rowDimensionHeaderDirective) {
+            this.rowDimensionHeaderTemplate = this.rowDimensionHeaderDirective.template;
+        }
     }
 
     /**
@@ -1164,7 +1193,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return 0;
         }
 
-        if (!dim.width) {
+        if (!dim?.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
@@ -2024,11 +2053,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected generateDimensionColumns(): IgxColumnComponent[] {
-        const rootFields = this.allDimensions.map(x => x.memberName);
         const columns = [];
-        rootFields.forEach((field) => {
+        this.allDimensions.forEach((dim) => {
             const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
-            ref.instance.field = field;
+            ref.instance.field = dim.memberName;
+            ref.instance.header = dim.displayName || dim.memberName;
+            ref.instance.headerTemplate = this.rowHeaderTemplate;
+            ref.instance.resizable = this.rowDimensionResizing;
+            ref.instance.width = this.rowDimensionWidthToPixels(dim) + 'px';
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });
@@ -2210,5 +2242,26 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         values?.forEach(val => {
             this.valueInit.emit(val);
         });
+    }
+
+    protected get rowHeaderTemplate() {
+        return this.rowDimensionHeaderTemplate ? this.rowDimensionHeaderTemplate : this.defaultRowHeader;
+    }
+
+    protected rowDimensionByName(memberName: string) {
+        return this.rowDimensions.find((rowDim) => rowDim.memberName === memberName);
+    }
+
+    protected onSortingIconClick(_event, dim: IPivotDimension) {
+        const startDirection = dim.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.sortDimension(dim, direction);
+    }
+
+    protected calculateResizerTop() {
+        return this.pivotUI.showRowHeaders ?
+            this.theadRow.pivotFilterContainer.nativeElement.clientHeight + this.theadRow.pivotRowContainer.nativeElement.clientHeight:
+            this.theadRow.nativeElement.clientHeight;
     }
 }

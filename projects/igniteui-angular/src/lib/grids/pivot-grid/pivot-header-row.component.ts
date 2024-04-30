@@ -36,6 +36,7 @@ import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 
 /**
  *
@@ -50,7 +51,13 @@ import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html',
     standalone: true,
-    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective, NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns]
+    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent,
+        IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective,
+        NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective,
+        IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective,
+        IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns,
+        IgxPivotRowHeaderGroupComponent]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
     public aggregateList: IPivotAggregator[] = [];
@@ -95,6 +102,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
      * @hidden @internal
      */
     @ViewChild('pivotFilterContainer') public pivotFilterContainer;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('pivotRowContainer') public pivotRowContainer;
 
     /**
     * @hidden
@@ -530,5 +542,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
         this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
+    }
+
+    protected getRowDimensionColumn(dim: IPivotDimension): ColumnType {
+        return this.grid.dimensionDataColumns ? this.grid.dimensionDataColumns.find((col) => col.field === dim.memberName) : null;
     }
 }

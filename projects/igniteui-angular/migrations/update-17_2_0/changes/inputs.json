@@ -81,6 +81,15 @@
                 "selector": "igx-dialog",
                 "type": "component"
             }
+        },
+        {
+            "name": "showPivotConfigurationUI",
+            "replaceWith": "[pivotUI]",
+            "valueTransform": "pivotConfiguration_to_pivotUI",
+            "owner": {
+                "selector": "igx-pivot-grid",
+                "type": "component"
+            }
         }
     ]
 }

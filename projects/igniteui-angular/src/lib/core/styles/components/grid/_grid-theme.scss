@@ -3106,6 +3106,25 @@
                 align-items: center;
             }
         }
+
+        igx-pivot-row-header-group {
+            padding-left: pad-inline(
+                map.get($grid-header-padding-inline, 'compact'),
+                map.get($grid-header-padding-inline, 'cosy'),
+                map.get($grid-header-padding-inline, 'comfortable')
+            );
+
+            igx-pivot-row-dimension-header {
+                align-items: center;
+            }
+
+            &:last-of-type {
+                igx-pivot-row-dimension-header {
+                    border-inline-end: 0;
+                }
+            }
+        }
     }
+
     // Pivot grid END
 }

@@ -192,6 +192,11 @@ export enum PivotDimensionType {
     Filter
 }
 
+export interface IPivotUISettings {
+    showConfiguration?: boolean;
+    showRowHeaders?: boolean;
+}
+
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
 
 /** Interface describing the pivot dimension data.
@@ -238,4 +243,8 @@ export interface IPivotGridGroupRecord extends IPivotGridRecord {
 
 export interface IgxPivotGridValueTemplateContext {
     $implicit: IPivotValue;
+}
+
+export interface IgxPivotRowDimensionHeaderTemplateContext {
+    $implicit: ColumnType;
 }

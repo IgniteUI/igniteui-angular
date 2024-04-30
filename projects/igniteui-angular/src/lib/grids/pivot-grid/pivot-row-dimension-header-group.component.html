@@ -23,7 +23,6 @@
         [density]="grid.displayDensity"
     >
     </igx-pivot-row-dimension-header>
-    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
         [igxPivotResizeHandle]="column"
         [igxPivotResizeHandleHeader]="this"

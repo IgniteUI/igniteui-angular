@@ -114,7 +114,7 @@
         </igx-circular-bar>
     </div>
 </ng-template>
-<igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
+<igx-pivot-grid-column-resizer [restrictResizerTop]="calculateResizerTop()" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 
@@ -171,3 +171,14 @@
         </igx-excel-style-filter-operations>
     </igx-grid-excel-style-filtering>
 </div>
+
+<ng-template #defaultRowHeader let-col>
+    <ng-container *ngIf="rowDimensionByName(col.field) as tempDim">
+        <span class="igx-grid-th__group-title" [title]="col.title">{{tempDim.displayName || tempDim.memberName}}</span>
+        <div class="igx-grid-th__icons">
+            <div class="sort-icon" (click)="onSortingIconClick($event, tempDim)">
+                <igx-icon>{{ !tempDim.sortDirection || tempDim.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

@@ -24,5 +24,20 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
     });
 
+    update.addValueTransform('pivotConfiguration_to_pivotUI', (args: BoundPropertyObject): void => {
+        args.bindingType = InputPropertyType.STRING;
+
+        switch (args.value) {
+            case 'true':
+                args.value = '{ showConfiguration: true }';
+                break;
+            case 'false':
+                args.value = '{ showConfiguration: false }';
+                break;
+            default:
+                args.value += ` ? { showConfiguration: true } : { showConfiguration: false } `;
+        }
+    });
+
     update.applyChanges();
 };
