@@ -226,19 +226,19 @@ Default Component Icons:
   - close
   - error
 
-- [ ] Path: input-group/input-group.component.html
+- [x] Path: input-group/input-group.component.html
   - clear
 
 - [x] Path: navbar/navbar.component.html
   * no built-in, just configurable child icon
 
-- [ ] Path: paginator/pager.component.html
+- [x] Path: paginator/pager.component.html
   - chevron_left
   - chevron_right
   - first_page
   - last_page
 
-- [ ] Path: query-builder/query-builder.component.html
+- [x] Path: query-builder/query-builder.component.html
   * multiple built-in from imx-icons & condition.iconName; possibly user-configurable too
   - add
   - edit
@@ -293,7 +293,18 @@ Default Component Icons:
 | default | remove         | material   | cancel               | Chip                             | All                       |
 | default | clear          | material   | cancel               | Combo, Simple Combo, Time Picker | Material                  |
 | default | clear          | material   | clear                | Combo, Simple Combo, Time Picker | Indigo, Fluent, Bootstrap |
+| default | clear          | material   | clear                | Input Group                      | All                       |
 | default | clock          | material   | access_time          | Time Picker                      | All                       |
+| default | filter_list    | material   | filter_list          | Grid Filtering Cell              | All                       |
+| default | add            | material   | add                  | Query Builder                    | All                       |
+| default | close          | material   | close                | Query Builder                    | All                       |
+| default | check          | material   | check                | Query Builder                    | All                       |
+| default | delete         | material   | delete               | Query Builder                    | All                       |
+| default | edit           | material   | edit                 | Query Builder                    | All                       |
+| default | first_page     | material   | first_page           | Paginator                        | All                       |
+| default | last_page      | material   | last_page            | Paginator                        | All                       |
+| default | chevron_left   | material   | chevron_left         | Paginator                        | All                       |
+| default | chevron_right  | material   | chevron_right        | Paginator                        | All                       |
 | combo   | expand         | material   | expand_more          | Combo, Simple Combo, Select      | Material                  |
 | combo   | collapse       | material   | expand_less          | Combo, Simple Combo, Select      | Material                  |
 | combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo, Select      | Indigo, Fluent, Bootstrap |
@@ -301,4 +312,3 @@ Default Component Icons:
 | combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo              | All                       |
 | tree    | expand         | material   | keyboard_arrow_right | TreeNode                         | All                       |
 | tree    | collapse       | material   | expand_less          | TreeNode                         | All                       |
-| default | filter_list    | material   | filter_list          | Grid Filtering Cell              | All                       |

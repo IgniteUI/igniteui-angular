@@ -28,6 +28,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 @Component({
     selector: 'igx-input-group',
@@ -224,10 +225,15 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private document: any,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private iconService?: IgxIconService
     ) {
         super(_displayDensityOptions, element);
         this.theme = this.themeService.theme;
+        this.iconService.addIconRef('clear', 'default', {
+            name: 'clear',
+            family: 'material',
+        });
     }
 
     /** @hidden */

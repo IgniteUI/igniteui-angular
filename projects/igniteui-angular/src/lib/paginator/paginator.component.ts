@@ -14,6 +14,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -387,5 +388,30 @@ export class IgxPageNavigationComponent {
     @Input()
     public role = 'navigation';
 
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
+    constructor(
+        @Host()
+        public paginator: IgxPaginatorComponent,
+        @Optional() @Inject(IgxIconService)
+        protected iconService: IgxIconService,
+    ) {
+        this.iconService.addIconRef('first_page', 'default', {
+            name: 'first_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('last_page', 'default', {
+            name: 'last_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_left', 'default', {
+            name: 'chevron_left',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_right', 'default', {
+            name: 'chevron_right',
+            family: 'material',
+        });
+    }
 }

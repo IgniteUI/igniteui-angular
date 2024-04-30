@@ -1211,7 +1211,39 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     private registerSVGIcons(): void {
         const editorIcons = editor as any[];
-        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+
+        editorIcons.forEach((icon) => {
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+            this.iconService.addIconRef(icon.name, 'default', {
+                name: icon.name,
+                family: 'imx-icons'
+            });
+        });
+
+        this.iconService.addIconRef('add', 'default', {
+            name: 'add',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('close', 'default', {
+            name: 'close',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('check', 'default', {
+            name: 'check',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('delete', 'default', {
+            name: 'delete',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('edit', 'default', {
+            name: 'edit',
+            family: 'material',
+        });
     }
 }
 

@@ -62,7 +62,7 @@
             (click)="inputGroupPrefixClick($event)"
             (keydown)="onPrefixKeyDown($event)"
             [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+            <igx-icon family="default" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <igx-suffix *ngIf="value">
             <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
@@ -113,7 +113,7 @@
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon family="imx-icons" [name]="getIconName()"></igx-icon>
+            <igx-icon family="default" [name]="getIconName()"></igx-icon>
         </igx-prefix>
         <input
             #input
@@ -155,7 +155,7 @@
                     [removable]="true">
                     <igx-icon
                         igxPrefix
-                        family="imx-icons"
+                        family="default"
                         [name]="item.expression.condition.iconName">
                     </igx-icon>
                     <span>{{filteringService.getChipLabel(item.expression)}}</span>
