@@ -90,7 +90,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set minValue(value: string | Date) {
         this._minValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -111,7 +111,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set maxValue(value: string | Date) {
         this._maxValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -166,14 +166,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * ```
      */
     @Input()
-    public set value(value: Date | string) {
+    public set value(value: Date | string | undefined | null) {
         this._value = value;
         this.setDateValue(value);
         this.onChangeCallback(value);
         this.updateMask();
     }
 
-    public get value(): Date | string {
+    public get value(): Date | string | undefined | null {
         return this._value;
     }
 
@@ -216,9 +216,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _dateValue: Date;
     private _onClear: boolean;
     private document: Document;
-    private _isFocused: boolean;
     private _defaultInputFormat: string;
-    private _value: Date | string;
+    private _value?: Date | string;
     private _minValue: Date | string;
     private _maxValue: Date | string;
     private _inputDateParts: DatePartInfo[];
@@ -231,9 +230,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         seconds: 1,
         fractionalSeconds: 1
     };
-    private onTouchCallback: (...args: any[]) => void = noop;
+
     private onChangeCallback: (...args: any[]) => void = noop;
-    private onValidatorChange: (...args: any[]) => void = noop;
+    private _onValidatorChange: (...args: any[]) => void = noop;
 
     private get datePartDeltas(): DatePartDeltas {
         return Object.assign({}, this._datePartDeltas, this.spinDelta);
@@ -291,7 +290,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     @HostListener('wheel', ['$event'])
     public onWheel(event: WheelEvent): void {
-        if (!this._isFocused) {
+        if (!this._focused) {
             return;
         }
         event.preventDefault();
@@ -394,7 +393,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public registerOnValidatorChange?(fn: () => void): void {
-        this.onValidatorChange = fn;
+        this._onValidatorChange = fn;
     }
 
     /** @hidden @internal */
@@ -404,7 +403,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override registerOnTouched(fn: any): void {
-        this.onTouchCallback = fn;
+        this._onTouchedCallback = fn;
     }
 
     /** @hidden @internal */
@@ -473,8 +472,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         if (this.nativeElement.readOnly) {
             return;
         }
-        this._isFocused = true;
-        this.onTouchCallback();
+        this._focused = true;
+        this._onTouchedCallback();
         this.updateMask();
         super.onFocus();
         this.nativeElement.select();
@@ -482,7 +481,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override onBlur(value: string): void {
-        this._isFocused = false;
+        this._focused = false;
         if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
             this.updateValue(this.parseDate(this.inputValue));
         } else {
@@ -506,7 +505,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     private updateMask(): void {
-        if (this._isFocused) {
+        if (this._focused) {
             // store the cursor position as it will be moved during masking
             const cursor = this.selectionEnd;
             this.inputValue = this.getMaskedValue();
