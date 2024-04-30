@@ -222,6 +222,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     public deselect() {
         this.selected = false;
+        this.focused = false;
     }
 }
 
