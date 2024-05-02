@@ -219,6 +219,23 @@
         box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+        @if $variant == 'indigo-design' {
+            padding: rem(3px);
+
+            %igx-drop-down__item {
+                margin-block: rem(2px);
+
+                &:first-of-type,
+                &:last-of-type {
+                    margin-block: initial;
+                }
+            }
+
+            %igx-drop-down__header {
+                margin-block-end: rem(2px);
+            }
+        }
     }
 
     %igx-drop-down__list-scroll {
