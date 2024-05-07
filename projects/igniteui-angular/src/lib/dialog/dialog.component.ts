@@ -69,7 +69,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public toggleRef: IgxToggleDirective;
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-dialog [id]="'igx-dialog-56'" #alert title="Notification"
      *  leftButtonLabel="OK" (leftButtonSelect)="alert.close()">
@@ -113,7 +113,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
-     * An @Input property to set whether the Tab key focus is trapped within the dialog when opened.
+     * Set whether the Tab key focus is trapped within the dialog when opened.
      * Defaults to `true`.
      * ```html
      * <igx-dialog focusTrap="false""></igx-dialog>
@@ -123,7 +123,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public focusTrap = true;
 
     /**
-     * An @Input property controlling the `title` of the dialog.
+     * Sets the title of the dialog.
      * ```html
      * <igx-dialog title="Notification" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -132,7 +132,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public title = '';
 
     /**
-     *  An @Input property controlling the `message` of the dialog.
+     *  Sets the message text of the dialog.
      * ```html
      * <igx-dialog message="Your email was sent!" #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -141,7 +141,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public message = '';
 
     /**
-     * An @Input property to set the `label` of the left button of the dialog.
+     * Sets the `label` of the left button of the dialog.
      * ```html
      * <igx-dialog leftButtonLabel="OKAY" #alert title="Notification"  (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -150,7 +150,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonLabel = '';
 
     /**
-     * An @Input property to set the left button `type`. The types are `flat`, `contained` and `fab`.
+     * Sets the left button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
      * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
@@ -161,26 +161,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input()
     public leftButtonType: IgxButtonType = 'flat';
-    /**
-     * An @Input property to set the left button color. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog leftButtonColor="yellow" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public leftButtonColor = '';
 
     /**
-     * An @Input property to set the left button `background-color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog leftButtonBackgroundColor="black" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public leftButtonBackgroundColor = '';
-
-    /**
-     * An @Input property to set the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
+     * Sets the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
      * The property accepts all valid CSS color property values.
      * ```html
      * <igx-dialog leftButtonRipple="green" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
@@ -190,7 +173,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public leftButtonRipple = '';
 
     /**
-     * An @Input property to set the `label` of the right button of the dialog.
+     * Sets the `label` of the right button of the dialog.
      * ```html
      * <igx-dialog rightButtonLabel="OKAY" #alert title="Notification"  (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -199,7 +182,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonLabel = '';
 
     /**
-     * An @Input property to set the right button `type`. The types are `flat`, `contained` and `fab`.
+     * Sets the right button `type`. The types are `flat`, `contained` and `fab`.
      * The `flat` type button is a rectangle and doesn't have a shadow. <br>
      * The `contained` type button is also a rectangle but has a shadow. <br>
      * The `fab` type button is a circle with a shadow. <br>
@@ -212,25 +195,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonType: IgxButtonType = 'flat';
 
     /**
-     * An @Input property to set the right button `color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog rightButtonColor="yellow" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public rightButtonColor = '';
-
-    /**
-     * An @Input property to set the right button `background-color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog rightButtonBackgroundColor="black" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public rightButtonBackgroundColor = '';
-
-    /**
-     * An @Input property to set the right button `ripple`.
+     * Sets the right button `ripple`.
      * ```html
      * <igx-dialog rightButtonRipple="green" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
      * ```
@@ -239,7 +204,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public rightButtonRipple = '';
 
     /**
-     * An @Input property that allows you to enable the "close on click outside the dialog". By default it's disabled.
+     * Gets/Sets whether the dialog should close on click outside the component. By default it's false.
      * ```html
      * <igx-dialog closeOnOutsideSelect="true" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()"
      * rightButtonLabel="OK" rightButtonRipple="#4CAF50" (rightButtonSelect)="onDialogOKSelected($event)">
@@ -506,7 +471,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.open() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.open() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -528,7 +493,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.close() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.close() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -543,7 +508,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.toggle() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.toggle() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */

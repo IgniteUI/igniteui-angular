@@ -25,10 +25,9 @@ import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_DATE_SELECTED = 'igx-calendar__date--selected';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
-const DATE_PICKER_TOGGLE_ICON = 'today';
+const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
 const DATE_PICKER_CLEAR_ICON = 'clear';
 
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
@@ -479,7 +478,7 @@ describe('IgxDatePicker', () => {
                 datePicker = fixture.componentInstance.datePicker;
             }));
 
-            it('should focus today\'s date when reopening the calendar', fakeAsync(() => {
+            it('should activate today\'s date when reopening the calendar', fakeAsync(() => {
                 datePicker.clear();
                 datePicker.open();
                 expect(datePicker.value).toEqual(null);
@@ -495,9 +494,9 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeFalsy();
 
-                const today = new Date().getDate().toString();
-                expect(document.activeElement.textContent.trim()).toEqual(today);
-                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+                const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
             }));
 
             it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
@@ -511,9 +510,8 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeFalsy();
 
-                const today = new Date().getDate().toString();
-                expect(document.activeElement.textContent.trim()).toEqual(today);
-                expect(document.activeElement.classList).not.toContain(CSS_CLASS_DATE_SELECTED);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).not.toEqual('test');
             }));
         });
     });
@@ -537,6 +535,7 @@ describe('IgxDatePicker', () => {
         let mockNgControl: any;
         let mockControlInstance: any;
         let renderer2: Renderer2;
+
         beforeEach(() => {
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             mockControlInstance = {
@@ -1191,7 +1190,7 @@ describe('IgxDatePicker', () => {
                 expect(mockCalendar.formatOptions).toEqual((datePicker as any).pickerCalendarFormat);
                 expect(mockCalendar.formatViews).toEqual((datePicker as any).pickerFormatViews);
                 expect(mockCalendar.locale).toEqual(datePicker.locale);
-                expect(mockCalendar.vertical).toEqual(datePicker.headerOrientation === PickerHeaderOrientation.Vertical);
+                expect(mockCalendar.headerOrientation).toEqual(datePicker.headerOrientation);
                 expect(mockCalendar.weekStart).toEqual(datePicker.weekStart);
                 expect(mockCalendar.specialDates).toEqual(datePicker.specialDates);
                 expect(mockCalendar.hideOutsideDays).toEqual(datePicker.hideOutsideDays);

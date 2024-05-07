@@ -56,15 +56,8 @@ describe('IgxButton', () => {
         fixture.detectChanges();
 
         expect(button.classList.contains('igx-button--disabled')).toBe(false);
-        expect(button.style.color).toEqual('white');
-        expect(button.style.background).toEqual('black');
 
-        fixture.componentInstance.foreground = 'yellow';
-        fixture.componentInstance.background = 'green';
         fixture.detectChanges();
-
-        expect(button.style.color).toEqual('yellow');
-        expect(button.style.background).toEqual('green');
     });
 
     it('Should apply display density to respective buttons correctly', () => {
@@ -167,17 +160,12 @@ class InitButtonComponent {
 }
 
 @Component({
-    template: `<span igxButton="contained"
-        [igxButtonColor]="foreground"
-        [igxButtonBackground]="background"
-        [disabled]="disabled">Test</span>`,
+    template: `<span igxButton="contained" [disabled]="disabled">Test</span>`,
     standalone: true,
     imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {
     public disabled = true;
-    public foreground = 'white';
-    public background = 'black';
 }
 
 @Component({

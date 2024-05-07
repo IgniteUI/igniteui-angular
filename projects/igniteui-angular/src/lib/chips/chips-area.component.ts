@@ -91,7 +91,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      public ariaLabel = 'chip area';
 
     /**
-     * An @Input property that sets the width of the `IgxChipsAreaComponent`.
+     * Sets the width of the `IgxChipsAreaComponent`.
      *
      * @example
      * ```html
@@ -108,7 +108,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     }
 
     /**
-     * An @Input property that sets the height of the `IgxChipsAreaComponent`.
+     * Sets the height of the `IgxChipsAreaComponent`.
      *
      * @example
      * ```html

@@ -56,5 +56,9 @@
         @include m(hidden) {
             @extend %igx-toggle--hidden !optional;
         }
+
+        @include m(hidden-webkit) {
+            @extend %igx-toggle--hidden-webkit !optional;
+        }
     }
 }

@@ -137,6 +137,7 @@ import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-sta
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
+import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 
 export const appRoutes: Routes = [
     {
@@ -267,6 +268,10 @@ export const appRoutes: Routes = [
     {
         path: 'mask',
         component: MaskSampleComponent
+    },
+    {
+        path: 'monthPicker',
+        component: MonthPickerSampleComponent
     },
     {
         path: 'date-time-editor',
