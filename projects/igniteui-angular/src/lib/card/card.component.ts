@@ -195,16 +195,6 @@ export class IgxCardFooterDirective {
  * ```
  */
 
-/**
- * @deprecated in 17.0.0. To switch between `outlined` and `elevated` card use the `elevated` property.
- * Since version 17.0.0 the card component is `outlined` by default.
- */
-export const IgxCardType = /*@__PURE__*/mkenum({
-    ELEVATED: 'elevated',
-    OUTLINED: 'outlined'
-});
-export type IgxCardType = (typeof IgxCardType)[keyof typeof IgxCardType];
-
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
@@ -252,32 +242,6 @@ export class IgxCardComponent {
     public role = 'group';
 
     /**
-     * Sets the value of the `type` attribute of the card.
-     * By default the value is set to `outlined`. You can make the card use the
-     * elevated style by setting the value to `elevated`.
-     *
-     * @deprecated in version 17.0.0. Use `elevated` property instead.
-     */
-    @Input()
-    public type: IgxCardType | string = IgxCardType.OUTLINED;
-
-    /**
-     * A getter which will return true if the card type is `outlined`.
-     */
-    @HostBinding('class.igx-card--outlined')
-    public get isOutlinedCard() {
-        return this.type === IgxCardType.OUTLINED;
-    }
-
-    /**
-     * A getter which will return true if the card type is `elevated`.
-     */
-    @HostBinding('class.igx-card--elevated')
-    protected get isElevatedCard() {
-        return this.type === IgxCardType.ELEVATED;
-    }
-
-    /**
      * Sets/gets whether the card is elevated.
      * Default value is `false`.
      *
@@ -290,12 +254,13 @@ export class IgxCardComponent {
      * ```
      */
     @Input()
+    @HostBinding('class.igx-card--elevated')
     public get elevated(): boolean {
         return this._elevated;
     }
+
     public set elevated(value: boolean) {
         this._elevated = (value as any === '') || value;
-        this.type = IgxCardType.ELEVATED;
     }
 
     /**
@@ -366,15 +331,6 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public get isJustifyLayout() {
         return this.layout === IgxCardActionsLayout.JUSTIFY;
     }
-
-    /**
-     * Reverses the order of the buttons in the actions area.
-     *
-     * @deprecated in version 15.1.0.
-     */
-    @HostBinding('class.igx-card-actions--reverse')
-    @Input({ transform: booleanAttribute })
-    public reverse = false;
 
     private isVerticalSet = false;
 
