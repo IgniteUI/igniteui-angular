@@ -13,6 +13,7 @@
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} background [null] - The background color used for the tree node.
 /// @param {Color} foreground [null] - The color used for the tree node content.
+/// @param {Color} icon-color [null] - The color used for the tree node icon.
 /// @param {Color} background-selected [null] - The background color used for the selected tree node.
 /// @param {Color} foreground-selected [null] - The color used for the content of the selected tree node.
 /// @param {Color} background-active [null] - The background color used for the active tree node.
@@ -43,6 +44,7 @@
     $foreground-active: null,
     $foreground-active-selected: null,
     $foreground-disabled: null,
+    $icon-color: null,
     $drop-area-color: null,
     $border-color: null,
     $hover-color: null,
@@ -83,6 +85,7 @@
         selector: $selector,
         background: $background,
         foreground: $foreground,
+        icon-color: $icon-color,
         background-selected: $background-selected,
         foreground-selected: $foreground-selected,
         background-active: $background-active,
@@ -111,14 +114,44 @@
     $variant: map.get($theme, '_meta', 'variant');
     $indigo-theme: $variant == 'indigo-design';
 
-    $node-indent: (
+    $node-indent-default: (
         comfortable: rem(24px),
         cosy: rem(16px),
         compact: rem(12px)
     );
 
-    $icon-size: rem(24px);
-    $icon-space: rem(8px);
+    $node-indent-indigo: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
+    );
+
+    $icon-size-default: rem(24px);
+    $icon-space-default: rem(8px);
+
+    $icon-size-indigo: rem(14px);
+    $icon-space-indigo: rem(4px);
+
+    $node-indent: map.get((
+        material: $node-indent-default,
+        fluent: $node-indent-default,
+        bootstrap: $node-indent-default,
+        indigo-design: $node-indent-indigo
+    ), $variant);
+
+    $icon-size: map.get((
+        material: $icon-size-default,
+        fluent: $icon-size-default,
+        bootstrap: $icon-size-default,
+        indigo-design: $icon-size-indigo
+    ), $variant);
+
+    $icon-space: map.get((
+        material: $icon-space-default,
+        fluent: $icon-space-default,
+        bootstrap: $icon-space-default,
+        indigo-design: $icon-space-indigo
+    ), $variant);
 
     $circular-bar-size: (
         comfortable: #{$icon-size},
@@ -152,6 +185,10 @@
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --tree-size: var(--component-size);
         flex-direction: column;
+
+        @if $variant == 'indigo-design' {
+            border-radius: rem(4px);
+        }
     }
 
     %node-wrapper,
@@ -163,6 +200,12 @@
     %node-toggle-button,
     %node-select {
         margin-inline-end: $icon-space;
+    }
+    
+    @if $variant == 'indigo-design' {
+        %node-select {
+            margin-inline-end: rem(8px);
+        }
     }
 
     %node-content,
@@ -182,6 +225,19 @@
         position: relative;
         background: var-get($theme, 'background');
         color: var-get($theme, 'foreground');
+
+        @if $variant == 'indigo-design' {
+            border-radius: rem(4px);
+            margin-block-end: rem(4px);
+
+            &::after {
+                border-radius: rem(4px);
+            }
+
+            igx-icon {
+                color: var-get($theme, 'icon-color');
+            }
+        }
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
@@ -211,6 +267,10 @@
             &::after {
                 background: var-get($theme, 'hover-color');
             }
+
+            @if $variant == 'indigo-design' {
+                color: var-get($theme, 'foreground-active');
+            }
         }
 
         &:focus {
@@ -231,6 +291,10 @@
         &:hover {
             &::after {
                 background: var-get($theme, 'hover-selected-color');
+
+                @if $variant == 'indigo-design' {
+                    background: var-get($theme, 'hover-color');
+                }
             }
         }
     }
@@ -238,16 +302,14 @@
     %node-wrapper--active {
         background: var-get($theme, 'background-active');
         color: var-get($theme, 'foreground-active');
-    }
 
-    %indigo-opacity {
-        $bg-active: map.get($theme, 'background-active');
+        @if $variant == 'indigo-design' {
+            &:hover {
+                background: var-get($theme, 'hover-selected-color');
 
-        @if ($indigo-theme) {
-            @if meta.type-of($bg-active) == 'color' and lightness($bg-active) < 50 {
-                opacity: .8;
-            } @else {
-                opacity: .3;
+                &::after {
+                    background: transparent;
+                }
             }
         }
     }
@@ -255,15 +317,35 @@
     %node-wrapper--active-selected {
         background: var-get($theme, 'background-active-selected');
         color: var-get($theme, 'foreground-active-selected');
+
+        @if $variant == 'indigo-design' {
+            &:hover {
+                background: var-get($theme, 'hover-selected-color');
+            }
+
+            &::after {
+                background: transparent;
+            }
+        }
     }
 
     %node-wrapper--focused {
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+
+        @if $variant == 'indigo-design' {
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'border-color');
+        }
     }
 
     %node-wrapper--disabled {
         background: var-get($theme, 'background-disabled') !important;
         color: var-get($theme, 'foreground-disabled') !important;
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                color: var-get($theme, 'foreground-disabled') !important;
+            }
+        }
 
         box-shadow: none !important;
 
