@@ -3116,6 +3116,10 @@
 
             igx-pivot-row-dimension-header {
                 align-items: center;
+
+                .igx-grid-th__title {
+                    text-align: center;
+                }
             }
 
             &:last-of-type {

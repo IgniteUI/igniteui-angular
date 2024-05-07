@@ -2261,7 +2261,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected calculateResizerTop() {
         return this.pivotUI.showRowHeaders ?
-            this.theadRow.pivotFilterContainer.nativeElement.clientHeight + this.theadRow.pivotRowContainer.nativeElement.clientHeight:
+            this.theadRow.pivotFilterContainer?.nativeElement.clientHeight || 0 + this.theadRow.pivotRowContainer?.nativeElement.clientHeight || 0 :
             this.theadRow.nativeElement.clientHeight;
     }
 }

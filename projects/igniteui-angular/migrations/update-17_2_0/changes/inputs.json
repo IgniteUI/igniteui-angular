@@ -85,7 +85,7 @@
         {
             "name": "showPivotConfigurationUI",
             "replaceWith": "[pivotUI]",
-            "valueTransform": "pivotConfiguration_to_pivotUI",
+            "valueTransform": "pivotConfigurationUI_to_pivotUI",
             "owner": {
                 "selector": "igx-pivot-grid",
                 "type": "component"
