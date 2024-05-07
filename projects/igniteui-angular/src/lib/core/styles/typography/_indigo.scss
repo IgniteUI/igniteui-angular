@@ -40,7 +40,12 @@
     @include button-group-typography($categories: (
         text: 'body-2',
     ));
-    @include calendar-typography();
+    @include calendar-typography($categories: (
+        header-year: 'body-2',
+        header-date: 'h5',
+        weekday-label: 'body-2',
+        picker-date: 'subtitle-2',
+    ));
     @include card-typography($categories: (
         title: 'h6',
         title-small: 'body-2',
@@ -81,11 +86,18 @@
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography();
+    @include slider-typography($categories: (
+        ticks-label: 'body-2',
+        thumb-label: 'subtitle-2',
+    ));
     @include snackbar-typography();
     @include switch-typography();
     @include tabs-typography();
-    @include time-picker-typography();
+    @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
+        header-hour: 'h5',
+        selected-time: 'h6'
+    ));
     @include stepper-typography();
     @include toast-typography();
     @include tooltip-typography();

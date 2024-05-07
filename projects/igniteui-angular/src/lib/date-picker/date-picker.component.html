@@ -2,7 +2,7 @@
     <igx-prefix *ngIf="!toggleComponents.length" (click)="toggle()">
         <igx-icon [title]="value
             ? pickerResourceStrings.igx_date_picker_change_date
-            : pickerResourceStrings.igx_date_picker_choose_date">today</igx-icon>
+            : pickerResourceStrings.igx_date_picker_choose_date">calendar_today</igx-icon>
     </igx-prefix>
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="formatter ? displayValue : null" igxInput
