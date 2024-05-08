@@ -261,7 +261,7 @@
     %cbx-composite--disabled {
         border-color: var-get($theme, 'disabled-color');
 
-        @if $variant == 'bootstrap' {
+        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
             background: color($color: 'surface', $variant: 500);
         }
     }
@@ -566,6 +566,7 @@
     %igx-checkbox--focused-invalid {
         @if $variant == 'bootstrap' {
             %cbx-composite {
+                border-color: var-get($theme, 'error-color');
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color-error');
             }
         }
