@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.0.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxRowIsland`
+  - Removed deprecated property `displayDensity`.
+
 ## 17.2.0
 ### New Features
 - `IgxAvatar`
