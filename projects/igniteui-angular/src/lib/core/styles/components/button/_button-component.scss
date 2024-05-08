@@ -34,6 +34,22 @@
             @extend %igx-button--fab !optional;
         }
 
+        @include mx(flat, focused) {
+            @extend %igx-button--flat-focused !optional;
+        }
+
+        @include mx(contained, focused) {
+            @extend %igx-button--contained-focused !optional;
+        }
+
+        @include mx(outlined, focused) {
+            @extend %igx-button--outlined-focused !optional;
+        }
+
+        @include mx(fab, focused) {
+            @extend %igx-button--fab-focused !optional;
+        }
+
         // DISABLED BUTTON
         @include m(disabled) {
             @extend %igx-button--disabled !optional;
