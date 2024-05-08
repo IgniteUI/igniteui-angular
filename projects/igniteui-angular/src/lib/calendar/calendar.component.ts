@@ -530,6 +530,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
         this.showActiveDay = false;
         this.monthViews.forEach(view => view.clearPreviewRange());
+        this._onTouchedCallback();
     }
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {
@@ -1025,7 +1026,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 *  this.calendar.deselectDate(new Date(`2018-06-12`));
 	 * ````
 	 */
-	public override deselectDate(value?: Date | Date[]) {
+	public override deselectDate(value?: Date | Date[] | string) {
 		super.deselectDate(value);
 
 		this.monthViews.forEach((m) => {

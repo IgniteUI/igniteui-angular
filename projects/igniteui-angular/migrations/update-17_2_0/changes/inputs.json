@@ -9,7 +9,94 @@
                 "selector": "igx-calendar",
                 "type": "component"
             }
+        },
+        {
+            "name": "roundShape",
+            "remove": true,
+            "owner": {
+                "selector": "igx-avatar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "color",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "background",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "igxButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "igxButtonBackground",
+            "remove": true,
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "type",
+            "remove": true,
+            "owner": {
+                "selector": "igx-card",
+                "type": "component"
+            }
+        },
+        {
+            "name": "reverse",
+            "remove": true,
+            "owner": {
+                "selector": "igx-card",
+                "type": "component"
+            }
+        },
+        {
+            "name": "leftButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "leftButtonBackgroundColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rightButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rightButtonBackgroundColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
         }
     ]
 }
-
