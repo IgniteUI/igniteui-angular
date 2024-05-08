@@ -1,8 +1,8 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { DisplayDensity, GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
+import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, Size } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -19,18 +19,18 @@ export class GridAutoSizeSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = "large";
+    public sizes;
     public height = '100%';
     public gridContainerHidden = false;
     public containerHeight;
     public selectionMode;
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === Size.Large, togglable: true },
+            { label: 'medium', selected: this.size === Size.Medium, togglable: true },
+            { label: 'small', selected: this.size === Size.Small, togglable: true }
         ];
 
         this.grid1.moving = true;
@@ -57,7 +57,12 @@ export class GridAutoSizeSampleComponent implements OnInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
+    }
+
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
     }
 
     public checkCols(): void {

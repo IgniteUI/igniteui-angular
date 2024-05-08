@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
@@ -7,7 +7,7 @@ import {
     PivotAggregation,
     IgxPivotDateDimension,
     IPivotDimension,
-    DisplayDensity,
+
     FilteringExpressionsTree,
     FilteringLogic,
     IgxStringFilteringOperand,
@@ -59,14 +59,12 @@ export class IgxTotalSaleAggregate {
     imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {
-    @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
-    public gridDensity: DisplayDensity | 'superCompact' = 'superCompact';
-    public get density(): DisplayDensity {
-        if (this.gridDensity === 'superCompact') {
-            return 'compact';
-        }
-        return this.gridDensity;
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return this.size === "superCompact" ? `var(--ig-size-small)` : `var(--ig-size-${this.size})`;
     }
+    @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
+    public size = 'superCompact';
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
@@ -291,8 +289,8 @@ export class PivotGridSampleComponent {
         this.selected = allEnabled;
     }
 
-    public setDensity(density: DisplayDensity | 'superCompact') {
-        this.gridDensity = density;
+    public setDensity(density) {
+        this.size = density;
     }
 
     public autoSizeRow(ind) {

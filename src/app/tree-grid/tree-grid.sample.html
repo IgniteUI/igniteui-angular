@@ -1,13 +1,13 @@
 <div class="sample-column">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <igx-tree-grid #grid1 selectionType="multi" [autoGenerate]="true" [batchEditing]="true" [data]="data"
         childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
-        [rowSelection]="selectionMode" [displayDensity]="density" [height]="'500px'"
+        [rowSelection]="selectionMode" [height]="'500px'"
         [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" [filterStrategy]="filterStrategy">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -28,8 +28,8 @@
         <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
         <igx-switch [(ngModel)]="grid1.rowEditable">Enable RowEditing</igx-switch>
         <div class="sample-buttons">
-            <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
-            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  displayDensity="comfortable">
+            <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" [style.--ig-size]="3">Row Selection: {{grid1.rowSelection}}</button>
+            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  [style.--ig-size]="3">
                 <igx-drop-down-item *ngFor="let item of selectionModes" [value]="item">
                         {{ item }}
                 </igx-drop-down-item>

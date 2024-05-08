@@ -21,7 +21,7 @@
             <igx-grid #grid1
                 width="650px" height="550px"
                 [data]="localData"
-                displayDensity="compact"
+                [style.--ig-size]="1"
                 [primaryKey]="'ProductID'"
                 [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                 [moving]="true"

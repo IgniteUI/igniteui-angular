@@ -10,12 +10,12 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(grid)"></ng-container>
-                <igx-grid [id]="gridId" #grid [igxGridState]="options" columnSelection="multiple" displayDensity="cosy"
+                <igx-grid [id]="gridId" #grid [igxGridState]="options" columnSelection="multiple" [style.--ig-size]="2"
                     width="1200px" height="550px" [autoGenerate]="false" [data]="localData" primaryKey="EmployeeID"
                     [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
-                    [filterMode]="'excelStyleFilter'" displayDensity="cosy" cellSelection="multiple"
+                    [filterMode]="'excelStyleFilter'" [style.--ig-size]="2" cellSelection="multiple"
                     rowSelection="multiple" (columnInit)="onColumnInit($event)">
-                    <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+                    <igx-grid-toolbar>
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -54,7 +54,7 @@
         <igx-expansion-panel-body>
             <ng-container *ngTemplateOutlet="controls; context: getContext(mcGrid)"></ng-container>
             <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData"
-                displayDensity="compact" [allowFiltering]="true" [moving]="true">
+                [style.--ig-size]="1" [allowFiltering]="true" [moving]="true">
                 <igx-column [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
                 <igx-column-group [pinned]="false" header="Employee">
                     <igx-column [sortable]="true" [resizable]="true" field="Country"></igx-column>
@@ -91,10 +91,10 @@
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
                 <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="hierData" [showExpandAll]='true'
-                    hasChildrenKey="hasChild" igxGridState columnSelection="multiple" displayDensity="cosy"
+                    hasChildrenKey="hasChild" igxGridState columnSelection="multiple" [style.--ig-size]="2"
                     rowSelection="multiple" [autoGenerate]="false" [allowFiltering]="true" primaryKey="ID"
                     [height]="'1300px'" [width]="'100%'" #hGrid>
-                    <igx-grid-toolbar [displayDensity]="hierGrid.displayDensity">
+                    <igx-grid-toolbar>
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -107,7 +107,7 @@
 
                     <igx-row-island primaryKey="ID" key="childData" height="450px" [showExpandAll]="true"
                         [autoGenerate]="false" [allowFiltering]="true" rowSelection="multiple" #layout1>
-                        <igx-grid-toolbar [displayDensity]="hierGrid.displayDensity">
+                        <igx-grid-toolbar >
                             <igx-grid-toolbar-actions>
                                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -154,9 +154,9 @@
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(treeGrid)"></ng-container>
                 <igx-tree-grid [id]="treeGridId" igxGridState #treeGrid [data]="treeGridFlatData"
-                    primaryKey="employeeID" foreignKey="PID" [allowFiltering]="true" displayDensity="cosy"
+                    primaryKey="employeeID" foreignKey="PID" [allowFiltering]="true" [style.--ig-size]="2"
                     rowSelection="multiple" [width]="'900px'" [height]="'800px'">
-                    <igx-grid-toolbar [displayDensity]="treeGrid.displayDensity">
+                    <igx-grid-toolbar >
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -186,9 +186,9 @@
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(treeGridHier)"></ng-container>
                 <igx-tree-grid #treeGridHier [id]="treeGridHierId" igxGridState primaryKey="Name" [data]="employees"
-                    childDataKey="Employees" displayDensity="cosy" width="100%" height="800px" [autoGenerate]="false"
+                    childDataKey="Employees" [style.--ig-size]="2" width="100%" height="800px" [autoGenerate]="false"
                     [rowSelection]="'multiple'" [allowFiltering]="true" [moving]="true">
-                    <igx-grid-toolbar [displayDensity]="treeGridHier.displayDensity">
+                    <igx-grid-toolbar >
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

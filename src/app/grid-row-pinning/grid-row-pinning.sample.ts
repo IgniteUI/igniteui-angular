@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import {
@@ -8,9 +8,6 @@ import {
     IgxGridStateDirective,
     IgxExcelExporterService,
     IgxExcelExporterOptions,
-    DisplayDensityToken,
-    DisplayDensity,
-    IDisplayDensityOptions,
     GridSelectionMode,
     IPinningConfig,
     IgxIconService,
@@ -29,7 +26,6 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     styleUrls: ['grid-row-pinning.sample.scss'],
     templateUrl: 'grid-row-pinning.sample.html',
     providers: [
-        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable } },
         IgxIconService
     ],
     standalone: true,
@@ -37,6 +33,10 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;
 
@@ -58,7 +58,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         pinningConfig: true
     };
     public selectionMode;
-
+    public size = 'large';
     public data: any[];
     public hierarchicalData: any[];
     public columns: any[];
@@ -66,7 +66,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     public treeColumns: any[];
     public treeData: any[];
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
+    constructor(
                 private iconService: IgxIconService,
                 private excelExportService: IgxExcelExporterService) {
     }
@@ -262,10 +262,10 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     }
 
     public toggleDensity() {
-        switch (this.displayDensityOptions.displayDensity ) {
-            case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
-            case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
-            case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
+        switch (this.size ) {
+            case 'large': this.size = 'small'; break;
+            case 'small': this.size ='medium'; break;
+            case 'medium': this.size = 'small'; break;
         }
     }
 }

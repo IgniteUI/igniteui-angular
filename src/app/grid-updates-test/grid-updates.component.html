@@ -2,7 +2,7 @@
 <button igxButton="contained" (click)="stop()">Stop</button>
 
 <igx-grid
-    displayDensity="compact"
+    [style.--ig-size]="1"
     width="800px" height = "400px"
     [data]="data"
     [allowFiltering]="true"

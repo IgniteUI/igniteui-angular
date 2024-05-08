@@ -19,9 +19,9 @@
     </button>
     <div class="separator"></div>
     <button igxButton="contained" [igxToggleAction]="dropDownRowSelection"
-        [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection:
+        [igxDropDownItemNavigation]="dropDownRowSelection" [style.--ig-size]="3">Row Selection:
         {{grid1.rowSelection}}</button>
-    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" displayDensity="comfortable">
+    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" [style.--ig-size]="3">
         <igx-drop-down-item *ngFor="let item of selectionModes">
             {{ item }}
         </igx-drop-down-item>
@@ -64,7 +64,7 @@
         "Address"</button>
     <br />
     <button igxButton="contained" (click)="toggleDensity()">Toggle density</button>
-    <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
+    <div>Current Size: {{size}}</div>
 
     <button igxButton="contained" (click)="hideGroupableRow()">Show/Hide groupable row</button>
 </div>
