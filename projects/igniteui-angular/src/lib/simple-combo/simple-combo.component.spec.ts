@@ -2135,8 +2135,8 @@ describe('IgxSimpleCombo', () => {
             fixture = TestBed.createComponent(IgxComboRemoteDataInReactiveFormComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.reactiveCombo;
-            reactiveForm = fixture.componentInstance.reactiveForm;
-            reactiveControl = reactiveForm.form.controls['comboValue'];
+            const reactiveForm = fixture.componentInstance.reactiveForm;
+            const reactiveControl = reactiveForm.form.controls['comboValue'];
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             tick()
             fixture.detectChanges();
@@ -2144,12 +2144,12 @@ describe('IgxSimpleCombo', () => {
 
             combo.select(0);
             fixture.detectChanges();
-            expect(combo.value).toEqual(0);
+            expect(combo.value).toEqual([0]);
             expect(input.nativeElement.value).toEqual('Product 0');
 
             reactiveControl.setValue(3);
             fixture.detectChanges();
-            expect(combo.value).toEqual(3);
+            expect(combo.value).toEqual([3]);
             expect(input.nativeElement.value).toEqual('Product 3');
 
             combo.open();
@@ -2158,7 +2158,7 @@ describe('IgxSimpleCombo', () => {
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
 
-            expect(combo.value).toEqual(5);
+            expect(combo.value).toEqual([5]);
             expect(input.nativeElement.value).toEqual('Product 5');
         }));
     });
