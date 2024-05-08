@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import {

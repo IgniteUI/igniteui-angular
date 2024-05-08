@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Component, ViewChild, OnInit, Inject, TemplateRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
 
