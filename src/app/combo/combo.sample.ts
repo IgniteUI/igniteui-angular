@@ -369,7 +369,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSimpleComboSelectionChanging(evt: ISimpleComboSelectionChangingEventArgs) {
-        this.hasSelection = evt.newSelection !== undefined;
+        this.hasSelection = evt.newValue !== undefined;
 
         if (!this.hasSelection) {
             this.itemID = 1;
@@ -379,12 +379,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
         this.currentVirtState.chunkSize = Math.ceil(this.remoteSimpleCombo.itemsMaxHeight / this.remoteSimpleCombo.itemHeight);
 
-        this.itemCount === evt.newSelection ?
+        this.itemCount === evt.newValue ?
             this.additionalScroll = this.remoteSimpleCombo.itemHeight :
             this.additionalScroll = 0;
 
-        if (this.itemCount - evt.newSelection >= this.currentVirtState.chunkSize - 1) {
-            this.itemID = this.currentVirtState.startIndex = evt.newSelection;
+        if (this.itemCount - evt.newValue >= this.currentVirtState.chunkSize - 1) {
+            this.itemID = this.currentVirtState.startIndex = evt.newValue;
         } else {
             this.itemID = this.currentVirtState.startIndex = this.itemCount - (this.currentVirtState.chunkSize - 1);
         }
