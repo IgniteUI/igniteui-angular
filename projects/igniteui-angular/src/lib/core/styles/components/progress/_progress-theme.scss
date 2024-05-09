@@ -146,6 +146,10 @@
         flex: 1 1 100%;
         flex-direction: column;
 
+        @if $variant == 'indigo-design' {
+            gap: rem(4px);
+        }
+
         &[dir='rtl'],
         [dir='rtl'] & {
             %linear-bar {
@@ -255,6 +259,11 @@
         color: var-get($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(12px);
+            line-height: rem(16px);
+        }
     }
 
     %linear-value--start {
@@ -512,7 +521,12 @@
         line-height: 1;
         text-align: center;
         font-weight: 600;
-        fill: var-get($theme, 'text-color');
+        color: var-get($theme, 'text-color');
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(12px);
+            line-height: rem(16px);
+        }
     }
 
     %circular-text--hidden {
