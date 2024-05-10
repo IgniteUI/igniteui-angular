@@ -458,7 +458,7 @@
         material: rem(4px),
         fluent: rem(4px),
         bootstrap: rem(8px),
-        indigo-design: rem(2px),
+        indigo-design: rem(4px),
     ), $variant);
 
     %circular-display {
@@ -467,6 +467,11 @@
         width: rem(32px);
         height: rem(32px);
         position: relative;
+
+        @if $variant == 'indigo-design' {
+            width: rem(48px);
+            height: rem(48px);
+        }
 
         svg {
             width: 100%;
