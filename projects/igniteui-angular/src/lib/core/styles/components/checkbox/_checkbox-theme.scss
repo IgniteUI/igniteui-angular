@@ -510,17 +510,13 @@
     %igx-checkbox--focused {
         @if $variant == 'fluent' {
             position: relative;
-            $focus-outline-offset-top: rem(2px);
-            $focus-outline-offset-left: rem(2px);
+            $focus-outline-offset: rem(2px);
 
             &::after {
                 content: '';
                 position: absolute;
-                top: -$focus-outline-offset-top;
-                inset-inline-start: -$focus-outline-offset-left;
+                inset: -$focus-outline-offset;
                 box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
-                width: calc(100% + (#{$focus-outline-offset-left} * 2));
-                height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
         }
 
