@@ -458,7 +458,7 @@
         material: rem(4px),
         fluent: rem(4px),
         bootstrap: rem(8px),
-        indigo-design: rem(6px),
+        indigo-design: rem(2px),
     ), $variant);
 
     %circular-display {
@@ -499,7 +499,7 @@
         stroke-dasharray: 289;
 
         @if $variant == 'indigo-design' {
-            stroke-linecap: round;
+            stroke-width: calc($stroke-width + rem(1px));
         }
     }
 
