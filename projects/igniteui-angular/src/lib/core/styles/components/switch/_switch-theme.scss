@@ -265,7 +265,12 @@
 
     $input-transition: all .2s $ease-in-out-quad;
 
-    $ripple-theme: ripple-theme(
+    $ripple-theme-off: ripple-theme(
+        $schema: $light-material-schema,
+        $color: var-get($theme, 'track-off-color')
+    );
+
+    $ripple-theme-on: ripple-theme(
         $schema: $light-material-schema,
         $color: var-get($theme, 'thumb-on-color')
     );
@@ -342,6 +347,11 @@
     %switch-composite--x {
         background: var-get($theme, 'track-on-color');
         border-color: var-get($theme, 'border-on-color');
+
+        %switch-ripple {
+            @include ripple($ripple-theme-on);
+            @include css-vars($ripple-theme-on);
+        }
     }
 
     %switch-composite--x--hover {
@@ -418,8 +428,8 @@
     }
 
     %switch-ripple {
-        @include ripple($ripple-theme);
-        @include css-vars($ripple-theme);
+        @include ripple($ripple-theme-off);
+        @include css-vars($ripple-theme-off);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
