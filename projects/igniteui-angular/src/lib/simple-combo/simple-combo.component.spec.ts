@@ -1528,6 +1528,23 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)
         });
+
+        it('should properly filter dropdown when a key is pressed while the combo is focused but not opened', fakeAsync(() => {
+            spyOn(combo, 'open').and.callThrough();
+
+            const event = UIInteractions.getKeyboardEvent('keydown', 'z');
+
+            expect(combo.collapsed).toEqual(true);
+
+            combo.handleKeyDown(event);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toEqual(false);
+            expect(combo.open).toHaveBeenCalled();
+            expect(combo.filteredData.length).toEqual(1);
+            expect(combo.filteredData).toEqual([{ field: 'Arizona', region: 'Mount' }]);
+        }));
     });
 
     describe('Display density', () => {
