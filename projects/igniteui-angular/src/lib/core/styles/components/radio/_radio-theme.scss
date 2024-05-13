@@ -127,7 +127,7 @@
     $scale: map.get((
         material: scale(.5),
         fluent: scale(.5),
-        bootstrap: scale(.375),
+        bootstrap: scale(.4375),
         indigo-design: scale(.5),
     ), $variant);
 
@@ -172,7 +172,12 @@
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: ripple-theme(
+    $ripple-theme-off: ripple-theme(
+        $schema: $light-material-schema,
+        $color: var-get($theme, 'empty-color')
+    );
+
+    $ripple-theme-on: ripple-theme(
         $schema: $light-material-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -279,6 +284,11 @@
             @if $bootstrap-theme{
                 background: var-get($theme, 'fill-color');
             }
+        }
+
+        @if $variant == 'material' {
+            @include ripple($ripple-theme-on);
+            @include css-vars($ripple-theme-on);
         }
     }
 
@@ -430,8 +440,8 @@
     }
 
     %radio-ripple {
-        @include ripple($ripple-theme);
-        @include css-vars($ripple-theme);
+        @include ripple($ripple-theme-off);
+        @include css-vars($ripple-theme-off);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -516,16 +526,6 @@
         } @else if $variant == 'indigo-design' {
             %radio-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
-            }
-        } @else if $variant == 'fluent' {
-            %radio-composite {
-                &::after {
-                    border: $border-width $border-style var-get($theme, 'error-color');
-                }
-
-                &::before {
-                    background: var-get($theme, 'error-color');
-                }
             }
         }
     }
