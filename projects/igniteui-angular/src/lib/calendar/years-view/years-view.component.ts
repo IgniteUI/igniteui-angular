@@ -12,7 +12,8 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, DayInterval } from "../common/model";
+import { CalendarDay } from "../common/model";
+import type { DayInterval } from "../common/model";
 import { calendarRange } from "../common/helpers";
 
 @Component({
