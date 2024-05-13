@@ -65,8 +65,8 @@
     $hover-background: null,
     $hover-foreground: null,
 
-    $icon-color: null,
-    $icon-color-hover: null,
+    $icon-color: $foreground,
+    $icon-color-hover: $hover-foreground,
 
     $focus-background: null,
     $focus-foreground: null,
@@ -96,7 +96,7 @@
 
     $disabled-background: null,
     $disabled-foreground: null,
-    $disabled-icon-color: null,
+    $disabled-icon-color: $disabled-foreground,
     $disabled-border-color: null,
     $size: null,
 ) {
