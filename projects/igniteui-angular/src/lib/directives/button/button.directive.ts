@@ -150,36 +150,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     }
 
     /**
-     * @deprecated in version 17.1.0.
-     * Sets the button text color.
-     *
-     * @example
-     * ```html
-     * <button type="button" igxButton igxButtonColor="orange"></button>
-     * ```
-     */
-    @Input('igxButtonColor')
-    public set color(value: string) {
-        this._color = value || this.nativeElement.style.color;
-        this._renderer.setStyle(this.nativeElement, 'color', this._color);
-    }
-
-    /**
-     * @deprecated in version 17.1.0.
-     * Sets the background color of the button.
-     *
-     * @example
-     *  ```html
-     * <button type="button" igxButton igxButtonBackground="red"></button>
-     * ```
-     */
-    @Input('igxButtonBackground')
-    public set background(value: string) {
-        this._backgroundColor = value || this._backgroundColor;
-        this._renderer.setStyle(this.nativeElement, 'background', this._backgroundColor);
-    }
-
-    /**
      * Sets the `aria-label` attribute.
      *
      * @example
@@ -252,6 +222,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     public deselect() {
         this.selected = false;
+        this.focused = false;
     }
 }
 

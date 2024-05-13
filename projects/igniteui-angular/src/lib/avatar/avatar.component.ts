@@ -118,27 +118,6 @@ export class IgxAvatarComponent implements OnInit {
     public id = `igx-avatar-${NEXT_ID++}`;
 
     /**
-     * @deprecated in version 15.1.0.
-     * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
-     * By default the shape of the avatar is a square.
-     *
-     * @example
-     * ```html
-     * <igx-avatar [roundShape]="true" ></igx-avatar>
-     * ```
-     */
-    /** @hidden @internal */
-    @Input()
-    @HostBinding('class.igx-avatar--circle')
-    public get roundShape() {
-        return this.shape === 'circle';
-    }
-
-    public set roundShape(value: boolean) {
-        this.shape = value === true ? 'circle' : 'square';
-    }
-
-    /**
      * Sets square, rounded or circular shape to the avatar.
      * By default the shape of the avatar is square.
      *
@@ -156,6 +135,12 @@ export class IgxAvatarComponent implements OnInit {
         return this.shape === 'rounded';
     }
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--circle')
+    public get isCircle(): boolean {
+        return this.shape === 'circle';
+    }
+
     /**
      * Sets the color of the avatar's initials or icon.
      *
@@ -163,6 +148,7 @@ export class IgxAvatarComponent implements OnInit {
      * ```html
      * <igx-avatar color="blue"></igx-avatar>
      * ```
+     * @deprecated in version 17.2.0.
      */
 
     @HostBinding('style.color')
@@ -177,6 +163,7 @@ export class IgxAvatarComponent implements OnInit {
      * <igx-avatar bgColor="yellow"></igx-avatar>
      * ```
      * @igxFriendlyName Background color
+     * @deprecated in version 17.2.0.
      */
 
     @HostBinding('style.background')

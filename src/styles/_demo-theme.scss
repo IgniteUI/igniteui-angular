@@ -1,5 +1,3 @@
-// Configure the base font-size #optional
-@use 'igniteui-theming/sass/config' as * with ($base-font-size: 16px);
 // Standard imports
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 @use 'variables' as *;

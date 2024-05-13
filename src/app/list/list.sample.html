@@ -296,12 +296,18 @@
     </section>
 </div>
 
-<igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (leftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
-            rightButtonBackgroundColor="#0375be" rightButtonColor="white" (rightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
-            backgroundClick="true" [closeOnOutsideSelect]="true">
+<igx-dialog
+    #addFruitDialog
+    title="Add Fruit"
+    leftButtonLabel="Cancel"
+    (leftButtonSelect)="addFruitDialog.close()"
+    rightButtonLabel="Add"
+    (rightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
+    backgroundClick="true"
+    [closeOnOutsideSelect]="true"
+>
     <igx-input-group>
         <label igxLabel for="newFruit">Fruit Name</label>
         <input id="newFruit" igxInput #newFruitName type="text" />
     </igx-input-group>
 </igx-dialog>
-

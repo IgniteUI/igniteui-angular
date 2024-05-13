@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
@@ -21,6 +21,7 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
+import { IFilteringEventArgs } from '../public_api';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -658,8 +659,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Click on 'today' item in calendar.
             const calendar = GridFunctions.getAdvancedFilteringCalendar(fix);
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            todayItem.click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            todayItem.firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
@@ -679,6 +680,79 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 0).value.toString()).toBe('8');
 
             flush();
+        }));
+
+        it('Should emit the filtering event when applying filters.', fakeAsync(() => {
+            spyOn(grid.filtering, 'emit');
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Ensure that filtering event was emitted with expected arguments
+            expect(grid.filtering.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                owner: grid,
+                filteringExpressions: grid.advancedFilteringExpressionsTree,
+                cancel: false
+            }));
+        }));
+
+        it('Should cancel filtering if cancel is set to true.', fakeAsync(() => {
+            spyOn(grid.filtering, 'emit').and.callFake((args: IFilteringEventArgs) => {
+                args.cancel = true;
+            });
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Ensure that cancel flag is true
+            expect(grid.filtering.emit).toHaveBeenCalled();
+            const emittedArgs: IFilteringEventArgs = (grid.filtering.emit as jasmine.Spy).calls.mostRecent().args[0];
+            expect(emittedArgs.cancel).toBeTrue();
+
+            // Ensure that grid.filteredData is null
+            expect(grid.filteredData).toEqual(null);
         }));
 
         it('Should emit the filteringDone event when applying filters.', fakeAsync(() => {
@@ -2286,7 +2360,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyContextMenuVisibility(fix, false);
             }));
 
-            it('Should change the group\'s operator when using its context menu buttons.', fakeAsync(() => {
+            it('Should change the group\'s operator when using its context menu buttons.', async () => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2315,7 +2389,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
                 // Click the innner group's operator line.
                 operatorLine.click();
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Click the 'and' button of the button group in the context menu.
@@ -2323,6 +2397,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const andOperatorButton: any = Array.from(buttonGroup.querySelectorAll('.igx-button-group__item'))
                                                     .find((b: any) => b.textContent.toLowerCase() === 'and');
                 andOperatorButton.click();
+                await wait();
                 fix.detectChanges();
 
                 // Verify new operator of inner group.
@@ -2333,12 +2408,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const orOperatorButton: any = Array.from(buttonGroup.querySelectorAll('.igx-button-group__item'))
                                                    .find((b: any) => b.textContent.toLowerCase() === 'or');
                 orOperatorButton.click();
+                await wait();
                 fix.detectChanges();
 
                 // Verify new operator of inner group.
                 operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 verifyOperatorLine(operatorLine, 'or');
-            }));
+            });
 
             it('Should apply changes in the group\'s operator made via its context menu buttons.', fakeAsync(() => {
                 // Apply advanced filter through API.
