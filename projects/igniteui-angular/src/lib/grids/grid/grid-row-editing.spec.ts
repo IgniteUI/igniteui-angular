@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs,IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -317,14 +317,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             // check event args
-            const rowAddArgs: IRowDataCancelableEventArgs = {
+            const rowAddArgs: IGridEditEventArgs = {
                 cancel: false,
-                oldValue: { ProductID: generatedId},
+                oldValue: null,
                 rowData: { ProductID: generatedId, ProductName: "NewValue"},
-                data: { ProductID: generatedId, ProductName: "NewValue"},
+                newValue: { ProductID: generatedId, ProductName: "NewValue"},
                 rowID: generatedId,
                 primaryKey: generatedId,
-                rowKey: generatedId,
                 valid: true,
                 event: jasmine.anything() as any,
                 owner: grid,
@@ -332,10 +331,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             }
 
             const rowAddedArgs: IRowDataEventArgs = {
-                rowData: { ProductID: generatedId, ProductName: "NewValue"},
                 data: { ProductID: generatedId, ProductName: "NewValue"},
                 primaryKey: generatedId,
-                rowKey: generatedId,
                 owner: grid
             };
             expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
