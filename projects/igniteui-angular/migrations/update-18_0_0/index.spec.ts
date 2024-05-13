@@ -28,7 +28,7 @@ describe(`Update to ${version}`, () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    const migrationName = 'migration-36';
+    const migrationName = 'migration-37';
 
     it('should remove displayDensity property from igx-grid and replace it with inline style if its value is not set to a component member', async () => {
         appTree.create(
