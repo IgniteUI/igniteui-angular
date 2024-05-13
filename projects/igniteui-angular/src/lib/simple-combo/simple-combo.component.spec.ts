@@ -2079,7 +2079,8 @@ describe('IgxSimpleCombo', () => {
                     ReactiveFormsModule,
                     FormsModule,
                     IgxComboRemoteDataComponent,
-                    IgxSimpleComboBindingDataAfterInitComponent
+                    IgxSimpleComboBindingDataAfterInitComponent,
+                    IgxComboRemoteDataInReactiveFormComponent
                 ]
             }).compileComponents();
         }));
@@ -2169,6 +2170,37 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.comboInput.value).toEqual('');
         });
+
+        it('should display correct value after the value has been changed from the form and then by the user', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxComboRemoteDataInReactiveFormComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.reactiveCombo;
+            reactiveForm = fixture.componentInstance.reactiveForm;
+            reactiveControl = reactiveForm.form.controls['comboValue'];
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            tick()
+            fixture.detectChanges();
+            expect(combo).toBeTruthy();
+
+            combo.select(0);
+            fixture.detectChanges();
+            expect(combo.value).toEqual(0);
+            expect(input.nativeElement.value).toEqual('Product 0');
+
+            reactiveControl.setValue(3);
+            fixture.detectChanges();
+            expect(combo.value).toEqual(3);
+            expect(input.nativeElement.value).toEqual('Product 3');
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.value).toEqual(5);
+            expect(input.nativeElement.value).toEqual('Product 5');
+        }));
     });
 });
 
@@ -2415,6 +2447,59 @@ class IgxSimpleComboInTemplatedFormComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    providers: [RemoteDataService],
+    template: `
+    <form [formGroup]="comboForm" #reactiveForm="ngForm">
+        <igx-simple-combo #reactiveCombo [placeholder]="'Products'" [data]="data | async" (dataPreLoad)="dataLoading($event)" [itemsMaxHeight]='400'
+    [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'" formControlName="comboValue" name="combo">
+    </igx-simple-combo>
+     <button #button IgxButton (click)="changeValue()">Change value</button>
+    </form>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, AsyncPipe, ReactiveFormsModule]
+})
+export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterViewInit, OnDestroy {
+    @ViewChild('reactiveCombo', { read: IgxSimpleComboComponent, static: true })
+    public reactiveCombo: IgxSimpleComboComponent;
+    @ViewChild('button', { read: HTMLButtonElement, static: true })
+    public button: HTMLButtonElement;
+    @ViewChild('reactiveForm')
+    public reactiveForm: NgForm;
+    public comboForm: UntypedFormGroup;
+    public data;
+    constructor(private remoteDataService: RemoteDataService, public cdr: ChangeDetectorRef, fb: UntypedFormBuilder) {
+        this.comboForm = fb.group({
+            comboValue: new UntypedFormControl('', Validators.required),
+        });
+    }
+    public ngOnInit(): void {
+        this.data = this.remoteDataService.records;
+    }
+
+    public ngAfterViewInit() {
+        this.remoteDataService.getData(this.reactiveCombo.virtualizationState, (count) => {
+            this.reactiveCombo.totalItemCount = count;
+            this.cdr.detectChanges();
+        });
+    }
+
+    public dataLoading(evt) {
+        this.remoteDataService.getData(evt, () => {
+            this.cdr.detectChanges();
+        });
+    }
+
+    public ngOnDestroy() {
+        this.cdr.detach();
+    }
+
+    public changeValue() {
+        this.comboForm.get('comboValue').setValue(14);
     }
 }
 
