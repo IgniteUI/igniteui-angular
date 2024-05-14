@@ -523,7 +523,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (add && selection) {
             this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey].toString();
         } else {
-            delete this._remoteSelection[ids[0]];
+            this._remoteSelection = {};
         }
     }
 

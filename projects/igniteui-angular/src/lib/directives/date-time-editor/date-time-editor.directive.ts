@@ -216,6 +216,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _dateValue: Date;
     private _onClear: boolean;
     private document: Document;
+    private _isFocused: boolean;
     private _defaultInputFormat: string;
     private _value?: Date | string;
     private _minValue: Date | string;
@@ -288,7 +289,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     @HostListener('wheel', ['$event'])
     public onWheel(event: WheelEvent): void {
-        if (!this._focused) {
+        if (!this._isFocused) {
             return;
         }
         event.preventDefault();
@@ -470,7 +471,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         if (this.nativeElement.readOnly) {
             return;
         }
-        this._focused = true;
+        this._isFocused = true;
         this._onTouchedCallback();
         this.updateMask();
         super.onFocus();
@@ -479,7 +480,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override onBlur(value: string): void {
-        this._focused = false;
+        this._isFocused = false;
         if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
             this.updateValue(this.parseDate(this.inputValue));
         } else {
@@ -503,7 +504,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     private updateMask(): void {
-        if (this._focused) {
+        if (this._isFocused) {
             // store the cursor position as it will be moved during masking
             const cursor = this.selectionEnd;
             this.inputValue = this.getMaskedValue();
