@@ -92,6 +92,10 @@ $_igx-slider-thumbs: 'from' 'to';
                 @extend %igx-slider-track-fill--disabled !optional;
             }
 
+            @include e(track-steps) {
+                @extend %igx-slider-track-steps--disabled !optional;
+            }
+
             @include e(ticks-tick) {
                 @extend %igx-slider__tick--disabled !optional;
             }
