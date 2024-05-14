@@ -155,10 +155,10 @@
     ), $variant);
 
     $mark-offset: map.get((
-        material: 0,
+        material: .5px,
         fluent: -1px,
-        bootstrap: 0,
-        indigo-design: 0,
+        bootstrap: .5px,
+        indigo-design: 1px,
     ), $variant);
 
     $mark-length: 24;
@@ -167,7 +167,12 @@
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: ripple-theme(
+    $ripple-theme-off: ripple-theme(
+        $schema: $light-material-schema,
+        $color: var-get($theme, 'empty-color')
+    );
+
+    $ripple-theme-on: ripple-theme(
         $schema: $light-material-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -225,6 +230,9 @@
     }
 
     %cbx-composite--x {
+        @include ripple($ripple-theme-on);
+        @include css-vars($ripple-theme-on);
+
         border-color: var-get($theme, 'fill-color');
         background: var-get($theme, 'fill-color');
     }
@@ -295,6 +303,10 @@
         opacity: 0;
         z-index: 1;
         transition: opacity .1s $ease-out-quad;
+
+        @if $variant == 'material' {
+            inset-inline-start: -.5px;
+        }
     }
 
     %igx-checkbox--indeterminate {
@@ -476,8 +488,8 @@
     }
 
     %cbx-ripple {
-        @include ripple($ripple-theme);
-        @include css-vars($ripple-theme);
+        @include ripple($ripple-theme-off);
+        @include css-vars($ripple-theme-off);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -564,6 +576,12 @@
             %cbx-composite {
                 border-color: var-get($theme, 'error-color');
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color-error');
+            }
+
+            &:hover {
+                %cbx-composite {
+                    border-color: var-get($theme, 'error-color-hover');
+                }
             }
         }
 
