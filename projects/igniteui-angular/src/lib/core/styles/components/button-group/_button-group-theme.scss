@@ -370,7 +370,7 @@
         }
 
         @if $variant == 'indigo-design' {
-            padding-inline: pad-inline(rem(8px));
+            padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
 
             igx-icon {
                 $icon-size: rem(16px);
