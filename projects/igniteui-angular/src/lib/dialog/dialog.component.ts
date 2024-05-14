@@ -161,23 +161,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input()
     public leftButtonType: IgxButtonType = 'flat';
-    /**
-     * Sets the left button color. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog leftButtonColor="yellow" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public leftButtonColor = '';
-
-    /**
-     * Sets the left button `background-color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog leftButtonBackgroundColor="black" leftButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public leftButtonBackgroundColor = '';
 
     /**
      * Sets the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
@@ -210,24 +193,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input()
     public rightButtonType: IgxButtonType = 'flat';
-
-    /**
-     * Sets the right button `color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog rightButtonColor="yellow" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public rightButtonColor = '';
-
-    /**
-     * Sets the right button `background-color`. The property accepts all valid CSS color property values.
-     * ```html
-     * <igx-dialog rightButtonBackgroundColor="black" rightButtonLabel="OKAY" #alert (leftButtonSelect)="alert.close()"></igx-dialog>
-     * ```
-     */
-    @Input()
-    public rightButtonBackgroundColor = '';
 
     /**
      * Sets the right button `ripple`.
@@ -506,7 +471,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.open() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.open() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -528,7 +493,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.close() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.close() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
@@ -543,7 +508,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *
      * @memberOf {@link IgxDialogComponent}
      * ```html
-     * <button type="button" (click)="dialog.toggle() igxButton="contained" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     * <button type="button" (click)="dialog.toggle() igxButton="contained">Trigger Dialog</button>
      * <igx-dialog #dialog></igx-dialog>
      * ```
      */
