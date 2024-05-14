@@ -139,6 +139,12 @@
             }
         }
 
+        @if not($icon-color-hover) and $hover-foreground {
+            @if meta.type-of($hover-background) == 'color' {
+                $icon-color-hover: $hover-foreground;
+            }
+        }
+
         @if not($focus-background) and $background {
             $focus-background: color.scale($background, $lightness: 5%);
         }
