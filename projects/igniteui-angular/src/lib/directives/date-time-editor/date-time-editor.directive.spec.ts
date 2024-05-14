@@ -378,6 +378,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement = fixture.debugElement.query(By.css('input'));
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
             });
+
             it('should properly update mask with inputFormat onInit', () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorBaseTestComponent);
                 fixture.detectChanges();

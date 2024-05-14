@@ -412,8 +412,6 @@
             height: sizable(rem(14px), rem(18px), rem(24px));
         }
 
-        @extend  %igx-chip-custom-icon;
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-chip__prefix;
@@ -695,15 +693,6 @@
 
         &:empty {
             display: none;
-        }
-    }
-
-    %igx-chip-custom-icon {
-        igx-icon {
-            width: sizable(rem(16px), rem(20px), rem(20px));
-            height: sizable(rem(16px), rem(20px), rem(20px));
-            font-size: sizable(rem(16px), rem(20px), rem(20px));
-            outline-style: none;
         }
     }
 

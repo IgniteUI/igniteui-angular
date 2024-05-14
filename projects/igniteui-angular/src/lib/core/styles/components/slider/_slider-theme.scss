@@ -19,6 +19,7 @@
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
 /// @param {Color} $thumb-border-color [null] - The thumb border color.
+/// @param {Color} $thumb-border-hover-color [null] - The thumb border color when hovered.
 /// @param {Color} $thumb-border-focus-color [null] - The thumb border color when focused.
 /// @param {Color} $thumb-disabled-border-color [null] - The thumb border color when it's disabled.
 /// @param {Color} $disabled-thumb-color [null] - The thumb color when its disabled.
@@ -45,6 +46,7 @@
     $thumb-color: null,
     $thumb-focus-color: null,
     $thumb-border-color: null,
+    $thumb-border-hover-color: null,
     $thumb-border-focus-color: null,
     $thumb-disabled-border-color: null,
     $disabled-thumb-color: null,
@@ -84,6 +86,7 @@
         thumb-color: $thumb-color,
         thumb-focus-color: $thumb-focus-color,
         thumb-border-color: $thumb-border-color,
+        thumb-border-hover-color: $thumb-border-hover-color,
         thumb-border-focus-color: $thumb-border-focus-color,
         thumb-disabled-border-color: $thumb-disabled-border-color,
         disabled-thumb-color: $disabled-thumb-color,
@@ -112,8 +115,20 @@
     $slider-height: rem(48px);
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
-    $thumb-label-width: rem(40px);
-    $thumb-label-height: rem(30px);
+
+    $thumb-label-width: map.get((
+        material: rem(40px),
+        fluent: rem(40px),
+        bootstrap: rem(40px),
+        indigo-design: rem(36px)
+    ), $variant);
+
+    $thumb-label-height: map.get((
+        material: rem(30px),
+        fluent: rem(30px),
+        bootstrap: rem(30px),
+        indigo-design: rem(22px)
+    ), $variant);
 
     $slider-track-height: map.get((
         material: 6px,
@@ -140,15 +155,18 @@
         material: 20px,
         fluent: 16px,
         bootstrap: 16px,
-        indigo-design: 14px
+        indigo-design: 12px
     ), $variant);
     $thumb-radius: math.div($thumb-size, 2);
+
+    $thumb-indigo-idle: math.div($thumb-size , $thumb-size * 0 + 1);
+    $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
 
     $thumb-border-width: map.get((
         material: 0,
         fluent: 2px,
         bootstrap: 1px,
-        indigo-design: 0
+        indigo-design: 2px
     ), $variant);
 
     // Slider Steps
@@ -373,6 +391,12 @@
         }
     }
 
+    %igx-slider-track-steps--disabled {
+        @if $variant == 'indigo-design' {
+            color: transparent;
+        }
+    }
+
     %igx-slider__tick-labels--top-bottom {
         %igx-slider__ticks-group {
             display: block;
@@ -451,6 +475,19 @@
             }
         }
 
+        @if $variant == 'indigo-design' {
+            transition: transform .2s $out-quad;
+
+            &:hover,
+            &:active {
+                transform: scale($thumb-indigo-hover);
+
+                div::before {
+                    border-color: var-get($theme, 'thumb-border-hover-color');
+                }
+            }
+        }
+
         &:focus div::before {
             box-shadow: 0 0 0 rem($slider-outline-width) var-get($theme, 'thumb-focus-color');
 
@@ -482,7 +519,7 @@
         &:focus div::before {
             box-shadow: none;
 
-            @if $variant == 'fluent' {
+            @if $variant == 'fluent' or $variant == 'indigo-design' {
                 border-color: var-get($theme, 'thumb-disabled-border-color') !important;
             }
         }
@@ -507,11 +544,15 @@
         justify-content: center;
         white-space: nowrap;
         margin-inline-start: -50%;
-        padding: 0 rem(2px);
+        padding: 0 rem(8px);
         background: var-get($theme, 'label-background-color');
         color: var-get($theme, 'label-text-color');
         min-width: $thumb-label-width;
         opacity: 0;
+
+        @if $variant == 'indigo-design' {
+            border-radius: rem(3px);
+        }
 
         &::after {
             content: '';
