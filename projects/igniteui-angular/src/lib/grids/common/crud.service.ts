@@ -93,6 +93,7 @@ export class IgxAddRow extends IgxEditRow {
         const args = super.createRowEditEventArgs(includeNewValue, event);
         args.oldValue = null;
         args.isAddRow = true;
+        args.rowData = this.newData ?? this.data;
         return args;
     }
 
