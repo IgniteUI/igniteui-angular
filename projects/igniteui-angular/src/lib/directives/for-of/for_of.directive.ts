@@ -1306,18 +1306,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         const scrollable = containerSizeInfo ? this.scrollComponent.size > containerSizeInfo.prevSize : this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this.initSizesCache(this.igxForOf) : 0;
-            this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
-            this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.resetScrollPosition();
             }
+            this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
+            this.scrollComponent.size = totalWidth;
         }
         if (this.igxForScrollOrientation === 'vertical') {
-            this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
-            this.scrollComponent.size = this._calcHeight();
-            if (this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
+            const totalHeight = this._calcSize();
+            if (totalHeight <= parseInt(this.igxForContainerSize, 10)) {
                 this.resetScrollPosition();
             }
+            this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
+            this.scrollComponent.size = totalHeight;
         }
         if (scrollable !== this.isScrollable()) {
             // scrollbar visibility has changed
