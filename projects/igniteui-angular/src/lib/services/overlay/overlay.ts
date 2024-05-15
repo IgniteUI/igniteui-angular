@@ -520,8 +520,8 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
-        info.transformX += deltaX;
-        info.transformY += deltaY;
+        info.transformX = deltaX;
+        info.transformY = deltaY;
 
         const transformX = info.transformX;
         const transformY = info.transformY;
