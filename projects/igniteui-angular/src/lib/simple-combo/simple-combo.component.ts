@@ -327,23 +327,29 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
             return;
-        } else if (event.key === this.platformUtil.KEYMAP.BACKSPACE
+        }
+        if (event.key === this.platformUtil.KEYMAP.BACKSPACE
             || event.key === this.platformUtil.KEYMAP.DELETE) {
             this._updateInput = false;
             this.clearSelection(true);
-        } else if (event.key === this.platformUtil.KEYMAP.TAB) {
+        }
+        if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
             this.clearOnBlur();
             this.close();
-        } else {
-            if (event.key !== this.platformUtil.KEYMAP.ARROW_DOWN && event.key !== this.platformUtil.KEYMAP.SPACE) {
-                const newFilterValue = this.filterValue + event.key.toLowerCase();
-                this.filterValue = newFilterValue;
-                this.searchValue = newFilterValue;
-                this.filteredData = this.data.filter(item => this.findAllMatches(item));
-                if (this.filteredData.length > 0 && this.collapsed) {
-                    this.open();
-                }
-            }
+        }
+        if (this.collapsed && event.key && event.key.length > 0
+            && event.key !== this.platformUtil.KEYMAP.CONTROL && !event.altKey && !event.metaKey) {
+            const newFilterValue = this.filterValue + event.key.toLowerCase();
+            this.filterValue = newFilterValue;
+            this.searchValue = newFilterValue;
+            this.filteredData = this.data.filter(item => this.findAllMatches(item));
+            this.open();
+        }
+        if (event.key === this.platformUtil.KEYMAP.SPACE && this.filteredData.length !== this.data.length) {
+            this.clearSelection();
+            this.filterValue = '';
+            this.searchValue = '';
+            this.filteredData = this.data;
         }
         this.composing = false;
         super.handleKeyDown(event);
