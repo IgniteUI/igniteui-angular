@@ -1,8 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../ripple/ripple-component' as *;
-@use '../ripple/ripple-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
 @use '../../themes/schemas' as *;
 
@@ -102,8 +100,6 @@
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} ripple
-/// @requires ripple-theme
 @mixin checkbox($theme) {
     @include css-vars($theme);
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
