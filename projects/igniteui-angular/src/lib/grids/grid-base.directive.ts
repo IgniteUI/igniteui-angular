@@ -6312,12 +6312,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
         const gridScrLeft = rowForOf.getScroll().scrollLeft;
-        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
-        if (gridScrLeft !== actualScrollLeft) {
-            rowForOf.onHScroll(gridScrLeft);
-            rowForOf.cdr.detectChanges();
-        }
+        rowForOf.onHScroll(gridScrLeft);
+        rowForOf.cdr.detectChanges();
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: RowType) {
