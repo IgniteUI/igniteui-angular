@@ -820,7 +820,6 @@ describe('igxOverlay', () => {
             const componentElementRect = componentElement.getBoundingClientRect();
             let overlayContentTransform = contentElement.style.transform;
             const firstTransform = 'translate(40px, 40px)';
-            const secondTransform = 'translate(30px, 60px)';
 
             expect(contentElementRect.top).toEqual(componentElementRect.top);
             expect(contentElementRect.left).toEqual(componentElementRect.left);
@@ -833,6 +832,7 @@ describe('igxOverlay', () => {
             const contentElementRectNew = contentElement.getBoundingClientRect();
             const componentElementRectNew = componentElement.getBoundingClientRect();
             overlayContentTransform = contentElement.style.transform;
+            const secondTransform = 'translate(-10px, 20px)';
 
             expect(contentElementRectNew.top).toEqual(componentElementRectNew.top);
             expect(contentElementRectNew.left).toEqual(componentElementRectNew.left);
@@ -843,6 +843,29 @@ describe('igxOverlay', () => {
             expect(componentElementRectNew.top).not.toEqual(componentElementRect.top);
             expect(componentElementRectNew.left).not.toEqual(componentElementRect.left);
             expect(overlayContentTransform).toEqual(secondTransform);
+
+            overlayInstance.detachAll();
+        }));
+
+        it('Should set transformX and transformY correctly in setOffset method', fakeAsync(() => {
+            const fixture = TestBed.createComponent(WidthTestOverlayComponent);
+            const overlayInstance = fixture.componentInstance.overlay;
+
+            const id = fixture.componentInstance.overlay.attach(SimpleRefComponent);
+            overlayInstance.show(id);
+            fixture.detectChanges();
+            tick();
+
+            // Set initial offset
+            overlayInstance.setOffset(id, 20, 20);
+            const overlayInfo = overlayInstance.getOverlayById(id);
+            expect(overlayInfo.transformX).toEqual(20);
+            expect(overlayInfo.transformY).toEqual(20);
+
+            // Set new offset
+            overlayInstance.setOffset(id, 10, 10);
+            expect(overlayInfo.transformX).toEqual(10);
+            expect(overlayInfo.transformY).toEqual(10);
 
             overlayInstance.detachAll();
         }));
