@@ -1313,7 +1313,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             this.scrollComponent.size = totalWidth;
         }
         if (this.igxForScrollOrientation === 'vertical') {
-            const totalHeight = this._calcSize();
+            const totalHeight = this._calcHeight();
             if (totalHeight <= parseInt(this.igxForContainerSize, 10)) {
                 this.resetScrollPosition();
             }
