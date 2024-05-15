@@ -1,4 +1,3 @@
-<ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 <ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 <ng-content select="igx-tree-grid-group-by-area,igc-tree-grid-group-by-area"></ng-content>
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
@@ -214,5 +213,6 @@
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 <div #sink style="display: none;">
+    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
 </div>

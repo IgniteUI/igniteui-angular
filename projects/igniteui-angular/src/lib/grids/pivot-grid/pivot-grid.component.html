@@ -116,7 +116,7 @@
 </ng-template>
 <igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div #sink class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header">
@@ -170,4 +170,8 @@
             <igx-excel-style-search></igx-excel-style-search>
         </igx-excel-style-filter-operations>
     </igx-grid-excel-style-filtering>
+</div>
+
+<div #sink style="display: none;">
+    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 </div>
