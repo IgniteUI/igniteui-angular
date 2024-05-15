@@ -1,8 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../ripple/ripple-theme' as *;
-@use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
 @use '../../themes/schemas' as *;
 
@@ -179,8 +177,6 @@
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} ripple
-/// @requires ripple-theme
 @mixin switch($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -211,14 +207,14 @@
 
     $switch-on-offset: map.get((
         material: 1px,
-        fluent: math.div($switch-thumb-width, 2),
+        fluent: 5px,
         bootstrap: 4px,
         indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map.get((
         material: -1px,
-        fluent: math.div($switch-thumb-width, 3),
+        fluent: 3px,
         bootstrap: math.div($switch-thumb-width, 4),
         indigo-design: math.div($switch-thumb-width, 3),
     ), $variant);
@@ -264,16 +260,6 @@
     ), $variant);
 
     $input-transition: all .2s $ease-in-out-quad;
-
-    $ripple-theme-off: ripple-theme(
-        $schema: $light-material-schema,
-        $color: var-get($theme, 'track-off-color')
-    );
-
-    $ripple-theme-on: ripple-theme(
-        $schema: $light-material-schema,
-        $color: var-get($theme, 'thumb-on-color')
-    );
 
     %switch-display {
         position: relative;
@@ -349,8 +335,7 @@
         border-color: var-get($theme, 'border-on-color');
 
         %switch-ripple {
-            @include ripple($ripple-theme-on);
-            @include css-vars($ripple-theme-on);
+            --color: #{var-get($theme, 'thumb-on-color')};
         }
     }
 
@@ -428,8 +413,6 @@
     }
 
     %switch-ripple {
-        @include ripple($ripple-theme-off);
-        @include css-vars($ripple-theme-off);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -440,6 +423,9 @@
         pointer-events: none;
         filter: opacity(1);
         border-radius: var-get($theme, 'border-radius-ripple');
+
+        //ripple-color
+        --color: #{var-get($theme, 'track-off-color')};
     }
 
     %igx-switch--focused {
