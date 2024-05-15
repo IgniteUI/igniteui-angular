@@ -1620,9 +1620,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
             this._recalcOnContainerChange();
-            if (changes[containerSize].previousValue) {
-                this.scrollComponent.scrollAmount = this.scrollComponent.nativeElement[this.igxForScrollOrientation === "horizontal" ? "scrollLeft" : "scrollTop"];
-                this._updateScrollOffset();
+            if (changes[containerSize].previousValue && this.igxForScrollOrientation === "horizontal") {
+                const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+                this.scrollComponent.scrollAmount = scrollAmount;
+                this.onHScroll(scrollAmount);
             }
         }
     }
