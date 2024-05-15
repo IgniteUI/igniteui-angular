@@ -318,9 +318,6 @@ export class IgxNavigationDrawerComponent implements
      */
     @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
-        // if (!this.isOpen) {
-        //     this.setDrawerWidth(v ? this.miniWidth : '');
-        // }
         this._miniTemplate = v;
     }
 
@@ -476,9 +473,6 @@ export class IgxNavigationDrawerComponent implements
         if (this._state) {
             this._state.add(this.id, this);
         }
-        // if (this.isOpen) {
-        //     this.setDrawerWidth(this.width);
-        // }
     }
 
     /**
@@ -534,18 +528,7 @@ export class IgxNavigationDrawerComponent implements
             }
         }
 
-        // if (changes.width && this.isOpen) {
-        //     this.setDrawerWidth(changes.width.currentValue);
-        // }
-
-        // if (changes.isOpen) {
-        //     this.setDrawerWidth(this.isOpen ? this.width : (this.miniTemplate ? this.miniWidth : ''));
-        // }
-
         if (changes.miniWidth) {
-            // if (!this.isOpen) {
-            //     this.setDrawerWidth(changes.miniWidth.currentValue);
-            // }
             this.updateEdgeZone();
         }
     }
@@ -611,7 +594,6 @@ export class IgxNavigationDrawerComponent implements
         this.closing.emit();
 
         this.isOpen = false;
-        // this.setDrawerWidth(this.miniTemplate ? this.miniWidth : '');
         this.elementRef.nativeElement.addEventListener('transitionend', this.toggleClosedEvent, false);
     }
 
@@ -668,22 +650,6 @@ export class IgxNavigationDrawerComponent implements
 
     private getWindowWidth() {
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    }
-
-    /**
-     * Sets the drawer width.
-     */
-    private setDrawerWidth(width: string) {
-        // if (this.platformUtil.isBrowser) {
-            requestAnimationFrame(() => {
-                // if (this.drawer) {
-                //     console.log(width);
-                //     this.renderer.setStyle(this.drawer, '--igx-nav-drawer-size', width);
-                // }
-            });
-        // } else {
-        //     this.renderer.setStyle(this.drawer, '--igx-nav-drawer-size', width);
-        // }
     }
 
     /**
