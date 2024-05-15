@@ -211,7 +211,7 @@ describe('Navigation Drawer', () => {
         spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
             callback(0); return 0;
         });
-        const template = `<igx-nav-drawer>
+        const template = `<igx-nav-drawer [miniWidth]="'56px'">
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
@@ -222,23 +222,25 @@ describe('Navigation Drawer', () => {
         });
         let fixture;
         let asideElem;
+        let cssProp
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(TestComponentMiniComponent);
             fixture.detectChanges();
-            asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside'));
+            asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside--mini'));
+            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--igx-nav-drawer-size--mini');
 
-            expect(asideElem.styles['min-width']).toEqual('40px');
+            expect(cssProp).toEqual('56px');
 
             fixture.componentInstance.miniView = false;
             fixture.detectChanges();
 
-            expect(asideElem.styles['min-width']).toBeFalsy();
+            expect(asideElem.styles['width']).toBeFalsy();
             fixture.componentInstance.miniView = true;
             fixture.detectChanges();
 
-            expect(asideElem.styles['min-width']).toEqual(fixture.componentInstance.navDrawer.miniWidth);
+            expect(cssProp).toEqual(fixture.componentInstance.navDrawer.miniWidth);
         }).catch((reason) => Promise.reject(reason));
     }));
 
@@ -310,30 +312,48 @@ describe('Navigation Drawer', () => {
     it('should set flex-basis and order when pinned', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
+        let fixture: ComponentFixture<TestComponentPinComponent>;
         TestBed.compileComponents()
             .then(() => {
-                const fixture = TestBed.createComponent(TestComponentPinComponent);
+                fixture = TestBed.createComponent(TestComponentPinComponent);
                 const drawer = fixture.componentInstance.navDrawer;
                 drawer.isOpen = true;
                 fixture.detectChanges();
                 const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
                 expect(drawer.pin).toBeTruthy();
-                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(flexBasis).toEqual('240px');
                 expect(drawerElem.style.order).toEqual('0');
 
                 drawer.width = '345px';
                 drawer.position = 'right';
                 fixture.detectChanges();
-                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(()=> {
+                const drawer = fixture.componentInstance.navDrawer;
+
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+
+                expect(flexBasis).toEqual('345px');
                 expect(drawerElem.style.order).toEqual('1');
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
                 expect(drawer.pin).toBeFalsy();
-                expect(drawerElem.style.flexBasis).toEqual('0px');
+
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(()=> {
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+
+                expect(flexBasis).toEqual('0px');
                 expect(drawerElem.style.order).toEqual('0');
-            });
+        });
     }));
 
     it('should toggle on edge swipe gesture', (done) => {
@@ -457,30 +477,34 @@ describe('Navigation Drawer', () => {
         const fixture: ComponentFixture<TestComponentDIComponent> = TestBed.createComponent(TestComponentDIComponent);
         fixture.detectChanges();
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
+        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
+
+        const computedStyle = window.getComputedStyle(asideElem);
+        const asideWidth = computedStyle.getPropertyValue('--igx-nav-drawer-size');
 
         // defaults:
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('');
+        expect(asideWidth).toBe('');
         fixture.componentInstance.navDrawer.open();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('');
+        expect(asideWidth).toBe('');
 
         fixture.componentInstance.drawerMiniWidth = '80px';
         fixture.componentInstance.drawerWidth = '250px';
         fixture.detectChanges();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('250px');
+        expect(asideWidth).toBe('250px');
         fixture.componentInstance.navDrawer.close();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('80px');
+        expect(asideWidth).toBe('80px');
         fixture.componentInstance.drawerWidth = '350px';
         fixture.detectChanges();
         fixture.componentInstance.navDrawer.open();
         await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.minWidth).toBe('350px');
+        expect(asideWidth).toBe('350px');
     });
 
     it('should update pin based on window width (pinThreshold)', async () => {
