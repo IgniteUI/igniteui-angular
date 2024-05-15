@@ -197,6 +197,10 @@
                 @extend %cbx-composite-mark--x !optional;
             }
 
+            @include e(composite-wrapper) {
+                @extend %cbx-composite-wrapper--x !optional;
+            }
+
             &:hover {
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;

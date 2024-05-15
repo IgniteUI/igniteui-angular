@@ -167,16 +167,6 @@
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme-off: ripple-theme(
-        $schema: $light-material-schema,
-        $color: var-get($theme, 'empty-color')
-    );
-
-    $ripple-theme-on: ripple-theme(
-        $schema: $light-material-schema,
-        $color: var-get($theme, 'fill-color')
-    );
-
     @include scale-in-center();
 
     %cbx-display {
@@ -204,6 +194,14 @@
         position: relative;
         width: $size;
         height: $size;
+
+        //ripple color
+        --color: #{var-get($theme, 'empty-color')};
+    }
+
+    %cbx-composite-wrapper--x {
+        //ripple color
+        --color: #{var-get($theme, 'fill-color')};
     }
 
     %cbx-composite {
@@ -230,9 +228,6 @@
     }
 
     %cbx-composite--x {
-        @include ripple($ripple-theme-on);
-        @include css-vars($ripple-theme-on);
-
         border-color: var-get($theme, 'fill-color');
         background: var-get($theme, 'fill-color');
     }
@@ -434,6 +429,10 @@
         @if $variant == 'fluent' {
             stroke: var-get($theme, 'error-color');
         }
+
+        @if $variant == 'fluent' and $theme-variant == 'dark' {
+            stroke: color($color: 'error', $variant: 500);
+        }
     }
 
     %cbx-composite-mark--in--fluent {
@@ -488,8 +487,6 @@
     }
 
     %cbx-ripple {
-        @include ripple($ripple-theme-off);
-        @include css-vars($ripple-theme-off);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
