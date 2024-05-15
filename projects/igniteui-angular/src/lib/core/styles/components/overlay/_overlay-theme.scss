@@ -94,7 +94,23 @@
         position: relative;
     }
 
-    %igx-toggle--hidden {
+    %igx-toggle--hidden:not(%igx-toggle--hidden-webkit) {
         display: none !important;
+    }
+
+    %igx-toggle--hidden-webkit {
+        // WARN: This is a workaround around a bug in Safari.
+        position: absolute;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        margin: -1px;
+        border: none;
+        clip: rect(0, 0, 0, 0);
+        outline: 0;
+        pointer-events: none;
+        overflow: hidden;
+        appearance: none;
+        z-index: -1;
     }
 }
