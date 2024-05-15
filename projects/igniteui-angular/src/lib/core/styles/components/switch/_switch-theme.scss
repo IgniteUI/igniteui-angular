@@ -293,6 +293,9 @@
         @if $variant == 'indigo-design' {
             border: rem(2px) solid var-get($theme, 'border-color');
         }
+
+        //ripple color
+        --color: #{var-get($theme, 'track-off-color')}
     }
 
     %switch-composite--hover {
@@ -334,9 +337,8 @@
         background: var-get($theme, 'track-on-color');
         border-color: var-get($theme, 'border-on-color');
 
-        %switch-ripple {
-            --color: #{var-get($theme, 'thumb-on-color')};
-        }
+        //ripple color
+        --color: #{var-get($theme, 'thumb-on-color')};
     }
 
     %switch-composite--x--hover {
@@ -423,9 +425,6 @@
         pointer-events: none;
         filter: opacity(1);
         border-radius: var-get($theme, 'border-radius-ripple');
-
-        //ripple-color
-        --color: #{var-get($theme, 'track-off-color')};
     }
 
     %igx-switch--focused {
