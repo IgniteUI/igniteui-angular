@@ -172,22 +172,41 @@
         indigo-design: rem(32px),
     ), $variant);
 
+    $item-mini-size: map.get((
+        material: rem(56px),
+        fluent: rem(40px),
+        bootstrap: rem(88px),
+        indigo-design: rem(48px),
+    ), $variant);
+
     %navdrawer-display {
+        --igx-nav-drawer-size: #{rem(240px)};
+        --igx-nav-drawer-size--mini: #{$item-mini-size};
+
+        flex-basis: 0;
         transition: flex-basis;
         transition-duration: .3s;
         transition-timing-function: $out-quad;
         flex-shrink: 0;
     }
 
+    %navdrawer-display-pinned {
+        flex-basis: var(--igx-nav-drawer-size);
+    }
+
+    %navdrawer-display-mini-pinned {
+        flex-basis: var(--igx-mini-nav-drawer-size);
+    }
+
     %aside {
         position: fixed;
         height: 100%;
-        max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
+        width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
         z-index: 999;
         transition: width, padding, transform;
@@ -211,7 +230,6 @@
 
     %aside--pinned {
         position: relative;
-        max-width: 100%;
         box-shadow: none;
         z-index: 0;
     }
@@ -254,14 +272,14 @@
     }
 
     %aside--mini {
-        min-width: rem(40px);
         transition-duration: .2s, .2s;
+        width: var(--igx-nav-drawer-size--mini);
 
         %item {
             justify-content: center;
 
             @if $variant == 'indigo-design' {
-                max-width: rem(32px);
+                //max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: rem(14px) auto !important;
             }
@@ -273,8 +291,8 @@
     }
 
     %aside--normal {
-        width: rem(240px);
         transition-duration: .3s, .3s;
+        width: var(--igx-nav-drawer-size);
     }
 
     %overlay {
