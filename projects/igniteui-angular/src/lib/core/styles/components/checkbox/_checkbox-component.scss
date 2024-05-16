@@ -123,6 +123,8 @@
             }
 
             &:hover {
+                @extend %igx-checkbox--focused-hovered !optional;
+                
                 @include e(ripple) {
                     @extend %cbx-ripple--focused !optional;
                 }
@@ -193,6 +195,10 @@
 
             @include e(composite-mark) {
                 @extend %cbx-composite-mark--x !optional;
+            }
+
+            @include e(composite-wrapper) {
+                @extend %cbx-composite-wrapper--x !optional;
             }
 
             &:hover {
