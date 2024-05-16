@@ -305,7 +305,7 @@
         border-color: var-get($theme, 'border-hover-color');
 
         @if $variant != 'material' {
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'border-hover-color');
             }
 
@@ -347,7 +347,7 @@
         border-color: var-get($theme, 'border-on-hover-color');
 
         @if $variant != 'material' {
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -387,6 +387,7 @@
         min-width: rem($switch-thumb-width);
         border-radius: var-get($theme, 'border-radius-thumb');
         background: var-get($theme, 'thumb-off-color');
+        transition: $input-transition;
 
         @if $variant == 'material' {
             box-shadow: $thumb-resting-shadow;
@@ -401,7 +402,7 @@
         background: var-get($theme, 'thumb-on-color');
     }
 
-    %switch-composite-thumb--invalid {
+    %switch-thumb--invalid {
         background: var-get($theme, 'error-color');
     }
 
@@ -517,7 +518,7 @@
             background: var-get($theme, 'track-on-disabled-color');
         }
       
-        %switch-composite-thumb--x {
+        %switch-thumb--x {
             background: var-get($theme, 'thumb-on-disabled-color');
         }
 

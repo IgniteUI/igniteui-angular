@@ -164,8 +164,8 @@
                 @extend %switch-label--invalid !optional;
             }
 
-            @include e(composite-thumb) {
-                @extend %switch-composite-thumb--invalid !optional;
+            @include e(thumb) {
+                @extend %switch-thumb--invalid !optional;
             }
         }
 
