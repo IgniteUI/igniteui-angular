@@ -240,7 +240,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            this.filterValue = this.searchValue = '';
+            if (!this.comboInput.value) {
+                this.filterValue = this.searchValue = '';
+            }
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
@@ -288,7 +290,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && super.selection.length) {
+        if (!this.comboInput.value.trim() && super.selection.length && super.selection[0][this.valueKey] !== "") {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
@@ -336,20 +338,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
             this.clearOnBlur();
             this.close();
-        }
-        if (this.collapsed && event.key && event.key.length > 0
-            && event.key !== this.platformUtil.KEYMAP.CONTROL && !event.altKey && !event.metaKey) {
-            const newFilterValue = this.filterValue + event.key.toLowerCase();
-            this.filterValue = newFilterValue;
-            this.searchValue = newFilterValue;
-            this.filteredData = this.data.filter(item => this.findAllMatches(item));
-            this.open();
-        }
-        if (event.key === this.platformUtil.KEYMAP.SPACE && this.filteredData.length !== this.data.length) {
-            this.clearSelection();
-            this.filterValue = '';
-            this.searchValue = '';
-            this.filteredData = this.data;
         }
         this.composing = false;
         super.handleKeyDown(event);

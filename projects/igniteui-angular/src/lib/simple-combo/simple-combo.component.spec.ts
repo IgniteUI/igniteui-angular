@@ -1530,20 +1530,25 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should properly filter dropdown when a key is pressed while the combo is focused but not opened', fakeAsync(() => {
-            spyOn(combo, 'open').and.callThrough();
-
-            const event = UIInteractions.getKeyboardEvent('keydown', 'z');
-
             expect(combo.collapsed).toEqual(true);
 
-            combo.handleKeyDown(event);
+            combo.handleInputChange('z');
             tick();
             fixture.detectChanges();
 
-            expect(combo.collapsed).toEqual(false);
-            expect(combo.open).toHaveBeenCalled();
             expect(combo.filteredData.length).toEqual(1);
-            expect(combo.filteredData).toEqual([{ field: 'Arizona', region: 'Mount' }]);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toEqual(true);
+
+            combo.handleInputChange(' ');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(12);
         }));
     });
 
