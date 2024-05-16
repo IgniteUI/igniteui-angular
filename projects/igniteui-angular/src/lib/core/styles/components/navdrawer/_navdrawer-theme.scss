@@ -206,7 +206,6 @@
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
-        width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
         z-index: 999;
         transition: width, padding, transform;
@@ -359,6 +358,7 @@
             --component-size: 3;
 
             color: var-get($theme, 'item-icon-color');
+
             @if $variant == 'indigo-design' {
                 margin-inline-start: rem(4px);
             }

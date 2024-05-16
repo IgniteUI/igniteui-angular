@@ -394,6 +394,9 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '240px';
+            navDrawer.miniWidth = '56px';
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
