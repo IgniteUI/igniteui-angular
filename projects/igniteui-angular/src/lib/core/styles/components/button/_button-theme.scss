@@ -65,8 +65,8 @@
     $hover-background: null,
     $hover-foreground: null,
 
-    $icon-color: null,
-    $icon-color-hover: null,
+    $icon-color: $foreground,
+    $icon-color-hover: $hover-foreground,
 
     $focus-background: null,
     $focus-foreground: null,
@@ -96,7 +96,7 @@
 
     $disabled-background: null,
     $disabled-foreground: null,
-    $disabled-icon-color: null,
+    $disabled-icon-color: $disabled-foreground,
     $disabled-border-color: null,
     $size: null,
 ) {
@@ -136,6 +136,12 @@
         @if not($hover-foreground) and $hover-background {
             @if meta.type-of($hover-background) == 'color' {
                 $hover-foreground: text-contrast($hover-background);
+            }
+        }
+
+        @if not($icon-color-hover) and $hover-foreground {
+            @if meta.type-of($hover-background) == 'color' {
+                $icon-color-hover: $hover-foreground;
             }
         }
 
@@ -761,6 +767,10 @@
             background: var-get($contained-theme, 'active-background');
             border-color: var-get($contained-theme, 'active-border-color');
             box-shadow: var-get($contained-theme, 'hover-shadow');
+
+            igx-icon {
+                color: var-get($contained-theme, 'active-foreground');
+            }
         }
 
         @if ($variant == 'indigo-design') {
@@ -897,6 +907,10 @@
             background: var-get($fab-theme, 'active-background');
             border-color: var-get($fab-theme, 'active-border-color');
             box-shadow: var-get($fab-theme, 'focus-shadow');
+
+            igx-icon {
+                color: var-get($fab-theme, 'active-foreground');
+            }
 
             @if ($variant == 'indigo-design') {
                 igx-icon {

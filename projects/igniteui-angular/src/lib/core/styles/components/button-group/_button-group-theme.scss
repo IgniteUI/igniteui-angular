@@ -73,12 +73,12 @@
     $shadow: null,
 
     $item-text-color: null,
-    $item-icon-color: null,
+    $item-icon-color: $item-text-color,
     $item-background: null,
     $item-border-color: null,
 
     $item-hover-text-color: null,
-    $item-hover-icon-color: null,
+    $item-hover-icon-color: $item-hover-text-color,
     $item-hover-background: null,
     $item-hover-border-color: null,
 
@@ -95,19 +95,19 @@
     $item-disabled-border: null,
 
     $item-selected-text-color: null,
-    $item-selected-icon-color: null,
+    $item-selected-icon-color: $item-selected-text-color,
     $item-selected-background: null,
     $item-selected-border-color: null,
 
     $item-selected-hover-text-color: null,
-    $item-selected-hover-icon-color: null,
+    $item-selected-hover-icon-color: $item-selected-hover-text-color,
     $item-selected-hover-background: null,
     $item-selected-hover-border-color: null,
     $item-selected-focus-background: null,
     $item-selected-focus-hover-background: null,
 
     $disabled-selected-text-color: null,
-    $disabled-selected-icon-color: null,
+    $disabled-selected-icon-color: $disabled-selected-text-color,
     $disabled-selected-background: null,
     $disabled-selected-border-color: null,
 ) {
@@ -140,7 +140,7 @@
 
     @if not($item-selected-background) and $item-background {
         @if meta.type-of($item-background) == 'color' {
-            $item-selected-text-color: text-contrast($item-background);
+            $item-selected-background: text-contrast($item-background);
         }
     }
 
@@ -370,7 +370,7 @@
         }
 
         @if $variant == 'indigo-design' {
-            padding-inline: pad-inline(rem(8px));
+            padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
 
             igx-icon {
                 $icon-size: rem(16px);
