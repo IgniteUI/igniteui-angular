@@ -401,7 +401,7 @@
         background: var-get($theme, 'thumb-on-color');
     }
 
-    %switch-thumb--invalid {
+    %switch-composite-thumb--invalid {
         background: var-get($theme, 'error-color');
     }
 
