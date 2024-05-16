@@ -1,0 +1,17 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$idle-item-color",
+      "replaceWith": "$label-color",
+      "owner": "bottom-nav-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-item-color",
+      "replaceWith": "$label-selected-color",
+      "owner": "bottom-nav-theme",
+      "type": "property"
+    }
+  ]
+}

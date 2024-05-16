@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.0.0
+### New Features
+- `IgxCombo`, `IgxSimpleCombo`:
+    - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+
 ## 17.2.0
 ### New Features
 - `IgxAvatar`
