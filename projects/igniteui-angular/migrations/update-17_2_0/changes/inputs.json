@@ -19,31 +19,7 @@
             }
         },
         {
-            "name": "color",
-            "remove": true,
-            "owner": {
-                "selector": "igxButton",
-                "type": "directive"
-            }
-        },
-        {
-            "name": "background",
-            "remove": true,
-            "owner": {
-                "selector": "igxButton",
-                "type": "directive"
-            }
-        },
-        {
             "name": "type",
-            "remove": true,
-            "owner": {
-                "selector": "igx-card",
-                "type": "component"
-            }
-        },
-        {
-            "name": "reverse",
             "remove": true,
             "owner": {
                 "selector": "igx-card",
