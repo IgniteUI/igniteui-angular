@@ -22,6 +22,7 @@
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
 /// @param {Color} $track-on-disabled-color [null] - The color of the track when the switch is on and disabled.
 /// @param {Color} $label-color [null] - The color of the switch label
+/// @param {Color} $label-hover-color [null] - The color of the switch label on hover.
 /// @param {Color} $label-disabled-color [null] - The color of the switch label when the switch is disabled
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
@@ -65,6 +66,7 @@
     $thumb-on-disabled-color: null,
 
     $label-color: null,
+    $label-hover-color: null,
     $label-disabled-color: null,
     $label-invalid-color: null,
 
@@ -144,6 +146,7 @@
         thumb-on-disabled-color: $thumb-on-disabled-color,
 
         label-color: $label-color,
+        label-hover-color: $label-hover-color,
         label-disabled-color: $label-disabled-color,
         label-invalid-color: $label-invalid-color,
 
@@ -188,7 +191,7 @@
         material: 36px,
         fluent: 40px,
         bootstrap: 32px,
-        indigo-design: 34px
+        indigo-design: 32px
     ), $variant);
 
     $switch-height: map.get((
@@ -299,12 +302,10 @@
     }
 
     %switch-composite--hover {
-        @if $variant != 'indigo-design' {
-            border-color: var-get($theme, 'border-hover-color');
-        }
+        border-color: var-get($theme, 'border-hover-color');
 
-        @if $variant == 'fluent' or $variant == 'bootstrap' {
-            %switch-thumb {
+        @if $variant != 'material' {
+            %switch-composite-thumb {
                 background: var-get($theme, 'border-hover-color');
             }
 
@@ -342,12 +343,11 @@
     }
 
     %switch-composite--x--hover {
+        background: var-get($theme, 'track-on-hover-color');
         border-color: var-get($theme, 'border-on-hover-color');
 
-        @if $variant == 'fluent' or $variant == 'bootstrap' {
-            background: var-get($theme, 'track-on-hover-color');
-
-            %switch-thumb {
+        @if $variant != 'material' {
+            %switch-composite-thumb {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -513,19 +513,23 @@
     }
 
     %igx-switch--disabled-checked {
-        @if $variant != 'indigo-design' {
-            %switch-composite--x {
-                background: var-get($theme, 'track-on-disabled-color');
-            }
-
-            %switch-thumb--x {
-                background: var-get($theme, 'thumb-on-disabled-color');
-            }
+        %switch-composite--x {
+            background: var-get($theme, 'track-on-disabled-color');
+        }
+      
+        %switch-composite-thumb--x {
+            background: var-get($theme, 'thumb-on-disabled-color');
         }
 
         @if $variant == 'bootstrap' or $variant == 'fluent'{
             %switch-composite--x {
                 border-color: var-get($theme, 'track-on-disabled-color');
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            %switch-composite--x {
+                border-color: transparent;
             }
         }
     }
@@ -574,6 +578,10 @@
     %switch-label--before {
         order: -1;
         margin-inline-end: $label-margin;
+    }
+
+    %switch-label--hover {
+        color: var-get($theme, 'label-hover-color');
     }
 
     %switch-label--invalid {

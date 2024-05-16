@@ -22,6 +22,14 @@
             @include e(composite) {
                 @extend %switch-composite--hover !optional;
             }
+
+            @include e(label) {
+                @extend %switch-label--hover !optional;
+            }
+
+            @include e(label, $m: before) {
+                @extend %switch-label--hover !optional;
+            }
         }
 
         &:active {
@@ -151,9 +159,13 @@
             @include e(label) {
                 @extend %switch-label--invalid !optional;
             }
+          
+            @include e(label, $m: before) {
+                @extend %switch-label--invalid !optional;
+            }
 
-            @include e(thumb) {
-                @extend %switch-thumb--invalid !optional;
+            @include e(composite-thumb) {
+                @extend %switch-composite-thumb--invalid !optional;
             }
         }
 
