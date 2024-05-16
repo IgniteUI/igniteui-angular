@@ -910,7 +910,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        this._zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(this.recalcUpdateSizes.bind(this));
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1090,7 +1090,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        this._zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(this.recalcUpdateSizes.bind(this));
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1674,7 +1674,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        this._zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(this.recalcUpdateSizes.bind(this));
         this.cdr.markForCheck();
     }
 

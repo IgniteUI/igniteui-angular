@@ -18,7 +18,6 @@ import {
     ViewContainerRef,
     Optional,
     LOCALE_ID,
-    Injector,
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute
@@ -435,7 +434,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
@@ -449,7 +447,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
+            _zone, document, cdr, differs, viewRef, envInjector, navigation, filteringService, textHighlightService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
