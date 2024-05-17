@@ -317,6 +317,8 @@
 
                 @if $variant != 'fluent' {
                     background: var-get($theme, 'fill-color-hover');
+                } @else {
+                    background: transparent;
                 }
 
                 &::before {
