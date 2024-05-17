@@ -338,11 +338,11 @@ export class IgxNavigationDrawerComponent implements
      */
     @HostBinding('style.--igx-nav-drawer-size')
     public get normalSize() {
-        if (this.isOpen) {
-            return this.width;
+        if (!this.isOpen) {
+            return '0px';
         }
 
-        return '0px';
+        return this.width;
     }
 
     /**
@@ -350,9 +350,6 @@ export class IgxNavigationDrawerComponent implements
      */
     @HostBinding('style.--igx-nav-drawer-size--mini')
     public get miniSize() {
-        if (this.isOpen) {
-            return this.width;
-        }
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
         }
@@ -559,9 +556,11 @@ export class IgxNavigationDrawerComponent implements
         if (this._panning) {
             this.resetPan();
         }
+
         if (this.isOpen) {
             return;
         }
+
         this.opening.emit();
         this.isOpen = true;
 
@@ -588,9 +587,11 @@ export class IgxNavigationDrawerComponent implements
         if (this._panning) {
             this.resetPan();
         }
+
         if (!this.isOpen) {
             return;
         }
+
         this.closing.emit();
 
         this.isOpen = false;
