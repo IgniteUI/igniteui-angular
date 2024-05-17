@@ -479,33 +479,51 @@ describe('Navigation Drawer', () => {
         await TestBed.compileComponents();
         const fixture: ComponentFixture<TestComponentDIComponent> = TestBed.createComponent(TestComponentDIComponent);
         fixture.detectChanges();
+
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
         const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
 
         const computedStyle = window.getComputedStyle(asideElem);
-        const asideWidth = computedStyle.getPropertyValue('--igx-nav-drawer-size');
+        let asideWidth = computedStyle.getPropertyValue('width');
 
-        // defaults:
-        expect(asideWidth).toBe('');
+        // Default sizes:
+        // Mini default:
+        expect(asideWidth).toBe('56px');
+
         fixture.componentInstance.navDrawer.open();
-        await wait(200);
+        fixture.detectChanges();
 
-        expect(asideWidth).toBe('');
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
 
+        // Standard default:
+        expect(asideWidth).toBe('240px');
+
+        // Change sizes:
         fixture.componentInstance.drawerMiniWidth = '80px';
         fixture.componentInstance.drawerWidth = '250px';
+
         fixture.detectChanges();
-        await wait(200);
+
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('250px');
+
         fixture.componentInstance.navDrawer.close();
-        await wait(200);
+        fixture.detectChanges();
+
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('80px');
+
         fixture.componentInstance.drawerWidth = '350px';
-        fixture.detectChanges();
         fixture.componentInstance.navDrawer.open();
-        await wait(200);
+        fixture.detectChanges();
+
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('350px');
     });
