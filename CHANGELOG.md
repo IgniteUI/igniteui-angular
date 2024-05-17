@@ -116,11 +116,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-=======
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
     - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
+- `IgxOverlayService`:
+    - **Breaking Change** The `setOffset` function now directly sets the specified values instead of incrementing them.
+
 ## 16.1.4
 ### New Features
 - `Themes`:
