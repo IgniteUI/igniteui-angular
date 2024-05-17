@@ -238,6 +238,11 @@
         }
     }
 
+    %cbx-composite-wrapper--invalid {
+        //ripple color
+        --color: #{var-get($theme, 'error-color')};
+    }
+
     %cbx-composite--invalid--hover {
         border-color: var-get($theme, 'error-color-hover');
     }

@@ -73,6 +73,10 @@
                 @extend %cbx-composite--invalid !optional;
             }
 
+            @include e(composite-wrapper) {
+                @extend %cbx-composite-wrapper--invalid !optional;
+            }
+
             @include e(label) {
                 @extend %cbx-label--invalid !optional;
             }

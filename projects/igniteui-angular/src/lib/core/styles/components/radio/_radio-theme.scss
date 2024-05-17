@@ -333,6 +333,9 @@
     }
 
     %radio-composite--invalid {
+        //ripple color
+        --color: #{var-get($theme, 'error-color')};
+
         &::after {
             border: $border-width $border-style var-get($theme, 'error-color');
 
