@@ -6,7 +6,9 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxButtonGroup`:
     - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
-
+- `IgxOverlayService`:
+    - **Breaking Change** The `setOffset` function now directly sets the specified values instead of incrementing them.
+    
 ## 16.1.4
 ### New Features
 - `Themes`:

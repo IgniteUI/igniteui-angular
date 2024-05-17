@@ -99,7 +99,7 @@ this.overlay.show(component, overlaySettings);
 |detach           | Remove overlay with the provided id                                             |id               |
 |detachAll        | Remove all the overlays                                                         |-                |
 |reposition       | Repositions the native element of the component with provided id                |id               |
-|setOffset        | Offsets the content along the corresponding axis by the provided amount       |id, deltaX, deltaY |
+|setOffset        | Offsets the content's position along the relevant axis precisely by the specified amount |id, deltaX, deltaY |
 
 ###### IPositionStrategy
 
