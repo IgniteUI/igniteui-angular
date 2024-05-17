@@ -352,7 +352,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
             });
         }
 
-        this.el.nativeElement.focus();
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
+
         this.activeDate = item.date.native;
         this.selectActiveDate();
     }
