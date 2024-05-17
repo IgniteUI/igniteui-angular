@@ -9,7 +9,7 @@
         [attr.aria-controls]="this.subMenu.listId"
         [attr.aria-activedescendant]="!this.subMenu.collapsed ? this.subMenu.focusedItem?.id : null">
         <span>{{ subMenuText }}</span>
-        <igx-icon>keyboard_arrow_right</igx-icon>
+        <igx-icon name="chevron_right" family="default"></igx-icon>
     </div>
 
     <igx-drop-down
@@ -23,13 +23,13 @@
             *ngFor="let condition of conditions"
             [value]="condition">
                 <div class="igx-grid__filtering-dropdown-items">
-                    <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+                    <igx-icon family="default" [name]="getCondition(condition).iconName"></igx-icon>
                     <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
                 </div>
             </igx-drop-down-item>
             <igx-drop-down-item *ngIf="showCustomFilterItem()">
                 <div class="igx-grid__filtering-dropdown-items">
-                    <igx-icon>filter_list</igx-icon>
+                    <igx-icon name="filter_list" family="default"></igx-icon>
                     <span class="igx-grid__filtering-dropdown-text">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
                 </div>
             </igx-drop-down-item>

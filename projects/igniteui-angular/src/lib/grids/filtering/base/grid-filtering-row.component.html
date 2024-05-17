@@ -35,8 +35,20 @@
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp()"/>
         <igx-suffix *ngIf="value || value === 0" >
-            <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
-            <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
+            <igx-icon
+                (keydown)="onCommitKeyDown($event)"
+                (click)="onCommitClick()"
+                tabindex="0"
+                family="default"
+                name="done">
+            </igx-icon>
+            <igx-icon
+                (keydown)="onClearKeyDown($event)"
+                (click)="onClearClick()"
+                tabindex="0"
+                family="default"
+                name="clear">
+            </igx-icon>
         </igx-suffix>
     </igx-input-group>
 </ng-template>
@@ -65,8 +77,20 @@
             <igx-icon family="default" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <igx-suffix *ngIf="value">
-            <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
-            <igx-icon tabindex="0" (keydown)="onClearKeyDown($event)" (click)="clearInput($event)">clear</igx-icon>
+            <igx-icon
+                tabindex="0"
+                (keydown)="onCommitKeyDown($event)"
+                (click)="onCommitClick($event)"
+                family="default"
+                name="done">
+            </igx-icon>
+            <igx-icon
+                tabindex="0"
+                (keydown)="onClearKeyDown($event)"
+                (click)="clearInput($event)"
+                family="default"
+                name="clear">
+            </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
         <igx-picker-toggle></igx-picker-toggle>
@@ -97,8 +121,20 @@
             <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <igx-suffix *ngIf="value">
-            <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
-            <igx-icon tabindex="0" (keydown)="onClearKeyDown($event)" (click)="clearInput($event)">clear</igx-icon>
+            <igx-icon
+                tabindex="0"
+                (keydown)="onCommitKeyDown($event)"
+                (click)="onCommitClick($event)"
+                family="default"
+                name="done">
+            </igx-icon>
+            <igx-icon
+                tabindex="0"
+                (keydown)="onClearKeyDown($event)"
+                (click)="clearInput($event)"
+                family="default"
+                name="clear">
+            </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
         <igx-picker-toggle></igx-picker-toggle>

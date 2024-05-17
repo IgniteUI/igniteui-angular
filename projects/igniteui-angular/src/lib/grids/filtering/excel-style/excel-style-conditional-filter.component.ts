@@ -16,6 +16,7 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
 import { NgIf, NgFor } from '@angular/common';
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
+import { IgxIconService } from '../../../icon/icon.service';
 
 
 /**
@@ -54,7 +55,11 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
+    constructor(
+        public esf: BaseFilteringComponent,
+        protected platform: PlatformUtil,
+        protected iconService: IgxIconService,
+    ) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;
@@ -65,6 +70,16 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         if (this.esf.grid) {
             this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
         }
+
+        this.iconService.addIconRef('chevron_right', 'default', {
+            family: 'material',
+            name: 'chevron_right'
+        });
+
+        this.iconService.addIconRef('filter_list', 'default', {
+            family: 'material',
+            name: 'android'
+        });
     }
 
     public ngOnDestroy(): void {

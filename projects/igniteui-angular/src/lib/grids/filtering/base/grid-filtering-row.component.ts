@@ -46,6 +46,7 @@ import { IgxInputGroupComponent } from '../../../input-group/input-group.compone
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { IgxIconService } from '../../../icon/icon.service';
 
 /**
  * @hidden
@@ -216,8 +217,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         public filteringService: IgxFilteringService,
         public ref: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil
-    ) { }
+        protected platform: PlatformUtil,
+        protected iconService: IgxIconService,
+    ) {
+        this.iconService.addIconRef('clear', 'default', {
+            name: 'clear',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('done', 'default', {
+            name: 'done',
+            family: 'material'
+        });
+    }
 
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt: KeyboardEvent) {

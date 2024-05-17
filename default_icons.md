@@ -59,7 +59,7 @@ Default Component Icons:
  - filter_list
  - filter_list
 
-- [ ] Path: grids/filtering/base/grid-filtering-row.component.html
+- [x] Path: grids/filtering/base/grid-filtering-row.component.html
   * multiple built-in from imx-icons & condition.iconName; possibly user-configurable too
   - done
   - clear
@@ -69,10 +69,10 @@ Default Component Icons:
   - close
   - refresh
 
-- [ ] Path: grids/filtering/excel-style/excel-style-clear-filters.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-clear-filters.component.html
   - clear
 
-- [ ] Path: grids/filtering/excel-style/excel-style-conditional-filter.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-conditional-filter.component.html
   * multiple built-in from imx-icons & condition.iconName; possibly user-configurable too
   - keyboard_arrow_right
   - filter_list

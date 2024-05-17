@@ -5,7 +5,7 @@
         (selectionChanging)="onConditionsChanged($event)"
         [overlaySettings]="dropDownOverlaySettings">
     <igx-prefix>
-        <igx-icon *ngIf="expressionUI.expression.condition" family="imx-icons" [name]="getIconName()"></igx-icon>
+        <igx-icon *ngIf="expressionUI.expression.condition" family="default" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
     <igx-select-item *ngFor="let condition of conditions" [value]="condition" [text]="getConditionFriendlyName(condition)" [selected]="isConditionSelected(condition)">
