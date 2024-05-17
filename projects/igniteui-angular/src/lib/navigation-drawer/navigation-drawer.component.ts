@@ -156,7 +156,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public pin = false;
 
     /**
-     * Width of the drawer in its open state. Defaults to "280px".
+     * Width of the drawer in its open state.
      *
      * ```typescript
      * // get
@@ -168,7 +168,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public width = '280px';
+    @Input() public width;
 
 
     /**
@@ -181,7 +181,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
 
     /**
-     * Width of the drawer in its mini state. Defaults to 68px.
+     * Width of the drawer in its mini state.
      *
      * ```typescript
      * // get
@@ -193,7 +193,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth = '68px';
+    @Input() public miniWidth;
 
     /**
      * Pinned state change output for two-way binding.
