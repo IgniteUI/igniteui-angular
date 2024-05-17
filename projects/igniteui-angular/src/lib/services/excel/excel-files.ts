@@ -611,10 +611,12 @@ export class WorksheetFile implements IExcelFile {
                     ? this.rowIndex
                     : startValue + (owner.maxRowLevel ?? 0)
 
-                const rowCoordinate = isVertical
+                let rowCoordinate = isVertical
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
-
+                if (currentCol.pivotRowHeader) {
+                    rowCoordinate = startValue + 1;
+                }
                 const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
@@ -670,8 +672,9 @@ export class WorksheetFile implements IExcelFile {
                     this.mergeCellStr += `${columnCoordinate}" />`;
                 }
             }
-
-            startValue += spanLength;
+            if (!currentCol.pivotRowHeader) {
+                startValue += spanLength;
+            }
         }
     }
 }
