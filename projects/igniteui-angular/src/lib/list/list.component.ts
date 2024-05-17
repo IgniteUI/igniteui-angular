@@ -27,7 +27,6 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { IListResourceStrings, ListResourceStringsEN } from '../core/i18n/list-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
@@ -467,9 +466,8 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this._resourceStrings;
     }
 
-    constructor(public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions, element);
+    constructor(public element: ElementRef) {
+        super(element);
     }
 
     /**
@@ -524,14 +522,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
         return !this.isListEmpty;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        if (!this.isListEmpty) {
-            return this.getComponentSizeStyles();
-        }
     }
 
     /**

@@ -15,7 +15,6 @@ import {
     OnDestroy,
     booleanAttribute
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
@@ -86,7 +85,7 @@ let CHIP_ID = 0;
     standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
+export class IgxChipComponent implements OnDestroy {
 
     /**
      * Sets/gets the variant of the chip.
@@ -516,15 +515,6 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.--component-size')
-    public get componentSize(): string {
-        return this.getComponentSizeStyles();
-    }
-
-    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -579,28 +569,6 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
         return this.selectIcon || this.defaultSelectIcon;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public get ghostStyles() {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-small))',
-                };
-            case DisplayDensity.cosy:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-medium))',
-                };
-            case DisplayDensity.comfortable:
-            default:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-large))',
-                };
-        }
-    }
-
     /** @hidden @internal */
     public get nativeElement() {
         return this.ref.nativeElement;
@@ -624,10 +592,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     protected _movedWhileRemoving = false;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
-    constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions, ref);
-    }
+    constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2) { }
 
     /**
      * @hidden

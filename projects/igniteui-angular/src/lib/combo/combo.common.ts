@@ -28,7 +28,6 @@ import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
@@ -114,7 +113,7 @@ export interface IComboFilteringOptions {
 }
 
 @Directive()
-export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, AfterViewChecked, OnInit, DoCheck,
+export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit, DoCheck,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
@@ -982,8 +981,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngOnInit() {
-        super.ngOnInit();
+    public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');

@@ -28,7 +28,6 @@ import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } f
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -344,10 +343,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         cdr: ChangeDetectorRef,
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        super(elementRef, cdr, selection);
     }
 
     //#region ControlValueAccessor
@@ -522,9 +520,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /**
      * @hidden @internal
      */
-    public override ngOnInit() {
+    public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
     }
 
     /**

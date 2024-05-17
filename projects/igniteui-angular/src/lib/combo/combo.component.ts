@@ -18,7 +18,6 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -203,10 +202,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
         _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        super(elementRef, cdr, selectionService, comboAPI, _iconService, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 
@@ -260,12 +258,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
+    public ngDoCheck(): void {
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
-        super.ngDoCheck();
     }
 
     /**

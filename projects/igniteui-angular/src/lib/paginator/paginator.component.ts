@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -37,7 +36,7 @@ export class IgxPaginatorContentDirective {
     ]
 })
 // switch IgxPaginatorToken to extends once density is dropped
-export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPaginatorToken {
+export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * @hidden
@@ -120,12 +119,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
     /** @hidden @internal */
     @HostBinding('class.igx-paginator')
     public cssClass = 'igx-paginator';
-
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
 
     /**
      * Gets/Sets the current page of the paginator.
@@ -256,10 +249,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements IgxPagi
         return this._resourceStrings;
     }
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions, elementRef);
-    }
+    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) { }
 
     /**
      * Returns if the current page is the last page.

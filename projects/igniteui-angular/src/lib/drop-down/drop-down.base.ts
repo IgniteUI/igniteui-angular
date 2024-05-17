@@ -6,7 +6,6 @@ import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 let NEXT_ID = 0;
 
@@ -18,7 +17,7 @@ let NEXT_ID = 0;
  * Properties and methods for selecting items from the collection
  */
 @Directive()
-export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
+export abstract class IgxDropDownBaseDirective implements IDropDownList {
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -177,10 +176,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
 
     constructor(
         protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions, elementRef);
-        }
+        protected cdr: ChangeDetectorRef) {}
 
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {

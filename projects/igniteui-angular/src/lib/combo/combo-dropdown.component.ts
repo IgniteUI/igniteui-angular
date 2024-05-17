@@ -10,7 +10,6 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { NgIf } from '@angular/common';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
@@ -86,9 +85,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         cdr: ChangeDetectorRef,
         selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        protected comboAPI: IgxComboAPIService) {
+        super(elementRef, cdr, selection);
     }
 
     /**

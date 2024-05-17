@@ -6,7 +6,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
     IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
@@ -80,7 +79,7 @@ export class IgxTreeExpandIndicatorDirective {
     ],
     standalone: true
 })
-export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -310,9 +309,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions, element);
+        private element: ElementRef<HTMLElement>) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
@@ -420,19 +417,13 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     }
 
     /** @hidden @internal */
-    public override ngOnInit() {
-        super.ngOnInit();
+    public ngOnInit() {
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);
         });
         this.activeNodeBindingChange.pipe(takeUntil(this.destroy$)).subscribe((node) => {
             this.expandToNode(this.navService.activeNode);
             this.scrollNodeIntoView(node?.header?.nativeElement);
-        });
-        this.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            requestAnimationFrame(() => {
-                this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
-            });
         });
         this.subToCollapsing();
     }

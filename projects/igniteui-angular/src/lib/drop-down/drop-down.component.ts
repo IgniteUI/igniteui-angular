@@ -30,7 +30,6 @@ import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { NgIf } from '@angular/common';
 
@@ -231,9 +230,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, _displayDensityOptions);
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr);
     }
 
     /**
