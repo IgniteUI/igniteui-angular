@@ -260,6 +260,7 @@ describe('Row Drag Tests', () => {
                     fixture.detectChanges();
 
                     // selectable rows disabled
+                    fixture.detectChanges();
                     let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
                     let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
                     let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
