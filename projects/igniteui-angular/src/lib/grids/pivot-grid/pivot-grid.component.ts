@@ -93,7 +93,6 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
