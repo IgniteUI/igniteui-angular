@@ -225,8 +225,33 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             family: 'material'
         });
 
-        this.iconService.addIconRef('done', 'default', {
+        this.iconService.addIconRef('close', 'default', {
+            name: 'close',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('selected', 'default', {
             name: 'done',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('prev', 'default', {
+            name: 'navigate_before',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('next', 'default', {
+            name: 'navigate_next',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('expand', 'default', {
+            name: 'expand_more',
+            family: 'material'
+        });
+
+        this.iconService.addIconRef('refresh', 'default', {
+            name: 'refresh',
             family: 'material'
         });
     }

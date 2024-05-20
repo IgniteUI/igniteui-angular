@@ -16,7 +16,6 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 

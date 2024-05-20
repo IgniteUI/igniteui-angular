@@ -9,7 +9,7 @@
         [attr.data-togglable]="true"
         (buttonSelected)="onSortButtonClicked(1)"
         >
-        <igx-icon>arrow_upwards</igx-icon>
+        <igx-icon family="default" name="arrow_upward"></igx-icon>
         <span>
             {{ esf.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc_short:
@@ -23,7 +23,7 @@
         [attr.data-togglable]="true"
         (buttonSelected)="onSortButtonClicked(2)"
         >
-        <igx-icon>arrow_downwards</igx-icon>
+        <igx-icon family="default" name="arrow_downward"></igx-icon>
         <span>
             {{ esf.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:

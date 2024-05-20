@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxIconService } from '../../../icon/icon.service';
 import { NgIf, NgClass } from '@angular/common';
 
 /**
@@ -18,13 +17,7 @@ export class IgxExcelStyleClearFiltersComponent {
     constructor(
         public esf: BaseFilteringComponent,
         protected platform: PlatformUtil,
-        protected iconService: IgxIconService
-    ) {
-        this.iconService.addIconRef('clear', 'default', {
-            family: 'material',
-            name: 'clear'
-        });
-    }
+    ) { }
 
     /**
      * @hidden @internal

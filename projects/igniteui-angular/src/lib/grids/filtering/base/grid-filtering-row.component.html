@@ -40,7 +40,7 @@
                 (click)="onCommitClick()"
                 tabindex="0"
                 family="default"
-                name="done">
+                name="selected">
             </igx-icon>
             <igx-icon
                 (keydown)="onClearKeyDown($event)"
@@ -82,7 +82,7 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="done">
+                name="selected">
             </igx-icon>
             <igx-icon
                 tabindex="0"
@@ -118,7 +118,7 @@
             (click)="inputGroupPrefixClick($event)"
             (keydown)="onPrefixKeyDown($event)"
             [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+            <igx-icon family="default" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <igx-suffix *ngIf="value">
             <igx-icon
@@ -126,7 +126,7 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="done">
+                name="selected">
             </igx-icon>
             <igx-icon
                 tabindex="0"
@@ -164,8 +164,20 @@
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp()"/>
             <igx-suffix *ngIf="value || value === 0" >
-                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
-                <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
+                <igx-icon
+                    (keydown)="onCommitKeyDown($event)"
+                    (click)="onCommitClick()"
+                    tabindex="0"
+                    family="default"
+                    name="selected">
+                </igx-icon>
+                <igx-icon
+                    (keydown)="onClearKeyDown($event)"
+                    (click)="onClearClick()"
+                    tabindex="0"
+                    family="default"
+                    name="clear">
+                </igx-icon>
             </igx-suffix>
     </igx-input-group>
 </ng-template>
@@ -173,7 +185,7 @@
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
 <button igxIconButton="flat" type="button" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
-    <igx-icon>navigate_before</igx-icon>
+    <igx-icon family="default" name="prev"></igx-icon>
 </button>
 
 <div #container class="igx-grid__filtering-row-main">
@@ -199,7 +211,7 @@
 
                 <span id="operand" *ngIf="!last">
                     <button igxButton type="button" (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="displayDensity">
-                        <igx-icon>expand_more</igx-icon>
+                        <igx-icon family="default" name="expand"></igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down [displayDensity]="column.grid.displayDensity" #operators (selectionChanging)="onLogicOperatorChanged($event, item)">
@@ -213,26 +225,26 @@
 </div>
 
 <button igxIconButton="flat" type="button" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
-    <igx-icon>navigate_next</igx-icon>
+    <igx-icon family="default" name="next"></igx-icon>
 </button>
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
     <ng-container *ngIf="!isNarrowWidth">
         <button [displayDensity]="displayDensity" igxButton="flat" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
-            <igx-icon>refresh</igx-icon>
+            <igx-icon family="default" name="refresh"></igx-icon>
             <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_reset }}</span>
         </button>
         <button #closeButton [displayDensity]="displayDensity" igxButton="flat" type="button" igxRipple (click)="close()">
-            <igx-icon>close</igx-icon>
+            <igx-icon family="default" name="close"></igx-icon>
             <span>{{ filteringService.grid.resourceStrings.igx_grid_filter_row_close }}</span>
         </button>
     </ng-container>
     <ng-container *ngIf="isNarrowWidth">
         <button igxIconButton="flat" type="button" [style.--component-size]="getIconBtnSize()" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
-            <igx-icon>refresh</igx-icon>
+            <igx-icon family="default" name="refresh"></igx-icon>
         </button>
         <button #closeButton igxIconButton="flat" type="button" [style.--component-size]="getIconBtnSize()" igxRipple (click)="close()">
-            <igx-icon>close</igx-icon>
+            <igx-icon family="default" name="close"></igx-icon>
         </button>
     </ng-container>
 </div>

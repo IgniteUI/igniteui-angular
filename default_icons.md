@@ -77,48 +77,48 @@ Default Component Icons:
   - keyboard_arrow_right
   - filter_list
 
-- [ ] Path: grids/filtering/excel-style/excel-style-custom-dialog.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-custom-dialog.component.html
   - add
 
-- [ ] Path: grids/filtering/excel-style/excel-style-date-expression.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-date-expression.component.html
   * multiple built-in from imx-icons & condition.iconName; possibly user-configurable too
   - filter_list
   - cancel
 
-- [ ] Path: grids/filtering/excel-style/excel-style-default-expression.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-default-expression.component.html
   * multiple built-in from imx-icons & condition.iconName; possibly user-configurable too
   - filter_list
   - cancel
 
-- [ ] Path: grids/filtering/excel-style/excel-style-header.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-header.component.html
   - done
   - imx-icons:unpin-left
   - imx-icons:pin-left
   - visibility
   - visibility_off
 
-- [ ] Path: grids/filtering/excel-style/excel-style-hiding.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-hiding.component.html
   - visibility
   - visibility_off
 
-- [ ] Path: grids/filtering/excel-style/excel-style-moving.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-moving.component.html
   - arrow_back
-  - arrow_forwards
+  - arrow_forward
 
-- [ ] Path: grids/filtering/excel-style/excel-style-pinning.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-pinning.component.html
   - imx-icons:unpin-left
   - imx-icons:pin-left
 
-- [ ] Path: grids/filtering/excel-style/excel-style-search.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-search.component.html
   - search
   - clear
 
-- [ ] Path: grids/filtering/excel-style/excel-style-selecting.component.html
+- [x] Path: grids/filtering/excel-style/excel-style-selecting.component.html
   - done
 
-- [ ] Path: grids/filtering/excel-style/excel-style-sorting.component.html
-  - arrow_upwards
-  - arrow_downwards
+- [x] Path: grids/filtering/excel-style/excel-style-sorting.component.html
+  - arrow_upward
+  - arrow_downward
 
 - [ ] Path: grids/grid/expandable-cell.component.html
   - check
@@ -277,38 +277,47 @@ Default Component Icons:
   - keyboard_arrow_down
 
 
-| Family  | Name           | Ref Family | Ref Name             | Used By                          | Theme                     |
-|---------|----------------|------------|----------------------|----------------------------------|---------------------------|
-| default | expand         | material   | expand_more          | ExpansionPanel                   | All                       |
-| default | collapse       | material   | expand_less          | ExpansionPanel                   | All                       |
-| default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar           | All                       |
-| default | arrow_prev     | material   | keyboard_arrow_left  | Month Picker, Calendar           | All                       |
-| default | carousel_next  | material   | keyboard_arrow_right | Carousel                         | Indigo                    |
-| default | carousel_prev  | material   | keyboard_arrow_left  | Carousel                         | Indigo                    |
-| default | carousel_next  | material   | arrow_forward        | Carousel                         | Material                  |
-| default | carousel_prev  | material   | arrow_back           | Carousel                         | Material                  |
-| default | next           | material   | navigate_next        | Tabs                             | Indigo                    |
-| default | prev           | material   | navigate_before      | Tabs                             | Indigo                    |
-| default | selected       | material   | done                 | Chip                             | All                       |
-| default | remove         | material   | cancel               | Chip                             | All                       |
-| default | clear          | material   | cancel               | Combo, Simple Combo, Time Picker | Material                  |
-| default | clear          | material   | clear                | Combo, Simple Combo, Time Picker | Indigo, Fluent, Bootstrap |
-| default | clear          | material   | clear                | Input Group                      | All                       |
-| default | clock          | material   | access_time          | Time Picker                      | All                       |
-| default | filter_list    | material   | filter_list          | Grid Filtering Cell              | All                       |
-| default | add            | material   | add                  | Query Builder                    | All                       |
-| default | close          | material   | close                | Query Builder                    | All                       |
-| default | check          | material   | check                | Query Builder                    | All                       |
-| default | delete         | material   | delete               | Query Builder                    | All                       |
-| default | edit           | material   | edit                 | Query Builder                    | All                       |
-| default | first_page     | material   | first_page           | Paginator                        | All                       |
-| default | last_page      | material   | last_page            | Paginator                        | All                       |
-| default | chevron_left   | material   | chevron_left         | Paginator                        | All                       |
-| default | chevron_right  | material   | chevron_right        | Paginator                        | All                       |
-| combo   | expand         | material   | expand_more          | Combo, Simple Combo, Select      | Material                  |
-| combo   | collapse       | material   | expand_less          | Combo, Simple Combo, Select      | Material                  |
-| combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo, Select      | Indigo, Fluent, Bootstrap |
-| combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo, Select      | Indigo, Fluent, Bootstrap |
-| combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo              | All                       |
-| tree    | expand         | material   | keyboard_arrow_right | TreeNode                         | All                       |
-| tree    | collapse       | material   | expand_less          | TreeNode                         | All                       |
+| Family  | Name           | Ref Family | Ref Name             | Used By                                           | Theme                     |
+|---------|----------------|------------|----------------------|---------------------------------------------------|---------------------------|
+| default | expand         | material   | expand_more          | ExpansionPanel, Filtering Row                     | All                       |
+| default | collapse       | material   | expand_less          | ExpansionPanel                                    | All                       |
+| default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar                            | All                       |
+| default | arrow_prev     | material   | keyboard_arrow_left  | Month Picker, Calendar                            | All                       |
+| default | carousel_next  | material   | keyboard_arrow_right | Carousel                                          | Indigo                    |
+| default | carousel_prev  | material   | keyboard_arrow_left  | Carousel                                          | Indigo                    |
+| default | carousel_next  | material   | arrow_forward        | Carousel                                          | Material                  |
+| default | carousel_prev  | material   | arrow_back           | Carousel                                          | Material                  |
+| default | next           | material   | navigate_next        | Tabs                                              | Indigo                    |
+| default | prev           | material   | navigate_before      | Tabs                                              | Indigo                    |
+| default | next           | material   | navigate_next        | Filtering Row                                     | All                       |
+| default | prev           | material   | navigate_before      | Filtering Row                                     | All                       |
+| default | selected       | material   | done                 | Chip, Filtering Row                               | All                       |
+| default | remove         | material   | cancel               | Chip                                              | All                       |
+| default | clear          | material   | cancel               | Combo, Simple Combo, Time Picker                  | Material                  |
+| default | clear          | material   | clear                | Combo, Simple Combo, Time Picker                  | Indigo, Fluent, Bootstrap |
+| default | clear          | material   | clear                | Input Group, Excel Style Filtering, Filtering Row | All                       |
+| default | clock          | material   | access_time          | Time Picker                                       | All                       |
+| default | filter_list    | material   | filter_list          | Grid Filtering Cell, Excel Style Filtering        | All                       |
+| default | add            | material   | add                  | Query Builder, Excel Style Filtering              | All                       |
+| default | close          | material   | close                | Query Builder, Filtering Row                      | All                       |
+| default | check          | material   | check                | Query Builder                                     | All                       |
+| default | delete         | material   | delete               | Query Builder                                     | All                       |
+| default | edit           | material   | edit                 | Query Builder                                     | All                       |
+| default | first_page     | material   | first_page           | Paginator                                         | All                       |
+| default | last_page      | material   | last_page            | Paginator                                         | All                       |
+| default | chevron_left   | material   | chevron_left         | Paginator                                         | All                       |
+| default | chevron_right  | material   | chevron_right        | Paginator, Excel Style Filtering                  | All                       |
+| default | refresh        | material   | refresh              | Filtering Row                                     | All                       |
+| default | visibility     | material   | visibility           | Excel Style Filtering                             | All                       |
+| default | visibility_off | material   | visibility_off       | Excel Style Filtering                             | All                       |
+| default | arrow_back     | material   | arrow_back           | Excel Style Filtering                             | All                       |
+| default | arrow_forward  | material   | arrow_forward        | Excel Style Filtering                             | All                       |
+| default | arrow_upward   | material   | arrow_upward         | Excel Style Filtering                             | All                       |
+| default | arrow_downward | material   | arrow_downward       | Excel Style Filtering                             | All                       |
+| combo   | expand         | material   | expand_more          | Combo, Simple Combo, Select                       | Material                  |
+| combo   | collapse       | material   | expand_less          | Combo, Simple Combo, Select                       | Material                  |
+| combo   | expand         | material   | arrow_drop_down      | Combo, Simple Combo, Select                       | Indigo, Fluent, Bootstrap |
+| combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo, Select                       | Indigo, Fluent, Bootstrap |
+| combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo                               | All                       |
+| tree    | expand         | material   | keyboard_arrow_right | TreeNode                                          | All                       |
+| tree    | collapse       | material   | expand_less          | TreeNode                                          | All                       |

@@ -325,6 +325,8 @@ export class IgxFilteringService implements OnDestroy {
         });
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addIconRef(pinLeft.name, 'default', { family: 'imx-icons', name: pinLeft.name });
+        this.iconService.addIconRef(unpinLeft.name, 'default', { family: 'imx-icons', name: unpinLeft.name });
     }
 
     /**

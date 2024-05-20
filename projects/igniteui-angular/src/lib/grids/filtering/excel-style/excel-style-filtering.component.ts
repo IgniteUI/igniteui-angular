@@ -41,6 +41,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { IgxIconService } from '../../../icon/icon.service';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -306,19 +307,87 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
     }
 
+    protected _icons = new Map(Object.entries({
+        material: [
+            {
+                name: 'clear',
+                mappedAs: 'clear'
+            },
+            {
+                name: 'chevron_right',
+                mappedAs: 'chevron_right'
+            },
+            {
+                name: 'filter_list',
+                mappedAs: 'filter_list'
+            },
+            {
+                name: 'add',
+                mappedAs: 'add'
+            },
+            {
+                name: 'cancel',
+                mappedAs: 'remove'
+            },
+            {
+                name: 'done',
+                mappedAs: 'selected'
+            },
+            {
+                name: 'visibility',
+                mappedAs: 'visibility'
+            },
+            {
+                name: 'visibility_off',
+                mappedAs: 'visibility_off'
+            },
+            {
+                name: 'arrow_back',
+                mappedAs: 'arrow_back'
+            },
+            {
+                name: 'arrow_forward',
+                mappedAs: 'arrow_forward',
+            },
+            {
+                name: 'arrow_upward',
+                mappedAs: 'arrow_upward',
+            },
+            {
+                name: 'arrow_downward',
+                mappedAs: 'arrow_downward',
+            },
+            {
+                name: 'search',
+                mappedAs: 'search'
+            }
+        ]
+    }));
+
     constructor(
         cdr: ChangeDetectorRef,
         element: ElementRef<HTMLElement>,
         platform: PlatformUtil,
         @Inject(DOCUMENT)
         private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType) {
+        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType,
+        private iconService?: IgxIconService,
+    ) {
         super(cdr, element, platform);
 
         this._sizeSubscription = this._size$.asObservable().subscribe(value => {
             this._size = value as string;
             this.cdr.detectChanges();
         });
+
+        for (const [family, icons] of this._icons) {
+            icons.forEach(({name, mappedAs}) => {
+                this.iconService?.addIconRef(mappedAs, "default", {
+                    name,
+                    family,
+                });
+            });
+        }
     }
 
     /**

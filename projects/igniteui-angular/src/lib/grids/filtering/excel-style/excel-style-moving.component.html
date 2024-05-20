@@ -8,7 +8,7 @@
         igxButton
         [disabled]="canNotMoveLeft"
         (click)="onMoveButtonClicked(0)">
-        <igx-icon>arrow_back</igx-icon>
+        <igx-icon family="default" name="arrow_back"></igx-icon>
         <span>
             {{ esf.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_left_short:
@@ -25,7 +25,7 @@
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_right_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_right }}
         </span>
-        <igx-icon>arrow_forwards</igx-icon>
+        <igx-icon family="default" name="arrow_forward"></igx-icon>
     </button>
 </igx-buttongroup>
 </ng-container>

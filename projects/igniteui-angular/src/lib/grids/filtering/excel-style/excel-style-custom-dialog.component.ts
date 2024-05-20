@@ -34,7 +34,6 @@ import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { NgClass, NgIf, NgFor } from '@angular/common';
-import { IgxIconService } from '../../../icon/icon.service';
 
 /**
  * @hidden
@@ -103,13 +102,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         protected overlayService: IgxOverlayService,
         private cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
-        protected iconService: IgxIconService,
-    ) {
-        this.iconService.addIconRef('add', 'default', {
-            name: 'add',
-            family: 'material'
-        });
-    }
+    ) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;

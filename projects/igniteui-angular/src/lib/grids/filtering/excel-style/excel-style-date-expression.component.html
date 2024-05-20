@@ -6,10 +6,10 @@
         [overlaySettings]="dropDownOverlaySettings">
     <igx-prefix>
         <igx-icon *ngIf="expressionUI.expression.condition" family="default" [name]="getIconName()"></igx-icon>
-        <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
+        <igx-icon *ngIf="!expressionUI.expression.condition" family="default" name="filter_list"></igx-icon>
     </igx-prefix>
     <igx-select-item *ngFor="let condition of conditions" [value]="condition" [text]="getConditionFriendlyName(condition)" [selected]="isConditionSelected(condition)">
-        <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <igx-icon family="default" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{translateCondition(condition)}}</span>
     </igx-select-item>
 </igx-select>
@@ -59,7 +59,7 @@
 </igx-input-group>
 
 <button type="button" (click)="onRemoveButtonClick()" igxIconButton="flat" *ngIf="!isSingle" >
-    <igx-icon>cancel</igx-icon>
+    <igx-icon family="default" name="remove"></igx-icon>
 </button>
 
 <igx-buttongroup #logicOperatorButtonGroup
