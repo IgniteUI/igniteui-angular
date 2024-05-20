@@ -474,7 +474,8 @@
     }
 
     %item--header {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: $item-padding;
         min-height: $item-min-height;
         white-space: nowrap;
