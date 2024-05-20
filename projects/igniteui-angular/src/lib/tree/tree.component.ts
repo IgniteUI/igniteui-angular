@@ -16,6 +16,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { IgxComponentSizeService } from '../core/size';
 
 /**
  * @hidden @internal
@@ -75,6 +76,7 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeService,
         IgxTreeSelectionService,
         IgxTreeNavigationService,
+        IgxComponentSizeService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ],
     standalone: true
@@ -309,7 +311,8 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>) {
+        private element: ElementRef<HTMLElement>,
+        protected componentSizeService: IgxComponentSizeService) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
@@ -426,10 +429,17 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
             this.scrollNodeIntoView(node?.header?.nativeElement);
         });
         this.subToCollapsing();
+        this.componentSizeService.attachObserver();
+        this.componentSizeService.componentSize.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => {
+                this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
+            });
+        });
     }
 
     /** @hidden @internal */
     public ngAfterViewInit() {
+        this.componentSizeService.init = false;
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });

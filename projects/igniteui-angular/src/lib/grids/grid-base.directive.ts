@@ -32,6 +32,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
+import { IgxComponentSizeService } from '../core/size';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -3151,7 +3152,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
-    private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
 
     /**
@@ -3327,6 +3327,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
+        protected componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
     ) {
         this.locale = this.locale || this.localeId;
@@ -3538,7 +3539,19 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.subscribeToTransactions();
 
-        this.resizeNotify.pipe(
+        this.componentSizeService.attachObserver();
+        this.componentSizeService.componentSize.pipe(destructor).subscribe(() => {
+            if (this.rowList.length > 0 && this.rowList.first.cells && this.rowList.first.cells.length > 0) {
+                this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.rowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            }
+            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+            this.crudService.endEdit(false);
+            if (this._summaryRowHeight === 0) {
+                this.summaryService.summaryHeight = 0;
+            }
+            this.notifyChanges(true);
+        });
+        /* this.resizeNotify.pipe(
             filter(() => !this._init),
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
@@ -3562,7 +3575,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     this.notifyChanges(true);
                 }
             });
-        });
+        });*/
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3894,6 +3907,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initPinning();
         this.calculateGridSizes();
         this._init = false;
+        this.componentSizeService.init = false;
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
@@ -5242,7 +5256,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Gets the size of the grid
      */
     public get gridSize(): Size {
-        return this.gridComputedStyles?.getPropertyValue('--component-size') || Size.Large;
+        return this.componentSizeService.componentSize.value;
     }
 
     /**

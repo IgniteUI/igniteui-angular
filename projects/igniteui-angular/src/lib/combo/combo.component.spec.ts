@@ -8,7 +8,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
@@ -974,7 +973,6 @@ describe('igxCombo', () => {
                 // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
                 let itemHeight = defaultDropdownItemHeight;
                 let itemMaxHeight = defaultDropdownItemMaxHeight;
-                combo.displayDensity = DisplayDensity.comfortable;
                 fixture.detectChanges();
                 combo.toggle();
                 tick();
@@ -3349,44 +3347,14 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
             });
-            it('Should be able to set Display Density as input', () => {
-                expect(combo.displayDensity).toEqual(DisplayDensity.cosy);
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                expect(combo.displayDensity).toEqual(DisplayDensity.compact);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
-            });
-            it('should apply correct styles to items when Display Density is set', fakeAsync(() => {
-                combo.open();
-                fixture.detectChanges();
-                combo.dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('2');
-                });
-                combo.close();
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                combo.open();
-                combo.dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('1');
-                });
-                combo.close();
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                combo.open();
-                combo.dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('3');
-                });
-            }));
-            it('should scale items container depending on displayDensity (itemHeight * 10)', () => {
+            it('should scale items container depending on size (itemHeight * 10)', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(320);
-                fixture.componentInstance.density = DisplayDensity.compact;
+                fixture.componentInstance.nativeElement.style['--ig-size'] = 'var(--ig-size-small);';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(280);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
+                fixture.componentInstance.nativeElement.style['--ig-size'] = 'var(--ig-size-large);';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(400);
             });
@@ -3396,9 +3364,9 @@ describe('igxCombo', () => {
 
 @Component({
     template: `
-    <igx-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
+    <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)">
+        (selectionChanging)="selectionChanging($event)" style="--ig-size: var(--ig-size-medium);">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
@@ -3425,7 +3393,6 @@ class IgxComboSampleComponent {
      */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items = [];
     public initData = [];

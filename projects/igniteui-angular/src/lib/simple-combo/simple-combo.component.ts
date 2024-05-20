@@ -25,6 +25,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxComponentSizeService } from '../core/size';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -64,6 +65,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     templateUrl: 'simple-combo.component.html',
     providers: [
         IgxComboAPIService,
+        IgxComponentSizeService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
@@ -147,10 +149,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         comboAPI: IgxComboAPIService,
         _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
+        componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, _inputGroupType, _injector);
+            _iconService, componentSizeService, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 

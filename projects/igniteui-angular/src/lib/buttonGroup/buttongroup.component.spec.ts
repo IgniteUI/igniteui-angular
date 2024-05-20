@@ -367,36 +367,6 @@ describe('IgxButtonGroup', () => {
         expect(error).toBe('');
     });
 
-    it('Button Group - DisplayDensity property is applied', () => {
-        const fixture = TestBed.createComponent(InitButtonGroupComponent);
-        fixture.detectChanges();
-
-        const buttongroup = fixture.componentInstance.buttonGroup;
-
-        expect(buttongroup.displayDensity).toBe('comfortable');
-
-        buttongroup.displayDensity = 'compact';
-        fixture.detectChanges();
-
-        expect(buttongroup.displayDensity).toBe('compact', 'DisplayDensity not set!');
-        expect(getComponentSize(buttongroup.buttons[1].nativeElement)).toBe('1', 'Missing density class!');
-    });
-
-    it('Button Group - DisplayDensity property is applied to templated buttons', () => {
-        const fixture = TestBed.createComponent(TemplatedButtonGroupDesplayDensityComponent);
-        fixture.detectChanges();
-
-        const buttongroup = fixture.componentInstance.buttonGroup;
-
-        expect(buttongroup.displayDensity).toBe('cosy');
-
-        const groupChildren = buttongroup.buttons;
-        // The density class should be applied only to buttons with no DisplayDensity set
-        expect(groupChildren[0].displayDensity).toBe('compact');
-        expect(getComponentSize(groupChildren[0].element.nativeElement)).toBe('1', 'Missing density class!');
-        expect(getComponentSize(groupChildren[1].element.nativeElement)).toBe('2', 'Missing density class!');
-    });
-
     it('Button Group - should support tab navigation', () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
@@ -565,8 +535,8 @@ class TemplatedButtonGroupComponent {
 
 @Component({
     template: `
-    <igx-buttongroup [selectionMode]="'multi'" displayDensity="cosy">
-        <button igxButton displayDensity="compact">Sofia</button>
+    <igx-buttongroup [selectionMode]="'multi'">
+        <button igxButton>Sofia</button>
         <button igxButton>London</button>
     </igx-buttongroup>
     `,

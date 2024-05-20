@@ -147,7 +147,6 @@ describe('igxSelect', () => {
             expect(select.value).toBeNull();
             // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
-            expect(select.displayDensity).toEqual('comfortable');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -163,8 +162,6 @@ describe('igxSelect', () => {
             expect(select.value).toEqual('Hamburg');
             select.type = 'box';
             expect(select.type).toEqual('box');
-            select.displayDensity = 'compact';
-            expect(select.displayDensity).toEqual('compact');
             select.items[3].disabled = true;
             expect(select.items[3].disabled).toBeTruthy();
             select.items[10].selected = true;
@@ -482,19 +479,6 @@ describe('igxSelect', () => {
             tick();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeTruthy();
         }));
-
-        it('should render display density properly', () => {
-            const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default display density is 'comfortable'
-            expect(select.displayDensity).toEqual('comfortable');
-            expect(getComponentSize(inputGroup.nativeElement)).toEqual('3');
-            select.displayDensity = 'cosy';
-            fixture.detectChanges();
-            expect(getComponentSize(inputGroup.nativeElement)).toEqual('2');
-            select.displayDensity = 'compact';
-            fixture.detectChanges();
-            expect(getComponentSize(inputGroup.nativeElement)).toEqual('1');
-        });
 
         it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
             const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
@@ -2674,7 +2658,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -3033,10 +3017,10 @@ class IgxSelectTemplateFormComponent {
     template: `
         <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
         <igx-select #headerFooterSelect
-        required
-        [placeholder]="'Pick One'"
-        [(ngModel)]="value"
-        [displayDensity]="'cosy'">
+            required
+            [placeholder]="'Pick One'"
+            [(ngModel)]="value"
+            style="--ig-size: var(--ig-size-medium);">
             <label igxLabel>Sample Label</label>
             <igx-prefix>
                 <igx-icon>alarm</igx-icon>

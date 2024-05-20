@@ -67,6 +67,7 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
+import { IgxComponentSizeService } from '../../core/size';
 
 let NEXT_ID = 0;
 
@@ -273,6 +274,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
+        IgxComponentSizeService,
         IgxGridCRUDService,
         IgxGridValidationService,
         IgxGridSelectionService,

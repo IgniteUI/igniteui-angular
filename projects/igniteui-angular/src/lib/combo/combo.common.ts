@@ -7,7 +7,6 @@ import {
     ContentChild,
     ContentChildren,
     Directive,
-    DoCheck,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -45,6 +44,7 @@ import {
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxComponentSizeService } from '../core/size';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -89,9 +89,9 @@ const itemsInContainer = 10; // TODO: make private readonly
 
 /** @hidden @internal */
 const ItemHeights = {
-    comfortable: 40,
-    cosy: 32,
-    compact: 28,
+    Large: 40,
+    Medium: 32,
+    Small: 28
 };
 
 /** @hidden @internal */
@@ -112,8 +112,10 @@ export interface IComboFilteringOptions {
     filteringKey?: string;
 }
 
-@Directive()
-export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit, DoCheck,
+@Directive({
+    providers: [IgxComponentSizeService]
+})
+export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
@@ -246,7 +248,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @Input()
     public get itemHeight(): number {
         if (this._itemHeight === null || this._itemHeight === undefined) {
-            return ItemHeights[this.displayDensity];
+            return ItemHeights[this.componentSizeService.componentSize.value];
         }
         return this._itemHeight;
     }
@@ -950,11 +952,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        protected componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
-        super(_displayDensityOptions, elementRef);
-    }
+        @Optional() protected _injector: Injector) { }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
@@ -985,11 +985,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+        this.componentSizeService.attachObserver();
     }
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data];
+
+        this.componentSizeService.init = false;
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);

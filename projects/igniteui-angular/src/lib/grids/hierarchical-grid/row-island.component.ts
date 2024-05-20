@@ -48,12 +48,14 @@ import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxComponentSizeService } from '../../core/size';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: ``,
     providers: [
+        IgxComponentSizeService,
         IgxRowIslandAPIService,
         IgxFilteringService,
         IgxGridSelectionService
@@ -264,7 +266,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         summaryService: IgxGridSummaryService,
         public rowIslandAPI: IgxRowIslandAPIService,
         @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
+        platform: PlatformUtil,
+        componentSizeService: IgxComponentSizeService) {
         super(
             validationService,
             selectionService,
@@ -285,7 +288,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             localeId,
-            platform
+            platform,
+            componentSizeService
         );
     }
 
