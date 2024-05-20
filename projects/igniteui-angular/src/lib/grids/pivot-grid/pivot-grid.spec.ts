@@ -1976,6 +1976,33 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimension.width).toBe('auto');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
+
+            it ('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.data = [];
+                fixture.detectChanges();
+
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+                pivotGrid.autoGenerateConfig = true;
+                fixture.detectChanges();
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                    Country: 'Bulgaria', Date: new Date('01/01/2021'), UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                expect(pivotGrid.allDimensions.length).toBe(4);
+                expect(pivotGrid.values.length).toBe(2);
+
+                expect(pivotGrid.allDimensions.map(x => x.memberName))
+                .toEqual(['Date', 'ProductCategory', 'SellerName', 'Country']);
+
+                expect(pivotGrid.values.map(x => x.member))
+                .toEqual(['UnitPrice', 'UnitsSold']);
+            });
         });
     });
 
