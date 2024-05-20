@@ -7,7 +7,8 @@ import {
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs,
-    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs,
+    IGridContextMenuEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -1028,7 +1029,7 @@ export interface GridType extends IGridDataBindable {
     cellClick: EventEmitter<IGridCellEventArgs>;
     rowClick: EventEmitter<IGridRowEventArgs>;
     doubleClick: EventEmitter<IGridCellEventArgs>;
-    contextMenu: EventEmitter<IGridCellEventArgs>;
+    contextMenu: EventEmitter<IGridContextMenuEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
     rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;
