@@ -1453,6 +1453,28 @@ describe('IgxTimePicker', () => {
                 selectedAMPM = selectedItems[3].nativeElement.innerText;
                 expect(selectedAMPM).toEqual(expectedAmPm);
             }));
+
+            it('should set placeholder correctly', fakeAsync(() => {
+                // no inputFormat set - placeholder equals the default date time input format
+                let inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(inputEl.placeholder).toEqual('hh:mm tt');
+
+                // no placeholder - set to inputFormat, if it is set
+                // test with the different a,aa,.. ampm formats
+                for(let i = 1; i <= 5; i++) {
+                    const format = `hh:mm ${'a'.repeat(i)}`;
+                    timePicker.inputFormat = format;
+                    fixture.detectChanges();
+
+                    inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                    expect(inputEl.placeholder).toEqual(i === 5 ? 'hh:mm a' : 'hh:mm aa');
+                }
+
+                timePicker.placeholder = 'sample placeholder';
+                fixture.detectChanges();
+
+                inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(inputEl.placeholder).toEqual('sample placeholder');
             }));
         });
 

@@ -534,8 +534,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
         const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
-        .replace(new RegExp(/(?=[^a])[\w]/, 'g'), '0');
-        this.mask = mask.replaceAll(/a{1,2}/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
+        .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');
+        this.mask = mask.replaceAll(/(a{1,2})|tt/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || oldFormat === placeholder) {
             this.renderer.setAttribute(this.nativeElement, 'placeholder', inputFormat);

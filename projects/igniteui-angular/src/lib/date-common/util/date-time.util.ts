@@ -102,7 +102,7 @@ export abstract class DateTimeUtil {
                     }
                 }
 
-                if (currentPart.type === DatePart.AmPm) {
+                if (currentPart.type === DatePart.AmPm && currentPart.format.indexOf('a') !== -1) {
                     currentPart = DateTimeUtil.simplifyAmPmFormat(currentPart);
                 }
                 DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
