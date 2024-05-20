@@ -3618,6 +3618,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.cdr.detectChanges();
         });
 
+
+        this.headerContainer?.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            // the horizontal scrollbar showing/hiding
+            // update scrollbar visibility and recalc heights
+            this.notifyChanges(true);
+            this.cdr.detectChanges();
+        });
+
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
             this.notifyChanges(true);
         });
@@ -4226,10 +4234,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get isHorizontalScrollHidden() {
-        const diff = this.unpinnedWidth - this.totalWidth;
-        return this.width === null || diff >= 0;
-    }
+    public isHorizontalScrollHidden = false;
 
     /**
      * @hidden @internal
@@ -6072,7 +6077,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0;
+        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
     }
 
     /**
@@ -6652,6 +6657,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetCaches(recalcFeatureWidth);
 
         const hasScroll = this.hasVerticalScroll();
+        const hasHScroll = !this.isHorizontalScrollHidden;
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
@@ -6669,6 +6675,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // in case scrollbar has appeared recalc to size correctly.
         if (hasScroll !== this.hasVerticalScroll()) {
             this.calculateGridWidth();
+            this.cdr.detectChanges();
+        }
+
+        // in case horizontal scrollbar has appeared recalc to size correctly.
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
             this.cdr.detectChanges();
         }
         if (this.zone.isStable) {
