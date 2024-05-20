@@ -81,8 +81,13 @@
         title: 'subtitle-1',
         subtitle: 'body-2'
     ));
-    @include navbar-typography();
-    @include navdrawer-typography();
+    @include navbar-typography($categories: (
+        title: 'h5',
+    ));
+    @include navdrawer-typography($categories: (
+        item: 'subtitle-2',
+        header: 'overline'
+    ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
@@ -91,7 +96,9 @@
         thumb-label: 'subtitle-2',
     ));
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-2'
+    ));
     @include tabs-typography();
     @include time-picker-typography($categories: (
         header-time-period: 'subtitle-1',
