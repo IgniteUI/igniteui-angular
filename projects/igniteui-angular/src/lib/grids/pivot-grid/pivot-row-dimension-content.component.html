@@ -3,8 +3,9 @@
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles | igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
-                [style.min-width]="grid.rowDimensionWidthToPixels(rootDimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="grid.rowDimensionWidthToPixels(rootDimension) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.min-width]="grid.rowDimensionWidth(rootDimension)"
+                [style.width]="grid.rowDimensionWidth(rootDimension)"
+                [style.flex-basis]="grid.rowDimensionWidth(rootDimension)"
                 [rowIndex]="rowIndex"
                 [parent]='this'>
             </igx-pivot-row-dimension-header-group>
