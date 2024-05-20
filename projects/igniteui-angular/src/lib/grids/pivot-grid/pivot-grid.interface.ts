@@ -124,10 +124,12 @@ export interface IPivotDimension {
      * The dataType of the related data field.
      */
     dataType?: GridColumnDataType;
-    /** The width of the dimension cells to be rendered.Can be pixel or %. */
+    /** The width of the dimension cells to be rendered.Can be pixel, % or "auto". */
     width?: string;
     /** Level of the dimension. */
     level?: number;
+    /** hidden */
+    autoWidth?: number;
 }
 /**
 * Configuration of a pivot value aggregation.

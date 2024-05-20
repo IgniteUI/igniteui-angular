@@ -211,7 +211,7 @@ describe('Navigation Drawer', () => {
         spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
             callback(0); return 0;
         });
-        const template = `<igx-nav-drawer>
+        const template = `<igx-nav-drawer [miniWidth]="'68px'">
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
@@ -318,6 +318,8 @@ describe('Navigation Drawer', () => {
                 fixture.detectChanges();
                 const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
 
+                drawer.width = '280px';
+                fixture.detectChanges();
                 expect(drawer.pin).toBeTruthy();
                 expect(drawerElem.style.flexBasis).toEqual(drawer.width);
                 expect(drawerElem.style.order).toEqual('0');
@@ -374,6 +376,9 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '280px';
+            navDrawer.miniWidth = '68px';
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 

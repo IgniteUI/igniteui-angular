@@ -219,6 +219,10 @@
             @if $variant == 'bootstrap' {
                 border-inline-end: rem(1px) solid var(--border-color);
             }
+
+            &:empty {
+                padding: 0;
+            }
         }
     }
 
