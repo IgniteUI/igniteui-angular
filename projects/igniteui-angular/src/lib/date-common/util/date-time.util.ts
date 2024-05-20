@@ -22,7 +22,7 @@ const enum DateParts {
 /** @hidden */
 export abstract class DateTimeUtil {
     public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
-    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm a';
+    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm tt';
     private static readonly SEPARATOR = 'literal';
     private static readonly DEFAULT_LOCALE = 'en';
 

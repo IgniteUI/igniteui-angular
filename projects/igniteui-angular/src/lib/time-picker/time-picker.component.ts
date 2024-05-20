@@ -106,7 +106,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * Sets the value of the `id` attribute.
      * ```html
-     * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm a" ></igx-time-picker>
+     * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm tt" ></igx-time-picker>
      * ```
      */
     @HostBinding('attr.id')
@@ -132,7 +132,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `hh:mm a`
+     * Default is `hh:mm tt`
      *
      * @example
      * ```html
@@ -503,7 +503,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```html
      * public date: Date = new Date(Date.now());
      *  //...
-     * <igx-time-picker [value]="date" format="h:mm a"></igx-time-picker>
+     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
@@ -549,7 +549,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * Defaults to the value from resource strings, `"OK"` for the built-in EN.
      *
      * ```html
-     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm a"></igx-time-picker>
+     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
@@ -572,7 +572,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * @remarks
      * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
      * ```html
-     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm a"></igx-time-picker>
+     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()

@@ -34,7 +34,7 @@ import { DateTimeUtil } from '../../date-common/util/date-time.util';
  *
  * The Ignite UI Date Time Editor Directive makes it easy for developers to manipulate date/time user input.
  * It requires input in a specified or default input format which is visible in the input element as a placeholder.
- * It allows the input of only date (ex: 'dd/MM/yyyy'), only time (ex:'HH:mm a') or both at once, if needed.
+ * It allows the input of only date (ex: 'dd/MM/yyyy'), only time (ex:'HH:mm tt') or both at once, if needed.
  * Supports display format that may differ from the input format.
  * Provides methods to increment and decrement any specific/targeted `DatePart`.
  *
@@ -522,7 +522,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             }
             const format = this.displayFormat || this.inputFormat;
             if (format) {
-                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format, this.locale);
+                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
             } else {
                 this.inputValue = this.dateValue.toLocaleString();
             }

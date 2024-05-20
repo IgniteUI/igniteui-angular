@@ -170,7 +170,7 @@ describe('IgxDateTimeEditor', () => {
             });
 
             it('should prioritize Date for spinning, if it is set in format', () => {
-                inputFormat = 'dd/M/yy HH:mm:ss aa';
+                inputFormat = 'dd/M/yy HH:mm:ss tt';
                 inputDate = '11/03/2020 00:00:00 AM';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -339,6 +339,20 @@ describe('IgxDateTimeEditor', () => {
             });
 
             it('should properly parse AM/PM no matter where it is in the format', () => {
+                inputFormat = 'dd tt yyyy-MM mm-ss-hh';
+                inputDate = '12 AM 2020-06 14-15-11';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                dateTimeEditor.inputFormat = inputFormat;
+                expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
+
+                dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
+                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+
+                dateTimeEditor.increment(DatePart.AmPm);
+                expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
+
                 inputFormat = 'dd aa yyyy-MM mm-ss-hh';
                 inputDate = '12 AM 2020-06 14-15-11';
                 elementRef = { nativeElement: { value: inputDate } };

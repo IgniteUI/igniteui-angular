@@ -9,7 +9,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
 describe(`DateTimeUtil Unit tests`, () => {
     describe('Date Time Parsing', () => {
         it('should correctly parse all date time parts (base)', () => {
-            const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss:SS a');
+            let result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss:SS a');
             const expected = [
                 { start: 0, end: 2, type: DatePart.Date, format: 'dd' },
                 { start: 2, end: 3, type: DatePart.Literal, format: '/' },
@@ -27,6 +27,10 @@ describe(`DateTimeUtil Unit tests`, () => {
                 { start: 23, end: 24, type: DatePart.Literal, format: ' ' },
                 { start: 24, end: 26, type: DatePart.AmPm, format: 'aa' }
             ];
+            expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
+
+            result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss:SS tt');
+            expected[expected.length - 1] =  { start: 24, end: 26, type: DatePart.AmPm, format: 'tt' }
             expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
         });
 

@@ -1395,7 +1395,7 @@ describe('IgxTimePicker', () => {
                 expect(selectedAMPM).toEqual('PM');
             }));
             it('should select hour/minute/second/AMPM via the drop down list (throw onItemClick event)', fakeAsync(() => {
-                timePicker.inputFormat = 'hh:mm:ss a';
+                timePicker.inputFormat = 'hh:mm:ss tt';
                 fixture.detectChanges();
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
@@ -1415,7 +1415,7 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
-                const selectedAMPM = selectedItems[3].nativeElement.innerText;
+                let selectedAMPM = selectedItems[3].nativeElement.innerText;
                 expect(selectedAMPM).toEqual(expectedAmPm);
 
                 item = hourColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
@@ -1441,6 +1441,18 @@ describe('IgxTimePicker', () => {
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
                 const selectedSecond = selectedItems[2].nativeElement.innerText;
                 expect(selectedSecond).toEqual(expectedSecond);
+
+                timePicker.inputFormat = 'hh:mm:ss a';
+                fixture.detectChanges();
+
+                item = ampmColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                selectedAMPM = selectedItems[3].nativeElement.innerText;
+                expect(selectedAMPM).toEqual(expectedAmPm);
+            }));
             }));
         });
 
