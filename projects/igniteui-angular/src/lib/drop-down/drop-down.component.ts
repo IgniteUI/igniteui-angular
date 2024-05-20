@@ -13,8 +13,6 @@ import {
     AfterViewInit,
     Output,
     EventEmitter,
-    Optional,
-    Inject,
     SimpleChanges,
     booleanAttribute
 } from '@angular/core';

@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {

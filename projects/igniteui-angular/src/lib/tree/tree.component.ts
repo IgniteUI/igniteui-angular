@@ -1,6 +1,6 @@
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject, booleanAttribute
+    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute
 } from '@angular/core';
 
 import { Subject } from 'rxjs';

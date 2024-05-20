@@ -34,7 +34,7 @@ import {
 import { formatDate, resizeObservable } from '../core/utils';
 import { IgxComponentSizeService } from '../core/size';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
+import { Subject, pipe, fromEvent, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';

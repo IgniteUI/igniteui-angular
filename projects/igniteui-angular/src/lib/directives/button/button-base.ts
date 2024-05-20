@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Optional, Output, booleanAttribute } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxBaseButtonType = /*@__PURE__*/mkenum({

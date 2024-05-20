@@ -12,8 +12,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    Optional,
-    Inject, Directive, booleanAttribute
+    Directive,
+    booleanAttribute
 } from '@angular/core';
 
 

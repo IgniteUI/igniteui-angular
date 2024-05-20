@@ -5,8 +5,6 @@ import {
     Input,
     Renderer2,
     ViewContainerRef,
-    Optional,
-    Inject,
     ContentChildren,
     QueryList,
     ViewChild,

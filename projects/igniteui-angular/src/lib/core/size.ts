@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Inject, OnInit, AfterViewInit, NgZone, Injectable, Component } from '@angular/core';
+import { ElementRef, Inject, NgZone, Injectable } from '@angular/core';
 import { Size } from '../grids/common/enums';
 import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject, Subject, animationFrameScheduler, filter, throttleTime } from 'rxjs';

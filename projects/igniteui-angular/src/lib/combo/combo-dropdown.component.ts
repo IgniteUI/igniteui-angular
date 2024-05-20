@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional, Input, booleanAttribute
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';

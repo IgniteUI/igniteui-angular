@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, EventEmitter, QueryList, Optional, Inject, ElementRef } from '@angular/core';
+import { Directive, TemplateRef, EventEmitter, QueryList, Optional, ElementRef } from '@angular/core';
 
 export interface IListChild {
     index: number;

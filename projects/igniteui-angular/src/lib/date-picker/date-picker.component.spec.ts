@@ -758,7 +758,6 @@ describe('IgxDatePicker', () => {
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.disabledDates = mockDisabledDates;
                 expect(datePicker.disabledDates).toEqual(mockDisabledDates);
-                spyOn(datePicker.densityChanged, 'emit').and.callThrough();
                 datePicker.displayFormat = 'MM/yy/DD';
                 expect(datePicker.displayFormat).toEqual('MM/yy/DD');
                 datePicker.displayMonthsCount = Infinity;

@@ -10,8 +10,6 @@ import {
     ViewChild,
     Renderer2,
     TemplateRef,
-    Inject,
-    Optional,
     OnDestroy,
     booleanAttribute
 } from '@angular/core';

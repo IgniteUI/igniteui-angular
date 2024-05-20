@@ -6,8 +6,6 @@ import {
     Input,
     Output,
     Renderer2,
-    Optional,
-    Inject,
     booleanAttribute,
     AfterContentInit
 } from '@angular/core';

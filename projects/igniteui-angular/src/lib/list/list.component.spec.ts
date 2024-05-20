@@ -29,7 +29,6 @@ import {
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
-import { getComponentSize } from '../core/utils';
 
 describe('List', () => {
     configureTestSuite(() => {

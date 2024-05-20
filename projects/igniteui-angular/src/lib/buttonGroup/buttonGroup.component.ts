@@ -1,16 +1,13 @@
 import { NgFor, NgIf } from '@angular/common';
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     ContentChildren,
     ChangeDetectorRef,
     EventEmitter,
     HostBinding,
-    Inject,
     Input,
     Output,
-    Optional,
     QueryList,
     Renderer2,
     ViewChildren,

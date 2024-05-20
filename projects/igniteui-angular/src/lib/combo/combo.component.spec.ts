@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxInputState } from '../directives/input/input.directive';

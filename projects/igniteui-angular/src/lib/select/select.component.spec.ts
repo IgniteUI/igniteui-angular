@@ -18,7 +18,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
-import { getComponentSize } from '../core/utils';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';

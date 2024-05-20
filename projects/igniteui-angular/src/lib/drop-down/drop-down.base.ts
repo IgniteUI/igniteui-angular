@@ -1,5 +1,5 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Optional, Inject, Directive
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';

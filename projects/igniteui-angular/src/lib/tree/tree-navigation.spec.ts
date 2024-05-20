@@ -785,7 +785,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 spyOn(nav, 'update_disabled_cache');
                 spyOn(nav, 'update_visible_cache');
                 spyOn(nav, 'register');
-                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef);
+                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef, null);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();

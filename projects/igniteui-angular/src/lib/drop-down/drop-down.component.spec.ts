@@ -8,7 +8,7 @@ import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './publ
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { CancelableEventArgs, getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';

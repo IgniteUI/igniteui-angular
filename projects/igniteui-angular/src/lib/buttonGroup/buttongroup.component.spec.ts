@@ -5,7 +5,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { getComponentSize } from '../core/utils';
 import { NgFor } from '@angular/common';
 import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
 import { IgxRadioComponent } from '../radio/radio.component';
