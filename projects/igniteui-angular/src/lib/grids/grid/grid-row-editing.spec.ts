@@ -10,7 +10,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
@@ -27,7 +27,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
-import { setElementSize } from '../../core/utils';
 import { Size } from "../common/enums";
 
 const CELL_CLASS = '.igx-grid__td';

@@ -17,7 +17,7 @@ import { GridSelectionMode, Size } from '../common/enums';
 import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { setElementSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
