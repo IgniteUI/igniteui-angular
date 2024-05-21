@@ -14,8 +14,8 @@ import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../col
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
-import { setElementSize } from '../../core/utils';
 import { Size } from "../common/enums";
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 

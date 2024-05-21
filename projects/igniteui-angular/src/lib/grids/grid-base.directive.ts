@@ -32,9 +32,8 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
-import { IgxComponentSizeService } from '../core/size';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, merge } from 'rxjs';
+import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
@@ -122,7 +121,8 @@ import {
     IGridEditEventArgs,
     IRowDataCancelableEventArgs,
     IGridEditDoneEventArgs,
-    IGridRowEventArgs
+    IGridRowEventArgs,
+    IGridContextMenuEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -837,16 +837,16 @@ export abstract class IgxGridBaseDirective implements GridType,
     public columnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     /**
-     * Emitted when a cell is right clicked.
+     * Emitted when a cell or row is right clicked.
      *
      * @remarks
-     * Returns the `IgxGridCell` object.
+     * Returns the `IgxGridCell` object if the immediate context menu target is a cell or an `IgxGridRow` otherwise.
      * ```html
      * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public contextMenu = new EventEmitter<IGridCellEventArgs>();
+    public contextMenu = new EventEmitter<IGridContextMenuEventArgs>();
 
     /**
      * Emitted when a cell is double clicked.
@@ -3152,6 +3152,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
+    private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
 
     /**
@@ -3327,7 +3328,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
-        protected componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
     ) {
         this.locale = this.locale || this.localeId;
@@ -3539,19 +3539,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.subscribeToTransactions();
 
-        this.componentSizeService.attachObserver();
-        this.componentSizeService.componentSize.pipe(destructor).subscribe(() => {
-            if (this.rowList.length > 0 && this.rowList.first.cells && this.rowList.first.cells.length > 0) {
-                this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.rowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
-            }
-            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
-            this.crudService.endEdit(false);
-            if (this._summaryRowHeight === 0) {
-                this.summaryService.summaryHeight = 0;
-            }
-            this.notifyChanges(true);
-        });
-        /* this.resizeNotify.pipe(
+        this.resizeNotify.pipe(
             filter(() => !this._init),
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
@@ -3559,7 +3547,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         .subscribe(() => {
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
-                if (this.document.contains(this.nativeElement)) {
+                if (this.nativeElement.isConnected) {
                     if (this._gridSize !== this.gridSize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
@@ -3575,7 +3563,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     this.notifyChanges(true);
                 }
             });
-        });*/
+        });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3639,6 +3627,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
             // called to recalc all widths that may have changes as a result of
             // the vert. scrollbar showing/hiding
+            this.notifyChanges(true);
+            this.cdr.detectChanges();
+        });
+
+
+        this.headerContainer?.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            // the horizontal scrollbar showing/hiding
+            // update scrollbar visibility and recalc heights
             this.notifyChanges(true);
             this.cdr.detectChanges();
         });
@@ -3895,8 +3891,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
-            // resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
-            // resizeObservable(this.tbodyContainer.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            resizeObservable(this.tbodyContainer.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
     }
 
@@ -3907,7 +3903,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initPinning();
         this.calculateGridSizes();
         this._init = false;
-        this.componentSizeService.startObserving()
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
@@ -4240,10 +4235,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get isHorizontalScrollHidden() {
-        const diff = this.unpinnedWidth - this.totalWidth;
-        return this.width === null || diff >= 0;
-    }
+    public isHorizontalScrollHidden = false;
 
     /**
      * @hidden @internal
@@ -5253,10 +5245,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden @internal
      * Gets the size of the grid
      */
     public get gridSize(): Size {
-        return this.componentSizeService.componentSize.value;
+        return this.gridComputedStyles?.getPropertyValue('--component-size') || Size.Large;
     }
 
     /**
@@ -6093,7 +6086,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0;
+        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
     }
 
     /**
@@ -6672,6 +6665,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.detectChanges();
         this.resetCaches(recalcFeatureWidth);
         const hasScroll = this.hasVerticalScroll();
+        const hasHScroll = !this.isHorizontalScrollHidden;
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
@@ -6689,6 +6683,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         // in case scrollbar has appeared recalc to size correctly.
         if (hasScroll !== this.hasVerticalScroll()) {
             this.calculateGridWidth();
+            this.cdr.detectChanges();
+        }
+
+        // in case horizontal scrollbar has appeared recalc to size correctly.
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
             this.cdr.detectChanges();
         }
         if (this.zone.isStable) {

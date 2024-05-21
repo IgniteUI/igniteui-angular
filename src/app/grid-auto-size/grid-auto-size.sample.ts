@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, Size } from 'igniteui-angular';
+import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -19,18 +19,17 @@ export class GridAutoSizeSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
-    public size = "large";
+    public size : "large" | "medium" | "small" = "large";
     public sizes;
     public height = '100%';
     public gridContainerHidden = false;
     public containerHeight;
     public selectionMode;
-
     public ngOnInit(): void {
         this.sizes = [
-            { label: 'large', selected: this.size === Size.Large, togglable: true },
-            { label: 'medium', selected: this.size === Size.Medium, togglable: true },
-            { label: 'small', selected: this.size === Size.Small, togglable: true }
+            { label: 'large', selected: this.size === "large", togglable: true },
+            { label: 'medium', selected: this.size === "medium", togglable: true },
+            { label: 'small', selected: this.size === "small", togglable: true }
         ];
 
         this.grid1.moving = true;

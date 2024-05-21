@@ -19,8 +19,8 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
-import { setElementSize } from '../../core/utils';
 import { Size } from '../common/enums';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -1932,6 +1932,50 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.autoSizeRowDimension(rowDimension);
                 fixture.detectChanges();
                 expect(rowDimension.width).toBe('158px');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+            });
+
+            it('should auto-size row dimension when width is set to auto.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                let rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.width).toBeUndefined();
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
+                fixture.componentInstance.pivotConfigHierarchy = {
+                    columns: [{
+                        memberName: 'Country',
+                        enabled: true
+                    },
+                    ],
+                    rows: [{
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "auto",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }],
+                    values: [
+                        {
+                            member: 'UnitPrice',
+                            aggregate: {
+                                aggregator: IgxPivotNumericAggregate.sum,
+                                key: 'SUM',
+                                label: 'Sum',
+                            },
+                            enabled: true,
+                            dataType: 'currency'
+                        }
+                    ],
+                    filters: []
+                };
+
+                fixture.detectChanges();
+                rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.autoWidth).toBe(158);
+                expect(rowDimension.width).toBe('auto');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
         });

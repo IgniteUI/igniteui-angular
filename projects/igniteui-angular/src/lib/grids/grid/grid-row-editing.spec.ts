@@ -3,14 +3,14 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
@@ -27,7 +27,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
-import { setElementSize } from '../../core/utils';
 import { Size } from "../common/enums";
 
 const CELL_CLASS = '.igx-grid__td';
@@ -300,8 +299,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
-        it('Emit rowAdd event with proper arguments', () => {
+        it('Emit rowAdd and rowAdded event with proper arguments', () => {
             spyOn(grid.rowAdd, 'emit').and.callThrough();
+            spyOn(grid.rowAdded, 'emit').and.callThrough();
             // start add row
             grid.beginAddRowById(null);
             fix.detectChanges();
@@ -337,7 +337,16 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid,
                 isAddRow: true
             }
+
+            const rowAddedArgs: IRowDataEventArgs = {
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                primaryKey: generatedId,
+                rowKey: generatedId,
+                owner: grid
+            };
             expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
+            expect(grid.rowAdded.emit).toHaveBeenCalledWith(rowAddedArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {

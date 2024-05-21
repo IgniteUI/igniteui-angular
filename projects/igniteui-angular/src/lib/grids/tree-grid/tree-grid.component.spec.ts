@@ -16,7 +16,8 @@ import { GridSelectionMode, Size } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../test-utils/grid-functions.spec';
-import { setElementSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
+
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();

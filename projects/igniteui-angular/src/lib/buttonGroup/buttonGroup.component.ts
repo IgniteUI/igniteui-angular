@@ -525,11 +525,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
                 // Watch for changes again
                 observer.observe(this._el.nativeElement, this.observerConfig);
-
-                // Cleanup function
-                this._renderer.listen(this._el.nativeElement, 'DOMAttrModified', () => {
-                    observer.disconnect();
-                });
             });
         }
     }

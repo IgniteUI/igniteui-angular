@@ -21,7 +21,8 @@ import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-st
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
-import { getComponentSize, setElementSize } from '../../core/utils';
+import { getComponentSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -1014,6 +1015,19 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
         });
+
+        it('should update columns property of row islands on columns change.', fakeAsync(() => {
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(2, 'Initial columns length should be 2');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(2, 'Initial columnList length should be 2');
+
+            fixture.componentInstance.toggleColumns = false;
+            fixture.detectChanges();
+            tick();
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
+        }));
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1866,8 +1880,8 @@ export class IgxHierarchicalGridTestBaseComponent {
     <igx-column field="ID"></igx-column>
     <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1>
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
+            <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2>
             <igx-column field="Col1"></igx-column>
@@ -1876,12 +1890,13 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
+    public toggleColumns = true;
 }
 
 @Component({

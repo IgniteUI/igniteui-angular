@@ -48,9 +48,10 @@ import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate, getComponentSize, setElementSize } from '../../core/utils';
+import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';

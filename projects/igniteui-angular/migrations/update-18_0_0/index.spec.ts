@@ -28,7 +28,7 @@ describe(`Update to ${version}`, () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    const migrationName = 'migration-37';
+    const migrationName = 'migration-38';
 
     it('should remove displayDensity property from igx-grid and replace it with inline style if its value is not set to a component member', async () => {
         appTree.create(
@@ -48,12 +48,12 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
         .toEqual(`
-        <igx-grid [data]="data" height="300px" width="300px" [style.--ig-size]="2">
+        <igx-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-medium)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>
-        <igx-grid [data]="data" height="300px" width="300px" [style.--ig-size]="2">
+        <igx-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-medium)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
@@ -98,12 +98,12 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
         .toEqual(`
-        <igx-tree-grid [data]="data" height="300px" width="300px" [style.--ig-size]="3">
+        <igx-tree-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-large)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-tree-grid>
-        <igx-tree-grid [data]="data" height="300px" width="300px" [style.--ig-size]="1">
+        <igx-tree-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-small)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
@@ -128,12 +128,12 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
         .toEqual(`
-        <igx-pivot-grid [data]="data" height="300px" width="300px" [style.--ig-size]="3">
+        <igx-pivot-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-large)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-pivot-grid>
-        <igx-pivot-grid [data]="data" height="300px" width="300px" [style.--ig-size]="1">
+        <igx-pivot-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-small)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
@@ -170,24 +170,24 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
         .toEqual(`
-        <igx-hierarchical-grid [data]="data" height="300px" width="300px" [style.--ig-size]="3">
+        <igx-hierarchical-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-large)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
-            <igx-row-island [style.--ig-size]="3">
+            <igx-row-island [style.--ig-size]="'var(--ig-size-large)'">
                 <igx-column field="Name" header="Athlete"></igx-column>
-                <igx-row-island [style.--ig-size]="1">
+                <igx-row-island [style.--ig-size]="'var(--ig-size-small)'">
                     <igx-column field="Name" header="Athlete"></igx-column>
                 <igx-row-island/>
             <igx-row-island/>
         </igx-hierarchical-grid>
-        <igx-hierarchical-grid [data]="data" height="300px" width="300px" [style.--ig-size]="1">
+        <igx-hierarchical-grid [data]="data" height="300px" width="300px" [style.--ig-size]="'var(--ig-size-small)'">
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
-            <igx-row-island [style.--ig-size]="3">
+            <igx-row-island [style.--ig-size]="'var(--ig-size-large)'">
                 <igx-column field="Name" header="Athlete"></igx-column>
-                <igx-row-island [style.--ig-size]="2">
+                <igx-row-island [style.--ig-size]="'var(--ig-size-medium)'">
                     <igx-column field="Name" header="Athlete"></igx-column>
                 <igx-row-island/>
             <igx-row-island/>

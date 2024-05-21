@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 
+import { first} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -1114,6 +1115,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
+    public rowDimensionWidth(dim, ignoreBeforeInit = false ): string {
+        const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
+        if (isAuto) {
+            return dim.autoWidth ? dim.autoWidth + 'px' : 'fit-content';
+        } else {
+            return this.rowDimensionWidthToPixels(dim, ignoreBeforeInit) + 'px';
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit = false): number {
         if (!ignoreBeforeInit && this.shouldGenerate) {
             return 0;
@@ -1123,8 +1136,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return MINIMUM_COLUMN_WIDTH;
         }
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
+        const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
         if (isPercent) {
             return parseFloat(dim.width) / 100 * this.calcWidth;
+        } else if (isAuto) {
+            return dim.autoWidth;
         } else {
             return parseInt(dim.width, 10);
         }
@@ -1984,22 +2000,61 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return columns;
     }
 
+    protected override calculateGridSizes(recalcFeatureWidth = true) {
+        super.calculateGridSizes(recalcFeatureWidth);
+        if (this.hasDimensionsToAutosize) {
+            this.cdr.detectChanges();
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.autoSizeDimensionsInView();
+            });
+        }
+    }
+
+    protected autoSizeDimensionsInView() {
+        if (!this.hasDimensionsToAutosize) return;
+        for (const dim of this.rowDimensions) {
+            if (dim.width === 'auto') {
+                const contentWidths = [];
+                const relatedDims = PivotUtil.flatten([dim]).map(x => x.memberName);
+                const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
+                const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
+                headers.forEach((header) => contentWidths.push(header?.nativeElement?.offsetWidth || 0));
+                const max = Math.max(...contentWidths);
+                if (max === 0) {
+                    // cells not in DOM yet...
+                    continue;
+                }
+                const maxSize = Math.ceil(Math.max(...contentWidths));
+                dim.autoWidth = maxSize;
+            }
+        }
+    }
+
+        /** @hidden @internal */
+        public get hasDimensionsToAutosize() {
+            return this.rowDimensions.some(x => x.width === 'auto' && !x.autoWidth);
+        }
+
     protected generateFromData(fields: string[]) {
         const separator = this.pivotKeys.columnDimensionSeparator;
         const dataArr = fields.map(x => x.split(separator)).sort(x => x.length);
         const hierarchy = new Map<string, any>();
+        const columnDimensions =  PivotUtil.flatten(this.columnDimensions);
         dataArr.forEach(arr => {
             let currentHierarchy = hierarchy;
             const path = [];
+            let index = 0;
             for (const val of arr) {
                 path.push(val);
                 const newPath = path.join(separator);
                 let targetHierarchy = currentHierarchy.get(newPath);
                 if (!targetHierarchy) {
-                    currentHierarchy.set(newPath, { value: newPath, expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
+                    const currentColumnDimension = columnDimensions[index];
+                    currentHierarchy.set(newPath, { value: newPath, expandable: !!currentColumnDimension.childLevel, children: new Map<string, any>(), dimension: currentColumnDimension });
                     targetHierarchy = currentHierarchy.get(newPath);
                 }
                 currentHierarchy = targetHierarchy.children;
+                index++;
             }
         });
         return hierarchy;
@@ -2103,13 +2158,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const count = this.values.length;
         const childWidth = parseInt(parentWidth, 10) / count;
         const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
+        const isAuto = parentWidth && parentWidth.indexOf('auto') !== -1;
         this.values.forEach(val => {
             const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + this.pivotKeys.columnDimensionSeparator + val.member;
             ref.instance.parent = parent;
             if (parentWidth) {
-                ref.instance.width = isPercent ? childWidth + '%' : childWidth + 'px';
+                ref.instance.width = isAuto ? 'auto' : isPercent ? childWidth + '%' : childWidth + 'px';
             }
             ref.instance.hidden = hidden;
             ref.instance.sortable = true;

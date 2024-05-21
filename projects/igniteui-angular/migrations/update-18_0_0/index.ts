@@ -45,14 +45,14 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 const { value } = getAttribute(node, prop)[0];
                 // using includes and not the value itself because the value might be either [displayDensity]='comfortable' or displayDensity="'comfortable'"
                 if (value.includes('comfortable')) {
-                    const newProp = ' [style.--ig-size]="3"';
+                    const newProp = ` [style.--ig-size]="'var(--ig-size-large)'"`;
                     addChange(file.url, new FileChange(startTag.end - 1, newProp, '', "insert"));
                 }
                 else if (value.includes('cosy')) {
-                    const newProp = ' [style.--ig-size]="2"';
+                    const newProp = ` [style.--ig-size]="'var(--ig-size-medium)'"`;
                     addChange(file.url, new FileChange(startTag.end - 1, newProp, '', "insert"));
                 } else if (value.includes('compact')) {
-                    const newProp = ' [style.--ig-size]="1"';
+                    const newProp = ` [style.--ig-size]="'var(--ig-size-small)'"`;
                     addChange(file.url, new FileChange(startTag.end - 1, newProp, '', "insert"));
                 }
                 // We don`t have else because if density it set like this: [displayDensity]="customDensity"

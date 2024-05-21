@@ -20,7 +20,7 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { PlatformUtil, formatDate, formatCurrency, getComponentCssSizeVar } from '../../../core/utils';
+import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
@@ -90,14 +90,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     @HostBinding('class.igx-excel-filter--inline')
     public inline = true;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('style.--component-size')
-    protected get componentSize(): string {
-        return getComponentCssSizeVar(this.size);
-    }
 
     /**
      * @hidden @internal

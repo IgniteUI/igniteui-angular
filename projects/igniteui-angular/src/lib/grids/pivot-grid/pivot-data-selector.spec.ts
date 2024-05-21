@@ -17,8 +17,8 @@ import {
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
-import { setElementSize } from '../../core/utils';
 import { Size } from '../common/enums';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe("Pivot data selector", () => {
 
