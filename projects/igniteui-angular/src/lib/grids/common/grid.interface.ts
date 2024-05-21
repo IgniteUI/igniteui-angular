@@ -7,7 +7,8 @@ import {
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs,
-    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs,
+    IGridContextMenuEventArgs
 } from '../common/events';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -1025,7 +1026,7 @@ export interface GridType extends IGridDataBindable {
     cellClick: EventEmitter<IGridCellEventArgs>;
     rowClick: EventEmitter<IGridRowEventArgs>;
     doubleClick: EventEmitter<IGridCellEventArgs>;
-    contextMenu: EventEmitter<IGridCellEventArgs>;
+    contextMenu: EventEmitter<IGridContextMenuEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
     rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;
@@ -1265,6 +1266,7 @@ export interface PivotGridType extends GridType {
     /** Move value from its currently at specified index or at the end.
      * If the parameter is not set, it will add it to the end of the collection. */
     moveValue(value: IPivotValue, index?: number);
+    rowDimensionWidth(dim: IPivotDimension): string;
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
     /** Emits an event when the dimensions in the pivot grid change. */
     dimensionsChange: EventEmitter<IDimensionsChange>;

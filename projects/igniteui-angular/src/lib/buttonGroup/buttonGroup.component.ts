@@ -543,11 +543,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
                 // Watch for changes again
                 observer.observe(this._el.nativeElement, this.observerConfig);
-
-                // Cleanup function
-                this._renderer.listen(this._el.nativeElement, 'DOMAttrModified', () => {
-                    observer.disconnect();
-                });
             });
         }
     }
