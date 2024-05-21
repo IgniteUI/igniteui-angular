@@ -3049,6 +3049,15 @@
         border-bottom: 0;
     }
 
+    %igx-grid__tr-pivot--small-row-area {
+        height: var(--header-size);
+        align-items: flex-end;
+
+        border-inline-start: 0;
+        border-inline-end: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
     %igx-grid__tr-pivot--filter-container {
         display: flex;
         flex-direction: column;

@@ -37,10 +37,11 @@
                         <igx-badge value="{{this.filterDropdownDimensions.size}}"></igx-badge>
                     </div>
                 </div>
-                <div class='igx-grid__tr-pivot--drop-row-area' (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
-                     (dropped)="onDimDrop($event, rowArea, 0)">
+                <div class='igx-grid__tr-pivot--drop-row-area'>
                     <div #pivotRowContainer *ngIf="grid.pivotUI.showConfiguration && grid.pivotUI.showRowHeaders" [style.width.px]="grid.pivotRowWidths - 1"
-                        class="igx-grid__tr-pivot igx-grid__tr-pivot--filter">
+                        class="igx-grid__tr-pivot igx-grid__tr-pivot--small-row-area" igxDrop
+                        (igxDragLeave)="onAreaDragLeave($event, rowArea)"
+                        (dropped)="onDimDrop($event, rowArea, 0)">
                         <igx-chips-area #rowArea droppable='true'>
                             <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
                                 *ngIf="grid.rowDimensions.length === 0"
