@@ -699,11 +699,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
                 maskedValue = this.prependValue(this.dateValue.getMilliseconds(), 3, '00');
                 break;
             case DatePart.AmPm:
-                if (this.dateValue.getHours() >= 12) {
-                    maskedValue = partLength === 1 ? 'p' : 'PM';
-                } else {
-                    maskedValue = partLength === 1 ? 'a' : 'AM';
-                }
+                maskedValue = DateTimeUtil.getAmPmValue(partLength, this.dateValue.getHours() < 12);
                 break;
         }
 

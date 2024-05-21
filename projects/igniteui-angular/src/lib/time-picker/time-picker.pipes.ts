@@ -2,6 +2,7 @@ import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 import { DatePart } from '../directives/date-time-editor/public_api';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const ITEMS_COUNT = 7;
 
@@ -186,11 +187,11 @@ export class TimeItemPipe implements PipeTransform {
         const maxHour = max.getHours();
 
         if (minHour < 12) {
-            ampmItems.push(selectedAmPm.length === 1 ? 'a' : 'AM');
+            ampmItems.push(DateTimeUtil.getAmPmValue(selectedAmPm.length, true));
         }
 
         if (minHour >= 12 || maxHour >= 12) {
-            ampmItems.push(selectedAmPm.length === 1 ? 'p' : 'PM');
+            ampmItems.push(DateTimeUtil.getAmPmValue(selectedAmPm.length, false));
         }
 
         for (let i = 0; i < 5; i++) {

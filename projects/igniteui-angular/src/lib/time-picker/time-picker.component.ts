@@ -938,7 +938,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             }
             case 'ampmList': {
                 let hour = this._selectedDate.getHours();
-                hour = item === 'AM' || item === 'a' ? hour - 12 : hour + 12;
+                hour = DateTimeUtil.isAm(item) ? hour - 12 : hour + 12;
                 date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
                 this.setSelectedValue(date);
@@ -1020,8 +1020,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public nextAmPm(delta?: number) {
         const ampm = this.getPartValue(this._selectedDate, 'ampm');
-        if (!delta || ((ampm === 'AM' || ampm === 'a') && delta > 0)
-                   || ((ampm === 'PM' || ampm === 'p') && delta < 0)) {
+        if (!delta || (DateTimeUtil.isAm(ampm) && delta > 0)
+                   || (DateTimeUtil.isPm(ampm) && delta < 0)) {
             let hours = this._selectedDate.getHours();
             const sign = hours < 12 ? 1 : -1;
             hours = hours + sign * 12;
@@ -1201,9 +1201,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private toTwentyFourHourFormat(hour: number, ampm: string): number {
-        if ((ampm === 'PM' || ampm === 'p') && hour < 12) {
+        if (DateTimeUtil.isPm(ampm) && hour < 12) {
             hour += 12;
-        } else if ((ampm === 'AM' || ampm === 'a') && hour === 12) {
+        } else if (DateTimeUtil.isAm(ampm) && hour === 12) {
             hour = 0;
         }
 

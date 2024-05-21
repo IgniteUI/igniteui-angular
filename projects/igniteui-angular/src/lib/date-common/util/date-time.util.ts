@@ -9,8 +9,16 @@ const enum FormatDesc {
     TwoDigits = '2-digit'
 }
 
-const TIME_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
+const TIME_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T', 'a'];
 const DATE_CHARS = ['d', 'D', 'M', 'y', 'Y'];
+
+/** @hidden */
+const enum AmPmValues {
+    AM = 'AM',
+    A = 'a',
+    PM = 'PM',
+    P = 'p'
+}
 
 /** @hidden */
 const enum DateParts {
@@ -68,7 +76,7 @@ export abstract class DateTimeUtil {
 
         if (amPm) {
             const cleanVal = DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase();
-            if (cleanVal === 'pm' || cleanVal === 'p') {
+            if (DateTimeUtil.isPm(cleanVal)) {
                 parts[DatePart.Hours] += 12;
             }
         }
@@ -182,11 +190,7 @@ export abstract class DateTimeUtil {
                 maskedValue = value.getMilliseconds();
                 break;
             case DatePart.AmPm:
-                if (value.getHours() >= 12) {
-                    maskedValue = partLength === 1 ? 'p' : 'PM';
-                } else {
-                    maskedValue = partLength === 1 ? 'a' : 'AM';
-                }
+                maskedValue = DateTimeUtil.getAmPmValue(partLength, value.getHours() < 12);
                 break;
         }
 
@@ -195,6 +199,27 @@ export abstract class DateTimeUtil {
         }
 
         return maskedValue;
+    }
+
+    /** Returns the AmPm part value depending on the part length and a
+     * conditional expression indicating whether the value is AM or PM.
+     */
+    public static getAmPmValue(partLength: number, isAm: boolean) {
+        if (isAm) {
+            return partLength === 1 ? AmPmValues.A : AmPmValues.AM;
+        } else {
+            return partLength === 1 ? AmPmValues.P : AmPmValues.PM;
+        }
+    }
+
+    /** Returns true if a string value indicates an AM period */
+    public static isAm(value: string) {
+        return (value === AmPmValues.AM || value === AmPmValues.A);
+    }
+
+    /** Returns true if a string value indicates a PM period */
+    public static isPm(value: string) {
+        return (value === AmPmValues.PM || value === AmPmValues.P);
     }
 
     /** Builds a date-time editor's default input format based on provided locale settings. */
@@ -356,16 +381,12 @@ export abstract class DateTimeUtil {
 
     /** Spins the AM/PM portion in a date-time editor. */
     public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string): Date {
-        switch (amPmFromMask) {
-            case 'AM':
-            case 'a':
-                newDate = new Date(newDate.setHours(newDate.getHours() + 12));
-                break;
-            case 'PM':
-            case 'p':
-                newDate = new Date(newDate.setHours(newDate.getHours() - 12));
-                break;
+        if(DateTimeUtil.isAm(amPmFromMask)) {
+            newDate = new Date(newDate.setHours(newDate.getHours() + 12));
+        } else if(DateTimeUtil.isPm(amPmFromMask)) {
+            newDate = new Date(newDate.setHours(newDate.getHours() - 12));
         }
+
         if (newDate.getDate() !== currentDate.getDate()) {
             return currentDate;
         }
