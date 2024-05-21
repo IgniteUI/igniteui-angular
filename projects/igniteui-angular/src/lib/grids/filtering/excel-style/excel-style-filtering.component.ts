@@ -94,14 +94,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    @HostBinding('style.--component-size')
-    protected get componentSize(): string {
-        return getComponentCssSizeVar(this.size);
-    }
-
-    /**
-     * @hidden @internal
-     */
     @Output()
     public loadingStart = new EventEmitter();
 

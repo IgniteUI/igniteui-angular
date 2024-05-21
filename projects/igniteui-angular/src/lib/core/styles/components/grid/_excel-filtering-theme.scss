@@ -41,6 +41,7 @@
     );
 
     %grid-excel-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: block;
         width: rem(320px);
         height: 100%;
