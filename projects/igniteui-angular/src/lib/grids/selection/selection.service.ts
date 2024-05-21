@@ -397,20 +397,17 @@ export class IgxGridSelectionService {
                 return keys.some(k => this.isPivotRowSelected(k));
             });
         }
-        if(this.rowSelection.size && (this.grid as any).totalItemCount || this.grid.pagingMode === GridPagingMode.Remote) {
-            if(!this.grid.primaryKey) {
-                return Array.from(this.rowSelection);
-            }
-            const selection = [];
-            this.rowSelection.forEach(rID =>  {
-                const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
-                const partialRowData = {};
-                partialRowData[this.grid.primaryKey] = rID;
-                selection.push(rData ? rData : partialRowData);
-            });
-            return selection;
+        if (!this.grid.primaryKey) {
+            return Array.from(this.rowSelection);
         }
-        return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(this.getRecordKey(row))) : [];
+        const selection = [];
+        this.rowSelection.forEach(rID => {
+            const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
+            const partialRowData = {};
+            partialRowData[this.grid.primaryKey] = rID;
+            selection.push(rData ? rData : partialRowData);
+        });
+        return selection;
     }
 
     /** Returns array of the selected row id's. */

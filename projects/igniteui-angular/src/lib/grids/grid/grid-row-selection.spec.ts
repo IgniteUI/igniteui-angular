@@ -289,6 +289,41 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
 
+        it('Should display the newly selected rows in correct order', () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const secondRow = grid.gridAPI.get_row_by_index(1);
+            const thirdRow = grid.gridAPI.get_row_by_index(2);
+            spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
+
+            GridSelectionFunctions.clickRowCheckbox(thirdRow);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            let args: IRowSelectionEventArgs = {
+                added: [gridData[2], gridData[0], gridData[1]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2], gridData[0], gridData[1]],
+                oldSelection: [],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            expect(grid.selectedRows).toEqual([3]);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(thirdRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+        });
+
         it('Should select the row with mouse click ', () => {
             expect(grid.selectRowOnClick).toBe(true);
             spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
