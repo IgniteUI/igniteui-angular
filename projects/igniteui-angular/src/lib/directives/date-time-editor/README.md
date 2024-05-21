@@ -68,7 +68,7 @@ public datePart: typeof DatePart = DatePart;
 ```
 ```html
 <igx-input-group>
-<input igxInput #timeEditor="igxDateTimeEditor" type="text" [igxDateTimeEditor]="'HH:mm tt'" [(ngModel)]="date">
+<input igxInput #timeEditor="igxDateTimeEditor" type="text" [igxDateTimeEditor]="'HH:mm a'" [(ngModel)]="date">
 <igx-suffix>
     <igx-icon (click)="timeEditor.increment(datePart.Minutes)">keyboard_arrow_up</igx-icon>
     <igx-icon (click)="timeEditor.decrement(datePart.Minutes)">keyboard_arrow_down</igx-icon>

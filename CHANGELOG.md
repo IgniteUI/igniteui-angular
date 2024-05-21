@@ -6,9 +6,14 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
     - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
-  
+- `IgxDateTimeEditor`, `IgxTimePicker`:
+  - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
+      - Fractional seconds: S, SS, SSS.
+      - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
+
 ### General
 - Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
+
 ## 17.2.0
 ### New Features
 - `IgxAvatar`
