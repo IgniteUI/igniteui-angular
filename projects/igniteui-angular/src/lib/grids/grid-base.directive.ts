@@ -3547,7 +3547,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         .subscribe(() => {
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
-                if (this.document.contains(this.nativeElement)) {
+                if (this.nativeElement.isConnected) {
                     if (this._gridSize !== this.gridSize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
