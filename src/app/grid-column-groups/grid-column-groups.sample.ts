@@ -53,7 +53,7 @@ export class GridColumnGroupsSampleComponent {
     ];
     /* eslint-enable max-len */
 
-    public size = "small";
+    public size : "large" | "medium" | "small" = "small";
     public sizes;
 
     constructor() {
@@ -62,9 +62,9 @@ export class GridColumnGroupsSampleComponent {
         }
         this.selectionMode = GridSelectionMode.none;
         this.sizes = [
-            { label: 'large', selected: this.size === Size.Large, togglable: true },
-            { label: 'medium', selected: this.size === Size.Medium, togglable: true },
-            { label: 'small', selected: this.size === Size.Small, togglable: true }
+            { label: 'large', selected: this.size === "large", togglable: true },
+            { label: 'medium', selected: this.size === "medium", togglable: true },
+            { label: 'small', selected: this.size === "small", togglable: true }
         ];
     }
 

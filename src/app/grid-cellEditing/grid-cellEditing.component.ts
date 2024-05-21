@@ -24,7 +24,7 @@ export class GridCellEditingComponent {
     public orderDateHidden = false;
     public data: any;
     public dataWithoutPK: any;
-    public size = "small";
+    public size : "large" | "medium" | "small" = "small";
     public sizes;
     public options = {
         timezone: '+0430',
@@ -47,9 +47,9 @@ export class GridCellEditingComponent {
         this.data = data;
         this.dataWithoutPK = dataWithoutPK;
         this.sizes = [
-            { label: 'small', selected: this.size === Size.Small, togglable: true },
-            { label: 'medium', selected: this.size === Size.Medium, togglable: true },
-            { label: 'large', selected: this.size === Size.Large, togglable: true }
+            { label: 'large', selected: this.size === "large", togglable: true },
+            { label: 'medium', selected: this.size === "medium", togglable: true },
+            { label: 'small', selected: this.size === "small", togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
     }
