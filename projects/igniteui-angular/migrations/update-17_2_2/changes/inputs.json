@@ -1,0 +1,29 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "igxButtonColor",
+            "replaceWith": "style.--foreground",
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "igxButtonBackground",
+            "replaceWith": "style.--background",
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "reverse",
+            "remove": true,
+            "owner": {
+                "selector": "igx-card-actions",
+                "type": "component"
+            }
+        }
+    ]
+}
