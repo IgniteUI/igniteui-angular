@@ -2,7 +2,6 @@ import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { GridPagingMode } from '../common/enums';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import {
