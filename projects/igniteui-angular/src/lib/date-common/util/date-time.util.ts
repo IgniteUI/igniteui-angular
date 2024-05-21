@@ -75,7 +75,7 @@ export abstract class DateTimeUtil {
         }
 
         if (amPm) {
-            const cleanVal = DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase();
+            const cleanVal = DateTimeUtil.getCleanVal(inputData, amPm, promptChar);
             if (DateTimeUtil.isPm(cleanVal)) {
                 parts[DatePart.Hours] += 12;
             }
@@ -214,12 +214,14 @@ export abstract class DateTimeUtil {
 
     /** Returns true if a string value indicates an AM period */
     public static isAm(value: string) {
-        return (value === AmPmValues.AM || value === AmPmValues.A);
+        value = value.toLowerCase();
+        return (value === AmPmValues.AM.toLowerCase() || value === AmPmValues.A.toLowerCase());
     }
 
     /** Returns true if a string value indicates a PM period */
     public static isPm(value: string) {
-        return (value === AmPmValues.PM || value === AmPmValues.P);
+        value = value.toLowerCase();
+        return (value === AmPmValues.PM.toLowerCase() || value === AmPmValues.P.toLowerCase());
     }
 
     /** Builds a date-time editor's default input format based on provided locale settings. */
