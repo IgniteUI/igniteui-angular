@@ -3895,8 +3895,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
-            resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
-            resizeObservable(this.tbodyContainer.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            // resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            // resizeObservable(this.tbodyContainer.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
     }
 
@@ -3907,7 +3907,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initPinning();
         this.calculateGridSizes();
         this._init = false;
-        this.componentSizeService.init = false;
+        this.componentSizeService.startObserving()
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();

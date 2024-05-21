@@ -439,7 +439,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this.componentSizeService.init = false;
+        this.componentSizeService.startObserving();
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });

@@ -54,6 +54,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { Observable, Subject } from 'rxjs';
+import { IgxComponentSizeService } from '../../core/size';
 
 let NEXT_ID = 0;
 
@@ -86,6 +87,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     providers: [
+        IgxComponentSizeService,
         IgxGridCRUDService,
         IgxGridNavigationService,
         IgxGridSummaryService,

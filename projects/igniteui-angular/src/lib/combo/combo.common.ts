@@ -89,9 +89,9 @@ const itemsInContainer = 10; // TODO: make private readonly
 
 /** @hidden @internal */
 const ItemHeights = {
-    Large: 40,
-    Medium: 32,
-    Small: 28
+    "3": 40,
+    "2": 32,
+    "1": 28
 };
 
 /** @hidden @internal */
@@ -991,9 +991,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data];
-
-        this.componentSizeService.init = false;
-
+        this.componentSizeService.startObserving();
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
