@@ -93,6 +93,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -2206,7 +2207,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const columnDimensions: IPivotDimension[] = [];
         const rowDimensions: IPivotDimension[] = [];
         const values: IPivotValue[] = [];
-
+        let isFirstDate = false;
         fields.forEach((field) => {
             const dataType = this.resolveDataTypes(data[0][field]);
             switch (dataType) {
@@ -2228,12 +2229,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             case "date":
             {
-                const dimension: IPivotDimension = {
-                    memberName: field,
-                    enabled: true,
-                    dataType: dataType
-                };
+                const dimension: IPivotDimension = new IgxPivotDateDimension(
+                    {
+                        memberName: field,
+                        enabled: isFirstDate,
+                        dataType: dataType
+                    }
+                )
                 rowDimensions.push(dimension);
+                isFirstDate = false;
                 break;
             }
                 default: {

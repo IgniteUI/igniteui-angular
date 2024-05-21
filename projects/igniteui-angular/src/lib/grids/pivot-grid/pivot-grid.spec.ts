@@ -1994,14 +1994,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 }];
                 fixture.detectChanges();
 
-                expect(pivotGrid.allDimensions.length).toBe(4);
-                expect(pivotGrid.values.length).toBe(2);
-
-                expect(pivotGrid.allDimensions.map(x => x.memberName))
-                .toEqual(['Date', 'ProductCategory', 'SellerName', 'Country']);
-
-                expect(pivotGrid.values.map(x => x.member))
-                .toEqual(['UnitPrice', 'UnitsSold']);
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                // only date is row dimension and is enabled by default
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                // all other are disabled column dimensions.
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['ProductCategory', 'SellerName', 'Country']);
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.enabled)).toEqual([false, false, false]);
+                // values are all enabled.
+                expect(pivotGrid.values.length).toEqual(2);
+                expect(pivotGrid.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+                expect(pivotGrid.values.map(x => x.enabled)).toEqual([true, true]);
             });
         });
     });
