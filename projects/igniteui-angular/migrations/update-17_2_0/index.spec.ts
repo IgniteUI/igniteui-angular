@@ -333,20 +333,4 @@ describe(`Update to ${version}`, () => {
         `
         );
     });
-
-    it('should replace PivotGrid property `showPivotConfigurationUI` with `pivotUI`', async () => {
-        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
-        `
-        <igx-pivot-grid [showPivotConfigurationUI]="false"></igx-pivot-grid>
-        `
-        );
-
-        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
-        `
-        <igx-pivot-grid [pivotUI]="{ showConfiguration: false }"></igx-pivot-grid>
-        `
-        );
-    });
 });

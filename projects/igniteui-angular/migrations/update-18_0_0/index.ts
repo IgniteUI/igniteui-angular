@@ -1,7 +1,7 @@
 import { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
 
-const version = "17.2.0";
+const version = "18.0.0";
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(
@@ -9,18 +9,18 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     );
     const update = new UpdateChanges(__dirname, host, context);
 
-    update.addValueTransform('vertical_to_orientation', (args: BoundPropertyObject): void => {
-        args.bindingType = InputPropertyType.STRING;
+    update.addValueTransform('pivotConfigurationUI_to_pivotUI', (args: BoundPropertyObject): void => {
+        args.bindingType = InputPropertyType.EVAL;
 
         switch (args.value) {
             case 'true':
-                args.value = 'vertical';
+                args.value = '{ showConfiguration: true }';
                 break;
             case 'false':
-                args.value = 'horizontal';
+                args.value = '{ showConfiguration: false }';
                 break;
             default:
-                args.value += ` ? 'vertical' : 'horizontal' `;
+                args.value = `{ showConfiguration: ${args.value} }`;
         }
     });
 
