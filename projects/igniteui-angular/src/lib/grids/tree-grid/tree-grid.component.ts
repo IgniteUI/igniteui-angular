@@ -81,7 +81,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxComponentSizeService } from '../../core/size';
 
 let NEXT_ID = 0;
 
@@ -106,7 +105,6 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
-        IgxComponentSizeService,
         IgxGridCRUDService,
         IgxGridValidationService,
         IgxGridSummaryService,
@@ -445,13 +443,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
-        componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
             _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
-            overlayService, summaryService, localeId, platform, componentSizeService, _diTransactions);
+            overlayService, summaryService, localeId, platform, _diTransactions);
     }
 
     /**

@@ -3,8 +3,8 @@ import {
     TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute
 } from '@angular/core';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, animationFrameScheduler } from 'rxjs';
+import { takeUntil, throttleTime } from 'rxjs/operators';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
@@ -16,7 +16,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { IgxComponentSizeService } from '../core/size';
+import { resizeObservable } from '../core/utils';
 
 /**
  * @hidden @internal
@@ -76,7 +76,6 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeService,
         IgxTreeSelectionService,
         IgxTreeNavigationService,
-        IgxComponentSizeService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ],
     standalone: true
@@ -303,6 +302,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     /** @hidden @internal */
     public forceSelect = [];
 
+    /** @hidden @internal */
+    public resizeNotify = new Subject<void>();
+
     private _selection: IgxTreeSelectionType = IgxTreeSelectionType.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
@@ -311,8 +313,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>,
-        protected componentSizeService: IgxComponentSizeService) {
+        private element: ElementRef<HTMLElement>) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
@@ -429,8 +430,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
             this.scrollNodeIntoView(node?.header?.nativeElement);
         });
         this.subToCollapsing();
-        this.componentSizeService.attachObserver();
-        this.componentSizeService.componentSize.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.resizeNotify.pipe(
+            throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
+            takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
             requestAnimationFrame(() => {
                 this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
             });
@@ -439,12 +443,12 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this.componentSizeService.startObserving();
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
         this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
         this.subToChanges();
+        resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
     }
 
     /** @hidden @internal */

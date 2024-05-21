@@ -2903,7 +2903,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /** @hidden @internal */
     public rowDeletedNotifier = new Subject<IRowDataEventArgs>();
 
-    /** @hidden @internal */
+/** @hidden @internal */
     public pipeTriggerNotifier = new Subject();
 
     /** @hidden @internal */

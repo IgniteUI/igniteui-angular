@@ -11,15 +11,18 @@ import {
     Renderer2,
     TemplateRef,
     OnDestroy,
-    booleanAttribute
+    booleanAttribute,
+    OnInit,
+    Inject
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgIf, DOCUMENT } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { Size } from '../grids/common/enums';
 
 export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
@@ -83,7 +86,7 @@ let CHIP_ID = 0;
     standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent implements OnDestroy {
+export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Sets/gets the variant of the chip.
@@ -567,6 +570,14 @@ export class IgxChipComponent implements OnDestroy {
         return this.selectIcon || this.defaultSelectIcon;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public get ghostStyles() {
+        return { '--component-size': `${this.chipSize}` };
+    }
+
     /** @hidden @internal */
     public get nativeElement() {
         return this.ref.nativeElement;
@@ -582,15 +593,28 @@ export class IgxChipComponent implements OnDestroy {
      * @hidden
      * @internal
      */
+    public get chipSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public destroy$ = new Subject<void>();
 
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
+    protected computedStyles;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
-    constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2) { }
+    constructor(
+        public cdr: ChangeDetectorRef,
+        private ref: ElementRef<HTMLElement>,
+        private renderer: Renderer2,
+        @Inject(DOCUMENT) public document: any) { }
 
     /**
      * @hidden
@@ -888,6 +912,10 @@ export class IgxChipComponent implements OnDestroy {
                 });
             }
         }
+    }
+
+    public ngOnInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
     }
 
     public ngOnDestroy(): void {

@@ -19,7 +19,7 @@ import { getComponentSize } from '../core/utils';
             <igx-chip #chipElem *ngFor="let chip of chipList" class="custom"
             [id]="chip.id" [draggable]="chip.draggable"
             [removable]="chip.removable" [selectable]="chip.selectable"
-            (remove)="chipRemoved($event)">
+            [style]="'--ig-size: var(' + chip.chipSize + ')'" (remove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix>drag_indicator</igx-icon>
             </igx-chip>
@@ -53,9 +53,9 @@ class TestChipComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
-        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: 'cosy' }
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-large' },
+        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: '--ig-size-medium' },
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: '--ig-size-small' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -266,7 +266,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should affect the ghostElement density when chip has it set to compact', () => {
+        it('should affect the ghostElement size when chip has it set to compact', () => {
             const thirdChip = fix.componentInstance.chips.toArray()[2];
             const thirdChipElem = thirdChip.chipArea.nativeElement;
 

@@ -44,7 +44,8 @@ import {
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxComponentSizeService } from '../core/size';
+import { DOCUMENT } from '@angular/common';
+import { Size } from '../grids/common/enums';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -112,9 +113,7 @@ export interface IComboFilteringOptions {
     filteringKey?: string;
 }
 
-@Directive({
-    providers: [IgxComponentSizeService]
-})
+@Directive()
 export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
     /**
@@ -233,6 +232,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get comboSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+    }
+
+    /**
      * Configures the drop down list item height
      *
      * ```typescript
@@ -248,7 +255,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @Input()
     public get itemHeight(): number {
         if (this._itemHeight === null || this._itemHeight === undefined) {
-            return ItemHeights[this.componentSizeService.componentSize.value];
+            return ItemHeights[this.comboSize];
         }
         return this._itemHeight;
     }
@@ -933,6 +940,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
     protected compareCollator = new Intl.Collator();
+    protected computedStyles;
 
     private _type = null;
     private _dataType = '';
@@ -952,7 +960,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
-        protected componentSizeService: IgxComponentSizeService,
+        @Inject(DOCUMENT) public document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) { }
 
@@ -985,13 +993,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
-        this.componentSizeService.attachObserver();
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data];
-        this.componentSizeService.startObserving();
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();

@@ -40,7 +40,7 @@ describe('IgxTree #treeView', () => {
                 nativeElement: jasmine.createSpyObj('nativeElement', ['focus'], {})
             });
             tree?.ngOnDestroy();
-            tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef, null);
+            tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef);
             mockNodes = jasmine.createSpyObj('mockList', ['toArray'], {
                 changes: new Subject<void>(),
                 get first() {

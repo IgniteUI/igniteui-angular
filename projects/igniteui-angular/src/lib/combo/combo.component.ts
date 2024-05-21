@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
@@ -27,7 +27,6 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxComponentSizeService } from '../core/size';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -100,7 +99,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     templateUrl: 'combo.component.html',
     providers: [
         IgxComboAPIService,
-        IgxComponentSizeService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
@@ -204,10 +202,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
         _iconService: IgxIconService,
-        componentSizeService: IgxComponentSizeService,
+        @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, componentSizeService, _inputGroupType, _injector);
+        super(elementRef, cdr, selectionService, comboAPI, _iconService, document, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 

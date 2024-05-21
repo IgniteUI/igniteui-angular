@@ -92,7 +92,6 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxComponentSizeService } from '../../core/size';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -120,7 +119,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
     providers: [
-        IgxComponentSizeService,
         IgxGridCRUDService,
         IgxGridValidationService,
         IgxGridSummaryService,
@@ -938,7 +936,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
-        componentSizeService: IgxComponentSizeService,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
         super(
             validationService,
@@ -961,7 +958,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             summaryService,
             localeId,
             platform,
-            componentSizeService,
             _diTransactions);
     }
 
