@@ -420,10 +420,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onChipSort(_event, dimension: IPivotDimension) {
-        const startDirection = dimension.sortDirection || SortingDirection.None;
-        const direction = startDirection + 1 > SortingDirection.Desc ?
-            SortingDirection.None : startDirection + 1;
-        this.grid.sortDimension(dimension, direction);
+        if (dimension.sortable === undefined || dimension.sortable) {
+            const startDirection = dimension.sortDirection || SortingDirection.None;
+            const direction = startDirection + 1 > SortingDirection.Desc ?
+                SortingDirection.None : startDirection + 1;
+            this.grid.sortDimension(dimension, direction);
+        }
     }
 
     /**

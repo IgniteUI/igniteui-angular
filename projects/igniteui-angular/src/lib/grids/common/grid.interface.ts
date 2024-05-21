@@ -1274,6 +1274,8 @@ export interface PivotGridType extends GridType {
     dimensionsChange: EventEmitter<IDimensionsChange>;
     /** Emits an event when the values in the pivot grid change. */
     valuesChange: EventEmitter<IValuesChange>;
+    /** Emits an event when the a dimension is sorted. */
+    dimensionsSortingExpressionsChange: EventEmitter<ISortingExpression[]>;
     /** @hidden @internal */
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;

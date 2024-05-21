@@ -7,7 +7,8 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 import { SortingIndexPipe } from '../headers/pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { takeUntil } from 'rxjs';
 
 /**
  * @hidden
@@ -21,7 +22,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
     private pivotGrid: PivotGridType;
-    private sortIndex = -1;
 
     constructor(
         @Inject(IGX_GRID_BASE) grid: GridType,
@@ -30,20 +30,16 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
         public refInstance: ElementRef<HTMLElement>
     ) {
         super(grid, colResizingService, cdr, refInstance);
+
         this.pivotGrid = this.grid as PivotGridType;
+        this.pivotGrid.dimensionsSortingExpressionsChange
+            .pipe(takeUntil(this._destroy$))
+            .subscribe((_: ISortingExpression[]) => this.setSortIndex());
     }
 
     @HostListener('click', ['$event'])
     public override onClick(event: MouseEvent) {
         event.preventDefault();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public override ngDoCheck() {
-        super.ngDoCheck();
-        this.setSortIndex();
     }
 
     /**
@@ -88,10 +84,7 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
                 newSortIndex = priorSortedDims + 1;
             }
 
-            if (this.sortIndex !== newSortIndex) {
-                this.sortIconContainer.nativeElement.setAttribute("data-sortIndex", newSortIndex >= 0 ? newSortIndex : "");
-                this.sortIndex = newSortIndex;
-            }
+            this.sortIconContainer.nativeElement.setAttribute("data-sortIndex", newSortIndex >= 0 ? newSortIndex : "");
         }
     }
 }

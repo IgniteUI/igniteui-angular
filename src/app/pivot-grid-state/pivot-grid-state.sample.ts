@@ -74,6 +74,7 @@ export class PivotGridStateSampleComponent {
                 displayName: 'All Cities',
                 memberFunction: () => 'All',
                 enabled: true,
+                sortable: false,
                 childLevel: {
                     memberName: 'City',
                     enabled: true,

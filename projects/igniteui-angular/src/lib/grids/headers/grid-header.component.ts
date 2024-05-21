@@ -200,7 +200,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     public sortDirection = SortingDirection.None;
-    private _destroy$ = new Subject<boolean>();
+    protected _destroy$ = new Subject<boolean>();
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,

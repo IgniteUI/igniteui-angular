@@ -2057,7 +2057,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.header = dim.displayName || dim.memberName;
             ref.instance.headerTemplate = this.rowDimensionHeaderTemplate;
             ref.instance.resizable = this.rowDimensionResizing;
-            ref.instance.sortable = this._sortableColumns;
+            ref.instance.sortable = dim.sortable === undefined ? true : dim.sortable;
             ref.instance.width = this.rowDimensionWidthToPixels(dim) + 'px';
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
