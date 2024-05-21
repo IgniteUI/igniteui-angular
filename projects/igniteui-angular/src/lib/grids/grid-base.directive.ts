@@ -5245,6 +5245,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden @internal
      * Gets the size of the grid
      */
     public get gridSize(): Size {

@@ -688,6 +688,7 @@ export interface GridType extends IGridDataBindable {
     /** Indicates whether the grid is currently in a moving state. */
     moving: boolean;
     isLoading: boolean;
+    /** @hidden @internal */
     gridSize: Size;
 
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */

@@ -117,6 +117,8 @@ export enum GridInstanceType {
 }
 
 /**
+ * @hidden @internal
+ * 
  * Enumeration representing the possible predefined size options of the grid.
  * - Small: This is the smallest size with 32px row height. Left and Right paddings are 12px. Minimal column width is 56px.
  * - Medium: This is the middle size with 40px row height. Left and Right paddings are 16px. Minimal column width is 64px.
