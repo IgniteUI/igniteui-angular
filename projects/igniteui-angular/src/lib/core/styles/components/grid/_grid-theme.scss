@@ -3117,8 +3117,12 @@
             igx-pivot-row-dimension-header {
                 align-items: center;
 
-                .igx-grid-th__title {
-                    text-align: center;
+                .igx-grid-th__icons {
+                    padding-right: pad-inline(
+                        map.get($grid-header-padding-inline, 'compact'),
+                        map.get($grid-header-padding-inline, 'cosy'),
+                        map.get($grid-header-padding-inline, 'comfortable')
+                    );
                 }
             }
 

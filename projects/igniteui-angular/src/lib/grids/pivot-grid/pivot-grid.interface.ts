@@ -244,7 +244,3 @@ export interface IPivotGridGroupRecord extends IPivotGridRecord {
 export interface IgxPivotGridValueTemplateContext {
     $implicit: IPivotValue;
 }
-
-export interface IgxPivotRowDimensionHeaderTemplateContext {
-    $implicit: ColumnType;
-}

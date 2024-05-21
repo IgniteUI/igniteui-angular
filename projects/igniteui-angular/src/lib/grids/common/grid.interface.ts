@@ -34,7 +34,7 @@ import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../da
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
-import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, IgxPivotRowDimensionHeaderTemplateContext, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
@@ -1280,7 +1280,7 @@ export interface PivotGridType extends GridType {
     excelStyleFilterMaxHeight: string;
     excelStyleFilterMinHeight: string;
     valueChipTemplate: TemplateRef<any>;
-    rowDimensionHeaderTemplate: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>;
+    rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
 }
 
 export interface GridSVGIcon {

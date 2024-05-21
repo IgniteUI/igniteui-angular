@@ -33,10 +33,10 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IgxPivotRowDimensionHeaderTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -302,7 +302,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
 
     @Input()
-    public rowDimensionHeaderTemplate: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>;
+    public rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     @Input()
     /**
@@ -459,10 +459,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     protected rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
-
-    /** @hidden @internal */
-    @ViewChild('defaultRowHeader', { read: TemplateRef, static: true })
-    protected defaultRowHeader: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -669,6 +665,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
     private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false };
+    private _sortableColumns = true;
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -2058,8 +2055,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.field = dim.memberName;
             ref.instance.header = dim.displayName || dim.memberName;
-            ref.instance.headerTemplate = this.rowHeaderTemplate;
+            ref.instance.headerTemplate = this.rowDimensionHeaderTemplate;
             ref.instance.resizable = this.rowDimensionResizing;
+            ref.instance.sortable = this._sortableColumns;
             ref.instance.width = this.rowDimensionWidthToPixels(dim) + 'px';
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
@@ -2195,7 +2193,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.width = isPercent ? childWidth + '%' : childWidth + 'px';
             }
             ref.instance.hidden = hidden;
-            ref.instance.sortable = true;
+            ref.instance.sortable = this._sortableColumns;
             ref.instance.dataType = val.dataType || this.resolveDataTypes(data[0][val.member]);
             ref.instance.formatter = val.formatter;
             ref.changeDetectorRef.detectChanges();
@@ -2244,24 +2242,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
     }
 
-    protected get rowHeaderTemplate() {
-        return this.rowDimensionHeaderTemplate ? this.rowDimensionHeaderTemplate : this.defaultRowHeader;
-    }
-
     protected rowDimensionByName(memberName: string) {
         return this.rowDimensions.find((rowDim) => rowDim.memberName === memberName);
     }
 
-    protected onSortingIconClick(_event, dim: IPivotDimension) {
-        const startDirection = dim.sortDirection || SortingDirection.None;
-        const direction = startDirection + 1 > SortingDirection.Desc ?
-            SortingDirection.None : startDirection + 1;
-        this.sortDimension(dim, direction);
-    }
-
     protected calculateResizerTop() {
         return this.pivotUI.showRowHeaders ?
-            this.theadRow.pivotFilterContainer?.nativeElement.clientHeight || 0 + this.theadRow.pivotRowContainer?.nativeElement.clientHeight || 0 :
-            this.theadRow.nativeElement.clientHeight;
+            (this.theadRow.pivotFilterContainer?.nativeElement.offsetHeight || 0) + (this.theadRow.pivotRowContainer?.nativeElement.offsetHeight || 0) :
+            this.theadRow.nativeElement.offsetHeight;
     }
 }

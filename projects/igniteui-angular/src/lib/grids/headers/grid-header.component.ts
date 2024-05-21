@@ -54,6 +54,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected defaultSortHeaderIconTemplate;
 
     /**
+     * @hidden
+     */
+    @ViewChild('sortIconContainer', { read: ElementRef })
+    protected sortIconContainer: ElementRef;
+
+    /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
