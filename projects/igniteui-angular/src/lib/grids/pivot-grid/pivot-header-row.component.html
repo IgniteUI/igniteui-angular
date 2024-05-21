@@ -1,33 +1,3 @@
-<ng-template #rowsChipsAreaContent let-rowArea>
-    <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
-        *ngIf="grid.rowDimensions.length === 0"
-        class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
-    <ng-container *ngFor="let row of grid.rowDimensions; let last = last;">
-        <span class="igx-grid__tr-pivot--chip_drop_indicator"
-            [style.height.px]='getAreaHeight(rowArea)'></span>
-            <igx-chip [draggable]="true" [id]="row.memberName" [displayDensity]="grid.displayDensity" [data]="{ pivotArea: 'row' }"
-                    [removable]="true" (remove)="rowRemoved($event)" (dragLeave)="onDimDragLeave($event)"
-                    (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
-                    (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
-                    (click)="onChipSort($event, row)">
-                <igx-icon igxPrefix>table_rows</igx-icon>
-                <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
-                        (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
-                {{ row.displayName || row.memberName}}
-                <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward'
-                    : 'arrow_downward' }}</igx-icon>
-            </igx-chip>
-        <ng-container *ngIf='last'>
-        <span class="igx-grid__tr-pivot--chip_drop_indicator"
-            [style.height.px]='getAreaHeight(rowArea)'></span>
-        </ng-container>
-    </ng-container>
-    <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'
-            [displayDensity]="grid.displayDensity">
-        {{grid.resourceStrings.igx_grid_pivot_row_drop_chip}}
-    </igx-chip>
-</ng-template>
-
 <div>
     <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width.px]="width">
         <div class="igx-grid__tr" role="row" [style.width.px]="width">
