@@ -343,7 +343,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
-            expect(grid.selectedRows).toEqual([3]);
+            expect(grid.selectedRows.length).toEqual(3);
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyRowSelected(thirdRow);
