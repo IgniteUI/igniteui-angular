@@ -207,6 +207,64 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private _icons = [
+        {
+            name: 'clear',
+            family: 'default',
+            ref: {
+                name: 'clear',
+                family: 'material'
+            }
+        },
+        {
+            name: 'close',
+            family: 'default',
+            ref: {
+                name: 'close',
+                family: 'material'
+            }
+        },
+        {
+            name: 'done',
+            family: 'default',
+            ref: {
+                name: 'done',
+                family: 'material'
+            }
+        },
+        {
+            name: 'prev',
+            family: 'default',
+            ref: {
+                name: 'navigate_before',
+                family: 'material'
+            }
+        },
+        {
+            name: 'next',
+            family: 'default',
+            ref: {
+                name: 'navigate_next',
+                family: 'material'
+            }
+        },
+        {
+            name: 'expand',
+            family: 'default',
+            ref: {
+                name: 'expand_more',
+                family: 'material'
+            }
+        },
+        {
+            name: 'refresh',
+            family: 'default',
+            ref: {
+                name: 'refresh',
+                family: 'material'
+            }
+        },
+    ];
 
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
@@ -220,40 +278,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         protected platform: PlatformUtil,
         protected iconService: IgxIconService,
     ) {
-        this.iconService.addIconRef('clear', 'default', {
-            name: 'clear',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('close', 'default', {
-            name: 'close',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('selected', 'default', {
-            name: 'done',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('prev', 'default', {
-            name: 'navigate_before',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('next', 'default', {
-            name: 'navigate_next',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('expand', 'default', {
-            name: 'expand_more',
-            family: 'material'
-        });
-
-        this.iconService.addIconRef('refresh', 'default', {
-            name: 'refresh',
-            family: 'material'
-        });
+        for (const icon of this._icons) {
+            this.iconService.addIconRef(icon.name, icon.family, {
+                name: icon.ref.name,
+                family: icon.ref.family
+            });
+        }
     }
 
     @HostListener('keydown', ['$event'])

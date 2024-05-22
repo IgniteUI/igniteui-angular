@@ -120,65 +120,63 @@ Default Component Icons:
   - arrow_upward
   - arrow_downward
 
-- [ ] Path: grids/grid/expandable-cell.component.html
+- [x] Path: grids/grid/expandable-cell.component.html
   - check
   - close
   - error
   - expand_more
   - chevron_right
 
-- [ ] Path: grids/grid/grid.component.html
+- [x] Path: grids/grid/grid.component.html
   - unfold_less
   - unfold_more
   - drag_indicator
 
-- [ ] Path: grids/grid/groupby-row.component.html
+- [x] Path: grids/grid/groupby-row.component.html
   - drag_indicator
   - expand_more
   - chevron_right
   - group_work
 
-- [ ] Path: grids/grouping/group-by-area.component.html
+- [x] Path: grids/grouping/group-by-area.component.html
   - arrow_upward
   - arrow_downward
   - arrow_forward
   - group_work
 
-- [ ] Path: grids/headers/grid-header-group.component.html
+- [x] Path: grids/headers/grid-header-group.component.html
   - expand_more
   - chevron_right
 
-- [ ] Path: grids/headers/grid-header.component.html
+- [x] Path: grids/headers/grid-header.component.html
   - more_vert
   - arrow_upward
   - arrow_downward
 
-- [ ] Path: grids/hierarchical-grid/hierarchical-grid.component.html
+- [x] Path: grids/hierarchical-grid/hierarchical-grid.component.html
   - unfold_more
   - unfold_less
   - drag_indicator
 
-- [ ] Path: grids/hierarchical-grid/hierarchical-row.component.html
+- [x] Path: grids/hierarchical-grid/hierarchical-row.component.html
   - expand_more
   - chevron_right
-  - <igx-icon></igx-icon> 👀
 
-- [ ] Path: grids/pivot-grid/pivot-data-selector.component.html
+- [x] Path: grids/pivot-grid/pivot-data-selector.component.html
   * multiple built-in from panel.icon;
   - search
   - arrow_upward
   - arrow_downward
   - filter_list
   - functions
-  - drag_handle
   - unfold_more
   - drag_handle
 
-- [ ] Path: grids/pivot-grid/pivot-grid.component.html
+- [x] Path: grids/pivot-grid/pivot-grid.component.html
   - expand_more
   - chevron_right
 
-- [ ] Path: grids/pivot-grid/pivot-header-row.component.html
+- [x] Path: grids/pivot-grid/pivot-header-row.component.html
   - filter_list
   - view_column
   - arrow_upward
@@ -187,27 +185,27 @@ Default Component Icons:
   - arrow_drop_down
   - table_rows
 
-- [ ] Path: grids/pivot-grid/pivot-row-dimension-content.component.html
+- [x] Path: grids/pivot-grid/pivot-row-dimension-content.component.html
   - expand_more
   - chevron_right
   - <igx-icon style='flex-shrink: 0;' [attr.draggable]="false"></igx-icon> 👀
 
-- [ ] Path: grids/pivot-grid/pivot-row-dimension-header-group.component.html
+- [x] Path: grids/pivot-grid/pivot-row-dimension-header-group.component.html
   - expand_more
   - chevron_right
 
-- [ ] Path: grids/toolbar/grid-toolbar-advanced-filtering.component.html
+- [x] Path: grids/toolbar/grid-toolbar-advanced-filtering.component.html
   - filter_list
 
-- [ ] Path: grids/toolbar/grid-toolbar-exporter.component.html
+- [x] Path: grids/toolbar/grid-toolbar-exporter.component.html
   - import_export
   - arrow_drop_down
 
-- [ ] Path: grids/toolbar/grid-toolbar-hiding.component.html
+- [x] Path: grids/toolbar/grid-toolbar-hiding.component.html
   - visibility
   - visibility_off
 
-- [ ] Path: grids/toolbar/grid-toolbar-pinning.component.html
+- [x] Path: grids/toolbar/grid-toolbar-pinning.component.html
   - imx-icons:unpin-left
   - imx-icons:pin-left
 
@@ -218,10 +216,10 @@ Default Component Icons:
   - expand_more
   - chevron_right
 
-- [ ] Path: grids/tree-grid/tree-grid.component.html
+- [x] Path: grids/tree-grid/tree-grid.component.html
   - drag_indicator
 
-- [ ] Path: grids/cell.component.html
+- [x] Path: grids/cell.component.html
   - check
   - close
   - error
@@ -279,6 +277,7 @@ Default Component Icons:
 
 | Family  | Name           | Ref Family | Ref Name             | Used By                                           | Theme                     |
 |---------|----------------|------------|----------------------|---------------------------------------------------|---------------------------|
+| default | more_vert      | material   | more_vert            | Action Strip, Grid                                | All                       |
 | default | expand         | material   | expand_more          | ExpansionPanel, Filtering Row                     | All                       |
 | default | collapse       | material   | expand_less          | ExpansionPanel                                    | All                       |
 | default | arrow_next     | material   | keyboard_arrow_right | Month Picker, Calendar                            | All                       |

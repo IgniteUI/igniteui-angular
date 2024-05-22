@@ -45,9 +45,11 @@
                 : value
         }}</div>
     <igx-icon
+        family="default"
+        [name]="value ? 'check' : 'close'"
         *ngIf="column.dataType === 'boolean' && !this.formatter"
-        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
-        >{{ value ? "check" : "close" }}</igx-icon>
+        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">
+    </igx-icon>
     <img *ngIf="column.dataType === 'image'" [src]="value" [alt]="value | igxCellImageAlt" />
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
@@ -220,8 +222,15 @@
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"> </ng-container>
 <ng-container *ngIf="isInvalid">
-    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" [igxToggleOutlet]="grid.outlet"
-    (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
+    <igx-icon
+        family="default"
+        name="error"
+        #errorIcon
+        [igxTooltipTarget]="tooltipRef"
+        [igxToggleOutlet]="grid.outlet"
+        (mouseover)='errorShowing = true'
+        (mouseout)='errorShowing = false'>
+    </igx-icon>
     <div [id]="ariaErrorMessage"
     igxTooltip #error #tooltipRef="tooltip">
         <div [style.width]="'max-content'">
@@ -231,10 +240,10 @@
 </ng-container>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon>expand_more</igx-icon>
+    <igx-icon family="default" name="expand"></igx-icon>
 </ng-template>
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon>chevron_right</igx-icon>
+    <igx-icon family="default" name="chevron_right"></igx-icon>
 </ng-template>
 <ng-template #defaultError>
     <div *ngIf="formGroup?.get(column?.field).errors?.['required']">

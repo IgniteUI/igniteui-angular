@@ -1,15 +1,13 @@
 <ng-container *ngTemplateOutlet='addRowUI ? addTemp : defaultTemp'></ng-container>
 <ng-template #defaultExpandedTemplate>
-    <igx-icon [active]='!added'>expand_more</igx-icon>
+    <igx-icon family="default" name="expand" [active]='!added'></igx-icon>
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon [active]='!added'>chevron_right</igx-icon>
+    <igx-icon family="default" name="chevron_right" [active]='!added'></igx-icon>
 </ng-template>
 
-<ng-template #defaultEmptyTemplate>
-    <igx-icon></igx-icon>
-</ng-template>
+<ng-template #defaultEmptyTemplate></ng-template>
 
 <ng-template #addTemp>
     <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='triggerAddAnimationClass' (animationend)='animationEndHandler()'>

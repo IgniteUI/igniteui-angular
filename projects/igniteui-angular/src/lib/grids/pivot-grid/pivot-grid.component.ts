@@ -983,7 +983,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
+        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
+    ) {
         super(
             validationService,
             selectionService,

@@ -3,11 +3,14 @@
 </ng-template>
 
 <ng-template #defaultESFHeaderIconTemplate>
-    <igx-icon>more_vert</igx-icon>
+    <igx-icon family="default" name="more_vert"></igx-icon>
 </ng-template>
 
 <ng-template #defaultSortHeaderIconTemplate>
-    <igx-icon>{{ sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+    <igx-icon
+        family="default"
+        [name]="sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'">
+    </igx-icon>
 </ng-template>
 
 <span class="igx-grid-th__title">

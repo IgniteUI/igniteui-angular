@@ -22,7 +22,7 @@ import { IgxBadgeComponent } from '../../../badge/badge.component';
 import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxIconService } from 'igniteui-angular';
+import { IgxIconService } from '../../../icon/icon.service';
 
 /**
  * @hidden
