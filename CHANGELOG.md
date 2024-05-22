@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
     - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+- `IgxOverlayService`, `IgxToggleDirective`:
+    - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
 
 ## 17.2.0
 ### New Features
@@ -120,6 +122,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
+=======
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:

@@ -42,7 +42,8 @@ import {
     PositionSettings,
     RelativePosition,
     RelativePositionStrategy,
-    VerticalAlignment
+    VerticalAlignment,
+    OffsetMode
 } from './utilities';
 import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
 
@@ -489,24 +490,30 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     * Offsets the content along the corresponding axis by the provided amount
+     * Offsets the content along the corresponding axis by the provided amount with optional offsetMode that determines whether to add (by default) or set the offset values
      *
      * @param id Id to offset overlay for
      * @param deltaX Amount of offset in horizontal direction
      * @param deltaY Amount of offset in vertical direction
+     * @param offsetMode Determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set
      * ```typescript
-     * this.overlay.setOffset(id, deltaX, deltaY);
+     * this.overlay.setOffset(id, deltaX, deltaY, offsetMode);
      * ```
      */
-    public setOffset(id: string, deltaX: number, deltaY: number) {
+    public setOffset(id: string, deltaX: number, deltaY: number, offsetMode?: OffsetMode) {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {
             return;
         }
 
-        info.transformX = deltaX;
-        info.transformY = deltaY;
+        if (offsetMode === OffsetMode.Set) {
+            info.transformX = deltaX;
+            info.transformY = deltaY;
+        } else {
+            info.transformX += deltaX;
+            info.transformY += deltaY;
+        }
 
         const transformX = info.transformX;
         const transformY = info.transformY;

@@ -34,6 +34,7 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
+    OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
     OverlaySettings,
@@ -820,6 +821,7 @@ describe('igxOverlay', () => {
             const componentElementRect = componentElement.getBoundingClientRect();
             let overlayContentTransform = contentElement.style.transform;
             const firstTransform = 'translate(40px, 40px)';
+            const secondTransform = 'translate(30px, 60px)';
 
             expect(contentElementRect.top).toEqual(componentElementRect.top);
             expect(contentElementRect.left).toEqual(componentElementRect.left);
@@ -832,7 +834,6 @@ describe('igxOverlay', () => {
             const contentElementRectNew = contentElement.getBoundingClientRect();
             const componentElementRectNew = componentElement.getBoundingClientRect();
             overlayContentTransform = contentElement.style.transform;
-            const secondTransform = 'translate(-10px, 20px)';
 
             expect(contentElementRectNew.top).toEqual(componentElementRectNew.top);
             expect(contentElementRectNew.left).toEqual(componentElementRectNew.left);
@@ -847,7 +848,7 @@ describe('igxOverlay', () => {
             overlayInstance.detachAll();
         }));
 
-        it('Should set transformX and transformY correctly in setOffset method', fakeAsync(() => {
+        it('Should offset the overlay content correctly using setOffset method and optional offsetMode', fakeAsync(() => {
             const fixture = TestBed.createComponent(WidthTestOverlayComponent);
             const overlayInstance = fixture.componentInstance.overlay;
 
@@ -862,8 +863,18 @@ describe('igxOverlay', () => {
             expect(overlayInfo.transformX).toEqual(20);
             expect(overlayInfo.transformY).toEqual(20);
 
-            // Set new offset
+            // Add offset values to the existing ones (default behavior)
             overlayInstance.setOffset(id, 10, 10);
+            expect(overlayInfo.transformX).toEqual(30);
+            expect(overlayInfo.transformY).toEqual(30);
+
+            // Add offset values using OffsetMode.Add
+            overlayInstance.setOffset(id, 20, 20, OffsetMode.Add);
+            expect(overlayInfo.transformX).toEqual(50);
+            expect(overlayInfo.transformY).toEqual(50);
+
+            // Set offset values using OffsetMode.Set
+            overlayInstance.setOffset(id, 10, 10, OffsetMode.Set);
             expect(overlayInfo.transformX).toEqual(10);
             expect(overlayInfo.transformY).toEqual(10);
 

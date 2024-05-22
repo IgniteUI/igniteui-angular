@@ -52,7 +52,7 @@ handlers when the toggle is opened and respectively closed.
 | `close` | --- | `void` | Closes the toggle. |
 | `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 | `reposition` | --- | `void` | Repositions the toggle. |
-| `setOffset`  | Offsets the content's position along the relevant axis precisely by the specified amount. |deltaX, deltaY |
+| `setOffset`  | Offsets the content along the corresponding axis by the provided amount with optional offsetMode that determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set. | deltaX, deltaY, offsetMode? |
 
 
 
