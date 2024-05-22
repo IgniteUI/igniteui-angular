@@ -1,11 +1,15 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
+    OnInit,
+    Inject
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
+import { DOCUMENT } from '@angular/common';
+import { Size } from '../grids/common/enums';
 
 let NEXT_ID = 0;
 
@@ -17,7 +21,7 @@ let NEXT_ID = 0;
  * Properties and methods for selecting items from the collection
  */
 @Directive()
-export abstract class IgxDropDownBaseDirective implements IDropDownList {
+export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit {
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -162,12 +166,21 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList {
      * @hidden
      * @internal
      */
+    public get dropDownSize() {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public children: QueryList<IgxDropDownItemBaseDirective>;
 
     protected _width;
     protected _height;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
+    protected computedStyles;
 
     /**
      * Gets if the dropdown is collapsed
@@ -176,7 +189,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList {
 
     constructor(
         protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef) {}
+        protected cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) public document: any) {}
+
+    public ngOnInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement); 
+    }
 
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {

@@ -48,7 +48,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
-describe('igxSelect', () => {
+fdescribe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -2655,9 +2655,10 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
         });
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockDocument, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);

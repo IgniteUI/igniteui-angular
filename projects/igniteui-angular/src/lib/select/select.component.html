@@ -35,6 +35,7 @@
     </ng-container>
 </igx-input-group>
 <div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);"
+    [style.--component-size]="dropDownSize"
     (appended)="onToggleContentAppended($event)"
     (opening)="handleOpening($event)"
     (opened)="handleOpened()"

@@ -10,7 +10,7 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
-import { NgIf } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 /** @hidden */
@@ -83,10 +83,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
         protected comboAPI: IgxComboAPIService) {
-        super(elementRef, cdr, selection);
+        super(elementRef, cdr, document, selection);
     }
 
     /**

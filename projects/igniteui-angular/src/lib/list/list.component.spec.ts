@@ -787,7 +787,6 @@ describe('List', () => {
         list.panStateChange.unsubscribe();
         list.rightPan.unsubscribe();
         list.itemClicked.unsubscribe();
-        list.densityChanged.unsubscribe();
         list.startPan.unsubscribe();
         list.resetPan.unsubscribe();
         list.endPan.unsubscribe();

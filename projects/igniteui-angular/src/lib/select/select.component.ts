@@ -23,7 +23,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -341,11 +341,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
-        super(elementRef, cdr, selection);
+        super(elementRef, cdr, document, selection);
     }
 
     //#region ControlValueAccessor
@@ -520,7 +521,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /**
      * @hidden @internal
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
     }
 

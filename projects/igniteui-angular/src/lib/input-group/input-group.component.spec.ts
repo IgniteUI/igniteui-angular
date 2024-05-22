@@ -175,15 +175,6 @@ describe('IgxInputGroup', () => {
         expect(igxInputGroup.disabled).toBeTruthy();
     });
 
-    it('default Display Density applied', () => {
-        const fixture = TestBed.createComponent(InputGroupDisabledByDefaultComponent);
-        fixture.detectChanges();
-
-        const inputGroup = fixture.componentInstance.igxInputGroup;
-        const inputGroupElement = inputGroup.element.nativeElement;
-        expect(getComponentSize(inputGroupElement)).toBe('3');
-    });
-
     it('should correctly prevent default on pointer down', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();

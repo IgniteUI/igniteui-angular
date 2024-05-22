@@ -47,9 +47,10 @@ describe('IgxDropDown ', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
         it('should notify when selection has changed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -64,7 +65,7 @@ describe('IgxDropDown ', () => {
         });
         it('should fire selectionChanging with correct args', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -89,7 +90,7 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -120,7 +121,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return selected item', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -134,7 +135,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return null when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -148,7 +149,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call open method when dropdown is collapsed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOnProperty(dropdown, 'collapsed', 'get').and.returnValue(true);
@@ -159,7 +160,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call close method when dropdown is opened', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             const mockToggle = jasmine.createSpyObj('IgxToggleDirective', ['open']);
             mockToggle.isClosing = false;
@@ -174,7 +175,7 @@ describe('IgxDropDown ', () => {
         it('should remove selection on destroy', () => {
             const selectionService = new IgxSelectionAPIService();
             const selectionDeleteSpy = spyOn(selectionService, 'delete');
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             dropdown.ngOnDestroy();
             expect(selectionDeleteSpy).toHaveBeenCalled();
         });

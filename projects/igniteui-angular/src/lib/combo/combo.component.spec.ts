@@ -3354,10 +3354,10 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(320);
-                fixture.componentInstance.nativeElement.style['--ig-size'] = 'var(--ig-size-small);';
+                fixture.componentInstance.size = 'small';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(280);
-                fixture.componentInstance.nativeElement.style['--ig-size'] = 'var(--ig-size-large);';
+                fixture.componentInstance.size = 'large';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(400);
             });
@@ -3369,7 +3369,7 @@ describe('igxCombo', () => {
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ');'">
+        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
