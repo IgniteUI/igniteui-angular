@@ -3320,6 +3320,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 family: 'material',
             }
         },
+        {
+            family: 'default',
+            name: 'more_vert',
+            ref: {
+                name: 'more_vert',
+                family: 'material',
+            }
+        },
     ];
 
     /**

@@ -319,4 +319,4 @@ Default Component Icons:
 | combo   | collapse       | material   | arrow_drop_up        | Combo, Simple Combo, Select                       | Indigo, Fluent, Bootstrap |
 | combo   | case-sensitive | imx-icons  | case-sensitive       | Combo, Simple Combo                               | All                       |
 | tree    | expand         | material   | keyboard_arrow_right | TreeNode                                          | All                       |
-| tree    | collapse       | material   | expand_less          | TreeNode                                          | All                       |
+| tree    | collapse       | material   | keyboard_arrow_down  | TreeNode                                          | All                       |

@@ -17,6 +17,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { IgxIconService } from '../icon/icon.service';
 
 /**
  * @hidden @internal
@@ -120,7 +121,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     public singleBranchExpand = false;
 
     /** Get/Set if nodes should be expanded/collapsed when clicking over them.
-     * 
+     *
      * ```html
      * <igx-tree [toggleNodeOnClick]="true">
      * ...
@@ -134,7 +135,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
      */
     @Input({ transform: booleanAttribute })
     public toggleNodeOnClick = false;
-    
+
 
     /** Get/Set the animation settings that branches should use when expanding/collpasing.
      *
@@ -311,11 +312,24 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken)
+        protected _displayDensityOptions?: IDisplayDensityOptions,
+        @Optional() @Inject(IgxIconService) iconService?: IgxIconService
+    ) {
         super(_displayDensityOptions, element);
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
+
+        iconService?.addIconRef('expand', 'tree', {
+            name: 'keyboard_arrow_right',
+            family: 'material'
+        });
+
+        iconService?.addIconRef('collapse', 'tree', {
+            name: 'keyboard_arrow_down',
+            family: 'material'
+        });
     }
 
     /** @hidden @internal */

@@ -853,49 +853,51 @@ export class GridFunctions {
         hideIcon.click();
     }
 
-    public static getIconFromButton(iconName: string, component: any) {
-        const icons = component.querySelectorAll('igx-icon');
-        return Array.from(icons).find((sortIcon: any) => sortIcon.innerText === iconName);
+    public static getIconFromButton(iconName: string, fixture: ComponentFixture<any>) {
+        const icons = fixture.debugElement.queryAll(By.directive(IgxIconComponent));
+        return icons.find((de: DebugElement) => {
+            return de.componentInstance.name === iconName;
+        });
     }
 
     /**
      * Click the sort ascending button in the ESF.
      */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix));
-        sortAscIcon.click();
+        const sortAscIcon: DebugElement = this.getIconFromButton('arrow_upward', fix);
+        sortAscIcon?.nativeElement.click();
     }
 
     /**
      * Click the column selection button in the ESF.
      */
     public static clickColumnSelectionInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const columnSelectIcon: any = this.getIconFromButton('done', GridFunctions.getExcelFilteringColumnSelectionContainer(fix));
-        columnSelectIcon.click();
+        const columnSelectIcon: any = this.getIconFromButton('selected', fix);
+        columnSelectIcon?.nativeElement.click();
     }
 
     /**
      * Click the sort descending button in the ESF.
      */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix));
-        sortDescIcon.click();
+        const sortDescIcon: any = this.getIconFromButton('arrow_downward', fix);
+        sortDescIcon?.nativeElement.click();
     }
 
     /**
      * Click the move left button in the ESF.
      */
     public static clickMoveLeftInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix));
-        moveLeftIcon.click();
+        const moveLeftIcon: any = this.getIconFromButton('arrow_back', fix);
+        moveLeftIcon?.nativeElement.click();
     }
 
     /**
      * Click the move right button in the ESF.
      */
     public static clickMoveRightInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveRightIcon: any = this.getIconFromButton('arrow_forwards', GridFunctions.getExcelFilteringMoveComponent(fix));
-        moveRightIcon.click();
+        const moveRightIcon: any = this.getIconFromButton('arrow_forward', fix);
+        moveRightIcon?.nativeElement.click();
     }
 
     public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex = 0): HTMLInputElement {

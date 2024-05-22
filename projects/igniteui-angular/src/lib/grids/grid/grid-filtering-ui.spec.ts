@@ -2014,7 +2014,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
-            
+
             firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
