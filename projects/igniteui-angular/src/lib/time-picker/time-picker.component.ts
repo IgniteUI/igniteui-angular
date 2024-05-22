@@ -758,14 +758,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         for (const icon of this._icons) {
             switch (this.inputGroup?.theme) {
                 case "material":
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("material"),
                     );
                     break;
                 default:
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("all"),
@@ -779,7 +779,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
-        console.log(this.inputGroup.theme);
 
         this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
 

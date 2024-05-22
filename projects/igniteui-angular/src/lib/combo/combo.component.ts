@@ -202,11 +202,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
-        _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        @Optional() _injector: Injector,
+        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+    ) {
+        super(elementRef, cdr, selectionService, comboAPI, _displayDensityOptions, _inputGroupType, _injector, _iconService);
         this.comboAPI.register(this);
     }
 

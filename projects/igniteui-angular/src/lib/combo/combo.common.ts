@@ -1008,10 +1008,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         protected cdr: ChangeDetectorRef,
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
+        @Optional() protected _injector: Injector,
+        @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
+    ) {
         super(_displayDensityOptions, elementRef);
     }
 
@@ -1045,19 +1046,19 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
-        this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+        this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
 
         for (const icon of this._icons) {
-            switch (this.inputGroup.theme) {
+            switch (this.inputGroup?.theme) {
                 case "material":
-                    this._iconService.addIconRef(
+                    this._iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("material"),
                     );
                     break;
                 default:
-                    this._iconService.addIconRef(
+                    this._iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("all"),

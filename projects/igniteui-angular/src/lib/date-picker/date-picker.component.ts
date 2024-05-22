@@ -521,12 +521,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
 
-        iconService.addIconRef('clear', 'default', {
+        iconService?.addIconRef('clear', 'default', {
             name: 'clear',
             family: 'material',
         });
 
-        iconService.addIconRef('today', 'default', {
+        iconService?.addIconRef('today', 'default', {
             name: 'calendar_today',
             family: 'material',
         });

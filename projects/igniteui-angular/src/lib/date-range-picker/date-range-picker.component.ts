@@ -448,7 +448,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
 
-        iconService.addIconRef("date_range", "default", {
+        iconService?.addIconRef("date_range", "default", {
             name: "date_range",
             family: "material"
         });

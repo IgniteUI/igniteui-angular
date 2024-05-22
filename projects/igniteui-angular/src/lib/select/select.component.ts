@@ -379,7 +379,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         @Optional() @Inject(IgxIconService)
-        protected iconService: IgxIconService,
+        protected iconService?: IgxIconService,
     ) {
         super(elementRef, cdr, selection, _displayDensityOptions);
     }
@@ -561,16 +561,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         super.ngOnInit();
 
         for (const icon of this._icons) {
-            switch (this.inputGroup.theme) {
+            switch (this.inputGroup?.theme) {
                 case "material":
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("material"),
                     );
                     break;
                 default:
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get("all"),

@@ -23,6 +23,7 @@ import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -1714,18 +1715,22 @@ export class GridFunctions {
     }
 
     public static getAdvancedFilteringExpressionCommitButton(fix: ComponentFixture<any>) {
-        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
-        const actionButtonsContainer = editModeContainer.querySelector('.igx-filter-tree__inputs-actions');
-        const actionButtons = Array.from(actionButtonsContainer.querySelectorAll('button'));
-        const commitButton: any = actionButtons.find((b: any) => b.innerText === 'check');
+        const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
+        const commitButton = actionButtons.find((el: DebugElement) => {
+            const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
+            return icon.name === 'check';
+        }).nativeElement;
+
         return commitButton;
     }
 
     public static getAdvancedFilteringExpressionCloseButton(fix: ComponentFixture<any>) {
-        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
-        const actionButtonsContainer = editModeContainer.querySelector('.igx-filter-tree__inputs-actions');
-        const actionButtons = Array.from(actionButtonsContainer.querySelectorAll('button'));
-        const closeButton: any = actionButtons.find((b: any) => b.innerText === 'close');
+        const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
+        const closeButton = actionButtons.find((el: DebugElement) => {
+            const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
+            return icon.name === 'close';
+        }).nativeElement;
+
         return closeButton;
     }
 
@@ -1876,15 +1881,17 @@ export class GridFunctions {
         UIInteractions.simulateClickEvent(select);
     }
 
-    public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
-        indicatorText = ['expand_more', 'chevron_right']) {
+    public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true, indicatorText = ['expand_more', 'chevron_right']) {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
         expect(group.collapsible).toEqual(collapsible);
+
         if (collapsible === false) {
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
         } else {
             expect(group.expanded).toEqual(isExpanded);
             const text = isExpanded ? indicatorText[0] : indicatorText[1];
+            console.log(groupHeader);
+            debugger;
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
         }

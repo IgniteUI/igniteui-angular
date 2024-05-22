@@ -209,7 +209,7 @@ Default Component Icons:
   - imx-icons:unpin-left
   - imx-icons:pin-left
 
-- [ ] Path: grids/tree-grid/tree-cell.component.html
+- [x] Path: grids/tree-grid/tree-cell.component.html
   - check
   - close
   - error
