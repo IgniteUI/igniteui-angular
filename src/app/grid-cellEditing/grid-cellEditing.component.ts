@@ -7,6 +7,7 @@ import { data, dataWithoutPK } from '../shared/data';
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
+    styleUrl: 'grid-cellEditing.component.scss',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })

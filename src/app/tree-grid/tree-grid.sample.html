@@ -28,8 +28,8 @@
         <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
         <igx-switch [(ngModel)]="grid1.rowEditable">Enable RowEditing</igx-switch>
         <div class="sample-buttons">
-            <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" [style.--ig-size]="3">Row Selection: {{grid1.rowSelection}}</button>
-            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  [style.--ig-size]="3">
+            <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection: {{grid1.rowSelection}}</button>
+            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  class="size">
                 <igx-drop-down-item *ngFor="let item of selectionModes" [value]="item">
                         {{ item }}
                 </igx-drop-down-item>
