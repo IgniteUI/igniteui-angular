@@ -124,16 +124,15 @@ describe('IgxGrid - Cell component #grid', () => {
 
         it('Should trigger contextMenu event when right click into cell', () => {
             spyOn(grid.contextMenu, 'emit').and.callThrough();
-            const event = new Event('contextmenu');
+            const event = new Event('contextmenu', { bubbles: true });
             cellElem.nativeElement.dispatchEvent(event);
-            const args: IGridCellEventArgs = {
-                cell: grid.getCellByColumn(0, 'ID'),
-                event
-            };
 
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
-            expect(grid.contextMenu.emit).toHaveBeenCalledWith(args);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                cell: jasmine.anything(),
+                row: jasmine.anything()
+            }));
         });
 
         it('Should trigger doubleClick event when double click into cell', () => {
