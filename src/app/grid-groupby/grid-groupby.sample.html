@@ -19,9 +19,9 @@
     </button>
     <div class="separator"></div>
     <button igxButton="contained" [igxToggleAction]="dropDownRowSelection"
-        [igxDropDownItemNavigation]="dropDownRowSelection" [style.--ig-size]="3">Row Selection:
+        [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection:
         {{grid1.rowSelection}}</button>
-    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" [style.--ig-size]="3">
+    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" class="size">
         <igx-drop-down-item *ngFor="let item of selectionModes">
             {{ item }}
         </igx-drop-down-item>

@@ -185,7 +185,7 @@
                 </igx-column-actions>
             </div>
         </div>
-        <igx-grid #grid3 [style.--ig-size]="1" [data]="remote | async" (pagingDone)="process()" (sortingDone)="process()" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">
+        <igx-grid #grid3 class="grid-size" [data]="remote | async" (pagingDone)="process()" (sortingDone)="process()" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">
             <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
             <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
             <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>

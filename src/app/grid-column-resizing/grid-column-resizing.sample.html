@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'100%'" [height]="'800px'" [style.--ig-size]="1" [rowSelection]="'multiple'" >
+    <igx-grid #grid1 [data]="data" [width]="'100%'" [height]="'800px'" class="grid-size" [rowSelection]="'multiple'" >
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
                                               [resizable]="c.resizable"

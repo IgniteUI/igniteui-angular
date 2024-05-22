@@ -3,9 +3,9 @@
         <div class="sample-column">
             <div class="sample-buttons">
                 <button igxButton="contained" [igxToggleAction]="dropDownComfortable"
-                    [igxDropDownItemNavigation]="dropDownComfortable" [style.--ig-size]="3">
+                    [igxDropDownItemNavigation]="dropDownComfortable">
                     Column Selection: {{grid1.columnSelection}}</button>
-                <igx-drop-down #dropDownComfortable (selected)="selected($event)" [style.--ig-size]="3">
+                <igx-drop-down #dropDownComfortable (selected)="selected($event)">
                     <igx-drop-down-item *ngFor="let item of selectionModes">
                         {{ item }}
                     </igx-drop-down-item>

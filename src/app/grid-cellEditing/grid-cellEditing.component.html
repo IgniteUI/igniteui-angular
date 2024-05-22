@@ -43,7 +43,7 @@
 <button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
 <input type="text" [(ngModel)]="pname">
 <h4 class="sample-title">Grid without PK</h4>
-<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" [style.--ig-size]="1" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" class="grid-size" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.id.rowIndex)">Delete</button>

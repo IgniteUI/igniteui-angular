@@ -74,7 +74,7 @@
      <div style="width: 100%; text-align: center; margin: 10px;">
             <div>Sample:</div>
     </div>
-    <igx-grid *ngIf="renderGrid" [rowSelection]="selectionMode" #grid [data]="data" [style.--ig-size]="1" [style.--ig-size]="1" [width]="'800px'">
+    <igx-grid *ngIf="renderGrid" [rowSelection]="selectionMode" #grid [data]="data" [width]="'800px'">
         <igx-column-layout  [pinned]="false">
             <igx-column *ngFor="let col of gridCollection" [field]="col.key" [sortable]="true" [resizable]="true"
                 [rowStart]="col.rowStart" [rowEnd]="col.rowStart + col.rowSpan" [colStart]="col.colStart" [colEnd]="col.colStart + col.colSpan" ></igx-column>

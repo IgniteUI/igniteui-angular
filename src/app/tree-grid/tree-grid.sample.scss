@@ -2,7 +2,7 @@
     width: 90%;
 }
 
-.density-chooser{
+.density-chooser {
     margin-bottom: 16px;
 }
 
@@ -14,10 +14,14 @@ igx-buttongroup {
     margin-top: 20px;
 }
 
-.sample-buttons igx-switch{
+.sample-buttons igx-switch {
     margin: 8px;
 }
 
-.sample-buttons button{
+.sample-buttons button {
     margin: 8px 4px;
+}
+
+.size {
+    --ig-size: var(--ig-size-large);
 }
