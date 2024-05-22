@@ -54,8 +54,8 @@ class TestChipComponent {
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-large' },
-        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: '--ig-size-medium' },
-        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: '--ig-size-small' }
+        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-small' },
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-medium' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -266,7 +266,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should affect the ghostElement size when chip has it set to compact', () => {
+        fit('should affect the ghostElement size when chip has it set to compact', () => {
             const thirdChip = fix.componentInstance.chips.toArray()[2];
             const thirdChipElem = thirdChip.chipArea.nativeElement;
 

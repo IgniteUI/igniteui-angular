@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
     FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -858,11 +858,7 @@ describe('igxCombo', () => {
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent
-                ]/*,
-                providers: [
-                    IgxComponentSizeService,
-                    { provide: ElementRef, useClass: MockElementRef }
-                ]*/
+                ]
             });
         });
 
@@ -979,6 +975,7 @@ describe('igxCombo', () => {
                 // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
                 let itemHeight = defaultDropdownItemHeight;
                 let itemMaxHeight = defaultDropdownItemMaxHeight;
+                fixture.componentInstance.size = "large";
                 fixture.detectChanges();
                 combo.toggle();
                 tick();
@@ -3372,7 +3369,7 @@ describe('igxCombo', () => {
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)" style="--ig-size: var(--ig-size-medium);">
+        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ');'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
@@ -3402,8 +3399,9 @@ class IgxComboSampleComponent {
 
     public items = [];
     public initData = [];
+    public size = 'medium';
 
-    constructor() {
+    constructor(public elementRef: ElementRef) {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
