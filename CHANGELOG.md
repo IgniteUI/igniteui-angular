@@ -6,9 +6,13 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
     - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+- `IgxDateTimeEditor`, `IgxTimePicker`:
+    - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
+        - Fractional seconds: S, SS, SSS.
+        - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
 - `IgxOverlayService`, `IgxToggleDirective`:
     - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
-
+    
 ## 17.2.0
 ### New Features
 - `IgxAvatar`
