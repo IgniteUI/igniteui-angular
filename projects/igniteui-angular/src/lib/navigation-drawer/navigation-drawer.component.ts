@@ -320,17 +320,17 @@ export class IgxNavigationDrawerComponent implements
      */
     @HostBinding('style.flexBasis')
     public get flexWidth() {
-        if (!this.pin) {
+        if (!this.pin || (!this.isOpen && !this.miniTemplate)) {
             return '0px';
         }
+
         if (this.isOpen) {
             return this.width;
         }
+
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
         }
-
-        return '0px';
     }
 
     /** @hidden */
