@@ -99,6 +99,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -1582,6 +1583,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             const relatedDims = PivotUtil.flatten([dimension]).map(x => x.memberName);
             const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
             const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
+            if (this.pivotUI.showRowHeaders) {
+                const dimensionHeader = this.theadRow.rowDimensionHeaders.find(x => x.column.field === dimension.memberName);
+                headers.push(dimensionHeader);
+            }
             const autoWidth = this.getLargesContentWidth(headers);
             dimension.width = autoWidth;
             this.pipeTrigger++;
@@ -1899,11 +1904,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     PivotDimensionType.Filter : null;
     }
 
+    protected getPivotRowHeadeContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
+        const headerStyle = this.document.defaultView.getComputedStyle(headerGroup.nativeElement);
+        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+            parseFloat(headerStyle.borderRightWidth);
+        return this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement).width + headerPadding;
+    }
+
     protected getLargesContentWidth(contents: ElementRef[]): string {
         const largest = new Map<number, number>();
         if (contents.length > 0) {
             const cellsContentWidths = [];
-            contents.forEach((elem) => cellsContentWidths.push(this.getHeaderCellWidth(elem.nativeElement).width));
+            contents.forEach((elem) => {
+                elem instanceof IgxPivotRowHeaderGroupComponent ?
+                    cellsContentWidths.push(this.getPivotRowHeadeContentWidth(elem)) :
+                    cellsContentWidths.push(this.getHeaderCellWidth(elem.nativeElement).width);
+            });
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.document.defaultView.getComputedStyle(contents[index].nativeElement);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +

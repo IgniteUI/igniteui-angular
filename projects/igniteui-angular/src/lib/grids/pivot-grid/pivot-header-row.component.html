@@ -193,7 +193,7 @@
             <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0">
                 <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
                     <ng-container *ngFor="let dim of grid.rowDimensions; index as colIndex;last as isLast">
-                        <igx-pivot-row-header-group *ngIf="getRowDimensionColumn(dim) as dimCol"
+                        <igx-pivot-row-header-group #rowDimensionHeaders *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
                             [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
                             [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"

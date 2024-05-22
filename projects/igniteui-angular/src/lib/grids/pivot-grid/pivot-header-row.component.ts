@@ -37,6 +37,7 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
+import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
 /**
  *
@@ -122,6 +123,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
     public headerContainers: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
+
+    /**
+    * @hidden
+    * @internal
+    */
+    @ViewChildren('rowDimensionHeaders')
+    public rowDimensionHeaders: QueryList<IgxPivotRowDimensionHeaderGroupComponent>;
 
     public override get headerForOf() {
         return this.headerContainers?.last;
