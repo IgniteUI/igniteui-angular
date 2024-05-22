@@ -129,7 +129,7 @@ export class PivotGridSampleComponent {
                 memberName: 'City',
                 displayName: 'City',
                 enabled: true,
-                width: '100px'
+                width: 'auto'
             },
         ],
         rows: [
@@ -137,6 +137,7 @@ export class PivotGridSampleComponent {
                 memberName: 'SellerName',
                 displayName: 'Seller Name',
                 enabled: true,
+                width: "auto"
                 //filter: this.filterExpTree
             }
         ],

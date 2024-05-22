@@ -14,7 +14,7 @@
         <p class="sample-description">{{showDate(val)}}</p>
         <div class="preview">
             <igx-time-picker #tp1 [value]="val" [spinLoop]="false" [itemsDelta]="{ hours: 1, minutes: 30, seconds: 20 }"
-                [inputFormat]="'hh:mm tt'" (valueChange)="updateValue($event)"
+                [inputFormat]="'hh:mm a'" (valueChange)="updateValue($event)"
                 (validationFailed)="validationFailed($event)">
             </igx-time-picker>
         </div>
@@ -24,7 +24,7 @@
         <p class="sample-description">{{showDate(date1)}}</p>
         <div class="preview">
             <igx-time-picker #hourModeTimePicker #model="ngModel" [(ngModel)]="date1" [minValue]="min" [maxValue]="max"
-                [inputFormat]="'hh:mm tt'" [displayFormat]="'hh tt'">
+                [inputFormat]="'hh:mm tt'" [displayFormat]="'hh a'">
                 <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">Value is outside the range.
                 </igx-hint>
             </igx-time-picker>
@@ -49,7 +49,7 @@
         <h4 class="sample-title">Templated Action Buttons Time Picker</h4>
         <p class="sample-description">Time picker with custom action button</p>
         <div class="preview">
-            <igx-time-picker #picker [(ngModel)]="date1" [inputFormat]="'hh:mm tt'">
+            <igx-time-picker #picker [(ngModel)]="date1" [inputFormat]="'hh:mm aaaaa'">
                 <ng-template igxPickerActions>
                     <div class="action-buttons">
                         <button igxButton="flat" (click)="selectCurrentTime(picker)">Current Time</button>
