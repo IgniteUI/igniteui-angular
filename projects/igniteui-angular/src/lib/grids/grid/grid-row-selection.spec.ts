@@ -298,19 +298,45 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.clickRowCheckbox(thirdRow);
             fix.detectChanges();
 
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            let args: IRowSelectionEventArgs = {
+                added: [gridData[2]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2]],
+                oldSelection: [],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
             GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            args = {
+                added: [gridData[0]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2], gridData[0]],
+                oldSelection: [gridData[2]],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
 
-            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
-            let args: IRowSelectionEventArgs = {
-                added: [gridData[2], gridData[0], gridData[1]],
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
+            args = {
+                added: [gridData[1]],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [gridData[2], gridData[0], gridData[1]],
-                oldSelection: [],
+                oldSelection: [gridData[2], gridData[0]],
                 removed: [],
                 allRowsSelected: false,
                 owner: grid
@@ -321,7 +347,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyRowSelected(thirdRow);
-            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         });
 
         it('Should select the row with mouse click ', () => {
