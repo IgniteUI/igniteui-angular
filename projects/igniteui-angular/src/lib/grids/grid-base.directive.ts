@@ -121,7 +121,8 @@ import {
     IGridEditEventArgs,
     IRowDataCancelableEventArgs,
     IGridEditDoneEventArgs,
-    IGridRowEventArgs
+    IGridRowEventArgs,
+    IGridContextMenuEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -837,16 +838,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     /**
-     * Emitted when a cell is right clicked.
+     * Emitted when a cell or row is right clicked.
      *
      * @remarks
-     * Returns the `IgxGridCell` object.
+     * Returns the `IgxGridCell` object if the immediate context menu target is a cell or an `IgxGridRow` otherwise.
      * ```html
      * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public contextMenu = new EventEmitter<IGridCellEventArgs>();
+    public contextMenu = new EventEmitter<IGridContextMenuEventArgs>();
 
     /**
      * Emitted when a cell is double clicked.
