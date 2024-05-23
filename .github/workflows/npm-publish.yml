@@ -18,7 +18,7 @@ jobs:
       - run: echo ${VERSION}
 
       - run: echo "NG_CLI_ANALYTICS=false" >> $GITHUB_ENV
-      - run: npm ci --legacy-peer-deps
+      - run: npm ci
 
       - name: Build igniteui-angular
         run: |
