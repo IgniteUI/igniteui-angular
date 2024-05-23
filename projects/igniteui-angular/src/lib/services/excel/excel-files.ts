@@ -151,7 +151,9 @@ export class WorksheetFile implements IExcelFile {
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
                 this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
-                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader && c.headerType !== ExportHeaderType.MultiRowHeader);
+                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader &&
+                     c.headerType !== ExportHeaderType.MultiRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotRowHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
@@ -614,7 +616,7 @@ export class WorksheetFile implements IExcelFile {
                 let rowCoordinate = isVertical
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
-                if (currentCol.pivotRowHeader) {
+                if (currentCol.headerType === ExportHeaderType.PivotRowHeader) {
                     rowCoordinate = startValue + 1;
                 }
                 const columnValue = dictionary.saveValue(currentCol.header, true, false);
@@ -672,7 +674,7 @@ export class WorksheetFile implements IExcelFile {
                     this.mergeCellStr += `${columnCoordinate}" />`;
                 }
             }
-            if (!currentCol.pivotRowHeader) {
+            if (currentCol.headerType !== ExportHeaderType.PivotRowHeader) {
                 startValue += spanLength;
             }
         }
