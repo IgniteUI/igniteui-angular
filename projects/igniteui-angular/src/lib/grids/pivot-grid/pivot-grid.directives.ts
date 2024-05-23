@@ -1,5 +1,6 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { IgxPivotGridValueTemplateContext, IgxPivotRowDimensionHeaderTemplateContext } from './pivot-grid.interface';
+import { IgxPivotGridValueTemplateContext } from './pivot-grid.interface';
+import { IgxColumnTemplateContext } from '../common/grid.interface';
 /**
  * @hidden
  */
@@ -23,9 +24,9 @@ export class IgxPivotValueChipTemplateDirective {
     standalone: true
 })
 export class IgxPivotRowDimensionHeaderTemplateDirective {
-    constructor(public template: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>) { }
+    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
     public static ngTemplateContextGuard(_directive: IgxPivotRowDimensionHeaderTemplateDirective,
-        context: unknown): context is IgxPivotRowDimensionHeaderTemplateContext {
+        context: unknown): context is IgxColumnTemplateContext {
         return true;
     }
 }

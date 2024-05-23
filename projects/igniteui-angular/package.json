@@ -74,7 +74,7 @@
         "igniteui-trial-watermark": "^3.0.2",
         "lodash-es": "^4.17.21",
         "uuid": "^9.0.0",
-        "igniteui-theming": "^6.1.0",
+        "igniteui-theming": "^6.3.1",
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
@@ -94,7 +94,7 @@
         }
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~17.1.1316"
+        "@igniteui/angular-schematics": "~17.2.1320"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

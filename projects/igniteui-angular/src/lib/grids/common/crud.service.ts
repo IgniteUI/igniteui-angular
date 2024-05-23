@@ -93,6 +93,7 @@ export class IgxAddRow extends IgxEditRow {
         const args = super.createRowEditEventArgs(includeNewValue, event);
         args.oldValue = null;
         args.isAddRow = true;
+        args.rowData = this.newData ?? this.data;
         return args;
     }
 
@@ -253,10 +254,13 @@ export class IgxCellCrudState {
         // this is needed when we are not using ngModel to update the editValue
         // so that the change event of the inlineEditorTemplate is hit before
         // trying to update any cell
-        const cellNode = this.grid.gridAPI.get_cell_by_index(this.cell.id.rowIndex, this.cell.column.field).nativeElement;
-        const document = cellNode.getRootNode() as Document | ShadowRoot;
-        const activeElement = document.activeElement as HTMLElement;
-        activeElement.blur();
+        const cellNode = this.grid.gridAPI.get_cell_by_index(this.cell.id.rowIndex, this.cell.column.field)?.nativeElement;
+        let activeElement;
+        if (cellNode) {
+            const document = cellNode.getRootNode() as Document | ShadowRoot;
+            activeElement = document.activeElement as HTMLElement;
+            activeElement.blur();
+        }
 
         const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
         if (this.grid.validationTrigger === 'blur' && this.cell.pendingValue !== undefined) {
@@ -284,7 +288,7 @@ export class IgxCellCrudState {
         const args = this.cellEdit(event);
         if (args.cancel) {
             // the focus is needed when we cancel the cellEdit so that the activeElement stays on the editor template
-            activeElement.focus();
+            activeElement?.focus();
             return args;
         }
 

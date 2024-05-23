@@ -116,6 +116,8 @@ export interface IPivotDimension {
      * A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
      * */
     filter?: IFilteringExpressionsTree | null;
+    /** Enable/disable sorting for a particular dimension. True by default. */
+    sortable?: boolean;
     /**
      * The sorting direction of the current dimension. Determines the order in which the values will appear in the related dimension.
      */
@@ -124,10 +126,12 @@ export interface IPivotDimension {
      * The dataType of the related data field.
      */
     dataType?: GridColumnDataType;
-    /** The width of the dimension cells to be rendered.Can be pixel or %. */
+    /** The width of the dimension cells to be rendered.Can be pixel, % or "auto". */
     width?: string;
     /** Level of the dimension. */
     level?: number;
+    /** hidden */
+    autoWidth?: number;
 }
 /**
 * Configuration of a pivot value aggregation.
@@ -243,8 +247,4 @@ export interface IPivotGridGroupRecord extends IPivotGridRecord {
 
 export interface IgxPivotGridValueTemplateContext {
     $implicit: IPivotValue;
-}
-
-export interface IgxPivotRowDimensionHeaderTemplateContext {
-    $implicit: ColumnType;
 }

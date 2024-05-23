@@ -7,7 +7,8 @@ import {
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs,
-    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs,
+    IGridContextMenuEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -34,7 +35,7 @@ import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../da
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
-import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, IgxPivotRowDimensionHeaderTemplateContext, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
@@ -1028,7 +1029,7 @@ export interface GridType extends IGridDataBindable {
     cellClick: EventEmitter<IGridCellEventArgs>;
     rowClick: EventEmitter<IGridRowEventArgs>;
     doubleClick: EventEmitter<IGridCellEventArgs>;
-    contextMenu: EventEmitter<IGridCellEventArgs>;
+    contextMenu: EventEmitter<IGridContextMenuEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
     rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;
@@ -1269,18 +1270,21 @@ export interface PivotGridType extends GridType {
     /** Move value from its currently at specified index or at the end.
      * If the parameter is not set, it will add it to the end of the collection. */
     moveValue(value: IPivotValue, index?: number);
+    rowDimensionWidth(dim: IPivotDimension): string;
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
     /** Emits an event when the dimensions in the pivot grid change. */
     dimensionsChange: EventEmitter<IDimensionsChange>;
     /** Emits an event when the values in the pivot grid change. */
     valuesChange: EventEmitter<IValuesChange>;
+    /** Emits an event when the a dimension is sorted. */
+    dimensionsSortingExpressionsChange: EventEmitter<ISortingExpression[]>;
     /** @hidden @internal */
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
     excelStyleFilterMaxHeight: string;
     excelStyleFilterMinHeight: string;
     valueChipTemplate: TemplateRef<any>;
-    rowDimensionHeaderTemplate: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>;
+    rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
 }
 
 export interface GridSVGIcon {

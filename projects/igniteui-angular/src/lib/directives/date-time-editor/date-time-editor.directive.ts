@@ -90,7 +90,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set minValue(value: string | Date) {
         this._minValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -111,7 +111,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input()
     public set maxValue(value: string | Date) {
         this._maxValue = value;
-        this.onValidatorChange();
+        this._onValidatorChange();
     }
 
     /**
@@ -166,14 +166,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * ```
      */
     @Input()
-    public set value(value: Date | string) {
+    public set value(value: Date | string | undefined | null) {
         this._value = value;
         this.setDateValue(value);
         this.onChangeCallback(value);
         this.updateMask();
     }
 
-    public get value(): Date | string {
+    public get value(): Date | string | undefined | null {
         return this._value;
     }
 
@@ -216,9 +216,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _dateValue: Date;
     private _onClear: boolean;
     private document: Document;
-    private _isFocused: boolean;
     private _defaultInputFormat: string;
-    private _value: Date | string;
+    private _value?: Date | string;
     private _minValue: Date | string;
     private _maxValue: Date | string;
     private _inputDateParts: DatePartInfo[];
@@ -228,11 +227,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         year: 1,
         hours: 1,
         minutes: 1,
-        seconds: 1
+        seconds: 1,
+        fractionalSeconds: 1
     };
-    private onTouchCallback: (...args: any[]) => void = noop;
+
     private onChangeCallback: (...args: any[]) => void = noop;
-    private onValidatorChange: (...args: any[]) => void = noop;
+    private _onValidatorChange: (...args: any[]) => void = noop;
 
     private get datePartDeltas(): DatePartDeltas {
         return Object.assign({}, this._datePartDeltas, this.spinDelta);
@@ -268,7 +268,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         return this._inputDateParts.some(
             p => p.type === DatePart.Hours
                 || p.type === DatePart.Minutes
-                || p.type === DatePart.Seconds);
+                || p.type === DatePart.Seconds
+                || p.type === DatePart.FractionalSeconds);
     }
 
     private get dateValue(): Date {
@@ -289,7 +290,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     @HostListener('wheel', ['$event'])
     public onWheel(event: WheelEvent): void {
-        if (!this._isFocused) {
+        if (!this._focused) {
             return;
         }
         event.preventDefault();
@@ -392,7 +393,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public registerOnValidatorChange?(fn: () => void): void {
-        this.onValidatorChange = fn;
+        this._onValidatorChange = fn;
     }
 
     /** @hidden @internal */
@@ -402,7 +403,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override registerOnTouched(fn: any): void {
-        this.onTouchCallback = fn;
+        this._onTouchedCallback = fn;
     }
 
     /** @hidden @internal */
@@ -471,8 +472,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         if (this.nativeElement.readOnly) {
             return;
         }
-        this._isFocused = true;
-        this.onTouchCallback();
+        this._focused = true;
+        this._onTouchedCallback();
         this.updateMask();
         super.onFocus();
         this.nativeElement.select();
@@ -480,7 +481,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override onBlur(value: string): void {
-        this._isFocused = false;
+        this._focused = false;
         if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
             this.updateValue(this.parseDate(this.inputValue));
         } else {
@@ -504,7 +505,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     private updateMask(): void {
-        if (this._isFocused) {
+        if (this._focused) {
             // store the cursor position as it will be moved during masking
             const cursor = this.selectionEnd;
             this.inputValue = this.getMaskedValue();
@@ -533,9 +534,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
         const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
-            .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
-        this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
-
+        .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');
+        this.mask = mask.replaceAll(/(a{1,2})|tt/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || oldFormat === placeholder) {
             this.renderer.setAttribute(this.nativeElement, 'placeholder', inputFormat);
@@ -609,6 +609,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
                 break;
             case DatePart.Seconds:
                 DateTimeUtil.spinSeconds(delta, newDate, this.spinLoop);
+                break;
+            case DatePart.FractionalSeconds:
+                DateTimeUtil.spinFractionalSeconds(delta, newDate, this.spinLoop);
                 break;
             case DatePart.AmPm:
                 const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
@@ -691,8 +694,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             case DatePart.Seconds:
                 maskedValue = this.dateValue.getSeconds();
                 break;
+            case DatePart.FractionalSeconds:
+                partLength = 3;
+                maskedValue = this.prependValue(this.dateValue.getMilliseconds(), 3, '00');
+                break;
             case DatePart.AmPm:
-                maskedValue = this.dateValue.getHours() >= 12 ? 'PM' : 'AM';
+                maskedValue = DateTimeUtil.getAmPmValue(partLength, this.dateValue.getHours() < 12);
                 break;
         }
 
