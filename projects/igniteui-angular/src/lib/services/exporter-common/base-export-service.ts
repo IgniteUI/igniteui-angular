@@ -1276,7 +1276,7 @@ export abstract class IgxBaseExporter {
     }
 
     public addPivotRowHeaders(grid: any) {
-        if (grid.pivotUI.showRowHeaders) {
+        if (grid?.pivotUI?.showRowHeaders) {
             const headersList = this._ownersMap.get(DEFAULT_OWNER);
             const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
             let startIndex = 0;
