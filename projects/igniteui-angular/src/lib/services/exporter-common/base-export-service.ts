@@ -31,6 +31,7 @@ export enum ExportHeaderType {
     ColumnHeader = 'ColumnHeader',
     MultiRowHeader = 'MultiRowHeader',
     MultiColumnHeader = 'MultiColumnHeader',
+    PivotRowHeader = 'PivotRowHeader',
 }
 
 export interface IExportRecord {
@@ -274,6 +275,7 @@ export abstract class IgxBaseExporter {
         this.prepareData(grid);
         this.addLevelData();
         this.addPivotGridColumns(grid);
+        this.addPivotRowHeaders(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
     }
 
@@ -1271,6 +1273,29 @@ export abstract class IgxBaseExporter {
         };
 
         return result;
+    }
+
+    public addPivotRowHeaders(grid: any) {
+        if (grid?.pivotUI?.showRowHeaders) {
+            const headersList = this._ownersMap.get(DEFAULT_OWNER);
+            const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
+            let startIndex = 0;
+            enabledRows.forEach(x => {
+                headersList.columns.unshift({
+                    rowSpan: headersList.maxLevel + 1,
+                    field: x.name,
+                    header: x.name,
+                    startIndex: startIndex,
+                    skip: false,
+                    pinnedIndex: 0,
+                    level: x.level,
+                    dataType: 'string',
+                    headerType: ExportHeaderType.PivotRowHeader
+                });
+                startIndex += 1;
+            });
+            headersList.columnWidths.unshift(...Array(enabledRows.length).fill(200));
+        }
     }
 
     public addPivotGridColumns(grid: any) {
