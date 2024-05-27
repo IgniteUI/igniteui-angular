@@ -41,6 +41,9 @@ export interface IGridRowEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
+/** Represents an event argument for the grid contextMenu output */
+export interface IGridContextMenuEventArgs extends IGridCellEventArgs, IGridRowEventArgs {}
+
 /** Represents event arguments related to grid editing completion. */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**

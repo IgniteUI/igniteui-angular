@@ -2083,7 +2083,35 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             expect(grid.rowClick.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowClick.emit).toHaveBeenCalledWith(args);
-        })
+        });
+
+        it('Should emit contextMenu when clicking outside of the columns area', () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            //fix.componentInstance.columns.forEach(c => c.width = '100px');
+            fix.componentInstance.grid.width = '900px';
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.columnList.forEach(c => c.width = '100px');
+            fix.detectChanges();
+            const spy = spyOn(grid.contextMenu, 'emit').and.callThrough();
+            const event = new Event('contextmenu', { bubbles: true });
+            const row = grid.rowList.get(0);
+            const cell = row.cells.get(0);
+            cell.nativeElement.dispatchEvent(event);
+            fix.detectChanges();
+            expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                cell: jasmine.anything()
+            }));
+            spy.calls.reset();
+            row.nativeElement.dispatchEvent(event);
+            fix.detectChanges();
+            expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                row: jasmine.anything()
+            }));
+        });
 
         it(`Verify that getRowData returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
