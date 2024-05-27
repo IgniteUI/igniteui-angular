@@ -288,7 +288,7 @@
         height: rem($switch-height);
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
-        background: var-get($theme, 'track-off-color');
+        background: color($color: 'gray', $variant: 600);
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
@@ -536,7 +536,7 @@
     }
 
     %switch-ripple--focused {
-        background: var-get($theme, 'track-off-color');
+        background: color($color: 'gray', $variant: 600);
         transition: background .2s $ease-out-quad;
         opacity: .12;
 
@@ -608,7 +608,7 @@
 
     %switch-ripple--hover-unchecked {
         &::after {
-            background: var-get($theme, 'track-off-color');
+            background: color($color: 'gray', $variant: 600);
         }
     }
 
