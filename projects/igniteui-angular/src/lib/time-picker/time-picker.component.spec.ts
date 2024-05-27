@@ -740,10 +740,11 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should change date parts correctly and emit valueChange with increment() and decrement() methods', () => {
-                const date = new Date(2020, 12, 12, 10, 30, 30);
+                const date = new Date(2020, 12, 12, 10, 30, 30, 999);
+                timePicker.inputFormat = 'hh:mm:ss:SS a';
                 timePicker.value = new Date(date);
-                timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
-                timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
+                timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0, 0);
+                timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0, 0);
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 fixture.detectChanges();
                 spyOn(timePicker.valueChange, 'emit').and.callThrough();
@@ -764,6 +765,12 @@ describe('IgxTimePicker', () => {
                 date.setSeconds(date.getSeconds() - timePicker.itemsDelta.seconds);
                 expect(timePicker.value).toEqual(date);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(3);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+
+                timePicker.decrement(DatePart.FractionalSeconds);
+                date.setMilliseconds(date.getMilliseconds() - timePicker.itemsDelta.fractionalSeconds);
+                expect(timePicker.value).toEqual(date);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(4);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
             });
 
@@ -792,7 +799,7 @@ describe('IgxTimePicker', () => {
             });
 
             it('should scroll trough hours/minutes/seconds/AM PM based on default or set itemsDelta', fakeAsync(() => {
-                timePicker.inputFormat = 'hh:mm:ss tt';
+                timePicker.inputFormat = 'hh:mm:ss a';
                 fixture.detectChanges();
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
@@ -1114,6 +1121,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.itemsDelta.hours).toEqual(1);
                 expect(timePicker.itemsDelta.minutes).toEqual(1);
                 expect(timePicker.itemsDelta.seconds).toEqual(1);
+                expect(timePicker.itemsDelta.fractionalSeconds).toEqual(1);
                 expect(timePicker.disabled).toEqual(false);
             });
 
@@ -1407,7 +1415,7 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
-                const selectedAMPM = selectedItems[3].nativeElement.innerText;
+                let selectedAMPM = selectedItems[3].nativeElement.innerText;
                 expect(selectedAMPM).toEqual(expectedAmPm);
 
                 item = hourColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
@@ -1433,6 +1441,40 @@ describe('IgxTimePicker', () => {
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
                 const selectedSecond = selectedItems[2].nativeElement.innerText;
                 expect(selectedSecond).toEqual(expectedSecond);
+
+                timePicker.inputFormat = 'hh:mm:ss a';
+                fixture.detectChanges();
+
+                item = ampmColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                selectedAMPM = selectedItems[3].nativeElement.innerText;
+                expect(selectedAMPM).toEqual(expectedAmPm);
+            }));
+
+            it('should set placeholder correctly', fakeAsync(() => {
+                // no inputFormat set - placeholder equals the default date time input format
+                let inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(inputEl.placeholder).toEqual('hh:mm tt');
+
+                // no placeholder - set to inputFormat, if it is set
+                // test with the different a,aa,.. ampm formats
+                for(let i = 1; i <= 5; i++) {
+                    const format = `hh:mm ${'a'.repeat(i)}`;
+                    timePicker.inputFormat = format;
+                    fixture.detectChanges();
+
+                    inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                    expect(inputEl.placeholder).toEqual(i === 5 ? 'hh:mm a' : 'hh:mm aa');
+                }
+
+                timePicker.placeholder = 'sample placeholder';
+                fixture.detectChanges();
+
+                inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(inputEl.placeholder).toEqual('sample placeholder');
             }));
         });
 
@@ -1754,7 +1796,7 @@ export class IgxTimePickerTestComponent {
     @ViewChild('picker', { read: IgxTimePickerComponent, static: true })
     public timePicker: IgxTimePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
-    public date = new Date(2021, 24, 2, 11, 45, 0);
+    public date = new Date(2021, 24, 2, 11, 45, 0, 0);
     public minValue;
     public maxValue;
 }
