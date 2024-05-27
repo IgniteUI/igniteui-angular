@@ -78,10 +78,10 @@
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
-        "@angular/common": "17",
-        "@angular/core": "17",
-        "@angular/animations": "17",
-        "@angular/forms": "17",
+        "@angular/common": "18",
+        "@angular/core": "18",
+        "@angular/animations": "18",
+        "@angular/forms": "18",
         "hammerjs": "^2.0.8",
         "@types/hammerjs": "^2.0.40"
     },
