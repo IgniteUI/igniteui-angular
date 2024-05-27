@@ -149,7 +149,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private _unsubscribe() {
         if (this.subscription$) {
             this.subscription$.unsubscribe();
-            this.subscription$ = null;
+
+            delete this.subscription$;
         }
     }
 }

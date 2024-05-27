@@ -15,7 +15,6 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    Injector,
     Input,
     IterableChangeRecord,
     IterableDiffers,
@@ -3097,6 +3096,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
+    private _verticalScrollHandler;
+    private _horizontalScrollHandler;
+    private _preventContainerScroll;
+    private _rowEditingWheelHandler;
+
     private columnListDiffer;
     private rowListDiffer;
     private _height: string | null = '100%';
@@ -3314,7 +3318,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public readonly cdr: ChangeDetectorRef,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        protected injector: Injector,
         protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
         /** @hidden @internal */
@@ -3798,7 +3801,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public setUpPaginator() {
         if (this.paginator) {
-            this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init), takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.selectionService.clear(true);
                     this.crudService.endEdit(false);
@@ -3806,7 +3809,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.navigateTo(0);
                     this.notifyChanges();
                 });
-            this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init), takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.selectionService.clear(true);
                     this.page = 0;
@@ -3874,12 +3877,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
-            this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
+            this._verticalScrollHandler = this.verticalScrollHandler.bind(this);
+            this._horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this._verticalScrollHandler);
+            this.headerContainer?.getScroll().addEventListener('scroll', this._horizontalScrollHandler);
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.zone.onStable.pipe(first()).subscribe(() => {
+                    this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                         this.autoSizeColumnsInView();
                     });
                 });
@@ -3901,7 +3906,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._zoneBegoneListeners();
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
-        vertScrDC.addEventListener('scroll', this.preventContainerScroll.bind(this));
+        this._preventContainerScroll = this.preventContainerScroll.bind(this);
+        vertScrDC.addEventListener('scroll', this._preventContainerScroll);
 
         this._pinnedRowList.changes
             .pipe(takeUntil(this.destroy$))
@@ -3909,7 +3915,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -3999,10 +4005,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this._verticalScrollHandler);
+            this.headerContainer?.getScroll()?.removeEventListener('scroll', this._horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer?.displayContainer;
-            vertScrDC?.removeEventListener('scroll', this.preventContainerScroll);
+            vertScrDC?.removeEventListener('scroll', this._preventContainerScroll);
         });
     }
 
@@ -4379,7 +4385,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -5966,7 +5972,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this._rowEditingWheelHandler = this.rowEditingWheelHandler.bind(this);
+        this.rowEditingOverlay.element.addEventListener('wheel', this._rowEditingWheelHandler);
     }
 
     /**
@@ -6015,7 +6022,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -6691,7 +6698,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.cdr.detectChanges();
             });
         } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.zone.run(() => {
                     this._applyWidthHostBinding();
                 });
@@ -6700,7 +6707,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.autoSizeColumnsInView();
             });
         }
@@ -6938,7 +6945,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.viewRef.injector });
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
@@ -7235,7 +7242,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (delayScrolling) {
-            this.verticalScrollContainer.dataChanged.pipe(first()).subscribe(() => {
+            this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
                     typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
             });
@@ -7333,7 +7340,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = true;
 
         this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
                 if (this.rowEditable) {
                     this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
@@ -7362,7 +7369,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.markForCheck();
 
         this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            this.zone.onStable.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();
@@ -7383,7 +7390,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) {
             if ((this as any).totalItemCount) {
-                this.verticalScrollContainer.dataChanged.pipe(first()).subscribe(() => {
+                this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
                     row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
                     const cbArgs = this.getNavigationArguments(row, visibleColIndex);

@@ -13,10 +13,8 @@ import {
     forwardRef,
     HostBinding,
     Inject,
-    Injector,
     Input,
     OnDestroy,
-    OnInit,
     Optional,
     Output,
     QueryList,
@@ -106,7 +104,7 @@ export class IgxSelectFooterDirective {
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
-    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
+    AfterContentInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
@@ -345,8 +343,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        private _injector: Injector) {
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType) {
         super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
@@ -517,14 +514,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public onFocus(): void {
         this._onTouchedCallback();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public override ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
     }
 
     /**

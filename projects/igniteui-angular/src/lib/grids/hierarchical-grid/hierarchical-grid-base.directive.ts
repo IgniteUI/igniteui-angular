@@ -176,7 +176,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             cdr,
             differs,
             viewRef,
-            injector,
             envInjector,
             navigation,
             filteringService,
@@ -235,7 +234,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+        const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.viewRef.injector });
         ref.changeDetectorRef.detectChanges();
         const mirror = reflectComponentType(IgxColumnGroupComponent);
         mirror.inputs.forEach((input) => {
@@ -256,7 +255,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.viewRef.injector });
         const mirror = reflectComponentType(IgxColumnComponent);
         mirror.inputs.forEach((input) => {
             const propName = input.propName;
