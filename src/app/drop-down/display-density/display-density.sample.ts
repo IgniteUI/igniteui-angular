@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
-import { DisplayDensity, IgxButtonDirective, IgxComboComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxToggleActionDirective } from 'igniteui-angular';
+import { IgxButtonDirective, IgxComboComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
 const data = Array.apply(null, { length: 57 }).map((e, i) => ({
     valueKey: i,
@@ -15,7 +15,6 @@ const data = Array.apply(null, { length: 57 }).map((e, i) => ({
     standalone: true,
     imports: [IgxComboComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent]
 })
-export class DisplayDensityDropDownComponent {
+export class SizingDropDownComponent {
     public data = data;
-    public displayDensity = DisplayDensity;
 }

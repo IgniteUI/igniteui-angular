@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-    DisplayDensity,
     IGX_INPUT_GROUP_DIRECTIVES,
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
@@ -20,6 +19,7 @@ import {
     IgxRippleDirective,
     IgxSwitchComponent
 } from 'igniteui-angular';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 interface Employee {
     imageURL: string;
@@ -49,11 +49,12 @@ interface Employee {
         IgxButtonDirective,
         IgxDialogComponent,
         IgxFilterPipe,
+        SizeSelectorComponent,
         IGX_LIST_DIRECTIVES,
         IGX_INPUT_GROUP_DIRECTIVES
     ]
 })
-export class ListSampleComponent implements OnInit {
+export class ListSampleComponent {
     @ViewChild('fruitList', { static: true })
     private fruitList: IgxListComponent;
 
@@ -71,9 +72,6 @@ export class ListSampleComponent implements OnInit {
     public search2: string;
     public options = {};
     public fruitsFilteredItemsCount = undefined;
-
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
 
     public employeeItems: Employee[] = [{
         imageURL: 'assets/images/avatar/18.jpg',
@@ -170,17 +168,6 @@ export class ListSampleComponent implements OnInit {
 
     public fruits: Fruit[] = [];
 
-    public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
-        ];
-    }
-
-    public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
-    }
 
     public get fo1() {
         const _fo = new IgxFilterOptions();
