@@ -2207,7 +2207,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const columnDimensions: IPivotDimension[] = [];
         const rowDimensions: IPivotDimension[] = [];
         const values: IPivotValue[] = [];
-        let isFirstDate = false;
+        let isFirstDate = true;
         fields.forEach((field) => {
             const dataType = this.resolveDataTypes(data[0][field]);
             switch (dataType) {
