@@ -14,7 +14,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const prop = ["displayDensity", "[displayDensity]"];
-    const tags = ["igx-grid", "igx-hierarchical-grid", "igx-row-island", "igx-tree-grid", "igx-pivot-grid"]
+    const tags = ["igx-grid", "igx-hierarchical-grid", "igx-row-island", "igx-tree-grid", "igx-pivot-grid",
+        "igx-action-strip", "igx-button", "igx-buttongroup", "igx-chip", "igx-combo", "igx-date-picker", "igx-drop-down",
+        "igx-select", "igx-input-group", "igx-list", "igx-paginator", "igx-query-builder", "igx-simple-combo", "igx-tree"];
 
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {

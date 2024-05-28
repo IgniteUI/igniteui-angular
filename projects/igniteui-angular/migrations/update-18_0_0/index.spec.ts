@@ -193,6 +193,202 @@ describe(`Update to ${version}`, () => {
             <igx-row-island/>
         </igx-hierarchical-grid>`);
     });
+
+    it('should remove displayDensity property from igx-action-strip and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-action-strip [displayDensity]="'compact'">
+        </igx-action-strip>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-action-strip [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-action-strip>`);
+    });
+
+    it('should remove displayDensity property from igx-buttongroup and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-buttongroup [displayDensity]="'compact'">
+        </igx-buttongroup>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-buttongroup [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-buttongroup>`);
+    });
+
+    it('should remove displayDensity property from igx-chip and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-chip [displayDensity]="'compact'">
+        </igx-chip>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-chip [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-chip>`);
+    });
+
+    it('should remove displayDensity property from igx-combo and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-combo displayDensity="compact">
+        </igx-combo>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-combo [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-combo>`);
+    });
+
+    it('should remove displayDensity property from igx-date-picker and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-date-picker displayDensity="compact">
+        </igx-date-picker>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-date-picker [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-date-picker>`);
+    });
+
+    it('should remove displayDensity property from igx-button and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-button displayDensity="compact">
+        </igx-button>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-button [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-button>`);
+    });
+
+    it('should remove displayDensity property from igx-drop-down and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-drop-down displayDensity="compact">
+        </igx-drop-down>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-drop-down [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-drop-down>`);
+    });
+
+    it('should remove displayDensity property from igx-select and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-select displayDensity="compact">
+        </igx-select>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-select [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-select>`);
+    });
+    
+    it('should remove displayDensity property from igx-input-group and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-input-group displayDensity="compact">
+        </igx-input-group>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-input-group [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-input-group>`);
+    });
+
+    it('should remove displayDensity property from igx-list and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-list displayDensity="compact">
+        </igx-list>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-list [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-list>`);
+    });
+
+    it('should remove displayDensity property from igx-paginator and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-paginator #paginator displayDensity="compact">
+        </igx-paginator>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-paginator #paginator [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-paginator>`);
+    });
+
+    it('should remove displayDensity property from igx-query-builder and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-query-builder displayDensity="compact" #builder>
+        </igx-query-builder>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-query-builder #builder [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-query-builder>`);
+    });
+
+    it('should remove displayDensity property from igx-simple-combo and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-simple-combo displayDensity="compact">
+        </igx-simple-combo>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-simple-combo [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-simple-combo>`);
+    });
+
+    it('should remove displayDensity property from igx-tree and replace it with inline style if its value is not set to a component member', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-tree displayDensity="compact">
+        </igx-tree>`);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        .toEqual(`
+        <igx-tree [style.--ig-size]="'var(--ig-size-small)'">
+        </igx-tree>`);
+    });
     
     it('should replace PivotGrid property `showPivotConfigurationUI` with `pivotUI`', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
