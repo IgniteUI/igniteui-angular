@@ -100,6 +100,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -328,6 +329,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get pivotConfiguration() {
         return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
+
+    /**
+     * Gets/Sets whether to auto-generate the pivot configuration based on the provided data.
+     *
+     * @remarks
+     * The default value is false. When set to true, it will override all dimensions and values in the pivotConfiguration.
+     * @example
+     * ```html
+     * <igx-pivot-grid [data]="Data" [autoGenerateConfig]="true"></igx-pivot-grid>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public autoGenerateConfig = false;
 
     @Input()
     /**
@@ -1050,6 +1064,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         // ignore any user defined columns and auto-generate based on pivot config.
         this.updateColumns([]);
         Promise.resolve().then(() => {
+            if (this.autoGenerateConfig) {
+                this.generateConfig();
+            }
             this.setupColumns();
         });
         if (this.valueChipTemplateDirective) {
@@ -1142,6 +1159,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public set data(value: any[] | null) {
         this._data = value || [];
         if (!this._init) {
+            if (this.autoGenerateConfig) {
+                this.generateConfig();
+            }
             this.setupColumns();
             this.reflow();
         }
@@ -2222,6 +2242,67 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return columns;
+    }
+
+
+    protected generateConfig() {
+        if (!this.data) return;
+
+        const data = this.data;
+        const fields = this.generateDataFields(data);
+        const columnDimensions: IPivotDimension[] = [];
+        const rowDimensions: IPivotDimension[] = [];
+        const values: IPivotValue[] = [];
+        let isFirstDate = true;
+        fields.forEach((field) => {
+            const dataType = this.resolveDataTypes(data[0][field]);
+            switch (dataType) {
+                case "number":
+                    {
+                        const value: IPivotValue = {
+                            member: field,
+                            displayName: field,
+                            dataType: dataType,
+                            aggregate: {
+                                key: 'sum',
+                                label: 'Sum',
+                                aggregatorName: "SUM"
+                            },
+                            enabled: true
+                        };
+                        values.push(value);
+                        break;
+                }
+            case "date":
+            {
+                const dimension: IPivotDimension = new IgxPivotDateDimension(
+                    {
+                        memberName: field,
+                        enabled: isFirstDate,
+                        dataType: dataType
+                    }
+                )
+                rowDimensions.push(dimension);
+                isFirstDate = false;
+                break;
+            }
+                default: {
+                    const dimension: IPivotDimension = {
+                        memberName: field,
+                        enabled: false,
+                        dataType: dataType
+                    };
+                    columnDimensions.push(dimension);
+                    break;
+                }
+            }
+        });
+        const config: IPivotConfiguration = {
+            columns: columnDimensions,
+            rows: rowDimensions,
+            values: values
+        };
+        this.pivotConfiguration = config;
     }
 
     protected createColumnForDimension(value: any, data: any, parent: ColumnType, isGroup: boolean) {
