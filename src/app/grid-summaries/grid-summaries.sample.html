@@ -1,10 +1,10 @@
 <div class="density-chooser">
-    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
 </div>
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [width]="w" [height]="h"
     [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
-    [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'" [displayDensity]="density">
-    <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">
+    [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'">
+    <igx-grid-toolbar *ngIf="showToolbar">
         <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
             <igx-grid-toolbar-pinning *ngIf="columnPinning"></igx-grid-toolbar-pinning>

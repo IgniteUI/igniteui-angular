@@ -4,6 +4,9 @@
 
 .chips {
     margin-left: 5px;
+    & igx-chip {
+        --ig-size: var(--ig-size-small);
+    }
 }
 
 .searchButtons {    
@@ -15,3 +18,7 @@
     user-select: none;
     position: relative;
 }  
+
+.search-box {
+ --ig-size: var(--ig-size-small);
+}

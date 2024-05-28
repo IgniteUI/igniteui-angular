@@ -13,6 +13,7 @@ const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders
 @Component({
     selector: 'app-grid-formatting',
     templateUrl: 'grid-formatting.component.html',
+    styleUrls: ['grid-formatting.component.scss'],
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, NgFor, AsyncPipe]
 })
