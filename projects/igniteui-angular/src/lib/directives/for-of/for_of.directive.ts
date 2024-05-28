@@ -924,6 +924,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateScroll(): void {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+            this.scrollComponent.scrollAmount = scrollAmount;
+            this._updateScrollOffset();
+        }
+    }
+
     protected updateSizes() {
         if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
@@ -1627,11 +1640,6 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             const prevSize = parseInt(changes[containerSize].previousValue, 10);
             const newSize = parseInt(changes[containerSize].currentValue, 10);
             this._recalcOnContainerChange({prevSize, newSize});
-            if (changes[containerSize].previousValue && this.igxForScrollOrientation === "horizontal") {
-                const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
-                this.scrollComponent.scrollAmount = scrollAmount;
-                this._updateScrollOffset();
-            }
         }
     }
 

@@ -3628,6 +3628,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
             this.cdr.detectChanges();
+            Promise.resolve().then(() => this.headerContainer.updateScroll());
         });
 
 
