@@ -50,6 +50,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected defaultSortHeaderIconTemplate;
 
     /**
+     * @hidden
+     */
+    @ViewChild('sortIconContainer', { read: ElementRef })
+    protected sortIconContainer: ElementRef;
+
+    /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
@@ -172,7 +178,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     public sortDirection = SortingDirection.None;
-    private _destroy$ = new Subject<boolean>();
+    protected _destroy$ = new Subject<boolean>();
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,

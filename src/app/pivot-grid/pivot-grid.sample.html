@@ -68,8 +68,7 @@
             [superCompactMode]="size === 'superCompact'"
             [defaultExpandState]="true"
             [rowSelection]="'single'"
-            [pivotConfiguration]="pivotConfigHierarchy"
-            (dimensionsChange)="dimensionChange()"
+            [autoGenerateConfig]="true"
         >
         <ng-template igxPivotValueChip let-value>
             {{ value.displayName }}
