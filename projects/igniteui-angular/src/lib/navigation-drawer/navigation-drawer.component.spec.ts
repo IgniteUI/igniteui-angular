@@ -7,6 +7,9 @@ import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { NgIf } from '@angular/common';
+import { IgxLayoutModule } from '../directives/layout/layout.module';
+import { IgxNavbarModule } from '../navbar/navbar.module';
+import { IgxNavbarComponent } from '../navbar/navbar.component';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
@@ -222,7 +225,7 @@ describe('Navigation Drawer', () => {
         });
         let fixture;
         let asideElem;
-        let cssProp
+        let cssProp;
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
@@ -394,6 +397,9 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '280px';
+            navDrawer.miniWidth = '68px';
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
@@ -604,6 +610,37 @@ describe('Navigation Drawer', () => {
         expect(fix.componentInstance.navDrawer.element.classList.contains('igx-nav-drawer')).toBeTruthy();
     });
 
+    it('should maintain size when mini pinned has `fixed` position', async () => {
+            const fix = TestBed.createComponent(TestFixedMiniComponent);
+            fix.detectChanges();
+
+            fix.componentInstance.navDrawer.pin = true;
+            fix.detectChanges();
+
+            // Account for transition duration
+            await wait(350);
+
+            const drawerEl = fix.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+            const navbarEl = fix.debugElement.query(By.directive(IgxNavbarComponent)).nativeElement;
+
+            let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
+
+            // Mini variant pinned by default
+            expect(flexBasis).toEqual('56px');;
+            expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
+
+            fix.componentInstance.navDrawer.toggle();
+            fix.detectChanges();
+
+            // Account for transition duration
+            await wait(350);
+
+            flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
+
+            expect(flexBasis).toEqual('240px');;
+            expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
+    });
+
     const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
         const swipeOptions = {
             deltaX,
@@ -687,3 +724,44 @@ class TestComponentPinComponent extends TestComponentDIComponent {
 class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;
 }
+
+@Component({
+    selector: 'igx--test-fixed-mini',
+    providers: [IgxNavigationService],
+    standalone: true,
+    imports: [
+        IgxLayoutModule,
+        IgxNavbarModule,
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerTemplateDirective,
+        IgxNavDrawerMiniTemplateDirective,
+        NgIf,
+    ],
+    styles: `
+        .igx-nav-drawer__aside--pinned {
+            position: fixed;
+        }
+    `,
+    template: `
+    <div igxLayout>
+      <igx-nav-drawer #nav>
+        <ng-template igxDrawer>
+          <span igxDrawerItem>Item</span>
+        </ng-template>
+
+        <ng-template igxDrawerMini *ngIf="nav.pin">
+          <nav>
+            <span igxDrawerItem>Item</span>
+          </nav>
+        </ng-template>
+      </igx-nav-drawer>
+
+      <div igxFlex igxLayout igxLayoutDir="columns">
+        <igx-navbar title="Navbar" actionButtonIcon="menu" (action)="nav.toggle()">
+        </igx-navbar>
+        <div class="main"></div>
+      </div>
+    </div>
+    `,
+})
+class TestFixedMiniComponent extends TestComponentDIComponent { }
