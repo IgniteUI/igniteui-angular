@@ -1,8 +1,8 @@
 import { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
-import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import type { Element } from '@angular/compiler';
+import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
 
 const version = "18.0.0";
 
@@ -59,7 +59,22 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 // then we can`t do anything and we just remove the property.
         });
     }
-    applyChanges();
 
+    update.addValueTransform('pivotConfigurationUI_to_pivotUI', (args: BoundPropertyObject): void => {
+        args.bindingType = InputPropertyType.EVAL;
+
+        switch (args.value) {
+            case 'true':
+                args.value = '{ showConfiguration: true }';
+                break;
+            case 'false':
+                args.value = '{ showConfiguration: false }';
+                break;
+            default:
+                args.value = `{ showConfiguration: ${args.value} }`;
+        }
+    });
+
+    applyChanges();
     update.applyChanges();
 };
