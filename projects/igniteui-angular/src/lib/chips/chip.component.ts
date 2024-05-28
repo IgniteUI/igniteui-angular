@@ -575,7 +575,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * @internal
      */
     public get ghostStyles() {
-        return { '--component-size': `${this.chipSize}` };
+        return { '--ig-size': `${this.chipSize}` };
     }
 
     /** @hidden @internal */
@@ -594,7 +594,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * @internal
      */
     public get chipSize(): Size {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
     }
 
     /**

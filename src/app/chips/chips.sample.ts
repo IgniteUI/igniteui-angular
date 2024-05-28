@@ -21,11 +21,6 @@ import {
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
-interface Selection {
-    selected: boolean;
-    label: string;
-}
-
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
