@@ -6,3 +6,7 @@
 [igxButton]+[igxButton] {
     margin: 4px;
 }
+
+.grid-size {
+    --ig-size: var(--ig-size-small);
+}

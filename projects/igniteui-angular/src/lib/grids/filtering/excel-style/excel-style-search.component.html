@@ -1,6 +1,6 @@
 <igx-input-group
             type="box"
-            [displayDensity]="esf.displayDensity">
+            >
     <igx-icon igxPrefix>search</igx-icon>
     <input
         #input
@@ -20,7 +20,7 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list #list role="listbox" [displayDensity]="esf.displayDensity" [isLoading]="isLoading" *ngIf="!isHierarchical()" (keydown)="handleKeyDown($event)" tabindex="0"
+<igx-list #list role="listbox" [isLoading]="isLoading" *ngIf="!isHierarchical()" (keydown)="handleKeyDown($event)" tabindex="0"
 [attr.aria-activedescendant]="this.activeDescendant" (focus)="onFocus()" (focusout)="onFocusOut()">
     <div style="overflow: hidden; position: relative;">
         <igx-list-item [class.igx-list__item-base--active]="focusedItem?.id === this.getItemId(i)" [attr.id]="getItemId(i)" role="option" 
@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <igx-tree #tree [displayDensity]="esf.displayDensity" selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
+    <igx-tree #tree selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
         <igx-tree-node [data]="item" *ngFor="let item of displayedListData;" [selected]="item.isSelected">
             <div>{{item.label}}</div>
             <igx-tree-node [data]="childLevel1" *ngFor="let childLevel1 of item.children" [selected]="childLevel1.isSelected">
@@ -139,7 +139,6 @@
     <div class="igx-excel-filter__cancel">
         <button type="button" #cancelButton
             igxButton="flat"
-            [displayDensity]="esf.displayDensity"
             (click)="esf.cancel()">
                 {{ esf.grid?.resourceStrings.igx_grid_excel_cancel }}
         </button>
@@ -147,7 +146,6 @@
     <div class="igx-excel-filter__apply">
         <button type="button"
             igxButton="contained"
-            [displayDensity]="esf.displayDensity"
             [disabled]="applyButtonDisabled"
             (click)="applyFilter()">
                 {{ esf.grid?.resourceStrings.igx_grid_excel_apply }}

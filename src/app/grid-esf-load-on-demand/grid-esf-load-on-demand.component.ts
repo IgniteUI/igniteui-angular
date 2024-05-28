@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, DisplayDensity, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
 @Component({
@@ -10,34 +10,39 @@ import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
-  @ViewChild('grid1', { static: true })
-  public grid1: IgxGridComponent;
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
+    
+    @ViewChild('grid1', { static: true })
+    public grid1: IgxGridComponent;
 
-  public data: Array<any>;
-  public density: DisplayDensity = 'comfortable';
-  public displayDensities;
-  public selectionMode;
+    public data: Array<any>;
+    public size = 'large';
+    public sizes;
+    public selectionMode;
 
-  private esfService = new GridESFLoadOnDemandService();
+    private esfService = new GridESFLoadOnDemandService();
 
-  public columnValuesStrategy = (column: IgxColumnComponent,
-                                 columnExprTree: IFilteringExpressionsTree,
-                                 done: (uniqueValues: any[]) => void) => {
+    public columnValuesStrategy = (column: IgxColumnComponent,
+                                    columnExprTree: IFilteringExpressionsTree,
+                                    done: (uniqueValues: any[]) => void) => {
     this.esfService.getColumnData(column, columnExprTree, uniqueValues => done(uniqueValues));
-  };
+    };
 
-  public ngOnInit(): void {
-      this.displayDensities = [
-          { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-          { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-          { label: 'compact', selected: this.density === 'compact', togglable: true }
-      ];
+    public ngOnInit(): void {
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
+        ];
 
-      this.data = this.esfService.getRecordsData();
-      this.selectionMode = GridSelectionMode.multiple;
-  }
+        this.data = this.esfService.getRecordsData();
+        this.selectionMode = GridSelectionMode.multiple;
+    }
 
-  public selectDensity(event) {
-      this.density = this.displayDensities[event.index].label;
-  }
+    public selectDensity(event) {
+        this.size = this.sizes[event.index].label;
+    }
 }

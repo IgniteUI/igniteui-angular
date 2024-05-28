@@ -20,7 +20,6 @@
         (pointerdown)="pointerdown($event)"
         [igxColumnMovingDrop]="column"
         [column]="column"
-        [density]="grid.displayDensity"
     >
     </igx-pivot-row-dimension-header>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"

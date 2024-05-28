@@ -1,6 +1,5 @@
 <igx-select #dropdownConditions
         type="box"
-        [displayDensity]="displayDensity"
         [placeholder]="conditionsPlaceholder"
         (selectionChanging)="onConditionsChanged($event)"
         [overlaySettings]="dropDownOverlaySettings">
@@ -19,7 +18,6 @@
     [(value)]="expressionUI.expression.searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
-    [displayDensity]="displayDensity"
     (click)="picker.open()"
     [readOnly]="true"
     [placeholder]="inputDatePlaceholder"
@@ -37,7 +35,6 @@
     [(value)]="expressionUI.expression.searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
-    [displayDensity]="displayDensity"
     (click)="picker.open()"
     [readOnly]="true"
     [placeholder]="inputTimePlaceholder"
@@ -50,7 +47,7 @@
      <igx-picker-clear></igx-picker-clear>
 </igx-time-picker>
 
-<igx-input-group #dropDownTarget *ngIf="column.dataType === 'dateTime'" #inputGroup type="box" [displayDensity]="displayDensity">
+<igx-input-group #dropDownTarget *ngIf="column.dataType === 'dateTime'" #inputGroup type="box">
     <input #input igxInput tabindex="0"
         [placeholder]="inputDatePlaceholder"
         [igxDateTimeEditor]="column.defaultDateTimeFormat"
@@ -64,7 +61,7 @@
 
 <igx-buttongroup #logicOperatorButtonGroup
     *ngIf="!isLast">
-    <span igxButton [displayDensity]="displayDensity"
+    <span igxButton
         #andButton
         (keydown)="onLogicOperatorKeyDown($event, 0)"
         tabindex="0"
@@ -74,7 +71,7 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton [displayDensity]="displayDensity"
+    <span igxButton
         #orButton
         tabindex="0"
         (keydown)="onLogicOperatorKeyDown($event, 1)"
