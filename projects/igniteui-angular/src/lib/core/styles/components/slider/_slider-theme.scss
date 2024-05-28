@@ -237,7 +237,7 @@
         border-radius: border-radius(rem(32px));
 
         @if $variant == 'indigo-design' {
-            border-radius: initial;
+            border-radius: border-radius(rem(4px));
         }
     }
 
@@ -303,7 +303,7 @@
         }
 
         &:last-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-end: rem(-1px);
         }
     }
 
@@ -535,6 +535,10 @@
         display: flex;
         top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
         height: $thumb-label-height;
+
+        @if $variant == 'indigo-design' {
+            top: calc(((#{$thumb-label-height}) + rem(18px)) * -1);
+        }
     }
 
     %igx-slider-thumb-label__container {
@@ -561,6 +565,11 @@
             border-inline-start: rem(10px) solid transparent;
             border-inline-end: rem(10px) solid transparent;
             border-top: rem(10px) solid var-get($theme, 'label-background-color');
+
+            @if $variant == 'indigo-design' {
+                top: rem(16px);
+                border-top: rem(12px) solid var-get($theme, 'label-background-color');
+            }
         }
     }
 
