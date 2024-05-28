@@ -904,6 +904,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         }
     }
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateScroll(): void {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+            this.scrollComponent.scrollAmount = scrollAmount;
+            this._updateScrollOffset();
+        }
+    }
+
     protected updateSizes() {
         if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
@@ -1614,11 +1627,6 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
             this._recalcOnContainerChange();
-            if (changes[containerSize].previousValue && this.igxForScrollOrientation === "horizontal") {
-                const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
-                this.scrollComponent.scrollAmount = scrollAmount;
-                this._updateScrollOffset();
-            }
         }
     }
 
