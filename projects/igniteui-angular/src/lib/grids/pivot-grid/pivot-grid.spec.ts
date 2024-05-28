@@ -1976,6 +1976,36 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimension.width).toBe('auto');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
+
+            it ('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.data = [];
+                fixture.detectChanges();
+
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+                pivotGrid.autoGenerateConfig = true;
+                fixture.detectChanges();
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                    Country: 'Bulgaria', Date: new Date('01/01/2021'), UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                // only date is row dimension and is enabled by default
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                // all other are disabled column dimensions.
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['ProductCategory', 'SellerName', 'Country']);
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.enabled)).toEqual([false, false, false]);
+                // values are all enabled.
+                expect(pivotGrid.values.length).toEqual(2);
+                expect(pivotGrid.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+                expect(pivotGrid.values.map(x => x.enabled)).toEqual([true, true]);
+            });
         });
     });
 

@@ -1,9 +1,9 @@
 import { TestBed, fakeAsync } from "@angular/core/testing";
 import { IconFamily, IconMeta, IgxIconService } from "./icon.service";
 
-import { configureTestSuite } from "../test-utils/configure-suite";
-import { first } from "rxjs/operators";
-import { HttpClientModule } from "@angular/common/http";
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe("Icon Service", () => {
     configureTestSuite();
@@ -23,7 +23,7 @@ describe("Icon Service", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            providers: [IgxIconService],
+            providers: [IgxIconService, provideHttpClient(withInterceptorsFromDi())],
         }).compileComponents();
 
         iconService = TestBed.inject(IgxIconService);

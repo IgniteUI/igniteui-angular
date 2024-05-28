@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject } from '@angular/core';
 
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { SortingIndexPipe } from '../headers/pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { takeUntil } from 'rxjs';
 
 /**
  * @hidden
@@ -19,6 +21,7 @@ import { IgxIconComponent } from '../../icon/icon.component';
     imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
+    private pivotGrid: PivotGridType;
 
     constructor(
         @Inject(IGX_GRID_BASE) grid: GridType,
@@ -27,6 +30,11 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
         public refInstance: ElementRef<HTMLElement>
     ) {
         super(grid, colResizingService, cdr, refInstance);
+
+        this.pivotGrid = this.grid as PivotGridType;
+        this.pivotGrid.dimensionsSortingExpressionsChange
+            .pipe(takeUntil(this._destroy$))
+            .subscribe((_: ISortingExpression[]) => this.setSortIndex());
     }
 
     @HostListener('click', ['$event'])
@@ -34,7 +42,49 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
         event.preventDefault();
     }
 
+    /**
+     * @hidden @internal
+     */
     public override get selectable(): boolean {
         return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public override onSortingIconClick(event) {
+        event.stopPropagation();
+        const dimIndex = this.pivotGrid.rowDimensions.findIndex((target) => target.memberName === this.column.field);
+        const dim = this.pivotGrid.rowDimensions[dimIndex];
+        const startDirection = dim.sortDirection || SortingDirection.None;
+        const direction = startDirection + 1 > SortingDirection.Desc ?
+            SortingDirection.None : startDirection + 1;
+        this.pivotGrid.sortDimension(dim, direction);
+    }
+
+    protected override getSortDirection() {
+        const dim = this.pivotGrid.rowDimensions.find((x) => x.memberName === this.column.field);
+        this.sortDirection = dim?.sortDirection || SortingDirection.None;
+    }
+
+    protected setSortIndex() {
+        if (this.column.sortable && this.sortIconContainer) {
+            const dimIndex = this.pivotGrid.rowDimensions.findIndex((target) => target.memberName === this.column.field);
+            const dim = this.pivotGrid.rowDimensions[dimIndex];
+            let newSortIndex = -1;
+            if (dim.sortDirection) {
+                let priorSortedDims = 0;
+                for (let i = 0; i < dimIndex; i++) {
+                    if (this.pivotGrid.rowDimensions[i].sortDirection) {
+                        priorSortedDims++;
+                    }
+                }
+
+                // Sort index starts from 1.
+                newSortIndex = priorSortedDims + 1;
+            }
+
+            this.sortIconContainer.nativeElement.setAttribute("data-sortIndex", newSortIndex >= 0 ? newSortIndex : "");
+        }
     }
 }
