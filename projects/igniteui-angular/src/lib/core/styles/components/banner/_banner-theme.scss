@@ -100,6 +100,7 @@
         flex-wrap: wrap;
         gap: rem(8px);
         padding: rem(8px);
+        min-width: rem(320px);
         background: var-get($theme, 'banner-background');
 
         @if $variant == 'indigo-design' {
@@ -150,7 +151,7 @@
     }
 
     %igx-banner__message {
-        min-width: rem(320px);
+        min-width: rem(150px);
         flex: 1 0 0%;
         gap: rem(16px);
 
