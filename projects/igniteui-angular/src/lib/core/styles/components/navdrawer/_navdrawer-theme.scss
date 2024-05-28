@@ -195,7 +195,7 @@
     }
 
     %navdrawer-display-mini-pinned {
-        flex-basis: var(--igx-mini-nav-drawer-size);
+        flex-basis: var(--igx-mini-nav-drawer-size, #{$item-mini-size});
     }
 
     %aside {

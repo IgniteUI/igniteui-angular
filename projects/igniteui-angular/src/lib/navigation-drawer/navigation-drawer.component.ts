@@ -324,7 +324,7 @@ export class IgxNavigationDrawerComponent implements
     /** @hidden @internal */
     @HostBinding('class.igx-nav-drawer--mini')
     public get isMini(): boolean {
-        return !!this._miniTemplate;
+        return !!this._miniTemplate && !this.isOpen;
     }
 
     /** @hidden @internal */
