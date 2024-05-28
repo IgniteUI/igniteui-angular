@@ -288,7 +288,7 @@
         height: rem($switch-height);
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
-        background: color($color: 'gray', $variant: 600);
+        background: var-get($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
