@@ -3603,6 +3603,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
             this.cdr.detectChanges();
+            Promise.resolve().then(() => this.headerContainer.updateScroll());
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
