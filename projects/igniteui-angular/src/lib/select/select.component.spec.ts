@@ -2346,7 +2346,7 @@ describe('igxSelect', () => {
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
 
-            fit('should display selected item over input when first item is selected', fakeAsync(() => {
+            it('should display selected item over input when first item is selected', fakeAsync(() => {
                 selectedItemIndex = 0;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
