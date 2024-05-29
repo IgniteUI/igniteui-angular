@@ -2705,7 +2705,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
 @Component({
     template: `
     <input class="dummyInput" #dummyInput/>
-    <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
+    <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
         <label igxLabel #simpleLabel>Select Simple Component</label>
         <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
             {{ item }} {{'©'}}
@@ -2749,7 +2749,7 @@ class IgxSelectSimpleComponent {
 }
 @Component({
     template: `
-    <igx-select #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
+    <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
         <igx-select-item-group *ngFor="let location of locations" [label]="location.continent"> {{location.continent}}
             <igx-select-item *ngFor="let capital of location.capitals" [value]="capital" [text]="capital">
                 {{ capital }} <igx-icon>star</igx-icon>
@@ -2773,7 +2773,7 @@ class IgxSelectGroupsComponent {
 @Component({
     template: `
     <div style="width: 2500px; height: 400px;"></div>
-        <igx-select #select [(ngModel)]="value" >
+        <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" >
             <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
