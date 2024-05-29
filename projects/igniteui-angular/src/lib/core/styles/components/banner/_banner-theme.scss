@@ -111,24 +111,18 @@
         }
 
         border-radius: var-get($theme, 'border-radius');
+
+        igc-icon,
+        igx-icon,
+        igc-button,
+        [igxButton] {
+            --component-size: var(--ig-size, 2) !important;
+        }
     }
 
     %igx-banner__illustration {
         justify-content: center;
         color: var-get($theme, 'banner-illustration-color');
-
-        @if $variant == 'indigo-design' {
-            igx-icon {
-                $icon-size: rem(16px);
-
-                --ig-icon-size: #{$icon-size};
-                --igx-icon-size: #{$icon-size};
-            }
-
-            width: initial;
-            height: initial;
-            min-width: initial;
-        }
     }
 
     %igx-banner__text {
@@ -157,11 +151,6 @@
         flex-wrap: wrap;
         align-self: flex-end;
         gap: rem(8px);
-
-        [igxButton] {
-            --default-size: 2;
-            --component-size: var(--ig-size, var(--default-size)) !important;
-        }
     }
 }
 
