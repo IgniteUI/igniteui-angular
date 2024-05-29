@@ -290,6 +290,14 @@
             top: 0;
             align-items: flex-end;
         }
+
+        @if $variant == 'indigo-design' {
+            bottom: rem(3px);
+
+            &%igx-slider__ticks--top {
+                top: rem(3px);
+            }
+        }
     }
 
     %igx-slider__ticks-group {
@@ -330,6 +338,10 @@
     %igx-slider__ticks--tall {
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
+
+            @if $variant == 'indigo-design' {
+                top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
+            }
         }
     }
 
@@ -348,6 +360,10 @@
 
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
+
+            @if $variant == 'indigo-design' {
+                top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
+            }
         }
     }
 
