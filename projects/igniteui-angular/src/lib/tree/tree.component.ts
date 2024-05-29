@@ -3,7 +3,7 @@ import {
     TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute
 } from '@angular/core';
 
-import { Subject, animationFrameScheduler } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
@@ -431,7 +431,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         });
         this.subToCollapsing();
         this.resizeNotify.pipe(
-            throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
+            throttleTime(40, null, { trailing: true }),
             takeUntil(this.destroy$)
         )
         .subscribe(() => {
