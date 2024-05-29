@@ -1421,7 +1421,7 @@ class GroupDropDownComponent {
 @Component({
     template: `
         <button igxButton #toggleButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Virtual</button>
-        <igx-drop-down #dropdown [allowItemsFocus]="true">
+        <igx-drop-down #dropdown [allowItemsFocus]="true" [style.--ig-size]="'var(--ig-size-large)'">
             <div class="wrapping-div">
                 <igx-drop-down-item
                 *igxFor="let item of items; index as index;

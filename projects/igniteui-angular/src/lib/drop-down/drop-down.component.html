@@ -1,5 +1,6 @@
 <div class="igx-drop-down__list" [style.width]="width"
     igxToggle
+    [style.--component-size]="dropDownSize"
     (appended)="onToggleContentAppended($event)"
     (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
     (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
