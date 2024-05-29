@@ -288,6 +288,10 @@
         background: var-get($theme, 'background-selected');
         color: var-get($theme, 'foreground-selected');
 
+        @if $variant == 'indigo-design' {
+            color: var-get($theme, 'foreground');
+        }
+
         &:hover {
             &::after {
                 background: var-get($theme, 'hover-selected-color');
@@ -363,6 +367,10 @@
     %node-spacer {
         --component-size: var(--tree-size);
         --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+
+        @if $variant == 'indigo-design' {
+            --spacer: #{sizable(24px)};
+        }
         width: var(--spacer);
         display: inline-block;
     }
