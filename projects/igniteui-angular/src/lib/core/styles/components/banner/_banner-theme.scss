@@ -104,10 +104,10 @@
         background: var-get($theme, 'banner-background');
 
         @if $variant == 'indigo-design' {
-            border: rem(1px) solid var-get($theme, 'banner-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
             padding: rem(16px);
         } @else {
-            border-bottom: rem(1px) solid var-get($theme, 'banner-border-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
         }
 
         border-radius: var-get($theme, 'border-radius');
@@ -129,16 +129,6 @@
             height: initial;
             min-width: initial;
         }
-    }
-
-    %igx-banner__border-top {
-        border-block-start: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: rem(-1px);
-    }
-
-    %igx-banner__border-bottom {
-        border-block-end: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: 0;
     }
 
     %igx-banner__text {
@@ -165,18 +155,12 @@
     %igx-banner__actions,
     %igx-banner__actions > igx-banner-actions {
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: center;
         align-self: flex-end;
         gap: rem(8px);
-        min-height: rem(40px);
 
-        @if $variant == 'indigo-design' {
-            min-height: initial;
-
-            [igxButton] {
-                --ig-size: 2;
-            }
+        [igxButton] {
+            --default-size: 2;
+            --component-size: var(--ig-size, var(--default-size)) !important;
         }
     }
 }
