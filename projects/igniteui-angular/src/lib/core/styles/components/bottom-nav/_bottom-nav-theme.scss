@@ -61,9 +61,33 @@
         }
     }
 
+    @if not($icon-color) and $background {
+        @if meta.type-of($background) == 'color' {
+            $icon-color: text-contrast($background);
+        }
+    }
+
     @if not($icon-color) and $label-color {
         @if meta.type-of($label-color) == 'color' {
             $icon-color: $label-color;
+        }
+    }
+
+    @if not($label-color) and $icon-color {
+        @if meta.type-of($icon-color) == 'color' {
+            $label-color: $icon-color;
+        }
+    }
+
+    @if not($icon-selected-color) and $label-selected-color {
+        @if meta.type-of($label-selected-color) == 'color' {
+            $icon-selected-color: $label-selected-color;
+        }
+    }
+
+    @if not($label-selected-color) and $icon-selected-color {
+        @if meta.type-of($icon-selected-color) == 'color' {
+            $label-selected-color: $icon-selected-color;
         }
     }
 
@@ -76,18 +100,6 @@
     @if not($label-disabled-color) and $icon-disabled-color {
         @if meta.type-of($icon-disabled-color) == 'color' {
             $label-disabled-color: $icon-disabled-color;
-        }
-    }
-
-    @if not($icon-selected-color) and $label-selected-color {
-        @if meta.type-of($background) == 'color' {
-            $icon-selected-color: $label-selected-color;
-        }
-    }
-
-    @if not($icon-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $icon-color: text-contrast($background);
         }
     }
 
