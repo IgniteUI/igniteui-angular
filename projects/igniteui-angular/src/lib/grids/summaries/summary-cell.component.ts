@@ -30,9 +30,6 @@ export class IgxSummaryCellComponent {
     public hasSummary = false;
 
     @Input()
-    public density;
-
-    @Input()
     public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
 
     @Input()

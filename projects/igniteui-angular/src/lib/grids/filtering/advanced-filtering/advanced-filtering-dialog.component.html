@@ -15,18 +15,18 @@
 
     <footer class="igx-excel-filter__secondary-footer">
         <div class="igx-excel-filter__clear">
-            <button igxButton="flat" type="button" [displayDensity]="displayDensity"
+            <button igxButton="flat" type="button"
                 (click)="onClearButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
             </button>
         </div>
         <div class="igx-excel-filter__cancel">
-            <button igxButton="flat" type="button" [displayDensity]="displayDensity" (click)="cancelChanges()">
+            <button igxButton="flat" type="button" (click)="cancelChanges()">
                 {{ grid.resourceStrings.igx_grid_excel_cancel }}
             </button>
         </div>
         <div class="igx-excel-filter__apply">
-            <button igxButton="contained" type="button" [displayDensity]="displayDensity"
+            <button igxButton="contained" type="button"
                 (click)="onApplyButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>

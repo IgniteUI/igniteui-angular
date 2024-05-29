@@ -51,7 +51,7 @@
         content: 'body-1',
     ));
     @include checkbox-typography($categories: (
-        label: 'body-2',
+        label: 'body-1',
     ));
     @include chip-typography();
     @include column-actions-typography();

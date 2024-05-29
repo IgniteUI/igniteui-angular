@@ -1,0 +1,54 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-pivot-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "showPivotConfigurationUI",
+            "replaceWith": "pivotUI",
+            "valueTransform": "pivotConfigurationUI_to_pivotUI",
+            "owner": {
+                "selector": "igx-pivot-grid",
+                "type": "component"
+            }
+        }
+    ]
+}

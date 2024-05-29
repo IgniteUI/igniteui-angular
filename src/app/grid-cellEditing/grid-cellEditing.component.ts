@@ -1,12 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DisplayDensity, GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
+import { GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
 
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
+    styleUrl: 'grid-cellEditing.component.scss',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
@@ -16,11 +17,16 @@ export class GridCellEditingComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     private gridWithoutPK: IgxGridComponent;
 
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
+
     public orderDateHidden = false;
     public data: any;
     public dataWithoutPK: any;
-    public density: DisplayDensity = 'compact';
-    public displayDensities;
+    public size : "large" | "medium" | "small" = "small";
+    public sizes;
     public options = {
         timezone: '+0430',
         format: 'longTime',
@@ -41,10 +47,10 @@ export class GridCellEditingComponent {
     constructor() {
         this.data = data;
         this.dataWithoutPK = dataWithoutPK;
-        this.displayDensities = [
-            { label: 'compact', selected: this.density === 'compact', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === "large", togglable: true },
+            { label: 'medium', selected: this.size === "medium", togglable: true },
+            { label: 'small', selected: this.size === "small", togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
     }
@@ -194,7 +200,7 @@ export class GridCellEditingComponent {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public customKeydown(args) {
