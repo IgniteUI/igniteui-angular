@@ -288,10 +288,6 @@
         background: var-get($theme, 'background-selected');
         color: var-get($theme, 'foreground-selected');
 
-        @if $variant == 'indigo-design' {
-            color: var-get($theme, 'foreground');
-        }
-
         &:hover {
             &::after {
                 background: var-get($theme, 'hover-selected-color');
