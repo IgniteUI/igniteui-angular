@@ -183,7 +183,7 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
     template: `<div>
     <igx-column-actions
         igxColumnHiding
-        [style.--ig-size]="'var(ig-size-large)'"
+        [style.--ig-size]="'var(--ig-size-large)'"
         [grid]="grid"
         *ngIf="showInline"
         [hideFilter]="hideFilter"></igx-column-actions>

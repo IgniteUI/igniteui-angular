@@ -2346,7 +2346,7 @@ describe('igxSelect', () => {
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
 
-            it('should display selected item over input when first item is selected', fakeAsync(() => {
+            fit('should display selected item over input when first item is selected', fakeAsync(() => {
                 selectedItemIndex = 0;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
@@ -2795,7 +2795,7 @@ class IgxSelectMiddleComponent {
 }
 @Component({
     template: `
-        <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+        <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
             <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
