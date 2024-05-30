@@ -25,6 +25,8 @@
 /// @param {Color} $item-hover-background [null] - The item's hover background color.
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
+/// @param {Color} $item-disabled-text-color [null] - The item's disabled text color.
+/// @param {Color} $item-disabled-icon-color [null] - The item's disabled icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
 /// @param {List} $border-radius [null] - The border radius used for the navdrawer.
 /// @param {List} $item-border-radius [null] - The border radius used for the navdrawer item.
@@ -58,6 +60,9 @@
     $item-hover-background: null,
     $item-hover-text-color: null,
     $item-hover-icon-color: null,
+
+    $item-disabled-text-color: null,
+    $item-disabled-icon-color: null,
     $shadow: null
 ) {
     $name: 'igx-nav-drawer';
@@ -128,6 +133,8 @@
         item-icon-color:$item-icon-color,
         item-active-icon-color:$item-active-icon-color,
         item-hover-icon-color: $item-hover-icon-color,
+        item-disabled-text-color:$item-disabled-text-color,
+        item-disabled-icon-color: $item-disabled-icon-color,
         shadow: $shadow,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -483,6 +490,17 @@
 
         @if $variant == 'indigo-design' {
             margin-block-end: rem(4px) !important;
+        }
+    }
+
+    %item--disabled {
+        background: none;
+        color: var-get($theme, 'item-disabled-text-color');
+        cursor: default;
+        pointer-events: none;
+
+        igx-icon {
+            color: var-get($theme, 'item-disabled-icon-color');
         }
     }
 
