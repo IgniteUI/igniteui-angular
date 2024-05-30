@@ -13,7 +13,16 @@ describe(`Update to ${version}`, () => {
         projects: {
             testProj: {
                 root: '/',
-                sourceRoot: '/testSrc'
+                sourceRoot: '/testSrc',
+                architect: {
+                    build: {
+                        options: {
+                            styles: [
+                                "/testSrc/styles.scss"
+                            ]
+                        }
+                    }
+                }
             }
         },
         schematics: {
@@ -26,6 +35,7 @@ describe(`Update to ${version}`, () => {
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree.create('/testSrc/styles.scss', '');
     });
 
     const migrationName = 'migration-38';
@@ -419,6 +429,17 @@ describe(`Update to ${version}`, () => {
         `
         <igx-pivot-grid [pivotUI]="{ showConfiguration: testProp }"></igx-pivot-grid>
         `
+        );
+    });
+
+    it('should add default CSS rule to set all components to their previous Large defaults', async () => {
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        expect(tree.readContent('/testSrc/styles.scss')).toContain(
+`
+:root {
+    --ig-size: var(--ig-size-large);
+}
+`
         );
     });
 });
