@@ -1531,7 +1531,7 @@ describe('IgxSimpleCombo', () => {
             spyOn(component, 'onKeyDownEvent').and.callThrough();
 
             expect(combo.collapsed).toBe(true);
-            expect(combo.selection).toBeUndefined();
+            expect(combo.selection.length).toEqual(0);
 
             input.triggerEventHandler('focus', {});
             UIInteractions.simulateTyping('c', input);
@@ -1543,7 +1543,7 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
 
-            expect(combo.selection).toBeDefined();
+            expect(combo.selection.length).toEqual(1);
             expect(combo.collapsed).toBe(true);
             expect(component.onKeyDownEvent).not.toHaveBeenCalled();
 
