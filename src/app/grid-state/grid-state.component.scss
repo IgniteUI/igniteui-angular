@@ -35,3 +35,11 @@
 igx-expansion-panel-body {
     overflow: auto;
 }
+
+#mcGridId {
+    --ig-size: var(--ig-size-small);
+}
+
+.grid-size {
+    --ig-size: var(--ig-size-medium);
+}

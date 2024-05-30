@@ -3,14 +3,14 @@
         <button (click)="log('')">LOG</button>
         <igx-switch [(ngModel)]="grid1.hideRowSelectors">Hide row selectors</igx-switch>
 
-        <button igxButton="contained" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
-            <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)"  displayDensity="comfortable">
+        <button igxButton="contained" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable">Cell Selection: {{grid1.cellSelection}}</button>
+            <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)" >
                 <igx-drop-down-item *ngFor="let item of selectionModes">
                         {{ item }}
                 </igx-drop-down-item>
             </igx-drop-down>
-        <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
-        <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)"  displayDensity="comfortable">
+        <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection">Row Selection: {{grid1.rowSelection}}</button>
+        <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)">
             <igx-drop-down-item *ngFor="let item of selectionModes">
                     {{ item }}
             </igx-drop-down-item>

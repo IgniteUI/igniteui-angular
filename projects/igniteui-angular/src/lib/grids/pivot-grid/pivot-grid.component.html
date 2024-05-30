@@ -5,7 +5,6 @@
 <igx-pivot-header-row class="igx-grid-thead igx-grid-thead--pivot" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
-    [density]="displayDensity"
     [activeDescendant]="activeDescendant"
     [width]="calcWidth"
     [pinnedColumnCollection]="pinnedColumns"
@@ -114,7 +113,7 @@
         </igx-circular-bar>
     </div>
 </ng-template>
-<igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
+<igx-pivot-grid-column-resizer [restrictResizerTop]="calculateResizerTop()" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 
@@ -141,7 +140,7 @@
                                              [rootDimension]="dim"
                                              [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
                                              [rowIndex]="rowIndex" [rowData]="rowData"
-                                             [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
+                                             [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
@@ -152,7 +151,7 @@
             [dimension]="emptyRowDimension"
             [rootDimension]="emptyRowDimension"
             [rowIndex]="0" [rowData]="dataView[0]"
-            [density]="displayDensity" [width]="rowDimensionWidthToPixels(emptyRowDimension)">
+            [width]="rowDimensionWidthToPixels(emptyRowDimension)">
         </igx-pivot-row-dimension-content>
     </div>
 </ng-template>

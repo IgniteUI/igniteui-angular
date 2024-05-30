@@ -363,6 +363,10 @@
     %node-spacer {
         --component-size: var(--tree-size);
         --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+
+        @if $variant == 'indigo-design' {
+            --spacer: #{sizable(24px)};
+        }
         width: var(--spacer);
         display: inline-block;
     }

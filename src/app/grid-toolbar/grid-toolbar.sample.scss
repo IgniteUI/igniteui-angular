@@ -1,3 +1,7 @@
 .sample-content {
     flex-flow: column nowrap;
 }
+
+igx-grid {
+    --ig-size: var(--ig-size-small);
+}

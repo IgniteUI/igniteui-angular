@@ -13,10 +13,9 @@ import {
     AfterViewInit,
     Output,
     EventEmitter,
-    Optional,
-    Inject,
     SimpleChanges,
-    booleanAttribute
+    booleanAttribute,
+    Inject
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -30,9 +29,8 @@ import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { NgIf } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -231,9 +229,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, _displayDensityOptions);
+        @Inject(DOCUMENT) document: any,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, document);
     }
 
     /**

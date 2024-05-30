@@ -84,7 +84,7 @@
     ));
     @include navdrawer-typography($categories: (
         item: 'body-2',
-        header: 'caption'
+        header: 'subtitle-1'
     ));
     @include radio-typography($categories: (
         label: 'body-2'

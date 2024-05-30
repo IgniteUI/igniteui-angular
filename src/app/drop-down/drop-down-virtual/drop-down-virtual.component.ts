@@ -4,7 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { RemoteService } from 'src/app/shared/remote.service';
-import { DisplayDensity, IForOfState, IgxButtonDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxToastComponent, IgxToggleActionDirective, VerticalAlignment } from 'igniteui-angular';
+import { IForOfState, IgxButtonDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxToastComponent, IgxToggleActionDirective, VerticalAlignment } from 'igniteui-angular';
 
 interface DataItem {
   name: string;
@@ -31,12 +31,6 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public startIndex = 0;
   public itemHeight = 40;
   public itemsMaxHeight = 320;
-  public density: DisplayDensity = 'comfortable';
-  public displayDensities = [
-    { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-    { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-    { label: 'compact', selected: this.density === 'compact', togglable: true }
-  ];
 
   constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
     this.remoteService.urlBuilder = (state) => {
