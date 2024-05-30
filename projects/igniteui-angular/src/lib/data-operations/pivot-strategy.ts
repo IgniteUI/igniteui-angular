@@ -33,6 +33,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         values: IPivotValue[],
         cloneStrategy: IDataCloneStrategy,
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS,
+        horizontalRendering = false
     ): IPivotGridRecord[] {
         let hierarchies;
         let data: IPivotGridRecord[];
@@ -55,7 +56,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 data = PivotUtil.processHierarchy(hierarchies, pivotKeys, 0, true);
                 prevRowDims.push(row);
             } else {
-                PivotUtil.processGroups(data, row, pivotKeys, cloneStrategy);
+                PivotUtil.processGroups(data, row, pivotKeys, cloneStrategy, horizontalRendering);
             }
         }
         return data;

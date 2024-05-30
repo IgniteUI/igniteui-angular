@@ -36,7 +36,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IgxPivotRowDimensionHeaderTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IgxPivotRowDimensionHeaderTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, IPivotGridRecord } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -83,7 +83,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxPivotRowDimensionHeaderTemplateDirective, IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe } from './pivot-grid.pipes';
+import { IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe, IgxPivotGridHorizontalRowGrouping, IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
 import { IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -172,7 +172,9 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxPivotGridFilterPipe,
         IgxPivotGridSortingPipe,
         IgxPivotGridColumnSortingPipe,
-        IgxPivotCellMergingPipe
+        IgxPivotCellMergingPipe,
+        IgxPivotGridHorizontalRowGrouping,
+        IgxPivotGridHorizontalRowCellMerging
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -303,6 +305,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     @Input()
     public rowDimensionHeaderTemplate: TemplateRef<IgxPivotRowDimensionHeaderTemplateContext>;
+
+    @Input()
+    public horizontalRowDimensions = false;
 
     @Input()
     /**
@@ -628,7 +633,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     public columnGroupStates = new Map<string, boolean>();
     /** @hidden @internal */
-    public dimensionDataColumns;
+    public dimensionDataColumns: any[];
     /** @hidden @internal */
     public get pivotKeys() {
         return this.pivotConfiguration.pivotKeys || DEFAULT_PIVOT_KEYS;
@@ -669,6 +674,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
     private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false };
+    private _visibleRowDimensions: IPivotDimension[] = [];
+    private _flattenedRowDimensions: IPivotDimension[] = [];
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1095,6 +1102,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
+    public get allVisibleDimensions() {
+        const config = this._pivotConfiguration;
+        const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows.find(configRow => configRow.memberName === dim.memberName));
+        const rows = (config.rows || []).concat(...uniqueVisibleRowDims);
+        if (!config) return [];
+        return rows.concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
+    }
+
     /** @hidden @internal */
     public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
         options.outlet = this.outlet;
@@ -1181,7 +1196,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public get pivotRowWidths() {
-        return this.rowDimensions.length ? this.rowDimensions.reduce((accumulator, dim) => accumulator + this.rowDimensionWidthToPixels(dim), 0) :
+        return this.visibleRowDimensions.length ? this.visibleRowDimensions.reduce((accumulator, dim) => accumulator + this.rowDimensionWidthToPixels(dim), 0) :
             this.rowDimensionWidthToPixels(this.emptyRowDimension);
     }
 
@@ -1202,6 +1217,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         } else {
             return parseInt(dim.width, 10);
         }
+    }
+
+    public rowDimensionWidthCombined(dims: IPivotDimension[]) {
+        let resWidth = 0;
+        for (const dim of dims) {
+            resWidth += this.rowDimensionWidthToPixels(dim);
+        }
+        return resWidth;
     }
 
     /**
@@ -1232,6 +1255,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     public get rowDimensions() {
         return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
+    }
+
+    /** @hidden @internal */
+    public get visibleRowDimensions() {
+        return this._visibleRowDimensions || this.rowDimensions;
+    }
+
+    public get flattenedRowDimensions() {
+        if (this.rowDimensions.length > 0 && this._flattenedRowDimensions.length === 0) {
+            this._flattenedRowDimensions = this.flattenRowDimensions();
+        }
+        return this._flattenedRowDimensions;
     }
 
     /** @hidden @internal */
@@ -2026,6 +2061,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         columns = this.generateColumnHierarchy(fieldsMap, sortedData);
         this._autoGeneratedCols = columns;
+        this._flattenedRowDimensions = this.flattenRowDimensions();
         // reset expansion states if any are stored.
         this.columnGroupStates.forEach((value, key) => {
             if (value) {
@@ -2052,9 +2088,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return super.getComponentDensityClass(baseStyleClass);
     }
 
+    protected flattenRowDimensions(): IPivotDimension[] {
+        const res = [];
+        for (let i = 0; i < this.rowDimensions.length; i++) {
+            let curLevelDim = this.rowDimensions[i];
+            do {
+                res.push(curLevelDim);
+                curLevelDim = curLevelDim.childLevel;
+            } while (curLevelDim);
+        };
+        return res;
+    }
+
     protected generateDimensionColumns(): IgxColumnComponent[] {
         const columns = [];
-        this.allDimensions.forEach((dim) => {
+        this.allVisibleDimensions.forEach((dim) => {
             const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.field = dim.memberName;
             ref.instance.header = dim.displayName || dim.memberName;
@@ -2249,7 +2297,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected rowDimensionByName(memberName: string) {
-        return this.rowDimensions.find((rowDim) => rowDim.memberName === memberName);
+        return this.visibleRowDimensions.find((rowDim) => rowDim.memberName === memberName);
     }
 
     protected onSortingIconClick(_event, dim: IPivotDimension) {
@@ -2263,5 +2311,30 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.pivotUI.showRowHeaders ?
             this.theadRow.pivotFilterContainer?.nativeElement.clientHeight || 0 + this.theadRow.pivotRowContainer?.nativeElement.clientHeight || 0 :
             this.theadRow.nativeElement.clientHeight;
+    }
+
+    protected getRowMRLTemplate(forRows: boolean, rows: IPivotGridRecord[]) {
+        if (forRows) {
+            return `repeat(${rows.length},1fr)`;
+        } else if (this.visibleRowDimensions && this.dimensionDataColumns) {
+            const res = [];
+            this.visibleRowDimensions.forEach(dim => {
+                const targetCol = this.dimensionDataColumns.find(col => col.field === dim.memberName);
+                res.push(targetCol.calcWidth);
+            });
+            return  res.join(' ');
+        }
+    }
+
+    protected calcRowIndex(groupedData: IPivotGridRecord[][], rowIndex: number, colIndex: number) {
+        let resIndex = 0;
+        for (let i = 0; i <= rowIndex; i++) {
+            if (i < rowIndex) {
+                resIndex += groupedData[i].length * this.visibleRowDimensions.length;
+            } else {
+                resIndex += colIndex + (rowIndex > 0 ? 1 : 0);
+            }
+        }
+        return resIndex;
     }
 }

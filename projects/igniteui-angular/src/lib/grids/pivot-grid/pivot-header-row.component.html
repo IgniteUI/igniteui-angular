@@ -167,17 +167,17 @@
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0">
+            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
                 <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
-                    <ng-container *ngFor="let dim of grid.rowDimensions; index as colIndex;last as isLast">
+                    <ng-container *ngFor="let dim of grid.visibleRowDimensions; index as colIndex;last as isLast">
                         <igx-pivot-row-header-group *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
                             [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
-                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                             [column]="dimCol"
-                            [rootDimension]="grid.rowDimensions[colIndex]"
-                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex])"
+                            [rootDimension]="grid.visibleRowDimensions[colIndex]"
+                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
                             [rowIndex]="0">
                         </igx-pivot-row-header-group>
                     </ng-container>

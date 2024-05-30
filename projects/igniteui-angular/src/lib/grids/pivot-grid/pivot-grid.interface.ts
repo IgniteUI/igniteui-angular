@@ -48,7 +48,8 @@ export interface IPivotDimensionStrategy {
         dimensions: IPivotDimension[],
         values: IPivotValue[],
         cloneStrategy: IDataCloneStrategy,
-        pivotKeys?: IPivotKeys): any[];
+        pivotKeys?: IPivotKeys,
+        horizontalRendering?: boolean): any[];
 }
 
 /**
@@ -128,6 +129,7 @@ export interface IPivotDimension {
     width?: string;
     /** Level of the dimension. */
     level?: number;
+    horizontalSummary? : boolean;
 }
 /**
 * Configuration of a pivot value aggregation.
@@ -221,6 +223,11 @@ export interface PivotRowHeaderGroupType {
     grid: any;
 }
 
+export interface DimensionValueType {
+    value: string;
+    children: Map<string, string | DimensionValueType>;
+}
+
 export interface IPivotGridRecord {
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
@@ -239,6 +246,17 @@ export interface IPivotGridRecord {
 export interface IPivotGridGroupRecord extends IPivotGridRecord {
     height?: number;
     rowSpan?: number;
+}
+
+export interface IPivotGridHorizontalGroup {
+    value?: string;
+    rootDimension?: IPivotDimension;
+    dimensions?: IPivotDimension[];
+    records?: IPivotGridRecord[];
+    rowStart?: number;
+    rowSpan?: number;
+    colStart?: number;
+    colSpan?: number;
 }
 
 export interface IgxPivotGridValueTemplateContext {
