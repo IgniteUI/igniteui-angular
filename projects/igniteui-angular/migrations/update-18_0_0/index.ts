@@ -85,7 +85,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         const angularConfig = JSON.parse(angularConfigBuffer.toString('utf-8'));
 
         for (const project of Object.values<any>(angularConfig.projects)) {
-            const srcRoot = project.sourceRoot || '';
+            const srcRoot = project.sourceRoot || project.root || '';
             const stylesPath = (project.architect?.build?.options?.styles?.filter(s => s.startsWith(srcRoot))[0]) as string;
            
             if (!stylesPath) {
