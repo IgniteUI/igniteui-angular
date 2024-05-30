@@ -1014,11 +1014,12 @@
         }
     }
 
-    %form-group-textarea-label {
-        transition-duration: 0ms;
-    }
-
     @if $material-theme {
+        %form-group-textarea-label {
+            top: $input-top-padding;
+            margin-block-end: auto;
+        }
+
         %textarea-group-label--focused {
             transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
