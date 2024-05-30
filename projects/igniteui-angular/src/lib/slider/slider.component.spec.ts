@@ -1809,35 +1809,26 @@ describe('IgxSlider', () => {
         it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.componentInstance.updateOn = 'blur';
-            fixture.componentInstance.value = 0;
             fixture.detectChanges();
+            tick();
 
             const slider = fixture.componentInstance.slider;
+            const thumb = fixture.nativeElement.querySelector('igx-thumb');
 
-            const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
-            const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
-            const startX = sliderX + sliderWidth / 2;
+            expect(slider.value).toBe(fixture.componentInstance.value);
 
-            thumbEl.dispatchEvent(new Event('focus'));
+            thumb.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
-            (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
-            fixture.detectChanges();
-            tick();
-
-            (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            slider.value = 30;
             fixture.detectChanges();
             tick();
+            expect(slider.value).not.toBe(fixture.componentInstance.value);
 
-            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
-            expect(activeThumb).not.toBeNull();
-            expect(fixture.componentInstance.value).not.toBeGreaterThan(0);
-
-            thumbEl.dispatchEvent(new Event('blur'));
+            thumb.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
             tick();
-
-            expect(fixture.componentInstance.value).toBeGreaterThan(0);
+            expect(slider.value).toBe(fixture.componentInstance.value);
         }));
     });
 
@@ -2029,7 +2020,7 @@ class RangeSliderWithCustomTemplateComponent {
 @Component({
     template: `
         <form #form="ngForm">
-            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
+            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn }"></igx-slider>
         </form>
     `,
     standalone: true,
