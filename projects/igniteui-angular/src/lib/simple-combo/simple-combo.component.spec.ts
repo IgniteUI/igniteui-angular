@@ -1528,6 +1528,34 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)
         });
+
+        it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
+            const component = fixture.componentInstance;
+            spyOn(component, 'onKeyDownEvent').and.callThrough();
+
+            expect(combo.collapsed).toBe(true);
+            expect(combo.selection).toBeUndefined();
+
+            input.triggerEventHandler('focus', {});
+            UIInteractions.simulateTyping('c', input);
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection).toBeDefined();
+            expect(combo.collapsed).toBe(true);
+            expect(component.onKeyDownEvent).not.toHaveBeenCalled();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            expect(component.onKeyDownEvent).toHaveBeenCalled();
+        }));
     });
 
     describe('Display density', () => {
@@ -2176,7 +2204,7 @@ describe('IgxSimpleCombo', () => {
     template: `
     <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
     [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
-    [allowCustomValues]="allowCustomValues">
+    [allowCustomValues]="allowCustomValues" (keydown)="onKeyDownEvent()">
         <ng-template igxComboItem let-display let-key="valueKey">
         <div class="state-card--simple">
         <span class="small-red-circle"></span>
@@ -2239,6 +2267,8 @@ class IgxSimpleComboSampleComponent {
 
     public selectionChanging() {
     }
+
+    public onKeyDownEvent() { }
 }
 
 @Component({
