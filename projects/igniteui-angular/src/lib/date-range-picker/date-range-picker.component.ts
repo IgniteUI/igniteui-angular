@@ -15,7 +15,6 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
@@ -441,9 +440,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
 
@@ -602,11 +600,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden */
-    public override ngOnInit(): void {
+    public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        super.ngOnInit();
     }
 
     /** @hidden */

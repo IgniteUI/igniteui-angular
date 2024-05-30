@@ -30,7 +30,6 @@ import {
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective
@@ -610,12 +609,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     constructor(
         element: ElementRef,
         @Inject(LOCALE_ID) _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef) {
-        super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
 
@@ -716,12 +714,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     //#endregion
 
     /** @hidden */
-    public override ngOnInit(): void {
+    public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
         this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
-        super.ngOnInit();
     }
 
     /** @hidden */

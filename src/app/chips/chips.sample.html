@@ -4,7 +4,7 @@
         <div class="preview__sample">
             <igx-chip #me
                 [variant]="selected"
-                [displayDensity]="density"
+                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
                 [disabled]="isDisabled"
                 [selectable]="isSelectable"
                 [removable]="isRemovable"
@@ -41,7 +41,7 @@
                 [(ngModel)]="selected"
                 [ngModelOptions]="{standalone: true}"
                 [placeholder]="'Select chip variant'"
-                [displayDensity]="'compact'"
+                [style.--ig-size]="'var(--ig-size-small)'"
                 type="border" class="preview__variant-select">
 
                 <igx-select-item *ngFor="let type of chipTypes" [value]="type">
@@ -49,12 +49,7 @@
                 </igx-select-item>
             </igx-select>
 
-            <igx-buttongroup
-                class="preview__comp-size"
-                [alignment]="alignment"
-                [values]="displayDensities"
-                (selected)="selectDensity($event)"
-            ></igx-buttongroup>
+            <size-selector #sizeSelector></size-selector>
 
             <igx-switch id="selectable" [(ngModel)]="isSelectable">
                 <label for="selectable">Selectable</label>
