@@ -1529,7 +1529,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData[0].field).toBe(target.value)
         });
 
-        it('should prevent Enter key default behavior when dropdown is open', fakeAsync(() => {
+        it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
             const component = fixture.componentInstance;
             spyOn(component, 'onKeyDownEvent').and.callThrough();
 
