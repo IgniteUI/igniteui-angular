@@ -1033,13 +1033,13 @@ export class IgxSliderComponent implements
         this.setTickInterval();
         this.changeThumbFocusableState(this.disabled);
 
-        this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
-        this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
+        this.subscribeToEvents(this.thumbFrom);
+        this.subscribeToEvents(this.thumbTo);
 
         this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
             const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
             this.positionHandler(thumbFrom, null, this.lowerValue);
-            this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
+            this.subscribeToEvents(thumbFrom);
             this.changeThumbFocusableState(this.disabled);
         });
 
@@ -1115,7 +1115,6 @@ export class IgxSliderComponent implements
         // Finally do positionHandlersAndUpdateTrack the DOM
         // based on data values
         this.positionHandlersAndUpdateTrack();
-        this._onTouchedCallback();
     }
 
     /**
@@ -1412,14 +1411,18 @@ export class IgxSliderComponent implements
         }
     }
 
-    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: string) => void) {
+    private subscribeToEvents(thumb: IgxSliderThumbComponent) {
         if (!thumb) {
             return;
         }
 
         thumb.thumbValueChange
             .pipe(takeUntil(this.unsubscriber(thumb)))
-            .subscribe(value => callback(value, thumb.type));
+            .subscribe(value => this.thumbChanged(value, thumb.type));
+
+        thumb.thumbBlur
+            .pipe(takeUntil(this.unsubscriber(thumb)))
+            .subscribe(() => this._onTouchedCallback());
     }
 
     private unsubscriber(thumb: IgxSliderThumbComponent) {
