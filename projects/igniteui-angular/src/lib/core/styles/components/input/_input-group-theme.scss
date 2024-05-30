@@ -1016,8 +1016,20 @@
 
     @if $material-theme {
         %form-group-textarea-label {
-            top: $input-top-padding;
+            top: calc($input-top-padding - #{rem(1px)});
             margin-block-end: auto;
+        }
+
+        %textarea-group--outlined {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(3px)});
+            }
+        }
+
+        %textarea-group--box {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(2px)});
+            }
         }
 
         %textarea-group-label--focused {
