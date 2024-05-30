@@ -593,16 +593,11 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * @hidden
      * @internal
      */
-    public get chipSize(): Size {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public destroy$ = new Subject<void>();
 
+    protected get chipSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
+    }
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
