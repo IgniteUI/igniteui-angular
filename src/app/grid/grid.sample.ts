@@ -13,6 +13,10 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
     styleUrls: ['grid.sample.scss'],
     templateUrl: 'grid.sample.html',
     standalone: true,
+    providers: [
+        LocalService,
+        RemoteService
+    ],
     imports: [
         FormsModule,
         NgFor,

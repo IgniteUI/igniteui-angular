@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
+import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -10,7 +10,6 @@ import {
     IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs,
     IGridContextMenuEventArgs
 } from '../common/events';
-import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
@@ -140,7 +139,6 @@ export interface HeaderType {
     nativeElement: HTMLElement;
     /** The column that the header cell represents. */
     column: ColumnType;
-    density: DisplayDensity;
     /** Indicates whether the column is currently sorted. */
     sorted: boolean;
     /** Indicates whether the cell can be selected */
@@ -662,9 +660,7 @@ export interface GridServiceType {
  * Extends `IGridDataBindable`
  */
 export interface GridType extends IGridDataBindable {
-    /** @deprecated since version 16.1.0. Please use the `--ig-size` CSS custom property. */
-    displayDensity: DisplayDensity;
-    /** Represents the locale of the Grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
+    /** Represents the locale of the drig: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
     resourceStrings: IGridResourceStrings;
     /** Represents the native HTML element itself */
@@ -692,6 +688,8 @@ export interface GridType extends IGridDataBindable {
     /** Indicates whether the grid is currently in a moving state. */
     moving: boolean;
     isLoading: boolean;
+    /** @hidden @internal */
+    gridSize: Size;
 
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
@@ -1046,7 +1044,6 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanging: EventEmitter<IColumnVisibilityChangingEventArgs>;
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
-    densityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IRowDataCancelableEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     rowAddedNotifier: Subject<IRowDataEventArgs>;

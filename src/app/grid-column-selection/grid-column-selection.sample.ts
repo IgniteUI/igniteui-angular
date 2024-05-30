@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DisplayDensity, FilterMode, HorizontalAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxInputDirective, IgxInputGroupComponent, IgxPaginatorComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, FilterMode, HorizontalAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxInputDirective, IgxInputGroupComponent, IgxPaginatorComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 
 @Pipe({
@@ -37,6 +37,10 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, NgIf, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
 
@@ -63,8 +67,8 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
             togglable: true
         }
     ];
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public paging = false;
 
     private _positionSettings: PositionSettings = {
@@ -91,10 +95,10 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     }
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
          this.data = SAMPLE_DATA.slice(0);
 
@@ -121,7 +125,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public selected(event) {

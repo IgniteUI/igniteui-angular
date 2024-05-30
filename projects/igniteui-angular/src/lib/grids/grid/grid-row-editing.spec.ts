@@ -5,13 +5,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
@@ -28,6 +27,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
+import { Size } from "../common/enums";
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -1111,8 +1111,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.endEdit).toHaveBeenCalledWith(false);
         });
 
-        it(`Should exit row editing AND COMMIT on displayDensity change`, () => {
-            grid.displayDensity = DisplayDensity.comfortable;
+        it(`Should exit row editing AND COMMIT on grid size change`, async () => {
+            setElementSize(grid.nativeElement, Size.Large);
             fix.detectChanges();
 
             cell.editMode = true;
@@ -1122,7 +1122,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toBeTruthy();
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
+            fix.detectChanges();
+            await wait(16); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);

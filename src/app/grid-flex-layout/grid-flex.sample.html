@@ -3,7 +3,7 @@
         <div igxFlex igxLayout igxLayoutDir="column">
             <h4 class="sample-title">Grid1</h4>
             <igx-grid #grid1 [data]="localData" [autoGenerate]="false">
-                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                <igx-grid-toolbar >
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -30,7 +30,7 @@
         <div igxFlex igxLayout igxLayoutDir="column">
             <h4 class="sample-title">HGrid</h4>
             <igx-hierarchical-grid [data]="localData" [autoGenerate]="true" #hGrid2>
-                <igx-grid-toolbar [displayDensity]="hGrid2.displayDensity">
+                <igx-grid-toolbar>
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

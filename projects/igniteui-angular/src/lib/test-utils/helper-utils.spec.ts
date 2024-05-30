@@ -30,6 +30,13 @@ export const clearGridSubs = () => {
     gridsubscriptions = [];
 }
 
+/**
+ * Sets element size as a inline style
+ */
+export function setElementSize(element: HTMLElement, size: string) {
+    element.style.setProperty('--ig-size', size);
+}
+
 @Injectable()
 export class TestNgZone extends NgZone {
     public override onStable: EventEmitter<any> = new EventEmitter(false);
