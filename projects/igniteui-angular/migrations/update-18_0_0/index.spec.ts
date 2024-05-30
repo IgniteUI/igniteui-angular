@@ -305,7 +305,7 @@ describe(`Update to ${version}`, () => {
         <igx-select [style.--ig-size]="'var(--ig-size-small)'">
         </igx-select>`);
     });
-    
+
     it('should remove displayDensity property from igx-input-group and replace it with inline style if its value is not set to a component member', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -389,7 +389,7 @@ describe(`Update to ${version}`, () => {
         <igx-tree [style.--ig-size]="'var(--ig-size-small)'">
         </igx-tree>`);
     });
-    
+
     it('should replace PivotGrid property `showPivotConfigurationUI` with `pivotUI`', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
         `
@@ -419,6 +419,19 @@ describe(`Update to ${version}`, () => {
         `
         <igx-pivot-grid [pivotUI]="{ showConfiguration: testProp }"></igx-pivot-grid>
         `
+        );
+    });
+
+    it('should rename the $active-item-color property to the $icon-selected-color', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-bottom-nav: bottom-nav-theme($active-item-color: red);`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-bottom-nav: bottom-nav-theme($icon-selected-color: red);`
         );
     });
 });
