@@ -1,13 +1,9 @@
 <div class="combo-sample">
     <section class="combo-sample__section">
-        <igx-buttongroup>
-            <button igxButton (click)="setDensity('comfortable')">Comfortable</button>
-            <button igxButton (click)="setDensity('cosy')">Cosy</button>
-            <button igxButton (click)="setDensity('compact')">Compact</button>
-        </igx-buttongroup>
+        <size-selector #sizeSelector></size-selector>
 
         <!-- Simple combo -->
-        <igx-simple-combo #densityCombo [allowCustomValues]="true" [displayDensity]="'comfortable'" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+        <igx-simple-combo #densityCombo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
                           required [data]="uniqueFalsyData" displayKey="field" valueKey="value">
             <label igxLabel>Falsy unique values (simple-combo)</label>
             <igx-hint>Select a unique falsy value</igx-hint>
@@ -17,11 +13,10 @@
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Normal and simple combo next to each other</h1>
         <igx-switch (click)="isDisabled = !isDisabled">{{isDisabled? 'Enable' : 'Disable'}}</igx-switch>
-        <form class="combo-sample__form">
+        <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <div class="combo-sample__row combo-sample__row--stretch">
                 <!-- Simple combo -->
                 <igx-combo [allowCustomValues]="true"
-                           [displayDensity]="'comfortable'"
                            name="falsyValueCombo"
                            required
                            [data]="uniqueFalsyData"
@@ -34,7 +29,6 @@
                 </igx-combo>
                 <igx-simple-combo  #simpleCombo class="input-container"
                            name="anyName" #comboModel="ngModel"
-                           [displayDensity]="'comfortable'"
                            [(ngModel)]="singleValue"
                            minlength="2"
                            required
@@ -110,7 +104,6 @@
         <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
         <igx-simple-combo
                     #simpleComboOpenOnClear
-                    [displayDensity]="'comfortable'"
                     [(ngModel)]="singleValue"
                     type="border"
                     [data]="items"
@@ -124,7 +117,6 @@
         <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
         <igx-simple-combo
                     #simpleComboOpenOnClearWithTemplate
-                    [displayDensity]="'comfortable'"
                     [(ngModel)]="singleValue"
                     type="border"
                     [data]="items"

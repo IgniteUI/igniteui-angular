@@ -119,7 +119,7 @@ The following features are no supported and not exposed in the API of the Hierar
 Enabling and configuring features is done through the **igx-row-island** markup and is applied for every grid that is created for it. Changing options on runtime through the row instance changes them for each of the grids it spawned. 
 
 ```html
-<igx-hierarchical-grid [data]="localData" [displayDensity]="density" [autoGenerate]="false"
+<igx-hierarchical-grid [data]="localData" [autoGenerate]="false"
     [allowFiltering]="true" [height]="'600px'" [width]="'800px'" #hGrid>
     <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
     <igx-column-group header="Information">

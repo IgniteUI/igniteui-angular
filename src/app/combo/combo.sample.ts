@@ -5,8 +5,39 @@ import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
 import { RemoteNWindService } from './remote-nwind.service';
-import { ButtonGroupAlignment, ConnectedPositioningStrategy, DisplayDensity, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, IChangeCheckboxEventArgs, IComboFilteringOptions, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IForOfState, ISimpleComboSelectionChangingEventArgs, IgxButtonDirective, IgxButtonGroupComponent, IgxComboAddItemDirective, IgxComboComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxHintDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSimpleComboComponent, IgxSwitchComponent, IgxToastComponent, OverlaySettings, VerticalAlignment } from 'igniteui-angular';
+import {
+    ButtonGroupAlignment,
+    ConnectedPositioningStrategy,
+    ElasticPositionStrategy, 
+    GlobalPositionStrategy,
+    HorizontalAlignment,
+    IChangeCheckboxEventArgs,
+    IComboFilteringOptions,
+    IComboSearchInputEventArgs,
+    IComboSelectionChangingEventArgs,
+    IForOfState, 
+    ISimpleComboSelectionChangingEventArgs,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxComboAddItemDirective,
+    IgxComboComponent,
+    IgxComboFooterDirective,
+    IgxComboHeaderDirective,
+    IgxHintDirective,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxLabelDirective,
+    IgxPrefixDirective,
+    IgxRippleDirective,
+    IgxSimpleComboComponent,
+    IgxSwitchComponent,
+    IgxToastComponent,
+    OverlaySettings,
+    VerticalAlignment
+} from 'igniteui-angular';
 import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 
 @Component({
@@ -15,7 +46,29 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.scss'],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective, FormsModule, IgxSimpleComboComponent, IgxLabelDirective, IgxHintDirective, IgxComboComponent, IgxButtonDirective, ReactiveFormsModule, IgxToastComponent, NgIf, IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective, IgxRippleDirective, IgxPrefixDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonGroupComponent, AsyncPipe]
+    imports: [
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        FormsModule,
+        IgxSimpleComboComponent,
+        IgxLabelDirective,
+        IgxHintDirective,
+        IgxComboComponent,
+        IgxButtonDirective,
+        ReactiveFormsModule,
+        IgxToastComponent,
+        NgIf,
+        IgxComboHeaderDirective,
+        IgxComboFooterDirective,
+        IgxComboAddItemDirective,
+        IgxRippleDirective,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxSwitchComponent,
+        IgxButtonGroupComponent,
+        SizeSelectorComponent,
+        AsyncPipe
+    ]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })
@@ -69,10 +122,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public valueKeyVar = 'field';
     public currentDataType = '';
-
-    public comfortable: DisplayDensity = DisplayDensity.comfortable;
-    public cosy: DisplayDensity = DisplayDensity.cosy;
-    public compact: DisplayDensity = DisplayDensity.compact;
 
     public genres = [];
     public user: UntypedFormGroup;
@@ -234,10 +283,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         const comboTemplate = this.initialItemTemplate ? null : this.igxCombo.itemTemplate;
         this.igxCombo.itemTemplate = this.initialItemTemplate ? this.initialItemTemplate : this.customItemTemplate;
         this.initialItemTemplate = comboTemplate;
-    }
-
-    public setDensity(density: DisplayDensity) {
-        this.densityCombo.displayDensity = density;
     }
 
     public changeFiltering(e: IChangeCheckboxEventArgs) {

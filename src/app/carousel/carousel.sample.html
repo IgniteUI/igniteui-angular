@@ -9,8 +9,8 @@
             <igx-switch [(ngModel)]="loop">loop</igx-switch>
             <igx-switch [(ngModel)]="pause">pause</igx-switch>
             <br>
-            <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
-            <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)"  displayDensity="comfortable">
+            <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation">Animation Type: {{car.animationType}}</button>
+            <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)" >
                 <igx-drop-down-item *ngFor="let item of animationModes">
                         {{ item }}
                 </igx-drop-down-item>
