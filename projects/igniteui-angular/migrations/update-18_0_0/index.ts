@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
+import { Rule, SchematicContext, SchematicsException, Tree } from "@angular-devkit/schematics";
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import type { Element } from '@angular/compiler';
@@ -31,9 +31,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     const addChange = (path: string, change: FileChange) => {
         if (changes.has(path)) {
-          changes.get(path).push(change);
+            changes.get(path).push(change);
         } else {
-          changes.set(path, [change]);
+            changes.set(path, [change]);
         }
     };
 
@@ -59,7 +59,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 }
                 // We don`t have else because if density it set like this: [displayDensity]="customDensity"
                 // then we can`t do anything and we just remove the property.
-        });
+            });
     }
 
     update.addValueTransform('pivotConfigurationUI_to_pivotUI', (args: BoundPropertyObject): void => {
@@ -77,6 +77,52 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
     });
 
+    const updateMainCSSFile = (host: Tree, context: SchematicContext): Tree => {
+        const angularConfigBuffer = host.read('angular.json');
+        if (!angularConfigBuffer) {
+            throw new SchematicsException('Could not find angular.json');
+        }
+        const angularConfig = JSON.parse(angularConfigBuffer.toString('utf-8'));
+
+        for (const project of Object.values<any>(angularConfig.projects)) {
+            const srcRoot = project.sourceRoot || '';
+            const stylesPath = (project.architect?.build?.options?.styles?.filter(s => s.startsWith(srcRoot))[0]) as string;
+           
+            if (!stylesPath) {
+                context.logger.error(`No styles file found in angular.json for project: ${project}`);
+            }
+
+            // Read the CSS file
+            const cssBuffer = host.read(stylesPath);
+            if (!cssBuffer) {
+                context.logger.error(`Could not find the CSS file: ${stylesPath}`);
+                continue;
+            }
+
+            const content = cssBuffer.toString('utf-8');
+            const newContent = `
+// Specifies large size for all components to match the previous defaults
+// This may not be needed for your project. Please consult https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide for more details.
+:root {
+    --ig-size: var(--ig-size-large);
+}\n` + content;
+
+            // Write the new content to the CSS file
+            host.overwrite(stylesPath, newContent);
+
+            context.logger.info(`Added global default Large size for ig components to CSS file: ${stylesPath}`);
+        }
+
+        return host;
+    }
+
     applyChanges();
     update.applyChanges();
+
+    context.logger.info(
+        `Adding global CSS rule to ensure non-specified sizes for components remain the previous default (Large).
+        Please refer to the migration guide (https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) for more information.`
+    )
+
+    updateMainCSSFile(host, context);
 };
