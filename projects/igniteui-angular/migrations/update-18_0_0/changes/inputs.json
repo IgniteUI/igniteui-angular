@@ -42,6 +42,118 @@
             }
         },
         {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-action-strip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-button",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-simple-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-input-group",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-query-builder",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayDensity",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tree",
+                "type": "component"
+            }
+        },
+        {
             "name": "showPivotConfigurationUI",
             "replaceWith": "pivotUI",
             "valueTransform": "pivotConfigurationUI_to_pivotUI",

@@ -106,11 +106,6 @@ The container element must have the following styles:
  - `overflow: hidden;`
  - `height` property set to the same as `itemsMaxHeight` in the template, in `px`. E.g. `height: 480px`
 
-## Display Density
-**igx-drop-down** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
-Setting `[displayDensity]` affects the control's items' css properties, most notably heights, padding, font-size.
-
 # API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
 

@@ -1,16 +1,13 @@
 import { NgFor, NgIf } from '@angular/common';
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     ContentChildren,
     ChangeDetectorRef,
     EventEmitter,
     HostBinding,
-    Inject,
     Input,
     Output,
-    Optional,
     QueryList,
     Renderer2,
     ViewChildren,
@@ -23,7 +20,6 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -65,7 +61,7 @@ let NEXT_ID = 0;
     standalone: true,
     imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
 })
-export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
+export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * A collection containing all buttons inside the button group.
      */
@@ -319,11 +315,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     constructor(
         private _cdr: ChangeDetectorRef,
         private _renderer: Renderer2,
-        private _el: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
-    ) {
-        super(_displayDensityOptions, _el);
-    }
+        private _el: ElementRef
+    ) {}
 
     /**
      * Gets the selected button/buttons.
@@ -427,17 +420,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         const button = this.buttons[index];
         button.deselect();
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit() {
-        this.templateButtons.forEach((button) => {
-            if (!button.initialDensity) {
-                button.displayDensity = this.displayDensity;
-            }
-        });
     }
 
     /**
