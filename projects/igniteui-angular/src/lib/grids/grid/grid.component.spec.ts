@@ -2437,7 +2437,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 - grid.footer.nativeElement.offsetHeight
                 - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(30);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
         it('IgxTabs: should initialize a grid with correct height when height = 100%', async () => {
@@ -2455,7 +2455,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const paging = fix.debugElement.query(By.css('igx-page-nav'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(30);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
         it('IgxTabs: should initialize a grid with correct height height = 100% when parent has height', async () => {
