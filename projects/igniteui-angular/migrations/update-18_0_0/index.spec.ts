@@ -35,7 +35,10 @@ describe(`Update to ${version}`, () => {
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
         appTree.create('/angular.json', JSON.stringify(configJson));
-        appTree.create('/testSrc/styles.scss', '');
+        appTree.create('/testSrc/styles.scss', `
+@use "mockStyles.scss";
+@forward something;
+`);
     });
 
     const migrationName = 'migration-38';
@@ -434,8 +437,12 @@ describe(`Update to ${version}`, () => {
 
     it('should add default CSS rule to set all components to their previous Large defaults', async () => {
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(tree.readContent('/testSrc/styles.scss')).toContain(
+        expect(tree.readContent('/testSrc/styles.scss')).toEqual(
 `
+@use "mockStyles.scss";
+@forward something;
+// Specifies large size for all components to match the previous defaults
+// This may not be needed for your project. Please consult https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide for more details.
 :root {
     --ig-size: var(--ig-size-large);
 }
