@@ -2033,18 +2033,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const separator = this.pivotKeys.columnDimensionSeparator;
         const dataArr = fields.map(x => x.split(separator)).sort(x => x.length);
         const hierarchy = new Map<string, any>();
+        const columnDimensions =  PivotUtil.flatten(this.columnDimensions);
         dataArr.forEach(arr => {
             let currentHierarchy = hierarchy;
             const path = [];
+            let index = 0;
             for (const val of arr) {
                 path.push(val);
                 const newPath = path.join(separator);
                 let targetHierarchy = currentHierarchy.get(newPath);
                 if (!targetHierarchy) {
-                    currentHierarchy.set(newPath, { value: newPath, expandable: true, children: new Map<string, any>(), dimension: this.columnDimensions[0] });
+                    const currentColumnDimension = columnDimensions[index];
+                    currentHierarchy.set(newPath, { value: newPath, expandable: !!currentColumnDimension.childLevel, children: new Map<string, any>(), dimension: currentColumnDimension });
                     targetHierarchy = currentHierarchy.get(newPath);
                 }
                 currentHierarchy = targetHierarchy.children;
+                index++;
             }
         });
         return hierarchy;
