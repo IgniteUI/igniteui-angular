@@ -297,6 +297,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         if (super.selection.length) {
             this.selectionService.clear(this.id);
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
