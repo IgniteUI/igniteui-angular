@@ -912,7 +912,7 @@ describe('igxCombo', () => {
             combo = new IgxComboComponent(
                 elementRef,
                 mockCdr,
-                mockSelection as any,
+                selectionService,
                 mockComboService,
                 mockDocument,
                 null,

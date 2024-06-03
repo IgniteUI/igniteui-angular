@@ -156,8 +156,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             cdr,
             selectionService,
             comboAPI,
-            _inputGroupType,
             document,
+            _inputGroupType,
             _injector,
             _iconService
         );

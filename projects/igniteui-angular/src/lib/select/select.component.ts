@@ -557,7 +557,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
 
         for (const icon of this._icons) {
             switch (this.inputGroup?.theme) {

@@ -551,7 +551,7 @@ describe('IgxSimpleCombo', () => {
             combo = new IgxSimpleComboComponent(
                 elementRef,
                 mockCdr,
-                mockSelection as any,
+                selectionService,
                 mockComboService,
                 platformUtil,
                 mockDocument,

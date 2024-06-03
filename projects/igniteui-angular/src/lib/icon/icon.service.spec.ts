@@ -22,7 +22,7 @@ describe("Icon Service", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
+            imports: [],
             providers: [IgxIconService, provideHttpClient(withInterceptorsFromDi())],
         }).compileComponents();
 
