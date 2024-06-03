@@ -97,3 +97,7 @@ textarea {
 button {
     margin: 0 0.5rem;
 }
+
+igx-grid {
+    --ig-size: var(--ig-size-small);
+}

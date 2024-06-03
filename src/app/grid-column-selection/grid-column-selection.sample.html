@@ -3,28 +3,28 @@
         <div class="sample-column">
             <div class="sample-buttons">
                 <button igxButton="contained" [igxToggleAction]="dropDownComfortable"
-                    [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">
+                    [igxDropDownItemNavigation]="dropDownComfortable">
                     Column Selection: {{grid1.columnSelection}}</button>
-                <igx-drop-down #dropDownComfortable (selected)="selected($event)" displayDensity="comfortable">
+                <igx-drop-down #dropDownComfortable (selected)="selected($event)">
                     <igx-drop-down-item *ngFor="let item of selectionModes">
                         {{ item }}
                     </igx-drop-down-item>
                 </igx-drop-down>
             </div>
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
-            <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'" [allowFiltering]="true"
+            <igx-grid #grid1 [data]="data" [columnSelection]="'multiple'" [allowFiltering]="true"
                 [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [moving]="true" [width]="'900px'"
                 [height]="'800px'" (columnSelectionChanging)="onColumnSelection($event)">
-                <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+                <igx-grid-toolbar>
                     <igx-grid-toolbar-actions>
                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                         <!-- <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering> -->
                     </igx-grid-toolbar-actions>
                     <button igxButton="outlined" #columnSelectionButton igxRipple (click)="toggleColumnSelection()"
-                            [displayDensity]="grid1.displayDensity">
+                            >
                         <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
                         </igx-checkbox>
                         <span>{{ grid1.selectedColumns().length }}</span>

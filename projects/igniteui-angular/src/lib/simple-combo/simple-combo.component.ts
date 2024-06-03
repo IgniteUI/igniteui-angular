@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
@@ -11,7 +11,6 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
 import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -150,11 +149,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         comboAPI: IgxComboAPIService,
         _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, _displayDensityOptions, _inputGroupType, _injector);
+            _iconService, document, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 
@@ -273,12 +272,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
+    public ngDoCheck(): void {
         if (this.data?.length && super.selection.length && !this._displayValue) {
             this._displayValue = this.createDisplayText(super.selection, []);
             this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
         }
-        super.ngDoCheck();
     }
 
     /** @hidden @internal */

@@ -256,7 +256,7 @@
 
     %igx-drop-down__item {
         @include sizable();
-        --component-size: (--dropdown-size);
+        --component-size: var(--dropdown-size);
 
         color: var-get($theme, 'item-text-color');
         cursor: pointer;

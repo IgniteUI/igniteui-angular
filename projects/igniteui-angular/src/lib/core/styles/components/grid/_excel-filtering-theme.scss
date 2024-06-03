@@ -41,6 +41,7 @@
     );
 
     %grid-excel-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: block;
         width: rem(320px);
         height: 100%;
@@ -48,6 +49,20 @@
         box-shadow: elevation(12);
         overflow: auto;
         min-width: rem(320px);
+    }
+
+    %igx-excel-filter__sizing {
+        @include sizable();
+        min-height: sizable(
+            rem(330px),
+            rem(465px),
+            rem(645px)
+        );
+        max-height: sizable(
+            rem(405px),
+            rem(565px),
+            rem(775px)
+        );
     }
 
     %grid-excel-filter--inline {
@@ -391,7 +406,6 @@
     }
 
     %grid-excel-menu--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
 
         %grid-excel-menu__header {
             justify-content: space-between;
@@ -399,7 +413,6 @@
     }
 
     %grid-excel-menu--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
 
         %grid-excel-menu__header {
             justify-content: space-between;

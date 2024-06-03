@@ -1,7 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DisplayDensity } from '../../core/density';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
@@ -13,10 +12,12 @@ import {
     IgxTreeGridWithNoForeignKeyComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, Size } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../test-utils/grid-functions.spec';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
+
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
@@ -94,12 +95,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 expect(grid.rowList.length).toEqual(6);
         });
 
-        it(`should render 11 records if height is 100% and parent container\'s height is unset and display density is changed`, () => {
+        it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, async () => {
             grid.height = '100%';
-            fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
-            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            setElementSize(grid.nativeElement, Size.Small);
             fix.detectChanges();
+            await wait(32); // needed because of the throttleTime on the resize observer
+            fix.detectChanges();
+
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();

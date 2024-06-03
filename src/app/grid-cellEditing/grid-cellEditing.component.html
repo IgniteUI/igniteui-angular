@@ -1,9 +1,9 @@
 <h4 class="sample-title">Grid with primary key ProductID</h4>
 
 <div class="density-chooser">
-    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
 </div>
-<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" width="1500px" height="550px" [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
@@ -43,7 +43,7 @@
 <button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
 <input type="text" [(ngModel)]="pname">
 <h4 class="sample-title">Grid without PK</h4>
-<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" class="grid-size" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.id.rowIndex)">Delete</button>
