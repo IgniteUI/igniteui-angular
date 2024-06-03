@@ -1527,8 +1527,8 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
-            const component = fixture.componentInstance;
-            spyOn(component, 'onKeyDownEvent').and.callThrough();
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            const spy = spyOn(keyEvent, 'preventDefault');
 
             expect(combo.collapsed).toBe(true);
             expect(combo.selection.length).toEqual(0);
@@ -1539,19 +1539,19 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.collapsed).toBe(false);
 
-            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            combo.handleKeyDown(keyEvent);
             tick();
             fixture.detectChanges();
 
             expect(combo.selection.length).toEqual(1);
             expect(combo.collapsed).toBe(true);
-            expect(component.onKeyDownEvent).not.toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
 
-            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            combo.handleKeyDown(keyEvent);
             tick();
             fixture.detectChanges();
 
-            expect(component.onKeyDownEvent).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalledTimes(1);
         }));
     });
 
@@ -2272,7 +2272,7 @@ describe('IgxSimpleCombo', () => {
     template: `
     <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
     [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
-    [allowCustomValues]="allowCustomValues" (keydown)="onKeyDownEvent()">
+    [allowCustomValues]="allowCustomValues">
         <ng-template igxComboItem let-display let-key="valueKey">
         <div class="state-card--simple">
         <span class="small-red-circle"></span>
@@ -2335,8 +2335,6 @@ class IgxSimpleComboSampleComponent {
 
     public selectionChanging() {
     }
-
-    public onKeyDownEvent() { }
 }
 
 @Component({
