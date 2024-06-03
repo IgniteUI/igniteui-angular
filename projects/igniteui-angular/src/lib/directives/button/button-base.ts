@@ -1,5 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Optional, Output, booleanAttribute } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
+import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxBaseButtonType = /*@__PURE__*/mkenum({
@@ -9,7 +8,7 @@ export const IgxBaseButtonType = /*@__PURE__*/mkenum({
 });
 
 @Directive()
-export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
+export abstract class IgxButtonBaseDirective {
     /**
      * Emitted when the button is clicked.
      */
@@ -81,13 +80,7 @@ export abstract class IgxButtonBaseDirective extends DisplayDensityBase {
         return this.disabled || null;
     }
 
-    constructor(
-        public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken)
-        protected _displayDensityOptions: IDisplayDensityOptions
-    ) {
-        super(_displayDensityOptions, element);
-    }
+    constructor(public element: ElementRef) { }
 
     /**
      * @hidden

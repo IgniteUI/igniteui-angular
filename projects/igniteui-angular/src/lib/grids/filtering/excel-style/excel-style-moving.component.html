@@ -3,25 +3,25 @@
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_moving_header }}
 </header>
 <igx-buttongroup>
-    <button [displayDensity]="esf.displayDensity"
+    <button
         type="button"
         igxButton
         [disabled]="canNotMoveLeft"
         (click)="onMoveButtonClicked(0)">
         <igx-icon>arrow_back</igx-icon>
         <span>
-            {{ esf.displayDensity==='compact'?
+            {{ esfSize === '1'?
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_left_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_left }}
         </span>
     </button>
-    <button [displayDensity]="esf.displayDensity"
+    <button
         type="button"
         igxButton
         [disabled]="canNotMoveRight"
         (click)="onMoveButtonClicked(1)">
         <span>
-            {{ esf.displayDensity==='compact'?
+            {{ esfSize === '1'?
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_right_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_moving_right }}
         </span>

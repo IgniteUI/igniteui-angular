@@ -144,6 +144,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
+        this.enabled = inBaseDimension.enabled;
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }

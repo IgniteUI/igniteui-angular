@@ -1,8 +1,8 @@
 <ng-template #defaultExcelColumnOperations>
     <igx-excel-style-header
-        [showHiding]="displayDensity !== 'comfortable' && !column?.disableHiding"
-        [showPinning]="displayDensity !== 'comfortable' && !column?.disablePinning"
-        [showSelecting]="displayDensity !== 'comfortable' && columnSelectable()"
+        [showHiding]="size !== '3' && !column?.disableHiding"
+        [showPinning]="size !== '3' && !column?.disablePinning"
+        [showSelecting]="size !== '3' && columnSelectable()"
     >
     </igx-excel-style-header>
 
@@ -12,13 +12,13 @@
     <igx-excel-style-moving *ngIf="grid?.moving">
     </igx-excel-style-moving>
 
-    <igx-excel-style-pinning *ngIf="!column?.disablePinning && displayDensity==='comfortable'">
+    <igx-excel-style-pinning *ngIf="!column?.disablePinning && size === '3'">
     </igx-excel-style-pinning>
 
-    <igx-excel-style-hiding *ngIf="!column?.disableHiding && displayDensity==='comfortable'">
+    <igx-excel-style-hiding *ngIf="!column?.disableHiding && size === '3'">
     </igx-excel-style-hiding>
 
-    <igx-excel-style-selecting *ngIf="columnSelectable() && displayDensity==='comfortable'">
+    <igx-excel-style-selecting *ngIf="columnSelectable() && size === '3'">
     </igx-excel-style-selecting>
 </ng-template>
 
@@ -36,8 +36,9 @@
 <article #mainDropdown
     class="igx-excel-filter__menu"
     [ngClass]="{
-        'igx-excel-filter__menu--cosy': displayDensity === 'cosy',
-        'igx-excel-filter__menu--compact': displayDensity === 'compact'
+        'igx-excel-filter__sizing': shouldApplySizes,
+        'igx-excel-filter__menu--cosy': size === '2',
+        'igx-excel-filter__menu--compact': size === '1'
     }"
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)"

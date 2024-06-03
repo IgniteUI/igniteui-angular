@@ -201,8 +201,6 @@ export class IgxCardFooterDirective {
     standalone: true
 })
 export class IgxCardComponent {
-    private static ngAcceptInputType_elevated: boolean | '';
-
     /**
      * Sets/gets the `id` of the card.
      * If not set, `id` will have value `"igx-card-0"`;
@@ -253,15 +251,9 @@ export class IgxCardComponent {
      * let cardElevation = this.card.elevated;
      * ```
      */
-    @Input()
+    @Input({transform: booleanAttribute})
     @HostBinding('class.igx-card--elevated')
-    public get elevated(): boolean {
-        return this._elevated;
-    }
-
-    public set elevated(value: boolean) {
-        this._elevated = (value as any === '') || value;
-    }
+    public elevated = false;
 
     /**
      * Sets the value of the `horizontal` attribute of the card.
@@ -276,12 +268,6 @@ export class IgxCardComponent {
     @HostBinding('class.igx-card--horizontal')
     @Input({ transform: booleanAttribute })
     public horizontal = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _elevated = false;
 }
 
 export const IgxCardActionsLayout = /*@__PURE__*/mkenum({

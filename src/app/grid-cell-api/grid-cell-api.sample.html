@@ -104,7 +104,7 @@
                     </ng-template>
                 </igx-column>
             </igx-column-layout> -->
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -159,7 +159,7 @@
             <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
                 [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -215,7 +215,7 @@
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -270,7 +270,7 @@
         <igx-hierarchical-grid #hGrid [width]="'700px'" [height]="'600px'" [columnSelection]="'single'" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
             <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
             </igx-column>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

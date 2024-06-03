@@ -3,7 +3,6 @@
         <igx-chip
             [id]="expression.fieldName"
             [title]="(expression.fieldName | igxGroupByMeta:grid).title"
-            [displayDensity]="grid.displayDensity"
             [removable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             [draggable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             [disabled]="!(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"

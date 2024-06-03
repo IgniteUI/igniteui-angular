@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../core/density';
 import { AnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';
@@ -38,7 +37,7 @@ describe('IgxTree #treeView', () => {
             mockSelectionService = jasmine.createSpyObj('selectionService',
                 ['register', 'deselectNodesWithNoEvent', 'ensureStateOnNodeDelete', 'selectNodesWithNoEvent']);
             mockElementRef = jasmine.createSpyObj('elementRef', [], {
-                nativeElement: jasmine.createSpyObj('nativeElement', ['focus'], {})
+                nativeElement: document.createElement('div')
             });
             tree?.ngOnDestroy();
             tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef);
@@ -240,11 +239,7 @@ describe('IgxTree #treeView', () => {
                         nodeCollapsing: jasmine.createSpyObj('spy', ['emit']),
                         nodeExpanding: jasmine.createSpyObj('spy', ['emit']),
                         nodeCollapsed: jasmine.createSpyObj('spy', ['emit']),
-                        nodeExpanded: jasmine.createSpyObj('spy', ['emit']),
-                        _displayDensity: DisplayDensity.comfortable,
-                        get displayDensity() {
-                            return this._displayDensity;
-                        }
+                        nodeExpanded: jasmine.createSpyObj('spy', ['emit'])
                     });
                 mockCdr = jasmine.createSpyObj<ChangeDetectorRef>('mockCdr', ['detectChanges', 'markForCheck'], {});
                 mockAnimationService = jasmine.createSpyObj<AnimationService>('mockAB', ['buildAnimation'], {});
@@ -362,18 +357,6 @@ describe('IgxTree #treeView', () => {
                 node.toggle();
                 expect(node.expand).toHaveBeenCalledTimes(1);
                 expect(node.collapse).toHaveBeenCalledTimes(1);
-            });
-            it('Should properly get tree display density token', () => {
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
-                expect(node.isCosy).toBeFalse();
-                expect(node.isCompact).toBeFalse();
-                spyOnProperty(mockTree, 'displayDensity', 'get').and.returnValue(DisplayDensity.cosy);
-                expect(node.isCosy).toBeTrue();
-                expect(node.isCompact).toBeFalse();
-                spyOnProperty(mockTree, 'displayDensity', 'get').and.returnValue(DisplayDensity.compact);
-                expect(node.isCosy).toBeFalse();
-                expect(node.isCompact).toBeTrue();
             });
 
             it('Should have correct path to node, regardless if node has parent or not', () => {

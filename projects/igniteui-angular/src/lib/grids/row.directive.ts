@@ -153,10 +153,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return this.addRowUI ? height : null;
     }
 
-    public get cellHeight() {
-        return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
-    }
-
     /**
      * @hidden
      */

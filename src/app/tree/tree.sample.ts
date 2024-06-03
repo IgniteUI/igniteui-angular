@@ -3,14 +3,29 @@ import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    DisplayDensity,
-    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
-    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxLayoutDirective, IgxSwitchComponent, IgxTreeNodeLinkDirective, IgxTreeExpandIndicatorDirective
+    IgxTreeNodeComponent,
+    IgxTreeSearchResolver,
+    IgxTreeComponent,
+    ITreeNodeTogglingEventArgs,
+    ITreeNodeToggledEventArgs,
+    ITreeNodeSelectionEvent,
+    IgxTreeNode,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxLabelDirective,
+    IgxLayoutDirective, 
+    IgxSwitchComponent,
+    IgxTreeNodeLinkDirective,
+    IgxTreeExpandIndicatorDirective
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 interface CompanyData {
     ID: string;
@@ -44,7 +59,18 @@ interface CompanyData {
         IgxLabelDirective,
         FormsModule,
         IgxSwitchComponent,
-        IgxButtonGroupComponent, IgxTreeComponent, IgxTreeNodeComponent, NgFor, IgxTreeNodeLinkDirective, IgxTreeExpandIndicatorDirective, NgTemplateOutlet, IgxIconComponent, NgIf, AsyncPipe]
+        IgxButtonGroupComponent,
+        IgxTreeComponent, 
+        IgxTreeNodeComponent,
+        NgFor,
+        IgxTreeNodeLinkDirective,
+        IgxTreeExpandIndicatorDirective,
+        NgTemplateOutlet,
+        IgxIconComponent,
+        NgIf,
+        AsyncPipe,
+        SizeSelectorComponent
+    ]
 })
 export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { static: true })
@@ -58,29 +84,6 @@ export class TreeSampleComponent implements AfterViewInit {
     public selectionMode = 'Cascading';
 
     public animationDuration = 400;
-
-    public density: DisplayDensity = DisplayDensity.comfortable;
-
-    public displayDensities: { label: DisplayDensity; selectMode: DisplayDensity; selected: boolean; togglable: boolean }[] = [
-        {
-            label: DisplayDensity.comfortable,
-            selectMode: DisplayDensity.comfortable,
-            selected: this.density === DisplayDensity.comfortable,
-            togglable: false
-        },
-        {
-            label: DisplayDensity.cosy,
-            selectMode: DisplayDensity.cosy,
-            selected: this.density === DisplayDensity.cosy,
-            togglable: false
-        },
-        {
-            label: DisplayDensity.compact,
-            selectMode: DisplayDensity.compact,
-            selected: this.density === DisplayDensity.compact,
-            togglable: false
-        }
-    ];
 
     public data: CompanyData[];
 
@@ -206,10 +209,6 @@ export class TreeSampleComponent implements AfterViewInit {
     }
 
     public toggleSelectionMode() { }
-
-    public changeDensity(args) {
-        this.density = this.displayDensities[args.index].selectMode;
-    }
 
     public addItem() {
         const newArray = [...this.data];

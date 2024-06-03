@@ -3,15 +3,15 @@
         <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"></igx-buttongroup>
     </div>
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <h4 class="sample-title">Primary/Foreign key</h4>
     <igx-tree-grid #grid1 [moving]="true" [data]="data1" primaryKey="employeeID" foreignKey="PID"
         [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees" [batchEditing]="true"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'100%'" [height]="'700px'"
+        [rowSelection]="selectionMode" [width]="'100%'" [height]="'700px'"
         [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -63,9 +63,9 @@
     <h4 class="sample-title">ChildData key</h4>
     <igx-tree-grid [moving]="true" #grid2 [data]="data2" primaryKey="employeeID" childDataKey="employees"
         [batchEditing]="true" [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'700px'"
+        [rowSelection]="selectionMode" [width]="'900px'" [height]="'700px'"
         [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
-        <igx-grid-toolbar [displayDensity]="grid2.displayDensity">
+        <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid2" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
