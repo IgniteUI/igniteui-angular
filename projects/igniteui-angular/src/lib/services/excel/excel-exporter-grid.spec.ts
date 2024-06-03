@@ -1375,6 +1375,18 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportPivotGridData, false);
         });
 
+        it('should export pivot grid that has row headers.', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+            grid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+            await wait(300);
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridDataWithHeaders, false);
+        });
+
         it('should export hierarchical pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();

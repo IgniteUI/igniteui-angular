@@ -238,7 +238,7 @@ A list of the events emitted by the **igx-grid**:
 |`dataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
 |`columnPin`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
 |`columnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
-|`contextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
+|`contextMenu`|Emitted when a cell or row is right clicked. Returns the cell or row object.|
 |`doubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
 |`columnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
 |`groupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|

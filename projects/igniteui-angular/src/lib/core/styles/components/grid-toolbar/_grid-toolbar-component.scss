@@ -53,15 +53,5 @@
         @include e(dd-list){
             @extend %igx-grid-toolbar__dd-list !optional;
         }
-
-        @include m(cosy){
-            @extend %igx-grid-toolbar !optional;
-            @extend %igx-grid-toolbar--cosy !optional;
-        }
-
-        @include m(compact){
-            @extend %igx-grid-toolbar !optional;
-            @extend %igx-grid-toolbar--compact !optional;
-        }
     }
 }

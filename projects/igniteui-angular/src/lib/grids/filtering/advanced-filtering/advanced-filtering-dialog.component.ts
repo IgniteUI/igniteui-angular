@@ -7,7 +7,6 @@ import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
-import { DisplayDensity } from '../../../core/density';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
@@ -76,13 +75,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get displayDensity(): DisplayDensity {
-        return this.grid.displayDensity;
     }
 
     /**

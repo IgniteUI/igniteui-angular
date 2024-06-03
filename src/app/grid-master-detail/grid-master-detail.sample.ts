@@ -1,11 +1,10 @@
 /* eslint-disable max-len */
-import { Component, ViewChild, OnInit, Inject, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions, IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
+import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
 
 
 @Component({
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html',
@@ -13,6 +12,10 @@ import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions, IgxButtonD
     imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-small)`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
 
@@ -22,7 +25,7 @@ export class GridMasterDetailSampleComponent implements OnInit {
     @ViewChild('detailTemplate', {read: TemplateRef, static: true })
     public detailTemplate: TemplateRef<any>;
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
+    constructor() {}
     public ngOnInit(): void {
         this.columns = [
             { dataType: 'string', field: 'ContactName', width: 200 },

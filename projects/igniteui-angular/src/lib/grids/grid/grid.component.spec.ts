@@ -9,7 +9,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { DisplayDensity } from '../../core/density';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -17,7 +16,7 @@ import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, Size } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
@@ -28,6 +27,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
 import { IGridRowEventArgs, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -269,7 +269,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should change displayDensity runtime correctly', fakeAsync(() => {
+        it('should change grid size runtime correctly', async () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[1].hasSummary = true;
@@ -292,9 +292,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(51);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-            grid.displayDensity = 'cosy';
+            setElementSize(grid.nativeElement, Size.Medium)
             grid.summaryRowHeight = null;
-            tick(16);
+            fixture.detectChanges();
+            await wait(32); // needed because of the throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('2');
@@ -303,9 +304,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(41);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-            grid.displayDensity = 'compact';
+            setElementSize(grid.nativeElement, Size.Small)
             grid.summaryRowHeight = undefined;
-            tick(16);
+            fixture.detectChanges();
+            await wait(32); // needed because of the throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('1');
@@ -314,7 +316,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(33);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-        }));
+        });
 
         it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
@@ -1198,19 +1200,21 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
-            display density is changed`, async () => {
+            grid size is changed`, async () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
+            fix.detectChanges();
             expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
-            fix.componentInstance.density = DisplayDensity.compact;
+            setElementSize(fix.componentInstance.grid.nativeElement, Size.Small)
             fix.detectChanges();
-            await wait(100);
+            await wait(32); // needed because of the throttleTime on the resize observer
+            fix.detectChanges();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
@@ -1451,6 +1455,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.componentInstance.initColumnsRows(5, 5);
                 fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
@@ -2082,7 +2087,35 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             expect(grid.rowClick.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowClick.emit).toHaveBeenCalledWith(args);
-        })
+        });
+
+        it('Should emit contextMenu when clicking outside of the columns area', () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            //fix.componentInstance.columns.forEach(c => c.width = '100px');
+            fix.componentInstance.grid.width = '900px';
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.columnList.forEach(c => c.width = '100px');
+            fix.detectChanges();
+            const spy = spyOn(grid.contextMenu, 'emit').and.callThrough();
+            const event = new Event('contextmenu', { bubbles: true });
+            const row = grid.rowList.get(0);
+            const cell = row.cells.get(0);
+            cell.nativeElement.dispatchEvent(event);
+            fix.detectChanges();
+            expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                cell: jasmine.anything()
+            }));
+            spy.calls.reset();
+            row.nativeElement.dispatchEvent(event);
+            fix.detectChanges();
+            expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+                row: jasmine.anything()
+            }));
+        });
 
         it(`Verify that getRowData returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
@@ -2404,7 +2437,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 - grid.footer.nativeElement.offsetHeight
                 - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(30);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
         it('IgxTabs: should initialize a grid with correct height when height = 100%', async () => {
@@ -2422,7 +2455,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const paging = fix.debugElement.query(By.css('igx-page-nav'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(30);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
         it('IgxTabs: should initialize a grid with correct height height = 100% when parent has height', async () => {
@@ -2965,7 +2998,7 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 
 @Component({
     template: `<div>
-        <igx-grid #grid [data]="data" height='300px' [displayDensity]="'compact'" [autoGenerate]="true"
+        <igx-grid #grid [data]="data" height='300px' [style.--ig-size]="1" [autoGenerate]="true"
             >
             <igx-grid-footer>
                 <div style='height:100px;'>
@@ -2983,7 +3016,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
 }
 @Component({
     template: `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+            <igx-grid #grid [data]="data" [autoGenerate]="true">
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
@@ -3030,14 +3063,13 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 }
 
 @Component({
     template: `<div style="height:300px">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+            <igx-grid #grid [data]="data" [autoGenerate]="true">
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
@@ -3047,7 +3079,6 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public override paging = false;
     public override pageSize = 5;
-    public override density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 @Component({
@@ -3378,7 +3409,7 @@ export class IgxGridWithCustomPaginationTemplateComponent {
 
 @Component({
     template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
-        [autoGenerate]="autoGenerate" [displayDensity]="'compact'" [groupingExpressions]="groupingExpressions">
+        [autoGenerate]="autoGenerate" [style.--ig-size]="1" [groupingExpressions]="groupingExpressions">
         <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
     </igx-grid>`,
     standalone: true,

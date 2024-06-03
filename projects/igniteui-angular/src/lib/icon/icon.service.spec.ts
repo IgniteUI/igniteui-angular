@@ -3,7 +3,7 @@ import { IgxIconService } from './icon.service';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('Icon Service', () => {
     configureTestSuite();
@@ -17,9 +17,9 @@ describe('Icon Service', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
-            providers: [IgxIconService]
-        }).compileComponents();
+    imports: [],
+    providers: [IgxIconService, provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
     });
 
     it('should set the default icon set', () => {

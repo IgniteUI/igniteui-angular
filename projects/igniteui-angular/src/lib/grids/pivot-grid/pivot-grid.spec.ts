@@ -19,6 +19,8 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
+import { Size } from '../common/enums';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -511,7 +513,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnDimensions.length).toEqual(0);
         });
 
-        it('should change display density', fakeAsync(() => {
+        it('should change grid size', fakeAsync(() => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const minWidthComf = '80';
             const minWidthSupercompact = '56';
@@ -522,23 +524,23 @@ describe('IgxPivotGrid #pivotGrid', () => {
             tick();
             fixture.detectChanges();
 
-            expect(pivotGrid.displayDensity).toBe('compact')
+            expect(pivotGrid.gridSize).toBe(Size.Small);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightSuperCompact);
+            expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightSuperCompact);
 
             pivotGrid.superCompactMode = false;
             fixture.detectChanges();
-
-            pivotGrid.displayDensity = 'comfortable';
             tick();
+            
+            setElementSize(pivotGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
-            expect(pivotGrid.displayDensity).toBe('comfortable')
+            expect(pivotGrid.gridSize).toBe(Size.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
-            expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
+            expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightComf);
         }));
 
         it('should render correct auto-widths for dimensions with no width', () => {
@@ -589,7 +591,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             fixture.detectChanges();
 
-            // all should take density default min-width (200 for default density) as they exceed the size of the grid
+            // all should take grid size default min-width (200 for default grid size) as they exceed the size of the grid
             const colGroups = pivotGrid.columns.filter(x => x.columnGroup);
             const childCols = pivotGrid.columns.filter(x => !x.columnGroup);
             expect(colGroups.every(x => x.width === '400px')).toBeTrue();
@@ -1931,6 +1933,80 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
                 expect(rowDimension.width).toBe('158px');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+            });
+
+            it('should auto-size row dimension when width is set to auto.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                let rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.width).toBeUndefined();
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
+                fixture.componentInstance.pivotConfigHierarchy = {
+                    columns: [{
+                        memberName: 'Country',
+                        enabled: true
+                    },
+                    ],
+                    rows: [{
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "auto",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }],
+                    values: [
+                        {
+                            member: 'UnitPrice',
+                            aggregate: {
+                                aggregator: IgxPivotNumericAggregate.sum,
+                                key: 'SUM',
+                                label: 'Sum',
+                            },
+                            enabled: true,
+                            dataType: 'currency'
+                        }
+                    ],
+                    filters: []
+                };
+
+                fixture.detectChanges();
+                rowDimension = pivotGrid.pivotConfiguration.rows[0];
+                expect(rowDimension.autoWidth).toBe(158);
+                expect(rowDimension.width).toBe('auto');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+            });
+
+            it ('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.data = [];
+                fixture.detectChanges();
+
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+                pivotGrid.autoGenerateConfig = true;
+                fixture.detectChanges();
+                expect(pivotGrid.pivotConfiguration).toEqual({ rows: null, columns: null, values: null, filters: null });
+
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                    Country: 'Bulgaria', Date: new Date('01/01/2021'), UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                // only date is row dimension and is enabled by default
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                // all other are disabled column dimensions.
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['ProductCategory', 'SellerName', 'Country']);
+                expect(pivotGrid.pivotConfiguration.columns.map(x => x.enabled)).toEqual([false, false, false]);
+                // values are all enabled.
+                expect(pivotGrid.values.length).toEqual(2);
+                expect(pivotGrid.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+                expect(pivotGrid.values.map(x => x.enabled)).toEqual([true, true]);
             });
         });
     });

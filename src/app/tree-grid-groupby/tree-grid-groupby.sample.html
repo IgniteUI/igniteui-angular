@@ -1,6 +1,6 @@
 <div class="sample-column">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
         <igx-switch *ngIf="groupArea" [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
         <button igxButton="contained" (click)="print()" >Show Expressions</button>
     </div>
@@ -11,7 +11,6 @@
         selectionType="multi"
         [childDataKey]="childDataKey"
         [rowSelection]="selectionMode"
-        [displayDensity]="density"
         [width]="'1200px'"
         [height]="'700px'"
         [sortStrategy]="sorting"
@@ -20,7 +19,7 @@
         [filterMode]="'excelStyleFilter'"
         (cellEditDone)="cellEditDone()"
         [sortingOptions]="{mode: 'single'}">
-        <!-- <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <!-- <igx-grid-toolbar>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
             </igx-grid-toolbar-actions>

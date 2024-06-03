@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
+import { Component, HostBinding, ViewChild } from '@angular/core';
+import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -9,6 +9,10 @@ import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDire
     imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class GridColumnGroupsSampleComponent {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public collapse = true;
@@ -49,18 +53,18 @@ export class GridColumnGroupsSampleComponent {
     ];
     /* eslint-enable max-len */
 
-    public density: DisplayDensity = DisplayDensity.compact;
-    public displayDensities;
+    public size : "large" | "medium" | "small" = "small";
+    public sizes;
 
     constructor() {
         for (const item of this.data) {
             item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
         }
         this.selectionMode = GridSelectionMode.none;
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === "large", togglable: true },
+            { label: 'medium', selected: this.size === "medium", togglable: true },
+            { label: 'small', selected: this.size === "small", togglable: true }
         ];
     }
 
@@ -107,6 +111,6 @@ export class GridColumnGroupsSampleComponent {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 }

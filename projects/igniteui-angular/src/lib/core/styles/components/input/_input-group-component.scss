@@ -137,6 +137,10 @@
             @extend %textarea-group--outlined !optional;
         }
 
+        @include mx(textarea-group, box) {
+            @extend %textarea-group--box !optional;
+        }
+
         @include mx(textarea-group, focused) {
             @include e(label) {
                 @extend %textarea-group-label--focused !optional;
