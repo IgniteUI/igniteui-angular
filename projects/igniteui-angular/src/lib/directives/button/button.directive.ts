@@ -6,12 +6,9 @@ import {
     Input,
     Output,
     Renderer2,
-    Optional,
-    Inject,
     booleanAttribute,
     AfterContentInit
 } from '@angular/core';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
@@ -118,11 +115,9 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
 
     constructor(
         public override element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken)
-        protected override _displayDensityOptions: IDisplayDensityOptions,
         private _renderer: Renderer2,
     ) {
-        super(element, _displayDensityOptions);
+        super(element);
     }
 
     public ngAfterContentInit() {
@@ -197,15 +192,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     @HostBinding('class.igx-button--fab')
     public get fab(): boolean {
         return this._type === IgxButtonType.FAB;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
     }
 
     /**

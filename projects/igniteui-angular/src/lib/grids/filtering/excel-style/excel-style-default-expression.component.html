@@ -1,6 +1,5 @@
 <igx-select #dropdownConditions
         type="box"
-        [displayDensity]="displayDensity"
         [placeholder]="conditionsPlaceholder"
         (selectionChanging)="onConditionsChanged($event)"
         [overlaySettings]="dropDownOverlaySettings">
@@ -16,7 +15,7 @@
     </igx-select-item>
 </igx-select>
 
-<igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity">
+<igx-input-group #inputGroupValues type="box">
     <input
         #inputValues
         igxInput
@@ -36,7 +35,7 @@
 
 <igx-buttongroup #logicOperatorButtonGroup
     *ngIf="!isLast">
-    <span igxButton [displayDensity]="displayDensity"
+    <span igxButton
         tabindex="0"
         #andButton
         (keydown)="onLogicOperatorKeyDown($event, 0)"
@@ -46,7 +45,7 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton [displayDensity]="displayDensity"
+    <span igxButton
         tabindex="0"
         #orButton
         (keydown)="onLogicOperatorKeyDown($event, 1)"

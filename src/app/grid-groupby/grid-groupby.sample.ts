@@ -1,11 +1,10 @@
 /* eslint-disable max-len */
-import { Component, ViewChild, OnInit, Inject } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DefaultSortingStrategy, DisplayDensity, DisplayDensityToken, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IDisplayDensityOptions, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
+import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
 
 @Component({
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html',
@@ -13,6 +12,10 @@ import { DefaultSortingStrategy, DisplayDensity, DisplayDensityToken, GridSummar
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupBySampleComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;
 
@@ -29,9 +32,9 @@ export class GridGroupBySampleComponent implements OnInit {
     public position: GridSummaryPosition = GridSummaryPosition.top;
     public sortingOp: ISortingOptions = { mode: 'multiple' };
 
-    private _density: DisplayDensity = DisplayDensity.cosy;
+    private size = 'medium';
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) { }
+    constructor() { }
 
     public ngOnInit(): void {
         for (let i = 0; i < 2500; i++) {
@@ -93,13 +96,6 @@ export class GridGroupBySampleComponent implements OnInit {
             { Salary: 4900, ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
     }
-    public get density(): DisplayDensity {
-        return this._density;
-    }
-    public set density(value) {
-        this._density = value;
-        this.grid1.cdr.detectChanges();
-    }
 
     public groupBy(name: string) {
         const expressions = this.grid1.groupingExpressions;
@@ -129,10 +125,10 @@ export class GridGroupBySampleComponent implements OnInit {
         this.position = this.position === GridSummaryPosition.top ? GridSummaryPosition.bottom : GridSummaryPosition.top;
     }
     public toggleDensity() {
-        switch (this.displayDensityOptions.displayDensity) {
-            case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
-            case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
-            case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
+        switch (this.size) {
+            case "large": this.size = "small"; break;
+            case "small": this.size = "medium"; break;
+            case "medium": this.size = "large"; break;
         }
     }
     public onRowSelection(event) {
