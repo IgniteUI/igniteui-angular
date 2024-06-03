@@ -12,7 +12,6 @@ import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { ExpressionUI } from './common';
@@ -58,9 +57,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     @Input()
     public grid: any;
-
-    @Input()
-    public displayDensity: DisplayDensity;
 
     @Output()
     public expressionRemoved = new EventEmitter<ExpressionUI>();

@@ -2,11 +2,7 @@
     <section class="select-sample__section">
         <h1 class="select-sample__title">Select with ngModel, set items OnInit</h1>
 
-        <igx-buttongroup (selected)="setDensity($event)">
-            <button igxButton value="comfortable" [selected]="true">Comfortable</button>
-            <button igxButton value="cosy">Cosy</button>
-            <button igxButton value="compact">Compact</button>
-        </igx-buttongroup>
+        <size-selector #sizeSelector></size-selector>
 
         <div class="select-sample__row">
             <button igxButton="contained" (click)="handleOpen()">Open</button>
@@ -15,7 +11,7 @@
             <button igxButton (click)="openCustomOverlaySettings()">open Custom Overlay</button>
         </div>
 
-        <igx-select #displayDensitySelect
+        <igx-select #sizeSelect
                     required
                     [placeholder]="'Pick One'"
                     [(ngModel)]="value"
@@ -27,7 +23,7 @@
                     (closed)="testOnClosed()"
                     (selectionChanging)="testOnSelection($event)"
                     [disabled]="isDisabled"
-                    [displayDensity]="'comfortable'">
+                    [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <label igxLabel>Sample Label</label>
             <igx-prefix igxPrefix>
                 <igx-icon>alarm</igx-icon>

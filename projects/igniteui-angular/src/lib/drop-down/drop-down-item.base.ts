@@ -97,12 +97,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         return !this.isHeader;
     }
 
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get size() {
-        return this.dropDown.getComponentSizeStyles();
-    }
-
     /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *

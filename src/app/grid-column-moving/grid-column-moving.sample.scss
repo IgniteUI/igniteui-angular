@@ -30,3 +30,7 @@ igx-buttongroup {
     line-height: initial;
     font-size: 1em;
 }
+
+.size {
+    --ig-size: var(--ig-size-small);
+}
