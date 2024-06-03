@@ -5,8 +5,6 @@ import {
     Input,
     Renderer2,
     ViewContainerRef,
-    Optional,
-    Inject,
     ContentChildren,
     QueryList,
     ViewChild,
@@ -17,7 +15,6 @@ import {
     ElementRef,
     booleanAttribute
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
@@ -82,7 +79,7 @@ export class IgxActionStripMenuItemDirective {
     ],
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-export class IgxActionStripComponent extends DisplayDensityBase implements IgxActionStripToken, AfterContentInit, AfterViewInit {
+export class IgxActionStripComponent implements IgxActionStripToken, AfterContentInit, AfterViewInit {
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -184,14 +181,10 @@ export class IgxActionStripComponent extends DisplayDensityBase implements IgxAc
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         protected el: ElementRef,
-        @Optional() @Inject(DisplayDensityToken)
-        protected _displayDensityOptions: IDisplayDensityOptions,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
         protected _iconService: IgxIconService,
     ) {
-        super(_displayDensityOptions, el);
-
         this._iconService.addIconRef('more_vert', 'default', {
             name: 'more_vert',
             family: 'material',
@@ -231,11 +224,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements IgxAc
      */
     @HostBinding('class.igx-action-strip')
     protected hostClass = 'igx-action-strip';
-
-    @HostBinding('style.--component-size')
-    protected get componentSize() {
-        return this.getComponentSizeStyles();
-    }
 
     /**
      * @hidden

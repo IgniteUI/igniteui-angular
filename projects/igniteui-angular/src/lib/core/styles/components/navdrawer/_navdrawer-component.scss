@@ -13,6 +13,14 @@
 
         @extend %navdrawer-display !optional;
 
+        @include m(pinned) {
+            @extend %navdrawer-display-pinned !optional;
+        }
+
+        @include mx(mini, pinned) {
+            @extend %navdrawer-display-mini-pinned !optional;
+        }
+
         // Main aside element
         @include e(aside) {
             @extend %aside !optional;

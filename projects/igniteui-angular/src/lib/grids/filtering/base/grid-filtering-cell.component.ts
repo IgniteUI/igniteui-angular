@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxFilteringService } from '../grid-filtering.service';
-import { DisplayDensity } from '../../../core/density';
 import { ExpressionUI } from '../excel-style/common';
 import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
@@ -22,6 +21,7 @@ import { IgxBadgeComponent } from '../../../badge/badge.component';
 import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
+import { Size } from '../../common/enums';
 import { IgxIconService } from '../../../icon/icon.service';
 
 /**
@@ -72,19 +72,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostBinding('class')
     public get styleClasses(): string {
-        let classes = this.column && this.column.selected ?
+        return this.column && this.column.selected ?
             'igx-grid__filtering-cell--selected' :
             'igx-grid__filtering-cell';
-
-        switch (this.column.grid.displayDensity) {
-            case DisplayDensity.compact:
-                classes = classes + ' igx-grid__filtering-cell--compact';
-                break;
-            case DisplayDensity.cosy:
-                classes = classes + ' igx-grid__filtering-cell--cosy';
-                break;
-        }
-        return classes;
     }
 
     public expressionsList: ExpressionUI[];
@@ -130,10 +120,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     public updateFilterCellArea() {
         this.expressionsList = this.filteringService.getExpressions(this.column.field);
         this.updateVisibleFilters();
-    }
-
-    public get displayDensity(): DisplayDensity {
-        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
     public get template(): TemplateRef<any> {
@@ -207,6 +193,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             [this.baseClass]: !this.isMoreIconHidden(),
             [`${this.baseClass}--hidden`]: this.isMoreIconHidden()
         };
+    }
+
+    protected get filteringElementsSize(): Size {
+        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
     }
 
     private removeExpression(indexToRemove: number) {

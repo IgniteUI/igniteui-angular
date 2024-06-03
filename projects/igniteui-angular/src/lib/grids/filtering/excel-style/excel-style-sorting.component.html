@@ -5,13 +5,12 @@
 <igx-buttongroup #sortButtonGroup>
     <button type="button"
         igxButton
-        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (buttonSelected)="onSortButtonClicked(1)"
         >
         <igx-icon family="default" name="arrow_upward"></igx-icon>
         <span>
-            {{ esf.displayDensity==='compact'?
+            {{ esfSize === '1'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc  }}
         </span>
@@ -19,13 +18,12 @@
 
     <button type="button"
         igxButton
-        [displayDensity]="esf.displayDensity"
         [attr.data-togglable]="true"
         (buttonSelected)="onSortButtonClicked(2)"
         >
         <igx-icon family="default" name="arrow_downward"></igx-icon>
         <span>
-            {{ esf.displayDensity==='compact'?
+            {{ esfSize === '1' ?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc
         }}

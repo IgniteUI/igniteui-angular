@@ -1,5 +1,10 @@
 .sample-buttons {
     margin-top: 24px;
+
+    & > button,
+    & > igx-drop-down {
+        --ig-size: var(--ig-size-large);
+    }
 }
 
 [igxButton] {

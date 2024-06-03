@@ -23,7 +23,6 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
-import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { ExpressionUI } from './common';
 import { ColumnType } from '../../common/grid.interface';
@@ -58,12 +57,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayComponentId: string;
-
-    /**
-     * @deprecated since version 16.1.0. Use the `--ig-size` CSS custom property instead.
-     */
-    @Input()
-    public displayDensity: DisplayDensity;
 
     @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;

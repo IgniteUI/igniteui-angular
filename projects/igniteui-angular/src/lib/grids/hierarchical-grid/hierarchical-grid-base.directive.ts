@@ -21,7 +21,6 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -161,7 +160,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
@@ -186,7 +184,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             textHighlightService,
             overlayService,
             summaryService,
-            _displayDensityOptions,
             localeId,
             platform,
             _diTransactions,

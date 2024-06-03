@@ -106,7 +106,6 @@ export * from './lib/query-builder/public_api';
  */
 export * from './lib/services/public_api';
 export * from './lib/core/dates';
-export * from './lib/core/density';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { GridSelectionRange } from './lib/grids/common/types';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';

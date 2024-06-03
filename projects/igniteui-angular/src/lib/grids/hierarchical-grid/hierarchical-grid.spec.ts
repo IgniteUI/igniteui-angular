@@ -8,10 +8,9 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, Size } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { NgFor, NgIf } from '@angular/common';
@@ -23,6 +22,7 @@ import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-sty
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
 import { getComponentSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -390,26 +390,26 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGridSecondRow.inEditMode).toBe(true);
         });
 
-        it('should render correctly when display density is changed', () => {
+        it('should render correctly when grid size is changed', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+            expect(hierarchicalGrid.gridSize).toEqual(Size.Large);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             fixture.detectChanges();
 
-            expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+            expect(childGrid.gridSize).toBe(Size.Medium);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             fixture.detectChanges();
 
-            expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+            expect(childGrid.gridSize).toBe(Size.Small);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 

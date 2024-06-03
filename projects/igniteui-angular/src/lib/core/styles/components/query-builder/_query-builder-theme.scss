@@ -216,6 +216,10 @@
         }
 
         > igx-chip {
+            @container style(--ig-size: 1) {
+                --ig-size: 2;
+            }
+
             @if $variant != 'indigo-design' {
                 .igx-chip__item {
                     border-block: none;
@@ -289,6 +293,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        igx-input-group {
+            --ig-size: 1;
+        }
 
         igx-select + igx-select,
         igx-select + igx-input-group,

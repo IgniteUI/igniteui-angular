@@ -63,6 +63,11 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
         }
     }
 
+    protected get esfSize(): string {
+        const esf = this.esf as any;
+        return esf.size;
+    }
+
     private updateSelectedButtons(fieldName: string) {
         const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 

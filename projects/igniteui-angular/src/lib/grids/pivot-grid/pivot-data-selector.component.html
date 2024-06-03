@@ -1,5 +1,5 @@
 <div class="igx-pivot-data-selector__filter">
-    <igx-input-group type="box" [displayDensity]="displayDensity">
+    <igx-input-group type="box">
         <igx-icon family="default" name="search" igxPrefix></igx-icon>
         <input
             #input
@@ -9,7 +9,7 @@
             autocomplete="off"
         />
     </igx-input-group>
-    <igx-list [displayDensity]="displayDensity">
+    <igx-list>
         <igx-list-item
             *ngFor="
                 let item of dims
@@ -74,7 +74,6 @@
         >
             <igx-list
                 *ngIf="this.grid && this.grid[panel.dataKey].length > 0"
-                [displayDensity]="displayDensity"
             >
                 <igx-list-item
                     igxDrop

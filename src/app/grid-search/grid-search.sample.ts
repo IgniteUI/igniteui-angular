@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { DisplayDensity, GridSelectionMode, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular';
+import { GridSelectionMode, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 
 @Component({
@@ -16,20 +16,24 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
 })
 
 export class GridSearchComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
-    public displayDensities;
-    public density: DisplayDensity = 'comfortable';
+    public sizes;
+    public size = 'large';
     public selectionMode;
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
 
         this.columns = [
@@ -51,7 +55,7 @@ export class GridSearchComponent implements OnInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public toggleColumn(name: string) {

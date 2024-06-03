@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgFor, JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, DisplayDensity, DisplayDensityToken, IChangeCheckboxEventArgs } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
 
 
 @Component({
@@ -12,11 +12,7 @@ import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePi
         {
             provide: IGX_INPUT_GROUP_TYPE,
             useValue: 'border'
-        },
-        {
-            provide: DisplayDensityToken,
-            useFactory: () => ({ displayDensity: DisplayDensity.cosy })
-        },
+        }
     ],
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]

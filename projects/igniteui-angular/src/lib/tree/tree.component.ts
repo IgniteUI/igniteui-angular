@@ -1,12 +1,26 @@
 import {
-    Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject, booleanAttribute
+    Component,
+    QueryList,
+    Input,
+    Output,
+    EventEmitter,
+    ContentChild,
+    Directive,
+    TemplateRef,
+    OnInit,
+    AfterViewInit,
+    ContentChildren,
+    OnDestroy,
+    HostBinding,
+    ElementRef,
+    booleanAttribute,
+    Optional,
+    Inject
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, throttleTime } from 'rxjs/operators';
 
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
     IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
@@ -17,6 +31,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { resizeObservable } from '../core/utils';
 import { IgxIconService } from '../icon/icon.service';
 
 /**
@@ -81,7 +96,7 @@ export class IgxTreeExpandIndicatorDirective {
     ],
     standalone: true
 })
-export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -303,6 +318,9 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     /** @hidden @internal */
     public forceSelect = [];
 
+    /** @hidden @internal */
+    public resizeNotify = new Subject<void>();
+
     private _selection: IgxTreeSelectionType = IgxTreeSelectionType.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
@@ -312,11 +330,8 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
-        @Optional() @Inject(DisplayDensityToken)
-        protected _displayDensityOptions?: IDisplayDensityOptions,
-        @Optional() @Inject(IgxIconService) iconService?: IgxIconService
+        @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
     ) {
-        super(_displayDensityOptions, element);
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
@@ -434,8 +449,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     }
 
     /** @hidden @internal */
-    public override ngOnInit() {
-        super.ngOnInit();
+    public ngOnInit() {
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);
         });
@@ -443,12 +457,16 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
             this.expandToNode(this.navService.activeNode);
             this.scrollNodeIntoView(node?.header?.nativeElement);
         });
-        this.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.subToCollapsing();
+        this.resizeNotify.pipe(
+            throttleTime(40, null, { trailing: true }),
+            takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
             requestAnimationFrame(() => {
                 this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
             });
         });
-        this.subToCollapsing();
     }
 
     /** @hidden @internal */
@@ -458,6 +476,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         });
         this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
         this.subToChanges();
+        resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
     }
 
     /** @hidden @internal */

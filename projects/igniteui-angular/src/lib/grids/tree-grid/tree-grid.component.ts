@@ -54,7 +54,6 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
@@ -443,16 +442,36 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
-            overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions, iconService);
+        super(
+            validationService,
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            _elementRef,
+            _zone,
+            document,
+            cdr,
+            differs,
+            viewRef,
+            injector,
+            envInjector,
+            navigation,
+            filteringService,
+            textHighlightService,
+            overlayService,
+            summaryService,
+            localeId,
+            platform,
+            _diTransactions,
+            iconService
+        );
     }
 
     /**

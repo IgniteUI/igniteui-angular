@@ -10,19 +10,19 @@ import {
     ViewChild,
     Renderer2,
     TemplateRef,
-    Inject,
-    Optional,
     OnDestroy,
-    booleanAttribute
+    booleanAttribute,
+    OnInit,
+    Inject
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgIf, DOCUMENT } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { Size } from '../grids/common/enums';
 import { IgxIconService } from '../icon/icon.service';
 
 export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
@@ -87,7 +87,7 @@ let CHIP_ID = 0;
     standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
+export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Sets/gets the variant of the chip.
@@ -517,15 +517,6 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.--component-size')
-    public get componentSize(): string {
-        return this.getComponentSizeStyles();
-    }
-
-    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -585,21 +576,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get ghostStyles() {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-small))',
-                };
-            case DisplayDensity.cosy:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-medium))',
-                };
-            case DisplayDensity.comfortable:
-            default:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-large))',
-                };
-        }
+        return { '--ig-size': `${this.chipSize}` };
     }
 
     /** @hidden @internal */
@@ -619,10 +596,14 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      */
     public destroy$ = new Subject<void>();
 
+    protected get chipSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
+    }
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
+    protected computedStyles;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
     private _icons = [
         {
@@ -647,10 +628,8 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
         public cdr: ChangeDetectorRef,
         private ref: ElementRef<HTMLElement>,
         private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken)
-        protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) public document: any,
         protected iconService: IgxIconService) {
-        super(_displayDensityOptions, ref);
 
         for (const icon of this._icons) {
             iconService.addIconRef(icon.name, icon.family, icon.ref);
@@ -953,6 +932,10 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
                 });
             }
         }
+    }
+
+    public ngOnInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
     }
 
     public ngOnDestroy(): void {
