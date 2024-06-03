@@ -6,7 +6,6 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from '../core/density';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -20,7 +19,7 @@ import { getComponentSize } from '../core/utils';
             <igx-chip #chipElem *ngFor="let chip of chipList" class="custom"
             [id]="chip.id" [draggable]="chip.draggable"
             [removable]="chip.removable" [selectable]="chip.selectable"
-            [displayDensity]="chip.density" (remove)="chipRemoved($event)">
+            [style]="'--ig-size: var(' + chip.chipSize + ')'" (remove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix>drag_indicator</igx-icon>
             </igx-chip>
@@ -54,9 +53,9 @@ class TestChipComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
-        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: 'cosy' }
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-large' },
+        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-small' },
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-medium' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -172,36 +171,6 @@ describe('IgxChip', () => {
             expect(firstChipIconName).toContain('drag_indicator');
         });
 
-        it('should make chip comfortable when density is not set or it is set to comfortable', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const firstComponent = components[0];
-            const secondComponent = components[1];
-
-            expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-            expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-
-            expect(getComponentSize(firstComponent.nativeElement)).toEqual('3');
-            expect(getComponentSize(secondComponent.nativeElement)).toEqual('3');
-        });
-
-        it('should make chip compact when density is set to compact', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const thirdComponent = components[2];
-
-            expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
-
-            expect(getComponentSize(thirdComponent.nativeElement)).toEqual('1');
-        });
-
-        it('should make chip cosy when density is set to cosy', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const fourthComponent = components[3];
-
-            expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
-
-            expect(getComponentSize(fourthComponent.nativeElement)).toEqual('2');
-        });
-
         it('should set correctly color of chip when color is set through code', () => {
             const chipColor = 'rgb(255, 0, 0)';
 
@@ -297,7 +266,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should affect the ghostElement density when chip has it set to compact', () => {
+        it('should affect the ghostElement size when chip has it set to compact', () => {
             const thirdChip = fix.componentInstance.chips.toArray()[2];
             const thirdChipElem = thirdChip.chipArea.nativeElement;
 

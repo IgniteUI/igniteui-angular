@@ -9,9 +9,6 @@ import {
     OnDestroy, Optional, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import {
-    DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
-} from '../core/density';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { mkenum, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -47,7 +44,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -157,12 +154,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._filled || (this.input && this.input.value);
     }
 
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
-
     /** @hidden */
     @HostBinding('class.igx-input-group--textarea-group')
     public get textAreaClass(): boolean {
@@ -228,9 +219,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     constructor(
         public element: ElementRef<HTMLElement>,
         @Optional()
-        @Inject(DisplayDensityToken)
-        _displayDensityOptions: IDisplayDensityOptions,
-        @Optional()
         @Inject(IGX_INPUT_GROUP_TYPE)
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
@@ -238,8 +226,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef
     ) {
-        super(_displayDensityOptions, element);
-
         this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;
             this.cdr.detectChanges();
