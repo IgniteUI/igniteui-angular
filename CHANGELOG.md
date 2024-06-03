@@ -24,6 +24,11 @@ All notable changes for each version of this project will be documented in this 
     - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
+    
+### General
+- `IgxSimpleCombo`
+    - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
+    
 
 ## 17.1.0
 ### New Features
