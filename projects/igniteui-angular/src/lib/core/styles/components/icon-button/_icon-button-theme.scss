@@ -281,10 +281,6 @@
         border: rem(1px) solid var-get($contained-theme, 'border-color');
         border-radius: var-get($contained-theme, 'border-radius');
 
-        @if ($variant == 'material') {
-            border: rem(1px) solid var-get($contained-theme, 'border-color');
-        }
-
         &:hover {
             background: var-get($contained-theme, 'hover-background');
             color: var-get($contained-theme, 'hover-foreground');
