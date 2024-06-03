@@ -100,12 +100,23 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             }
 
             const content = cssBuffer.toString('utf-8');
-            const newContent = `
+            let newContent = `
 // Specifies large size for all components to match the previous defaults
 // This may not be needed for your project. Please consult https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide for more details.
 :root {
     --ig-size: var(--ig-size-large);
-}\n` + content;
+}\n`;
+
+            const lastUse = content.lastIndexOf('@use');
+            const lastForward = content.lastIndexOf('@forward');
+            if (lastUse > -1 || lastForward > -1) {
+                const lastLinePos = Math.max(lastForward, lastUse);
+                const fragment = content.substring(lastLinePos);
+                const insertPos = fragment.indexOf(';') + lastLinePos + 1;
+                newContent = content.substring(0, insertPos) + newContent + content.substring(insertPos + 1);
+            } else {
+                newContent = newContent + content;
+            }
 
             // Write the new content to the CSS file
             host.overwrite(stylesPath, newContent);

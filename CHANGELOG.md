@@ -36,6 +36,10 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
 
+### General
+- `IgxSimpleCombo`
+    - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
+
 ## 17.2.0
 ### New Features
 - `IgxAvatar`
