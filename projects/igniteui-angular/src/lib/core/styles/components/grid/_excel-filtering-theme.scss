@@ -105,8 +105,16 @@
                 color($color: 'secondary', $variant: 500)
             )};
             --item-border-color: transparent;
+            --item-hover-border-color: transparent;
+            --item-focused-border-color: #{if(
+                $variant == 'fluent',
+                color($color: 'gray', $variant: 700),
+                transparent
+            )};
             --item-selected-border-color: transparent;
+            --item-selected-hover-border-color: transparent;
             --item-disabled-border: transparent;
+            --disabled-selected-border-color: transparent;
         }
 
         @include tree(tree-theme(
