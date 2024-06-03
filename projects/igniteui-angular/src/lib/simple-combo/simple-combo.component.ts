@@ -471,10 +471,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             cancel: false
         };
         if (args.newSelection !== args.oldSelection) {
-            console.log('1')
             this.selectionChanging.emit(args);
         } else if (this._updateInput && newSelection.size === 0 && this._previousSelection.selectedItem !== '') {
-            console.log('w')
             args.oldValue = this._previousSelection.selectedItem;
             args.oldSelection = this._previousSelection.selection;
             this.selectionChanging.emit(args);
