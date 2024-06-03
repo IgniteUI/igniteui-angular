@@ -14,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
     - Added templatable row dimension headers displayed on the top, above all row headers.
     - Replace the `showPivotConfigurationUI` property with `pivotUI` property, adding ability now to enable/disable the configuration UI and/or the new row dimension headers.
     - Added `sortable` property for each IPivotDimension.
+- `IgxOverlayService`, `IgxToggleDirective`:
+    - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
+
 ### Changes
 - With the removal of the Display Density token, components now get their default sizes from the theme. Default sizes have changed for most components, with it now being medium (previously large). Here's an exhaustive list of all sizable components and their default sizes by theme:
     - `Avatar` - Small (All Themes)
@@ -158,8 +161,6 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxButtonGroup`:
     - Reverted cancellable on `selected` and `deselected` events (added in 15.1.24) as it was breaking firing order and related handling.
-- `IgxOverlayService`:
-    - **Breaking Change** The `setOffset` function now directly sets the specified values instead of incrementing them.
 
 ## 16.1.4
 ### New Features

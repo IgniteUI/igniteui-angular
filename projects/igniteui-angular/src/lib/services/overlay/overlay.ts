@@ -32,6 +32,7 @@ import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     AbsolutePosition,
     HorizontalAlignment,
+    OffsetMode,
     OverlayAnimationEventArgs,
     OverlayCancelableEventArgs,
     OverlayClosingEventArgs,
@@ -42,8 +43,7 @@ import {
     PositionSettings,
     RelativePosition,
     RelativePositionStrategy,
-    VerticalAlignment,
-    OffsetMode
+    VerticalAlignment
 } from './utilities';
 import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
 
@@ -507,12 +507,16 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
-        if (offsetMode === OffsetMode.Set) {
-            info.transformX = deltaX;
-            info.transformY = deltaY;
-        } else {
-            info.transformX += deltaX;
-            info.transformY += deltaY;
+        switch (offsetMode) {
+            case OffsetMode.Set:
+                info.transformX = deltaX;
+                info.transformY = deltaY;
+                break;
+            case OffsetMode.Add:
+            default:
+                info.transformX += deltaX;
+                info.transformY += deltaY;
+                break;
         }
 
         const transformX = info.transformX;
