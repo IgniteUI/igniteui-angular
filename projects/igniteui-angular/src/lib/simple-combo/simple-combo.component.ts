@@ -96,6 +96,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private _collapsing = false;
 
+    private _previousSelection = '';
+
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this._filteredData;
@@ -257,6 +259,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override handleInputChange(event?: any): void {
+        if (this.selectedItem) {
+            this._previousSelection = this.selectedItem;
+        }
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
@@ -441,6 +446,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         };
         if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
+        } else if (this._updateInput && newSelection.size === 0 && this._previousSelection !== '') {
+            args.oldSelection = this._previousSelection;
+            this.selectionChanging.emit(args);
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
@@ -459,7 +467,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newSelectionAsArray, false);
+        } else if (args.cancel) {
+            if (this._updateInput && this._previousSelection !== '') {
+                this.selectionService.select_items(this.id, [this._previousSelection], true);
+                this._value = [this._previousSelection];
+            }
         }
+        this._previousSelection = '';
     }
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]): string {

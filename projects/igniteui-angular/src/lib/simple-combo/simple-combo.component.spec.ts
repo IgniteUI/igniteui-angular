@@ -1525,6 +1525,38 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)
         });
+
+        it('should emit selectionChanging event when input value changes and input loses focus', () => {
+            spyOn(combo.selectionChanging, 'emit').and.callThrough();
+            fixture.detectChanges();
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                newSelection: "Connecticut",
+                oldSelection: undefined,
+                displayText: 'Connecticut',
+                owner: combo,
+                cancel: false
+            });
+
+            combo.handleInputChange('z');
+            fixture.detectChanges();
+
+            combo.onBlur();
+            fixture.detectChanges();
+
+            expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
+            expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldSelection: "Connecticut",
+                newSelection: undefined,
+                owner: combo,
+                displayText: "",
+                cancel: false
+            });
+        });
     });
 
     describe('Display density', () => {
