@@ -1,7 +1,7 @@
 import { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
 
-const version = "17.2.5";
+const version = "17.2.6";
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(

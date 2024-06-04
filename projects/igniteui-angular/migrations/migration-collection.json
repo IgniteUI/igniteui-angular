@@ -188,9 +188,9 @@
             "factory": "./update-17_2_3"
         },
         "migration-38": {
-            "version": "17.2.5",
-            "description": "Updates Ignite UI for Angular from v17.2.3 to v17.2.5",
-            "factory": "./update-17_2_5"
+            "version": "17.2.6",
+            "description": "Updates Ignite UI for Angular from v17.2.3 to v17.2.6",
+            "factory": "./update-17_2_6"
         }
     }
 }
