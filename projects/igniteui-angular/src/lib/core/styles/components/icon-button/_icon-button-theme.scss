@@ -242,7 +242,7 @@
         }
     }
 
-    [igxIconButton="flat"].igx-button--focused {
+    [igxIconButton='flat'].igx-button--focused {
         background: var-get($flat-theme, 'focus-background');
         color: var-get($flat-theme, 'focus-foreground');
 
@@ -377,7 +377,7 @@
         }
     }
 
-    [igxIconButton="outlined"].igx-button--focused {
+    [igxIconButton='outlined'].igx-button--focused {
         background: var-get($outlined-theme, 'focus-background');
         color: var-get($outlined-theme, 'focus-foreground');
 
