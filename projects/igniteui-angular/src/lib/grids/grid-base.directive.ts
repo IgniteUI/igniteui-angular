@@ -7643,7 +7643,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height')) || this.defaultRowHeight;
         }
     }
 
