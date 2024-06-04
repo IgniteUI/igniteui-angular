@@ -256,7 +256,7 @@ describe('igxOverlay', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
             mockElement.parentNode = mockElement;
-            mockElementRef = { nativeElement: mockElement };
+            mockElementRef = new ElementRef(mockElement);
             mockApplicationRef = { attachView: () => { }, detachView: () => { } };
             mockAnimationBuilder = {};
             mockDocument = {

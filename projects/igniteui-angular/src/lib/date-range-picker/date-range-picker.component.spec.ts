@@ -249,15 +249,6 @@ describe('IgxDateRangePicker', () => {
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
-            dateRange.open({
-                closeOnOutsideClick: true,
-                modal: false,
-                target: dateRange.element.nativeElement,
-                positionStrategy: new AutoPositionStrategy({
-                    openAnimation: null,
-                    closeAnimation: null
-                })
-            });
             (dateRange as any).updateCalendar();
             expect(mockCalendar.disabledDates.length).toEqual(2);
             expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
