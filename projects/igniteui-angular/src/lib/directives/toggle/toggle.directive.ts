@@ -19,7 +19,7 @@ import { filter, first, takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
-import { OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
+import { OffsetMode, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 
 export interface ToggleViewEventArgs extends IBaseEventArgs {
@@ -318,10 +318,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Offsets the content along the corresponding axis by the provided amount
+     * Offsets the content along the corresponding axis by the provided amount with optional
+     * offsetMode that determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set
      */
-    public setOffset(deltaX: number, deltaY: number) {
-        this.overlayService.setOffset(this._overlayId, deltaX, deltaY);
+    public setOffset(deltaX: number, deltaY: number, offsetMode?: OffsetMode) {
+        this.overlayService.setOffset(this._overlayId, deltaX, deltaY, offsetMode);
     }
 
     /**
