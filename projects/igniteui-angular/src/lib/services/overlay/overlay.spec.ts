@@ -687,8 +687,7 @@ describe('igxOverlay', () => {
 
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                target: mockItem
+                verticalDirection: VerticalAlignment.Bottom
             };
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
@@ -4677,7 +4676,7 @@ export class WidthTestOverlayComponent {
         this.overlaySettings.closeOnOutsideClick = true;
         this.overlaySettings.modal = false;
 
-        this.overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
+        this.overlaySettings.target = this.buttonElement.nativeElement;
         this.overlay.show(this.overlay.attach(this.customComponent, this.overlaySettings));
     }
 }
