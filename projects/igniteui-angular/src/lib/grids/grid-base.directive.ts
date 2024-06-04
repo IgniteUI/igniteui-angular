@@ -3787,8 +3787,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     public dataRebound(event) {
         this.selectionService.clearHeaderCBState();
         if (this._shouldRecalcRowHeight) {
-            this.updateDefaultRowHeight();
             this._shouldRecalcRowHeight = false;
+            this.updateDefaultRowHeight();
         }
         this.dataChanged.emit(event);
     }
@@ -7643,7 +7643,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height')) || this.defaultRowHeight;
+            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            if (height) {
+                this._defaultRowHeight = height;
+            } else {
+                this._shouldRecalcRowHeight = true;
+            }
         }
     }
 
