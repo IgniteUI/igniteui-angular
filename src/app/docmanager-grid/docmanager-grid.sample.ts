@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Renderer2, OnDestroy, OnInit, DoCheck, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxOverlayOutletDirective, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
-import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPane, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
+import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
 import { Subject } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { defineCustomElements } from 'igniteui-dockmanager/loader';
 
 import { SignalRService } from './signal-r.service';
@@ -175,8 +175,7 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
         if (this.isDarkTheme) {
             this.renderer.removeClass(this.elementRef.nativeElement, 'light-theme');
             this.renderer.addClass(this.elementRef.nativeElement, 'dark-theme');
-        }
-        else {
+        } else {
             this.renderer.removeClass(this.elementRef.nativeElement, 'dark-theme');
             this.renderer.addClass(this.elementRef.nativeElement, 'light-theme');
         }
@@ -185,9 +184,6 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
     public ngAfterViewInit() {
         // This 500ms timeout is used as a workaround for StackBlitz ExpressionChangedAfterItHasBeenChecked Error
         setTimeout(() => {
-            const x = (this.dockManager.nativeElement.getBoundingClientRect().width / 3);
-            const y = (this.dockManager.nativeElement.getBoundingClientRect().height / 3);
-
             // this.paneService.initialPanePosition = { x, y };
             this.grid2.selectColumns(['price', 'change', 'changeP']);
             this.customOverlaySettings.target = this.select.inputGroup.element.nativeElement;
@@ -237,7 +233,7 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
     private changeNegative = (rowData: any): boolean => rowData['changeP'] < 0 && rowData['changeP'] > -1;
     private changePositive = (rowData: any): boolean => rowData['changeP'] > 0 && rowData['changeP'] < 1;
     private strongPositive = (rowData: any): boolean => rowData['changeP'] >= 1;
-    private strongNegative = (rowData: any, key: string): boolean => rowData['changeP'] <= -1;
+    private strongNegative = (rowData: any, _key: string): boolean => rowData['changeP'] <= -1;
 
     public trends = {
         changeNeg: this.changeNegative,
