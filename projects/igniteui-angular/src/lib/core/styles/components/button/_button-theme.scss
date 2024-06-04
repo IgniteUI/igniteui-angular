@@ -139,6 +139,12 @@
             }
         }
 
+        @if not($icon-color) and $background {
+            @if meta.type-of($background) == 'color' {
+                $icon-color: text-contrast($background);
+            }
+        }
+
         @if not($icon-color-hover) and $hover-foreground {
             @if meta.type-of($hover-background) == 'color' {
                 $icon-color-hover: $hover-foreground;
@@ -577,7 +583,7 @@
         background: var-get($flat-theme, 'focus-visible-background');
         color: var-get($flat-theme, 'focus-visible-foreground');
         border-color: var-get($flat-theme, 'focus-visible-border-color');
-        
+
         igx-icon {
             color: var-get($flat-theme, 'icon-color');
         }
@@ -599,7 +605,7 @@
                 color: var-get($flat-theme, 'focus-foreground');
             }
         }
-        
+
         @if ($variant == 'bootstrap') {
             box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
         }
@@ -780,7 +786,7 @@
                 map.get($items-gap, 'cosy'),
                 $items-gap-indigo-comfortable
             );
-            
+
             &:active {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
