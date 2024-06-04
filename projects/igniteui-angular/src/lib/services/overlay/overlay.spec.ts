@@ -34,6 +34,7 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
+    OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
     OverlaySettings,
@@ -843,6 +844,39 @@ describe('igxOverlay', () => {
             expect(componentElementRectNew.top).not.toEqual(componentElementRect.top);
             expect(componentElementRectNew.left).not.toEqual(componentElementRect.left);
             expect(overlayContentTransform).toEqual(secondTransform);
+
+            overlayInstance.detachAll();
+        }));
+
+        it('Should offset the overlay content correctly using setOffset method and optional offsetMode', fakeAsync(() => {
+            const fixture = TestBed.createComponent(WidthTestOverlayComponent);
+            const overlayInstance = fixture.componentInstance.overlay;
+
+            const id = fixture.componentInstance.overlay.attach(SimpleRefComponent);
+            overlayInstance.show(id);
+            fixture.detectChanges();
+            tick();
+
+            // Set initial offset
+            overlayInstance.setOffset(id, 20, 20);
+            const overlayInfo = overlayInstance.getOverlayById(id);
+            expect(overlayInfo.transformX).toEqual(20);
+            expect(overlayInfo.transformY).toEqual(20);
+
+            // Add offset values to the existing ones (default behavior)
+            overlayInstance.setOffset(id, 10, 10);
+            expect(overlayInfo.transformX).toEqual(30);
+            expect(overlayInfo.transformY).toEqual(30);
+
+            // Add offset values using OffsetMode.Add
+            overlayInstance.setOffset(id, 20, 20, OffsetMode.Add);
+            expect(overlayInfo.transformX).toEqual(50);
+            expect(overlayInfo.transformY).toEqual(50);
+
+            // Set offset values using OffsetMode.Set
+            overlayInstance.setOffset(id, 10, 10, OffsetMode.Set);
+            expect(overlayInfo.transformX).toEqual(10);
+            expect(overlayInfo.transformY).toEqual(10);
 
             overlayInstance.detachAll();
         }));

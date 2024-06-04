@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
@@ -1753,6 +1753,10 @@ describe('IgxSlider', () => {
             fakeDoc.documentElement.dir = 'rtl';
         });
 
+        afterEach(() => {
+            fakeDoc.documentElement.dir = 'ltr';
+        });
+
         it('should reflect on the right instead of the left css property of the slider handlers', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
@@ -1809,6 +1813,40 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             expect(slider.value).toBe(formControl.value);
         });
+
+        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SliderTemplateFormComponent);
+            fixture.componentInstance.updateOn = 'blur';
+            fixture.componentInstance.value = 0;
+            fixture.detectChanges();
+
+            const slider = fixture.componentInstance.slider;
+
+            const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
+            const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
+            const startX = sliderX + sliderWidth / 2;
+
+            thumbEl.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+            tick();
+
+            (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            fixture.detectChanges();
+            tick();
+
+            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            expect(activeThumb).not.toBeNull();
+            expect(fixture.componentInstance.value).not.toBeGreaterThan(0);
+
+            thumbEl.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.value).toBeGreaterThan(0);
+        }));
     });
 
 
@@ -1984,7 +2022,7 @@ class RangeSliderWithCustomTemplateComponent {
 @Component({
     template: `
         <form #form="ngForm">
-            <igx-slider [(ngModel)]="value" name="amount"></igx-slider>
+            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
     standalone: true,
@@ -1992,6 +2030,8 @@ class RangeSliderWithCustomTemplateComponent {
 })
 export class SliderTemplateFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    @Input() public updateOn: 'change' | 'blur' | 'submit' = 'change';
 
     public value = 10;
 }

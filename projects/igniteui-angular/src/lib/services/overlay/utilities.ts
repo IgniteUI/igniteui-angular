@@ -47,6 +47,14 @@ export enum AbsolutePosition {
     Center = 'center'
 }
 
+/**
+ * Determines whether to add or set the offset values.
+ */
+export enum OffsetMode {
+    Add,
+    Set
+}
+
 // TODO: make this interface
 export class Point {
     constructor(public x: number, public y: number) { }
