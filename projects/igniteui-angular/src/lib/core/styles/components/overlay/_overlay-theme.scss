@@ -106,6 +106,8 @@
         width: 0;
         min-width: 0;
         height: 0;
+        // needed for bug #14302
+        padding: 0 !important;
         top: 0;
         left: 0;
         margin: -1px;
