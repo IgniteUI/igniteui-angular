@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "banner",
+            "replaceWith": "owner",
+            "definedIn": [
+                "BannerEventArgs",
+                "BannerCancelEventArgs"
+            ]
+        }
+    ]
+}
