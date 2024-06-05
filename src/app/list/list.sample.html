@@ -1,13 +1,11 @@
 <div class="sample-wrapper list-sample-component">
-    <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
-    </div>
+    <size-selector #sizeSelector></size-selector>
 
-    <section class="sample-content">
+    <section class="sample-content" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
 
         <article class="sample-column bootstrap">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item>
                         <p igxListLineTitle>Cras justo odio</p>
                         <igx-badge igxListAction value="14"></igx-badge>
@@ -26,7 +24,7 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
@@ -42,7 +40,7 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item [isHeader]="true">Custom List template</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
@@ -55,7 +53,7 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item [isHeader]="true">Thumbnail | Title | Subtitle | Action icon   </igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
@@ -83,10 +81,10 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -99,10 +97,10 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -115,7 +113,7 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
@@ -132,7 +130,7 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
@@ -147,9 +145,9 @@
 
         <article class="sample-column">
             <div class="list-sample">
-                <igx-list [displayDensity]="density">
+                <igx-list>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -173,7 +171,8 @@
             </igx-input-group>
 
             <div class="list-sample">
-                <igx-list [displayDensity]="density" #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler()">
+                <igx-list #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)"
+                    (filtered)="filteredHandler()">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
                     <igx-list-item><span igxListLine>Red Delicious</span></igx-list-item>
                     <igx-list-item><span igxListLine>Ambrosia</span></igx-list-item>
@@ -197,7 +196,7 @@
             </igx-input-group>
 
             <div class="list-sample-density">
-                <igx-list #contactsList [displayDensity]="density">
+                <igx-list #contactsList>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
                         <!-- <igx-avatar igxListThumbnail [src]="item.avatar"></igx-avatar>-->
@@ -211,7 +210,7 @@
         <article class="sample-column">
             <h4 class="sample-title">Non-header List</h4>
             <div class="list-sample">
-                <igx-list [displayDensity]="density" [allowRightPanning]="true" [allowLeftPanning]="true">
+                <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item *ngFor="let navItem of navItems; let index = index">
                         <igx-avatar igxListThumbnail [src]="navItem.avatar"></igx-avatar>
@@ -229,7 +228,7 @@
                 <i class="light">w/ Default template</i>
             </h4>
             <div class="list-sample">
-                <igx-list [displayDensity]="density" [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
+                <igx-list [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
                     <igx-list-item *ngFor="let fruit of fruits" [attr.data-fruit-id]="fruit.id">
                         <span igxListLine>{{ fruit.name }}</span>
                         <igx-icon igxListAction class="delete-item" (click)="deleteFruit(fruit.id)">close</igx-icon>
@@ -239,7 +238,7 @@
         </article>
 
         <article class="sample-column">
-            <igx-list [displayDensity]="density" [isLoading]="true">
+            <igx-list [isLoading]="true">
                 <igx-list-item *ngFor="let fruit of fruits">
                     {{ fruit.name }}
                 </igx-list-item>
@@ -255,7 +254,7 @@
                 <i class="light">w/ Custom template</i>
             </h4>
             <div class="list-sample">
-                <igx-list [displayDensity]="density" #fruitList>
+                <igx-list #fruitList>
                     <igx-list-item *ngFor="let fruit of fruits">
                         {{ fruit.name }}
                     </igx-list-item>
@@ -270,16 +269,9 @@
     </section>
 </div>
 
-<igx-dialog
-    #addFruitDialog
-    title="Add Fruit"
-    leftButtonLabel="Cancel"
-    (leftButtonSelect)="addFruitDialog.close()"
-    rightButtonLabel="Add"
-    (rightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
-    backgroundClick="true"
-    [closeOnOutsideSelect]="true"
->
+<igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (leftButtonSelect)="addFruitDialog.close()"
+    rightButtonLabel="Add" (rightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
+    backgroundClick="true" [closeOnOutsideSelect]="true">
     <igx-input-group>
         <label igxLabel for="newFruit">Fruit Name</label>
         <input id="newFruit" igxInput #newFruitName type="text" />

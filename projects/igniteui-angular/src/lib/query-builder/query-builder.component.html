@@ -15,7 +15,6 @@
         <button type="button"
             #addRootAndGroupButton
             igxButton="outlined"
-            [displayDensity]="this.displayDensity"
             (click)="addAndGroup()"
         >
             <igx-icon>add</igx-icon>
@@ -24,7 +23,6 @@
 
         <button type="button"
             igxButton="outlined"
-            [displayDensity]="this.displayDensity"
             (click)="addOrGroup()"
         >
             <igx-icon>add</igx-icon>
@@ -46,7 +44,6 @@
         <button type="button"
             #addConditionButton
             igxButton="outlined"
-            [displayDensity]="this.displayDensity"
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
         >
@@ -58,7 +55,6 @@
 
         <button type="button"
             igxButton="outlined"
-            [displayDensity]="this.displayDensity"
             [disabled]="hasEditedExpression"
             (click)="addAndGroup(expressionItem, afterExpression)"
         >
@@ -68,7 +64,6 @@
 
         <button type="button"
             igxButton="outlined"
-            [displayDensity]="this.displayDensity"
             [disabled]="hasEditedExpression"
             (click)="addOrGroup(expressionItem, afterExpression)"
         >
@@ -86,9 +81,6 @@
         >
             <igx-chip
                 [data]="expressionItem"
-                [displayDensity]="
-                    displayDensity === 'compact' ? 'cosy' : displayDensity
-                "
                 [removable]="true"
                 [selected]="expressionItem.selected"
                 (keydown)="invokeClick($event)"
@@ -180,7 +172,6 @@
             <igx-select
                 #fieldSelect
                 type="box"
-                [displayDensity]="'compact'"
                 [overlaySettings]="fieldSelectOverlaySettings"
                 [placeholder]="
                     this.resourceStrings.igx_query_builder_column_placeholder
@@ -195,7 +186,6 @@
             <igx-select
                 #conditionSelect
                 type="box"
-                [displayDensity]="'compact'"
                 [overlaySettings]="conditionSelectOverlaySettings"
                 [placeholder]="
                     this.resourceStrings.igx_query_builder_condition_placeholder
@@ -250,7 +240,6 @@
                         selectedField.dataType !== 'dateTime')
                 "
                 type="box"
-                [displayDensity]="'compact'"
             >
                 <input
                     #searchValueInput
@@ -282,7 +271,6 @@
                 (click)="picker.open()"
                 type="box"
                 [readOnly]="true"
-                [displayDensity]="'compact'"
                 [placeholder]="
                     this.resourceStrings.igx_query_builder_date_placeholder
                 "
@@ -310,7 +298,6 @@
                 [(value)]="searchValue"
                 (click)="picker.open()"
                 (keydown)="openPicker($event)"
-                [displayDensity]="'compact'"
                 [placeholder]="
                     this.resourceStrings.igx_query_builder_time_placeholder
                 "
@@ -338,7 +325,6 @@
                 type="box"
                 *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                 type="box"
-                [displayDensity]="'compact'"
             >
                 <input
                     #input
@@ -362,7 +348,6 @@
             <div class="igx-filter-tree__inputs-actions">
                 <button type="button"
                     igxIconButton="flat"
-                    [style.--component-size]="getComponentSizeStyles()"
                     [disabled]="!operandCanBeCommitted()"
                     (click)="commitOperandEdit()"
                 >
@@ -370,7 +355,6 @@
                 </button>
                 <button type="button"
                     igxIconButton="flat"
-                    [style.--component-size]="getComponentSizeStyles()"
                     (click)="cancelOperandEdit()"
                 >
                     <igx-icon>close</igx-icon>
@@ -392,7 +376,6 @@
             </ng-container>
             <button type="button"
                 igxIconButton="flat"
-                [style.--component-size]="getComponentSizeStyles()"
                 (click)="cancelOperandAdd()"
             >
                 <igx-icon>close</igx-icon>
@@ -441,7 +424,6 @@
                     <button type="button"
                         igxButton="outlined"
                         *ngIf="expressionItem !== rootGroup"
-                        [displayDensity]="this.displayDensity"
                         [disabled]="
                             hasEditedExpression ||
                             expressionItem.children.length < 2
@@ -471,10 +453,6 @@
         class="igx-filter-contextual-menu"
         (keydown)="onKeyDown($event)"
         (closed)="contextMenuClosed()"
-        [ngClass]="{
-            'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
-            'igx-filter-contextual-menu--compact': displayDensity === 'compact'
-        }"
     >
         <button type="button"
             igxIconButton="flat"
@@ -486,7 +464,6 @@
 
         <ng-container *ngIf="contextualGroup">
             <igx-buttongroup
-                [displayDensity]="this.displayDensity"
                 [values]="filteringLogics"
                 type="outline"
                 (selected)="selectFilteringLogic($event)"
@@ -495,7 +472,6 @@
 
             <button type="button"
                 igxButton="outlined"
-                [displayDensity]="this.displayDensity"
                 [disabled]="!contextualGroup.parent"
                 (click)="ungroup()"
             >
@@ -506,7 +482,6 @@
             </button>
             <button type="button"
                 igxButton="outlined"
-                [displayDensity]="this.displayDensity"
                 (click)="deleteGroup()"
                 class="igx-filter-contextual-menu__delete-btn"
             >
@@ -517,21 +492,18 @@
         <ng-container *ngIf="!contextualGroup">
             <button type="button"
                 igxButton="outlined"
-                [displayDensity]="this.displayDensity"
                 (click)="createAndGroup()"
             >
                 {{ this.resourceStrings.igx_query_builder_create_and_group }}
             </button>
             <button type="button"
                 igxButton="outlined"
-                [displayDensity]="this.displayDensity"
                 (click)="createOrGroup()"
             >
                 {{ this.resourceStrings.igx_query_builder_create_or_group }}
             </button>
             <button type="button"
                 igxButton="outlined"
-                [displayDensity]="this.displayDensity"
                 (click)="deleteFilters()"
                 class="igx-filter-contextual-menu__delete-btn"
             >
