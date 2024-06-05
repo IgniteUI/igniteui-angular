@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
-    - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+    - Introduced ability for hiding the clear icon button when the custom clear icon template is empty.
 - `IgxDateTimeEditor`, `IgxTimePicker`:
   - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
       - Fractional seconds: S, SS, SSS.
@@ -38,8 +38,15 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
-
-### General
+- `IgxBanner`
+    - Removed the deprecated `banner` property of `BannerEventArgs` and `BannerCancelEventArgs`. Automatic migration to `owner` is applied.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Removed the deprecated `movable` property of `IgxColumnComponent`.
+- `IgxOverlayService`
+    - Removed the deprecated `PositionSettings.target` (in favor of general `OverlaySettings.target`).
+    - Replaced deprecated `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) with shortcut overload that uses just the root scope and `createComponent`. The overload accepting `ViewComponentRef` is still recommended for local injection context.
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` deprecated getters `inBaseDimension` and `inOption` have been removed.
 - `IgxSimpleCombo`
     - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
 

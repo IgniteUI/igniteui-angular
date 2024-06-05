@@ -161,6 +161,15 @@
                 "selector": "igx-pivot-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "filterable",
+            "replaceWith": "filteringOptions",
+            "valueTransform": "comboFilteringTransform",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
         }
     ]
 }
