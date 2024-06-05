@@ -41,7 +41,7 @@
             [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxGridForOfVariableSizes]="false"
-            #verticalScrollContainer>
+            #verticalScrollContainer (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]="recordTemplate"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
