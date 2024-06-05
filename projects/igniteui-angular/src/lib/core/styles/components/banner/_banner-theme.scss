@@ -16,6 +16,7 @@
 /// @param {Color} $banner-message-color [null] - The color used for the banner label.
 /// @param {Color} $banner-border-color [null] - The color used for the banner border.
 /// @param {Color} $banner-illustration-color [null] - The color used for the banner illustration.
+/// @param {Number} $border-radius [null] - The border-radius for the banner.
 ///
 /// @requires $light-material-schema
 ///
@@ -28,7 +29,8 @@
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
-    $banner-illustration-color: null
+    $banner-illustration-color: null,
+    $border-radius: null,
 ) {
     $name: 'igx-banner';
     $selector: 'igx-banner, .igx-banner';
@@ -54,6 +56,7 @@
         banner-message-color: $banner-message-color,
         banner-border-color: $banner-border-color,
         banner-illustration-color: $banner-illustration-color,
+        border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -96,48 +99,30 @@
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: rem(8px);
-
-        padding-inline-start: pad-inline($padding-inline-start);
-        padding-inline-end: pad-inline($padding);
-        padding-block: pad-block($padding);
+        padding: rem(8px);
+        min-width: rem(320px);
         background: var-get($theme, 'banner-background');
 
         @if $variant == 'indigo-design' {
-            border: 1px solid var-get($theme, 'banner-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
             padding: rem(16px);
-            border-radius: rem(6px);
+        } @else {
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
+        }
+
+        border-radius: var-get($theme, 'border-radius');
+
+        igc-icon,
+        igx-icon,
+        igc-button,
+        [igxButton] {
+            --component-size: var(--ig-size, 2) !important;
         }
     }
 
     %igx-banner__illustration {
         justify-content: center;
-        width: rem(40px);
-        min-width: rem(40px);
-        height: rem(40px);
         color: var-get($theme, 'banner-illustration-color');
-
-        @if $variant == 'indigo-design' {
-            igx-icon {
-                $icon-size: rem(16px);
-
-                --ig-icon-size: #{$icon-size};
-                --igx-icon-size: #{$icon-size};
-            }
-
-            width: initial;
-            height: initial;
-            min-width: initial;
-        }
-    }
-
-    %igx-banner__border-top {
-        border-block-start: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: rem(-1px);
-    }
-
-    %igx-banner__border-bottom {
-        border-block-end: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: 0;
     }
 
     %igx-banner__text {
@@ -156,25 +141,16 @@
 
         @if $variant == 'indigo-design' {
             gap: rem(8px);
+        } @else {
+            padding: 0 rem(8px);
         }
     }
 
     %igx-banner__actions,
     %igx-banner__actions > igx-banner-actions {
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: center;
         align-self: flex-end;
         gap: rem(8px);
-        min-height: rem(40px);
-
-        @if $variant == 'indigo-design' {
-            min-height: initial;
-
-            [igxButton] {
-                --ig-size: 2;
-            }
-        }
     }
 }
 
