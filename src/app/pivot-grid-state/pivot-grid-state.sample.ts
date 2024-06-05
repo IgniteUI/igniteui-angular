@@ -69,22 +69,48 @@ export class PivotGridStateSampleComponent {
             ),
         ],
         rows: [
+            // {
+            //     memberName: 'AllSellers',
+            //     displayName: 'All Sellers',
+            //     memberFunction: () => 'All',
+            //     enabled: true
+            // },
             {
-                memberName: 'AllCities',
-                displayName: 'All Cities',
-                memberFunction: () => 'All',
+                memberName: 'Country',
+                displayName: 'Country',
                 enabled: true,
                 sortable: false,
+                horizontalSummary: false,
                 childLevel: {
+                    displayName: 'City',
                     memberName: 'City',
-                    enabled: true,
-                    width: '100px'
+                    horizontalSummary: true,
+                    enabled: true
                 }
             },
             {
-                memberName: 'SellerName',
-                enabled: true
-            }
+                memberName: 'AllProducts',
+                displayName: 'All Products',
+                memberFunction: () => 'All',
+                enabled: true,
+                horizontalSummary: false,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    displayName: 'Product Category',
+                    enabled: true
+                },
+            },
+            // {
+            //     memberName: 'AllSellers',
+            //     displayName: 'All Sellers',
+            //     memberFunction: () => 'All',
+            //     enabled: true,
+            //     childLevel: {
+            //         displayName: 'Seller Name',
+            //         memberName: 'SellerName',
+            //         enabled: true
+            //     }
+            // },
         ],
         values: [
             {
@@ -129,7 +155,7 @@ export class PivotGridStateSampleComponent {
         },
         {
             ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            Country: 'USA', City: 'California', Date: '12/08/2021', UnitsSold: 240
         },
         {
             ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',

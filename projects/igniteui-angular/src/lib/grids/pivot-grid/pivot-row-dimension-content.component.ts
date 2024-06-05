@@ -139,6 +139,13 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         return this.dimension.level;
     }
 
+    protected getHeaderWidthFromDimension() {
+        if (this.grid.horizontalRowDimensions) {
+            return this.width;
+        }
+        return this.grid.rowDimensionWidthToPixels(this.rootDimension);
+    }
+
     protected extractFromDimensions() {
         const col = this.extractFromDimension(this.dimension, this.rowData);
         const prevDims = [];
@@ -163,7 +170,9 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel) {
+
+
+        if (header && dim.childLevel && !this.rowData.totalRecord) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

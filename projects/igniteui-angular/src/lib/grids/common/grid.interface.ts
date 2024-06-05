@@ -1229,6 +1229,7 @@ export interface PivotGridType extends GridType {
      * it includes hierarchical level, filters and sorting, dimentional level, etc.
      */
     allDimensions: IPivotDimension[],
+    horizontalRowDimensions: boolean,
     /** Specifies whether to show the pivot configuration UI in the grid. */
     pivotUI: IPivotUISettings;
     /** @hidden @internal */
@@ -1236,6 +1237,8 @@ export interface PivotGridType extends GridType {
     /** @hidden @internal */
     rowDimensions: IPivotDimension[];
     rowDimensionResizing: boolean;
+    visibleRowDimensions: IPivotDimension[];
+    flattenedRowDimensions: IPivotDimension[];
     /** @hidden @internal */
     values: IPivotValue[];
     /** @hidden @internal */

@@ -94,6 +94,10 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     public get visibleIndex(): number {
+        if (this.grid.horizontalRowDimensions) {
+            return this.grid.visibleRowDimensions.indexOf(this.parent.dimension);
+        }
+
         const field = this.column.field;
         const rows = this.grid.rowDimensions;
         const rootDimension = this.findRootDimension(field);
