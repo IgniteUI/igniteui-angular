@@ -70,7 +70,7 @@
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string' || column.dataType === 'image'" [formGroup]="formGroup">
-        <igx-input-group [style.--ig-size]="1" >
+        <igx-input-group>
             <input
                 igxInput
                 [attr.aria-describedby]="ariaDescribeBy"
@@ -84,7 +84,7 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
-        <igx-input-group [style.--ig-size]="1" [formGroup]="formGroup">
+        <igx-input-group [formGroup]="formGroup">
             <input
                 igxInput
                 [attr.aria-describedby]="ariaDescribeBy"
@@ -144,7 +144,7 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
-        <igx-input-group [style.--ig-size]="1" [formGroup]="formGroup">
+        <igx-input-group [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
@@ -160,7 +160,7 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
-        <igx-input-group [style.--ig-size]="1" [formGroup]="formGroup">
+        <igx-input-group [formGroup]="formGroup">
             <input
                 igxInput
                 [attr.aria-describedby]="ariaDescribeBy"
