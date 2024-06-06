@@ -16,7 +16,6 @@ import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -47,8 +46,6 @@ const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
-        let mockElementRef: any;
-        let mockFactoryResolver: any;
         let mockApplicationRef: any;
         let mockAnimationBuilder: any;
         let mockDocument: any;
@@ -67,17 +64,6 @@ describe('IgxDateRangePicker', () => {
                 'registerOnValidatorChangeCb']);
         /* eslint-disable @typescript-eslint/no-unused-vars */
         beforeEach(() => {
-            mockFactoryResolver = {
-                resolveComponentFactory: (c: any) => ({
-                    create: (i: any) => ({
-                        hostView: '',
-                        location: mockElementRef,
-                        changeDetectorRef: { detectChanges: () => { } },
-                        destroy: () => { },
-                        instance: new IgxCalendarContainerComponent()
-                    })
-                })
-            };
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
                 classList: { add: () => { }, remove: () => { } },
@@ -91,7 +77,6 @@ describe('IgxDateRangePicker', () => {
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
-            mockElementRef = { nativeElement: mockElement };
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
@@ -143,7 +128,7 @@ describe('IgxDateRangePicker', () => {
             mockPlatformUtil = { isIOS: false };
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
-                mockFactoryResolver, mockApplicationRef, mockInjector, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
             mockCalendar = new IgxCalendarComponent(platform, 'en');
 
             mockDaysView = {
@@ -264,15 +249,6 @@ describe('IgxDateRangePicker', () => {
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
-            dateRange.open({
-                closeOnOutsideClick: true,
-                modal: false,
-                target: dateRange.element.nativeElement,
-                positionStrategy: new AutoPositionStrategy({
-                    openAnimation: null,
-                    closeAnimation: null
-                })
-            });
             (dateRange as any).updateCalendar();
             expect(mockCalendar.disabledDates.length).toEqual(2);
             expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
