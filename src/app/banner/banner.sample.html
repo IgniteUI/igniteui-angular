@@ -1,7 +1,14 @@
-<igx-banner #bannerNoSafeConnection [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
-    Your connections is not private!
-    <igx-icon>lock</igx-icon>
-</igx-banner>
+<div>
+    <igx-navbar actionButtonIcon="menu">
+        <button igxIconButton="flat">
+            <igx-icon>more_vert</igx-icon>
+        </button>
+    </igx-navbar>
+    <igx-banner #bannerNoSafeConnection [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
+        Your connections is not private!
+        <igx-icon>lock</igx-icon>
+    </igx-banner>
+</div>
 <igx-banner #bannerCookies (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
     <igx-icon>settings</igx-icon>
     <h5 class="ig-typography__subtitle-1">YOUR COOKIES SETTINGS</h5>
