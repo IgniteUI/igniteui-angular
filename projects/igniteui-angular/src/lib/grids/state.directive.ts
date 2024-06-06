@@ -77,7 +77,6 @@ export interface IColumnState {
     headerGroupClasses: string;
     maxWidth: string;
     groupable: boolean;
-    movable: boolean;
     hidden: boolean;
     dataType: GridColumnDataType;
     hasSummary: boolean;
@@ -192,7 +191,6 @@ export class IgxGridStateDirective {
                     headerGroupClasses: c.headerGroupClasses,
                     maxWidth: c.maxWidth,
                     groupable: c.groupable,
-                    movable: c.movable,
                     hidden: c.hidden,
                     dataType: c.dataType,
                     hasSummary: c.hasSummary,

@@ -70,9 +70,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
 
-    $padding: rem(8px);
-    $padding-inline-start: calc(#{$padding} * 2);
-
     %igx-banner-host {
         igx-expansion-panel-body {
             padding: 0;
@@ -99,18 +96,16 @@
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: rem(8px);
-        padding: rem(8px);
+        padding: rem(16px) rem(8px);
         min-width: rem(320px);
         background: var-get($theme, 'banner-background');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
+        border-radius: var-get($theme, 'border-radius');
 
         @if $variant == 'indigo-design' {
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
             padding: rem(16px);
-        } @else {
-            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
         }
-
-        border-radius: var-get($theme, 'border-radius');
 
         igc-icon,
         igx-icon,
