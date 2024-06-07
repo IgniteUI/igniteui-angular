@@ -27,7 +27,7 @@
                 <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-icon igxListThumbnail>face</igx-icon>
                             <p igxListLineTitle>{{employee.position}}</p>
                             <igx-checkbox igxListAction></igx-checkbox>
@@ -43,7 +43,7 @@
                 <igx-list>
                     <igx-list-item [isHeader]="true">Custom List template</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-checkbox>{{employee.name}}</igx-checkbox>
                         </igx-list-item>
                     </ng-template>
@@ -56,7 +56,7 @@
                 <igx-list>
                     <igx-list-item [isHeader]="true">Thumbnail | Title | Subtitle | Action icon   </igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                             <h4 igxListLineTitle>{{employee.name}}</h4>
                             <p igxListLineSubTitle>{{employee.position}}</p>
@@ -67,7 +67,7 @@
                     </ng-template>
                     <igx-list-item [isHeader]="true">Icon | Title | Subtitle | Action icon  </igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-icon igxListThumbnail>face</igx-icon>
                             <h4 igxListLineTitle>{{employee.name}}</h4>
                             <p igxListLineSubTitle>{{employee.position}}</p>
@@ -84,7 +84,7 @@
                 <igx-list>
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
+                            <igx-list-item>
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -100,7 +100,7 @@
                 <igx-list>
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
+                            <igx-list-item>
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -116,7 +116,7 @@
                 <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                             <h4 igxListLineTitle>{{employee.name}}</h4>
                             <p igxListLineSubTitle>{{employee.position}}</p>
@@ -133,7 +133,7 @@
                 <igx-list>
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                        <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
+                        <igx-list-item>
                             <igx-icon igxListThumbnail>face</igx-icon>
                             <p igxListLineTitle>{{employee.position}}</p>
                             <igx-checkbox igxListAction></igx-checkbox>
@@ -147,7 +147,7 @@
             <div class="list-sample">
                 <igx-list>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content">
+                            <igx-list-item>
                                 <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
@@ -198,7 +198,7 @@
             <div class="list-sample-density">
                 <igx-list #contactsList>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
+                    <igx-list-item *ngFor="let item of navItems | igxFilter: fo1">
                         <!-- <igx-avatar igxListThumbnail [src]="item.avatar"></igx-avatar>-->
                         <span igxListLine>{{item.text}}</span>
                         <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>

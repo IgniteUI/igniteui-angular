@@ -244,55 +244,47 @@
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $theme-padding-inline: map.get((
-        material: rem(16px),
-        fluent: rem(16px),
-        bootstrap: rem(16px),
-        indigo-design: rem(12px),
-    ), $variant);
-
-    $theme-padding-block: map.get((
+    $theme-padding-block-l: map.get((
         material: rem(8px),
         fluent: rem(8px),
         bootstrap: rem(8px),
+        indigo-design: rem(8px),
+    ), $variant);
+
+    $theme-padding-inline-l: map.get((
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(16px),
+        indigo-design: rem(16px),
+    ), $variant);
+
+    $theme-padding-block-m: map.get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(4px),
         indigo-design: rem(6px),
     ), $variant);
 
-    $list-item-padding-inline: (
-        comfortable: $theme-padding-inline,
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
+    $theme-padding-inline-m: map.get((
+        material: rem(8px),
+        fluent: rem(8px),
+        bootstrap: rem(8px),
+        indigo-design: rem(12px),
+    ), $variant);
 
-    $list-item-padding-block: (
-        comfortable: $theme-padding-block,
-        cosy: rem(4px),
-        compact: rem(2px)
-    );
+    $theme-padding-block-s: map.get((
+        material: rem(2px),
+        fluent: rem(2px),
+        bootstrap: rem(2px),
+        indigo-design: rem(4px),
+    ), $variant);
 
-    $list-icon-margin-inline: (
-        comfortable: rem(16px),
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
-
-    $list-icon-margin-block: (
-        comfortable: rem(8px),
-        cosy: rem(6px),
-        compact: rem(4px)
-    );
-
-    $list-line-margin: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
-    );
-
-    $list-actions-margin: (
-        comfortable: rem(8px),
-        cosy: rem(6px),
-        compact: rem(4px)
-    );
+    $theme-padding-inline-s: map.get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(4px),
+        indigo-design: rem(8px),
+    ), $variant);
 
     %igx-list {
         @include sizable();
@@ -337,6 +329,10 @@
         color: var-get($theme, 'header-text-color');
         background: var-get($theme, 'header-background');
         user-select: none;
+
+        @if $variant == 'indigo-design' {
+            min-height: sizable(rem(24), rem(28), rem(32));
+        }
     }
 
     %igx-list-item-base {
@@ -410,6 +406,10 @@
         flex-direction: column;
         flex: 1 0 0%;
 
+        @if $variant == 'indigo-design' {
+            gap: rem(2px);
+        }
+
         &:empty {
             display: none;
         }
@@ -429,16 +429,18 @@
         align-items: center;
         justify-content: center;
         color: var-get($theme, 'item-action-color');
-        gap: rem(8px);
+        gap: sizable(rem(4), rem(6), rem(8));
 
         &:empty {
             display: none;
         }
 
-        igx-icon,
-        igc-icon {
-            --component-size: 2;
+        > * {
+            --component-size: #{if($variant == 'indigo-design', 2, var(--list-size))};
+        }
 
+        igc-icon,
+        igx-icon {
             color: var-get($theme, 'item-action-color')
         }
 
@@ -463,16 +465,8 @@
 
     %igx-list-header,
     %igx-list-item-content {
-        padding-inline: pad-inline(
-            map.get($list-item-padding-inline, 'compact'),
-            map.get($list-item-padding-inline, 'cosy'),
-            map.get($list-item-padding-inline, 'comfortable')
-        );
-        padding-block: pad-block(
-            map.get($list-item-padding-block, 'compact'),
-            map.get($list-item-padding-block, 'cosy'),
-            map.get($list-item-padding-block, 'comfortable')
-        );
+        padding-inline: pad-inline($theme-padding-inline-s, $theme-padding-inline-m, $theme-padding-inline-l);
+        padding-block: pad-block($theme-padding-block-s, $theme-padding-block-m, $theme-padding-block-l);
     }
 
     %igx-list__item-thumbnail {
@@ -517,8 +511,7 @@
 
             igx-icon,
             igc-icon {
-                color: var-get($theme, 'item-action-color-active')
-            }
+                color: var-get($theme, 'item-action-color-active')}
         }
 
         %igx-list__item-thumbnail {
