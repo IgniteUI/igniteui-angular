@@ -491,14 +491,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this._onChangeCallback(args.newValue);
             this._updateInput = true;
+        } else if (this.isRemote) {
+            this.registerRemoteEntries(newValueAsArray, false);
         } else if (args.cancel) {
             if (this._updateInput && this._previousSelection.selectedItem !== '') {
                 this.selectionService.select_items(this.id, [this._previousSelection.selectedItem], true);
                 this._value = [this._previousSelection.selectedItem];
             }
-        } else if (this.isRemote) {
-            this.registerRemoteEntries(newValueAsArray, false);
-        } 
+        }
         this._previousSelection = { selectedItem: '', selection: [] };
     }
 
