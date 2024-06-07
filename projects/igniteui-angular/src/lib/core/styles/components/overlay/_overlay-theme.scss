@@ -102,6 +102,12 @@
         // WARN: This is a workaround around a bug in Safari.
         position: absolute;
         visibility: hidden;
+        // width/height/min-width to 0 needed for bug #14303
+        width: 0;
+        min-width: 0;
+        height: 0;
+        // needed for bug #14302
+        padding: 0 !important;
         top: 0;
         left: 0;
         margin: -1px;
