@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type" [displayDensity]="displayDensity">
+<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -35,7 +35,6 @@
     </ng-container>
 </igx-input-group>
 <div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);"
-    [style.--component-size]="getComponentSizeStyles()"
     (appended)="onToggleContentAppended($event)"
     (opening)="handleOpening($event)"
     (opened)="handleOpened()"

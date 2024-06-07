@@ -93,7 +93,6 @@ When selection is enabled, end-user selection of nodes is **only allowed through
    | animationSettings | The setting for the animation when opening / closing a node               |  `{ openAnimation: AnimationMetadata, closeAnimation: AnimationMetadata }`                 |
    | singleBranchExpand | Whether a single or multiple of a parent's child nodes can be expanded. Default is `false` | `boolean` |
    | expandIndicator | Get\Set a reference to a custom template that should be used for rendering the expand/collapse indicators of nodes. | `TemplateRef<any>` |
-   | displayDensity  | Get\Set the display density of the tree. Affects all child nodes | `DisplayDensity` |
 
 #### Methods
    | Name           | Description               | Parameters             | Returns |
@@ -113,7 +112,6 @@ When selection is enabled, end-user selection of nodes is **only allowed through
    | nodeExpanded   | Emitted when node expanding animation finishes and node is expanded.    | false      | `{ node: IgxTreeNodeComponent<any>, owner: IgxTreeComponent }` |
    | nodeExpanding  | Emitted when node expanding animation starts, when `node.expanded` is set to transition from `false` to `true`. | true  | `node: IgxTreeNodeComponent<any>, owner: IgxTreeComponent, cancel: boolean }` |
    | activeNodeChanged | Emitted when the tree's `active` node changes | false | `IgxTreeNodeComponent<any>` |
-   | densityChanged | Emitted when the display density of the tree is changed | false | `{ oldDensity: DisplayDensity, newDensity: DisplayDensity }` |
 
 ### IgxTreeNodeComponent<T>
 

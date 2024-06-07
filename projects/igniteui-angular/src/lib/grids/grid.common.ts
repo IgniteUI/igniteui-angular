@@ -30,7 +30,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public override position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
             target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
-        const targetElement: HTMLElement = target as HTMLElement || this.settings.target as HTMLElement; // current grid.row
+        const targetElement: HTMLElement = target as HTMLElement; // current grid.row
 
         // Position of the overlay depends on the available space in the grid.
         // If the bottom space is not enough then the the row overlay will show at the top of the row.
