@@ -1,7 +1,8 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
-import { HEADER_KEYS } from '../../core/utils';
+import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/utils';
+import { PivotUtil } from './pivot-util';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
@@ -32,6 +33,10 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 layout: null
             }
 
+            if (event.altKey) {
+                this.handleAlt(key, event);
+                return;
+            }
             if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
                 newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             }
@@ -65,6 +70,36 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         } else {
             super.handleNavigation(event);
         }
+    }
+
+    public override handleAlt(key: string, event: KeyboardEvent): void {
+        event.preventDefault();
+
+        let row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
+        let expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[0])
+        let isExpanded = this.grid.expansionStates.has(expansionRowKey) ? this.grid.expansionStates.get(expansionRowKey) : true;
+        console.log(isExpanded)
+
+        if (!isExpanded && ROW_EXPAND_KEYS.has(key)) {
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
+            } else {
+                const newExpansionState = new Map<any, boolean>(this.grid.expansionStates);
+                newExpansionState.set(expansionRowKey, true);
+                this.grid.expansionStates = newExpansionState;
+            }
+        } else if (isExpanded && ROW_COLLAPSE_KEYS.has(key)) {
+            if (row.key === undefined) {
+                // TODO use expanded row.expanded = !row.expanded;
+                (row as any).toggle();
+            } else {
+                const newExpansionState = new Map<any, boolean>(this.grid.expansionStates);
+                newExpansionState.set(expansionRowKey, false);
+                this.grid.expansionStates = newExpansionState;
+            }
+        }
+        this.grid.notifyChanges();
     }
 
     public override focusTbody(event) {
