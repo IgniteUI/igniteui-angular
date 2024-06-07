@@ -356,18 +356,9 @@
         justify-content: flex-start;
 
         igx-icon {
-            --component-size: 3;
+            --component-size: #{if($variant == 'indigo-design', 2, 3)};
 
             color: var-get($theme, 'item-icon-color');
-            @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
-            }
-        }
-
-        span {
-            @if $variant == 'indigo-design' {
-                padding-inline-start: rem(8px);
-            }
         }
 
         // Need this to override the igx-buttons
