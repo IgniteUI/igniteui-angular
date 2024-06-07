@@ -198,9 +198,16 @@ export enum PivotDimensionType {
     Filter
 }
 
+
+export enum PivotRowLayoutType {
+    Vertical = "vertical",
+    Horizontal = "horizontal"
+}
+
 export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
+    rowLayout?: PivotRowLayoutType
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;

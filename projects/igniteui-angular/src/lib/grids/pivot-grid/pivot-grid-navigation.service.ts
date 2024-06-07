@@ -52,7 +52,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             }
 
             let verticalContainer;
-            if (this.grid.horizontalRowDimensions) {
+            if (this.grid.hasHorizontalLayout) {
                 let newPosition = {
                     row: this.activeNode.row,
                     column: this.activeNode.column,
@@ -157,7 +157,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             }
 
             if (key.includes('down')) {
-                if (this.grid.horizontalRowDimensions) {
+                if (this.grid.hasHorizontalLayout) {
                     this.activeNode.row = 0;
                     this.activeNode.layout = {
                         rowStart: 1,
@@ -178,11 +178,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
 
                 this.isRowDimensionHeaderActive = false;
                 this.isRowHeaderActive = true;
-                this.grid.rowDimensionContainer.toArray()[this.grid.horizontalRowDimensions ? 0 : newActiveNode.column].nativeElement.focus();
+                this.grid.rowDimensionContainer.toArray()[this.grid.hasHorizontalLayout ? 0 : newActiveNode.column].nativeElement.focus();
             }
 
             this.setActiveNode(newActiveNode);
-        } else if (key.includes('left') && this.activeNode.column === 0) {
+        } else if (key.includes('left') && this.activeNode.column === 0 && this.grid.pivotUI.showRowHeaders) {
             this.isRowDimensionHeaderActive = true;
             const newActiveNode: IActiveNode = {
                 row: this.activeNode.row,
@@ -256,10 +256,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             return { row: this.activeNode.row, column: this.activeNode.column, layout: this.activeNode.layout };
         }
 
+        const nextColStartNormal = curCellLayout.colStart + (previous ? -1 : curCellLayout.colEnd - curCellLayout.colStart);
         const nextColumnLayout = this.getNextVerticalColumnIndex(
             parentRow,
             this.activeNode.layout.rowStart,
-            ctrl ? (previous ? 1 : maxColEnd - 1) : curCellLayout.colStart + (previous ? -1 : 1)
+            ctrl ? (previous ? 1 : maxColEnd - 1) : nextColStartNormal
         );
         return {
             row: this.activeNode.row,

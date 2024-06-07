@@ -64,8 +64,6 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
     @Input()
     public groupedData: IPivotGridRecord[][];
 
-    protected mrlIndexes: number[][];
-
     /**
      * @hidden @internal
      */
@@ -94,8 +92,7 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
         } else if (this.grid.visibleRowDimensions && this.grid.dimensionDataColumns) {
             const res = [];
             this.grid.visibleRowDimensions.forEach(dim => {
-                const targetCol = this.grid.dimensionDataColumns.find(col => col.field === dim.memberName);
-                res.push(targetCol.calcWidth);
+                res.push(this.grid.rowDimensionWidthToPixels(dim) + "px");
             });
             return  res.join(' ');
         }

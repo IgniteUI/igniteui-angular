@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, ViewChild } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';

@@ -18,7 +18,7 @@
 </igx-pivot-header-row>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
-    <ng-container *ngTemplateOutlet="rowDimensions.length ? (horizontalRowDimensions ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
+    <ng-container *ngTemplateOutlet="rowDimensions.length ? (hasHorizontalLayout ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"

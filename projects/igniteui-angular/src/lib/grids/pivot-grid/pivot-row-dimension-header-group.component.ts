@@ -110,7 +110,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     public get visibleIndex(): number {
-        if (this.grid.horizontalRowDimensions) {
+        if (this.grid.hasHorizontalLayout) {
             return this.colIndex;
         }
 

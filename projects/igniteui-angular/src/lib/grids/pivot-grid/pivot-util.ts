@@ -6,7 +6,7 @@ import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
-import { DimensionValueType, IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 
 export class PivotUtil {
 

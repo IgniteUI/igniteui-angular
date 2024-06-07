@@ -1,5 +1,5 @@
 <ng-template ngFor let-cell let-cellIndex="index" [ngForOf]="rowGroup
-    | pivotGridHorizontalRowCellMerging:grid.pivotConfiguration:mrlIndexes:grid.pipeTrigger">
+    | pivotGridHorizontalRowCellMerging:grid.pivotConfiguration:grid.pipeTrigger">
     <igx-pivot-row-dimension-content role="row" class="igx-grid-thead"
         [grid]="grid"
         [dimension]="cell.rootDimension"

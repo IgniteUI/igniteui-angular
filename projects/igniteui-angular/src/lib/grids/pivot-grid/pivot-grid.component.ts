@@ -37,7 +37,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -308,9 +308,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     @Input()
     public rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
-
-    @Input()
-    public horizontalRowDimensions = false;
 
     @Input()
     /**
@@ -666,7 +663,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
-    private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false };
+    private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false, rowLayout: PivotRowLayoutType.Vertical };
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];
     private _flattenedRowDimensions: IPivotDimension[] = [];
@@ -1588,7 +1585,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override dataRebinding(event: IForOfDataChangingEventArgs) {
         super.dataRebinding(event);
 
-        if (this.horizontalRowDimensions) {
+        if (this.hasHorizontalLayout) {
             this.setupColumns();
         }
     }
@@ -1962,6 +1959,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /** @hidden @internal */
+    public get hasHorizontalLayout() {
+        return this.pivotUI.rowLayout === PivotRowLayoutType.Horizontal;
+    }
+
     /**
     * @hidden
     */
@@ -2175,10 +2177,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
-        /** @hidden @internal */
-        public get hasDimensionsToAutosize() {
-            return this.rowDimensions.some(x => x.width === 'auto' && !x.autoWidth);
-        }
+    /** @hidden @internal */
+    public get hasDimensionsToAutosize() {
+        return this.rowDimensions.some(x => x.width === 'auto' && !x.autoWidth);
+    }
 
     protected generateFromData(fields: string[]) {
         const separator = this.pivotKeys.columnDimensionSeparator;

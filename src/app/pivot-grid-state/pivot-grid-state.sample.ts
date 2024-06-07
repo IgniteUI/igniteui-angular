@@ -13,7 +13,8 @@ import {
     IgxButtonDirective,
     IgxPivotDataSelectorComponent,
     IgxPivotRowDimensionHeaderTemplateDirective,
-    IPivotUISettings
+    IPivotUISettings,
+    PivotRowLayoutType
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -163,7 +164,7 @@ export class PivotGridStateSampleComponent {
         }];
 
 
-    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true };
+    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
     public options: IGridStateOptions = {
         pivotConfiguration: true
     };
