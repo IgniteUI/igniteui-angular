@@ -196,7 +196,7 @@
                             [column]="dimCol"
                             [rootDimension]="grid.visibleRowDimensions[colIndex]"
                             [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
-                            [rowIndex]="0">
+                            [rowIndex]="-1" >
                         </igx-pivot-row-header-group>
                     </ng-container>
                 </div>
@@ -213,7 +213,7 @@
                     </igx-grid-header-group>
                 </ng-container>
             </ng-container>
-            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight'>
+            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight' (click)="grid.navigation.focusOutRowHeader($event)">
                 <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]='totalDepth > 1 ? grid.rowHeight : undefined' *ngFor='let dimLevelColumns of columnDimensionsByLevel; let i = index' [style.width.px]='grid.unpinnedWidth'>
                     <ng-template igxGridFor #headerVirtualContainer let-column
                                  [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"

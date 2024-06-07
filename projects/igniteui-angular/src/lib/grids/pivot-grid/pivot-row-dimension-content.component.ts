@@ -5,6 +5,7 @@ import {
     createComponent,
     ElementRef,
     EnvironmentInjector,
+    HostBinding,
     Inject,
     Injector,
     Input,
@@ -25,6 +26,7 @@ import { PivotUtil } from './pivot-util';
 import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgClass, NgStyle } from '@angular/common';
+import { IMultiRowLayoutNode } from '../common/types';
 
 /**
  *
@@ -42,12 +44,42 @@ import { NgClass, NgStyle } from '@angular/common';
     imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    @HostBinding('style.grid-row-start')
+    public get rowStart(): string {
+        return this.layout ? `${this.layout.rowStart}` : "";
+    }
+
+    @HostBinding('style.grid-row-end')
+    public get rowsEnd(): string {
+        return this.layout ? `${this.layout.rowEnd}` : "";
+    }
+
+    @HostBinding('style.grid-column-start')
+    public get colStart(): string {
+        return this.layout ? `${this.layout.colStart}` : "";
+    }
+
+    @HostBinding('style.grid-column-end')
+    public get colEnd(): string {
+        return this.layout ? `${this.layout.colEnd}` : "";
+    }
+
     /**
      * @hidden
      * @internal
      */
     @Input()
     public rowIndex: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public colIndex: number;
+
+    @Input()
+    public layout: IMultiRowLayoutNode;
 
     @Input()
     public dimension: IPivotDimension;

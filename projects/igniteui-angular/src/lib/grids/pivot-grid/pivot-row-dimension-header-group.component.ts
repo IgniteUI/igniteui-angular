@@ -14,6 +14,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { NgIf, NgClass, NgStyle } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { IMultiRowLayoutNode } from '../common/types';
 
 /**
  * @hidden
@@ -49,6 +50,21 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      */
     @Input()
     public rowIndex: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public colIndex: number;
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public layout: IMultiRowLayoutNode;
 
     /**
     * @hidden
@@ -95,7 +111,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      */
     public get visibleIndex(): number {
         if (this.grid.horizontalRowDimensions) {
-            return this.grid.visibleRowDimensions.indexOf(this.parent.dimension);
+            return this.colIndex;
         }
 
         const field = this.column.field;
@@ -117,10 +133,11 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
 
     protected override get activeNode() {
         this.grid.navigation.isRowHeaderActive = true;
+        this.grid.navigation.isRowDimensionHeaderActive = false;
         return {
             row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: null,
-            layout: null
+            layout: this.layout || null
         };
     }
 

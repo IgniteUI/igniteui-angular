@@ -147,7 +147,7 @@
 </ng-template>
 
 <ng-template #horizontalRowDimensionsTemplate>
-    <div tabindex="0" [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div tabindex="0" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
         <ng-container *ngIf="dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger as groupedData">
             <ng-template #verticalRowDimScrollContainer role="rowgroup" igxGridFor let-rowGroup let-rowIndex="index"
                     [igxGridForOf]="groupedData"
@@ -157,26 +157,7 @@
                     [igxForItemSize]="renderedRowHeight"
                     [igxForSizePropName]="'height'"
             >
-                <div class="igx-grid__tbody-pivot-dimension igx-grid__mrl-block" [ngStyle]="{
-                    'grid-template-rows': getRowMRLTemplate(true, rowGroup),
-                    'grid-template-columns': getRowMRLTemplate(false, rowGroup)
-                }">
-                    <ng-template ngFor let-cell let-cellIndex="index" [ngForOf]="rowGroup
-                        | pivotGridHorizontalRowCellMerging:pivotConfiguration:pipeTrigger">
-                        <igx-pivot-row-dimension-content role="row" class="igx-grid-thead"
-                            [grid]="this"
-                            [dimension]="cell.rootDimension"
-                            [rootDimension]="cell.rootDimension"
-                            [rowIndex]="calcRowIndex(groupedData, rowIndex,  cell)"
-                            [rowData]="cell.records[0]"
-                            [width]="rowDimensionWidthCombined(cell.dimensions)"
-                            [style.grid-row-start]="cell.rowStart"
-                            [style.grid-row-end]="cell.rowStart + cell.rowSpan"
-                            [style.grid-column-start]="cell.colStart"
-                            [style.grid-column-end]="cell.colStart + cell.colSpan">
-                        </igx-pivot-row-dimension-content>
-                    </ng-template>
-                </div>
+                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         </ng-container>
     </div>

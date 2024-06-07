@@ -272,6 +272,7 @@ export class IgxPivotGridHorizontalRowCellMerging implements PipeTransform {
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
+        mrlIndexes: number[][],
         _pipeTrigger?: number
     ): IPivotGridHorizontalGroup[] {
         if (collection.length === 0 || config.rows.length === 0) return [{
