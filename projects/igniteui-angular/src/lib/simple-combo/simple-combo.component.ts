@@ -241,6 +241,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this.filterValue = this.searchValue = '';
         });
+        if (!this.comboInput.value) {
+            this.filterValue = this.searchValue = '';
+        }
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
                 this.comboInput.focus();
@@ -285,7 +288,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && super.selection.length) {
+        if (!this.comboInput.value.trim() && super.selection.length && super.selection[0][this.valueKey] !== "") {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
@@ -293,6 +296,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         if (super.selection.length) {
             this.selectionService.clear(this.id);
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {

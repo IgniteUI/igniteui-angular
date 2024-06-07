@@ -1528,6 +1528,52 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)
         });
+
+        it('should properly filter dropdown when a key is pressed while the combo is focused but not opened, with no selected item', fakeAsync(() => {
+            expect(combo.collapsed).toEqual(true);
+
+            // filter with a specific character when there is no selected item
+            combo.handleInputChange('z');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(1);
+            expect(combo.filteredData[0].field).toEqual('Arizona');
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toEqual(true);
+
+            // filter with ' '  when there is no selected item
+            combo.handleInputChange(' ');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(12);
+        }));
+
+        it('should properly filter dropdown when a key is pressed while the combo is focused but not opened, with a selected item', fakeAsync(() => {
+            // select an item
+            combo.select('Connecticut');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection.field).toEqual('Connecticut');
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+
+            // filter with a specific character when there is a selected item
+            combo.handleInputChange('z');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(1);
+            expect(combo.filteredData[0].field).toEqual('Arizona');
+        }));
     });
 
     describe('Display density', () => {
