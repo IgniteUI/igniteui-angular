@@ -55,12 +55,21 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
         return this.getRowMRLTemplate(false, this.rowGroup);
     }
 
+    /**
+     * @hidden @internal
+     */
     @Input()
     public rowIndex: number;
 
+    /**
+     * @hidden @internal
+     */
     @Input()
     public rowGroup: IPivotGridRecord[];
 
+    /**
+     * @hidden @internal
+     */
     @Input()
     public groupedData: IPivotGridRecord[][];
 

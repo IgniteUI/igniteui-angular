@@ -8,22 +8,8 @@ import { IMultiRowLayoutNode } from '../public_api';
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     public override grid: IgxPivotGridComponent;
-    protected _isRowHeaderActive = false;
-    protected _isRowDimensionHeaderActive = false;
-
-    public set isRowHeaderActive(value: boolean) {
-        this._isRowHeaderActive = value;
-    }
-    public get isRowHeaderActive() {
-        return this._isRowHeaderActive;
-    }
-
-    public set isRowDimensionHeaderActive(value: boolean) {
-        this._isRowDimensionHeaderActive = value;
-    }
-    public get isRowDimensionHeaderActive() {
-        return this._isRowDimensionHeaderActive;
-    }
+    public isRowHeaderActive = false;
+    public isRowDimensionHeaderActive = false;
 
     public get lastRowDimensionsIndex() {
         return this.grid.visibleRowDimensions.length - 1;

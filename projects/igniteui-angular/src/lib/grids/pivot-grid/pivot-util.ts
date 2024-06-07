@@ -378,10 +378,10 @@ export class PivotUtil {
         return leafs;
     }
 
-    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension, horizontalRendering: boolean = false) {
+    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension, horizontalLayout: boolean = false) {
         const parentFields = [];
 
-        if (!horizontalRendering) {
+        if (!horizontalLayout) {
             const currentDimIndex = rec.dimensions.findIndex(x => x.memberName === currentDim.memberName) + 1;
             const prevDims = rec.dimensions.slice(0, currentDimIndex);
             for (const prev of prevDims) {

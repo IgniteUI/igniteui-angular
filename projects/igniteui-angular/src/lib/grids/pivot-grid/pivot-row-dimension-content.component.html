@@ -4,6 +4,7 @@
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles | igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
                 [style.min-width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [style.flex-basis]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
                 [colIndex]="colIndex"

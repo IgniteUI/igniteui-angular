@@ -48,8 +48,7 @@ export interface IPivotDimensionStrategy {
         dimensions: IPivotDimension[],
         values: IPivotValue[],
         cloneStrategy: IDataCloneStrategy,
-        pivotKeys?: IPivotKeys,
-        horizontalRendering?: boolean): any[];
+        pivotKeys?: IPivotKeys): any[];
 }
 
 /**
