@@ -78,7 +78,6 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         let row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
         let expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[0])
         let isExpanded = this.grid.expansionStates.has(expansionRowKey) ? this.grid.expansionStates.get(expansionRowKey) : true;
-        console.log(isExpanded)
 
         if (!isExpanded && ROW_EXPAND_KEYS.has(key)) {
             if (row.key === undefined) {
