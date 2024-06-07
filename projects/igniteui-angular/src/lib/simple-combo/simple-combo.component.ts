@@ -115,6 +115,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private _collapsing = false;
 
+    private _previousSelection = { selectedItem: '', selection: [] };
+
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this._filteredData;
@@ -279,6 +281,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override handleInputChange(event?: any): void {
+        if (this.hasSelectedItem) {
+            this._previousSelection = { selectedItem: this.selectedItem, selection: this.selection };
+        }
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
@@ -466,6 +471,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         };
         if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
+        } else if (this._updateInput && newSelection.size === 0 && this._previousSelection.selectedItem !== '') {
+            args.oldValue = this._previousSelection.selectedItem;
+            args.oldSelection = this._previousSelection.selection;
+            this.selectionChanging.emit(args);
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
@@ -482,9 +491,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this._onChangeCallback(args.newValue);
             this._updateInput = true;
+        } else if (args.cancel) {
+            if (this._updateInput && this._previousSelection.selectedItem !== '') {
+                this.selectionService.select_items(this.id, [this._previousSelection.selectedItem], true);
+                this._value = [this._previousSelection.selectedItem];
+            }
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);
-        }
+        } 
+        this._previousSelection = { selectedItem: '', selection: [] };
     }
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]): string {
