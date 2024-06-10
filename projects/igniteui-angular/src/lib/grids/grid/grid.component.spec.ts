@@ -3030,7 +3030,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
 }
 @Component({
     template: `<div [style.display]="display" [style.width.px]="outerWidth" [style.height.px]="outerHeight">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+            <igx-grid #grid [data]="data" [autoGenerate]="true">
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
