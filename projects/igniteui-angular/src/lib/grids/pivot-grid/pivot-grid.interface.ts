@@ -84,6 +84,7 @@ export interface IPivotAggregator {
 }
 
 /* marshalByValue */
+/* tsPlainInterface */
 /**
 * Configuration of the pivot grid.
 */
@@ -92,20 +93,12 @@ export interface IPivotConfiguration {
     rowStrategy?: IPivotDimensionStrategy | null;
     /** A strategy to transform the columns. */
     columnStrategy?: IPivotDimensionStrategy | null;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotDimensionCollection */
     /** A list of the rows. */
     rows: IPivotDimension[] | null;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotDimensionCollection */
     /** A list of the columns. */
     columns: IPivotDimension[] | null;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotValueCollection */
     /** A list of the values. */
     values: IPivotValue[] | null;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotDimensionCollection */
     /** Dimensions to be displayed in the filter area. */
     filters?: IPivotDimension[] | null;
     /** Pivot data keys used for data generation. Can be used for custom remote scenarios where the data is pre-populated. */
