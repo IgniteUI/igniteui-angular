@@ -246,8 +246,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private createInitialExpressionUIElement() {
         if (this.expressionsList.length == 1) {
-            const currentExpr = this.expressionsList[0].expression;
-            if (currentExpr.condition.name === this.selectedOperator) {
+            const currentExprUI = this.expressionsList.pop();
+            if (currentExprUI.expression.condition.name === this.selectedOperator) {
+                currentExprUI.beforeOperator = FilteringLogic.And;
                 const secondExprUI = new ExpressionUI();
                 secondExprUI.expression = {
                     condition: null,
@@ -255,9 +256,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
                     ignoreCase: this.column.filteringIgnoreCase,
                     searchVal: null
                 };
-
-                secondExprUI.beforeOperator = FilteringLogic.And;
-
+                currentExprUI.afterOperator = FilteringLogic.And;
+                this.expressionsList.push(currentExprUI);
                 this.expressionsList.push(secondExprUI);
                 return;
             }
