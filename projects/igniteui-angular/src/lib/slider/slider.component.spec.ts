@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
@@ -329,6 +329,61 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(60);
+        });
+
+        it('should not set value if value is nullish but not zero', () => {
+            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(true);
+            const setValueSpy = spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+
+            slider.writeValue(null);
+            fixture.detectChanges();
+
+            expect(setValueSpy).not.toHaveBeenCalled();
+            expect(positionHandlersAndUpdateTrackSpy).not.toHaveBeenCalled();
+
+            slider.writeValue(undefined);
+            fixture.detectChanges();
+
+            expect(setValueSpy).not.toHaveBeenCalled();
+            expect(positionHandlersAndUpdateTrackSpy).not.toHaveBeenCalled();
+        });
+
+        it('should set value and update track when value is not nullish and not zero', () => {
+            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
+            const setValueSpy = spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+
+            const value = 10;
+            slider.writeValue(value);
+            fixture.detectChanges();
+
+            expect(setValueSpy).toHaveBeenCalledWith(value, false);
+            expect(positionHandlersAndUpdateTrackSpy).toHaveBeenCalled();
+        });
+
+        it('should normalize value by step', () => {
+            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
+            const normalizeByStepSpy = spyOn(slider as any, 'normalizeByStep');
+
+            const value = 10;
+            slider.writeValue(value);
+            fixture.detectChanges();
+
+            expect(normalizeByStepSpy).toHaveBeenCalledWith(value);
+        });
+
+        it('should return true if value is null or undefined', () => {
+            expect((slider as any).isNullishButNotZero(null)).toBe(true);
+            expect((slider as any).isNullishButNotZero(undefined)).toBe(true);
+        });
+
+        it('should return false if value is zero', () => {
+            expect((slider as any).isNullishButNotZero(0)).toBe(false);
+        });
+
+        it('should return false if value is not nullish and not zero', () => {
+            expect((slider as any).isNullishButNotZero(10)).toBe(false);
         });
     });
 
@@ -1690,6 +1745,10 @@ describe('IgxSlider', () => {
             fakeDoc.documentElement.dir = 'rtl';
         });
 
+        afterEach(() => {
+            fakeDoc.documentElement.dir = 'ltr';
+        });
+
         it('should reflect on the right instead of the left css property of the slider handlers', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
@@ -1746,6 +1805,31 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             expect(slider.value).toBe(formControl.value);
         });
+
+        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SliderTemplateFormComponent);
+            fixture.componentInstance.updateOn = 'blur';
+            fixture.detectChanges();
+            tick();
+
+            const slider = fixture.componentInstance.slider;
+            const thumb = fixture.nativeElement.querySelector('igx-thumb');
+
+            expect(slider.value).toBe(fixture.componentInstance.value);
+
+            thumb.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            slider.value = 30;
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).not.toBe(fixture.componentInstance.value);
+
+            thumb.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).toBe(fixture.componentInstance.value);
+        }));
     });
 
     const panRight = (element, elementHeight, elementWidth, duration) => {
@@ -1936,7 +2020,7 @@ class RangeSliderWithCustomTemplateComponent {
 @Component({
     template: `
         <form #form="ngForm">
-            <igx-slider [(ngModel)]="value" name="amount"></igx-slider>
+            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn }"></igx-slider>
         </form>
     `,
     standalone: true,
@@ -1944,6 +2028,8 @@ class RangeSliderWithCustomTemplateComponent {
 })
 export class SliderTemplateFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    @Input() public updateOn: 'change' | 'blur' | 'submit' = 'change';
 
     public value = 10;
 }

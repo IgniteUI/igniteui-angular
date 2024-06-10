@@ -989,6 +989,45 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid1.data[0].ID).toBe(11);
             expect(childGrid2.data[0].ID).toBe(21);
         });
+
+        it('should expose the (child) grid instance as context of the empty grid template', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridEmptyTemplateComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(fixture.componentInstance.childGridRef).toBe(null);
+
+            const firstDataItem = fixture.componentInstance.data[0];
+            firstDataItem.childData = [];
+            fixture.componentInstance.data[0] = firstDataItem;
+            fixture.detectChanges();
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[0]);
+            fixture.detectChanges();
+
+            const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+            const gridBody = child1Grid.query(By.css('.igx-grid__tbody'));
+            expect(gridBody.nativeElement.innerText).toBe('Get child grid ref'); //text from custom template button
+
+            const button = gridBody.nativeElement.querySelector('button');
+            button.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
+        });
+
+        it('should update columns property of row islands on columns change.', fakeAsync(() => {
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(2, 'Initial columns length should be 2');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(2, 'Initial columnList length should be 2');
+
+            fixture.componentInstance.toggleColumns = false;
+            fixture.detectChanges();
+            tick();
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
+        }));
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1841,8 +1880,8 @@ export class IgxHierarchicalGridTestBaseComponent {
     <igx-column field="ID"></igx-column>
     <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1>
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
+            <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2>
             <igx-column field="Col1"></igx-column>
@@ -1851,12 +1890,13 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
+    public toggleColumns = true;
 }
 
 @Component({
@@ -2287,5 +2327,38 @@ export class IgxHierarchicalGridMCHComponent {
 
     public pinnedChange(args: any) {
         this.pinnedArgs = args;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid
+        [emptyGridTemplate]="emptyTemplate">
+    <igx-column field="ID"></igx-column>
+    <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [emptyGridTemplate]="emptyTemplate">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <ng-template #emptyTemplate let-grid>
+                <button (click)="getChildGridRef(grid)">
+                    Get child grid ref
+                </button>
+      </ng-template>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGridTestBaseComponent {
+    public childGridRef: IgxHierarchicalGridComponent = null;
+    constructor() {
+        super();
+        const firstDataItem = this.data[0];
+        firstDataItem.childData = [];
+        this.data[0] = firstDataItem;
+    }
+
+    public getChildGridRef(grid: IgxHierarchicalGridComponent) {
+        this.childGridRef = grid;
     }
 }
