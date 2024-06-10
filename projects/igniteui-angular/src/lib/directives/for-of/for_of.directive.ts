@@ -907,6 +907,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         }
     }
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateScroll(): void {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+            this.scrollComponent.scrollAmount = scrollAmount;
+            this._updateScrollOffset();
+        }
+    }
+
     protected updateSizes() {
         if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();

@@ -3656,6 +3656,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
             this.cdr.detectChanges();
+            Promise.resolve().then(() => this.headerContainer.updateScroll());
         });
 
 
@@ -6367,12 +6368,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
         const gridScrLeft = rowForOf.getScroll().scrollLeft;
-        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
-        if (gridScrLeft !== actualScrollLeft) {
-            rowForOf.onHScroll(gridScrLeft);
-            rowForOf.cdr.detectChanges();
-        }
+        rowForOf.onHScroll(gridScrLeft);
+        rowForOf.cdr.detectChanges();
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: RowType) {
@@ -6917,7 +6914,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !parentElement ||
             parentElement.clientHeight === 0 ||
             parentElement.clientHeight === renderedHeight;
-        if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
+        if (parentElement && (res || this._autoSize)) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             this._autoSize = false;
