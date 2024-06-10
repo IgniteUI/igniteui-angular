@@ -1,10 +1,12 @@
-<div class="wrapper">
-    <div class="sample-content">
-        <div class="sample-column">
+<div class="wrapper" style="width:100%; height:100%;">
+    <div class="sample-content" style="width:100%; height:100%;">
+        <div class="sample-column" style="width:100%; height:100%;">
             <div class="density-chooser">
                 <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <div>
+                <button igxButton="contained" (click)="gridContainer.style.display = 'contents'">Set container display: contents</button>
+                <button igxButton="contained" (click)="gridContainer.style.display = 'block'">Set container display: block</button>
                 <button igxButton="contained" (click)="gridContainerHidden = !gridContainerHidden">Toggle Container Visibility</button>
                 <button igxButton="contained" (click)="containerHeight = '400px'">Set container height px</button>
                 <button igxButton="contained" (click)="containerHeight = '100%'">Set container height %</button>
@@ -19,7 +21,7 @@
                 <button igxButton="contained" (click)="setData(0)">Set no data</button>
                 <button igxButton="contained" (click)="checkCols()">Check cols</button>
             </div>
-            <div [hidden]="gridContainerHidden" [style.height]="containerHeight">
+            <div #gridContainer [hidden]="gridContainerHidden" [style.height]="containerHeight">
             <igx-grid
                 #grid1
                 [data]="data"
