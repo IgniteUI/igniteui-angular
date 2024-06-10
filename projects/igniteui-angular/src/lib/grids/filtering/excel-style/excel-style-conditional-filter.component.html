@@ -8,7 +8,7 @@
         aria-haspopup="true"
         [attr.aria-controls]="this.subMenu.listId"
         [attr.aria-activedescendant]="!this.subMenu.collapsed ? this.subMenu.focusedItem?.id : null">
-        <span>{{ subMenuText }}</span>
+        <span>{{ subMenuText }} <ng-container *ngIf="filterNumber > 0">({{filterNumber}})</ng-container></span>
         <igx-icon>keyboard_arrow_right</igx-icon>
     </div>
 
@@ -20,13 +20,15 @@
         <div>
             <igx-drop-down-item
             *ngFor="let condition of conditions"
+            [selected]="getSelectedCondition(condition)"
             [value]="condition">
                 <div class="igx-grid__filtering-dropdown-items">
                     <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
                     <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
                 </div>
             </igx-drop-down-item>
-            <igx-drop-down-item *ngIf="showCustomFilterItem()">
+            <igx-drop-down-item *ngIf="showCustomFilterItem()"
+            [selected]="getSelectedCondition('custom')" >
                 <div class="igx-grid__filtering-dropdown-items">
                     <igx-icon>filter_list</igx-icon>
                     <span class="igx-grid__filtering-dropdown-text">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
