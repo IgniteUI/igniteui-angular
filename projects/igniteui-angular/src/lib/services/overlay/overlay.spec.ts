@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     Component,
     ComponentRef,
     ElementRef,
@@ -9,7 +8,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
@@ -219,9 +218,7 @@ describe('igxOverlay', () => {
         configureTestSuite();
         let mockElement: any;
         let mockElementRef: any;
-        let mockFactoryResolver: any;
         let mockApplicationRef: any;
-        let mockInjector: any;
         let mockAnimationBuilder: any;
         let mockDocument: any;
         let mockNgZone: any;
@@ -259,20 +256,8 @@ describe('igxOverlay', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
             mockElement.parentNode = mockElement;
-            mockElementRef = { nativeElement: mockElement };
-            mockFactoryResolver = {
-                resolveComponentFactory: () => ({
-                    create: () => ({
-                        hostView: '',
-                        location: mockElementRef,
-                        changeDetectorRef: { detectChanges: () => { } },
-                        destroy: () => { },
-                        onDestroy: () => { }
-                    })
-                })
-            };
+            mockElementRef = new ElementRef(mockElement);
             mockApplicationRef = { attachView: () => { }, detachView: () => { } };
-            mockInjector = {};
             mockAnimationBuilder = {};
             mockDocument = {
                 body: mockElement,
@@ -310,7 +295,7 @@ describe('igxOverlay', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
 
             overlay = new IgxOverlayService(
-                mockFactoryResolver, mockApplicationRef, mockInjector, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
 
         it('Should set cursor to pointer on iOS', () => {
@@ -687,8 +672,7 @@ describe('igxOverlay', () => {
 
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                target: mockItem
+                verticalDirection: VerticalAlignment.Bottom
             };
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
@@ -1164,36 +1148,6 @@ describe('igxOverlay', () => {
 
             document.body.removeChild(wrapperElement);
         });
-
-        it('#3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            fixture.detectChanges();
-
-            spyOn(appRef, 'attachView');
-            const mockNativeElement = document.createElement('div');
-            const mockComponent = {
-                hostView: fixture.componentRef.hostView,
-                changeDetectorRef: { detectChanges: () => { } },
-                location: { nativeElement: mockNativeElement },
-                destroy: () => { }
-            };
-            const factoryMock = jasmine.createSpyObj('factoryMock', {
-                create: mockComponent
-            });
-            const injector = 'testInjector';
-            const componentFactoryResolver = jasmine.createSpyObj('componentFactoryResolver', {
-                resolveComponentFactory: factoryMock
-            });
-
-            const id = overlay.attach(SimpleDynamicComponent, {}, { componentFactoryResolver, injector } as any);
-            expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
-            expect(factoryMock.create).toHaveBeenCalledWith(injector);
-            expect(appRef.attachView).toHaveBeenCalledWith(fixture.componentRef.hostView);
-            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
-
-            overlay.detachAll();
-        }));
 
         it('#3988 - Should use viewContainerRef to create component', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -4677,7 +4631,7 @@ export class WidthTestOverlayComponent {
         this.overlaySettings.closeOnOutsideClick = true;
         this.overlaySettings.modal = false;
 
-        this.overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
+        this.overlaySettings.target = this.buttonElement.nativeElement;
         this.overlay.show(this.overlay.attach(this.customComponent, this.overlaySettings));
     }
 }

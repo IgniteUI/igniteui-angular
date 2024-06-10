@@ -440,21 +440,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
     public disablePinning = false;
-    /**
-     * Sets/gets whether the column is movable.
-     * Default value is `false`.
-     *
-     * ```typescript
-     * let isMovable = this.column.movable;
-     * ```
-     * ```html
-     * <igx-column [movable] = "true"></igx-column>
-     * ```
-     *
-     * @deprecated in version 13.1.0. Use the Grid's `moving` property instead.
-     */
-    @Input({ transform: booleanAttribute })
-    public movable = false;
+
     /**
      * Gets the `width` of the column.
      * ```typescript
