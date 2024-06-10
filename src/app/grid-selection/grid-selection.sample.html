@@ -3,14 +3,14 @@
         <button (click)="log('')">LOG</button>
         <igx-switch [(ngModel)]="grid1.hideRowSelectors">Hide row selectors</igx-switch>
 
-        <button igxButton="contained" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
-            <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)"  displayDensity="comfortable">
+        <button igxButton="contained" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable">Cell Selection: {{grid1.cellSelection}}</button>
+            <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)" >
                 <igx-drop-down-item *ngFor="let item of selectionModes">
                         {{ item }}
                 </igx-drop-down-item>
             </igx-drop-down>
-        <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
-        <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)"  displayDensity="comfortable">
+        <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection">Row Selection: {{grid1.rowSelection}}</button>
+        <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)">
             <igx-drop-down-item *ngFor="let item of selectionModes">
                     {{ item }}
             </igx-drop-down-item>
@@ -70,9 +70,9 @@
         <button igxButton="flat" (click)="selectThirdRow()">Select Third row</button>
         <button igxButton="flat" class="igx-button--flat" (click)="log(grid1.selectedRows)">Selected Rows</button>
         <ng-container *ngIf="selection">
-            <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
-            <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
-            <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Select All Rows</button>
+            <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
+            <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxRipple="#FBB13C" >Toggle All rows</button>
+            <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxRipple="#FBB13C" >Select All Rows</button>
         </ng-container>
     </div>
 </div>

@@ -8,10 +8,9 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, Size } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { NgFor, NgIf } from '@angular/common';
@@ -23,6 +22,7 @@ import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-sty
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
 import { getComponentSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -390,26 +390,26 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGridSecondRow.inEditMode).toBe(true);
         });
 
-        it('should render correctly when display density is changed', () => {
+        it('should render correctly when grid size is changed', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+            expect(hierarchicalGrid.gridSize).toEqual(Size.Large);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             fixture.detectChanges();
 
-            expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+            expect(childGrid.gridSize).toBe(Size.Medium);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             fixture.detectChanges();
 
-            expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+            expect(childGrid.gridSize).toBe(Size.Small);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 
@@ -1015,6 +1015,19 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
         });
+
+        it('should update columns property of row islands on columns change.', fakeAsync(() => {
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(2, 'Initial columns length should be 2');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(2, 'Initial columnList length should be 2');
+
+            fixture.componentInstance.toggleColumns = false;
+            fixture.detectChanges();
+            tick();
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
+        }));
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1867,8 +1880,8 @@ export class IgxHierarchicalGridTestBaseComponent {
     <igx-column field="ID"></igx-column>
     <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1>
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
+            <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2>
             <igx-column field="Col1"></igx-column>
@@ -1877,12 +1890,13 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
+    public toggleColumns = true;
 }
 
 @Component({

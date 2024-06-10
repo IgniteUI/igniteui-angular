@@ -27,7 +27,7 @@ import localeES from "@angular/common/locales/es";
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
-const DATE_PICKER_TOGGLE_ICON = 'today';
+const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
 const DATE_PICKER_CLEAR_ICON = 'clear';
 
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
@@ -758,7 +758,6 @@ describe('IgxDatePicker', () => {
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.disabledDates = mockDisabledDates;
                 expect(datePicker.disabledDates).toEqual(mockDisabledDates);
-                spyOn(datePicker.densityChanged, 'emit').and.callThrough();
                 datePicker.displayFormat = 'MM/yy/DD';
                 expect(datePicker.displayFormat).toEqual('MM/yy/DD');
                 datePicker.displayMonthsCount = Infinity;

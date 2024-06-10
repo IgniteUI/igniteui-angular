@@ -245,10 +245,12 @@ export const isEqual = (obj1, obj2): boolean => {
 export class PlatformUtil {
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    public isSafari = this.isBrowser && /Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -619,4 +621,20 @@ export function* intoChunks<T>(arr: T[], size: number) {
   for (let i = 0; i < arr.length; i += size) {
     yield arr.slice(i, i + size);
   }
+}
+
+/**
+ * @param size 
+ * @returns string that represents the --component-size default value 
+ */
+export function getComponentCssSizeVar(size: string) {
+    switch (size) {
+        case "1":
+            return 'var(--ig-size, var(--ig-size-small))';
+        case "2":
+            return 'var(--ig-size, var(--ig-size-medium))';
+        case "3":
+        default:
+            return 'var(--ig-size, var(--ig-size-large))';
+    }
 }

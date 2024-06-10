@@ -21,7 +21,6 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     QueryList,
     TemplateRef,
@@ -30,7 +29,6 @@ import {
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -264,7 +262,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil) {
@@ -287,7 +284,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             textHighlightService,
             overlayService,
             summaryService,
-            _displayDensityOptions,
             localeId,
             platform
         );
@@ -437,6 +433,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             return false;
         });
         this._childColumns = topCols;
+        this.updateColumns(this._childColumns);
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
             grid.createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {

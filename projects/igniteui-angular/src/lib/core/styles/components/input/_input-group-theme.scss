@@ -979,6 +979,26 @@
         will-change: font-size, color, transform;
     }
 
+    @if $variant == 'material' {
+        %textarea-group:not(%suffixed) {
+            %form-group-bundle-main {
+                grid-area: 1 / 2 / span 1 / span 3;
+                padding-inline-end: 0;
+            }
+
+            textarea {
+                padding-inline-end: rem(4px);
+                width: calc(100% - #{rem(1px)});
+            }
+        }
+
+        %textarea-group--outlined:not(%suffixed) {
+            textarea {
+                width: calc(100% - #{rem(2px)});
+            }
+        }
+    }
+
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
         --textarea-size: #{sizable(
@@ -994,11 +1014,24 @@
         }
     }
 
-    %form-group-textarea-label {
-        transition-duration: 0ms;
-    }
-
     @if $material-theme {
+        %form-group-textarea-label {
+            top: calc($input-top-padding - #{rem(1px)});
+            margin-block-end: auto;
+        }
+
+        %textarea-group--outlined {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(3px)});
+            }
+        }
+
+        %textarea-group--box {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(2px)});
+            }
+        }
+
         %textarea-group-label--focused {
             transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
@@ -1191,6 +1224,7 @@
 
         @if $material-theme {
             padding: 0;
+            inset-block-start: rem(-3px);
         }
 
         // resets typography styles
@@ -1668,8 +1702,9 @@
     }
 
     %indigo-textarea {
-        padding-block: rem(8px);
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-block: rem(6px);
+        padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+        inset-block-end: rem(2px);
     }
 
     %fluent-textarea {

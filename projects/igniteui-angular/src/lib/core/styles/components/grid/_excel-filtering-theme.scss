@@ -41,6 +41,7 @@
     );
 
     %grid-excel-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: block;
         width: rem(320px);
         height: 100%;
@@ -48,6 +49,20 @@
         box-shadow: elevation(12);
         overflow: auto;
         min-width: rem(320px);
+    }
+
+    %igx-excel-filter__sizing {
+        @include sizable();
+        min-height: sizable(
+            rem(330px),
+            rem(465px),
+            rem(645px)
+        );
+        max-height: sizable(
+            rem(405px),
+            rem(565px),
+            rem(775px)
+        );
     }
 
     %grid-excel-filter--inline {
@@ -98,15 +113,35 @@
             --item-hover-background: #{color($color: 'gray', $variant: 100)};
             --item-selected-background: #{color($color: 'gray', $variant: 100)};
             --item-text-color: #{color($color: 'gray', $variant: 700)};
+            --item-icon-color: #{color($color: 'gray', $variant: 700)};
             --item-hover-text-color: #{color($color: 'gray', $variant: 800)};
+            --item-hover-icon-color: #{color($color: 'gray', $variant: 800)};
             --item-selected-text-color: #{if(
                 $variant == 'indigo-design',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
+            --item-selected-icon-color: #{if(
+                $variant == 'indigo-design',
+                contrast-color($color: 'surface'),
+                color($color: 'secondary', $variant: 500)
+            )};
+            --item-selected-hover-icon-color: #{if(
+                $variant == 'fluent',
+                color($color: 'secondary', $variant: 500),
+                contrast-color($color: 'gray', $variant: 50)
+            )};
             --item-border-color: transparent;
+            --item-hover-border-color: transparent;
+            --item-focused-border-color: #{if(
+                $variant == 'fluent',
+                color($color: 'gray', $variant: 700),
+                transparent
+            )};
             --item-selected-border-color: transparent;
+            --item-selected-hover-border-color: transparent;
             --item-disabled-border: transparent;
+            --disabled-selected-border-color: transparent;
         }
 
         @include tree(tree-theme(
@@ -391,7 +426,6 @@
     }
 
     %grid-excel-menu--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
 
         %grid-excel-menu__header {
             justify-content: space-between;
@@ -399,7 +433,6 @@
     }
 
     %grid-excel-menu--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
 
         %grid-excel-menu__header {
             justify-content: space-between;

@@ -10,6 +10,10 @@
             @extend %igx-excel-filter__loading !optional;
         }
 
+        @include e(sizing) {
+            @extend %igx-excel-filter__sizing !optional;
+        }
+
         @include e(tree) {
             @extend %igx-excel-filter__tree !optional;
         }

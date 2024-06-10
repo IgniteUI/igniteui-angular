@@ -2,8 +2,53 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.0.0
+### New Features
+- `IgxCombo`, `IgxSimpleCombo`:
+    - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+- `IgxDateTimeEditor`, `IgxTimePicker`:
+  - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
+      - Fractional seconds: S, SS, SSS.
+      - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
+- `IgxPivotGrid`
+    - Added templatable row dimension headers displayed on the top, above all row headers.
+    - Replace the `showPivotConfigurationUI` property with `pivotUI` property, adding ability now to enable/disable the configuration UI and/or the new row dimension headers.
+    - Added `sortable` property for each IPivotDimension.
+- `IgxOverlayService`, `IgxToggleDirective`:
+    - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
+
+### Changes
+- With the removal of the Display Density token, components now get their default sizes from the theme. Default sizes have changed for most components, with it now being medium (previously large). Here's an exhaustive list of all sizable components and their default sizes by theme:
+    - `Avatar` - Small (All Themes)
+    - `Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Button Group` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Card` - Medium (All Themes)
+    - `Combo` - Medium (All Themes)
+    - `Chip` - Medium (All Themes)
+    - `Date/Time Picker` - Medium (All Themes)
+    - `Dropdown` - Medium (All Themes)
+    - `Dialog` - Medium (All Themes)
+    - `Icon` - Large (All Themes)
+    - `Icon Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Input Group` - Medium (All Themes)
+    - `List` - Medium (All Themes)
+    - `Tree` - Medium (All Themes)
+    - `Rating` - Medium (All Themes)
+    - `Select` - Medium (All Themes)
+
+### General
+- Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
+
+### General
+- `IgxSimpleCombo`
+    - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
+
 ## 17.2.0
 ### New Features
+- `IgxAvatar`
+    - Removed deprecated property `roundShape`; Deprecated `color` and `bgColor` properties.
+- `IgxButton`
+    - Removed deprecated properties `color` and `background`;
 - `IgxCalendar`
     - Completely revamped calendar themes.
     - New years view.
@@ -14,6 +59,16 @@ All notable changes for each version of this project will be documented in this 
     - Replaced the `vertical` property with `orientation` that can be set to either `horizontal`(default) or `vertical`.
     - Standalone views support full-blown keyboard navigation, accessibility improvements and the ability to change pages automatically on keyboard navigation.
     - Standalone views now emit `pageChanged` event whenever the active view page changes.
+- `IgxCard`
+    - Removed deprecated properties `type` and `reverse`;
+- `IgxDialog`
+    - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. For this reason the event argument of the event is now of type `IGridContextMenuEventArgs` which contains the row object as well as the cell one. The latter will be `null` if the event didn't originate from a cell. **This is not a breaking change** as the new type extends the old.
 
 ## 17.1.0
 ### New Features

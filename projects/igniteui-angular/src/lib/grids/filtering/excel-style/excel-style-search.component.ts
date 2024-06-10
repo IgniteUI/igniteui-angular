@@ -10,7 +10,6 @@ import {
     Input
 } from '@angular/core';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
@@ -40,7 +39,7 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
 import { ITreeNodeSelectionEvent } from '../../../tree/common';
 import { Navigate } from '../../../drop-down/drop-down.common';
-
+import { Size } from '../../common/enums';
 @Directive({
     selector: '[igxExcelStyleLoading]',
     standalone: true
@@ -229,6 +228,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.virtDir?.resetScrollPosition();
+
+            if (this.virtDir) {
+                this.virtDir.state.startIndex = 0;
+            }
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -355,9 +358,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get itemSize() {
         let itemSize = '40px';
-        switch (this.esf.displayDensity) {
-            case DisplayDensity.cosy: itemSize = '32px'; break;
-            case DisplayDensity.compact: itemSize = '24px'; break;
+        const esf = this.esf as any;
+        switch (esf.size) {
+            case Size.Medium: itemSize = '32px'; break;
+            case Size.Small: itemSize = '24px'; break;
             default: break;
         }
         return itemSize;

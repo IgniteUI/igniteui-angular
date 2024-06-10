@@ -1,12 +1,12 @@
 <section class="sample-content">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
         <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
     </ng-template>
-    <igx-grid [displayDensity]="density" [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
-        <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+    <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

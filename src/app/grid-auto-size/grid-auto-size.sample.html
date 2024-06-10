@@ -2,7 +2,7 @@
     <div class="sample-content" style="width:100%; height:100%;">
         <div class="sample-column" style="width:100%; height:100%;">
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <div>
                 <button igxButton="contained" (click)="gridContainer.style.display = 'contents'">Set container display: contents</button>
@@ -25,14 +25,13 @@
             <igx-grid
                 #grid1
                 [data]="data"
-                [displayDensity]="density"
                 [allowFiltering]="true"
                 [moving]="true"
                 [rowSelection]="selectionMode"
                 [filterMode]="'excelStyleFilter'"
                 [width]="'100%'"
                 [height]="height">
-                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                <igx-grid-toolbar>
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

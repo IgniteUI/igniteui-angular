@@ -51,7 +51,7 @@
         content: 'body-1',
     ));
     @include checkbox-typography($categories: (
-        label: 'body-2',
+        label: 'body-1',
     ));
     @include chip-typography();
     @include column-actions-typography();
@@ -80,21 +80,30 @@
     @include list-typography($categories: (
         item: 'body-2',
         title: 'body-1',
-        subtitle: 'subtitle-1',
+        subtitle: 'body-2',
         header: 'overline',
     ));
     @include navbar-typography($categories: (
         title: 'h5'
     ));
-    @include navdrawer-typography();
+    @include navdrawer-typography($categories: (
+        item: 'body-2',
+        header: 'caption'
+    ));
     @include radio-typography($categories: (
         label: 'body-1'
     ));
     @include slider-typography();
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-1'
+    ));
     @include tabs-typography();
-    @include time-picker-typography();
+    @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
+        header-hour: 'h4',
+        selected-time: 'h4'
+    ));
     @include stepper-typography();
     @include toast-typography();
     @include tooltip-typography();

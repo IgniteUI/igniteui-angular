@@ -2,7 +2,7 @@
     <h4>Sample 1</h4>
 
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <div class="sample-content">
         <div class="sample-column">
@@ -17,11 +17,11 @@
                 <button igxButton="contained" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
                 <button igxButton="contained" (click)='reverseColumn()'>Reverse</button>
             </div>
-            <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
+            <igx-grid #grid1 [columnSelection]="'single'" [data]="data"
                 [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
                 (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
                 [rowEditable]="true" [primaryKey]="'ID'" [moving]="true">
-                <igx-grid-toolbar [displayDensity]="'compact'">
+                <igx-grid-toolbar class="size">
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -66,11 +66,11 @@
         </div>
     </div>
 
-    <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
+    <igx-grid #grid1 [columnSelection]="'single'" [data]="data" 
         [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
         (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
         [rowEditable]="true" [primaryKey]="'ID'" [moving]="true">
-        <igx-grid-toolbar [displayDensity]="'compact'">
+        <igx-grid-toolbar class="size">
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -102,7 +102,7 @@
     </div>
 
     <igx-grid #grid2 [columnSelection]="'single'" [allowFiltering]="true" [moving]="true"
-        [data]="mchData" displayDensity="compact">
+        [data]="mchData" class="size">
         <igx-column-group header="General Information" title="General Company Information"
             [collapsible]="true" [expanded]="true" [hidden]="true">
             <ng-template igxHeader let-column>
