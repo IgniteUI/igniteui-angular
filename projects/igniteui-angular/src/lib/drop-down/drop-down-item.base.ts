@@ -16,7 +16,7 @@ let NEXT_ID = 0;
     selector: '[igxDropDownItemBase]',
     standalone: true
 })
-export class IgxDropDownItemBaseDirective implements DoCheck {
+export class IgxDropDownItemBaseDirective {
     /**
      * Sets/gets the `id` of the item.
      * ```html
@@ -286,19 +286,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     public handleMousedown(event: MouseEvent): void {
         if (!this.dropDown.allowItemsFocus) {
             event.preventDefault();
-        }
-    }
-
-    public ngDoCheck(): void {
-        if (this._selected) {
-            const dropDownSelectedItem = this.dropDown.selectedItem;
-            if (!dropDownSelectedItem) {
-                this.dropDown.selectItem(this);
-            } else if (this.hasIndex
-                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
-                this !== dropDownSelectedItem) {
-                this.dropDown.selectItem(this);
-            }
         }
     }
 
