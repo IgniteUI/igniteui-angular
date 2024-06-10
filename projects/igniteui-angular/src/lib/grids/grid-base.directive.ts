@@ -3082,6 +3082,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private overlayIDs = [];
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+    private _shouldRecalcRowHeight = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3738,9 +3739,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     if (this._gridSize !== this.gridSize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
-                        if (this.rowList.length > 0 && this.rowList.first.cells && this.rowList.first.cells.length > 0) {
-                            this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.rowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
-                        }
+                        this.updateDefaultRowHeight();
                         this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
                         this.crudService.endEdit(false);
                         if (this._summaryRowHeight === 0) {
@@ -3963,6 +3962,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public dataRebinding(event: IForOfDataChangingEventArgs) {
+        if (event.state.chunkSize == 0) {
+            this._shouldRecalcRowHeight = true;
+        }
         this.dataChanging.emit(event);
     }
 
@@ -3971,6 +3973,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebound(event) {
         this.selectionService.clearHeaderCBState();
+        if (this._shouldRecalcRowHeight) {
+            this._shouldRecalcRowHeight = false;
+            this.updateDefaultRowHeight();
+        }
         this.dataChanged.emit(event);
     }
 
@@ -7820,6 +7826,17 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
+    }
+
+    private updateDefaultRowHeight() {
+        if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
+            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            if (height) {
+                this._defaultRowHeight = height;
+            } else {
+                this._shouldRecalcRowHeight = true;
+            }
+        }
     }
 
     // TODO: About to Move to CRUD

@@ -106,7 +106,7 @@ export const enum DataTypes {
 /** The filtering criteria to be applied on data search */
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
-    caseSensitive: boolean;
+    caseSensitive?: boolean;
     /** Defines whether filtering is allowed */
     filterable: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
