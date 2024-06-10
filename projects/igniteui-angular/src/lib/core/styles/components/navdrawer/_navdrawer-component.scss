@@ -94,6 +94,10 @@
             @extend %item--header !optional;
         }
 
+        @include e(item, disabled) {
+            @extend %item--disabled !optional;
+        }
+
         @include m(disable-animation) {
             @extend %disable-animation !optional;
         }
