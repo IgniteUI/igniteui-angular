@@ -932,6 +932,8 @@
     %month-picker {
         @extend %parent-container;
 
+        display: flex;
+
         %years-view,
         %months-view {
             color: inherit;

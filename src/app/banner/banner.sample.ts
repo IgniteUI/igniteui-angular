@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { useAnimation } from '@angular/animations';
-import { IgxBannerActionsDirective, IgxBannerComponent, IgxButtonDirective, IgxFlexDirective, IgxIconComponent, IgxLayoutDirective, IgxRippleDirective } from 'igniteui-angular';
+import { IgxBannerActionsDirective, IgxBannerComponent, IgxFlexDirective, IgxIconComponent, IgxLayoutDirective, IgxRippleDirective, IgxNavbarModule, IgxButtonModule } from 'igniteui-angular';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 @Component({
@@ -8,7 +8,7 @@ import { growVerIn, growVerOut } from 'igniteui-angular/animations';
     templateUrl: `banner.sample.html`,
     styleUrls: [`banner.sample.scss`],
     standalone: true,
-    imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxButtonDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective]
+    imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective, IgxNavbarModule, IgxButtonModule]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })
