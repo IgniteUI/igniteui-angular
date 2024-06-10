@@ -40,6 +40,10 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
 
+    public get filterNumber() {
+        return this.esf.expressionsList.length;
+    }
+
     private shouldOpenSubMenu = true;
     private destroy$ = new Subject<boolean>();
 
@@ -115,6 +119,17 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public getCondition(value: string): IFilteringOperation {
         return this.esf.column.filters.condition(value);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getSelectedCondition(condition: string): boolean {
+        const expressions = this.esf.expressionsList;
+        if (expressions.length < 1) {
+            return false;
+        }
+        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
     }
 
     /**
