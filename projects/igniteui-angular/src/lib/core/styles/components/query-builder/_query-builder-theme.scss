@@ -213,8 +213,20 @@
             );
         }
 
-        > igx-chip igx-prefix {
-            display: flex;
+        > igx-chip {
+            @if $variant != 'indigo-design' {
+                .igx-chip__item {
+                    border-block: none;
+                }
+            }
+
+            .igx-filter-tree__expression-column {
+                padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+            }
+            
+            igx-prefix {
+                display: flex;
+            }
         }
     }
 

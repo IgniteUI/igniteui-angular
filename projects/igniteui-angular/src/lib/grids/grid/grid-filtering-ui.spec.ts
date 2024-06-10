@@ -6037,6 +6037,52 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('search');
         });
+
+        it('Should reset list scroll position on filtered column change.', async () => {
+            // Add additional rows as prerequisite for the test
+            for (let index = 0; index < 10; index++) {
+                const newRow = {
+                    Downloads: index,
+                    ID: index + 100,
+                    ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(),
+                    Released: false,
+                    AnotherField: 'z'
+                };
+                grid.addRow(newRow);
+            }
+
+            fix.detectChanges();
+
+            // Select column
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            await wait(100);
+            fix.detectChanges();
+
+            // Scroll the search list to the bottom.
+            let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            scrollbar.scrollTop = 3000;
+            await wait(100);
+            fix.detectChanges();
+
+            // Select another column
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            await wait(100);
+            fix.detectChanges();
+
+            // Update scrollbar
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            await wait(100);
+            fix.detectChanges();
+
+            // Get the display container and its parent and verify if the display contaier is at start
+            const displayContainer = searchComponent.querySelector('igx-display-container');
+            const displayContainerRect = displayContainer.getBoundingClientRect();
+            const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
+
+            expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
+        });
     });
 
     describe('Load values on demand', () => {
