@@ -99,7 +99,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input('igxTooltipTarget')
     public override set target(target: any) {
-        if (target !== null && target !== '') {
+        if (target instanceof IgxTooltipDirective) {
             this._target = target;
         }
     }
