@@ -77,21 +77,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
     });
 
-    update.addValueTransform('comboFilteringTransform', (args: BoundPropertyObject): void => {
-        args.bindingType = InputPropertyType.EVAL;
-
-        switch (args.value) {
-            case 'true':
-                args.value = '{ filterable: true }';
-                break;
-            case 'false':
-                args.value = '{ filterable: false }';
-                break;
-            default:
-                args.value = `{ filterable: ${args.value} }`;
-        }
-    });
-
     const updateMainCSSFile = (host: Tree, context: SchematicContext): Tree => {
         const angularConfigBuffer = host.read('angular.json');
         if (!angularConfigBuffer) {
