@@ -1,5 +1,5 @@
 import { Rule, SchematicContext, SchematicsException, Tree } from "@angular-devkit/schematics";
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
+import { FileChange, findElementNodes, getAttribute, getProjects, getSourceOffset, getWorkspace, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import type { Element } from '@angular/compiler';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
@@ -78,16 +78,26 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     });
 
     const updateMainCSSFile = (host: Tree, context: SchematicContext): Tree => {
-        const angularConfigBuffer = host.read('angular.json');
-        if (!angularConfigBuffer) {
+        const workspace = getWorkspace(host);
+        if (!workspace) {
             throw new SchematicsException('Could not find angular.json');
         }
-        const angularConfig = JSON.parse(angularConfigBuffer.toString('utf-8'));
 
-        for (const project of Object.values<any>(angularConfig.projects)) {
+        const projects = getProjects(workspace);
+        for (const project of projects) {
             const srcRoot = project.sourceRoot || project.root || '';
-            const stylesPath = (project.architect?.build?.options?.styles?.filter(s => s.startsWith(srcRoot))[0]) as string;
-           
+            const stylesPath = project.architect?.build?.options?.styles
+                ?.map((s) => {
+                    if (typeof s === 'string') {
+                        return s;
+                    }
+                    // ref - https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
+                    if (s instanceof Object && 'input' in s) {
+                        return s.input as string;
+                    }
+                })
+                .filter((s) => s.startsWith(srcRoot))[0];
+
             if (!stylesPath) {
                 context.logger.error(`No styles file found in angular.json for project: ${project}`);
             }
