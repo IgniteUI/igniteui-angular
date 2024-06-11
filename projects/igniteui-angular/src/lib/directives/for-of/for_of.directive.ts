@@ -568,7 +568,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                     this._applyChanges();
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
-                    this.dataChanged.emit();
+                    const args: IForOfDataChangingEventArgs = {
+                        containerSize: this.igxForContainerSize,
+                        state: this.state
+                    };
+                    this.dataChanged.emit(args);
                 });
             }
         }
@@ -917,6 +921,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
+        }
+    }
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateScroll(): void {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+            this.scrollComponent.scrollAmount = scrollAmount;
+            this._updateScrollOffset();
         }
     }
 
@@ -1489,6 +1506,7 @@ export interface IForOfState extends IBaseEventArgs {
 
 export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
+    state: IForOfState;
 }
 
 export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext<T, U> {
@@ -1639,7 +1657,8 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 const args: IForOfDataChangingEventArgs = {
-                    containerSize: this.igxForContainerSize
+                    containerSize: this.igxForContainerSize,
+                    state: this.state
                 };
                 this.dataChanging.emit(args);
                 //  re-init cache.
@@ -1661,7 +1680,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                     this._adjustScrollPositionAfterSizeChange(sizeDiff);
                 }
                 this._updateScrollOffset();
-                this.dataChanged.emit();
+                this.dataChanged.emit(args);
             }
         }
     }

@@ -3081,6 +3081,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private overlayIDs = [];
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+    private _shouldRecalcRowHeight = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3551,9 +3552,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     if (this._gridSize !== this.gridSize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
-                        if (this.rowList.length > 0 && this.rowList.first.cells && this.rowList.first.cells.length > 0) {
-                            this._defaultRowHeight = parseFloat(this.document.defaultView.getComputedStyle(this.rowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
-                        }
+                        this.updateDefaultRowHeight();
                         this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
                         this.crudService.endEdit(false);
                         if (this._summaryRowHeight === 0) {
@@ -3629,6 +3628,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
             this.cdr.detectChanges();
+            Promise.resolve().then(() => this.headerContainer.updateScroll());
         });
 
 
@@ -3776,6 +3776,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public dataRebinding(event: IForOfDataChangingEventArgs) {
+        if (event.state.chunkSize == 0) {
+            this._shouldRecalcRowHeight = true;
+        }
         this.dataChanging.emit(event);
     }
 
@@ -3784,6 +3787,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebound(event) {
         this.selectionService.clearHeaderCBState();
+        if (this._shouldRecalcRowHeight) {
+            this._shouldRecalcRowHeight = false;
+            this.updateDefaultRowHeight();
+        }
         this.dataChanged.emit(event);
     }
 
@@ -6306,12 +6313,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
         const gridScrLeft = rowForOf.getScroll().scrollLeft;
-        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
-        if (gridScrLeft !== actualScrollLeft) {
-            rowForOf.onHScroll(gridScrLeft);
-            rowForOf.cdr.detectChanges();
-        }
+        rowForOf.onHScroll(gridScrLeft);
+        rowForOf.cdr.detectChanges();
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: RowType) {
@@ -6858,7 +6861,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let res = !parentElement ||
             parentElement.clientHeight === 0 ||
             parentElement.clientHeight === renderedHeight;
-        if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
+        if (parentElement && (res || this._autoSize)) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             this._autoSize = false;
@@ -7633,6 +7636,17 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
+    }
+
+    private updateDefaultRowHeight() {
+        if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
+            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            if (height) {
+                this._defaultRowHeight = height;
+            } else {
+                this._shouldRecalcRowHeight = true;
+            }
+        }
     }
 
     // TODO: About to Move to CRUD
