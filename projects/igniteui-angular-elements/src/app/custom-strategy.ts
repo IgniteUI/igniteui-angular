@@ -215,8 +215,18 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+
+        if (value === componentRef.instance[property]) {
+            return;
+        }
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
             // const oldValue = this.getInputValue(property);
+            if (this.templateWrapper.templateFunctions.includes(value)) return;
+            const oldRef = componentRef.instance[property];
+            const oldValue = oldRef && this.templateWrapper.getTemplateFunction(oldRef);
+            if (oldValue === value) {
+                return;
+            }
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
         }
