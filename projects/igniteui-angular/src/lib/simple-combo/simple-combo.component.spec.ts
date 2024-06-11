@@ -1529,6 +1529,34 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData[0].field).toBe(target.value)
         });
 
+        it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            const spy = spyOn(keyEvent, 'preventDefault');
+
+            expect(combo.collapsed).toBe(true);
+            expect(combo.selection).toBeUndefined();
+
+            input.triggerEventHandler('focus', {});
+            UIInteractions.simulateTyping('c', input);
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBe(false);
+
+            combo.handleKeyDown(keyEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection).toBeDefined();
+            expect(combo.collapsed).toBe(true);
+            expect(spy).toHaveBeenCalled();
+
+            combo.handleKeyDown(keyEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
         it('should emit selectionChanging event when input value changes and input loses focus', () => {
             spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
