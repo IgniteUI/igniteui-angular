@@ -19,7 +19,7 @@ describe(`Update to ${version}`, () => {
                         options: {
                             styles: [
                                 "/testSrc/styles.scss"
-                            ]
+                            ] as (string | object)[]
                         }
                     }
                 }
@@ -436,6 +436,25 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should add default CSS rule to set all components to their previous Large defaults', async () => {
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        expect(tree.readContent('/testSrc/styles.scss')).toEqual(
+`
+@use "mockStyles.scss";
+@forward something;
+// Specifies large size for all components to match the previous defaults
+// This may not be needed for your project. Please consult https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide for more details.
+:root {
+    --ig-size: var(--ig-size-large);
+}
+`
+        );
+    });
+
+    it('should add default CSS rule to set all components to their previous Large defaults with complex file ref configs', async () => {
+        const _configJson = JSON.parse(appTree.readContent('/angular.json'));
+        _configJson.projects.testProj.architect.build.options.styles = [{ input: '/testSrc/styles.scss' }];
+        appTree.overwrite('/angular.json', JSON.stringify(_configJson));
+
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toEqual(
 `
