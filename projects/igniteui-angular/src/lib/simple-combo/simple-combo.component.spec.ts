@@ -1581,9 +1581,6 @@ describe('IgxSimpleCombo', () => {
             combo.handleInputChange('z');
             fixture.detectChanges();
 
-            combo.onBlur();
-            fixture.detectChanges();
-
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
                 oldValue: "Connecticut",
@@ -1596,6 +1593,41 @@ describe('IgxSimpleCombo', () => {
                 owner: combo,
                 displayText: "",
                 cancel: false
+            });
+        });
+
+        it('should not change selection when selectionChanging event is canceled', () => {
+            spyOn(combo.selectionChanging, 'emit').and.callThrough();
+            fixture.detectChanges();
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            const cancelEventSpy = spyOn(combo.selectionChanging, 'emit').and.callFake((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.cancel = true;
+            });
+
+            combo.handleInputChange('z');
+            fixture.detectChanges();
+
+            expect(cancelEventSpy).toHaveBeenCalled();
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            combo.handleInputChange(' ');
+            fixture.detectChanges();
+
+            expect(cancelEventSpy).toHaveBeenCalled();
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
             });
         });
     });
