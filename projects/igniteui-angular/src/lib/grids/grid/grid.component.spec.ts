@@ -1446,6 +1446,20 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.data = fix.componentInstance.fullData;
         }));
 
+        it('should not auto-size when container has display:contents and size is determinable ', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.display = "contents";
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+
+            expect(defaultHeightNum).toBeGreaterThan(fix.componentInstance.grid.renderedRowHeight * 10);
+            expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(fix.componentInstance.grid.renderedRowHeight * 10);
+        }));
+
         it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
             async () => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
@@ -3015,7 +3029,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
     public override data = SampleTestData.foodProductData();
 }
 @Component({
-    template: `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
+    template: `<div [style.display]="display" [style.width.px]="outerWidth" [style.height.px]="outerHeight">
             <igx-grid #grid [data]="data" [autoGenerate]="true">
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
@@ -3065,6 +3079,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public pageSize = 5;
     public outerWidth = 800;
     public outerHeight: number;
+    public display: string = "";
 }
 
 @Component({
