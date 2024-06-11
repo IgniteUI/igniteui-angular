@@ -469,6 +469,17 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should not throw when applying default CSS rule with complex file ref configs', async () => {
+        const _configJson = JSON.parse(appTree.readContent('/angular.json'));
+        _configJson.projects.testProj.architect.build.options.styles = [{ notInput: '/testSrc/styles.scss' }];
+        appTree.overwrite('/angular.json', JSON.stringify(_configJson));
+        try {
+            await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        } catch (e) {
+            fail(e);
+        }
+    });
+
     it('should rename the $active-item-color property to the $icon-selected-color', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
