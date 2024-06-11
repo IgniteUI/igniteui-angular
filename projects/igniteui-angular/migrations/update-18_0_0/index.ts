@@ -96,7 +96,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                         return s.input as string;
                     }
                 })
-                .filter((s) => s.startsWith(srcRoot))[0];
+                .filter((s) => s?.startsWith(srcRoot))[0];
 
             if (!stylesPath) {
                 context.logger.error(`No styles file found in angular.json for project: ${project}`);
