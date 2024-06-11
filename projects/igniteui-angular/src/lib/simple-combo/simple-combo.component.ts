@@ -240,9 +240,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            if (!this.comboInput.value) {
-                this.filterValue = this.searchValue = '';
-            }
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
@@ -289,7 +286,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && super.selection.length && super.selection[0][this.valueKey] !== "") {
+        if (!this.comboInput.value.trim() && super.selection.length) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
