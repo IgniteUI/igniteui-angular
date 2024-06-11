@@ -118,7 +118,9 @@
 
   <script src="assets/data/nw-products.js"></script>
   <script type="module">
-    import { html } from "/lit-html.js";
+    import { html, nothing } from "/lit-html.js";
+    import { Directive, directive } from "/directive.js";
+
     import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent } from "igniteui-webcomponents";
     // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
@@ -138,6 +140,30 @@
 
     grid1.groupingExpressions = groupingExpression1;
 
+    // In place of https://lit.dev/docs/api/directives/#ref, too annoying to resolve with current angular.json script resources:
+    class RefDirective extends Directive {
+        constructor(partInfo) {
+            super(partInfo);
+            this.partInfo = partInfo;
+        }
+        render(_ref) {
+            _ref(this.partInfo.element);
+            return nothing;
+        }
+    }
+    // Create the directive function
+    const ref = directive(RefDirective);
+
+    // Using callback
+    const focusCallback = (inputElement) => {
+        // needed for callback without Lit's lifecycle; Consider exposing ready-made directive for this
+        requestAnimationFrame(() => {
+            if (inputElement?.isConnected) {
+                inputElement.focus();
+            }
+        });
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
         grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
         grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
@@ -150,7 +176,7 @@
         };
         grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
             html`<div class="range-wrapper">
-                <input autofocus id="range" type="range"
+                <input ${ref(focusCallback)} id="range" type="range"
                     .value="${context.implicit}"
                     @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
                     />
@@ -158,20 +184,20 @@
             </div>`;
         grid1.querySelector('igc-column[field="CategoryName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-select .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
+            <igc-select ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
                 ${categories.map(x => html`<igc-select-item value="${x}">${x}</igc-select-item>`)}
             </igc-select>
         `;
         grid1.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-combo style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
+            <igc-combo ${ref(focusCallback)} style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
             </igc-combo>
         `;
         grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.implicit.InStock}</span></div>`;
 
         grid2.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-input .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
+            <igc-input ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcInput=${(e) => ctx.cell.editValue = e.detail}>
             </igc-input>
         `;
 

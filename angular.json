@@ -314,7 +314,8 @@
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
             "scripts": [
-                { "input": "./node_modules/lit-html/lit-html.js", "inject": false }
+                { "input": "./node_modules/lit-html/lit-html.js", "inject": false },
+                { "input": "./node_modules/lit-html/development/directive.js", "inject": false }
             ],
             "stylePreprocessorOptions": {
                 "includePaths": ["node_modules"]
