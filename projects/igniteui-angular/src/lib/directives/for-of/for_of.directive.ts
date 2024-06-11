@@ -1626,7 +1626,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             }
             if (this.igxForScrollOrientation === 'horizontal') {
                 // in case collection has changes, reset sync service
-                this.syncService.setMaster(this, true);
+                this.syncService.setMaster(this, false);
             }
         }
         const defaultItemSize = 'igxForItemSize';
