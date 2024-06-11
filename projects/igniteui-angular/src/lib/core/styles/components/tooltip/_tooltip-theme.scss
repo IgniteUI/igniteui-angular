@@ -16,22 +16,24 @@
 /// @param {Color} $text-color [null] - The text color of the tooltip.
 ///
 /// @param {List} $border-radius [null] - The border radius used for the tooltip component.
+/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the tooltip component.
 ///
 /// @requires $light-material-schema
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
 ///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-checkbox-theme);
+///   @include css-vars($my-tooltip-theme);
 @function tooltip-theme(
     $schema: $light-material-schema,
 
     $border-radius: null,
+    $shadow: null,
     $background: null,
     $text-color: null
 ) {
     $name: 'igx-tooltip';
-    $selector: '.igx-tooltip--desktop, .igx-tooptip--mobile';
+    $selector: '.igx-tooltip';
     $tooltip-schema: ();
 
     @if map.has-key($schema, 'tooltip') {
@@ -41,6 +43,12 @@
     }
 
     $theme: digest-schema($tooltip-schema);
+    $meta: map.get($theme, '_meta');
+
+    @if not($shadow) {
+        $elevation: map.get($tooltip-schema, 'elevation');
+        $shadow: elevation($elevation);
+    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -50,8 +58,12 @@
         name: $name,
         selector: $selector,
         background: $background,
-        border-radius: $border-radius,
         text-color: $text-color,
+        border-radius: $border-radius,
+        shadow: $shadow,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -60,6 +72,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin tooltip($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %tooltip-display {
         display: inline-flex;
@@ -68,17 +81,14 @@
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
         border-radius: var-get($theme, 'border-radius');
+        box-shadow: map.get($theme, 'shadow');
         margin: 0 auto;
-    }
-
-    %tooltip--desktop {
         padding: 0 rem(8px);
         min-height: rem(24px);
-    }
 
-    %tooltip--mobile {
-        padding: 0 rem(16px);
-        min-height: rem(32px);
+        @if $variant == 'indigo-design' {
+            padding: rem(4px) rem(8px);
+        }
     }
 
     %tooltip--hidden {
@@ -87,25 +97,20 @@
 }
 
 /// Adds typography styles for the igx-tooltip component.
-/// Uses the 'body-2' category from the typographic scale for mobile tooltips and custom typography for desktop tooltips.
+/// Uses custom typography.
 /// @group typography
-/// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(tooltip-text: null] - The categories from the typographic scale used for type styles.
 @mixin tooltip-typography(
-    $categories: (text-desktop: null, text-mobile: 'body-2')
+    $categories: (tooltip-text: null)
 ) {
-    $text-desktop: map.get($categories, 'text-desktop');
-    $text-mobile: map.get($categories, 'text-mobile');
+    $tooltip-text: map.get($categories, 'tooltip-text');
 
-    %tooltip--mobile {
-        @include type-style($text-mobile);
-    }
-
-    @if $text-desktop != null {
-        %tooltip--desktop {
-            @include type-style($text-desktop);
+    @if $tooltip-text != null {
+        %tooltip-display {
+            @include type-style($tooltip-text);
         }
     } @else {
-        %tooltip--desktop {
+        %tooltip-display {
             font-size: rem(10px);
             font-weight: 600;
         }

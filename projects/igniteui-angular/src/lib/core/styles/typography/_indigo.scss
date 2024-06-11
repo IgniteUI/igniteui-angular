@@ -107,6 +107,8 @@
     ));
     @include stepper-typography();
     @include toast-typography();
-    @include tooltip-typography();
+    @include tooltip-typography($categories: (
+        tooltip-text: 'subtitle-2'
+    ));
     @include tree-typography();
 }
