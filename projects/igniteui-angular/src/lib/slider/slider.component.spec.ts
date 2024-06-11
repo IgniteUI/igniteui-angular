@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
@@ -1745,6 +1745,10 @@ describe('IgxSlider', () => {
             fakeDoc.documentElement.dir = 'rtl';
         });
 
+        afterEach(() => {
+            fakeDoc.documentElement.dir = 'ltr';
+        });
+
         it('should reflect on the right instead of the left css property of the slider handlers', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
@@ -1801,6 +1805,31 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             expect(slider.value).toBe(formControl.value);
         });
+
+        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SliderTemplateFormComponent);
+            fixture.componentInstance.updateOn = 'blur';
+            fixture.detectChanges();
+            tick();
+
+            const slider = fixture.componentInstance.slider;
+            const thumb = fixture.nativeElement.querySelector('igx-thumb');
+
+            expect(slider.value).toBe(fixture.componentInstance.value);
+
+            thumb.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            slider.value = 30;
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).not.toBe(fixture.componentInstance.value);
+
+            thumb.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            tick();
+            expect(slider.value).toBe(fixture.componentInstance.value);
+        }));
     });
 
     const panRight = (element, elementHeight, elementWidth, duration) => {
@@ -1991,7 +2020,7 @@ class RangeSliderWithCustomTemplateComponent {
 @Component({
     template: `
         <form #form="ngForm">
-            <igx-slider [(ngModel)]="value" name="amount"></igx-slider>
+            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn }"></igx-slider>
         </form>
     `,
     standalone: true,
@@ -1999,6 +2028,8 @@ class RangeSliderWithCustomTemplateComponent {
 })
 export class SliderTemplateFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+
+    @Input() public updateOn: 'change' | 'blur' | 'submit' = 'change';
 
     public value = 10;
 }
