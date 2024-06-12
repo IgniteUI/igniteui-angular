@@ -489,7 +489,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._applyGrouping();
             this.notifyChanges();
         }
-        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this._columns) {
+        if (!this._init && JSON.stringify(oldExpressions, this.stringifyCallback) !== JSON.stringify(newExpressions, this.stringifyCallback) && this._columns) {
             const groupedCols: IgxColumnComponent[] = [];
             const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
@@ -1358,5 +1358,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    private stringifyCallback(key: string, val: any) {
+        // Workaround for Blazor, since its wrappers inject this externalObject that cannot serialize.
+        if (key === 'externalObject') {
+            return undefined;
+        }
+        return val;
     }
 }
