@@ -286,6 +286,18 @@
         indigo-design: rem(8px),
     ), $variant);
 
+    $list-icon-margin-inline: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $list-icon-margin-block: (
+        comfortable: rem(8px),
+        cosy: rem(6px),
+        compact: rem(4px)
+    );
+
     %igx-list {
         @include sizable();
 
@@ -473,7 +485,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        align-self: center;
+        align-self: if($variant == 'indigo-design', center, flex-start);
         padding: 0;
         color: var-get($theme, 'item-thumbnail-color');
         gap: rem(8px);
@@ -482,6 +494,12 @@
         > igx-icon,
         > igc-icon {
             --component-size: #{if($variant == 'indigo-design', 2, var(--list-size))};
+
+            @if $variant != 'indigo-design' {
+                margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
+                margin-inline-start: 0;
+                margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
+            }
         }
 
         > igx-avatar {
