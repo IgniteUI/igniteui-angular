@@ -61,15 +61,8 @@
         compact: rem(12px)
     );
 
-    $paginator-height: (
-        comfortable: rem(56px),
-        cosy: rem(48px),
-        compact: rem(44px)
-    );
-
     %igx-paginator {
         --component-size: var(--ig-size, var(--ig-size-large));
-        --size: #{sizable(#{map.get($paginator-height, 'compact')}, #{map.get($paginator-height, 'cosy')}, #{map.get($paginator-height, 'comfortable')})};
 
         display: flex;
         justify-content: space-between;
@@ -81,7 +74,7 @@
         z-index: 1;
         padding-inline: pad-inline(map.get($paginator-padding-inline, 'compact'), map.get($paginator-padding-inline, 'cosy'), map.get($paginator-padding-inline, 'comfortable'));
         padding-block: 0;
-        height: var(--size);
+        height: var-get($theme, 'size');
         width: 100%;
 
         &:empty {
@@ -91,14 +84,6 @@
 
     %igx-paginator--sizable {
         @include sizable();
-    }
-
-    %igx-paginator--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %igx-paginator--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-paginator-content {
@@ -124,6 +109,10 @@
         display: flex;
         max-width: rem(114px);
         min-width: rem(100px);
+
+        igx-select {
+            --ig-size: 1;
+        }
     }
 
     %igx-page-nav {

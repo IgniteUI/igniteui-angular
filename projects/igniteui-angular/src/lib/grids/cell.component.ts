@@ -930,7 +930,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         if (changes.value && !changes.value.firstChange) {
             if (this.highlight) {
-                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
+                this.highlight.lastSearchInfo.searchText = this.grid.lastSearchInfo.searchText;
                 this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
             }
@@ -1245,6 +1245,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     private getCellType(useRow?: boolean): CellType {
         const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.data) : this.intRow.index;
-        return new IgxGridCell(this.grid, rowID, this.column.field);
+        return new IgxGridCell(this.grid, rowID, this.column);
     }
 }

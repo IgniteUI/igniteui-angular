@@ -473,7 +473,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.open()">Open Dialog</button
+     * <button type="button" igxButton (click)="dateRange.open()">Open Dialog</button
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
@@ -499,7 +499,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.close()">Close Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.close()">Close Dialog</button>
      * ```
      */
     public close(): void {
@@ -515,7 +515,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```html
      * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
-     * <button (click)="dateRange.toggle()">Toggle Dialog</button>
+     * <button type="button" igxButton (click)="dateRange.toggle()">Toggle Dialog</button>
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings): void {

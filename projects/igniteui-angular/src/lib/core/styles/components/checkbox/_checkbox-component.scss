@@ -76,7 +76,7 @@
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--invalid--fluent !optional;
+                    @extend %cbx-composite--invalid--hover !optional;
                 }
 
                 @include e(composite-mark) {
@@ -98,7 +98,7 @@
 
             &:hover {
                 @include e(composite) {
-                    @extend %cbx-composite--x--invalid--fluent !optional;
+                    @extend %cbx-composite--x--invalid--hover !optional;
                 }
 
                 @include e(composite-mark) {
@@ -188,7 +188,7 @@
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--x--fluent !optional;
+                    @extend %cbx-composite--x--hover !optional;
                 }
 
                 @include e(composite-mark) {

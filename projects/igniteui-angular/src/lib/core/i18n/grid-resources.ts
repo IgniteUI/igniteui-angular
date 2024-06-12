@@ -87,6 +87,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_currency_filter?: string;
     igx_grid_excel_custom_filter?: string;
     igx_grid_excel_no_matches?: string;
+    igx_grid_excel_matches_count?: string;
     igx_grid_advanced_filter_title?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
@@ -254,6 +255,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_currency_filter: 'Currency filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
     igx_grid_excel_no_matches: 'No matches',
+    igx_grid_excel_matches_count: '{0} matches.',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',

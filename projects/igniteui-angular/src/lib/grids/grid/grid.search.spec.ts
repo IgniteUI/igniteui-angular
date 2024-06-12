@@ -395,7 +395,7 @@ describe('IgxGrid - search API #grid', () => {
             let highlights = getHighlights();
             expect(highlights.length).toBe(3);
             verifyActiveHighlight(0);
-            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(3);
+            expect(grid.lastSearchInfo.matchCount).toBe(3);
             expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
 
             grid.columnList.get(1).hidden = true;
@@ -403,7 +403,7 @@ describe('IgxGrid - search API #grid', () => {
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
-            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(1);
+            expect(grid.lastSearchInfo.matchCount).toBe(1);
             expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
         });
 

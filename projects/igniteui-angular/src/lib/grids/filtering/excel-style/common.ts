@@ -27,6 +27,15 @@ export class ExpressionUI {
     public isVisible = true;
 }
 
+/**
+ * @hidden @internal
+ */
+export class ActiveElement {
+    public index: number;
+    public id: string;
+    public checked: boolean;
+}
+
 export function generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
     operator: FilteringLogic,
     expressionsUIs: ExpressionUI[]): void {

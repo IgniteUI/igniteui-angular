@@ -1,7 +1,6 @@
 import {
     AfterContentInit,
     AfterViewInit,
-    ApplicationRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -310,7 +309,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        appRef: ApplicationRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -331,7 +329,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             cdr,
             differs,
             viewRef,
-            appRef,
             injector,
             envInjector,
             navigation,
@@ -468,6 +465,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public override calculateGridHeight() { }
 
+    /**
+     * @hidden
+     */
+    public override calculateGridWidth() { }
+
     protected _childColumns = [];
 
     protected updateColumnList() {
@@ -483,6 +485,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             return false;
         });
         this._childColumns = topCols;
+        this.updateColumns(this._childColumns);
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
             grid.createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {

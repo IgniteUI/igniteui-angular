@@ -113,14 +113,6 @@
         $shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         border-radius: $border-radius,
@@ -177,9 +169,7 @@
         transition: width, transform;
         transition-timing-function: $out-quad, $out-quad;
         box-shadow: var-get($theme, 'shadow');
-        @if $variant != 'indigo-design' {
-            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
-        }
+        border-inline-end: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
     }
 
@@ -315,6 +305,8 @@
         justify-content: flex-start;
 
         igx-icon {
+            --component-size: 3;
+
             color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
                 margin-inline-start: rem(4px);

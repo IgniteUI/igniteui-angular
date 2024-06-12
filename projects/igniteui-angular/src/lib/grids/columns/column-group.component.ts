@@ -397,6 +397,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      /* blazorSuppress */
     public override set width(val) { }
 
+    /** @hidden @internal **/
+    public override get resolvedWidth() {
+        return this.width;
+    }
+
     /**
      * @hidden
      */

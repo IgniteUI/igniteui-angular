@@ -10,10 +10,10 @@
 
     <igx-suffix *ngIf="searchText.length > 0">
         <div class="resultsText" *ngIf="grid.lastSearchInfo">
-            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length > 0">
-                {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchInfoCache.length }}
+            <span *ngIf="grid.lastSearchInfo.matchCount > 0">
+                {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchCount }}
             </span>
-            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length === 0">
+            <span *ngIf="grid.lastSearchInfo.matchCount === 0">
                 0/0
             </span>
         </div>

@@ -57,7 +57,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 <igx-time-picker #picker>
     <ng-template igxTimePickerActions>
         <div class="action-buttons">
-            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
+            <button type="button" igxButton="flat" (click)="selectToday(picker)">Today</button>
         </div>
     </ng-template>
 </igx-time-picker>

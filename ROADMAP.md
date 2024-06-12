@@ -2,12 +2,12 @@
 
 # Current Milestone
 
-## Milestone 27, (Due by July, 2023)
+## Milestone 28, (Due by December, 2023)
 
-1. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
-2. Igx Grid allow cell selection on specific columns [#11704](https://github.com/IgniteUI/igniteui-angular/issues/11704)
-3. igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
-4. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
+1. Support of Angular 17
+2. Refactor switch and radio to inherit from checkbox [#13563](https://github.com/IgniteUI/igniteui-angular/issues/13563)
+3. Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
+4.  **[DONE]** Improve package tree-shaking of animations [#13494](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
 
 ## Going down the road
 
@@ -20,8 +20,21 @@
 7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 8. Suggestion for igx-grid group by row template [#12752](https://github.com/IgniteUI/igniteui-angular/issues/12752)
 9. Way to filter auto-generated columns [#12577](https://github.com/IgniteUI/igniteui-angular/issues/12577)
+10. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
+11. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
 
 # Previous Milestone
+
+## Milestone 27,  version 16.1 (Released Oct 5th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-16-1-0)
+
+1. **[DONE]** Introduce `--ig-size` CSS variable. [#13389](https://github.com/IgniteUI/igniteui-angular/issues/13389) **NOTE**: DisplayDensity will be deprecated in `17.0.0` with `--ig-size` becoming the primary sizing approach.
+2. **[DONE]** Improved tree-shaking support for `igniteui-angular-i18n` [#13411](https://github.com/IgniteUI/igniteui-angular/issues/13411) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+3. **[DONE]** Improved tree-shaking support for `@igniteui/materials-icons-extended` [#13423](https://github.com/IgniteUI/igniteui-angular/pull/13494) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+4. **[DONE]** Improved tree-shaking support for all grid [#13412](https://github.com/IgniteUI/igniteui-angular/pull/13412) part of [#13418](https://github.com/IgniteUI/igniteui-angular/pull/13418)
+6. **[DONE]** IgxLabel: Split out the label theme from Input Group [#13211](https://github.com/IgniteUI/igniteui-angular/issues/13211)
+7. **[DONE]** RadioGroup: add label [#12890](https://github.com/IgniteUI/igniteui-angular/issues/12890)
+8. **[DONE]** Select item built-in prefix/suffix support [#13208](https://github.com/IgniteUI/igniteui-angular/issues/13208)
+9. **[DONE]** Stepper - Resolve differences in the step indicаtor between Web Components and Angular [#12988](https://github.com/IgniteUI/igniteui-angular/issues/12988)
 
 ## Milestone 26, version 16.0 (Released May 15th, 2023) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/archive/2023/05/15/ignite-ui-for-angular-16-0-0-release)
 
@@ -32,6 +45,8 @@
 5. **[DONE]** igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
 6. **[DONE]** Generate child igx-hierarchical-grids dynamically [#12765](https://github.com/IgniteUI/igniteui-angular/issues/12765)
 7. **[DONE]** Support height for card component [#12555](https://github.com/IgniteUI/igniteui-angular/issues/12555)
+8. **[DONE]** [IgxForOfDirective] use generic types #12182 (https://github.com/IgniteUI/igniteui-angular/issues/12182)
+9. **[DONE]** IgxForOf directive does not support as syntax in template for bound data [#13212](https://github.com/IgniteUI/igniteui-angular/issues/13212)
 
 ## Milestone 25, version 15.1 (Releasd March 28th, 2023) 
 

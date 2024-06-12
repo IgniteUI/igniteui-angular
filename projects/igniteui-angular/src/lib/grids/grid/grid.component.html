@@ -114,12 +114,12 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail="true" style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
+            <div detail="true" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
-                <div class="igx-grid__hierarchical-indent" style="display: flex">
+                <div class="igx-grid__hierarchical-indent">
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
@@ -131,7 +131,7 @@
             </div>
         </ng-template>
 
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
@@ -203,7 +203,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>

@@ -77,6 +77,7 @@ export class IgxAddRow extends IgxEditRow {
         const args = super.createEditEventArgs(includeNewValue, event);
         args.oldValue = null;
         args.isAddRow = true;
+        args.rowData = this.newData ?? this.data;
         return args;
     }
 
@@ -237,10 +238,13 @@ export class IgxCellCrudState {
         // this is needed when we are not using ngModel to update the editValue
         // so that the change event of the inlineEditorTemplate is hit before
         // trying to update any cell
-        const cellNode = this.grid.gridAPI.get_cell_by_index(this.cell.id.rowIndex, this.cell.column.field).nativeElement;
-        const document = cellNode.getRootNode() as Document | ShadowRoot;
-        const activeElement = document.activeElement as HTMLElement;
-        activeElement.blur();
+        const cellNode = this.grid.gridAPI.get_cell_by_index(this.cell.id.rowIndex, this.cell.column.field)?.nativeElement;
+        let activeElement;
+        if (cellNode) {
+            const document = cellNode.getRootNode() as Document | ShadowRoot;
+            activeElement = document.activeElement as HTMLElement;
+            activeElement.blur();
+        }
 
         const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
         if (this.grid.validationTrigger === 'blur' && this.cell.pendingValue !== undefined) {
@@ -268,7 +272,7 @@ export class IgxCellCrudState {
         const args = this.cellEdit(event);
         if (args.cancel) {
             // the focus is needed when we cancel the cellEdit so that the activeElement stays on the editor template
-            activeElement.focus();
+            activeElement?.focus();
             return args;
         }
 
@@ -432,6 +436,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
             const rowAddArgs = this.row.createEditEventArgs(true, event);
+            rowAddArgs.rowData = this.row.newData ?? this.row.data;
             this.grid.rowAdd.emit(rowAddArgs);
             if (rowAddArgs.cancel) {
                 return rowAddArgs;
@@ -704,18 +709,18 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
     /* blazorSuppress */
     /**
-     * Finishes the row transactions on the current row.
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled.
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */
     // TODO: Implement the same representation of the method without evt emission.
-    public endEdit(commit = true, event?: Event) {
+    public endEdit(commit = true, event?: Event): boolean {
         if (!this.row && !this.cell) {
             return;
         }

@@ -1,9 +1,10 @@
 <div class="igx-drop-down__list" [style.width]="width"
     igxToggle
+    [style.--component-size]="getComponentSizeStyles()"
     (appended)="onToggleContentAppended($event)"
     (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
     (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
-    <div class="igx-drop-down__list-scroll" #scrollContainer [attr.id]="this.listId" role="listbox" [attr.aria-labelledby]="this.labelledBy"
+    <div class="igx-drop-down__list-scroll" #scrollContainer [attr.id]="listId" role="listbox" [attr.aria-labelledby]="labelledBy"
     [style.height]="height"
     [style.maxHeight]="maxHeight">
         <ng-container *ngIf="!collapsed">

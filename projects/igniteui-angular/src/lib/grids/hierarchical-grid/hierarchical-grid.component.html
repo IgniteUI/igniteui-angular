@@ -80,7 +80,7 @@
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
-            <div style="overflow: auto; width: 100%;" [attr.data-rowindex]="rowIndex" (scroll)="onContainerScroll()"
+            <div [attr.data-rowindex]="rowIndex" (scroll)="onContainerScroll()"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
@@ -92,7 +92,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
             id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
@@ -137,7 +137,7 @@
         <ng-template igxGridFor [igxGridForOf]="[]" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
@@ -165,7 +165,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -196,8 +196,8 @@
     You have {{ rowChangesCount }} changes in this row and {{ hiddenColumnsCount }} hidden columns
 </ng-template>
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
+    <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
+    <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">

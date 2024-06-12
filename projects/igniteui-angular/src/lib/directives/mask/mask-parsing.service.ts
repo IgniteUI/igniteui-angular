@@ -131,11 +131,10 @@ export class MaskParsingService {
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);
-        const initialMaskedValue = maskedValue;
 
         for (let i = start; i < end || (chars.length && i < maskedValue.length); i++) {
             if (literalsPositions.indexOf(i) !== -1) {
-                if (chars[0] === maskedValue[i]) {
+                if (chars[0] === maskedValue[i] || value.length < 1) {
                     cursor = i + 1;
                     chars.shift();
                 }
@@ -152,24 +151,11 @@ export class MaskParsingService {
                 cursor = i + 1;
                 char = chars.shift();
             }
-            maskedValue = replaceCharAt(maskedValue, i, char);
-        }
-
-        if (value.length <= 1) {
-            let isDelete = false;
-            cursor = start;
-            for (let i = 0; i < literalsPositions.length; i++) {
-                if (value === '') {
-                    // on `delete` the cursor should move forward
-                    cursor = Math.max(cursor, end);
-                    isDelete = true;
-                } else if (cursor === literalsPositions[i]) {
-                    cursor = literalsPositions[i] + 1;
-                }
-            }
-            if (!isDelete && initialMaskedValue !== maskedValue) {
+            if (value.length < 1) {
+                // on `delete` the cursor should move forward
                 cursor++;
             }
+            maskedValue = replaceCharAt(maskedValue, i, char);
         }
 
         return { value: maskedValue, end: cursor };

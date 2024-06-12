@@ -352,16 +352,16 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
         [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar>
-            <button igxButton="raised">Parent Button</button>
+            <button type="button" igxButton="raised">Parent Button</button>
         </igx-grid-toolbar>
         <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
-                <button igxButton="raised">Child 1 Button</button>
+                <button type="button" igxButton="raised">Child 1 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
-                <button igxButton="raised">Child2 Button</button>
+                <button type="button" igxButton="raised">Child2 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
     </igx-hierarchical-grid>`,

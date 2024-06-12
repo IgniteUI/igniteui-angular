@@ -6,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getComponentSize } from '../core/utils';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -102,15 +103,11 @@ describe('igxActionStrip', () => {
 
             actionStrip.displayDensity = 'cosy';
             fixture.detectChanges();
-            expect(actionStripElement.nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--cosy'])
-            );
+            expect(getComponentSize(actionStripElement.nativeElement)).toEqual('2');
 
             actionStrip.displayDensity = 'compact';
             fixture.detectChanges();
-            expect(actionStripElement.nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--compact'])
-            );
+            expect(getComponentSize(actionStripElement.nativeElement)).toEqual('1');
         });
     });
 

@@ -417,10 +417,12 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
 
             // step 2 - verify columnMovingStart is fired correctly
-            expect(fixture.componentInstance.countStart).toEqual(1);
-            expect(fixture.componentInstance.source).toEqual(grid.columns[0]);
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait(50);
+
+            expect(fixture.componentInstance.countStart).toEqual(1);
+            expect(fixture.componentInstance.source).toEqual(grid.columns[0]);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
 
@@ -447,12 +449,13 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
 
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait();
+
             if (fixture.componentInstance.source.field === 'ID') {
                 fixture.componentInstance.cancel = true;
             }
 
-            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);

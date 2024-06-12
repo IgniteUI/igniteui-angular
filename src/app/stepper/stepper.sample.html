@@ -51,7 +51,7 @@
             [completed]="form1.form.valid && stepper.linear">
             <igx-icon igxStepIndicator>shopping_cart</igx-icon>
             <span igxStepTitle>Shopping Card</span>
-            <span igxStepSubTitle>{{stepper.linear === true ? '(Required)' : 'Optional'}}</span>
+            <span igxStepSubtitle>{{stepper.linear === true ? '(Required)' : 'Optional'}}</span>
             <div igxStepContent class="sample-body" [tabIndex]="-1">
                 <form #form1="ngForm">
                     <igx-input-group>
@@ -75,7 +75,7 @@
         <igx-step #step1 (activeChange)="activeStepChange($event)" [completed]="true">
             <igx-icon igxStepIndicator>place</igx-icon>
             <span igxStepTitle>Delivery Address</span>
-            <span igxStepSubTitle>(Required)</span>
+            <span igxStepSubtitle>(Required)</span>
             <div igxStepContent class="sample-body">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum eos asperiores, doloribus reiciendis, esse
                 earum, iusto expedita rem quo mollitia voluptatem quas saepe quia! Rem illum quo officia eum quisquam?
@@ -93,7 +93,7 @@
             </div>
 
             <span igxStepTitle>User Details</span>
-            <span igxStepSubTitle>(Requred)</span>
+            <span igxStepSubtitle>(Requred)</span>
             <div igxStepContent class="sample-body">
                 <form #form2="ngForm">
                     <igx-input-group>
@@ -122,7 +122,7 @@
         <igx-step #step3 [disabled]="true" (activeChange)="activeStepChange($event)" [isValid]="form3.form.valid">
             <igx-icon igxStepIndicator>attach_money</igx-icon>
             <span igxStepTitle>Payment method</span>
-            <span igxStepSubTitle>Currently you can pay only cash</span>
+            <span igxStepSubtitle>Currently you can pay only cash</span>
             <div igxStepContent class="sample-body">
                 <form #form3="ngForm">
                     <igx-input-group>
@@ -149,7 +149,7 @@
             [completed]="user3.valid && stepper.linear">
             <igx-icon igxStepIndicator>notes</igx-icon>
             <span igxStepTitle>Additional notes</span>
-            <span igxStepSubTitle>{{stepper.linear === true ? '(Required)' : 'Optional'}}</span>
+            <span igxStepSubtitle>{{stepper.linear === true ? '(Required)' : 'Optional'}}</span>
             <div igxStepContent class="sample-body">
                 <form [formGroup]="user3">
                     <div>
@@ -188,7 +188,7 @@
         <igx-step #step5 (activeChange)="activeStepChange($event)" [isValid]="user4.valid">
             <igx-icon igxStepIndicator>receipt_long</igx-icon>
             <span igxStepTitle>Finish order</span>
-            <span igxStepSubTitle>(#12542653)</span>
+            <span igxStepSubtitle>(#12542653)</span>
             <div igxStepContent class="sample-body">
                 <form [formGroup]="user4">
                     <div>

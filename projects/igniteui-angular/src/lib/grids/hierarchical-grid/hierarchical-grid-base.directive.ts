@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     ChangeDetectorRef,
     createComponent,
     Directive,
@@ -159,7 +158,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        appRef: ApplicationRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
@@ -182,7 +180,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             cdr,
             differs,
             viewRef,
-            appRef,
             injector,
             envInjector,
             navigation,
@@ -209,6 +206,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const result = flatten(columns);
         this.updateColumns(result);
         this.initPinning();
+
+        result.forEach(col => {
+            this.columnInit.emit(col);
+        });
 
         const mirror = reflectComponentType(IgxColumnComponent);
         const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');

@@ -87,7 +87,7 @@
                 class="igx-grid__summaries--body" role="row" #summaryRow>
             </igx-grid-summary-row>
         </ng-template>
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
@@ -131,7 +131,7 @@
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
@@ -158,7 +158,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -183,8 +183,8 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
+    <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
+    <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>

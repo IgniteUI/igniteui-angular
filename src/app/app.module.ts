@@ -156,6 +156,7 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
+import { DividerComponent } from './divider/divider.component';
 
 const components = [
     AccordionSampleComponent,
@@ -301,7 +302,8 @@ const components = [
     IgxStepperSampleComponent,
     QueryBuilderComponent,
     RatingSampleComponent,
-    GridExportComponent
+    GridExportComponent,
+	DividerComponent,
 ];
 
 @NgModule({

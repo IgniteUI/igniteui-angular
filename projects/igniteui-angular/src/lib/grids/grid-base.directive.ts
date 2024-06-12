@@ -2,9 +2,7 @@ import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from
 import {
     AfterContentInit,
     AfterViewInit,
-    ApplicationRef,
     ChangeDetectorRef,
-    ComponentRef,
     ContentChild,
     ContentChildren,
     createComponent,
@@ -81,7 +79,7 @@ import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
-} from './grid/grid.directives';
+} from './grid.directives';
 import {
     GridKeydownTargetType,
     GridSelectionMode,
@@ -178,6 +176,13 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 
 IgcTrialWatermark.register();
+
+interface IMatchInfoCache {
+    row: any;
+    index: number;
+    column: string;
+    metadata: Map<string, boolean>;
+}
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -1397,8 +1402,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets the row edit actions template.
      *```html
      * <ng-template #template igxRowEditActions let-endRowEdit>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
      * </ng-template>
      * ```
      *```typescript
@@ -1761,9 +1766,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
 
-    @HostBinding('class')
-    private get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+    @HostBinding('class.igx-grid')
+    protected baseClass = 'igx-grid';
+
+    @HostBinding('style.--component-size')
+    protected get hostStyles(): string {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -2414,7 +2422,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set sortingOptions(value: ISortingOptions) {
-        this.clearSort();
+        if (!this._init) {
+            // clear sort only if option is changed runtime. No need to clear on initial load.
+            this.clearSort();
+        }
         this._sortingOptions = Object.assign(this._sortingOptions, value);
     }
 
@@ -2679,7 +2690,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
-        return `${this.getComponentDensityClass('igx-banner')} ${position}`;
+        return `igx-banner ${position}`;
     }
 
     /* mustSetInCodePlatforms: WebComponents;Blazor;React */
@@ -2898,14 +2909,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public disableTransitions = false;
 
     /**
-     * @hidden @internal
+     * Represents the last search information.
      */
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
         caseSensitive: false,
         exactMatch: false,
         activeMatchIndex: 0,
-        matchInfoCache: []
+        matchInfoCache: [],
+        matchCount: 0,
+        content: ''
     };
 
     /**
@@ -3276,7 +3289,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get template(): TemplateRef<any> {
+    public get template(): TemplateRef<IgxGridTemplateContext> {
         if (this.isLoading && (this.hasZeroResultFilter || this.hasNoData)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
@@ -3354,7 +3367,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public readonly cdr: ChangeDetectorRef,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        private appRef: ApplicationRef,
         protected injector: Injector,
         protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
@@ -3368,7 +3380,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
@@ -3774,6 +3786,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resetCaches(recalcFeatureWidth = true) {
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
+            this.summaryService.summaryHeight = 0;
         }
         this.resetColumnsCaches();
         this.resetColumnCollections();
@@ -3832,19 +3845,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.excelStyleFilteringComponent.initialize(column, this.overlayService);
             const id = this.overlayService.attach(this.excelStyleFilteringComponent.element, options);
             this.excelStyleFilteringComponent.overlayComponentId = id;
-            return { id, ref: undefined };
+            return id;
         }
-        const ref = this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
-        ref.instance.initialize(column, this.overlayService);
-        const id = this.overlayService.attach(ref.instance.element, options);
-        ref.instance.overlayComponentId = id;
-        return { ref, id };
-    }
-
-    private createComponentInstance(component: any) {
-        const dynamicComponent: ComponentRef<any> = createComponent(component, { environmentInjector: this.envInjector, elementInjector: this.injector } );
-        this.appRef.attachView(dynamicComponent.hostView);
-        return dynamicComponent;
+        const id = this.overlayService.attach(IgxGridExcelStyleFilteringComponent, this.viewRef, options);
+        return id;
     }
 
     /** @hidden @internal */
@@ -4992,7 +4996,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columnName
      * @param index
      */
-    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public pinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.pin(index);
     }
@@ -5007,7 +5011,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param columnName
      * @param index
      */
-    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+    public unpinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.unpin(index);
     }
@@ -5195,7 +5199,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             caseSensitive: false,
             exactMatch: false,
             activeMatchIndex: 0,
-            matchInfoCache: []
+            matchInfoCache: [],
+            matchCount: 0,
+            content: ''
         };
 
         this.rowList.forEach((row) => {
@@ -5331,8 +5337,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.featureColumnsWidth();
-
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -5368,6 +5372,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!sumExistingWidths && !columnsToSize) {
             return '0px';
         }
+        computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
@@ -6183,21 +6188,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Finishes the row transactions on the current row.
+     * Finishes the row transactions on the current row and returns whether the grid editing was canceled.
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
      * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
-    public endEdit(commit = true, event?: Event) {
-        this.crudService.endEdit(commit, event);
+    public endEdit(commit = true, event?: Event): boolean {
+        return this.crudService.endEdit(commit, event);
     }
 
     /**
@@ -6411,7 +6416,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isPercentWidth) {
             /* width in %*/
             const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
-            width = computed.indexOf('%') === -1 ? parseInt(computed, 10) : null;
+            width = computed.indexOf('%') === -1 ? parseFloat(computed) : null;
         } else {
             width = parseInt(this.width, 10);
         }
@@ -6694,15 +6699,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetCaches();
 
             if (added || removed) {
-                this.summaryService.clearSummaryCache();
-                this.groupablePipeTrigger++;
-                Promise.resolve().then(() => {
-                    // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-                    // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-                    this.notifyChanges(true);
-                });
+                this.onColumnsAddedOrRemoved();
             }
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected onColumnsAddedOrRemoved() {
+        this.summaryService.clearSummaryCache();
+        Promise.resolve().then(() => {
+            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+            this.notifyChanges(true);
+        });
     }
 
     /**
@@ -6717,8 +6728,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
+        this.resetCaches(recalcFeatureWidth);
+
         const hasScroll = this.hasVerticalScroll();
         const hasHScroll = !this.isHorizontalScrollHidden;
         this.calculateGridWidth();
@@ -7228,6 +7240,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const header = this.headerCellList.find(x => x.column === col);
+                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 const max = Math.max(...cellsContentWidths);
                 // in cases with template contains something, like a webcomponent,
                 // that renders fully only after it is already injected in the DOM,
@@ -7242,8 +7256,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     // cells not in DOM yet or content not fully initialized.
                     continue;
                 }
-                const header = this.headerCellList.find(x => x.column === col);
-                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
@@ -7624,7 +7636,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 activeMatchIndex: 0,
                 caseSensitive: caseSensitiveResolved,
                 exactMatch: exactMatchResolved,
-                matchInfoCache: []
+                matchInfoCache: [],
+                matchCount: 0,
+                content: ''
             };
 
             rebuildCache = true;
@@ -7644,13 +7658,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.rebuildMatchCache();
         }
 
-        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchCount) {
             this.lastSearchInfo.activeMatchIndex = 0;
         } else if (this.lastSearchInfo.activeMatchIndex < 0) {
-            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchCount - 1;
         }
 
-        if (this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.matchCount > 0) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
@@ -7669,7 +7683,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             IgxTextHighlightDirective.clearActiveHighlight(this.id);
         }
 
-        return this.lastSearchInfo.matchInfoCache.length;
+        return this.lastSearchInfo.matchCount;
     }
 
     private rebuildMatchCache() {
@@ -7680,6 +7694,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
@@ -7693,28 +7708,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
-                            const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
-                            this.lastSearchInfo.matchInfoCache.push({
+                            const mic: IMatchInfoCache = {
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
-                                metadata,
-                            });
+                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+                            };
+
+                            this.lastSearchInfo.matchInfoCache.push(mic);
                         }
                     } else {
-                        let occurenceIndex = 0;
+                        let occurrenceIndex = 0;
                         let searchIndex = searchValue.indexOf(searchText);
 
                         while (searchIndex !== -1) {
-                            const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
-                            this.lastSearchInfo.matchInfoCache.push({
+                            const mic: IMatchInfoCache = {
                                 row: dataRow,
                                 column: c.field,
-                                index: occurenceIndex++,
-                                metadata,
-                            });
+                                index: occurrenceIndex++,
+                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+                            };
+
+                            this.lastSearchInfo.matchInfoCache.push(mic);
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
                             searchIndex = searchValue.indexOf(searchText);
@@ -7723,6 +7738,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         });
+
+        this.lastSearchInfo.matchCount = this.lastSearchInfo.matchInfoCache.length;
     }
 
     // TODO: About to Move to CRUD

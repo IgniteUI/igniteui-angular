@@ -163,54 +163,6 @@
         }
       }
     },
-    "igniteui-dev-demos-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "watch": true,
-            "headless": false
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "e2e/**/*.ts",
-              "e2e/**/*.html"
-            ]
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "configFile": "e2e//cypress.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "e2e//cypress.json"
-          }
-        }
-      }
-    },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
       "sourceRoot": "projects/igniteui-angular/src",
@@ -392,6 +344,100 @@
             "stylePreprocessorOptions": {
                 "includePaths": ["node_modules"]
             },
+            "scripts": []
+          }
+        }
+      }
+    },
+    "bundle-test": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/bundle-test",
+      "sourceRoot": "projects/bundle-test/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/bundle-test",
+            "index": "projects/bundle-test/src/index.html",
+            "main": "projects/bundle-test/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/bundle-test/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/bundle-test/src/styles.scss"
+            ],
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "bundle-test:build:production"
+            },
+            "development": {
+              "browserTarget": "bundle-test:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "bundle-test:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/bundle-test/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/bundle-test/src/styles.scss"
+            ],
             "scripts": []
           }
         }

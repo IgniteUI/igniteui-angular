@@ -13,7 +13,8 @@ import {
     TemplateRef,
     AfterContentInit,
     ChangeDetectorRef,
-    AfterViewInit
+    AfterViewInit,
+    ElementRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
@@ -205,10 +206,11 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     constructor(
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
+        protected el: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, el);
     }
 
     /**
@@ -242,15 +244,13 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      /**
       * Host `attr.class` binding.
       */
-     @HostBinding('class')
-     private get hostClasses(): string {
-         let hostClass = this.getComponentDensityClass('igx-action-strip');
-         if (hostClass !== 'igx-action-strip') {
-             // action strip requires the base class to be always present:
-             hostClass = `igx-action-strip ${hostClass}`;
-         }
-         return hostClass;
-     }
+    @HostBinding('class.igx-action-strip')
+    protected hostClass = 'igx-action-strip';
+
+    @HostBinding('style.--component-size')
+    protected get componentSize() {
+        return this.getComponentSizeStyles();
+    }
 
     /**
      * @hidden

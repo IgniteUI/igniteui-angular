@@ -247,22 +247,41 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         this.column.applySelectableClass = false;
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngDoCheck() {
         this.getSortDirection();
         this.cdr.markForCheck();
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onPointerDownIndicator(event) {
+        // Stop propagation of pointer events to now allow column dragging using the header indicators.
+        event.stopPropagation();
+    }
 
+    /**
+     * @hidden @internal
+     */
     public onFilteringIconClick(event) {
         event.stopPropagation();
         this.grid.filteringService.toggleFilterDropdown(this.nativeElement, this.column);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSortingIconClick(event) {
         event.stopPropagation();
         this.triggerSort();

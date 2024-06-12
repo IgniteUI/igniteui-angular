@@ -470,7 +470,7 @@ export abstract class IgxBaseExporter {
                             rawValue = rawValue.toString();
                         }
 
-                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue, record.data) : rawValue;
 
                         if (this.isPivotGridExport && !isNaN(parseFloat(formattedValue))) {
                             formattedValue = parseFloat(formattedValue);
@@ -1065,7 +1065,7 @@ export abstract class IgxBaseExporter {
             let summaryKey = '';
 
             if (this._setChildSummaries) {
-                currKey = `'${groupExpressionName}': '${recordVal}'`;
+                currKey = `'${record.expression.fieldName}': '${recordVal}'`;
                 summaryKeysArr = summaryKeysArr.filter(a => a !== previousKey);
                 previousKey = currKey;
                 summaryKeysArr.push(currKey);
@@ -1301,7 +1301,15 @@ export abstract class IgxBaseExporter {
         let startIndex = 0;
         const key = keys[0];
         const records = this.flatRecords.map(r => r.data);
-        const groupedRecords = records.reduce((hash, obj) => ({...hash, [obj[key.name]]:( hash[obj[key.name]] || []).concat(obj)}), {})
+        const groupedRecords = {};
+
+        records.forEach(obj => {
+            const keyValue = obj[key.name];
+            if (!groupedRecords[keyValue]) {
+                groupedRecords[keyValue] = [];
+            }
+            groupedRecords[keyValue].push(obj);
+        });
 
         if (columnGroupParent) {
             const mapKeys = [...this.pivotGridKeyValueMap.keys()];

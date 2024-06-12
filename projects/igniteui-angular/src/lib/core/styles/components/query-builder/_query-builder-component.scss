@@ -30,14 +30,6 @@
             @extend %advanced-filter__outlet !optional;
         }
 
-        @include m('cosy') {
-            @extend %advanced-filter--cosy !optional;
-        }
-
-        @include m('compact') {
-            @extend %advanced-filter--compact !optional;
-        }
-
         @include m('inline') {
             @extend %advanced-filter--inline !optional;
         }
@@ -132,14 +124,6 @@
 
         @include e(delete-btn) {
             @extend %filter-con-menu__delete-btn !optional;
-        }
-
-        @include m('cosy') {
-            @extend %filter-con-menu--cosy !optional;
-        }
-
-        @include m('compact') {
-            @extend %filter-con-menu--compact !optional;
         }
     }
 }

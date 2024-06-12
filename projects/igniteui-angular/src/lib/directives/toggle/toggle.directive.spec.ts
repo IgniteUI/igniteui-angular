@@ -637,7 +637,7 @@ export class IgxToggleTestComponent {
 @Component({
     template: `
     <p>Test</p>
-    <button [igxToggleAction]="toggleRef" [overlaySettings]="settings">Open/Close Toggle</button>
+    <button type="button" [igxToggleAction]="toggleRef" [overlaySettings]="settings">Open/Close Toggle</button>
     <div igxToggle #toggleRef="toggle">
       <ul>
         <li>1</li>
@@ -661,7 +661,7 @@ export class IgxToggleActionTestComponent {
 
 @Component({
     template: `
-    <button [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
+    <button type="button" [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
     <div igxToggle #toggleRef="toggle"></div>
     <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
     `,
@@ -672,7 +672,7 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
 
 @Component({
     template: `
-        <button igxToggleAction="toggleID">Open/Close Toggle</button>
+        <button type="button" igxToggleAction="toggleID">Open/Close Toggle</button>
         <div igxToggle id="toggleID">
             <span>Some content</span>
         </div>
@@ -709,7 +709,7 @@ export class IgxOverlayServiceComponent {
 
 @Component({
     template: `
-        <button igxToggleAction="toggleID">Open/Close Toggle</button>
+        <button type="button" igxToggleAction="toggleID">Open/Close Toggle</button>
         <div igxToggle id="toggleID">
             <span>Some content</span>
         </div>
@@ -724,21 +724,21 @@ export class TestWithOnPushComponent {
 
 @Component({
     template: `
-        <button #button1 igxToggleAction="toggle1" [overlaySettings]="overlaySettings" style="position:absolute; left: 100px; top: 10%">
+        <button type="button" #button1 igxToggleAction="toggle1" [overlaySettings]="overlaySettings" style="position:absolute; left: 100px; top: 10%">
             BUTTON 1
         </button>
         <div id="toggle1" igxToggle style="width: 100px; height: 100px;">
             <span>Toggle 1</span>
         </div>
 
-        <button #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:absolute; left: 300px; top: 50%">
+        <button type="button" #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:absolute; left: 300px; top: 50%">
             BUTTON 2
         </button>
         <div id="toggle2" igxToggle style="width: 100px; height: 100px;">
             <span>Toggle 2</span>
         </div>
 
-        <button #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:absolute; left: 500px; top: 110%">
+        <button type="button" #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:absolute; left: 500px; top: 110%">
             BUTTON 3
         </button>
         <div id="toggle3" igxToggle style="width: 100px; height: 100px;">

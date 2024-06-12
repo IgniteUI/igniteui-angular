@@ -90,6 +90,7 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Valutafilter',
     igx_grid_excel_custom_filter: 'Brugerdefineret filter',
     igx_grid_excel_no_matches: 'Ingen forekomster',
+    igx_grid_excel_matches_count: '{0} forekomster',
     igx_grid_advanced_filter_title: 'Avanceret filtrering',
     igx_grid_advanced_filter_and_group: '"Og" gruppe',
     igx_grid_advanced_filter_or_group: '"Eller" gruppe',

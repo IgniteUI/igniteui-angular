@@ -1,0 +1,10 @@
+{
+    "$schema": "../../common/schema/selector.schema.json",
+    "changes": [
+        {
+            "type": "directive",
+            "selector": "igxStepSubTitle",
+            "replaceWith": "igxStepSubtitle"
+        }
+    ]
+}

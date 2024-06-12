@@ -80,25 +80,20 @@ describe('Avatar', () => {
         const fixture = TestBed.createComponent(AvatarWithAttribsComponent);
         fixture.detectChanges();
         const instance = fixture.componentInstance.avatar;
-        const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.size).toEqual(IgxAvatarSize.SMALL);
-        expect(hostEl.classList).toContain(classes.small);
 
         instance.size = IgxAvatarSize.MEDIUM;
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.MEDIUM);
-        expect(hostEl.classList).toContain(classes.medium);
 
         instance.size = IgxAvatarSize.LARGE;
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.LARGE);
-        expect(hostEl.classList).toContain(classes.large);
 
         instance.size = 'nonsense' as any;
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.SMALL);
-        expect(hostEl.classList).toContain(classes.small);
     });
 
     it('Initializes default avatar', () => {

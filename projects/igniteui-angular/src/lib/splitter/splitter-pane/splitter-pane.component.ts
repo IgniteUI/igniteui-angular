@@ -190,9 +190,8 @@ export class IgxSplitterPaneComponent {
      */
     @HostBinding('style.flex')
     public get flex() {
-        const isAuto = this.size === 'auto' && !this.dragSize;
-        const grow = !isAuto ? 0 : 1;
         const size = this.dragSize || this.size;
+        const grow = this.isPercentageSize && !this.dragSize ? 1 : 0;
         return `${grow} ${grow} ${size}`;
     }
 

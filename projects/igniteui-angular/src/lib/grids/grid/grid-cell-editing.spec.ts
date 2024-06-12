@@ -9,11 +9,12 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
     SelectionWithTransactionsComponent,
-    ColumnEditablePropertyTestComponent
+    ColumnEditablePropertyTestComponent,
+    CellEditingCustomEditorTestComponent
 } from '../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { first, takeUntil } from 'rxjs/operators';
+import { Subject, fromEvent } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
@@ -327,6 +328,38 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect((document.activeElement as HTMLInputElement).value).toBe('John Brown');
             expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0)
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
+        }));
+
+        it('should work correct when not using ngModel but value and change event', fakeAsync(() => {
+            fixture = TestBed.createComponent(CellEditingCustomEditorTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+            grid.getColumnByName("fullName").inlineEditorTemplate = fixture.componentInstance.templateCell;
+            fixture.detectChanges();
+
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            tick(16); // trigger igxFocus
+
+            expect(cell.editMode).toBe(true);
+            const newValue = 'new value';
+
+            const editTemplate = fixture.debugElement.query(By.css('input'));
+            fromEvent(editTemplate.nativeElement, "blur").pipe(first()).subscribe(() => {
+                // needed because we cannot simulate entirely user input (change event needs it)
+                editTemplate.nativeElement.dispatchEvent(new Event('change'));
+                fixture.detectChanges();
+            });
+            UIInteractions.clickAndSendInputElementValue(editTemplate, newValue);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+            expect(cell.editMode).toBe(false);
+            expect(cell.value).toBe(newValue);
         }));
     });
 

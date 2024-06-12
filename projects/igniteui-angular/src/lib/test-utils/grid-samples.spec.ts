@@ -14,7 +14,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { IgxExcelStyleHeaderIconDirective, IgxGridComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/grid/public_api';
+import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -37,9 +37,12 @@ import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridEditingActionsComponent } from '../action-strip/grid-actions/grid-editing-actions.component';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
 import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/public_api';
+import { IgxGridComponent } from '../grids/grid/public_api';
+import { OverlaySettings } from '../services/public_api';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '',
@@ -401,6 +404,9 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
     public override data = SampleTestData.personJobDataFull();
     public override width = '100%';
     public override height = '100%';
+    public formatter = (value: any, rowData: any) => {
+        return `${value} - ${rowData.JobTitle}`;
+    };
 }
 
 @Component({
@@ -1169,6 +1175,35 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-advanced-filtering
+                #filtering
+                [overlaySettings]="filteringOverlaySettings">
+            </igx-grid-toolbar-advanced-filtering>
+        </igx-grid-toolbar>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent]
+})
+export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public hidingOverlaySettings: OverlaySettings = {};
+    public override data = SampleTestData.excelFilteringData();
+
+    public filteringOverlaySettings: OverlaySettings = {
+        closeOnEscape: false
+    };
+}
+
+@Component({
     template: `
     <igx-grid #grid1 [data]="data" height="400px">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
@@ -1364,7 +1399,7 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <button>Delete</button>
+                <button type="button">Delete</button>
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -1434,8 +1469,8 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button type="button" igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>
@@ -1701,6 +1736,38 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
 @Component({
     template: `
         <igx-grid [data]="data">
+            <igx-column [editable]="true" field="fullName">
+            </igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'">   
+            </igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+            <igx-column [editable]="true" field="personNumber" [dataType]="'number'">
+            </igx-column>
+        </igx-grid>
+        <ng-template #cellEdit igxCellEditor let-cell="cell">
+            <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
+        </ng-template>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
+})
+export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
+    @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;
+    public override data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+
+    public onChange(event: any, cell: CellType) {
+        cell.editValue = event.target.value;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
             <igx-column [editable]="true" field="fullName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
@@ -1729,7 +1796,7 @@ export class CellEditingTestComponent extends BasicGridComponent {
             <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
             <igx-column field="fullName" [editable]="true"></igx-column>
         </igx-grid>
-        <button class="btnTest">Test</button>
+        <button type="button" class="btnTest">Test</button>
     `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -1858,7 +1925,7 @@ export class ColumnSelectionGroupTestComponent {
 @Component({
     template: `
     <ng-template #indicatorTemplate let-column="column">
-        <igx-icon [attr.draggable]="false">{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
+        <igx-icon>{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
     </ng-template>
 
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
@@ -1870,7 +1937,7 @@ export class ColumnSelectionGroupTestComponent {
                 <igx-column  field="ContactTitle"></igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column">
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column-group header="Address Information" [collapsible]="true">
@@ -2052,7 +2119,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
             <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
             <igx-column field="fullName" [editable]="false"></igx-column>
         </igx-grid>
-        <button class="btnTest">Test</button>
+        <button type="button" class="btnTest">Test</button>
     `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -2137,6 +2204,24 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
         const a = obj1[key].toLowerCase();
         const b = obj2[key].toLowerCase();
         return a > b ? 1 : a < b ? -1 : 0;
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '[sortingOptions]="sortingOptions"',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        ''),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
+   public sortingOptions: ISortingOptions = { mode: 'single' };
+   public ngOnInit(): void {
+        this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
     }
 }
 
@@ -2292,7 +2377,7 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
     <igx-grid #grid1 [data]="data">
         <igx-column>
             <ng-template igxCell>
-                <button>SimpleBtn</button>
+                <button type="button">SimpleBtn</button>
             </ng-template>
         </igx-column>
         <igx-column header="" field="ID"></igx-column>

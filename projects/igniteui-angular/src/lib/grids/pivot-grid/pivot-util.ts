@@ -185,11 +185,13 @@ export class PivotUtil {
 
     public static flatten(arr, lvl = 0) {
         const newArr = arr.reduce((acc, item) => {
-            item.level = lvl;
-            acc.push(item);
-            if (item.childLevel) {
-                item.expandable = true;
-                acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+            if (item) {
+                item.level = lvl;
+                acc.push(item);
+                if (item.childLevel) {
+                    item.expandable = true;
+                    acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+                }
             }
             return acc;
         }, []);

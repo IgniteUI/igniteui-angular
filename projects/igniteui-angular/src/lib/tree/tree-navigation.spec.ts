@@ -310,6 +310,10 @@ describe('IgxTree - Navigation #treeView', () => {
                 fix.detectChanges();
             }));
 
+            it('The tree should have custome expand indicator templates', () => {
+                expect(tree.nodes.first.nativeElement.querySelector('.igx-icon').textContent).toBe('close_fullscreen');
+            });
+
             it('The tree container should be scrolled so that the focused node is in view', fakeAsync(() => {
                 // set another node as active element, expect node to be in view
                 tick();

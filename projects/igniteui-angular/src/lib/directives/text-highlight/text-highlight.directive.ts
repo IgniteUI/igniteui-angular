@@ -14,12 +14,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { compareMaps } from '../../core/utils';
 
-interface ISearchInfo {
-    searchedText: string;
-    content: string;
-    matchCount: number;
+export interface IBaseSearchInfo {
+    searchText: string;
     caseSensitive: boolean;
     exactMatch: boolean;
+    matchCount: number;
+    content: string;
 }
 
 /**
@@ -156,13 +156,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public column: any;
 
     /**
-     * A map that contains all aditional conditions, that you need to activate a highlighted
+     * A map that contains all additional conditions, that you need to activate a highlighted
      * element. To activate the condition, you will have to add a new metadata key to
      * the `metadata` property of the IActiveHighlightInfo interface.
      *
      * @example
      * ```typescript
-     *  // Set a property, which would disable the highlight for a given element on a cetain condition
+     *  // Set a property, which would disable the highlight for a given element on a certain condition
      *  const metadata = new Map<string, any>();
      *  metadata.set('highlightElement', false);
      * ```
@@ -179,7 +179,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    public get lastSearchInfo(): ISearchInfo {
+    public get lastSearchInfo(): IBaseSearchInfo {
         return this._lastSearchInfo;
     }
 
@@ -192,7 +192,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
     private destroy$ = new Subject<boolean>();
     private _value = '';
-    private _lastSearchInfo: ISearchInfo;
+    private _lastSearchInfo: IBaseSearchInfo;
     private _div = null;
     private _observer: MutationObserver = null;
     private _nodeWasRemoved = false;
@@ -274,7 +274,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         }
 
         this._lastSearchInfo = {
-            searchedText: '',
+            searchText: '',
             content: this.value,
             matchCount: 0,
             caseSensitive: false,
@@ -289,7 +289,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public ngAfterViewChecked() {
         if (this._valueChanged) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+            this.highlight(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
             this._valueChanged = false;
         }
@@ -304,7 +304,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         const exactMatchResolved = exactMatch ? true : false;
 
         if (this.searchNeedsEvaluation(text, caseSensitiveResolved, exactMatchResolved)) {
-            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.searchText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
             this._lastSearchInfo.exactMatch = exactMatchResolved;
             this._lastSearchInfo.content = this.value;
@@ -316,7 +316,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive, exactMatch);
             }
         } else if (this._nodeWasRemoved) {
-            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.searchText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
             this._lastSearchInfo.exactMatch = exactMatchResolved;
         }
@@ -330,7 +330,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public clearHighlight(): void {
         this.clearChildElements(false);
 
-        this._lastSearchInfo.searchedText = '';
+        this._lastSearchInfo.searchText = '';
         this._lastSearchInfo.matchCount = 0;
     }
 
@@ -368,7 +368,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                             this._nodeWasRemoved = false;
 
                             this._forceEvaluation = true;
-                            this.highlight(this._lastSearchInfo.searchedText,
+                            this.highlight(this._lastSearchInfo.searchText,
                                 this._lastSearchInfo.caseSensitive,
                                 this._lastSearchInfo.exactMatch);
                             this._forceEvaluation = false;
@@ -492,7 +492,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean, exactMatch: boolean): boolean {
-        const searchedText = this._lastSearchInfo.searchedText;
+        const searchedText = this._lastSearchInfo.searchText;
 
         return !this._nodeWasRemoved &&
             (searchedText === null ||

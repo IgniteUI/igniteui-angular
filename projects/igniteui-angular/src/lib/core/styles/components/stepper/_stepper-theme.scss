@@ -230,11 +230,11 @@
     }
 
     @if not($border-radius-indicator) {
-        $border-radius-indicator: border-radius(map.get($theme, 'border-radius-indicator')...);
+        $border-radius-indicator: map.get($theme, 'border-radius-indicator');
     }
 
     @if not($border-radius-step-header) {
-        $border-radius-step-header: border-radius(map.get($theme, 'border-radius-step-header')...);
+        $border-radius-step-header: map.get($theme, 'border-radius-step-header');
     }
 
     @return extend($theme, (

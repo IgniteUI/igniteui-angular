@@ -109,14 +109,6 @@
         $dropdown-shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($active-item-border-radius) {
-        $active-item-border-radius: border-radius(map.get($theme, 'active-item-border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,

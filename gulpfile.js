@@ -1,92 +1,23 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const browserSync = require('browser-sync').create();
 const del = require('del');
 const gulp = require('gulp');
-const sass = require('gulp-sass')(require('sass'));
-const sourcemaps = require('gulp-sourcemaps');
-const postcss = require('gulp-postcss');
 const process = require('process');
 const fs = require('fs');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const path = require('path');
-const EventEmitter = require('events').EventEmitter;
 const { series } = require('gulp');
 const { spawnSync } = require('child_process');
 const slash = require('slash');
 const concat = require('gulp-concat');
-
-const STYLES = {
-    SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/**/*',
-    DIST: './dist/igniteui-angular/styles',
-    MAPS: './maps',
-    THEMING: {
-        SRC: './projects/igniteui-angular/src/lib/core/styles/**/*',
-        DIST: './dist/igniteui-angular/lib/core/styles'
-    },
-    CONFIG: {
-        outputStyle: 'compressed',
-        includePaths: ['node_modules']
-    }
-};
-
-const ELEMENTS_STYLES = {
-    SRC: './projects/igniteui-angular-elements/src/themes/**/*',
-    DIST: './dist/igniteui-angular-elements/themes',
-    CONFIG: {
-        outputStyle: 'compressed',
-        includePaths: ['node_modules']
-    }
-};
 
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
 const TYPEDOC_THEME = {
     SRC: slash(path.join(__dirname, 'node_modules', 'ig-typedoc-theme', 'dist')),
     OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
-};
-
-module.exports.buildStyle = () => {
-    const prefixer = postcss([autoprefixer({
-        cascade: false,
-        grid: true
-    })]);
-
-    gulp.src(STYLES.THEMING.SRC)
-        .pipe(gulp.dest(STYLES.THEMING.DIST));
-
-    const myEventEmitter = new EventEmitter();
-
-    return gulp.src(STYLES.SRC)
-        .pipe(sourcemaps.init())
-        .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
-            sass.logError.bind(myEventEmitter)(err);
-            myEventEmitter.emit('end');
-            process.exit(1);
-        }))
-        .pipe(prefixer)
-        .pipe(sourcemaps.write(STYLES.MAPS))
-        .pipe(gulp.dest(STYLES.DIST))
-};
-
-module.exports.buildElementsStyles = () => {
-    const prefixer = postcss([autoprefixer({
-        cascade: false,
-        grid: true
-    })]);
-
-    const myEventEmitter = new EventEmitter();
-
-    return gulp.src(ELEMENTS_STYLES.SRC)
-        .pipe(sass.sync(ELEMENTS_STYLES.CONFIG).on('error', err => {
-            sass.logError.bind(myEventEmitter)(err);
-            myEventEmitter.emit('end');
-            process.exit(1);
-        }))
-        .pipe(prefixer)
-        .pipe(gulp.dest(ELEMENTS_STYLES.DIST))
 };
 
 module.exports.copyGitHooks = async (cb) => {

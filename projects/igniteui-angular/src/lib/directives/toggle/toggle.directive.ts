@@ -49,7 +49,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onOpened)='onToggleOpened($event)'>
+     *   (opened)='onToggleOpened($event)'>
      * </div>
      * ```
      */
@@ -68,7 +68,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onOpening)='onToggleOpening($event)'>
+     *   (opening)='onToggleOpening($event)'>
      * </div>
      * ```
      */
@@ -87,7 +87,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onClosed)='onToggleClosed($event)'>
+     *   (closed)='onToggleClosed($event)'>
      * </div>
      * ```
      */
@@ -125,7 +125,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onAppended)='onToggleAppended()'>
+     *   (appended)='onToggleAppended()'>
      * </div>
      * ```
      */
@@ -211,6 +211,17 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         const closeAnimationStarted = info?.closeAnimationPlayer?.hasStarted() ?? false;
         if (openAnimationStarted || !(this._collapsed || closeAnimationStarted)) {
             return;
+        }
+
+        const target = overlaySettings && overlaySettings.target;
+
+        // Get the size from the target element
+        if (target && target instanceof Element) {
+            const styles = window.getComputedStyle(target);
+            const componentSize = styles.getPropertyValue('--component-size');
+            const globalSize = styles.getPropertyValue('--ig-size');
+            const size = componentSize || globalSize || '3';
+            this.elementRef.nativeElement.style.setProperty('--ig-size', size);
         }
 
         this._collapsed = false;
@@ -367,7 +378,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
                 //  in case event is not canceled this will close the toggle and we need to unsubscribe.
                 //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
-                //  onClosed was fired we will end with calling onClosing more than once
+                //  closed was fired we will end with calling closing more than once
                 if (!e.cancel) {
                     this.clearSubscription(this._overlayClosingSub);
                 }

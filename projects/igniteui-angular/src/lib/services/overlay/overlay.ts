@@ -439,7 +439,7 @@ export class IgxOverlayService implements OnDestroy {
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
-            document,
+            this._document,
             true,
             info.settings.target);
         this.addModalClasses(info);
@@ -489,7 +489,7 @@ export class IgxOverlayService implements OnDestroy {
     public reposition(id: string) {
         const overlayInfo = this.getOverlayById(id);
         if (!overlayInfo || !overlayInfo.settings) {
-            console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
+            console.warn('Wrong id provided in overlay.reposition method. Id: ', id);
             return;
         }
         if (!overlayInfo.visible) {

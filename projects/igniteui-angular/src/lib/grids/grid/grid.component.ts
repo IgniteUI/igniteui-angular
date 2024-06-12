@@ -10,12 +10,12 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
+import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from '../grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -53,6 +53,7 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
+import { Observable, Subject } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -441,6 +442,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private childDetailTemplates: Map<any, any> = new Map();
 
+    /**
+     * @hidden @internal
+     */
+    public groupingPerformedSubject = new Subject<void>();
+
+    /**
+     * @hidden @internal
+     */
+    public groupingPerformed$: Observable<void> = this.groupingPerformedSubject.asObservable();
+
     /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * Gets/Sets the group by state.
@@ -495,7 +506,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 groupedColumns: groupedCols,
                 ungroupedColumns: ungroupedCols
             };
-            this.groupingDone.emit(groupingDoneArgs);
+            this.groupingPerformed$.pipe(take(1)).subscribe(() => {
+                this.groupingDone.emit(groupingDoneArgs);
+            });
         }
     }
 
@@ -756,6 +769,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.clear_groupby(name);
         this.calculateGridSizes();
         this.notifyChanges(true);
+        this.groupingPerformedSubject.next();
     }
 
     /**
@@ -1189,7 +1203,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (this.pagingMode === 1 && this.page !== 0) {
                 row.index = rowIndex + this.perPage * this.page;
             }
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
@@ -1209,7 +1223,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByKey(rowSelector);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
@@ -1260,6 +1274,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override getGroupAreaHeight(): number {
         return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected override onColumnsAddedOrRemoved() {
+        // update grouping states
+        this.groupablePipeTrigger++;
+        if (this.groupingExpressions && this.hideGroupedColumns) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
+        super.onColumnsAddedOrRemoved();
     }
 
     /**

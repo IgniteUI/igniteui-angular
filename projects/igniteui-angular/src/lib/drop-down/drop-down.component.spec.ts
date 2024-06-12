@@ -8,7 +8,7 @@ import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './publ
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -25,14 +25,10 @@ const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_INNER_SPAN = 'igx-drop-down__inner';
 const CSS_CLASS_GROUP_ITEM = 'igx-drop-down__group';
-const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
-const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
-const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
-const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
 describe('IgxDropDown ', () => {
@@ -48,7 +44,7 @@ describe('IgxDropDown ', () => {
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
@@ -182,6 +178,13 @@ describe('IgxDropDown ', () => {
 
             dropdown.toggle();
             expect(dropdown.close).toHaveBeenCalledTimes(1);
+        });
+        it('should remove selection on destroy', () => {
+            const selectionService = new IgxSelectionAPIService();
+            const selectionDeleteSpy = spyOn(selectionService, 'delete');
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown.ngOnDestroy();
+            expect(selectionDeleteSpy).toHaveBeenCalled();
         });
     });
     describe('User interaction tests', () => {
@@ -1082,18 +1085,19 @@ describe('IgxDropDown ', () => {
             it('should apply correct styles to items when Display Density is set', () => {
                 dropdown.toggle();
                 fixture.detectChanges();
-                expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
-                expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
+                dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('2');
+                });
                 fixture.componentInstance.density = DisplayDensity.compact;
                 fixture.detectChanges();
-                expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
-                expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
+                dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('1');
+                });
                 fixture.componentInstance.density = DisplayDensity.comfortable;
                 fixture.detectChanges();
-                expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
-                expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER).length);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+                dropdown.items.forEach(item => {
+                    expect(getComponentSize(item.element.nativeElement)).toEqual('3');
+                });
             });
             it('should apply selected item class', fakeAsync(() => {
                 dropdown.toggle();

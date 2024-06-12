@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -12,6 +12,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgFor } from '@angular/common';
+import { getComponentSize } from '../core/utils';
 
 @Component({
     template: `
@@ -97,12 +98,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     const CHIP_TEXT_CLASS = 'igx-chip__text';
-    const CHIP_CLASS = 'igx-chip';
-    const CHIP_DISABLED_CLASS = 'igx-chip--disabled';
-    const CHIP_COMPACT_CLASS = 'igx-chip--compact';
-    const CHIP_COSY_CLASS = 'igx-chip--cosy';
     const CHIP_ITEM_CLASS = 'igx-chip__item';
-    const CHIP_GHOST_COMP_CLASS = 'igx-chip__ghost--compact';
 
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
@@ -184,22 +180,8 @@ describe('IgxChip', () => {
             expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
             expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
 
-            // Assert default css class is applied
-            const comfortableComponents = fix.debugElement.queryAll(By.css(`.${CHIP_CLASS}`));
-
-            expect(comfortableComponents.length).toEqual(9);
-            expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
-            expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
-
-            expect(comfortableComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS])
-            );
-
-            firstComponent.componentInstance.disabled = true;
-            fix.detectChanges();
-            expect(comfortableComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_DISABLED_CLASS])
-            );
+            expect(getComponentSize(firstComponent.nativeElement)).toEqual('3');
+            expect(getComponentSize(secondComponent.nativeElement)).toEqual('3');
         });
 
         it('should make chip compact when density is set to compact', () => {
@@ -208,15 +190,7 @@ describe('IgxChip', () => {
 
             expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
 
-            // Assert compact css class is added
-            const compactComponents = fix.debugElement.queryAll(By.css(`.${CHIP_COMPACT_CLASS}`));
-
-            expect(compactComponents.length).toEqual(1);
-            expect(compactComponents[0].nativeElement).toBe(thirdComponent.nativeElement);
-
-            expect(compactComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_COMPACT_CLASS])
-            );
+            expect(getComponentSize(thirdComponent.nativeElement)).toEqual('1');
         });
 
         it('should make chip cosy when density is set to cosy', () => {
@@ -225,15 +199,7 @@ describe('IgxChip', () => {
 
             expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
 
-            // Assert cosy css class is added
-            const cosyComponents = fix.debugElement.queryAll(By.css(`.${CHIP_COSY_CLASS}`));
-
-            expect(cosyComponents.length).toEqual(1);
-            expect(cosyComponents[0].nativeElement).toBe(fourthComponent.nativeElement);
-
-            expect(cosyComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_COSY_CLASS])
-            );
+            expect(getComponentSize(fourthComponent.nativeElement)).toEqual('2');
         });
 
         it('should set correctly color of chip when color is set through code', () => {
@@ -349,7 +315,7 @@ describe('IgxChip', () => {
             UIInteractions.simulatePointerEvent('pointermove', thirdChipElem, startingX + 10, startingY + 10);
             fix.detectChanges();
 
-            expect(thirdChip.dragDirective.ghostElement.classList.contains(CHIP_GHOST_COMP_CLASS)).toBeTruthy();
+            expect(getComponentSize(thirdChip.dragDirective.ghostElement)).toEqual('1');
         });
 
         it('should fire selectedChanging event when selectable is true', () => {

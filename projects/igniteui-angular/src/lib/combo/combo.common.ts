@@ -650,7 +650,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button class="combo__add-button">
+     *          <button type="button" igxButton="raised" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>
@@ -812,15 +812,27 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * The text displayed in the combo input
+     * The value of the selected item in the combo
      *
      * ```typescript
      * // get
      * let comboValue = this.combo.value;
      * ```
      */
-    public get value(): string {
+    public get value(): any[] {
         return this._value;
+    }
+
+    /**
+     * The text displayed in the combo input
+     *
+     * ```typescript
+     * // get
+     * let comboDisplayValue = this.combo.displayValue;
+     * ```
+     */
+    public get displayValue(): string[] {
+        return this._displayValue ? this._displayValue.split(', ') : [];
     }
 
     /**
@@ -923,7 +935,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
          this._filteringOptions = value;
      }
     protected _data = [];
-    protected _value = '';
+    protected _value = [];
+    protected _displayValue = '';
     protected _groupKey = '';
     protected _searchValue = '';
     protected _filteredData = [];
@@ -957,7 +970,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, elementRef);
     }
 
     public ngAfterViewChecked() {
@@ -1012,19 +1025,19 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.clear(this.id);
+        this.selectionService.delete(this.id);
     }
 
     /**
      * A method that opens/closes the combo.
      *
      * ```html
-     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
     public toggle(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
@@ -1039,12 +1052,12 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens the combo.
      *
      * ```html
-     * <button (click)="combo.open()">Open Combo</button>
+     * <button type="button" (click)="combo.open()">Open Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
     public open(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
@@ -1057,7 +1070,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that closes the combo.
      *
      * ```html
-     * <button (click)="combo.close()">Close Combo</button>
+     * <button type="button" (click)="combo.close()">Close Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1082,7 +1095,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     public get selection() {
         const items = Array.from(this.selectionService.get(this.id));
-        return items;
+        return this.convertKeysToItems(items);
     }
 
     /**
@@ -1280,7 +1293,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
+        if (this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 

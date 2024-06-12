@@ -121,7 +121,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }

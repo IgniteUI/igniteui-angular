@@ -5,7 +5,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-avatar) {
-        @include sizable();
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
 
@@ -28,18 +27,6 @@
 
         @include m(rounded) {
             @extend %igx-avatar--rounded !optional;
-        }
-
-        @include m(small) {
-            @extend %igx-avatar--small !optional;
-        }
-
-        @include m(medium) {
-            @extend %igx-avatar--medium !optional;
-        }
-
-        @include m(large) {
-            @extend %igx-avatar--large !optional;
         }
 
         @include m(initials) {

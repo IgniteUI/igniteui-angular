@@ -20,13 +20,12 @@
         <ng-container *ngIf="column.sortable && !disabled">
             <div class="sort-icon"
                 [attr.data-sortIndex]="(grid.sortingOptions.mode === 'single' && grid.sortingExpressions.length <=1) ? null : column.field | sortingIndex:grid.sortingExpressions"
-                [attr.draggable]="false" (click)="onSortingIconClick($event)" (pointerdown)="$event.stopPropagation()">
+                (pointerdown)="onPointerDownIndicator($event)" (click)="onSortingIconClick($event)">
                 <ng-container *ngTemplateOutlet="sortIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
         </ng-container>
         <ng-container *ngIf="grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter'">
-            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)"
-                (pointerdown)="$event.stopPropagation()">
+            <div [ngClass]="filterIconClassName" (pointerdown)="onPointerDownIndicator($event)" (click)="onFilteringIconClick($event)" >
                 <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
         </ng-container>

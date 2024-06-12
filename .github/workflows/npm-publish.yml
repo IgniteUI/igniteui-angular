@@ -18,14 +18,13 @@ jobs:
       - run: echo ${VERSION}
 
       - run: echo "NG_CLI_ANALYTICS=false" >> $GITHUB_ENV
-      - run: echo "NODE_OPTIONS='--max_old_space_size=4096'" >> $GITHUB_ENV
       - run: npm ci
 
       - name: Build igniteui-angular
         run: |
             npm run build:lib
             npm run build:schematics
-            npm run build:migration
+            npm run build:migrations
 
       - name: Build igniteui-angular-i18n
         run: npm run build:i18n

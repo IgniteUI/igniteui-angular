@@ -68,7 +68,7 @@ Additionally, custom buttons can be templated in the `igx-date-picker` using the
 <igx-date-picker #datePicker>
     <ng-template igxPickerActions>
         <div class="action-buttons">
-            <button igxButton="flat" (click)="datePicker.selectToday()">Today</button>
+            <button type="button" igxButton="flat" (click)="datePicker.selectToday()">Today</button>
         </div>
     </ng-template>
 </igx-date-picker>

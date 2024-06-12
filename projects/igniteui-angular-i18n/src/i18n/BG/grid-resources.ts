@@ -90,6 +90,7 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Филтър по валута',
     igx_grid_excel_custom_filter: 'Персонализиран филтър...',
     igx_grid_excel_no_matches: 'Няма съвпадения',
+    igx_grid_excel_matches_count: '{0} съвпадения.',
     igx_grid_advanced_filter_title: 'Разширено филтриране',
     igx_grid_advanced_filter_and_group: '"And" група',
     igx_grid_advanced_filter_or_group: '"Or" група',

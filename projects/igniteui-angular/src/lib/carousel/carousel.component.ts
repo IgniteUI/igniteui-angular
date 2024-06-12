@@ -270,9 +270,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>add</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>add</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -293,9 +293,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>remove</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>remove</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```

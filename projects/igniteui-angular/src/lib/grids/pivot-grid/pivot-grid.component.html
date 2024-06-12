@@ -56,7 +56,7 @@
             </igx-pivot-row>
         </ng-template>
 
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
@@ -86,7 +86,7 @@
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth" [hidden]="pivotPinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth" [hidden]="pivotPinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" #tfoot>

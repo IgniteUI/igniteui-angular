@@ -1,7 +1,7 @@
 import { IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './tree-node/tree-node.component';
-import { IgxTreeComponent } from './tree.component';
+import { IgxTreeComponent, IgxTreeExpandIndicatorDirective } from './tree.component';
 
-export { IgxTreeComponent } from './tree.component';
+export { IgxTreeComponent, IgxTreeExpandIndicatorDirective } from './tree.component';
 export * from './tree-node/tree-node.component';
 export { IgxTreeSearchResolver, ITreeNodeSelectionEvent, ITreeNodeEditingEvent,
     ITreeNodeEditedEvent, ITreeNodeTogglingEventArgs, ITreeNodeToggledEventArgs,
@@ -12,5 +12,6 @@ export { IgxTreeSearchResolver, ITreeNodeSelectionEvent, ITreeNodeEditingEvent,
 export const IGX_TREE_DIRECTIVES = [
     IgxTreeComponent,
     IgxTreeNodeComponent,
-    IgxTreeNodeLinkDirective
+    IgxTreeNodeLinkDirective,
+    IgxTreeExpandIndicatorDirective
 ] as const;

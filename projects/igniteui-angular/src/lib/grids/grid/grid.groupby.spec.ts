@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -710,6 +710,30 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
         expect(currExpr.groupedColumns.length).toEqual(1);
         expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
+    }));
+
+    it('should update groupsRecords when groupingDone is emitted', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        let groupsRecordsLength;
+
+        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        grid.groupingDone.subscribe(() => {
+            groupsRecordsLength = grid.groupsRecords.length;
+        });
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        expect(groupsRecordsLength).toEqual(5);
+
+        grid.clearGrouping();
+        tick();
+        fix.detectChanges();
+        expect(groupsRecordsLength).toEqual(0);
     }));
 
     it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
@@ -3488,6 +3512,30 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
         }));
 
+        it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
+            fakeAsync(() => {
+                const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+                fix.detectChanges();
+                const grid = fix.componentInstance.instance;
+                fix.componentInstance.columns = [];
+                grid.hideGroupedColumns = true;
+                fix.detectChanges();
+                tick();
+                fix.detectChanges();
+                fix.componentInstance.columns = [
+                    { field: 'A', width: 100 },
+                    { field: 'B', width: 100 },
+                    { field: 'C', width: 100 }
+                ];
+                grid.groupingExpressions = [
+                    { fieldName: 'A', dir: SortingDirection.Asc }
+                ];
+                fix.detectChanges();
+                tick();
+
+                expect(grid.getColumnByName('A').hidden).toBe(true);
+        }));
+
     it('should respect current sorting direction when grouping', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -3962,7 +4010,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             [data]='data'>
             <igx-column [width]='width' [groupable]="true">
                 <ng-template igxCell>
-                    <button>Dummy button</button>
+                    <button type="button">Dummy button</button>
                 </ng-template>
             </igx-column>
         </igx-grid>

@@ -6,7 +6,10 @@ import {
     TemplateRef,
     Directive,
     OnDestroy,
-    HostBinding
+    HostBinding,
+    Input,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
@@ -23,7 +26,7 @@ import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbo
 import { takeUntil } from 'rxjs/operators';
 import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { ExpressionUI, FilterListItem } from './common';
+import { ActiveElement, ExpressionUI, FilterListItem } from './common';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxCircularProgressBarComponent } from '../../../progressbar/progressbar.component';
 import { IgxTreeNodeComponent } from '../../../tree/tree-node/tree-node.component';
@@ -38,6 +41,7 @@ import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive'
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
 import { ITreeNodeSelectionEvent } from '../../../tree/common';
+import { Navigate } from '../../../drop-down/drop-down.common';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
@@ -51,6 +55,7 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
     constructor(public template: TemplateRef<undefined>) { }
 }
 
+let NEXT_ID = 0;
 /**
  * A component used for presenting Excel style search UI.
  */
@@ -74,6 +79,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
+
+    @ViewChild('cancelButton', {read: IgxButtonDirective, static: true })
+    protected cancelButton: IgxButtonDirective;
 
     /**
      * @hidden @internal
@@ -102,7 +110,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxForOfDirective, { static: true })
+    @ViewChild(IgxForOfDirective)
     protected virtDir: IgxForOfDirective<any>;
 
     /**
@@ -111,6 +119,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
+    @ViewChildren(IgxCheckboxComponent)
+    protected checkboxes: QueryList<IgxCheckboxComponent>;
+    
     /**
      * @hidden @internal
      */
@@ -183,6 +194,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public matchesCount: number;
+
+    /**
+     * @hidden @internal
+     */
     public get valuesLoadingTemplate() {
         if (this.esf.grid?.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
@@ -191,10 +207,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    protected activeDescendant = '';
+
+    private _id = `igx-excel-style-search-${NEXT_ID++}`;
     private _isLoading;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
+    private _focusedItem: ActiveElement = null;
     private destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
@@ -214,6 +234,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.virtDir?.resetScrollPosition();
+
+            if (this.virtDir) {
+                this.virtDir.state.startIndex = 0;
+            }
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -298,7 +322,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 selectAllBtn.indeterminate = true;
             }
         }
-        eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
 
     /**
@@ -361,6 +384,31 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         // If we skip this branch, on applying the filter the _calculateChunkSize() method off the ForOfDirective receives
         // an igxForContainerSize = undefined, thus assigns the chunkSize to the igxForOf.length which leads to performance issues.
         return 0;
+    }
+
+    @HostBinding('attr.id')
+    @Input()
+    protected get id(): string {
+        return this._id;
+    }
+    protected set id(value: string) {
+        this._id = value;
+    }
+
+    protected getItemId(index: number): string {
+        return `${this.id}-item-${index}`;
+    }
+
+    protected setActiveDescendant() : void  {
+        this.activeDescendant = this.focusedItem?.id || '';
+    }
+
+    protected get focusedItem(): ActiveElement {
+        return this._focusedItem;
+    }
+
+    protected set focusedItem(val: ActiveElement) {
+        this._focusedItem = val;
     }
 
     /**
@@ -437,6 +485,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 }
             }
             selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
+            this.matchesCount = this.displayedListData.length - 1;
             this.cdr.detectChanges();
 
             return;
@@ -467,6 +516,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             if (this.displayedListData.length === 2) {
                 this.displayedListData = [];
             }
+        }
+
+        if (this.displayedListData.length > 2) {
+            this.matchesCount = this.displayedListData.length - 2;
+        } else {
+            this.matchesCount = 0;
         }
 
         selectAllBtn.indeterminate = false;
@@ -562,6 +617,59 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
 
         this.esf.closeDropdown();
+    }
+
+    protected handleKeyDown(event: KeyboardEvent) {
+        if (event) {
+            const key = event.key.toLowerCase();
+            const navKeys = ['space', 'spacebar', ' ',
+            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+                if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
+                    return;
+                }
+                event.preventDefault();
+                event.stopPropagation();
+            switch (key) {
+                case 'arrowup':
+                case 'up':
+                    this.onArrowUpKeyDown();
+                    break;
+                case 'arrowdown':
+                case 'down':
+                    this.onArrowDownKeyDown();
+                    break;
+                case 'home':
+                    this.onHomeKeyDown();
+                    break;
+                case 'end':
+                    this.onEndKeyDown();
+                    break;
+                case 'space':
+                case 'spacebar':
+                case ' ':
+                    this.onActionKeyDown();
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
+
+    protected onFocus() {
+        const firstIndexInView = this.virtDir.state.startIndex;
+        if (this.virtDir.igxForOf.length > 0) {
+            this.focusedItem = {
+                id: this.getItemId(firstIndexInView),
+                index: firstIndexInView,
+                checked: this.virtDir.igxForOf[firstIndexInView].isSelected
+            };
+        }
+        this.setActiveDescendant();
+    }
+
+    protected onFocusOut() {
+        this.focusedItem = null;
+        this.setActiveDescendant();
     }
 
     /**
@@ -663,5 +771,71 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.searchInput.value = this.searchValue.replace(regExp, '');
             this.searchValue = this.searchInput.value;
         }
+    }
+
+    private onArrowUpKeyDown() {
+        if (this.focusedItem && this.focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
+            // on ArrowUp the focus stays on the same element if it is the first focused
+            return;
+        } else {
+            this.navigateItem(this.focusedItem ? this.focusedItem.index - 1 : 0);
+        }
+        this.setActiveDescendant();
+    }
+
+    private onArrowDownKeyDown() {
+        const lastIndex = this.virtDir.igxForOf.length - 1;
+        if (this.focusedItem && this.focusedItem.index === lastIndex) {
+            // on ArrowDown the focus stays on the same element if it is the last focused
+            return;
+        } else {
+            this.navigateItem(this.focusedItem ? this.focusedItem.index + 1 : 0);
+        }
+        this.setActiveDescendant();
+    }
+
+    private onHomeKeyDown() {
+        this.navigateItem(0);
+        this.setActiveDescendant();
+    }
+
+    private onEndKeyDown() {
+        this.navigateItem(this.virtDir.igxForOf.length - 1);
+        this.setActiveDescendant();
+    }
+
+    private onActionKeyDown() {
+        const dataItem = this.displayedListData[this.focusedItem.index];
+        const args: IChangeCheckboxEventArgs = {
+            checked: !dataItem.isSelected,
+            checkbox: this.checkboxes.find(x => x.value === dataItem)
+        }
+        this.onCheckboxChange(args);
+    }
+
+    private navigateItem(index: number) {
+        if (index === -1 || index >= this.virtDir.igxForOf.length) {
+            return;
+        }
+        const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
+        const scrollRequired = this.isIndexOutOfBounds(index, direction);
+        this.focusedItem = {
+           id: this.getItemId(index),
+           index: index,
+           checked: this.virtDir.igxForOf[index].isSelected
+        };
+        if (scrollRequired) {
+            this.virtDir.scrollTo(index);
+        }
+    }
+
+    private isIndexOutOfBounds(index: number, direction: Navigate) {
+        const virtState = this.virtDir.state;
+        const currentPosition = this.virtDir.getScroll().scrollTop;
+        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
+        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
+        const subRequired = indexOutOfChunk || scrollNeeded;
+        return subRequired;
     }
 }

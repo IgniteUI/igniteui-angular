@@ -15,13 +15,17 @@
 
         // css class 'igx-list__header'
         @include e(header) {
-            @include sizable();
             @extend %igx-list-header !optional;
         }
 
         // css class 'igx-list__item-base'
         @include e(item-base) {
             @extend %igx-list-item-base !optional;
+        }
+
+        // css class `igx-list__item-base--active
+        @include e(item-base, $m: active) {
+            @extend %igx-list-item-base--active !optional;
         }
 
         // css class 'igx-list__item-right' applied to the panning container shown when the list item is panned left
@@ -36,7 +40,6 @@
 
         // css class 'igx-list__item-content'
         @include e(item-content) {
-            @include sizable();
             @extend %igx-list-item-content !optional;
 
             &:active {
@@ -75,46 +78,6 @@
 
             @include e(message) {
                 @extend %igx-list__message--empty !optional;
-            }
-        }
-
-        @include m(compact) {
-            @extend %igx-list !optional;
-
-            @include e(item-thumbnail) {
-                @extend %igx-list__item-thumbnail--compact !optional;
-            }
-
-            @include e(item-actions) {
-                @extend %igx-list__item-actions--compact !optional;
-            }
-
-            @include e(item-content) {
-                @extend %igx-list-item-content--compact !optional;
-            }
-
-            @include e(header) {
-                @extend %igx-list-header--compact !optional;
-            }
-        }
-
-        @include m(cosy) {
-            @extend %igx-list !optional;
-
-            @include e(item-thumbnail) {
-                @extend %igx-list__item-thumbnail--cosy !optional;
-            }
-
-            @include e(item-actions) {
-                @extend %igx-list__item-actions--cosy !optional;
-            }
-
-            @include e(item-content) {
-                @extend %igx-list-item-content--cosy !optional;
-            }
-
-            @include e(header) {
-                @extend %igx-list-header--cosy !optional;
             }
         }
     }

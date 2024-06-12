@@ -135,7 +135,7 @@
         display: flex;
         align-items: center;
         padding: pad(rem(4px), rem(8px), rem(16px));
-        color: color($color: 'gray', $variant: 700);
+        color: var-get($theme, 'excel-filtering-header-foreground');
     }
 
     %grid-excel-menu__header-actions {
@@ -186,7 +186,7 @@
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
 
         header {
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'excel-filtering-subheader-foreground');
             margin-bottom: rem(4px);
         }
 
@@ -204,7 +204,6 @@
         justify-content: space-between;
 
         header {
-            color: color($color: 'gray', $variant: 700);
             margin-inline-end: auto;
         }
     }
@@ -253,12 +252,17 @@
         padding-block: pad-block(rem(4px), rem(8px), rem(8px));
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         cursor: pointer;
-        color: color($color: 'gray', $variant: 700);
+        color: var-get($theme, 'excel-filtering-actions-foreground');
         outline-style: none;
 
         &:hover,
         &:focus {
             background: color($color: 'gray', $variant: 100);
+            color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+        }
+
+        igx-icon {
+            --component-size: 3;
         }
 
         [dir='rtl'] & {
@@ -269,7 +273,7 @@
     }
 
     %grid-excel-actions__action--disabled {
-        color: color($color: 'gray', $variant: 400);
+        color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
         pointer-events: none;
     }
 
@@ -325,13 +329,25 @@
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
-                height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
-                min-height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
+                height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
+                min-height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
             }
 
             .igx-tree-node__toggle-button {
                 min-width: rem(20px);
-                margin-inline-start: pad-inline(map.get($tree-node-indent, 'compact'), map.get($tree-node-indent, 'cosy'), map.get($tree-node-indent, 'comfortable'));
+                margin-inline-start: pad-inline(
+                    map.get($tree-node-indent, 'compact'),
+                    map.get($tree-node-indent, 'cosy'),
+                    map.get($tree-node-indent, 'comfortable')
+                );
                 margin-inline-end: pad-inline(rem(4px), rem(8px));
             }
 
@@ -350,7 +366,11 @@
         %igx-excel-filter__tree-alike-item {
             display: flex;
             align-items: center;
-            height: sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'));
+            height: sizable(
+                map.get($tree-node-height, 'compact'),
+                map.get($tree-node-height, 'cosy'),
+                map.get($tree-node-height, 'comfortable')
+            );
             background: color($color: 'surface');
 
             &:hover,
@@ -359,7 +379,11 @@
             }
 
             > igx-checkbox {
-                margin-inline-start: pad-inline(map.get($checkbox-indent, 'compact'), map.get($checkbox-indent, 'cosy'), map.get($checkbox-indent, 'comfortable'));
+                margin-inline-start: pad-inline(
+                    map.get($checkbox-indent, 'compact'),
+                    map.get($checkbox-indent, 'cosy'),
+                    map.get($checkbox-indent, 'comfortable')
+                );
             }
         }
     }
@@ -464,6 +488,13 @@
         %grid-excel-filter__cancel {
             flex-grow: 0;
         }
+    }
+
+    %grid-excel-menu__filter-results {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
     }
 
     igx-excel-style-filter-operations,

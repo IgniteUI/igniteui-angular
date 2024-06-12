@@ -1428,7 +1428,7 @@ interface IColumnConfig {
     template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
         `
     <ng-template #customTemplate let-value>
-    <button igxButton="raised">{{value}}</button>
+        <button type="button" igxButton="raised">{{value}}</button>
     </ng-template>
     `,
     standalone: true,

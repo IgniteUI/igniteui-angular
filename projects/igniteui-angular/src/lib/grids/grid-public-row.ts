@@ -193,7 +193,7 @@ abstract class BaseRow implements RowType {
     public get cells(): CellType[] {
         const res: CellType[] = [];
         this.grid.columns.forEach(col => {
-            const cell: CellType = new IgxGridCell(this.grid, this.index, col.field);
+            const cell: CellType = new IgxGridCell(this.grid, this.index, col);
             res.push(cell);
         });
         return res;
@@ -533,7 +533,7 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     public override get cells(): CellType[] {
         const res: CellType[] = [];
         this.grid.columns.forEach(col => {
-            const cell: CellType = new IgxGridCell(this.grid, this.index, col.field);
+            const cell: CellType = new IgxGridCell(this.grid, this.index, col);
             res.push(cell);
         });
         return res;

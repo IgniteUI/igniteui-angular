@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -63,6 +64,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 
 let NEXT_ID = 0;
 
@@ -104,7 +106,17 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     @Input()
-    public data: any = [];
+    public get data(): any {
+        return this._data || [];
+    }
+
+    public set data(value: any) {
+        this._data = value;
+        if (this.hGrid && !this.hGrid.dataSetByUser) {
+            this.hGrid.setDataInternal(this._data.childGridsData[this.layout.key]);
+        }
+    }
+
     /**
      * The index of the row.
      *
@@ -173,6 +185,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public expanded = false;
 
+    private _data: any;
+
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
@@ -184,7 +198,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
-        this.hGrid.data = this.data.childGridsData[this.layout.key];
+        this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
         this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
@@ -404,6 +418,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childLayoutKeys = [];
 
+    /** @hidden @internal */
+    public dataSetByUser = false;
+
     /**
      * @hidden
      */
@@ -423,6 +440,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public childRow: IgxChildGridRowComponent;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
+    protected override actionStripComponents: QueryList<IgxActionStripComponent>;
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -458,20 +479,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     public set data(value: any[] | null) {
-        this._data = value || [];
-        this.summaryService.clearSummaryCache();
-        if (!this._init) {
-            this.validation.updateAll(this._data);
-        }
-        if (this.shouldGenerate) {
-            this.setupColumns();
-            this.reflow();
-        }
-        this.cdr.markForCheck();
-        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
-            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
-            this.notifyChanges(true);
-        }
+        this.setDataInternal(value);
+        this.dataSetByUser = true;
     }
 
     /**
@@ -783,7 +792,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, columnField);
+            return new IgxGridCell(this, rowIndex, column);
         }
     }
 
@@ -803,13 +812,31 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row.index, columnField);
+            return new IgxGridCell(this, row.index, column);
         }
     }
 
     public override pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
+    }
+
+    /** @hidden @internal */
+    public setDataInternal(value: any) {
+        this._data = value || [];
+        this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+        this.cdr.markForCheck();
+        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
+            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
+            this.notifyChanges(true);
+        }
     }
 
     public override unpinRow(rowID: any): boolean {

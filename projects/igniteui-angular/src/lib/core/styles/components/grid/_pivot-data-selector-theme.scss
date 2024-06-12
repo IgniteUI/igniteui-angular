@@ -84,9 +84,7 @@
             transform: none;
         }
 
-        %form-group-prefix,
-        %form-group-prefix--cosy,
-        %form-group-prefix--compact {
+        %form-group-prefix {
             @if $variant == 'material' {
                 padding-inline-end: rem(16px) !important;
             }
@@ -94,9 +92,7 @@
             box-sizing: content-box;
         }
 
-        %form-group-bundle-main--box,
-        %form-group-bundle-main--box-cosy,
-        %form-group-bundle-main--box-compact {
+        %form-group-bundle-main--box {
             padding-top: 0 !important;
         }
 
@@ -186,7 +182,12 @@
         }
 
         %igx-chip__item {
-            height: #{sizable(map.get($chip-height-material, 'compact'), map.get($chip-height-material, 'cosy'), map.get($chip-height-material, 'comfortable'))};
+            height: #{
+                sizable(
+                    map.get($chip-height-material, 'compact'),
+                    map.get($chip-height-material, 'cosy'),
+                    map.get($chip-height-material, 'comfortable')
+                )};
         }
 
         %igx-chip__content {
