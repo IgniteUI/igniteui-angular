@@ -298,6 +298,18 @@
         compact: rem(4px)
     );
 
+    $list-line-margin: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
+    );
+
+    $list-actions-margin: (
+        comfortable: rem(8px),
+        cosy: rem(6px),
+        compact: rem(4px)
+    );
+
     %igx-list {
         @include sizable();
 
@@ -441,7 +453,10 @@
         align-items: center;
         justify-content: center;
         color: var-get($theme, 'item-action-color');
-        gap: sizable(rem(4), rem(6), rem(8));
+
+        @if $variant == 'indigo-design' {
+            gap: sizable(rem(4), rem(6), rem(8));
+        }
 
         &:empty {
             display: none;
@@ -449,6 +464,10 @@
 
         > * {
             --component-size: #{if($variant == 'indigo-design', 2, var(--list-size))};
+
+            @if $variant != 'indigo-design' {
+                margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
+            }
         }
 
         igc-icon,
@@ -472,7 +491,10 @@
         border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
-        gap: rem(8px);
+
+        @if $variant == 'indigo-design' {
+            gap: rem(8px);
+        }
     }
 
     %igx-list-header,
@@ -513,6 +535,16 @@
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
         --component-size: var(--list-size);
+
+        @if $variant != 'indigo-design' {
+            margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
+        }
+    }
+
+    @if $variant != 'indigo-design' {
+        %igx-list__item-lines + %igx-list__item-actions {
+            margin-inline-start: rem(8px);
+        }
     }
 
     %igx-list-item-content--active {
