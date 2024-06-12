@@ -294,7 +294,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.filterValue = '';
         }
         if (super.selection.length) {
-            this.clearSelection();
+            const args: ISimpleComboSelectionChangingEventArgs = {
+                newValue: undefined,
+                oldValue: this.selectedItem,
+                newSelection: undefined,
+                oldSelection: this.selection,
+                displayText: typeof event === 'string' ? event : event?.target?.value,
+                owner: this,
+                cancel: false
+            };
+            this.selectionChanging.emit(args);
+            if (!args.cancel) {
+                this.selectionService.select_items(this.id, [], true);
+            }
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {

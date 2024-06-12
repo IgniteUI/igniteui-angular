@@ -1557,7 +1557,7 @@ describe('IgxSimpleCombo', () => {
             expect(spy).toHaveBeenCalledTimes(1);
         }));
 
-        it('should emit selectionChanging event when input value changes and input loses focus', () => {
+        it('should emit selectionChanging event when input value changes', () => {
             spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
 
@@ -1591,7 +1591,7 @@ describe('IgxSimpleCombo', () => {
                 },
                 newSelection: undefined,
                 owner: combo,
-                displayText: "",
+                displayText: "z",
                 cancel: false
             });
         });
