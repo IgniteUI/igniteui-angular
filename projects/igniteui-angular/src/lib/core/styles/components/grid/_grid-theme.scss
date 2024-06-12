@@ -746,6 +746,7 @@
         // Have a more stable visual editing experience
         > igx-input-group,
         igx-combo,
+        igx-simple-combo,
         igx-select,
         igx-date-picker,
         igx-time-picker {
@@ -759,8 +760,6 @@
         igx-input-group {
             background: var-get($theme, 'cell-editing-background');
 
-            height: 100%;
-
             input {
                 height: 100%;
                 color: var-get($theme, 'cell-editing-foreground');
@@ -768,6 +767,16 @@
 
             input:focus {
                 color: var-get($theme, 'cell-editing-focus-foreground');
+            }
+        }
+
+        igx-select,
+        igx-combo,
+        igx-simple-combo,
+        igx-time-picker,
+        igx-date-picker {
+            igx-input-group {
+                height: 100%;
             }
         }
 
