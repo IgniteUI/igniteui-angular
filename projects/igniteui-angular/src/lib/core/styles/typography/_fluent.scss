@@ -19,6 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -57,6 +58,9 @@
     @include chip-typography($categories: (
         text: 'subtitle-2'
     ));
+    @include circular-bar-typography($categories: (
+        text: null
+    ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography();
@@ -72,6 +76,9 @@
     @include input-group-typography($categories: (
         helper-text: 'caption',
         input-text: 'body-2'
+    ));
+    @include linear-bar-typography($categories: (
+        value: null
     ));
     @include list-typography($categories: (
         header: 'overline',
