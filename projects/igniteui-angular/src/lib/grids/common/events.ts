@@ -10,11 +10,11 @@ import { IBaseSearchInfo } from '../../directives/text-highlight/text-highlight.
 
 /** The event arguments when data from a grid is being copied. */
 export interface IGridClipboardEvent {
-    /** `data` can be of any type and referes to the data that is being copied/stored to the clipboard */
+    /** `data` can be of any type and refers to the data that is being copied/stored to the clipboard */
     data: any[];
-    /** 
-     * `cancel` returns whether an external event has interepted the copying 
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+    /**
+     * `cancel` returns whether an external event has intercepted the copying
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -24,7 +24,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     /** Represents the grid cell that triggered the event. */
     cell: CellType;
     /** 
-     * Represents the original event that occured
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
@@ -45,9 +45,9 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * The only case rowData (of the current object) is used directly, is when there is no rowEditing or transactions enabled
      */
     rowData: any;
-    /** 
-     * Represents the previous (before editing) value of the edited cell. 
-     * It's used when the event has been stoped/exited.
+    /**
+     * Represents the previous (before editing) value of the edited cell.
+     * It's used when the event has been stopped/exited.
      */
     oldValue: any;
     /**
@@ -73,7 +73,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     owner?: GridType;
     /**
      * Optional
-     * Indicates if the editing cosists of adding a new row
+     * Indicates if the editing consists of adding a new row
      */
     isAddRow?: boolean;
     /** 
@@ -106,7 +106,7 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
     insertAtIndex: number;
     /**
      * Returns the actual pin state of the column.
-     * If pinning/unpinning is succesfull, value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
+     * If pinning/unpinning is successful, value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
      */
     isPinned: boolean;
 }
@@ -115,7 +115,7 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
  * The event arguments before a column's pin state is changed.
  * `insertAtIndex`specifies at which index in the pinned/unpinned area the column is inserted.
  * Can be changed in the `columnPin` event.
- * `isPinned` returns the actual pin state of the column. When pinning/unpinning is succesfull,
+ * `isPinned` returns the actual pin state of the column. When pinning/unpinning is successful,
  * the value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
  */
 export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
@@ -138,7 +138,7 @@ export interface IRowDataEventArgs extends IBaseEventArgs {
 
 /** The event arguments when a column is being resized */
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
-    /** Represents the informantion of the column that is being resized */
+    /** Represents the information of the column that is being resized */
     column: ColumnType;
     /** Represents the old width of the column before the resizing */
     prevWidth: string;
@@ -183,8 +183,8 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     readonly allRowsSelected?: boolean;
 }
 
-/** 
- * The event arguments when the selection state of a column is being chaged 
+/**
+ * The event arguments when the selection state of a column is being changed
  * The event is cancelable
  */
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -235,9 +235,9 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
      * (whether they should be ignored) as well as method for generating a file name
      */
     options: IgxExporterOptionsBase;
-    /** 
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface 
+    /**
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -246,7 +246,7 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
 export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
     /**
      * Represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
 }
@@ -255,12 +255,12 @@ export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEventArgs extends IBaseEventArgs {
     /**
      * Represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
-    /** 
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface 
+    /**
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -269,17 +269,17 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     /**
      * The source of the event represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
     /**
      * The target of the event represents the column, the source is being moved to.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     target: ColumnType;
-    /** 
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface 
+    /**
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -293,12 +293,12 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     /** Represents the information and details of the object itself */
     target: any;
-    /** Represents the original event, that occured. */
+    /** Represents the original event, that occurred. */
     event: Event;
     /** 
      * The event is cancelable
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface 
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -307,9 +307,9 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
 export interface ICellPosition {
     /** It returns the position (index) of the row, the cell is in */
     rowIndex: number;
-    /** 
-     * It returns the position (index) of the colunm, the cell is in 
-     * Counts only the visible (non hidden) columns 
+    /**
+     * It returns the position (index) of the column, the cell is in
+     * Counts only the visible (non hidden) columns
      */
     visibleColumnIndex: number;
 }
@@ -339,7 +339,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragElement: HTMLElement;
 }
 
-/** Рepresents event arguments related to the row's expansion state being changed in a grid */
+/** Represents event arguments related to the row's expansion state being changed in a grid */
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     /** Represents the ID of the row that emitted the event (which state is changed) */
     rowID: any;
@@ -350,13 +350,13 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
     expanded: boolean;
     /** 
      * Optional
-     * Represents the original event, that has triggered the expantion/collapse 
+     * Represents the original event, that has triggered the expansion/collapse
      */
     event?: Event;
     /** 
      * The event is cancelable
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface 
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -401,7 +401,7 @@ export interface IColumnToggledEventArgs extends IBaseEventArgs {
     checked: boolean;
 }
 
-/** Emmited when the active node is changed */
+/** Emitted when the active node is changed */
 export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
     /** Represents the row index of the active node */
     row: number;
@@ -433,7 +433,7 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
     sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
     /**
      * Optional
-     * Represents the gouping expressions applied to the grid. 
+     * Represents the grouping expressions applied to the grid.
      * It can be a single grouping expression or an array of them
      * The expression contains information like the sorting expression and criteria by which the elements will be grouped
      */
@@ -457,7 +457,7 @@ export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
     /** Represents the column the event originated from */
     column: any;
     /**
-     * The new hidden state that the column will have, if operation is succesfull.
+     * The new hidden state that the column will have, if operation is successful.
      * Will be `true` when hiding and `false` when showing.
      */
     newValue: boolean;
