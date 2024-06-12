@@ -284,7 +284,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
-        this._onChangeCallback(this.searchValue);
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
@@ -320,10 +319,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (filtered === null || filtered === undefined) {
                 return;
             }
-            this.select(this.dropdown.focusedItem.itemID);
-            event.preventDefault();
-            event.stopPropagation();
-            this.close();
+            if (!this.dropdown.collapsed) {
+                this.select(this.dropdown.focusedItem.itemID);
+                event.preventDefault();
+                event.stopPropagation();
+                this.close();
+            }
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
             return;

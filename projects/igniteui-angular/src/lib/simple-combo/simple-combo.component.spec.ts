@@ -1528,6 +1528,34 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)
         });
+
+        it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            const spy = spyOn(keyEvent, 'preventDefault');
+
+            expect(combo.collapsed).toBe(true);
+            expect(combo.selection).toBeUndefined();
+
+            input.triggerEventHandler('focus', {});
+            UIInteractions.simulateTyping('c', input);
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBe(false);
+
+            combo.handleKeyDown(keyEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection).toBeDefined();
+            expect(combo.collapsed).toBe(true);
+            expect(spy).toHaveBeenCalled();
+
+            combo.handleKeyDown(keyEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
     });
 
     describe('Display density', () => {
@@ -1812,6 +1840,45 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.valid).toEqual(IgxInputState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
             });
+
+            it('Should update the model only if a selection is changing otherwise it shoudl be undefiend when the user is filtering in templeted form', fakeAsync(() => {
+                input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+                let model;
+
+                combo.open();
+                fixture.detectChanges();
+                const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+                item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+                model = fixture.componentInstance.values;
+
+                expect(combo.displayValue).toEqual('Illinois');
+                expect(combo.value).toEqual('Illinois');
+                expect(model).toEqual('Illinois');
+
+                combo.deselect();
+                fixture.detectChanges();
+                model = fixture.componentInstance.values;
+
+                expect(combo.selection).not.toBeDefined();
+                expect(model).toEqual(undefined);
+                expect(combo.displayValue).toEqual('');
+
+                combo.focusSearchInput();
+                UIInteractions.simulateTyping('con', input);
+                fixture.detectChanges();
+                model = fixture.componentInstance.values;
+                expect(combo.comboInput.value).toEqual('con');
+                expect(model).toEqual(undefined);
+
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+                fixture.detectChanges();
+                model = fixture.componentInstance.values;
+                expect(combo.selection).toBeDefined()
+                expect(combo.displayValue).toEqual('Wisconsin');
+                expect(combo.value).toEqual('Wisconsin');
+                expect(model).toEqual('Wisconsin');
+            }));
         });
         describe('Reactive form tests: ', () => {
             beforeAll(waitForAsync(() => {
@@ -2067,6 +2134,40 @@ describe('IgxSimpleCombo', () => {
                 expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                 expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                 expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+            }));
+
+            it('Should update the model only if a selection is changing otherwise it should be undefiend when the user is filtering in reactive form', fakeAsync(() => {
+                const form = (fixture.componentInstance as IgxSimpleComboInReactiveFormComponent).comboForm;
+                input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+
+                combo.open();
+                fixture.detectChanges();
+                const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+                item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.displayValue).toEqual('Four');
+                expect(combo.value).toEqual(4);
+                expect(form.controls['comboValue'].value).toEqual(4);
+
+                combo.deselect();
+                fixture.detectChanges();
+
+                expect(combo.selection).not.toBeDefined()
+                expect(form.controls['comboValue'].value).toEqual(undefined);
+                expect(combo.displayValue).toEqual('');
+
+                combo.focusSearchInput();
+                UIInteractions.simulateTyping('on', input);
+                fixture.detectChanges();
+                expect(combo.comboInput.value).toEqual('on');
+                expect(form.controls['comboValue'].value).toEqual(undefined);
+
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+                expect(combo.selection).toBeDefined()
+                expect(combo.displayValue).toEqual('One');
+                expect(combo.value).toEqual(1);
+                expect(form.controls['comboValue'].value).toEqual(1);
             }));
         });
     });
