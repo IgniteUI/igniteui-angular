@@ -113,6 +113,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         }
     }
 
+    /** @hidden @internal */
     public get size() {
         return globalThis.document?.defaultView
             .getComputedStyle(this._host.nativeElement)
@@ -185,6 +186,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
 
     /**
      * Sets the `--component-size` CSS variable based on the value of Display Density
+     * @hidden @internal
      */
     public getComponentSizeStyles() {
         switch (this._displayDensity || this.oldDisplayDensityOptions.displayDensity) {
