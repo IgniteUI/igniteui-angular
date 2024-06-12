@@ -361,6 +361,17 @@
         }
 
         @if ($variant == 'material') {
+            border: none;
+
+            &::after {
+                position: absolute;
+                content: '';
+                inset: 0;
+                box-shadow: inset 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
+                z-index: -1;
+                border-radius: inherit;
+            }
+
             &:active {
                 background: var-get($outlined-theme, 'focus-background');
                 color: var-get($outlined-theme, 'focus-foreground');
@@ -380,6 +391,14 @@
     [igxIconButton='outlined'].igx-button--focused {
         background: var-get($outlined-theme, 'focus-background');
         color: var-get($outlined-theme, 'focus-foreground');
+
+        @if ($variant == 'material') {
+            border: none;
+
+            &::after {
+                box-shadow: inset 0 0 0 rem(1px) var-get($outlined-theme, 'focus-border-color');
+            }
+        }
 
         @if ($variant != 'bootstrap') {
             border-color: var-get($outlined-theme, 'focus-border-color');
