@@ -30,7 +30,6 @@ import {
     IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { DisplayDensity } from '../../core/density';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
@@ -56,6 +55,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
+import { Size } from '../common/enums';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -440,21 +440,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
     public disablePinning = false;
-    /**
-     * Sets/gets whether the column is movable.
-     * Default value is `false`.
-     *
-     * ```typescript
-     * let isMovable = this.column.movable;
-     * ```
-     * ```html
-     * <igx-column [movable] = "true"></igx-column>
-     * ```
-     *
-     * @deprecated in version 13.1.0. Use the Grid's `moving` property instead.
-     */
-    @Input({ transform: booleanAttribute })
-    public movable = false;
+
     /**
      * Gets the `width` of the column.
      * ```typescript
@@ -1155,10 +1141,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.grid) {
             return '80';
         }
-        switch (this.grid.displayDensity) {
-            case DisplayDensity.cosy:
+        switch (this.grid.gridSize) {
+            case Size.Medium:
                 return '64';
-            case DisplayDensity.compact:
+            case Size.Small:
                 return '56';
             default:
                 return '80';

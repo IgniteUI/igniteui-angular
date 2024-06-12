@@ -146,40 +146,38 @@
 <div class="columns-container display-density">
     <article class="column">
         <h4 class="sample-title">Buttons based on Display Density</h4>
-        <div class="density-chooser">
-            <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
-        </div>
-        <div class="buttons-sample">
+        <size-selector #sizeSelector></size-selector>
+        <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <div class="button-sample">
-                <button igxButton="flat" [displayDensity]="density">
+                <button igxButton="flat">
                     <igx-icon>face</igx-icon>
                     <span>Flat</span>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="outlined" [displayDensity]="density">
+                <button igxButton="outlined">
                     <span>Outlined</span>
                     <igx-icon>face</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="outlined" [displayDensity]="density">
+                <button igxButton="outlined">
                     <igx-icon>face</igx-icon>
                     <span>Outlined</span>
                     <igx-icon>face</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="contained" [displayDensity]="density">Contained</button>
+                <button igxButton="contained">Contained</button>
             </div>
             <div class="button-sample">
-                <button igxButton="contained" [displayDensity]="density">
+                <button igxButton="contained">
                     <igx-icon>face</igx-icon>
                     <span>Contained</span>
                 </button>
             </div>
             <div class="button-sample">
-                <button igxButton="fab" [displayDensity]="density">
+                <button igxButton="fab">
                     <span>FAB</span>
                     <igx-icon>face</igx-icon>
                 </button>

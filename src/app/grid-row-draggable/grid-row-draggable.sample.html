@@ -1,9 +1,9 @@
 <div class="density-chooser" style="margin-bottom: 16px">
-    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
 <div class="sample-container">
-    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [displayDensity]="density" [width]="'500px'" [height]="'600px'"
+    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [width]="'500px'" [height]="'600px'"
         [rowDraggable]="dragdrop" (rowDragStart)="handleRowDrag()" (rowDragEnd)="handleRowDrop()">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
@@ -21,7 +21,7 @@
         </ng-template>
     </igx-grid>
     <igx-grid #grid2 igxDrop [data]="newData" [primaryKey]="'ProductID'"
-        [displayDensity]="density" [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
+         [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
         (enter)="onEnterAllowed($event)" (leave)="onLeaveAllowed($event)" (dropped)="onDropAllowed($event)">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>

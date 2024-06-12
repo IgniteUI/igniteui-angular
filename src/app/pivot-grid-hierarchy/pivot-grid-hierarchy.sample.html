@@ -8,6 +8,6 @@
 
     <button (click)="exportButtonHandler()">Export To Excel</button><br />
 </div>
-<igx-pivot-grid [superCompactMode]="true" #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)="dimensionChange()" [defaultExpandState]="true">
+<igx-pivot-grid [pivotUI]="{ showRowHeaders: true }" [superCompactMode]="true" #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)="dimensionChange()" [defaultExpandState]="true">
 </igx-pivot-grid>
 

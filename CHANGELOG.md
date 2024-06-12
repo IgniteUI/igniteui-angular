@@ -5,11 +5,50 @@ All notable changes for each version of this project will be documented in this 
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
-    - Introduced abillity for hiding the clear icon button when the custom clear icon template is empty.
+    - Introduced ability for hiding the clear icon button when the custom clear icon template is empty.
 - `IgxDateTimeEditor`, `IgxTimePicker`:
-    - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
-        - Fractional seconds: S, SS, SSS.
-        - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
+  - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
+      - Fractional seconds: S, SS, SSS.
+      - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
+- `IgxPivotGrid`
+    - Added templatable row dimension headers displayed on the top, above all row headers.
+    - Replace the `showPivotConfigurationUI` property with `pivotUI` property, adding ability now to enable/disable the configuration UI and/or the new row dimension headers.
+    - Added `sortable` property for each IPivotDimension.
+- `IgxOverlayService`, `IgxToggleDirective`:
+    - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
+
+### Changes
+- With the removal of the Display Density token, components now get their default sizes from the theme. Default sizes have changed for most components, with it now being medium (previously large). Here's an exhaustive list of all sizable components and their default sizes by theme:
+    - `Avatar` - Small (All Themes)
+    - `Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Button Group` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Card` - Medium (All Themes)
+    - `Combo` - Medium (All Themes)
+    - `Chip` - Medium (All Themes)
+    - `Date/Time Picker` - Medium (All Themes)
+    - `Dropdown` - Medium (All Themes)
+    - `Dialog` - Medium (All Themes)
+    - `Icon` - Large (All Themes)
+    - `Icon Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Input Group` - Medium (All Themes)
+    - `List` - Medium (All Themes)
+    - `Tree` - Medium (All Themes)
+    - `Rating` - Medium (All Themes)
+    - `Select` - Medium (All Themes)
+
+### General
+- Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
+- `IgxBanner`
+    - Removed the deprecated `banner` property of `BannerEventArgs` and `BannerCancelEventArgs`. Automatic migration to `owner` is applied.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Removed the deprecated `movable` property of `IgxColumnComponent`.
+- `IgxOverlayService`
+    - Removed the deprecated `PositionSettings.target` (in favor of general `OverlaySettings.target`).
+    - Replaced deprecated `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) with shortcut overload that uses just the root scope and `createComponent`. The overload accepting `ViewComponentRef` is still recommended for local injection context.
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` deprecated getters `inBaseDimension` and `inOption` have been removed.
+- `IgxSimpleCombo`
+    - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
 
 ## 17.2.0
 ### New Features

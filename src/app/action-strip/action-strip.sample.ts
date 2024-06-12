@@ -1,6 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { DisplayDensity, IDataCloneStrategy, IRowDataEventArgs, IgxActionStripComponent, IgxActionStripMenuItemDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxIconComponent, IRowDataCancelableEventArgs } from 'igniteui-angular';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
+import {
+    IDataCloneStrategy,
+    IRowDataEventArgs,
+    IgxActionStripComponent,
+    IgxActionStripMenuItemDirective,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxCellTemplateDirective,
+    IgxColumnComponent,
+    IgxGridComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridPinningActionsComponent,
+    IgxIconComponent,
+    IRowDataCancelableEventArgs
+}
+from 'igniteui-angular';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -59,17 +75,14 @@ class User {
         IgxGridPinningActionsComponent,
         IgxCellTemplateDirective,
         IgxGridEditingActionsComponent,
-        IgxActionStripMenuItemDirective
+        IgxActionStripMenuItemDirective,
+        SizeSelectorComponent
     ]
 })
 export class ActionStripSampleComponent implements OnInit {
     public result: string;
     public isVisible = false;
     public customItem = false;
-    public comfortable: DisplayDensity = DisplayDensity.comfortable;
-    public cosy: DisplayDensity = DisplayDensity.cosy;
-    public compact: DisplayDensity = DisplayDensity.compact;
-    public displayDensity: DisplayDensity = this.comfortable;
     public data: any[];
     public columns: any[];
     public userData: User[] = [];
@@ -101,10 +114,6 @@ export class ActionStripSampleComponent implements OnInit {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
-    }
-
-    public setDensity(density: DisplayDensity) {
-        this.displayDensity = density;
     }
 
     public rowAdd(event: IRowDataCancelableEventArgs) {

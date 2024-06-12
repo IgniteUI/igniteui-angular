@@ -582,22 +582,22 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
 @Component({
     template: `
     <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
-        <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
 
         <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
-            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column-group [movable]="true" header="Personal Details">
-                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group header="Personal Details">
+                    <igx-column field="ContactName" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
             </igx-column-group>
             <igx-column-group header="Address Information">
                 <igx-column-group header="Location">
-                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Address" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="Contact Information">
                     <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>

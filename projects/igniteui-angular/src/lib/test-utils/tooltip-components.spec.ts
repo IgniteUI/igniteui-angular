@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
+import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 @Component({
     template: `
@@ -71,4 +72,21 @@ export class IgxTooltipMultipleTargetsComponent {
 })
 export class IgxTooltipPlainStringComponent {
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+}
+
+@Component({
+    template: `
+    <button [igxTooltipTarget]="tooltipRef" [igxToggleAction]="toggleDiv">
+        Options
+    </button>
+    <div #toggleDiv="toggle" class="toggle-content" igxToggle>Toggle content</div>
+    <div #tooltipRef="tooltip" igxTooltip>Test</div>
+    `,
+    standalone: true,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxToggleActionDirective, IgxToggleDirective]
+})
+export class IgxTooltipWithToggleActionComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
 }

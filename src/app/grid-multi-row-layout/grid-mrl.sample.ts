@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { DisplayDensity, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+import { Component, HostBinding, ViewChild } from '@angular/core';
+import { GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
 @Component({
@@ -9,6 +9,10 @@ import { DisplayDensity, GridSelectionMode, IgxActionStripComponent, IgxButtonDi
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
 
@@ -26,8 +30,8 @@ export class GridMRLSampleComponent {
         }
     ];
 
-    public density: DisplayDensity = 'compact';
-    public displayDensities;
+    public size = 'small';
+    public sizes;
     public selectionMode;
     public data = [
         /* eslint-disable max-len */
@@ -61,16 +65,16 @@ export class GridMRLSampleComponent {
     ];
 
     constructor() {
-        this.displayDensities = [
-            { label: 'compact', selected: this.density === 'compact', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        this.sizes = [
+            { label: 'small', selected: this.size === 'small', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'large', selected: this.size === 'large', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.none;
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public hideGroup() {
