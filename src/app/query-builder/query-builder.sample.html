@@ -1,11 +1,9 @@
 <div class="sample-content">
     <div class="sample-column">
-        <div class="density-chooser">
-            <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
-        </div>
+        <size-selector #sizeSelector></size-selector>
 
         <igx-query-builder #queryBuilder
-            [displayDensity]="this.density"
+            [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
             [fields]="this.fields"
             [expressionTree]="this.expressionTree">
             <!-- Custom header -->

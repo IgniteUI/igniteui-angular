@@ -770,10 +770,7 @@ describe('IgxTree - Navigation #treeView', () => {
                     }),
                 });
                 const mockElementRef = jasmine.createSpyObj<ElementRef>('mockElement', ['nativeElement'], {
-                    nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['focus'], {
-                        clientHeight: 300,
-                        scrollHeight: 300
-                    })
+                    nativeElement: document.createElement('div')
                 });
                 const mockSelectionService = jasmine.createSpyObj<IgxTreeSelectionService>('mockSelection',
                     ['selectNodesWithNoEvent', 'selectMultipleNodes', 'deselectNode', 'selectNode', 'register']);

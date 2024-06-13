@@ -1,5 +1,5 @@
-import { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
+import { Rule, SchematicContext, SchematicsException, Tree } from "@angular-devkit/schematics";
+import { FileChange, findElementNodes, getAttribute, getProjects, getSourceOffset, getWorkspace, hasAttribute, parseFile } from '../common/util';
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import type { Element } from '@angular/compiler';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
@@ -14,7 +14,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const prop = ["displayDensity", "[displayDensity]"];
-    const tags = ["igx-grid", "igx-hierarchical-grid", "igx-row-island", "igx-tree-grid", "igx-pivot-grid"]
+    const tags = ["igx-grid", "igx-hierarchical-grid", "igx-row-island", "igx-tree-grid", "igx-pivot-grid",
+        "igx-action-strip", "igx-button", "igx-buttongroup", "igx-chip", "igx-combo", "igx-date-picker", "igx-drop-down",
+        "igx-select", "igx-input-group", "igx-list", "igx-paginator", "igx-query-builder", "igx-simple-combo", "igx-tree"];
 
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {
@@ -29,9 +31,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     const addChange = (path: string, change: FileChange) => {
         if (changes.has(path)) {
-          changes.get(path).push(change);
+            changes.get(path).push(change);
         } else {
-          changes.set(path, [change]);
+            changes.set(path, [change]);
         }
     };
 
@@ -57,7 +59,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 }
                 // We don`t have else because if density it set like this: [displayDensity]="customDensity"
                 // then we can`t do anything and we just remove the property.
-        });
+            });
     }
 
     update.addValueTransform('pivotConfigurationUI_to_pivotUI', (args: BoundPropertyObject): void => {
@@ -75,6 +77,73 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
     });
 
+    const updateMainCSSFile = (host: Tree, context: SchematicContext): Tree => {
+        const workspace = getWorkspace(host);
+        if (!workspace) {
+            throw new SchematicsException('Could not find angular.json');
+        }
+
+        const projects = getProjects(workspace);
+        for (const project of projects) {
+            const srcRoot = project.sourceRoot || project.root || '';
+            const stylesPath = project.architect?.build?.options?.styles
+                ?.map((s) => {
+                    if (typeof s === 'string') {
+                        return s;
+                    }
+                    // ref - https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
+                    if (s instanceof Object && 'input' in s) {
+                        return s.input as string;
+                    }
+                })
+                .filter((s) => s?.startsWith(srcRoot))[0];
+
+            if (!stylesPath) {
+                context.logger.error(`No styles file found in angular.json for project: ${project}`);
+            }
+
+            // Read the CSS file
+            const cssBuffer = host.read(stylesPath);
+            if (!cssBuffer) {
+                context.logger.error(`Could not find the CSS file: ${stylesPath}`);
+                continue;
+            }
+
+            const content = cssBuffer.toString('utf-8');
+            let newContent = `
+// Specifies large size for all components to match the previous defaults
+// This may not be needed for your project. Please consult https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide for more details.
+:root {
+    --ig-size: var(--ig-size-large);
+}\n`;
+
+            const lastUse = content.lastIndexOf('@use');
+            const lastForward = content.lastIndexOf('@forward');
+            if (lastUse > -1 || lastForward > -1) {
+                const lastLinePos = Math.max(lastForward, lastUse);
+                const fragment = content.substring(lastLinePos);
+                const insertPos = fragment.indexOf(';') + lastLinePos + 1;
+                newContent = content.substring(0, insertPos) + newContent + content.substring(insertPos + 1);
+            } else {
+                newContent = newContent + content;
+            }
+
+            // Write the new content to the CSS file
+            host.overwrite(stylesPath, newContent);
+
+            context.logger.info(`Added global default Large size for ig components to CSS file: ${stylesPath}`);
+        }
+
+        return host;
+    }
+
     applyChanges();
     update.applyChanges();
+
+    context.logger.info(
+        `Adding global CSS rule to ensure non-specified sizes for components remain the previous default (Large).
+        Please refer to the migration guide (https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) for more information.`
+    )
+
+    updateMainCSSFile(host, context);
 };

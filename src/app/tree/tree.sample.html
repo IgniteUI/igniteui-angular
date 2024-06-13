@@ -49,7 +49,7 @@
 
         </div>
         <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode()"></igx-buttongroup>
-        <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
+        <size-selector #sizeSelector></size-selector>
 
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
@@ -57,7 +57,7 @@
                 <igx-tree #tree1
                     [singleBranchExpand]="singleBranchExpand"
                     [toggleNodeOnClick]="true"
-                    [displayDensity]="density"
+                    [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
                     [selection]="'Cascading'"
                     [animationSettings]="animationSettings"
                     (nodeSelection)="nodeSelection($event)"

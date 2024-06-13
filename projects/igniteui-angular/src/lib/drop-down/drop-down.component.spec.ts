@@ -8,13 +8,12 @@ import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './publ
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { CancelableEventArgs, getComponentSize, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgFor } from '@angular/common';
@@ -48,10 +47,10 @@ describe('IgxDropDown ', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
         it('should notify when selection has changed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -66,8 +65,7 @@ describe('IgxDropDown ', () => {
         });
         it('should fire selectionChanging with correct args', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -92,8 +90,7 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
@@ -124,8 +121,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return selected item', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -139,8 +135,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return null when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -154,8 +149,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call open method when dropdown is collapsed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOnProperty(dropdown, 'collapsed', 'get').and.returnValue(true);
@@ -166,8 +160,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call close method when dropdown is opened', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
-            dropdown.ngOnInit();
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             (dropdown as any).virtDir = mockForOf;
             const mockToggle = jasmine.createSpyObj('IgxToggleDirective', ['open']);
             mockToggle.isClosing = false;
@@ -182,7 +175,7 @@ describe('IgxDropDown ', () => {
         it('should remove selection on destroy', () => {
             const selectionService = new IgxSelectionAPIService();
             const selectionDeleteSpy = spyOn(selectionService, 'delete');
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, mockDocument, selectionService);
             dropdown.ngOnDestroy();
             expect(selectionDeleteSpy).toHaveBeenCalled();
         });
@@ -1073,32 +1066,6 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 dropdown = fixture.componentInstance.dropdown;
             });
-            it('should be able to set Display Density as input', () => {
-                expect(dropdown.displayDensity).toEqual(DisplayDensity.cosy);
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                expect(dropdown.displayDensity).toEqual(DisplayDensity.compact);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                expect(dropdown.displayDensity).toEqual(DisplayDensity.comfortable);
-            });
-            it('should apply correct styles to items when Display Density is set', () => {
-                dropdown.toggle();
-                fixture.detectChanges();
-                dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('2');
-                });
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('1');
-                });
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                dropdown.items.forEach(item => {
-                    expect(getComponentSize(item.element.nativeElement)).toEqual('3');
-                });
-            });
             it('should apply selected item class', fakeAsync(() => {
                 dropdown.toggle();
                 tick();
@@ -1255,7 +1222,7 @@ describe('IgxDropDown ', () => {
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
-    [displayDensity]="density" [allowItemsFocus]="true">
+    [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
             {{item.field}}
         </igx-drop-down-item>
@@ -1268,7 +1235,6 @@ class IgxDropDownTestComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
     public maxHeight: string;
-    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items: any[] = [
         { field: 'Item 1' },
@@ -1455,7 +1421,7 @@ class GroupDropDownComponent {
 @Component({
     template: `
         <button igxButton #toggleButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Virtual</button>
-        <igx-drop-down #dropdown [allowItemsFocus]="true">
+        <igx-drop-down #dropdown [allowItemsFocus]="true" [style.--ig-size]="'var(--ig-size-large)'">
             <div class="wrapping-div">
                 <igx-drop-down-item
                 *igxFor="let item of items; index as index;
