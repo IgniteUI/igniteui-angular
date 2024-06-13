@@ -7,6 +7,7 @@ import { IgxButtonDirective, IgxGridComponent } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-remote-virtualization-sample',
     templateUrl: 'grid-remote-virtualization.sample.html',
+    providers: [RemoteService],
     standalone: true,
     imports: [IgxGridComponent, IgxButtonDirective, AsyncPipe]
 })
