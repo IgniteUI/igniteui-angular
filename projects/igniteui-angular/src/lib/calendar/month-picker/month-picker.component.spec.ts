@@ -525,6 +525,35 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.activeViewChanged.emit).toHaveBeenCalled();
         expect(monthPicker.activeView).toEqual('year');
     });
+
+    it('should emit viewDateChanged event when changing year with arrow buttons', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        const monthPicker = fixture.componentInstance.monthPicker;
+        spyOn(monthPicker.viewDateChanged, 'emit');
+
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const prev = dom.query(By.css('.igx-calendar-picker__prev'));
+        const next = dom.query(By.css('.igx-calendar-picker__next'));
+
+        UIInteractions.simulateMouseDownEvent(prev.nativeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDateChanged.emit).toHaveBeenCalledWith({
+            previousValue: new Date(2019, 1, 1),
+            currentValue: new Date(2018, 1, 1)
+        });
+
+        UIInteractions.simulateMouseDownEvent(next.nativeElement);
+        UIInteractions.simulateMouseDownEvent(next.nativeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDateChanged.emit).toHaveBeenCalledWith({
+            previousValue: new Date(2018, 1, 1),
+            currentValue: new Date(2019, 1, 1)
+        });
+    });
 });
 
 @Component({
