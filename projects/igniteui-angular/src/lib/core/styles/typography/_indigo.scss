@@ -77,8 +77,8 @@
     ));
     @include list-typography($categories: (
         header: 'overline',
-        item: 'subtitle-1',
-        title: 'subtitle-1',
+        item: 'body-2',
+        title: 'body-2',
         subtitle: 'body-2'
     ));
     @include navbar-typography($categories: (
