@@ -210,7 +210,9 @@
 
     %igx-grid-toolbar__title {
         @if $variant == 'indigo-design' {
+            /* stylelint-disable scss/at-extend-no-missing-placeholder */
             @extend .ig-typography__h6;
+            /* stylelint-enable scss/at-extend-no-missing-placeholder */
         }
 
         color: var-get($theme, 'title-text-color');
