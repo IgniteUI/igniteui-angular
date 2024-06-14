@@ -390,13 +390,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.disabled) {
             return;
         }
+
+        const oldSelection = this.selection;
         this.clearSelection(true);
+
         if(!this.collapsed){
             this.focusSearchInput(true);
         }
         event.stopPropagation();
 
-        this.comboInput.value = this.filterValue = this.searchValue = '';
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this.filterValue = this.searchValue = '';
+        }
+
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
@@ -488,6 +494,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);
+        } else {
+            args.displayText = this.createDisplayText(oldItems, []);
+
+            const oldSelectionArray = args.oldSelection ? [args.oldSelection] : [];
+            this.comboInput.value = this._displayValue = this.searchValue = this.createDisplayText(oldSelectionArray, []);
+
+            if (this.isRemote) {
+                this.registerRemoteEntries(newValueAsArray, false);
+            }
         }
     }
 
@@ -560,7 +575,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this.comboInput.value = this._displayValue = this.searchValue = '';
+        const oldSelection = this.selection;
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this._displayValue = this.searchValue = '';
+        }
     }
 
     private isValid(value: any): boolean {
