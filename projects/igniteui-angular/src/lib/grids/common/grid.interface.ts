@@ -383,7 +383,7 @@ export interface ColumnType extends FieldType {
     searchable: boolean;
     /** Specifies whether the column belongs to a group of columns. */
     columnGroup: boolean;
-    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
+    /** @deprecated in version 13.1.0. Use the Grid's `moving` property instead. */
     movable: boolean;
     /** Indicates whether a column can be put in a group. If the value is true, the column can be put in a group */
     groupable: boolean;
@@ -928,7 +928,7 @@ export interface GridType extends IGridDataBindable {
     /** Represents the last search in the grid
      * It contains the search text (the user has entered), the match and some settings for the search
      */
-    lastSearchInfo: ISearchInfo;
+    readonly lastSearchInfo: ISearchInfo;
     /** @hidden @internal */
     page: number;
     /** @hidden @internal */
@@ -1345,7 +1345,9 @@ export interface IgxCellTemplateContext {
 
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /** @deprecated Use `key` */
+    /**
+     * @deprecated Use the `key` property instead.
+     */
     rowID: any;
     key: any;
     selected: boolean;

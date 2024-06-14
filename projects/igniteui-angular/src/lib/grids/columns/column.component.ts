@@ -440,8 +440,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public disablePinning = false;
     /**
-     * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
-     *
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      *
@@ -452,7 +450,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [movable] = "true"></igx-column>
      * ```
      *
-     * @memberof IgxColumnComponent
+     * @deprecated in version 13.1.0. Use the Grid's `moving` property instead.
      */
     @Input()
     public movable = false;
