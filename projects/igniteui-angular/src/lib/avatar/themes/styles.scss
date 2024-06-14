@@ -1,0 +1,22 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'theme' as *;
+
+@include b(igx-avatar) {
+    @extend %igx-avatar-display;
+
+    @include e(image) {
+        @extend %igx-avatar-image;
+    }
+
+    @include m(circle) {
+        @extend %igx-avatar--circle;
+    }
+
+    @include m(rounded) {
+        @extend %igx-avatar--rounded;
+    }
+
+    @include m(initials) {
+        @extend %igx-avatar--initials;
+    }
+}
