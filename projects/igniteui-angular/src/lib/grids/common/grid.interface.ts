@@ -963,7 +963,7 @@ export interface GridType extends IGridDataBindable {
     /** Represents the last search in the grid
      * It contains the search text (the user has entered), the match and some settings for the search
      */
-    lastSearchInfo: ISearchInfo;
+    readonly lastSearchInfo: ISearchInfo;
     /** @hidden @internal */
     page: number;
     /** @hidden @internal */
