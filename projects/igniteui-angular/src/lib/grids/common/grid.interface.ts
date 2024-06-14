@@ -215,12 +215,12 @@ export interface RowType {
     expanded?: boolean;
     /**
      * Optional
-     * Indicades whether the row is marked for deletion.
+     * Indicates whether the row is marked for deletion.
      */
     deleted?: boolean;
      /**
      * Optional
-     * Indicades whether the row is currently being edited.
+     * Indicates whether the row is currently being edited.
      */
     inEditMode?: boolean;
     /**
@@ -237,7 +237,7 @@ export interface RowType {
     parent?: RowType;
     /**
      * Optional
-     * Indicades whether the current row has any child rows
+     * Indicates whether the current row has any child rows
      */
     hasChildren?: boolean;
     /**
@@ -249,7 +249,7 @@ export interface RowType {
     addRowUI?: boolean;
     /**
      * Optional
-     * Indicades whether the row is currently focused.
+     * Indicates whether the row is currently focused.
      */
     focused?: boolean;
     /** Represent the grid instance, the row belongs to */
@@ -321,7 +321,7 @@ export interface FieldType {
  * Contains definitions of properties and methods, relevant to a column
  */
 export interface ColumnType extends FieldType {
-    /** Represents the inctance of the parent `GridType` that contains this column. */
+    /** Represents the instance of the parent `GridType` that contains this column. */
     grid: GridType;
     /** A list, containing all the child columns under this column (if any). */
     children: QueryList<ColumnType>;
@@ -343,12 +343,12 @@ export interface ColumnType extends FieldType {
 
     /**
      * The template reference for the custom header of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerTemplate: TemplateRef<any>;
     /**
      * The template reference for the collapsible indicator of the column.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     collapsibleIndicatorTemplate?: TemplateRef<any>;
     /** Represents custom CSS classes applied to the header element. When added, they take different styling */
@@ -361,7 +361,7 @@ export interface ColumnType extends FieldType {
     headerGroupStyles: any;
 
     /**
-     * Custom CSS styling, appplied to every column
+     * Custom CSS styling, applied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;
@@ -385,12 +385,12 @@ export interface ColumnType extends FieldType {
     index: number;
     /**
      * Represents the type of data for the column:
-     * string, number, buulean, currency, date, time, etc.
+     * string, number, boolean, currency, date, time, etc.
      */
     dataType: GridColumnDataType;
     /**
      * The template reference for the custom inline editor of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     inlineEditorTemplate: TemplateRef<any>;
     /**
@@ -413,17 +413,17 @@ export interface ColumnType extends FieldType {
     columnGroup: boolean;
     /** @deprecated in version 13.1.0. Use the Grid's `moving` property instead. */
     movable: boolean;
-    /** Indicades whether a column can be put in a group. If the value is true, the column can be put in a group */
+    /** Indicates whether a column can be put in a group. If the value is true, the column can be put in a group */
     groupable: boolean;
-    /** Indicades whether a column can be sorted. If the value is true, the column can be sorted. */
+    /** Indicates whether a column can be sorted. If the value is true, the column can be sorted. */
     sortable: boolean;
-    /** Indicades whether a column can be filtered. If the value is true, the column can be filtered */
+    /** Indicates whether a column can be filtered. If the value is true, the column can be filtered */
     filterable: boolean;
-    /** Indicades whether a column is currently hidden (not visible). If the value is true, the column is not visible */
+    /** Indicates whether a column is currently hidden (not visible). If the value is true, the column is not visible */
     hidden: boolean;
-    /** Indicades whether a column can be pinned. If the value is true, the column cannot be pinned */
+    /** Indicates whether a column can be pinned. If the value is true, the column cannot be pinned */
     disablePinning: boolean;
-    /** Indicades whether a column can be hidden. If the value is true, the column cannot be hidden */
+    /** Indicates whether a column can be hidden. If the value is true, the column cannot be hidden */
     disableHiding: boolean;
     /**
      * The sorting strategy used for sorting this column.
@@ -447,7 +447,7 @@ export interface ColumnType extends FieldType {
     summaries: any;
     /**
      * The template reference for a summary of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     summaryTemplate: TemplateRef<any>;
     /** Indicates if the column is currently pinned. If the value is true, the column is pinned */
@@ -472,14 +472,14 @@ export interface ColumnType extends FieldType {
     /**
      * Optional
      * The root parent of this column (if any).
-     * If there is no root parent, that means the current solunm is the root parent
+     * If there is no root parent, that means the current column is the root parent
      */
     topLevelParent?: ColumnType;
     /* alternateName: parentColumn */
     /**
      * Optional
      * The immediate parent (right above) column of this column (if any).
-     * If there is no parent, that means the current solunm is the root parent
+     * If there is no parent, that means the current column is the root parent
      */
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
@@ -500,7 +500,7 @@ export interface ColumnType extends FieldType {
 
     /**
      * Represents a custom template for filtering
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     filterCellTemplate: TemplateRef<any>;
 
@@ -515,7 +515,7 @@ export interface ColumnType extends FieldType {
     /** A method definition to retrieve the set CSS width of the cells under the column */
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
-    /** A method definition to toggle column vibisility (hidden or visible) */
+    /** A method definition to toggle column visibility (hidden or visible) */
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
@@ -627,7 +627,7 @@ export interface GridServiceType {
      */
     get_cell_by_visible_index(rowIndex: number, columnIndex: number);
     /** Represents a method declaration that sets the expansion state of a group row (used for tree grids)
-     * It takes the value for the expantion as a parameter (expanded or collapsed)
+     * It takes the value for the expansion as a parameter (expanded or collapsed)
      */
     set_grouprow_expansion_state?(groupRow: IGroupByRecord, value: boolean): void;
     row_deleted_transaction(id: any): boolean;
@@ -636,12 +636,12 @@ export interface GridServiceType {
      * It takes the row's data and the identifier of the parent row if applicable (used for tree grids)
      */
     addRowToData(rowData: any, parentID?: any): void;
-    /** Represents a method declaration for deleting a row, specified by it's identidier (taken as a parameter) */
+    /** Represents a method declaration for deleting a row, specified by it's identifier (taken as a parameter) */
     deleteRowById(id: any): any;
-    /** Represents a method declaration for retrieving the row's current state of expantion (used for tree grids)*/
+    /** Represents a method declaration for retrieving the row's current state of expansion (used for tree grids)*/
     get_row_expansion_state(id: any): boolean;
     /* blazorSuppress */
-    /** Represents a method declaration for setting a new expantion state. It can be triggered by an event */
+    /** Represents a method declaration for setting a new expansion state. It can be triggered by an event */
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[];
 
@@ -656,7 +656,7 @@ export interface GridServiceType {
      * The expressions contains fieldName, sorting directory, whether case should be ignored and optional sorting strategy
      */
     sort_multiple(expressions: ISortingExpression[]): void;
-    /** Represents a method declaration for reseting the sorting */
+    /** Represents a method declaration for resetting the sorting */
     clear_sort(fieldName: string): void;
 
     /** Represents an event, triggered when the pin state is changed */
@@ -691,7 +691,7 @@ export interface GridServiceType {
 export interface GridType extends IGridDataBindable {
     /** @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property. */
     displayDensity: DisplayDensity;
-    /** Represents the locale of the drig: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
+    /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
     resourceStrings: IGridResourceStrings;
     /* blazorSuppress */
@@ -776,7 +776,7 @@ export interface GridType extends IGridDataBindable {
     showRowSelectors: boolean;
     /** Indicates whether the grid's element is pinned to the start of the grid */
     isPinningToStart: boolean;
-    /** Idicates if the column of the grid is in drag mode */
+    /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
     /** The width of pinned element */
@@ -809,60 +809,60 @@ export interface GridType extends IGridDataBindable {
     /**
      * Optional
      * The template for grid icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     iconTemplate?: TemplateRef<any>;
     /**
      * Optional
      * The template for group-by rows.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     groupRowTemplate?: TemplateRef<IgxGroupByRowTemplateContext>;
     /**
      * Optional
      * The template for the group row selector.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     groupByRowSelectorTemplate?: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     /**
      * Optional
      * The template for row loading indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
     /**
      * The template for the header selector.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
     /**
      * The template for row selectors.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
     /**
      * The template for sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for ascending sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for descending sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for header collapsed indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerCollapsedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     /**
      * The template for header expanded indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerExpandedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     /** The template for drag indicator icons. Could be of any type */
@@ -881,7 +881,7 @@ export interface GridType extends IGridDataBindable {
     calcHeight: number;
     calcWidth: number;
     outerWidth: number;
-    /** The height of each row in the grid. Setting a constant height can solve problems with not showing all alements when scrolling */
+    /** The height of each row in the grid. Setting a constant height can solve problems with not showing all elements when scrolling */
     rowHeight: number;
     multiRowLayoutRowSize: number;
     /** Minimal width for headers */
@@ -892,7 +892,7 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
-    /** The trigger for grid validation. It's value can eighter be `change` or `blur` */
+    /** The trigger for grid validation. It's value can either be `change` or `blur` */
     validationTrigger: GridValidationTrigger;
     /**
      * The configuration for columns and rows pinning in the grid
@@ -951,7 +951,7 @@ export interface GridType extends IGridDataBindable {
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
     /**
-     * Represents the paging of the grid. It can be eighter 'Local' or 'Remote'
+     * Represents the paging of the grid. It can be either 'Local' or 'Remote'
      * - Local: Default value; The grid will paginate the data source based on the page
      */
     pagingMode: GridPagingMode;
@@ -1002,17 +1002,17 @@ export interface GridType extends IGridDataBindable {
     document: Document;
      /**
      * The template for expanded row indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     /**
      * The template for collapsed row indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     /**
      * The template for header icon
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
 
@@ -1268,12 +1268,12 @@ export interface HierarchicalGridType extends GridType {
 export interface PivotGridType extends GridType {
     /**
      * The configuration settings for the pivot grid.
-     * it includes dimention strategy for rows and columns, filters and data keys
+     * it includes dimension strategy for rows and columns, filters and data keys
      */
     pivotConfiguration: IPivotConfiguration;
     /**
      * An array of all dimensions (rows and columns) in the pivot grid.
-     * it includes hierarchical level, filters and sorting, dimentional level, etc.
+     * it includes hierarchical level, filters and sorting, dimensional level, etc.
      */
     allDimensions: IPivotDimension[],
     /** Specifies whether to show the pivot configuration UI in the grid. */
@@ -1290,7 +1290,7 @@ export interface PivotGridType extends GridType {
     /** @hidden @internal */
     dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
-    /** Represents a method declaration for seting up the columns for the pivot grid based on the pivot configuration */
+    /** Represents a method declaration for setting up the columns for the pivot grid based on the pivot configuration */
     setupColumns(): void;
     /** Represents a method declaration that allows toggle of expansion state of a row (taken as a parameter) in the pivot grid */
     toggleRow(rowID: any): void;
