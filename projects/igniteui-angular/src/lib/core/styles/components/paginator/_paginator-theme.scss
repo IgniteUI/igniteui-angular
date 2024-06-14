@@ -38,6 +38,7 @@
     }
 
     $theme: digest-schema($grid-paginator-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -47,7 +48,10 @@
         name: $name,
         text-color: $text-color,
         background-color: $background-color,
-        border-color: $border-color
+        border-color: $border-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -56,6 +60,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin paginator($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
 
     $paginator-padding-inline: (
         comfortable: rem(24px),
@@ -73,6 +79,13 @@
         background: var-get($theme, 'background-color');
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(11px);
+            font-weight: 400;
+            line-height: rem(15px);
+        }
+
         z-index: 1;
         padding-inline: pad-inline(map.get($paginator-padding-inline, 'compact'), map.get($paginator-padding-inline, 'cosy'), map.get($paginator-padding-inline, 'comfortable'));
         padding-block: 0;
