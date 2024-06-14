@@ -1598,6 +1598,7 @@ describe('IgxSimpleCombo', () => {
 
         it('should not change selection when selectionChanging event is canceled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callThrough();
+
             fixture.detectChanges();
 
             combo.select('Connecticut');
@@ -1629,6 +1630,61 @@ describe('IgxSimpleCombo', () => {
                 field: 'Connecticut',
                 region: 'New England'
             });
+        });
+
+
+        it('should preserved the input value of the combo when selectionChanging event is canceled', () => {
+            spyOn(combo.selectionChanging, 'emit').and.callThrough();
+            fixture.detectChanges();
+
+            const comboInput = fixture.debugElement.query(By.css(`.igx-input-group__input`));
+            fixture.detectChanges();
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            const cancelEventSpy = spyOn(combo.selectionChanging, 'emit').and.callFake((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.cancel = true;
+            });
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(cancelEventSpy).toHaveBeenCalled();
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            expect(comboInput.nativeElement.value).toEqual('Connecticut');
+
+            combo.handleInputChange('z');
+            fixture.detectChanges();
+
+            expect(cancelEventSpy).toHaveBeenCalled();
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            expect(comboInput.nativeElement.value).toEqual('Connecticut');
+
+            combo.handleInputChange(' ');
+            fixture.detectChanges();
+
+            expect(cancelEventSpy).toHaveBeenCalled();
+            expect(combo.selection).toEqual({
+                field: 'Connecticut',
+                region: 'New England'
+            });
+
+            expect(comboInput.nativeElement.value).toEqual('Connecticut');
         });
     });
 
