@@ -68,16 +68,15 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
-     * @deprecated since version 16.1.x.
-     * Please use the `--ig-size` CSS custom property.
-     * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
-     *
      * Returns the theme of the component.
      * The default theme is `comfortable`.
      * Available options are `comfortable`, `cosy`, `compact`.
      * ```typescript
      * let componentTheme = this.component.displayDensity;
      * ```
+     *
+     * @deprecated since version 16.1.0. Please use the `--ig-size` CSS custom property.
+     * @see {@link [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-160x-to-161x)}
      */
     @Input()
     public get displayDensity(): DisplayDensity {
