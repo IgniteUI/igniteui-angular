@@ -628,6 +628,16 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
             expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
         });
+
+        it('should emit columnInit when a column is added runtime.', async() => {
+            spyOn(hierarchicalGrid.columnInit, 'emit').and.callThrough();
+            fixture.detectChanges();
+            fixture.componentInstance.showAnotherCol = true;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
+        });
     });
 
     describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
@@ -1827,6 +1837,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     <igx-hierarchical-grid #grid1 [data]="data"
      [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
+     <igx-column field="AnotherColumn" *ngIf="showAnotherCol"></igx-column>
      <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
@@ -1839,7 +1850,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -1847,7 +1858,7 @@ export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
     public data;
     public width = '500px';
-
+    public showAnotherCol = false;
     constructor() {
         // 3 level hierarchy
         this.data = this.generateDataUneven(20, 3);
