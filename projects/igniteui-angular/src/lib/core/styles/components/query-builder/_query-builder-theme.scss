@@ -120,9 +120,11 @@
         }
 
         @if $variant != 'indigo-design' {
+            /* stylelint-disable scss/at-extend-no-missing-placeholder */
             @extend .ig-typography__h6;
         } @else {
             @extend .ig-typography__h5;
+            /* stylelint-enable scss/at-extend-no-missing-placeholder */
 
             border-top-left-radius: border-radius(rem(10px));
             border-top-right-radius: border-radius(rem(10px));
