@@ -547,6 +547,38 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
+     /**
+     *
+     * @hidden
+     * @internal
+     * @param newSelection
+     */
+     public selectItemWithoutEvent(item: IgxDropDownItemBaseDirective) {
+        const oldSelection = this.selectedItem;
+        if (item instanceof IgxDropDownItemBaseDirective && item.isHeader) {
+            return;
+        }
+        if (this.virtDir) {
+            item = {
+                value: item.value,
+                index: item.index
+            } as IgxDropDownItemBaseDirective;
+        }
+        if (this.isSelectionValid(item)) {
+            this.selection.set(this.id, new Set([item]));
+            if (!this.virtDir) {
+                if (oldSelection) {
+                    oldSelection.selected = false;
+                }
+                if (item) {
+                    item.selected = true;
+                }
+            }
+        } else {
+            throw new Error('Please provide a valid drop-down item for the selection!');
+        }
+    }
+
     /**
      * Clears the selection of the dropdown
      * ```typescript

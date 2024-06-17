@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, Output, EventEmitter, booleanAttribute } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, Output, EventEmitter, booleanAttribute, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -16,7 +16,7 @@ let NEXT_ID = 0;
     selector: '[igxDropDownItemBase]',
     standalone: true
 })
-export class IgxDropDownItemBaseDirective {
+export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * Sets/gets the `id` of the item.
      * ```html
@@ -280,6 +280,19 @@ export class IgxDropDownItemBaseDirective {
     public handleMousedown(event: MouseEvent): void {
         if (!this.dropDown.allowItemsFocus) {
             event.preventDefault();
+        }
+    }
+
+    public ngDoCheck(): void {
+        if (this._selected) {
+            const dropDownSelectedItem = this.dropDown.selectedItem;
+            if (!dropDownSelectedItem) {
+                this.dropDown.selectItemWithoutEvent(this);
+            } else if (this.hasIndex
+                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
+                this !== dropDownSelectedItem) {
+                this.dropDown.selectItemWithoutEvent(this);
+            }
         }
     }
 
