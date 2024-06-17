@@ -136,6 +136,9 @@ export const cloneValue = (value: any): any => {
         const result = {};
 
         for (const key of Object.keys(value)) {
+            if (key === "externalObject") {
+                continue;
+            }
             result[key] = cloneValue(value[key]);
         }
         return result;
