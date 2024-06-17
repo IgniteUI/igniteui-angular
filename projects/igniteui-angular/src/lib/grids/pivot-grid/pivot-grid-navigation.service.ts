@@ -75,28 +75,14 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     public override handleAlt(key: string, event: KeyboardEvent): void {
         event.preventDefault();
 
-        let row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
-        let expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[0])
-        let isExpanded = this.grid.expansionStates.has(expansionRowKey) ? this.grid.expansionStates.get(expansionRowKey) : true;
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
+        const expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[this.activeNode.column])
+        const isExpanded = this.grid.expansionStates.get(expansionRowKey) ?? true;
 
-        if (!isExpanded && ROW_EXPAND_KEYS.has(key)) {
-            if (row.key === undefined) {
-                // TODO use expanded row.expanded = !row.expanded;
-                (row as any).toggle();
-            } else {
-                const newExpansionState = new Map<any, boolean>(this.grid.expansionStates);
-                newExpansionState.set(expansionRowKey, true);
-                this.grid.expansionStates = newExpansionState;
-            }
-        } else if (isExpanded && ROW_COLLAPSE_KEYS.has(key)) {
-            if (row.key === undefined) {
-                // TODO use expanded row.expanded = !row.expanded;
-                (row as any).toggle();
-            } else {
-                const newExpansionState = new Map<any, boolean>(this.grid.expansionStates);
-                newExpansionState.set(expansionRowKey, false);
-                this.grid.expansionStates = newExpansionState;
-            }
+        if (ROW_EXPAND_KEYS.has(key) && !isExpanded) {
+            this.grid.gridAPI.set_row_expansion_state(expansionRowKey, true, event)
+        } else if (ROW_COLLAPSE_KEYS.has(key) && isExpanded) {
+            this.grid.gridAPI.set_row_expansion_state(expansionRowKey, false, event)
         }
         this.grid.notifyChanges();
     }
