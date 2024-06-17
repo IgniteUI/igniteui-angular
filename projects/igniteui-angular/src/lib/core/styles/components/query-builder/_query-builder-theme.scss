@@ -9,6 +9,7 @@
 /// @param {Color} background [null] - The background color of the filtering row.
 /// @param {Color} header-background [null] - The background color of the query builder header.
 /// @param {Color} header-foreground [null] - The foreground color of the query builder header.
+/// @param {Color} header-border [null] - The border color of the query builder header.
 /// @param {Map} background-and [null] - The background color of advanced filtering "AND" condition.
 /// @param {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
 /// @param {Map} background-or [null] - The background color of advanced filtering "OR" condition.
@@ -24,6 +25,7 @@
     $background: null,
     $header-background: null,
     $header-foreground: null,
+    $header-border: null,
     $background-and: null,
     $background-and--focus: null,
     $background-or: null,
@@ -53,6 +55,7 @@
         background: $background,
         header-background: $header-background,
         header-foreground: $header-foreground,
+        header-border: $header-border,
         background-and: $background-and,
         background-and--focus: $background-and--focus,
         background-or: $background-or,
@@ -114,6 +117,16 @@
         h4,
         .ig-typography__h6 {
             margin-bottom: 0;
+        }
+
+        @if $variant != 'indigo-design' {
+            @extend .ig-typography__h6;
+        } @else {
+            @extend .ig-typography__h5;
+
+            border-top-left-radius: border-radius(rem(10px));
+            border-top-right-radius: border-radius(rem(10px));
+            border-block-end: rem(1px) solid var-get($theme, 'header-border');
         }
     }
 
