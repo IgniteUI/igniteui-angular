@@ -14,13 +14,16 @@ import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponen
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
+import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
+import { flatten } from '../../core/utils';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -533,7 +536,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.superCompactMode = false;
             fixture.detectChanges();
             tick();
-            
+
             setElementSize(pivotGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
@@ -2815,6 +2818,98 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
             expect(pivotRecord.aggregationValues.get('Japan')).toBe(240);
+        });
+    });
+
+
+    describe('IgxPivotGrid Horizontal Layout #pivotGrid', () => {
+        let fixture: ComponentFixture<any>;
+        let pivotGrid: IgxPivotGridComponent;
+
+        beforeEach(waitForAsync(() => {
+            fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fixture.detectChanges();
+
+            pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotUI = {
+                showRowHeaders: true,
+                showConfiguration: true,
+                rowLayout: PivotRowLayoutType.Horizontal
+            };
+            fixture.detectChanges();
+        }));
+
+        fit("should render row hierarchy horizontally.", () => {
+            fixture.detectChanges();
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(7);
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            // check each dimension from hierarchy is on another column.
+            const rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            let dimensions = rowDimensionCol1.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "All cities")).toBeTruthy();
+            const rowDimensionHeadersCol1 = rowDimensionCol1.map(x => x.componentInstance.rowDimensionColumn.header);
+            expect(rowDimensionHeadersCol1).toEqual(["All Cities"]);
+
+            const rowDimensionCol2 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 2);
+            const rowDimensionHeadersCol2 = rowDimensionCol2.map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol2.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "City")).toBeTruthy();
+            expect(rowDimensionHeadersCol2).toEqual(["Ciudad de la Costa", "London", "New York", "Plovdiv", "Sofia", "Yokohama"]);
+
+            const rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3);
+            const rowDimensionHeadersCol3 = rowDimensionCol3.map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol3.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "AllProducts")).toBeTruthy();
+            expect(rowDimensionHeadersCol3).toEqual(["AllProducts", "AllProducts", "AllProducts", "AllProducts", "AllProducts", "AllProducts"]);
+
+            const rowDimensionCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            const rowDimensionHeadersCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4)
+            .map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol4.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "ProductCategory")).toBeTruthy();
+            expect(rowDimensionHeadersCol4).toEqual(["Bikes", "Clothing", "Accessories",
+             "Clothing",  "Clothing", "Components", "Components"]);
+        });
+
+        it("should allow horizontal expand/collapse on a single dimension hierarchy.", () => {
+
+        });
+
+        it("should expand/collapse multiple dimension hierarchies individually.", () => {
+
+        });
+
+        it("should render summary rows when enabled.", () => {
+
+        });
+
+        it("should allow navigation in the row layouts.", () => {
+
+        });
+
+        it("should allow resizing each row dimension column from the hierarchy.", () => {
+
+        });
+
+        it("should allow sorting each dimension column from the hierarchy.", () => {
+
+        });
+
+        it("should allow row selection and mark the selected rows from the hierarchy.", () => {
+
+        });
+
+        it("should render correct grid with noop strategies.", () => {
+
+        });
+
+        it("should export to excel the horizontal structure correctly.", () => {
         });
     });
 });
