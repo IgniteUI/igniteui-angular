@@ -986,7 +986,7 @@
 ) {
     $title: map.get($categories, 'title');
     $subtitle: map.get($categories, 'subtitle');
-    $indicator: map.get($categories, 'caption');
+    $indicator: map.get($categories, 'indicator');
 
     %igx-stepper__step-indicator {
         @include type-style($indicator) {
