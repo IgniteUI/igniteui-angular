@@ -117,6 +117,11 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         if (this.isDecadeView) {
             this.viewDate = CalendarDay.from(this.viewDate).add('year', -15).native;
         }
+
+        this.viewDateChanged.emit({
+            previousValue: this.previousViewDate,
+            currentValue: this.viewDate,
+        });
     }
 
     /**
@@ -134,6 +139,11 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         if (this.isDecadeView) {
             this.viewDate = CalendarDay.from(this.viewDate).add('year', 15).native;
         }
+
+        this.viewDateChanged.emit({
+            previousValue: this.previousViewDate,
+            currentValue: this.viewDate,
+        });
     }
 
 	/**
