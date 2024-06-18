@@ -3068,23 +3068,133 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(activeCells.length).toBe(1);
         });
 
-        it("should allow resizing each row dimension column from the hierarchy.", () => {
+        it("should allow resizing the row dimension.", fakeAsync(() => {
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
 
-        });
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
+
+            // Resize first column
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            fixture.detectChanges();
+
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
+        }));
 
         it("should allow sorting each dimension column from the hierarchy.", () => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    childLevel:
+                    {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+            const rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
 
+            const productsHeaderColumn = rowHeaders.filter(x => x.componentInstance.column.header === "ProductCategory")[0].nativeElement;
+            const productRowContents = rowHeaders.filter(x => x.componentInstance.column.field === "ProductCategory");
+            const productRowContentsHeaders = productRowContents.map(x => x.componentInstance.column.header);
+
+            expect(productRowContentsHeaders).toEqual( ['ProductCategory', 'Accessories', 'Bikes', 'Clothing', 'Components']);
+
+            const sortIcon = productsHeaderColumn.querySelectorAll('igx-icon')[0];
+            sortIcon.click();
+            fixture.detectChanges();
+
+            expect(productRowContentsHeaders).toEqual( ['ProductCategory', 'Components', 'Clothing', 'Bikes', 'Accessories']);
         });
 
-        it("should allow row selection and mark the selected rows from the hierarchy.", () => {
-
+        it("should allow select/deselect the correct rows on row header click.", () => {
+            fixture.detectChanges();
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const rowHeaders = layoutContainer.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(pivotGrid.selectedRows).toEqual([]);
+            const pivotRows = GridFunctions.getPivotRows(fixture);
+            const row = pivotRows[2].componentInstance;
+            const secondDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'Accessories');
+            secondDimCell.nativeElement.click();
+            fixture.detectChanges();
+            expect(row.selected).toBeTrue();
+            expect(pivotGrid.selectedRows).not.toBeNull();
+            expect(pivotGrid.selectedRows.length).toBe(1);
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('ProductCategory')).toBe('Accessories');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('AllProducts')).toBe('AllProducts');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('City')).toBe('London');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('All cities')).toBe("All Cities");
         });
 
-        it("should render correct grid with noop strategies.", () => {
+        it("should render correct rows with noop strategies.", () => {
+            pivotGrid.data = [
+                {
+                    AllProducts: 'All Products', All: 2127, 'Bulgaria': 774, 'USA': 829, 'Uruguay': 524, 'AllProducts_records': [
+                        { ProductCategory: 'Clothing', All: 1523, 'Bulgaria': 774, 'USA': 296, 'Uruguay': 456, },
+                        { ProductCategory: 'Bikes', All: 68, 'Uruguay': 68 },
+                        { ProductCategory: 'Accessories', All: 293, 'USA': 293 },
+                        { ProductCategory: 'Components', All: 240, 'USA': 240 }
+                    ]
+                }
+            ];
+            pivotGrid.pivotConfiguration = {
+                columnStrategy: NoopPivotDimensionsStrategy.instance(),
+                rowStrategy: NoopPivotDimensionsStrategy.instance(),
+                columns: [
+                    {
+                        memberName: 'Country',
+                        enabled: true
+                    },
+                ]
+                ,
+                rows: [
+                    {
+                        memberFunction: () => 'All',
+                        memberName: 'AllProducts',
+                        enabled: true,
+                        width: '25%',
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            enabled: true
+                        }
+                    }
+                ],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'sum',
+                            label: 'Sum'
+                        },
+                        enabled: true
+                    },
+                ],
+                filters: null
+            };
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
 
-        });
-
-        it("should export to excel the horizontal structure correctly.", () => {
+            const pivotRows = GridFunctions.getPivotRows(fixture);
+            expect(pivotRows.length).toBe(4);
         });
     });
 });
