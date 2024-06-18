@@ -17,9 +17,6 @@ export class IgxComboFilteringPipe implements PipeTransform {
         if (!collection) {
             return [];
         }
-        if (!filteringOptions.filterable) {
-            return collection;
-        }
         filteringOptions.filteringKey = filteringOptions.filteringKey ?? displayKey;
         return filterFunction(collection, searchValue, filteringOptions);
     }
@@ -86,10 +83,10 @@ function groupBy<T>(data: T[], key: keyof T | ((item: T) => any)) {
     for (const item of data) {
       const category = _get(item);
       const group = result[category];
-  
+
       Array.isArray(group) ? group.push(item) : (result[category] = [item]);
     }
-  
+
     return result;
 }
 

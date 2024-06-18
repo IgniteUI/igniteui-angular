@@ -107,8 +107,6 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /** Defines whether filtering is allowed */
-    filterable: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
@@ -949,7 +947,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
-    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
+    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
     public abstract dropdown: IgxComboDropDownComponent;
 
     public abstract selectionChanging: EventEmitter<any>;

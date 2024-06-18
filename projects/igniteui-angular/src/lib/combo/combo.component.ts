@@ -133,19 +133,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
-     * Enables/disables filtering in the list. The default is `true`.
-     *
-     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
-     */
-    @Input({ transform: booleanAttribute })
-    public get filterable(): boolean {
-        return this.filteringOptions.filterable;
-    }
-    public set filterable(value: boolean) {
-        this.filteringOptions = Object.assign({}, this.filteringOptions, { filterable: value });
-    }
-
-    /**
      * Defines the placeholder value for the combo dropdown search field
      *
      * ```typescript
@@ -177,7 +164,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this.filteringOptions.filterable ? this._filteredData : this.data;
+        return this._filteredData;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -215,11 +202,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         event.preventDefault();
         event.stopPropagation();
         this.open();
-    }
-
-    /** @hidden @internal */
-    public get displaySearchInput(): boolean {
-        return this.filteringOptions.filterable || this.allowCustomValues;
     }
 
     /**
@@ -406,7 +388,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public focusSearchInput(opening?: boolean): void {
-        if (this.displaySearchInput && this.searchInput) {
+        if (this.searchInput) {
             this.searchInput.nativeElement.focus();
         } else {
             if (opening) {
