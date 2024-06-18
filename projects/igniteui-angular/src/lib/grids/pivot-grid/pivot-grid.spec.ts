@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxIconComponent, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -27,6 +27,7 @@ import { flatten } from '../../core/utils';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
+const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
 describe('IgxPivotGrid #pivotGrid', () => {
     configureTestSuite();
@@ -2839,7 +2840,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
         }));
 
-        fit("should render row hierarchy horizontally.", () => {
+        it("should render row hierarchy horizontally.", () => {
             fixture.detectChanges();
             // check rows
             const rows = pivotGrid.rowList.toArray();
@@ -2877,20 +2878,194 @@ describe('IgxPivotGrid #pivotGrid', () => {
              "Clothing",  "Clothing", "Components", "Components"]);
         });
 
-        it("should allow horizontal expand/collapse on a single dimension hierarchy.", () => {
+        it("should  horizontally expand/collapse on a single dimension hierarchy.", () => {
+            fixture.detectChanges();
+            let layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            let contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
 
+            // collapse All Products
+            let rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(4);
+            let expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+            expect(expander.nativeElement.innerText).toBe("expand_more");
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            // check cells are merged
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(5);
+
+            // check icon is updated
+            expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+           expect(expander.nativeElement.innerText).toBe("chevron_right");
+
+           // toggle All Products
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            // check cell is no longer merged.
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(4);
+            expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+            expect(expander.nativeElement.innerText).toBe("expand_more");
         });
 
-        it("should expand/collapse multiple dimension hierarchies individually.", () => {
+        it("should collapse fully the last dimension if all parent dimensions get collapsed.", () => {
+            pivotGrid.data = [{
+                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley Brooker',
+                    Country: 'Bulgaria', City: 'Plovdiv', Date: '01/01/2012', UnitsSold: 282
+                }];
+            fixture.detectChanges();
+            let layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            let contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
 
+            const rowDimensionsCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3);
+            let rowDimensionsCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            expect(rowDimensionsCol4.length).toBe(1);
+            // collapse all from All Products
+            const expander = rowDimensionsCol3[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionsCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            // nothing is now on column 4 since all are collapsed.
+            expect(rowDimensionsCol4.length).toBe(0);
         });
 
         it("should render summary rows when enabled.", () => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
 
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(7);
+            let layoutContainers = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(2);
+            const contentRowHeaders = layoutContainers[0].queryAll(
+                By.directive(IgxPivotRowDimensionContentComponent));
+            const summaryRowHeaders = layoutContainers[1].queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            // check first column of data contains summary
+            const summaryRowHeader = summaryRowHeaders.map(x => x.componentInstance.rowDimensionColumn.header);
+            expect(summaryRowHeader).toEqual(["All Cities Total"]);
+
+            // check summary hides on collapse
+            const rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            const expander = rowDimensionCol1[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            layoutContainers = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(1);
+            expect(pivotGrid.rowList.toArray().length).toBe(1);
         });
 
         it("should allow navigation in the row layouts.", () => {
+            fixture.detectChanges();
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const allGroups = layoutContainer.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const row0Col0 = allGroups[0];
+            const row0Col1 = allGroups.filter(x => x.componentInstance.column.header === "Ciudad de la Costa")[0];
+            const row0Col2 = allGroups.filter(x => x.componentInstance.column.header === "AllProducts")[0];
+            const row0Col3 = allGroups.filter(x => x.componentInstance.column.header === "Bikes")[0];
+            const row1Col3 = allGroups.filter(x => x.componentInstance.column.header === "Clothing")[0];
+            const row2Col3 = allGroups.filter(x => x.componentInstance.column.header === "Accessories")[0];
+            UIInteractions.simulateClickAndSelectEvent(row0Col0);
+            fixture.detectChanges();
 
+            GridFunctions.verifyHeaderIsFocused(row0Col0.parent);
+            let  activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col0.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col1.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col2.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row0Col3.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row1Col3.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row2Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row2Col3.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row1Col3.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col2.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col1.nativeElement);
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col0.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
         });
 
         it("should allow resizing each row dimension column from the hierarchy.", () => {
