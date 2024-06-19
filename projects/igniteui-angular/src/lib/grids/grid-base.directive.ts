@@ -7255,7 +7255,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
-                const maxForCells = Math.max(...cellsContentWidths);
+                let maxForCells = Math.max(...cellsContentWidths);
                 const header = this.headerCellList.find(x => x.column === col);
                 cellsContentWidths.push(header.nativeElement.offsetWidth);
                 const max = Math.max(...cellsContentWidths);
@@ -7266,6 +7266,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (cells.length > 0 && !!col.bodyTemplate) {
                     const cellStyle = this.document.defaultView.getComputedStyle(cells[0].nativeElement);
                     emptyCellWithPaddingOnly = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+                } else {
+                    maxForCells = max;
                 }
 
                 if (max === 0 || (maxForCells <= emptyCellWithPaddingOnly && this._firstAutoResize)) {
