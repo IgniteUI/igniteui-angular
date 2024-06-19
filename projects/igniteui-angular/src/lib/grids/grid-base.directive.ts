@@ -3100,7 +3100,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _headerFeaturesWidth = NaN;
     protected _init = true;
     protected _firstAutoResize = true;
-    protected _autoSizeColumnsNotify = new Subject<boolean>();
+    protected _autoSizeColumnsNotify = new Subject<void>();
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
     protected _transactions: TransactionService<Transaction, State>;
