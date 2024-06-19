@@ -5,6 +5,8 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { NgClass, NgIf } from '@angular/common';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 
 
 /**
@@ -39,4 +41,18 @@ export class IgxGridToolbarAdvancedFilteringComponent {
     public overlaySettings: OverlaySettings;
 
     constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
+
+    protected extractUniqueFieldNamesFromFilterTree(filteringTree: IFilteringExpressionsTree) : string[] {
+        const columnNames = [];    
+
+        filteringTree.filteringOperands.forEach((expr) => {
+            if (expr instanceof FilteringExpressionsTree) {
+                columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr));
+            } else {
+                columnNames.push((expr as IFilteringExpression).fieldName);
+            }
+        });
+
+        return columnNames.filter((value, index, self) => self.indexOf(value) === index);
+    }
 }
