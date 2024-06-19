@@ -71,15 +71,19 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 }
 
                 verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column];
-                if (key.includes('up') && this.activeNode.row > 0) {
-                    newActiveNode.row = ctrl ? 0 : this.activeNode.row - 1;
-                } else if (key.includes('up')) {
-                    newActiveNode.row = 0;
-                    newActiveNode.column = newActiveNode.layout.colStart - 1;
-                    newActiveNode.layout = null;
-                    this.isRowDimensionHeaderActive = true;
-                    this.isRowHeaderActive = false;
-                    this.grid.theadRow.nativeElement.focus();
+                if (key.includes('up')) {
+                    if (ctrl) {
+                        newActiveNode.row = 0;
+                    } else if (this.activeNode.row > 0) {
+                        newActiveNode.row = this.activeNode.row - 1;
+                    } else {
+                        newActiveNode.row = -1;
+                        newActiveNode.column = newActiveNode.layout ? newActiveNode.layout.colStart - 1 : 0;
+                        newActiveNode.layout = null;
+                        this.isRowDimensionHeaderActive = true;
+                        this.isRowHeaderActive = false;
+                        this.grid.theadRow.nativeElement.focus();
+                    }
                 }
 
                 if (key.includes('down') && this.activeNode.row < this.findLastDataRowIndex()) {
