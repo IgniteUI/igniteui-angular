@@ -62,9 +62,9 @@ export interface ISelectionKeyboardState {
     node: null | ISelectionNode;
     /** Indicates whether the Shift key is currently pressed during the selection. */
     shift: boolean;
-    /** The range of the selected cells in the grid. Can be null when reseting the selection. */
+    /** The range of the selected cells in the grid. Can be null when resetting the selection. */
     range: GridSelectionRange;
-    /** Indicates whether the selection is currently active (being performed). `False` when reseting the selection.  */
+    /** Indicates whether the selection is currently active (being performed). `False` when resetting the selection.  */
     active: boolean;
 }
 

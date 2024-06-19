@@ -1146,7 +1146,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const colLength = this.columns.length;
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         if (topCols.length > 0) {
-            this.updateColumns(topCols);
+            this.initColumns(topCols, (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
