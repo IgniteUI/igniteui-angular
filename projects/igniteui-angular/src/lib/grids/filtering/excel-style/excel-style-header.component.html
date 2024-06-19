@@ -4,7 +4,7 @@
     <div class="igx-excel-filter__menu-header-actions">
         <button *ngIf="showSelecting"
             type="button"
-            igxButton="icon"
+            igxIconButton="flat"
             (click)="esf.onSelect()"
             [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
             [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
@@ -13,7 +13,7 @@
         </button>
         <button *ngIf="showPinning"
             type="button"
-            igxButton="icon"
+            igxIconButton="flat"
             (click)="esf.onPin()"
             [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
         >
@@ -21,7 +21,7 @@
         </button>
         <button *ngIf="showHiding"
             type="button"
-            igxButton="icon"
+            igxIconButton="flat"
             (click)="esf.onHideToggle()"
             [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
         >

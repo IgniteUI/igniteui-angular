@@ -13,6 +13,7 @@
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
+/// @param {Color} $icon-color [null] - The icon color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {Number} $border-radius [null] - The border-radius used of the avatar.
 /// @param {Number} $size [null] - The size of the avatar.
@@ -26,6 +27,7 @@
     $schema: $light-material-schema,
     $background: null,
     $color: null,
+    $icon-color: null,
     $border-radius: null,
     $size: null,
 ) {
@@ -49,6 +51,7 @@
         name: $name,
         background: $background,
         color: $color,
+        icon-color: $icon-color,
         border-radius: $border-radius,
         size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
@@ -57,6 +60,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin avatar($theme) {
     @include css-vars($theme);
@@ -82,7 +87,7 @@
 
     %igx-avatar-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-small));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         position: relative;
         display: inline-flex;
@@ -99,6 +104,13 @@
 
         igx-icon {
             --component-size: 3;
+            color: var-get($theme, 'icon-color');
+        }
+
+        @if($variant == 'indigo-design'){
+            igx-icon {
+                --component-size: 1;
+            }
         }
 
         &::after {

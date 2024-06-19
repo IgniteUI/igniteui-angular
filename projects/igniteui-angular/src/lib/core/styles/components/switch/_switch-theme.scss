@@ -1,8 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../ripple/ripple-theme' as *;
-@use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
 @use '../../themes/schemas' as *;
 
@@ -24,6 +22,7 @@
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
 /// @param {Color} $track-on-disabled-color [null] - The color of the track when the switch is on and disabled.
 /// @param {Color} $label-color [null] - The color of the switch label
+/// @param {Color} $label-hover-color [null] - The color of the switch label on hover.
 /// @param {Color} $label-disabled-color [null] - The color of the switch label when the switch is disabled
 /// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
@@ -39,6 +38,7 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
+/// @param {Color} $focus-fill-hover-color [null] - The focus fill color on hover.
 /// @param {Color} $label-invalid-color [null] - The color of the switch label in invalid state.
 /// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
 /// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
@@ -66,6 +66,7 @@
     $thumb-on-disabled-color: null,
 
     $label-color: null,
+    $label-hover-color: null,
     $label-disabled-color: null,
     $label-invalid-color: null,
 
@@ -84,6 +85,7 @@
     $focus-outline-color: null,
     $focus-outline-color-focused: null,
     $focus-fill-color: null,
+    $focus-fill-hover-color: null,
     $track-error-color: null,
     $thumb-on-error-color: null,
     $error-color: null,
@@ -144,6 +146,7 @@
         thumb-on-disabled-color: $thumb-on-disabled-color,
 
         label-color: $label-color,
+        label-hover-color: $label-hover-color,
         label-disabled-color: $label-disabled-color,
         label-invalid-color: $label-invalid-color,
 
@@ -162,6 +165,7 @@
         focus-outline-color: $focus-outline-color,
         focus-outline-color-focused: $focus-outline-color-focused,
         focus-fill-color: $focus-fill-color,
+        focus-fill-hover-color: $focus-fill-hover-color,
         track-error-color: $track-error-color,
         thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
@@ -173,9 +177,9 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} ripple
-/// @requires ripple-theme
 @mixin switch($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -187,7 +191,7 @@
         material: 36px,
         fluent: 40px,
         bootstrap: 32px,
-        indigo-design: 34px
+        indigo-design: 32px
     ), $variant);
 
     $switch-height: map.get((
@@ -206,14 +210,14 @@
 
     $switch-on-offset: map.get((
         material: 1px,
-        fluent: math.div($switch-thumb-width, 2),
+        fluent: 5px,
         bootstrap: 4px,
         indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map.get((
         material: -1px,
-        fluent: math.div($switch-thumb-width, 3),
+        fluent: 3px,
         bootstrap: math.div($switch-thumb-width, 4),
         indigo-design: math.div($switch-thumb-width, 3),
     ), $variant);
@@ -251,14 +255,14 @@
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $label-margin: rem(8px);
+    $label-margin: map.get((
+        material: rem(12px),
+        fluent: rem(8px),
+        bootstrap: rem(8px),
+        indigo-design: rem(8px)
+    ), $variant);
 
     $input-transition: all .2s $ease-in-out-quad;
-
-    $ripple-theme: ripple-theme(
-        $schema: $light-material-schema,
-        $color: var-get($theme, 'thumb-on-color')
-    );
 
     %switch-display {
         position: relative;
@@ -292,19 +296,20 @@
         @if $variant == 'indigo-design' {
             border: rem(2px) solid var-get($theme, 'border-color');
         }
+
+        //ripple color
+        --color: #{var-get($theme, 'track-off-color')}
     }
 
     %switch-composite--hover {
-        @if $variant == 'material' or  $variant == 'fluent' {
-            border-color: var-get($theme, 'border-hover-color');
-        }
+        border-color: var-get($theme, 'border-hover-color');
 
-        @if $variant == 'fluent' {
-            %switch-composite-thumb {
+        @if $variant != 'material' {
+            %switch-thumb {
                 background: var-get($theme, 'border-hover-color');
             }
 
-            %switch-composite-thumb--x {
+            %switch-thumb--x {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -323,7 +328,7 @@
         @if $variant == 'fluent' {
             border-color: var-get($theme, 'error-color-hover');
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'error-color-hover');
             }
         }
@@ -332,17 +337,17 @@
     %switch-composite--x {
         background: var-get($theme, 'track-on-color');
         border-color: var-get($theme, 'border-on-color');
+
+        //ripple color
+        --color: #{var-get($theme, 'thumb-on-color')};
     }
 
     %switch-composite--x--hover {
-        @if $variant != 'bootstrap' {
-            border-color: var-get($theme, 'border-on-hover-color');
-        }
+        background: var-get($theme, 'track-on-hover-color');
+        border-color: var-get($theme, 'border-on-hover-color');
 
-        @if $variant == 'fluent' {
-            background: var-get($theme, 'track-on-hover-color');
-
-            %switch-composite-thumb {
+        @if $variant != 'material' {
+            %switch-thumb {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -354,30 +359,19 @@
     }
 
     %switch-composite-thumb {
-        position: relative;
-        display: block;
         width: rem($switch-thumb-width);
         height: $switch-thumb-height;
         min-width: rem($switch-thumb-width);
         border-radius: var-get($theme, 'border-radius-thumb');
-        background: var-get($theme, 'thumb-off-color');
-        box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
         transform: translateX(#{rem($switch-off-offset)});
 
         [dir='rtl'] & {
             transform: translateX(#{rem(-1 * $switch-off-offset)});
         }
-
-        @if $variant != 'bootstrap' {
-            &:hover {
-                box-shadow: $thumb-hover-shadow;
-            }
-        }
     }
 
     %switch-composite-thumb--x {
-        background: var-get($theme, 'thumb-on-color');
         transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
 
         [dir='rtl'] & {
@@ -385,22 +379,43 @@
         }
     }
 
-    %switch-composite-thumb--invalid {
+    %switch-thumb {
+        position: relative;
+        display: block;
+        width: rem($switch-thumb-width);
+        height: $switch-thumb-height;
+        min-width: rem($switch-thumb-width);
+        border-radius: var-get($theme, 'border-radius-thumb');
+        background: var-get($theme, 'thumb-off-color');
+        transition: $input-transition;
+
+        @if $variant == 'material' {
+            box-shadow: $thumb-resting-shadow;
+
+            &:hover {
+                box-shadow: $thumb-hover-shadow;
+            }
+        }
+    }
+
+    %switch-thumb--x {
+        background: var-get($theme, 'thumb-on-color');
+    }
+
+    %switch-thumb--invalid {
         background: var-get($theme, 'error-color');
     }
 
-    %switch-composite-thumb--x--invalid {
+    %switch-thumb--x--invalid {
         background: var-get($theme, 'thumb-on-error-color');
     }
 
-    %switch-composite-thumb--disabled {
+    %switch-thumb--disabled {
         background: var-get($theme, 'thumb-disabled-color');
         box-shadow: $thumb-disabled-shadow;
     }
 
     %switch-ripple {
-        @include ripple($ripple-theme);
-        @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -417,28 +432,28 @@
         @if $variant == 'fluent' {
             %switch-composite {
                 position: relative;
-                $focus-outline-offset-top: rem(2px);
-                $focus-outline-offset-left: rem(2px);
+                $focus-outline-offset: rem(3px);
 
                 &::after {
                     content: '';
                     position: absolute;
-                    top: -$focus-outline-offset-top;
-                    inset-inline-start: -$focus-outline-offset-left;
+                    inset: -$focus-outline-offset;
                     box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
-                    width: calc(100% + (#{$focus-outline-offset-left} * 2));
-                    height: calc(100% + (#{$focus-outline-offset-top} * 2));
                 }
+            }
+
+            &.igx-checkbox--focused::after {
+                opacity: 0;
             }
         }
 
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
             }
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'focus-fill-color');
             }
         }
@@ -451,14 +466,24 @@
         }
     }
 
+    %igx-switch--focused--hover {
+        @if $variant == 'bootstrap' {
+            border-color: var-get($theme, 'focus-fill-hover-color');
+
+            %switch-thumb {
+                background: var-get($theme, 'focus-fill-hover-color');
+            }
+        }
+    }
+
     %igx-switch--focused--invalid {
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'error-color');
-                box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-color-hover');
             }
 
-            %switch-composite-thumb {
+            %switch-thumb {
                 background: var-get($theme, 'error-color');
             }
         }
@@ -476,7 +501,7 @@
                 border-color: var-get($theme, 'border-on-color');
             }
 
-            %switch-composite-thumb--x {
+            %switch-thumb--x {
                 background: var-get($theme, 'thumb-on-color');
             }
         }
@@ -489,14 +514,12 @@
     }
 
     %igx-switch--disabled-checked {
-        @if $variant != 'indigo-design' {
-            %switch-composite--x {
-                background: var-get($theme, 'track-on-disabled-color');
-            }
-
-            %switch-composite-thumb--x {
-                background: var-get($theme, 'thumb-on-disabled-color');
-            }
+        %switch-composite--x {
+            background: var-get($theme, 'track-on-disabled-color');
+        }
+      
+        %switch-thumb--x {
+            background: var-get($theme, 'thumb-on-disabled-color');
         }
 
         @if $variant == 'bootstrap' or $variant == 'fluent'{
@@ -504,10 +527,16 @@
                 border-color: var-get($theme, 'track-on-disabled-color');
             }
         }
+
+        @if $variant == 'indigo-design' {
+            %switch-composite--x {
+                border-color: transparent;
+            }
+        }
     }
 
     %switch-ripple--focused {
-        background: var-get($theme, 'track-off-color');
+        background: color($color: 'gray', $variant: 600);
         transition: background .2s $ease-out-quad;
         opacity: .12;
 
@@ -552,6 +581,10 @@
         margin-inline-end: $label-margin;
     }
 
+    %switch-label--hover {
+        color: var-get($theme, 'label-hover-color');
+    }
+
     %switch-label--invalid {
         color: var-get($theme, 'label-invalid-color');
     }
@@ -575,7 +608,7 @@
 
     %switch-ripple--hover-unchecked {
         &::after {
-            background: var-get($theme, 'track-off-color');
+            background: color($color: 'gray', $variant: 600);
         }
     }
 

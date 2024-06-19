@@ -23,7 +23,7 @@
 
 <!-- separated in a template in case this ever needs to be templatable -->
 <ng-template #selectMarkerTemplate>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
+    <igx-checkbox [checked]="selected" [disabled]="disabled" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
     </igx-checkbox>
 </ng-template>
 
@@ -71,7 +71,7 @@
         <!-- Item selection -->
         <div *ngIf="showSelectors"
             class="igx-tree-node__select"
-            (pointerdown)="$event.preventDefault()"
+            (pointerdown)="onSelectorPointerDown($event)"
             (click)="onSelectorClick($event)">
             <ng-container *ngTemplateOutlet="selectMarkerTemplate">
             </ng-container>

@@ -239,7 +239,7 @@ describe('igxMask', () => {
         const target = fixture.debugElement.query(By.css('input'));
         target.triggerEventHandler('focus', {});
         fixture.detectChanges();
-        
+
         UIInteractions.simulatePaste('2', target, 0, 1);
         fixture.detectChanges();
         tick();
@@ -668,6 +668,7 @@ export class DisplayFormatPipe implements PipeTransform {
     </igx-input-group>
     `,
     standalone: true,
+    selector: 'igx-def-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DefMaskComponent {
@@ -686,6 +687,7 @@ class DefMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-mask-test',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskComponent {
@@ -704,6 +706,7 @@ class MaskComponent {
                     <input #input1 igxInput [ngModel]="value"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-incl-literals',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class IncludeLiteralsComponent {
@@ -722,6 +725,7 @@ class IncludeLiteralsComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-digit-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitSpaceMaskComponent {
@@ -737,6 +741,7 @@ class DigitSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-digital-plus-minus-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitPlusMinusMaskComponent {
@@ -752,6 +757,7 @@ class DigitPlusMinusMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-letter-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class LetterSpaceMaskComponent {
@@ -767,6 +773,7 @@ class LetterSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
+    selector: 'igx-alphanum-space-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AlphanumSpaceMaskComponent {
@@ -784,6 +791,7 @@ class AlphanumSpaceMaskComponent {
     </igx-input-group>
     `,
     standalone: true,
+    selector: 'igx-any-char-mask',
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AnyCharMaskComponent {

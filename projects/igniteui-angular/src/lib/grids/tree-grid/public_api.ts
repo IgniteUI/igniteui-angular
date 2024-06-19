@@ -1,4 +1,3 @@
-import { IGX_GRID_COMMON_DIRECTIVES, IGX_GRID_VALIDATION_DIRECTIVES } from '../public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
@@ -89,8 +88,7 @@ import {
     IgxPageNavigationComponent,
     IgxPageSizeSelectorComponent,
     IgxPaginatorContentDirective,
-    IgxPaginatorDirective,
-    IGX_PAGINATOR_DIRECTIVES
+    IgxPaginatorDirective
 } from '../../paginator/public_api';
 
 /* NOTE: Tree grid directives collection for ease-of-use import in standalone components scenario */
@@ -102,7 +100,82 @@ export const IGX_TREE_GRID_DIRECTIVES = [
     IgxRowEditActionsDirective,
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective,
-    ...IGX_GRID_COMMON_DIRECTIVES,
-    ...IGX_GRID_VALIDATION_DIRECTIVES,
-    ...IGX_PAGINATOR_DIRECTIVES
+    // IGX_GRID_COMMON_DIRECTIVES:
+    IgxRowDirective,
+    IgxGridFooterComponent,
+    IgxAdvancedFilteringDialogComponent,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective,
+    IgxExcelStyleHeaderIconDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    IgxDragIndicatorIconDirective,
+    IgxRowDragGhostDirective,
+    IgxGridStateDirective,
+    // IGX_GRID_HEADERS_DIRECTIVES:
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    // IGX_GRID_COLUMN_DIRECTIVES:
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellFooterTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    // IGX_GRID_COLUMN_ACTIONS_DIRECTIVES:
+    IgxColumnActionsComponent,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective,
+    // IGX_GRID_SELECTION_DIRECTIVES:
+    IgxRowSelectorDirective,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    // IGX_GRID_TOOLBAR_DIRECTIVES:
+    IgxCSVTextDirective,
+    IgxExcelTextDirective,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarDirective,
+    // IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES:
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleHeaderComponent,
+    IgxExcelStyleSortingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleHidingComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxExcelStyleClearFiltersComponent,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    // IGX_PAGINATOR_DIRECTIVES:
+    IgxColumnRequiredValidatorDirective,
+    IgxColumnMinValidatorDirective,
+    IgxColumnMaxValidatorDirective,
+    IgxColumnEmailValidatorDirective,
+    IgxColumnMinLengthValidatorDirective,
+    IgxColumnMaxLengthValidatorDirective,
+    IgxColumPatternValidatorDirective,
+    // IGX_PAGINATOR_DIRECTIVES:
+    IgxPaginatorComponent,
+    IgxPageNavigationComponent,
+    IgxPageSizeSelectorComponent,
+    IgxPaginatorContentDirective,
+    IgxPaginatorDirective
 ] as const;

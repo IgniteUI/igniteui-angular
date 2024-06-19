@@ -16,12 +16,11 @@ import {
     QueryList,
     SkipSelf,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../../core/density';
-import { CurrentResourceStrings } from '../../core/i18n/resources';
-import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
+import { ITreeResourceStrings, TreeResourceStringsEN } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
@@ -40,6 +39,7 @@ import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.c
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
+import { getCurrentResourceStrings } from '../../core/i18n/resources';
 
 // TODO: Implement aria functionality
 /**
@@ -183,7 +183,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * @remarks
      * Loading nodes do not render children.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public loading = false;
 
     // TO DO: return different tab index depending on anchor child
@@ -226,9 +226,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITreeResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.TreeResStrings;
-        }
         return this._resourceStrings;
     }
 
@@ -237,7 +234,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @param value: boolean
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set active(value: boolean) {
         if (value) {
             this.navService.activeNode = this;
@@ -309,7 +306,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @param value: boolean
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-tree-node--disabled')
     public get disabled(): boolean {
         return this._disabled;
@@ -325,19 +322,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /** @hidden @internal */
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
-
-    @HostBinding('style.--component-size')
-    public get size(): string {
-        switch(this.tree.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
-    }
 
     /** @hidden @internal */
     @HostBinding('attr.role')
@@ -389,23 +373,13 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /** @hidden @internal */
-    public get isCompact(): boolean {
-        return this.tree?.displayDensity === DisplayDensity.compact;
-    }
-
-    /** @hidden @internal */
-    public get isCosy(): boolean {
-        return this.tree?.displayDensity === DisplayDensity.cosy;
-    }
-
-    /** @hidden @internal */
     public isFocused: boolean;
 
     /** @hidden @internal */
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
     /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.TreeResStrings;
+    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
 
     private _tabIndex = null;
     private _disabled = false;
@@ -474,7 +448,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * node.selected = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selected(): boolean {
         return this.selectionService.isNodeSelected(this);
     }
@@ -509,7 +483,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * node.expanded = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get expanded() {
         return this.treeService.isExpanded(this);
     }
@@ -590,6 +564,14 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /**
      * @hidden @internal
      */
+    public onSelectorPointerDown(event) {
+        event.preventDefault();
+        event.stopPropagation()
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onSelectorClick(event) {
         // event.stopPropagation();
         event.preventDefault();
@@ -630,8 +612,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public indicatorClick() {
-        this.toggle();
-        this.navService.setFocusedAndActiveNode(this);
+        if(!this.tree.toggleNodeOnClick) {
+            this.toggle();
+            this.navService.setFocusedAndActiveNode(this);
+        }
     }
 
     /**
@@ -639,6 +623,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     public onPointerDown(event) {
         event.stopPropagation();
+
+        //Toggle the node only on left mouse click - https://w3c.github.io/pointerevents/#button-states
+        if(this.tree.toggleNodeOnClick && event.button === 0) {
+            this.toggle();
+        }
+
         this.navService.setFocusedAndActiveNode(this);
     }
 

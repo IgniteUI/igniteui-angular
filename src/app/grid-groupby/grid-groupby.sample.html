@@ -4,24 +4,24 @@
     <br />
     <igx-switch (change)="toggleSummaryPosition()">Toggle Summary Position</igx-switch>
     <br />
-    <button igxButton="raised" (click)="sortingOp= sortingOp.mode ==='single' ? {mode: 'multiple'} : {mode: 'single'}">
+    <button igxButton="contained" (click)="sortingOp= sortingOp.mode ==='single' ? {mode: 'multiple'} : {mode: 'single'}">
         {{ sortingOp.mode}}</button> - Sorting mode
     <br />
-    <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse">
+    <button igxButton="contained" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse">
         {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
     <br />
-    <button igxButton="raised"
+    <button igxButton="contained"
         (click)="grid1.hideRowSelectors ? grid1.hideRowSelectors = false : grid1.hideRowSelectors = true">
         {{ grid1.hideRowSelectors ? 'Show' : 'Hide' }} row selectors
     </button>
-    <button igxButton="raised" (click)="grid1.rowDraggable ? grid1.rowDraggable = false : grid1.rowDraggable = true">
+    <button igxButton="contained" (click)="grid1.rowDraggable ? grid1.rowDraggable = false : grid1.rowDraggable = true">
         {{ grid1.rowDragging ? 'Enable' : 'Disable' }} row dragging
     </button>
     <div class="separator"></div>
-    <button igxButton="raised" [igxToggleAction]="dropDownRowSelection"
-        [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection:
+    <button igxButton="contained" [igxToggleAction]="dropDownRowSelection"
+        [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection:
         {{grid1.rowSelection}}</button>
-    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" displayDensity="comfortable">
+    <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" class="size">
         <igx-drop-down-item *ngFor="let item of selectionModes">
             {{ item }}
         </igx-drop-down-item>
@@ -49,24 +49,24 @@
 
     </igx-grid>
     <br />
-    <button igxButton="raised" (click)="sortByGroup()">Sort by group ASC/DESC</button>
-    <button igxButton="raised" (click)="groupBy('CompanyName')">Group/Ungroup 'CompanyName'</button>
-    <button igxButton="raised" (click)="groupBy('ContactTitle')">Group/Ungroup 'ContactTitle'</button>
-    <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
-    <button igxButton="raised" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button>
-    <button igxButton="raised" (click)="getRowsList()">Get rowslist'</button>
-    <button igxButton="raised" (click)="getState()">Get state</button>
+    <button igxButton="contained" (click)="sortByGroup()">Sort by group ASC/DESC</button>
+    <button igxButton="contained" (click)="groupBy('CompanyName')">Group/Ungroup 'CompanyName'</button>
+    <button igxButton="contained" (click)="groupBy('ContactTitle')">Group/Ungroup 'ContactTitle'</button>
+    <button igxButton="contained" (click)="groupBy('City')">Group/Ungroup 'City'</button>
+    <button igxButton="contained" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button>
+    <button igxButton="contained" (click)="getRowsList()">Get rowslist'</button>
+    <button igxButton="contained" (click)="getState()">Get state</button>
 
     <br />
-    <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
-    <button igxButton="raised" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
-    <button igxButton="raised" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle",
+    <button igxButton="contained" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
+    <button igxButton="contained" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
+    <button igxButton="contained" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle",
         "Address"</button>
     <br />
-    <button igxButton="raised" (click)="toggleDensity()">Toggle density</button>
-    <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
+    <button igxButton="contained" (click)="toggleDensity()">Toggle density</button>
+    <div>Current Size: {{size}}</div>
 
-    <button igxButton="raised" (click)="hideGroupableRow()">Show/Hide groupable row</button>
+    <button igxButton="contained" (click)="hideGroupableRow()">Show/Hide groupable row</button>
 </div>
 
 <div class="wrapper">

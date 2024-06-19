@@ -1,28 +1,7 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
-import {
-    blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
-    flipVerBck, flipVerFwd, growVerIn, growVerOut, heartbeat, pulsateBck, pulsateFwd, rotateInBl,
-    rotateInBottom, rotateInBr, rotateInCenter, rotateInDiagonal1, rotateInDiagonal2, rotateInHor,
-    rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateInVer, rotateOutBl,
-    rotateOutBottom, rotateOutBr, rotateOutCenter, rotateOutDiagonal1, rotateOutDiagonal2,
-    rotateOutHor, rotateOutLeft, rotateOutRight, rotateOutTl, rotateOutTop, rotateOutTr,
-    rotateOutVer, scaleInBl, scaleInBottom, scaleInBr, scaleInCenter, scaleInHorCenter,
-    scaleInHorLeft, scaleInHorRight, scaleInLeft, scaleInRight, scaleInTl, scaleInTop, scaleInTr,
-    scaleInVerBottom, scaleInVerCenter, scaleInVerTop, scaleOutBl, scaleOutBottom, scaleOutBr,
-    scaleOutCenter, scaleOutHorCenter, scaleOutHorLeft, scaleOutHorRight, scaleOutLeft,
-    scaleOutRight, scaleOutTl, scaleOutTop, scaleOutTr, scaleOutVerBottom, scaleOutVerCenter,
-    scaleOutVerTop, shakeBl, shakeBottom, shakeBr, shakeCenter, shakeHor, shakeLeft, shakeRight,
-    shakeTl, shakeTop, shakeTr, shakeVer, slideInBl, slideInBottom, slideInBr, slideInLeft,
-    slideInRight, slideInTl, slideInTop, slideInTr, slideOutBl, slideOutBottom, slideOutBr,
-    slideOutLeft, slideOutRight, slideOutTl, slideOutTop, slideOutTr, swingInBottomBck,
-    swingInBottomFwd, swingInLeftBck, swingInLeftFwd, swingInRightBck, swingInRightFwd,
-    swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
-    swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
-} from '../animations/main';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 
@@ -43,7 +22,7 @@ export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T)
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver;
+export const getResizeObserver = () => globalThis.window?.ResizeObserver;
 
 /**
  * @hidden
@@ -92,7 +71,7 @@ export const copyDescriptors = (obj) => {
         return Object.create(
             Object.getPrototypeOf(obj),
             Object.getOwnPropertyDescriptors(obj)
-            );
+        );
     }
 }
 
@@ -251,15 +230,6 @@ export const isEqual = (obj1, obj2): boolean => {
 };
 
 /**
- * Checks if provided variable is the value NaN
- *
- * @param value Value to check
- * @returns true if provided variable is NaN
- * @hidden
- */
- export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
-
-/**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
  *
@@ -269,10 +239,12 @@ export const isEqual = (obj1, obj2): boolean => {
 export class PlatformUtil {
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    public isSafari = this.isBrowser && /Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -583,243 +555,6 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
 
 export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
 
-export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
-    oppositeAnimation.get(animation) ?? animation;
-
-export const isHorizontalAnimation = (animation: AnimationReferenceMetadata): boolean => horizontalAnimations.includes(animation);
-
-export const isVerticalAnimation = (animation: AnimationReferenceMetadata): boolean => verticalAnimations.includes(animation);
-
-const oppositeAnimation: Map<AnimationReferenceMetadata, AnimationReferenceMetadata> = new Map([
-    [fadeIn, fadeIn],
-    [fadeOut, fadeOut],
-    [flipTop, flipBottom],
-    [flipBottom, flipTop],
-    [flipRight, flipLeft],
-    [flipLeft, flipRight],
-    [flipHorFwd, flipHorBck],
-    [flipHorBck, flipHorFwd],
-    [flipVerFwd, flipVerBck],
-    [flipVerBck, flipVerFwd],
-    [growVerIn, growVerIn],
-    [growVerOut, growVerOut],
-    [heartbeat, heartbeat],
-    [pulsateFwd, pulsateBck],
-    [pulsateBck, pulsateFwd],
-    [blink, blink],
-    [shakeHor, shakeHor],
-    [shakeVer, shakeVer],
-    [shakeTop, shakeTop],
-    [shakeBottom, shakeBottom],
-    [shakeRight, shakeRight],
-    [shakeLeft, shakeLeft],
-    [shakeCenter, shakeCenter],
-    [shakeTr, shakeTr],
-    [shakeBr, shakeBr],
-    [shakeBl, shakeBl],
-    [shakeTl, shakeTl],
-    [rotateInCenter, rotateInCenter],
-    [rotateOutCenter, rotateOutCenter],
-    [rotateInTop, rotateInBottom],
-    [rotateOutTop, rotateOutBottom],
-    [rotateInRight, rotateInLeft],
-    [rotateOutRight, rotateOutLeft],
-    [rotateInLeft, rotateInRight],
-    [rotateOutLeft, rotateOutRight],
-    [rotateInBottom, rotateInTop],
-    [rotateOutBottom, rotateOutTop],
-    [rotateInTr, rotateInBl],
-    [rotateOutTr, rotateOutBl],
-    [rotateInBr, rotateInTl],
-    [rotateOutBr, rotateOutTl],
-    [rotateInBl, rotateInTr],
-    [rotateOutBl, rotateOutTr],
-    [rotateInTl, rotateInBr],
-    [rotateOutTl, rotateOutBr],
-    [rotateInDiagonal1, rotateInDiagonal1],
-    [rotateOutDiagonal1, rotateOutDiagonal1],
-    [rotateInDiagonal2, rotateInDiagonal2],
-    [rotateOutDiagonal2, rotateOutDiagonal2],
-    [rotateInHor, rotateInHor],
-    [rotateOutHor, rotateOutHor],
-    [rotateInVer, rotateInVer],
-    [rotateOutVer, rotateOutVer],
-    [scaleInTop, scaleInBottom],
-    [scaleOutTop, scaleOutBottom],
-    [scaleInRight, scaleInLeft],
-    [scaleOutRight, scaleOutLeft],
-    [scaleInBottom, scaleInTop],
-    [scaleOutBottom, scaleOutTop],
-    [scaleInLeft, scaleInRight],
-    [scaleOutLeft, scaleOutRight],
-    [scaleInCenter, scaleInCenter],
-    [scaleOutCenter, scaleOutCenter],
-    [scaleInTr, scaleInBl],
-    [scaleOutTr, scaleOutBl],
-    [scaleInBr, scaleInTl],
-    [scaleOutBr, scaleOutTl],
-    [scaleInBl, scaleInTr],
-    [scaleOutBl, scaleOutTr],
-    [scaleInTl, scaleInBr],
-    [scaleOutTl, scaleOutBr],
-    [scaleInVerTop, scaleInVerBottom],
-    [scaleOutVerTop, scaleOutVerBottom],
-    [scaleInVerBottom, scaleInVerTop],
-    [scaleOutVerBottom, scaleOutVerTop],
-    [scaleInVerCenter, scaleInVerCenter],
-    [scaleOutVerCenter, scaleOutVerCenter],
-    [scaleInHorCenter, scaleInHorCenter],
-    [scaleOutHorCenter, scaleOutHorCenter],
-    [scaleInHorLeft, scaleInHorRight],
-    [scaleOutHorLeft, scaleOutHorRight],
-    [scaleInHorRight, scaleInHorLeft],
-    [scaleOutHorRight, scaleOutHorLeft],
-    [slideInTop, slideInBottom],
-    [slideOutTop, slideOutBottom],
-    [slideInRight, slideInLeft],
-    [slideOutRight, slideOutLeft],
-    [slideInBottom, slideInTop],
-    [slideOutBottom, slideOutTop],
-    [slideInLeft, slideInRight],
-    [slideOutLeft, slideOutRight],
-    [slideInTr, slideInBl],
-    [slideOutTr, slideOutBl],
-    [slideInBr, slideInTl],
-    [slideOutBr, slideOutTl],
-    [slideInBl, slideInTr],
-    [slideOutBl, slideOutTr],
-    [slideInTl, slideInBr],
-    [slideOutTl, slideOutBr],
-    [swingInTopFwd, swingInBottomFwd],
-    [swingOutTopFwd, swingOutBottomFwd],
-    [swingInRightFwd, swingInLeftFwd],
-    [swingOutRightFwd, swingOutLefttFwd],
-    [swingInLeftFwd, swingInRightFwd],
-    [swingOutLefttFwd, swingOutRightFwd],
-    [swingInBottomFwd, swingInTopFwd],
-    [swingOutBottomFwd, swingOutTopFwd],
-    [swingInTopBck, swingInBottomBck],
-    [swingOutTopBck, swingOutBottomBck],
-    [swingInRightBck, swingInLeftBck],
-    [swingOutRightBck, swingOutLeftBck],
-    [swingInBottomBck, swingInTopBck],
-    [swingOutBottomBck, swingOutTopBck],
-    [swingInLeftBck, swingInRightBck],
-    [swingOutLeftBck, swingOutRightBck],
-]);
-
-const horizontalAnimations: AnimationReferenceMetadata[] = [
-    flipRight,
-    flipLeft,
-    flipVerFwd,
-    flipVerBck,
-    rotateInRight,
-    rotateOutRight,
-    rotateInLeft,
-    rotateOutLeft,
-    rotateInTr,
-    rotateOutTr,
-    rotateInBr,
-    rotateOutBr,
-    rotateInBl,
-    rotateOutBl,
-    rotateInTl,
-    rotateOutTl,
-    scaleInRight,
-    scaleOutRight,
-    scaleInLeft,
-    scaleOutLeft,
-    scaleInTr,
-    scaleOutTr,
-    scaleInBr,
-    scaleOutBr,
-    scaleInBl,
-    scaleOutBl,
-    scaleInTl,
-    scaleOutTl,
-    scaleInHorLeft,
-    scaleOutHorLeft,
-    scaleInHorRight,
-    scaleOutHorRight,
-    slideInRight,
-    slideOutRight,
-    slideInLeft,
-    slideOutLeft,
-    slideInTr,
-    slideOutTr,
-    slideInBr,
-    slideOutBr,
-    slideInBl,
-    slideOutBl,
-    slideInTl,
-    slideOutTl,
-    swingInRightFwd,
-    swingOutRightFwd,
-    swingInLeftFwd,
-    swingOutLefttFwd,
-    swingInRightBck,
-    swingOutRightBck,
-    swingInLeftBck,
-    swingOutLeftBck,
-];
-const verticalAnimations: AnimationReferenceMetadata[] = [
-    flipTop,
-    flipBottom,
-    flipHorFwd,
-    flipHorBck,
-    growVerIn,
-    growVerOut,
-    rotateInTop,
-    rotateOutTop,
-    rotateInBottom,
-    rotateOutBottom,
-    rotateInTr,
-    rotateOutTr,
-    rotateInBr,
-    rotateOutBr,
-    rotateInBl,
-    rotateOutBl,
-    rotateInTl,
-    rotateOutTl,
-    scaleInTop,
-    scaleOutTop,
-    scaleInBottom,
-    scaleOutBottom,
-    scaleInTr,
-    scaleOutTr,
-    scaleInBr,
-    scaleOutBr,
-    scaleInBl,
-    scaleOutBl,
-    scaleInTl,
-    scaleOutTl,
-    scaleInVerTop,
-    scaleOutVerTop,
-    scaleInVerBottom,
-    scaleOutVerBottom,
-    slideInTop,
-    slideOutTop,
-    slideInBottom,
-    slideOutBottom,
-    slideInTr,
-    slideOutTr,
-    slideInBr,
-    slideOutBr,
-    slideInBl,
-    slideOutBl,
-    slideInTl,
-    slideOutTl,
-    swingInTopFwd,
-    swingOutTopFwd,
-    swingInBottomFwd,
-    swingOutBottomFwd,
-    swingInTopBck,
-    swingOutTopBck,
-    swingInBottomBck,
-    swingOutBottomBck,
-];
-
-
 /**
  * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
  * coalescing to an empty string.
@@ -835,11 +570,66 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
+    const base = parseFloat(globalThis.window?.getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
 }
 
 /** Get the size of the component as derived from the CSS size variable */
 export function getComponentSize(el: Element) {
     return globalThis.window?.getComputedStyle(el).getPropertyValue('--component-size');
+}
+
+/** Get the first item in an array */
+export function first<T>(arr: T[]) {
+    return arr.at(0) as T;
+}
+
+/** Get the last item in an array */
+export function last<T>(arr: T[]) {
+    return arr.at(-1) as T;
+}
+
+/** Calculates the modulo of two numbers, ensuring a non-negative result. */
+export function modulo(n: number, d: number) {
+    return ((n % d) + d) % d;
+}
+
+/**
+ * Splits an array into chunks of length `size` and returns a generator
+ * yielding each chunk.
+ * The last chunk may contain less than `size` elements.
+ *
+ * @example
+ * ```typescript
+ * const arr = [0,1,2,3,4,5,6,7,8,9];
+ *
+ * Array.from(chunk(arr, 2)) // [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
+ * Array.from(chunk(arr, 3)) // [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+ * Array.from(chunk([], 3)) // []
+ * Array.from(chunk(arr, -3)) // Error
+ * ```
+ */
+export function* intoChunks<T>(arr: T[], size: number) {
+  if (size < 1) {
+    throw new Error('size must be an integer >= 1');
+  }
+  for (let i = 0; i < arr.length; i += size) {
+    yield arr.slice(i, i + size);
+  }
+}
+
+/**
+ * @param size
+ * @returns string that represents the --component-size default value
+ */
+export function getComponentCssSizeVar(size: string) {
+    switch (size) {
+        case "1":
+            return 'var(--ig-size, var(--ig-size-small))';
+        case "2":
+            return 'var(--ig-size, var(--ig-size-medium))';
+        case "3":
+        default:
+            return 'var(--ig-size, var(--ig-size-large))';
+    }
 }

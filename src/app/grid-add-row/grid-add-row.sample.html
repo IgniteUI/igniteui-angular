@@ -1,14 +1,19 @@
 <div>
+    <button (click)="add()">ADD</button>
     <igx-grid
         #grid
         [data]="data"
         [width]="'800px'"
         [height]="'500px'"
-        [primaryKey]="'ID'"
+
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
         [rowEditable]="true"
         [allowFiltering]="true"
+        (rowAdd)="log($event)"
+        (rowAdded)="log($event)"
+        (rowDelete)="log($event)"
+        (rowDeleted)="log($event)"
     >
         <igx-column
             *ngFor="let c of columns"
@@ -25,7 +30,7 @@
 
         <igx-action-strip #actionstrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions [addRow]="false" [editRow]="false" [deleteRow]='false'></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true" [editRow]="false" [deleteRow]='true'></igx-grid-editing-actions>
         </igx-action-strip>
         <igx-paginator
             *ngIf="paging"
@@ -38,22 +43,22 @@
             <h1 igxCardHeaderTitle>Settings</h1>
         </igx-card-header>
         <igx-card-content>
-            <button igxButton="raised" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
-            <button igxButton="raised" (click)="paging = !paging">Paging {{paging}}</button>
+            <button igxButton="contained" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
+            <button igxButton="contained" (click)="paging = !paging">Paging {{paging}}</button>
             <igx-select [(ngModel)]="perPage">
                 <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
             </igx-select>
-            <button igxButton="raised" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
+            <button igxButton="contained" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
             <igx-input-group>
                 <input igxInput name="index" type="number" #indexInput/>
                 <label igxLabel for="index">Index</label>
             </igx-input-group>
-            <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
+            <button igxButton="contained" (click)="beginAddRowStart()">Add Row At Start</button>
             <igx-input-group>
                 <input igxInput name="string" type="string" #stringInput value="CENTC"/>
                 <label igxLabel for="string">PK</label>
             </igx-input-group>
-            <button igxButton="raised" (click)="beginAddRowById(stringInput.value)">Add Row For ID</button>
+            <button igxButton="contained" (click)="beginAddRowById(stringInput.value)">Add Row For ID</button>
         </igx-card-content>
     </igx-card>
 </div>

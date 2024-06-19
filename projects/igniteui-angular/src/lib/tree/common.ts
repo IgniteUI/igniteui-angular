@@ -1,5 +1,4 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
-import { DisplayDensity } from '../core/density';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
@@ -14,11 +13,10 @@ export interface IgxTree {
     /** @hidden @internal */
     rootNodes: IgxTreeNode<any>[];
     singleBranchExpand: boolean;
+    toggleNodeOnClick: boolean;
     selection: IgxTreeSelectionType;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
-    /** @hidden @internal */
-    displayDensity: DisplayDensity;
     /** @hidden @internal */
     forceSelect: IgxTreeNode<any>[];
     /** @hidden @internal */
@@ -101,7 +99,7 @@ export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
 }
 
 // Enums
-export const IgxTreeSelectionType = mkenum({
+export const IgxTreeSelectionType = /*@__PURE__*/mkenum({
     None: 'None',
     BiState: 'BiState',
     Cascading: 'Cascading'
@@ -109,5 +107,5 @@ export const IgxTreeSelectionType = mkenum({
 export type IgxTreeSelectionType = (typeof IgxTreeSelectionType)[keyof typeof IgxTreeSelectionType];
 
 // Token
-export const IGX_TREE_COMPONENT = new InjectionToken<IgxTree>('IgxTreeToken');
-export const IGX_TREE_NODE_COMPONENT = new InjectionToken<IgxTreeNode<any>>('IgxTreeNodeToken');
+export const IGX_TREE_COMPONENT = /*@__PURE__*/new InjectionToken<IgxTree>('IgxTreeToken');
+export const IGX_TREE_NODE_COMPONENT = /*@__PURE__*/new InjectionToken<IgxTreeNode<any>>('IgxTreeNodeToken');

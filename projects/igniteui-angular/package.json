@@ -69,29 +69,38 @@
         "tree"
     ],
     "dependencies": {
-        "@types/hammerjs": "^2.0.40",
-        "hammerjs": "^2.0.8",
         "fflate": "^0.8.1",
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^3.0.2",
         "lodash-es": "^4.17.21",
         "uuid": "^9.0.0",
-        "igniteui-theming": "^3.3.2",
+        "igniteui-theming": "^8.1.0",
         "@igniteui/material-icons-extended": "^3.0.0"
     },
     "peerDependencies": {
-        "@angular/common": "^16.0.0",
-        "@angular/core": "^16.0.0",
-        "@angular/animations": "^16.0.0",
-        "@angular/forms": "^16.0.0"
+        "@angular/common": "18",
+        "@angular/core": "18",
+        "@angular/animations": "18",
+        "@angular/forms": "18",
+        "hammerjs": "^2.0.8",
+        "@types/hammerjs": "^2.0.40"
+    },
+    "peerDependenciesMeta": {
+        "hammerjs": {
+            "optional": true
+        },
+        "@types/hammerjs": {
+            "optional": true
+        }
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~16.0.1200"
+        "@igniteui/angular-schematics": "~18.0.1330"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",
         "packageGroup": [
             "igniteui-angular",
+            "igniteui-angular-extras",
             "igniteui-angular-i18n"
         ]
     },
@@ -112,5 +121,6 @@
         "./themes": {
             "sass": "./lib/core/styles/themes/_index.scss"
         }
-    }
+    },
+    "sideEffects": false
 }

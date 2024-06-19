@@ -1,7 +1,7 @@
-import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DisplayDensity, FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
 
 @Component({
@@ -13,6 +13,10 @@ import { DisplayDensity, FilterMode, FilteringExpressionsTree, FilteringLogic, G
     imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, NgFor, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -21,9 +25,9 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
 
     public data: Array<any>;
     public columns: Array<any>;
-    public displayDensities;
+    public sizes;
     public filterModes;
-    public density: DisplayDensity = 'comfortable';
+    public size = 'large';
     public selectionMode;
 
     constructor(private cdr: ChangeDetectorRef) {
@@ -63,10 +67,10 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
 
         this.filterModes = [
@@ -535,7 +539,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public selectFilterMode(event) {

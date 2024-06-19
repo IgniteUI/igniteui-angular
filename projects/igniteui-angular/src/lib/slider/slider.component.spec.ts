@@ -9,10 +9,12 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
 
-declare let Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
+const THUMB_TAG = 'igx-thumb';
 const THUMB_TO_CLASS = '.igx-slider-thumb-to';
+const THUMB_TO_PRESSED_CLASS = '.igx-slider-thumb-to--pressed';
 const THUMB_FROM_CLASS = '.igx-slider-thumb-from';
+const THUMB_LABEL = 'igx-thumb-label';
 const SLIDER_TICKS_ELEMENT = '.igx-slider__ticks';
 const SLIDER_TICKS_TOP_ELEMENT = '.igx-slider__ticks--top';
 const SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME = 'igx-slider__ticks-group--tall';
@@ -415,46 +417,57 @@ describe('IgxSlider', () => {
             expect(sliderInstance.maxValue).toEqual(expectedMax);
         });
 
-        it('continuous(smooth) sliding should be allowed', (done) => {
-            pending(`panRight trigers pointerdown where we are capturing all pointer events by passing a valid pointerId.
-                Pan guesture does not propagate that option. Respectively (no active pointer...) error is thrown.`);
+        it('continuous(smooth) sliding should be allowed', async() => {
             sliderInstance.continuous = true;
+            sliderInstance.thumbLabelVisibilityDuration = 10;
             fixture.detectChanges();
 
             expect(sliderInstance.continuous).toBe(true);
             expect(sliderInstance.value).toBe(150);
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: 200 }));
+            const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
+            const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
+            const startX = sliderX + sliderWidth / 2;
+
+            thumbEl.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
-            expect(sliderEl).toBeDefined();
-            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
-            .then(() => {
-                fixture.detectChanges();
-                const activeThumb = fixture.debugElement.query(By.css('.igx-slider-thumb-to--active'));
-                expect(sliderInstance.value).toBeGreaterThan(150);
-                expect(activeThumb).toBeNull();
-                done();
-            });
+
+            (sliderInstance as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            fixture.detectChanges();
+            await wait();
+
+            let activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            expect(activeThumb).not.toBeNull();
+            expect(sliderInstance.value).toBeGreaterThan(sliderInstance.minValue);
+
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+            await wait();
+
+            expect(sliderInstance.value).toEqual(sliderInstance.minValue);
         });
 
-        it('should not move thumb slider and value should remain the same when slider is disabled', (done) => {
-            pending(`panRight trigers pointerdown where we are capturing all pointer events by passing a valid pointerId.
-                Pan guesture does not propagate that option. Respectively (no active pointer...) error is thrown.`);
+        it('should not move thumb slider and value should remain the same when slider is disabled', async() => {
             sliderInstance.disabled = true;
             fixture.detectChanges();
 
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent( new MouseEvent('mosedown'));
+            const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
+            const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
+            const startX = sliderX + sliderWidth / 2;
+
+            thumbEl.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
-            expect(sliderEl).toBeDefined();
-            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
-            .then(() => {
-                fixture.detectChanges();
-                const activeThumb = fixture.debugElement.query(By.css('.igx-slider-thumb-to--active'));
-                expect(activeThumb).toBeDefined();
-                expect(sliderInstance.value).toBe(sliderInstance.minValue);
-                done();
-            });
+
+            (sliderInstance as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+
+            (sliderInstance as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            fixture.detectChanges();
+            await wait();
+
+            expect(sliderInstance.value).toBe(sliderInstance.minValue);
          });
     });
 
@@ -474,32 +487,27 @@ describe('IgxSlider', () => {
             expect((slider.value as IRangeSliderValue).upper).toBe(slider.upperBound);
         });
 
-        it('continuous(smooth) sliding should be allowed', (done) => {
-            pending(`panRight trigers pointerdown where we are capturing all pointer events by passing a valid pointerId.
-                Pan guesture does not propagate that option. Respectively (no active pointer...) error is thrown.`);
-            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+        it('continuous(smooth) sliding should be allowed', async() => {
             slider.continuous = true;
             fixture.detectChanges();
 
-            expect(slider.continuous).toBe(true);
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const { x: sliderX, width: sliderWidth } = fromThumb.getBoundingClientRect();
+            const startX = sliderX + sliderWidth / 2;
 
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
-            fixture.detectChanges();
             fromThumb.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
-            expect(sliderEl).toBeDefined();
-            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
-            .then(() => {
-                fixture.detectChanges();
-                const activetoThumb = fixture.debugElement.query(By.css('.igx-slider-thumb-to--active'));
-                const activefromThumb = fixture.debugElement.query(By.css('.igx-slider-thumb-from--active'));
-                expect(slider.value).toEqual({ lower: 60, upper: 100 });
-                expect(activetoThumb).toBeNull();
-                expect(activefromThumb).toBeNull();
-                done();
-            });
+            (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
+            fixture.detectChanges();
+            await wait();
+
+            (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            fixture.detectChanges();
+            await wait();
+
+            expect((slider.value as any).lower).toBeGreaterThan(slider.minValue);
+            expect((slider.value as any).upper).toEqual(slider.maxValue);
         });
 
         // K.D. Removing this functionality because of 0 benefit and lots of issues.
@@ -1754,8 +1762,8 @@ describe('IgxSlider', () => {
             fix.detectChanges();
 
             const inst = fix.componentInstance;
-            const thumbs = fix.debugElement.queryAll(By.css('igx-thumb'));
-            const labels = fix.debugElement.queryAll(By.css('igx-thumb-label'));
+            const thumbs = fix.debugElement.queryAll(By.css(THUMB_TAG));
+            const labels = fix.debugElement.queryAll(By.css(THUMB_LABEL));
 
             expect(inst.dir.rtl).toEqual(true);
 
@@ -1809,44 +1817,38 @@ describe('IgxSlider', () => {
         it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.componentInstance.updateOn = 'blur';
+            fixture.componentInstance.value = 0;
             fixture.detectChanges();
-            tick();
 
             const slider = fixture.componentInstance.slider;
-            const thumb = fixture.nativeElement.querySelector('igx-thumb');
 
-            expect(slider.value).toBe(fixture.componentInstance.value);
+            const thumbEl = fixture.debugElement.query(By.css(THUMB_TAG)).nativeElement;
+            const { x: sliderX, width: sliderWidth } = thumbEl.getBoundingClientRect();
+            const startX = sliderX + sliderWidth / 2;
 
-            thumb.dispatchEvent(new Event('focus'));
+            thumbEl.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
-            slider.value = 30;
-            fixture.detectChanges();
-            tick();
-            expect(slider.value).not.toBe(fixture.componentInstance.value);
-
-            thumb.dispatchEvent(new Event('blur'));
+            (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
             fixture.detectChanges();
             tick();
-            expect(slider.value).toBe(fixture.componentInstance.value);
+
+            (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
+            fixture.detectChanges();
+            tick();
+
+            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            expect(activeThumb).not.toBeNull();
+            expect(fixture.componentInstance.value).not.toBeGreaterThan(0);
+
+            thumbEl.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.value).toBeGreaterThan(0);
         }));
     });
 
-    const panRight = (element, elementHeight, elementWidth, duration) => {
-        const panOptions = {
-            deltaX: elementWidth * 0.6,
-            clientX: elementWidth * 0.6,
-            deltaY: 0,
-            duration,
-            pos: [element.offsetLeft, elementHeight * 0.5]
-        };
-
-        return new Promise<void>(resolve => {
-            Simulator.gestures.pan(element, panOptions, () => {
-                resolve(null);
-            });
-        });
-    };
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
@@ -2020,7 +2022,7 @@ class RangeSliderWithCustomTemplateComponent {
 @Component({
     template: `
         <form #form="ngForm">
-            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn }"></igx-slider>
+            <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
     standalone: true,

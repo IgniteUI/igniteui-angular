@@ -1,0 +1,11 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$disabled-color",
+            "replaceWith": "$disabled-text-color",
+            "owner": "expansion-panel-theme",
+            "type": "property"
+        }
+    ]
+}

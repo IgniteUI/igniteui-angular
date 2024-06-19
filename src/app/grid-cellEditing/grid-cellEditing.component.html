@@ -1,9 +1,9 @@
 <h4 class="sample-title">Grid with primary key ProductID</h4>
 
 <div class="density-chooser">
-    <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
 </div>
-<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" width="1500px" height="550px" [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
@@ -32,18 +32,18 @@
     </igx-column>
     <igx-paginator></igx-paginator>
 </igx-grid>
-<input igxButton="raised" id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
-<button igxButton="raised" (click)="addRow()">Add Row</button>
-<button igxButton="raised" (click)="updateCell()">Update Cell</button>
-<button igxButton="raised" (click)="pin()">Pin/Unpin</button>
-<button igxButton="raised" (click)="hideColumn()">Hide/Show OrderDate</button>
-<button igxButton="raised" (click)="updateSpecificRow()">Update Row by ID</button>
-<button igxButton="raised" (click)="enDisSummaries()">Enable/DisableSummaries</button>
-<button igxButton="raised" (click)="kk = !kk">groupable</button>
-<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
+<input igxButton="contained" id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
+<button igxButton="contained" (click)="addRow()">Add Row</button>
+<button igxButton="contained" (click)="updateCell()">Update Cell</button>
+<button igxButton="contained" (click)="pin()">Pin/Unpin</button>
+<button igxButton="contained" (click)="hideColumn()">Hide/Show OrderDate</button>
+<button igxButton="contained" (click)="updateSpecificRow()">Update Row by ID</button>
+<button igxButton="contained" (click)="enDisSummaries()">Enable/DisableSummaries</button>
+<button igxButton="contained" (click)="kk = !kk">groupable</button>
+<button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
 <input type="text" [(ngModel)]="pname">
 <h4 class="sample-title">Grid without PK</h4>
-<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" class="grid-size" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.id.rowIndex)">Delete</button>
@@ -67,5 +67,5 @@
     </igx-column>
     <igx-paginator [perPage]="10"></igx-paginator>
 </igx-grid>
-<button igxButton="raised" (click)="moveColumns()">Move OrderDate and ProductName</button>
-<button igxButton="raised" (click)="updateSelectedCell()">Update Selected Cell</button>
+<button igxButton="contained" (click)="moveColumns()">Move OrderDate and ProductName</button>
+<button igxButton="contained" (click)="updateSelectedCell()">Update Selected Cell</button>

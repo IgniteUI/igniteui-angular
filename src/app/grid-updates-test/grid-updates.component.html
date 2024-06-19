@@ -1,8 +1,7 @@
-<button igxButton="raised" (click)="update()">Update</button>
-<button igxButton="raised" (click)="stop()">Stop</button>
+<button igxButton="contained" (click)="update()">Update</button>
+<button igxButton="contained" (click)="stop()">Stop</button>
 
 <igx-grid
-    displayDensity="compact"
     width="800px" height = "400px"
     [data]="data"
     [allowFiltering]="true"

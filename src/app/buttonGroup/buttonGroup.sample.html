@@ -6,7 +6,7 @@
         <igx-buttongroup
             [selectionMode]="'single'"
             [values]="alignOptions"
-            displayDensity="compact"
+            [style.--ig-size]="'var(--ig-size-small)'"
         ></igx-buttongroup>
         <br />
         <span class="ig-typography__body-2"
@@ -95,9 +95,9 @@
         <igx-buttongroup
             [selectionMode]="'single'"
             [alignment]="alignment"
-            displayDensity="compact"
+            [style.--ig-size]="'var(--ig-size-small)'"
         >
-            <button igxButton displayDensity="comfortable">
+            <button igxButton [style.--ig-size]="'var(--ig-size-large)'">
                 <igx-icon>alarm_on</igx-icon>
                 <span>Button 1 text</span>
             </button>
@@ -189,14 +189,14 @@
         </igx-buttongroup>
         <div igxLayout igxLayoutJustify="flex-end">
             <button
-                igxButton="raised"
+                igxButton="contained"
                 (click)="switchContent()"
                 style="margin: 16px 8px 0 0"
             >
                 Move Selection
             </button>
             <button
-                igxButton="raised"
+                igxButton="contained"
                 (click)="selectLast()"
                 style="margin: 16px 0 0 8px"
             >

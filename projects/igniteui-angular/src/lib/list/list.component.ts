@@ -12,8 +12,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    Optional,
-    Inject, Directive
+    Directive,
+    booleanAttribute
 } from '@angular/core';
 
 
@@ -27,10 +27,9 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
-import { IListResourceStrings } from '../core/i18n/list-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IListResourceStrings, ListResourceStringsEN } from '../core/i18n/list-resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -70,7 +69,7 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
     selector: '[igxListThumbnail]',
     standalone: true
 })
-export class IgxListThumbnailDirective {}
+export class IgxListThumbnailDirective { }
 
 /**
  * igxListAction is container for the List action
@@ -81,7 +80,7 @@ export class IgxListThumbnailDirective {}
     selector: '[igxListAction]',
     standalone: true
 })
-export class IgxListActionDirective {}
+export class IgxListActionDirective { }
 
 /**
  * igxListLine is container for the List text content
@@ -92,7 +91,7 @@ export class IgxListActionDirective {}
     selector: '[igxListLine]',
     standalone: true
 })
-export class IgxListLineDirective {}
+export class IgxListLineDirective { }
 
 /**
  * igxListLineTitle is a directive that add class to the target element
@@ -298,7 +297,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isLeftPanningAllowed = this.list.allowLeftPanning;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override allowLeftPanning = false;
 
     /**
@@ -315,7 +314,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isRightPanningAllowed = this.list.allowRightPanning;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override allowRightPanning = false;
 
     /**
@@ -333,7 +332,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * let isLoading = this.list.isLoading;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public isLoading = false;
 
     /**
@@ -403,8 +402,8 @@ export class IgxListComponent extends IgxListBaseDirective {
      * <igx-list (resetPan)="resetPan($event)"></igx-list>
      * ```
      */
-     @Output()
-     public override resetPan = new EventEmitter<IgxListComponent>();
+    @Output()
+    public override resetPan = new EventEmitter<IgxListComponent>();
 
     /**
      *
@@ -449,7 +448,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
+    private _resourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
      * Sets the resource strings.
@@ -467,9 +466,8 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this._resourceStrings;
     }
 
-    constructor(public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions, element);
+    constructor(public element: ElementRef) {
+        super(element);
     }
 
     /**
@@ -524,14 +522,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
         return !this.isListEmpty;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        if (!this.isListEmpty) {
-            return this.getComponentSizeStyles();
-        }
     }
 
     /**

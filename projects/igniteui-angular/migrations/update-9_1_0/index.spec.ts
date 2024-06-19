@@ -31,8 +31,7 @@ describe('Update 9.1.0', () => {
             '<igx-input-group [supressInputAutofocus]="true"><input igxInput></igx-input-group>'
         );
 
-        const tree = await schematicRunner.runSchematicAsync('migration-15', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-15', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
             .toEqual('<igx-input-group [suppressInputAutofocus]="true"><input igxInput></igx-input-group>');
@@ -45,8 +44,7 @@ describe('Update 9.1.0', () => {
             '<igx-toast message="test message"></igx-toast>'
         );
 
-        const tree = await schematicRunner.runSchematicAsync('migration-15', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-15', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
         .toEqual('<igx-toast>test message</igx-toast>');
@@ -60,8 +58,7 @@ describe('Update 9.1.0', () => {
             `<igx-grid [rowSelectable]="true"></igx-grid>`
         );
 
-        const tree = await schematicRunner.runSchematicAsync('migration-15', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-15', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
         .toEqual(`<igx-grid rowSelection="multiple"></igx-grid>`);
@@ -86,8 +83,7 @@ describe('Update 9.1.0', () => {
 <h5 style="margin-top: 30px;">rowSelectable="multiple"</h5>
 <igx-grid rowSelectable="true" >`);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-15', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-15', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
         .toEqual(`<h5 style="margin-top: 30px;">[rowSelectable]="true"</h5>

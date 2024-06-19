@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, ContentChild, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -59,13 +59,13 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     /**
      * Show entry for CSV export.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public exportCSV = true;
 
     /**
      * Show entry for Excel export.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public exportExcel = true;
 
     /**

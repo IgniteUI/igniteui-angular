@@ -287,11 +287,6 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
-## Display Density
-**igx-combo** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possible display densities are `compact`, `cosy` and `comfortable` (default).
-Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
-
 ## API
 
 ### Inputs
@@ -299,7 +294,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | Name                  | Description                                       | Type                        |
 |-----------------------|---------------------------------------------------|-----------------------------|
 | `id`                  | combo id                                          | string                      |
-| `data`                | combo data source                                 | any                         |
+| `data`                | combo data source                                 | any[]                       |
 | `allowCustomValue`    | enables/disables combo custom value               | boolean                     |
 | `filterable`          | enables/disables combo drop down filtering - enabled by default | boolean       |
 | `showSearchCaseIcon`  | defines whether the search case-sensitive icon should be displayed - disabled by default | boolean |
@@ -309,7 +304,6 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `virtualizationState` | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize` | `IForOfState` |
 | `totalItemCount`      | total count of the virtual data items, when using remote service | number       |
 | `width `              | defines combo width                               | string                      |
-| `displayDensity`      | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
 | `itemsMaxHeight `     | defines drop down maximum height                  | number                      |
 | `itemsWidth `         | defines drop down width                           | string                      |
 | `itemHeight `         | defines drop down item height                     | number                      |
@@ -328,7 +322,9 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 ### Getters
 | Name                     | Description                                       | Type                        |
 |--------------------------|---------------------------------------------------|-----------------------------|
-|  `value`                 | the value of the combo text field                 | string                      |
+|  `displayValue`          | the value of the combo text field                 | string                      |
+|  `value`                 | the value of the combo                            | any[]                       |
+|  `selection`             | the selected items of the combo                   | any[]                       |
 
 ### Outputs
 

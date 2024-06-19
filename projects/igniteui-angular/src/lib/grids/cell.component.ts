@@ -16,7 +16,8 @@
     Inject,
     ViewChildren,
     QueryList,
-    AfterViewInit
+    AfterViewInit,
+    booleanAttribute
 } from '@angular/core';
 import { formatPercent, NgIf, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -484,7 +485,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Returns whether the cell is in edit mode.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-grid__td--editing')
     public editMode = false;
 
@@ -539,7 +540,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
         const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
-       return !this.intRow.deleted && isInvalid;
+        return !this.intRow.deleted && isInvalid;
     }
 
     /**
@@ -838,18 +839,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
-    @HostListener('contextmenu', ['$event'])
-    public onContextMenu(event: MouseEvent) {
-        this.grid.contextMenu.emit({
-            cell: this.getCellType(),
-            event
-        });
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public ngOnInit() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
@@ -942,9 +931,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * @hidden @internal
      */
-     private resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
+    private resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
         const overlay = this.overlayService.getOverlayById(overlayId);
-        if(!overlay) return;
+        if (!overlay) return;
         overlay.initialSize.width = newSize;
         overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
         this.overlayService.reposition(overlayId);

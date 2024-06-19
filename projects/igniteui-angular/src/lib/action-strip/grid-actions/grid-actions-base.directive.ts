@@ -1,5 +1,5 @@
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers } from '@angular/core';
+import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
@@ -27,7 +27,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      *  <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public asMenuItems = false;
 
     /** @hidden @internal **/

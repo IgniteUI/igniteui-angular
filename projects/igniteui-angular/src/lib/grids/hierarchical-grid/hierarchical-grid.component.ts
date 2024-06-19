@@ -1,9 +1,11 @@
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -39,7 +41,8 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import type { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxPaginatorToken } from '../../paginator/token';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -63,13 +66,9 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxActionStripToken } from '../../action-strip/token';
 
 let NEXT_ID = 0;
-
-export interface HierarchicalStateRecord {
-    rowID: any;
-}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,7 +127,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public index: number;
 
     /* blazorSuppress */
-    @ViewChild('container', {read: ViewContainerRef, static: true})
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     /**
@@ -379,7 +378,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPaginatorComponent, { descendants: true })
+    @ContentChildren(IgxPaginatorToken, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
     /** @hidden @internal */
@@ -441,8 +440,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     /** @hidden @internal */
-    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripComponent>;
+    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -469,7 +468,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /* treatAsRef */
     /**
-     * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
@@ -502,7 +501,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /** @hidden @internal */
-    public override get excelStyleFilteringComponent() : IgxGridExcelStyleFilteringComponent {
+    public override get excelStyleFilteringComponent(): IgxGridExcelStyleFilteringComponent {
         return this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents.first :
             super.excelStyleFilteringComponent;
@@ -530,14 +529,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Sets if all immediate children of the `IgxHierarchicalGridComponent` should be expanded/collapsed.
-     * Defult value is false.
+     * Default value is false.
      * ```html
      * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
      * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.expansionStates = new Map<any, boolean>();
@@ -657,14 +656,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
 
         if (this.parent) {
-            this._displayDensity = this.rootGrid.displayDensity;
-            this.summaryService.summaryHeight = 0;
-            this.rootGrid.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this._displayDensity = this.rootGrid.displayDensity;
-                this.summaryService.summaryHeight = 0;
-                this.notifyChanges(true);
-                this.cdr.markForCheck();
-            });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
 
@@ -1155,7 +1146,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             return topCols;
         } else {
-           return this.columnList.toArray()
+            return this.columnList.toArray()
         }
     }
 

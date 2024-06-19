@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     DoCheck,
@@ -86,7 +87,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * this.grid.selectedRows[0].pinned = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-grid__tr--disabled')
     public disabled = false;
@@ -151,10 +152,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             height = height * maxRowSpan;
         }
         return this.addRowUI ? height : null;
-    }
-
-    public get cellHeight() {
-        return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
     }
 
     /**
@@ -228,7 +225,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-     public get columns(): ColumnType[] {
+    public get columns(): ColumnType[] {
         return this.grid.visibleColumns;
     }
 
@@ -390,6 +387,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
+        this.grid.rowClick.emit({
+            row: this,
+            event
+        });
+
         if (this.grid.rowSelection === 'none' || this.deleted || !this.grid.selectRowOnClick) {
             return;
         }
@@ -405,6 +407,20 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         } else {
             this.selectionService.selectRowById(this.key, clearSelection, event);
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('contextmenu', ['$event'])
+    public onContextMenu(event: MouseEvent) {
+        const cell = (event.target as HTMLElement).closest('.igx-grid__td');
+        this.grid.contextMenu.emit({
+            row: this,
+            cell: this.cells.find(c => c.nativeElement === cell),
+            event
+        });
     }
 
     /**

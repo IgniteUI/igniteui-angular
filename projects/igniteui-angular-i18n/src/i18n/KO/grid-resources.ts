@@ -165,8 +165,7 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: '항목은 {0} 자 이상이어야합니다',
     igx_grid_max_length_validation_error: '항목은 {0} 자 이상이어야합니다',
     igx_grid_email_validation_error: '유효한 이메일 주소를 입력해야합니다',
-    igx_grid_pattern_validation_error: '항목이 필요한 패턴과 일치하지 않습니다',
-    igx_grid_pivot_no_aggregator: '{0} 에 유효한 집계 가 없습니다. 유효한 "aggregatorName" 또는 "aggregator" 를 설정하십시오.'
+    igx_grid_pattern_validation_error: '항목이 필요한 패턴과 일치하지 않습니다'
 };
 
 

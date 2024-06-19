@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IgxButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToggleActionDirective } from 'igniteui-angular';
+import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToggleActionDirective } from 'igniteui-angular';
 
 
 @Component({
@@ -7,7 +7,7 @@ import { IgxButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToggleActi
     styleUrls: ['./pageHeading.styles.scss'],
     templateUrl: './pageHeading.template.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxToggleActionDirective, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxToggleActionDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class PageHeaderComponent {
     @Input()

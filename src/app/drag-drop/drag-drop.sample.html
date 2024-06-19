@@ -25,12 +25,12 @@
         <h4 class="sample-title">Ghost and base templating:</h4>
         <div class="dragRow">
             <div style="width: 500px; height: 300px;">
-                <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
+                <div [igxDrag]="{ id: 'customGhost'}" [ghostClass]="'customGhost'" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
                     [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                     (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                     <span *ngIf="!customDragged">Drag me</span>
                     <ng-template #dragGhost>
-                        <div class="customGhost">
+                        <div>
                             <span *ngIf="!ghostInDropArea">Weeeee</span>
                             <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
                             <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
@@ -57,7 +57,7 @@
         </div>
         <br>
         <h4 class="sample-title">Drag Handle:</h4>
-        <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
+        <button igxButton="contained" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
         <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="320"
              igxDrag [ghost]="false" [dragTolerance]="0" [dragChannel]="'dialog'">
             <div class="igx-dialog__window">
@@ -145,8 +145,8 @@
             </div>
         </div>
         <div>
-            <button igxButton="raised" igxRipple (click)="toOriginNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
-            <button igxButton="raised" igxRipple (click)="toLocationNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+            <button igxButton="contained" igxRipple (click)="toOriginNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+            <button igxButton="contained" igxRipple (click)="toLocationNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
         </div>
 
         <ng-template #dragGhostAnimTemplate>
@@ -190,8 +190,8 @@
             </div>
         </div>
         <div>
-            <button igxButton="raised" igxRipple (click)="toOriginGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
-            <button igxButton="raised" igxRipple (click)="toLocationGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+            <button igxButton="contained" igxRipple (click)="toOriginGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+            <button igxButton="contained" igxRipple (click)="toLocationGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
         </div>
 
         <p>Ghost dragging with host - transition to location:</p>
@@ -203,8 +203,8 @@
             </div>
         </div>
         <div>
-            <button igxButton="raised" igxRipple (click)="toOriginGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
-            <button igxButton="raised" igxRipple (click)="toLocationGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+            <button igxButton="contained" igxRipple (click)="toOriginGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+            <button igxButton="contained" igxRipple (click)="toLocationGhostWithHost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
         </div>
         <!-- In order to test the ghostHost with window scroll position, set scroll to the body as well -->
         <div #fixedHost style="position: fixed; padding-top: 100px;"></div>
@@ -293,7 +293,7 @@
     <article class="sample-column">
         <h4>Drag and drop elements overlapping grid in shadow dom:</h4>
 
-        <button #buttonElement igxButton="raised" (click)="openOverlappingDialog()">Show Dialog</button>
+        <button #buttonElement igxButton="contained" (click)="openOverlappingDialog()">Show Dialog</button>
 
         <div igxToggle #toggleForm1="toggle" class="igx-dialog" [style.width.px]="320" igxDrag [ghost]="false"
             [dragTolerance]="0" [dragChannel]="'dialog'">

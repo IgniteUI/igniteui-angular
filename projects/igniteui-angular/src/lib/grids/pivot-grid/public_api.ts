@@ -1,4 +1,3 @@
-import { IGX_GRID_COMMON_DIRECTIVES } from '../public_api';
 import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
@@ -81,5 +80,68 @@ export const IGX_PIVOT_GRID_DIRECTIVES = [
     IgxPivotGridComponent,
     IgxPivotDataSelectorComponent,
     IgxPivotValueChipTemplateDirective,
-    ...IGX_GRID_COMMON_DIRECTIVES
+    // IGX_GRID_COMMON_DIRECTIVES:
+    IgxRowDirective,
+    IgxGridFooterComponent,
+    IgxAdvancedFilteringDialogComponent,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective,
+    IgxExcelStyleHeaderIconDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    IgxDragIndicatorIconDirective,
+    IgxRowDragGhostDirective,
+    IgxGridStateDirective,
+    // IGX_GRID_HEADERS_DIRECTIVES:
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    // IGX_GRID_COLUMN_DIRECTIVES:
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellFooterTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    // IGX_GRID_COLUMN_ACTIONS_DIRECTIVES:
+    IgxColumnActionsComponent,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective,
+    // IGX_GRID_SELECTION_DIRECTIVES:
+    IgxRowSelectorDirective,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    // IGX_GRID_TOOLBAR_DIRECTIVES:
+    IgxCSVTextDirective,
+    IgxExcelTextDirective,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarDirective,
+    // IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES:
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleHeaderComponent,
+    IgxExcelStyleSortingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleHidingComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxExcelStyleClearFiltersComponent,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective
 ] as const;

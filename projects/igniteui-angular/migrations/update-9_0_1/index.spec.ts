@@ -37,8 +37,7 @@ describe('Update 9.0.1', () => {
 );
 `);
     const tree = await _schematicRunner
-        .runSchematicAsync(migrationName, {}, appTree)
-        .toPromise();
+        .runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(

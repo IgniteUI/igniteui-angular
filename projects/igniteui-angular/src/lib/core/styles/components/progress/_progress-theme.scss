@@ -98,6 +98,8 @@
     );
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin progress-linear($theme) {
     @include css-vars($theme);
@@ -143,6 +145,10 @@
         width: 100%;
         flex: 1 1 100%;
         flex-direction: column;
+
+        @if $variant == 'indigo-design' {
+            gap: rem(4px);
+        }
 
         &[dir='rtl'],
         [dir='rtl'] & {
@@ -253,6 +259,11 @@
         color: var-get($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(12px);
+            line-height: rem(16px);
+        }
     }
 
     %linear-value--start {
@@ -432,6 +443,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin progress-circular($theme) {
     // Include rotate animation
@@ -445,7 +458,7 @@
         material: rem(4px),
         fluent: rem(4px),
         bootstrap: rem(8px),
-        indigo-design: rem(6px),
+        indigo-design: rem(4px),
     ), $variant);
 
     %circular-display {
@@ -454,6 +467,11 @@
         width: rem(32px);
         height: rem(32px);
         position: relative;
+
+        @if $variant == 'indigo-design' {
+            width: rem(48px);
+            height: rem(48px);
+        }
 
         svg {
             width: 100%;
@@ -486,7 +504,7 @@
         stroke-dasharray: 289;
 
         @if $variant == 'indigo-design' {
-            stroke-linecap: round;
+            stroke-width: calc($stroke-width + rem(1px));
         }
     }
 
@@ -508,7 +526,12 @@
         line-height: 1;
         text-align: center;
         font-weight: 600;
-        fill: var-get($theme, 'text-color');
+        color: var-get($theme, 'text-color');
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(12px);
+            line-height: rem(16px);
+        }
     }
 
     %circular-text--hidden {

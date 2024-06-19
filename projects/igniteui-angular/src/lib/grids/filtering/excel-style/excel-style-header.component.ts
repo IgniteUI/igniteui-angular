@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, booleanAttribute } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { NgIf, NgClass } from '@angular/common';
+import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
 /**
  * A component used for presenting Excel style header UI.
@@ -11,7 +12,7 @@ import { NgIf, NgClass } from '@angular/common';
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonDirective, NgClass, IgxIconComponent]
+    imports: [NgIf, IgxButtonDirective, NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {
     /**
@@ -23,7 +24,7 @@ export class IgxExcelStyleHeaderComponent {
      * <igx-excel-style-header [showPinning]="true"></igx-excel-style-header>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showPinning: boolean;
 
     /**
@@ -35,7 +36,7 @@ export class IgxExcelStyleHeaderComponent {
      * <igx-excel-style-header [showSelecting]="true"></igx-excel-style-header>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showSelecting: boolean;
 
     /**
@@ -47,7 +48,7 @@ export class IgxExcelStyleHeaderComponent {
      * <igx-excel-style-header [showHiding]="true"></igx-excel-style-header>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showHiding: boolean;
 
     constructor(public esf: BaseFilteringComponent) { }

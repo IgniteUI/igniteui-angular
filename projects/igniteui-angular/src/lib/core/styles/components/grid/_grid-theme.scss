@@ -591,6 +591,8 @@
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
@@ -1429,6 +1431,11 @@
         color: inherit;
         text-align: start;
         background-clip: border-box !important;
+        min-height: sizable(
+            rem(32px),
+            rem(40px),
+            rem(50px)
+        );
     }
 
     // This is no longer being extended and is left
@@ -2293,7 +2300,7 @@
             background: transparent;
         }
 
-        %igx-button--icon {
+        %igx-icon-button-display {
             width: rem(28px);
             height: rem(28px);
             color: var-get($theme, 'expand-all-icon-color');
@@ -2301,7 +2308,7 @@
 
         &:focus,
         &:hover {
-            %igx-button--icon {
+            %igx-icon-button-display {
                 color: var-get($theme, 'expand-all-icon-hover-color');
             }
         }
@@ -2654,6 +2661,16 @@
                 }
             }
         }
+
+        [igxIconButton] {
+            --ig-size: 1;
+        }
+
+        @if ($variant == 'bootstrap') {
+            [igxButton] {
+                margin: rem(4px);
+            }
+        }
     }
 
     %igx-grid__filtering-dropdown-items {
@@ -2934,6 +2951,7 @@
 
     // Pivot grid
     %igx-grid__pivot--super-compact {
+        --ig-size: 1 !important;
         %grid-cell-display,
         %grid-cell-header {
             padding: 0 rem(4px) !important;
@@ -3037,6 +3055,15 @@
         border-bottom: 0;
     }
 
+    %igx-grid__tr-pivot--small-row-area {
+        height: var(--header-size);
+        align-items: flex-end;
+
+        border-inline-start: 0;
+        border-inline-end: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
     %igx-grid__tr-pivot--filter-container {
         display: flex;
         flex-direction: column;
@@ -3094,6 +3121,33 @@
                 align-items: center;
             }
         }
+
+        igx-pivot-row-header-group {
+            padding-left: pad-inline(
+                map.get($grid-header-padding-inline, 'compact'),
+                map.get($grid-header-padding-inline, 'cosy'),
+                map.get($grid-header-padding-inline, 'comfortable')
+            );
+
+            igx-pivot-row-dimension-header {
+                align-items: center;
+
+                .igx-grid-th__icons {
+                    padding-right: pad-inline(
+                        map.get($grid-header-padding-inline, 'compact'),
+                        map.get($grid-header-padding-inline, 'cosy'),
+                        map.get($grid-header-padding-inline, 'comfortable')
+                    );
+                }
+            }
+
+            &:last-of-type {
+                igx-pivot-row-dimension-header {
+                    border-inline-end: 0;
+                }
+            }
+        }
     }
+
     // Pivot grid END
 }

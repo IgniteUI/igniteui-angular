@@ -15,6 +15,7 @@ import { IgxSelectItemComponent } from '../../../select/select-item.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxSelectComponent } from '../../../select/select.component';
+import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
 /**
  * @hidden
@@ -23,7 +24,7 @@ import { IgxSelectComponent } from '../../../select/select.component';
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html',
     standalone: true,
-    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective]
+    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
     @ViewChild('input', { read: IgxInputDirective, static: false })

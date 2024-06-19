@@ -1,24 +1,21 @@
 import {
-  AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-  EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
-  OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-  SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
+    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
+    EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
+    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
+    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
 import { NgTemplateOutlet, NgIf } from '@angular/common';
 import {
-  AbstractControl, ControlValueAccessor, NgControl,
-  NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
+    AbstractControl, ControlValueAccessor, NgControl,
+    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
 
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -26,16 +23,18 @@ import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-  IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+    IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE
 } from '../input-group/public_api';
 import {
-  AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
-  OverlaySettings, PositionSettings
+    AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
+    OverlaySettings, PositionSettings
 } from '../services/public_api';
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -107,7 +106,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [hideOutsideDays]="true"></igx-date-range-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
 
     /**
@@ -130,11 +129,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public formatter: (val: DateRange) => string;
 
     /**
-     * The default text of the calendar dialog `done` button.
+     * Overrides the default text of the calendar dialog **Done** button.
      *
      * @remarks
-     * Default value is `Done`.
-     * An @Input property that renders Done button with custom text. By default `doneButtonText` is set to Done.
+     * Defaults to the value from resource strings, `"Done"` for the built-in EN.
      * The button will only show up in `dialog` mode.
      *
      * @example
@@ -270,17 +268,17 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Show/hide week numbers
-     * 
+     *
      * @remarks
      * Default is `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
      * ``
      */
-     @Input()
-     public showWeekNumbers = false;
+    @Input({ transform: booleanAttribute })
+    public showWeekNumbers = false;
 
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
@@ -383,7 +381,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get separatorClass(): string {
-        return this.getComponentDensityClass('igx-date-range-picker__label');
+        return 'igx-date-range-picker__label';
     }
 
     private get required(): boolean {
@@ -407,7 +405,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
-    private _resourceStrings = CurrentResourceStrings.DateRangePickerResStrings;
+    private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
@@ -442,9 +440,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
 
@@ -603,11 +600,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden */
-    public override ngOnInit(): void {
+    public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        super.ngOnInit();
     }
 
     /** @hidden */
@@ -756,7 +752,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
@@ -849,7 +844,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private updateCalendar(): void {
         if (!this.calendar) {
-             return;
+            return;
         }
         this.calendar.disabledDates = [];
         const minValue = this.parseMinValue(this.minValue);

@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter, booleanAttribute } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -97,12 +97,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         return !this.isHeader;
     }
 
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get size() {
-        return this.dropDown.getComponentSizeStyles();
-    }
-
     /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
@@ -116,7 +110,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     public get selected(): boolean {
@@ -179,7 +173,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *  </igx-drop-down-item>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-drop-down__header')
     public isHeader: boolean;
 
@@ -201,7 +195,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-drop-down__item--disabled')
     public get disabled(): boolean {
@@ -304,7 +298,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /** Returns true if the items is not a header or disabled  */
     protected get isSelectable(): boolean {
-        return  !(this.disabled || this.isHeader);
+        return !(this.disabled || this.isHeader);
     }
 
     /** If `allowItemsFocus` is enabled, keep the browser focus on the active item */

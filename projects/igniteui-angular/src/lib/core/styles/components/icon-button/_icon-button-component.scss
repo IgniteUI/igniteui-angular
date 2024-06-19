@@ -1,0 +1,32 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+@mixin component {
+    @include b(igx-icon-button) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %igx-icon-button-display !optional;
+
+        @include m(flat) {
+            @extend %igx-icon-button--flat !optional;
+        }
+
+        @include m(contained) {
+            @extend %igx-icon-button--contained !optional;
+        }
+
+        @include m(outlined) {
+            @extend %igx-icon-button--outlined !optional;
+        }
+
+        @include m(disabled) {
+            @extend %igx-button--disabled !optional;
+        }
+    }
+}

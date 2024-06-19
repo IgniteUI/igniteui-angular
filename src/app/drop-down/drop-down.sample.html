@@ -15,11 +15,11 @@
             <button igxButton [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
         </igx-buttongroup>
 
-        <h5>Density types - Prefix/suffix</h5>
+        <h5>Size types - Prefix/suffix</h5>
         <igx-buttongroup>
-            <button igxButton [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Comfortable</button>
-            <button igxButton [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy" displayDensity="cosy">Cosy</button>
-            <button igxButton [igxToggleAction]="dropDownCompact" [igxDropDownItemNavigation]="dropDownCompact" displayDensity="compact">Compact</button>
+            <button igxButton [igxToggleAction]="dropDownLarge" [igxDropDownItemNavigation]="dropDownLarge">Large</button>
+            <button igxButton [igxToggleAction]="dropDownMedium" [igxDropDownItemNavigation]="dropDownMedium">Medium</button>
+            <button igxButton [igxToggleAction]="dropDownSmall" [igxDropDownItemNavigation]="dropDownSmall">Small</button>
         </igx-buttongroup>
     </div>
 
@@ -56,7 +56,7 @@
         </igx-drop-down-item-group>
     </igx-drop-down>
 
-    <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="comfortable">
+    <igx-drop-down #dropDownLarge (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-large)'">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
             <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
@@ -64,7 +64,7 @@
         </igx-drop-down-item>
     </igx-drop-down>
 
-    <igx-drop-down #dropDownCosy (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="cosy">
+    <igx-drop-down #dropDownMedium (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-medium)'">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
             <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
@@ -72,7 +72,7 @@
         </igx-drop-down-item>
     </igx-drop-down>
 
-    <igx-drop-down #dropDownCompact (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' displayDensity="compact">
+    <igx-drop-down #dropDownSmall (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-small)'">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
             <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
@@ -91,7 +91,7 @@
                 {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
-    <button igxButton="raised" igxRipple (click)="clearSelection()" style="display: block">
+    <button igxButton="contained" igxRipple (click)="clearSelection()" style="display: block">
         Clear selection
     </button>
 </section>

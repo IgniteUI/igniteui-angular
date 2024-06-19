@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic,
-    DisplayDensity,
     IgxQueryBuilderComponent,
     changei18n,
     IExpressionTree,
@@ -9,6 +8,7 @@ import { FilteringExpressionsTree, IgxStringFilteringOperand,
     IgxButtonGroupComponent,
     IgxRippleDirective} from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 @Component({
     providers: [],
@@ -16,7 +16,7 @@ import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective]
+    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
@@ -24,16 +24,9 @@ export class QueryBuilderComponent implements OnInit {
 
     public fields: Array<any>;
     public displayDensities;
-    public density: DisplayDensity = 'comfortable';
     public expressionTree: IExpressionTree;
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
-        ];
-
         this.fields = [
             { field: 'ID', dataType: 'string' },
             { field: 'CompanyName', dataType: 'string'},
@@ -80,10 +73,6 @@ export class QueryBuilderComponent implements OnInit {
         });
 
         this.expressionTree = tree;
-    }
-
-    public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
     }
 
     public changeLocale(locale: string) {

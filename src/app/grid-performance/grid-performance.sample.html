@@ -1,7 +1,7 @@
 <div style="height: 100vh; width: 100wh">
     <h4 class="sample-title"> Fixed Size Rows</h4>
-    <igx-grid #grid1 [rowHeight]="20" displayDensity="compact" [data]="localData" [rowSelection]="selectionMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+    <igx-grid #grid1 [rowHeight]="20" [data]="localData" [rowSelection]="selectionMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        <igx-grid-toolbar>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -11,8 +11,8 @@
         </igx-column>
     </igx-grid>
     <div class="sample-buttons">
-        <button igxButton="raised" (click)="toggleVis()">Show/Hide</button>
+        <button igxButton="contained" (click)="toggleVis()">Show/Hide</button>
         <input type='number' #input/>
-        <button igxButton="raised" (click)='scrollTo(grid1, input.value)'>Go To Index</button>
+        <button igxButton="contained" (click)='scrollTo(grid1, input.value)'>Go To Index</button>
     </div>
 </div>

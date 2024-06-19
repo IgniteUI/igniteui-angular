@@ -2,7 +2,7 @@
     <div class="sample-content" style="width:100%; height:100%;">
         <div class="sample-column" style="width:100%; height:100%;">
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <div>
                 <button igxButton="contained" (click)="gridContainer.style.display = 'contents'">Set container display: contents</button>
@@ -15,24 +15,23 @@
                 <button igxButton="contained" (click)="height = '100%'">Set height 100%</button>
                 <button igxButton="contained" (click)="height = '800px'">Set height px</button>
 
-                <button igxButton="raised" (click)="setData()">Set large data</button>
-                <button igxButton="raised" (click)=" setData(5)">Set small data - 5</button>
-                <button igxButton="raised" (click)=" setData(3)">Set small data - 3</button>
-                <button igxButton="raised" (click)="setData(0)">Set no data</button>
-                <button igxButton="raised" (click)="checkCols()">Check cols</button>
+                <button igxButton="contained" (click)="setData()">Set large data</button>
+                <button igxButton="contained" (click)=" setData(5)">Set small data - 5</button>
+                <button igxButton="contained" (click)=" setData(3)">Set small data - 3</button>
+                <button igxButton="contained" (click)="setData(0)">Set no data</button>
+                <button igxButton="contained" (click)="checkCols()">Check cols</button>
             </div>
             <div #gridContainer [hidden]="gridContainerHidden" [style.height]="containerHeight">
             <igx-grid
                 #grid1
                 [data]="data"
-                [displayDensity]="density"
                 [allowFiltering]="true"
                 [moving]="true"
                 [rowSelection]="selectionMode"
                 [filterMode]="'excelStyleFilter'"
                 [width]="'100%'"
                 [height]="height">
-                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                <igx-grid-toolbar>
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

@@ -1,4 +1,5 @@
 import {
+    booleanAttribute,
     ChangeDetectorRef,
     createComponent,
     Directive,
@@ -20,7 +21,6 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -39,6 +39,7 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -76,7 +77,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * </igx-hierarchical-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showExpandAll = false;
 
     /**
@@ -162,9 +163,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
@@ -184,9 +185,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             envInjector,
             navigation,
             filteringService,
+            textHighlightService,
             overlayService,
             summaryService,
-            _displayDensityOptions,
             localeId,
             platform,
             _diTransactions);

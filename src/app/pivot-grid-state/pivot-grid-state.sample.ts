@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
@@ -10,7 +11,9 @@ import {
     IGridStateOptions,
     IPivotValue,
     IgxButtonDirective,
-    IgxPivotDataSelectorComponent
+    IgxPivotDataSelectorComponent,
+    IgxPivotRowDimensionHeaderTemplateDirective,
+    IPivotUISettings
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -46,7 +49,8 @@ export class IgxTotalSaleAggregate {
     styleUrls: ['pivot-grid-state.sample.scss'],
     templateUrl: 'pivot-grid-state.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent]
+    imports: [FormsModule, IgxButtonDirective,
+        IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent, IgxPivotRowDimensionHeaderTemplateDirective ]
 })
 export class PivotGridStateSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
@@ -67,8 +71,10 @@ export class PivotGridStateSampleComponent {
         rows: [
             {
                 memberName: 'AllCities',
+                displayName: 'All Cities',
                 memberFunction: () => 'All',
                 enabled: true,
+                sortable: false,
                 childLevel: {
                     memberName: 'City',
                     enabled: true,
@@ -131,6 +137,7 @@ export class PivotGridStateSampleComponent {
         }];
 
 
+    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true };
     public options: IGridStateOptions = {
         pivotConfiguration: true
     };

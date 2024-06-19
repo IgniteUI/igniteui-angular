@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
-import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
+import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular';
+import { scaleInTop, scaleOutBottom } from 'igniteui-angular/animations';
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 
 
@@ -11,15 +13,33 @@ import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDir
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxSelectComponent, FormsModule, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, NgFor, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, ReactiveFormsModule, IgxSwitchComponent]
+    imports: [
+        IgxButtonDirective,
+        IgxSelectComponent,
+        FormsModule,
+        IgxLabelDirective,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxSelectItemComponent,
+        NgFor,
+        IgxSelectHeaderDirective,
+        IgxSelectFooterDirective,
+        IgxButtonGroupComponent,
+        IgxSuffixDirective,
+        IgxHintDirective,
+        IgxSelectGroupComponent,
+        ReactiveFormsModule,
+        IgxSwitchComponent,
+        SizeSelectorComponent
+    ]
 })
 export class SelectSampleComponent implements OnInit {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     @ViewChild('model', { read: IgxSelectComponent, static: true })
     public selectFruits: IgxSelectComponent;
-    @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
-    public selectDisplayDensity: IgxSelectComponent;
+    @ViewChild('sizeSelect', { read: IgxSelectComponent, static: true })
+    public sizeSelect: IgxSelectComponent;
 
     @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
 
@@ -135,10 +155,6 @@ export class SelectSampleComponent implements OnInit {
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
             this.selectComponents.first.open(customOverlaySettings);
         }
-    }
-
-    public setDensity(event: IButtonGroupEventArgs) {
-        this.selectDisplayDensity.displayDensity = event.button.nativeElement.value;
     }
 
     public btnClick() {

@@ -9,7 +9,7 @@ import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 
-export const IgxTabsAlignment = mkenum({
+export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
     end: 'end',
     center: 'center',
@@ -17,7 +17,7 @@ export const IgxTabsAlignment = mkenum({
 });
 
 /** @hidden */
-enum TabScrollButtonStyle {
+const enum TabScrollButtonStyle {
     Enabled = 'enabled',
     Disabled = 'disabled',
     NotDisplayed = 'not_displayed'
@@ -69,7 +69,7 @@ let NEXT_TAB_ID = 0;
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
 
     /**
-     * An @Input property which determines the tab alignment. Defaults to `start`.
+     * Gets/Sets the tab alignment. Defaults to `start`.
      */
     @Input()
     public get tabAlignment(): string | IgxTabsAlignment {

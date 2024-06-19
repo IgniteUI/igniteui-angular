@@ -83,7 +83,7 @@
         <div #outlet class="outlet column">
             Outlet
         </div>
-        <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
+        <button #button igxButton="contained" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
         <igx-drop-down width="{{dropDownWidth}}px">
             <igx-drop-down-item *ngFor="let item of items">

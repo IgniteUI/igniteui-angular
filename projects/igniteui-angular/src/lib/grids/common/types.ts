@@ -103,4 +103,4 @@ export type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
  * Injection token for accessing the grid transaction object.
  * This allows injecting the grid transaction object into components or services.
  */
-export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
+export const IgxGridTransaction = /*@__PURE__*/new InjectionToken<string>('IgxGridTransaction');

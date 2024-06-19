@@ -4,7 +4,7 @@
 $primary: #fff;
 $secondary: #FF0A3A;
 $gray: #ddd;
-$background: #192053;
+$background: #fff;
 
 $app-palette: palette(
   $primary: $primary,
@@ -17,7 +17,14 @@ $app-palette: palette(
 @include typography();
 
 $include: (
-  igx-chip
+  igx-chip,
+  igx-buttongroup,
+//   igx-input-group,
+//   igx-checkbox,
+//   igx-radio,
+//   igx-switch,
+//   igx-button,
+//   igx-stepper
 );
 
 @include light-theme(

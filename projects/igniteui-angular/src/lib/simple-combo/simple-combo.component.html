@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type">
+<igx-input-group #inputGroup [type]="type">
 
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
@@ -12,7 +12,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="displayValue[0]" role="combobox"
+    <input #comboInput igxInput [value]="displayValue" role="combobox"
         aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
@@ -24,7 +24,7 @@
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="hasSelectedItem" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -51,7 +51,7 @@
 
 </igx-input-group>
 
-<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
+<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down"
     [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()" [singleMode]="true">
@@ -65,7 +65,7 @@
         <igx-combo-item [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
                 | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
-                | comboGrouping:groupKey:valueKey:groupSortingDirection;
+                | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
                 index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
                 [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item?.isHeader">

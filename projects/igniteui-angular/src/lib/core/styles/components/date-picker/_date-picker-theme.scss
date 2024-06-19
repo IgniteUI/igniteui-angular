@@ -9,128 +9,75 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The calendar theme used to style the component.
 @mixin date-picker($theme) {
-    @include css-vars($theme);
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
+    $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+
+    $action-area-height: map.get((
+        material: (rem(40px), rem(46px), rem(52px)),
+        fluent: (rem(40px), rem(48px), rem(54px)),
+        bootstrap: (rem(47px), rem(54px), rem(64px)),
+        indigo-design: (rem(40px), rem(44px), rem(48px)),
+    ), $variant);
 
     %date-picker {
-        box-shadow: elevation(24);
+        // TODO move the shadow in the schemas
+        box-shadow: $border-shadow, elevation(24),;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
 
-        %cal-display {
-            background: var-get($theme, 'content-background');
+        igx-calendar,
+        %days-view,
+        %months-view,
+        %years-view {
+            box-shadow: none;
+            border-radius: 0;
         }
 
-        %cal-header-display {
-            background: var-get($theme, 'header-background');
-            color: var-get($theme, 'header-text-color');
+        igx-divider {
+            --color: #{var-get($theme, 'actions-divider-color')};
         }
-
-        %cal-picker-arrow {
-            color: var-get($theme, 'picker-arrow-color');
-
-            &:hover {
-                color: var-get($theme, 'picker-arrow-hover-color');
-            }
-        }
-
-        %cal-picker-date {
-            color: var-get($theme, 'picker-text-color');
-
-            &:hover,
-            &:focus {
-                color: var-get($theme, 'picker-text-hover-color');
-            }
-        }
-
-        %cal-value {
-            color: var-get($theme, 'content-text-color');
-            min-width: 14.28%;
-
-            @if $bootstrap-theme {
-                &:hover,
-                &:focus {
-                    color: var-get($theme, 'date-selected-text-color');
-                }
-            }
-        }
-
-        %cal-value--label {
-            color: var-get($theme, 'label-color');
-
-            &:hover,
-            &:focus {
-                color: var-get($theme, 'label-color');
-            }
-        }
-
-        %cal-value--weekend {
-            color: var-get($theme, 'weekend-text-color');
-        }
-
-        %cal-value--disabled {
-            color: var-get($theme, 'date-disabled-text-color');
-        }
-
-        %cal-value--year-current {
-            color: var-get($theme, 'year-current-text-color');
-
-            @if $bootstrap-theme {
-                &:hover,
-                &:focus {
-                    color: var-get($theme, 'year-hover-text-color');
-                }
-            }
-        }
-
-        %cal-value--year-hover {
-            color: var-get($theme, 'year-hover-text-color');
-        }
-
-        %cal-value--month-hover {
-            color: var-get($theme, 'month-hover-text-color');
-        }
-
-        %cal-value--month-current {
-            color: var-get($theme, 'month-current-text-color');
-        }
-
-        %cal-value--inactive {
-            color: var-get($theme, 'inactive-text-color');
-
-            &:hover {
-                color: var-get($theme, 'inactive-text-color');
-            }
-        }
-
-        %cal-value--selected {
-            color: var-get($theme, 'date-selected-text-color');
-        }
-
-        %cal-value--current {
-            color: var-get($theme, 'date-current-text-color');
-        }
-    }
-
-    %date-picker--vertical {
-        min-width: rem(368px); /* 168px for header + 200px for the content */
     }
 
     %date-picker--dropdown {
         display: flex;
         flex: 1 0 0;
         flex-direction: column;
-        box-shadow: elevation(3);
+        box-shadow: $border-shadow, elevation(3);
     }
 
     %date-picker__buttons {
         display: flex;
+        align-items: center;
         justify-content: flex-end;
         padding: rem(8px);
+    }
+
+    %date-picker__actions {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        min-height: sizable($action-area-height...);
+        display: flex;
+        justify-content: flex-end;
+
+        @if $variant == 'indigo-design' {
+            padding: rem(8px) rem(16px);
+        } @else {
+            padding: rem(8px);
+        }
+
+        gap: rem(8px);
+
+        // TODO remove this line after the override (--component-size: var(--ig-size, var(--ig-size-large)) is removed
+        [igxButton] {
+            --component-size: var(--ig-size, #{var-get($theme, 'default-size')}) !important;
+        }
     }
 }

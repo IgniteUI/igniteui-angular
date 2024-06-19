@@ -319,6 +319,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin stepper($theme) {
     @include css-vars($theme);
@@ -354,10 +356,10 @@
     $separator-position: 50%;
 
     $outline-width: map.get((
-        material: rem(1px),
-        fluent: rem(1px),
-        bootstrap: rem(1px),
-        indigo-design: rem(2px)
+        material: clamp(1px, rem(1px), rem(1px)),
+        fluent: clamp(1px, rem(1px), rem(1px)),
+        bootstrap: clamp(1px, rem(1px), rem(1px)),
+        indigo-design: clamp(2px, rem(2px), rem(2px))
     ), $variant);
 
     $separator-size: map.get((

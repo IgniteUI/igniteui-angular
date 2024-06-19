@@ -3,7 +3,7 @@
     [disabled]="paginator.isFirstPageDisabled"
     [attr.aria-disabled]="paginator.isFirstPageDisabled"
     (click)="paginator.paginate(0)"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"
@@ -15,7 +15,7 @@
     [disabled]="paginator.isFirstPageDisabled"
     [attr.aria-disabled]="paginator.isFirstPageDisabled"
     (click)="paginator.previousPage()"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"
@@ -38,7 +38,7 @@
     (click)="paginator.nextPage()"
     igxRipple
     [igxRippleCentered]="true"
-    igxButton="icon"
+    igxIconButton="flat"
     type="button"
 >
     <igx-icon>chevron_right</igx-icon>
@@ -48,7 +48,7 @@
     [disabled]="paginator.isLastPageDisabled"
     [attr.aria-disabled]="paginator.isLastPageDisabled"
     (click)="paginator.paginate(paginator.totalPages - 1)"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Direction, IgxSlideComponentBase } from './carousel-base';
 
@@ -19,13 +19,12 @@ import { Direction, IgxSlideComponentBase } from './carousel-base';
     templateUrl: 'slide.component.html',
     standalone: true
 })
-
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
      * <igx-carousel>
-     *  <igx-slide index = "1"></igx-slide>
+     *  <igx-slide index="1"></igx-slide>
      * <igx-carousel>
      * ```
      *
@@ -109,18 +108,18 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide--current')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get active(): boolean {
         return this._active;
     }
 
     public set active(value) {
-        this._active = !!value;
+        this._active = value;
         this.activeChange.emit(this._active);
     }
 
     @HostBinding('class.igx-slide--previous')
-    @Input() public previous = false;
+    @Input({ transform: booleanAttribute }) public previous = false;
 
     /**
      * @hidden
@@ -148,7 +147,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * @hidden
      */
     public get isDestroyed(): Subject<boolean> {
-    return this._destroy$;
+        return this._destroy$;
     }
 
     public ngAfterContentChecked() {

@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Renderer2, ChangeDetectorRef } from '@angular/core';
+import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
@@ -119,7 +119,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.ghostElement.style.flexBasis = null;
         this.ghostElement.style.position = null;
 
-        this.renderer.removeClass( this.ghostElement, this.columnSelectedClass);
+        this.ghostElement.classList.remove(this.columnSelectedClass);
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -129,7 +129,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.cms.icon = icon;
 
         if (!this.column.columnGroup) {
-            this.renderer.addClass(icon, this.ghostImgIconClass);
+            icon.classList.add(this.ghostImgIconClass);
 
             this.ghostElement.insertBefore(icon, this.ghostElement.firstElementChild);
 
@@ -138,7 +138,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         } else {
             this.ghostElement.insertBefore(icon, this.ghostElement.childNodes[0]);
 
-            this.renderer.addClass(icon, this.ghostImgIconGroupClass);
+            icon.classList.add(this.ghostImgIconGroupClass);
             this.ghostElement.children[0].style.paddingLeft = '0px';
 
             this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);

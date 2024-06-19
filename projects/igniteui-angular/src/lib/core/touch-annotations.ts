@@ -34,7 +34,6 @@ export interface HammerStatic {
 * @hidden
 * @internal
 */
-/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface Recognizer { }
 
 /**

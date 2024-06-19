@@ -43,8 +43,7 @@ describe('Update 7.0.2', () => {
             })
             export class AppModule { }`);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-07', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-07', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/module/test.module.ts'))
             .toEqual(
             `@NgModule({

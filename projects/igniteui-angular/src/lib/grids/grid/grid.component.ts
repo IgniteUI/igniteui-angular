@@ -1,7 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA
+    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute
 } from '@angular/core';
 import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
 
@@ -210,7 +210,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public groupsExpanded = true;
 
     /**
@@ -382,7 +382,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
 
     /**
-     * Gets/Sets the array of data that populates the `IgxGridComponent`.
+     * Gets/Sets the array of data that populates the component.
      *
      * @example
      * ```html
@@ -549,7 +549,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hideGroupedColumns() {
         return this._hideGroupedColumns;
     }
@@ -626,7 +626,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Gets the group by row selector template.
      */
     @Input()
-    public get groupByRowSelectorTemplate(): TemplateRef <IgxGroupByRowSelectorTemplateContext> {
+    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorTemplateContext> {
         return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates?.first;
     }
 
@@ -853,7 +853,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public override isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record && record?.records && record.records?.length &&
-         record.expression && record.expression?.fieldName;
+            record.expression && record.expression?.fieldName;
     }
 
     /**
@@ -888,7 +888,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid #grid [data]="Data" [showGroupArea]="false"></igx-grid>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get showGroupArea(): boolean {
         return this._showGroupArea;
     }
@@ -920,7 +920,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     }
                 };
@@ -929,7 +929,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 return {
                     $implicit: rowData.detailsData,
                     templateID: {
-                        type:'detailRow',
+                        type: 'detailRow',
                         id: rowID
                     },
                     index: this.dataView.indexOf(rowData)

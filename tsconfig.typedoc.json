@@ -11,13 +11,5 @@
         "./cypress.config.ts",
         "**/*.spec.ts",
         "src"
-    ],
-    "typedocOptions": {
-        "out": "dist/igniteui-angular/docs/typescript",
-        "theme":  "igtheme",
-        "excludePrivate": true,
-        "excludeProtected": true,
-        "name": "Ignite UI for Angular",
-        "readme": "none"
-    },
+    ]
 }

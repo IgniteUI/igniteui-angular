@@ -24,7 +24,6 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
-import { DisplayDensity } from '../../../core/density';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { isEqual, PlatformUtil } from '../../../core/utils';
@@ -45,6 +44,8 @@ import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive'
 import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
+import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { Size } from '../../common/enums';
 
 /**
  * @hidden
@@ -54,7 +55,7 @@ import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html',
     standalone: true,
-    imports: [NgFor, IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective]
+    imports: [NgFor, IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @Input()
@@ -109,22 +110,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public get displayDensity() {
-        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
+    protected get filteringElementsSize(): Size {
+        // needed because we want the size of the chips to be either Medium or Small
+        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
     }
 
     @HostBinding('class.igx-grid__filtering-row')
     public defaultCSSClass = true;
-
-    @HostBinding('class.igx-grid__filtering-row--compact')
-    public get compactCSSClass() {
-        return this.column.grid.displayDensity === DisplayDensity.compact;
-    }
-
-    @HostBinding('class.igx-grid__filtering-row--cosy')
-    public get cosyCSSClass() {
-        return this.column.grid.displayDensity === DisplayDensity.cosy;
-    }
 
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
@@ -205,7 +197,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
-    private $destroyer = new Subject<boolean>();
+    private $destroyer = new Subject<void>();
 
     constructor(
         public filteringService: IgxFilteringService,

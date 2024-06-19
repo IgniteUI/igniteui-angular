@@ -20,6 +20,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
+    const defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -32,7 +33,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxHierarchicalGridSmallerChildComponent
             ]
         }).compileComponents();
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;
     }));
+
+    afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 

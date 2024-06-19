@@ -46,8 +46,7 @@ $my-palette: palette(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -85,8 +84,7 @@ $my-palette: palette(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -115,8 +113,7 @@ $my-palette: palette(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -134,8 +131,7 @@ $my-palette: palette(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -156,8 +152,7 @@ $my-palette: palette(
 }`);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -179,8 +174,7 @@ $my-palette: palette(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')

@@ -15,6 +15,7 @@ import {
     Inject,
     Optional,
     Self,
+    booleanAttribute,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -29,7 +30,6 @@ import {
     IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { DisplayDensity } from '../../core/density';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
@@ -55,6 +55,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
+import { Size } from '../common/enums';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -152,7 +153,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public sortable = false;
     /**
      * Returns if the column is selectable.
@@ -195,7 +196,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get groupable(): boolean {
         return this._groupable;
     }
@@ -213,7 +214,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get editable(): boolean {
         // Updating the primary key when grid has transactions (incl. row edit)
         // should not be allowed, as that can corrupt transaction state.
@@ -258,7 +259,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
@@ -273,7 +274,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public resizable = false;
 
     /**
@@ -290,7 +291,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autosizeHeader = true;
 
     /**
@@ -303,7 +304,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hasSummary() {
         return this._hasSummary;
     }
@@ -333,7 +334,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges(true)
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get hidden(): boolean {
         return this._hidden;
     }
@@ -432,7 +433,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disableHiding = false;
     /**
      * Gets whether the pinning is disabled.
@@ -444,23 +445,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disablePinning = false;
-    /**
-     * Sets/gets whether the column is movable.
-     * Default value is `false`.
-     *
-     * ```typescript
-     * let isMovable = this.column.movable;
-     * ```
-     * ```html
-     * <igx-column [movable] = "true"></igx-column>
-     * ```
-     *
-     * @deprecated in version 13.1.0. Use the Grid's `moving` property instead.
-     */
-    @Input()
-    public movable = false;
     /**
      * Gets the `width` of the column.
      * ```typescript
@@ -743,7 +729,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public filteringIgnoreCase = true;
     /**
      * Sets/gets whether the column sorting should be case sensitive.
@@ -758,7 +744,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public sortingIgnoreCase = true;
     /**
      * Sets/gets whether the column is `searchable`.
@@ -774,7 +760,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @notifyChanges()
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public searchable = true;
     /**
      * Sets/gets the data type of the column values.
@@ -1016,7 +1002,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get pinned(): boolean {
         return this._pinned;
     }
@@ -1177,10 +1163,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.grid) {
             return '80';
         }
-        switch (this.grid.displayDensity) {
-            case DisplayDensity.cosy:
+        switch (this.grid.gridSize) {
+            case Size.Medium:
                 return '64';
-            case DisplayDensity.compact:
+            case Size.Small:
                 return '56';
             default:
                 return '80';
@@ -1556,7 +1542,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set visibleWhenCollapsed(value: boolean) {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
@@ -1639,13 +1625,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    public defaultTimeFormat = 'hh:mm:ss tt';
+    public defaultTimeFormat = 'hh:mm:ss a';
 
     /**
      * @hidden
      * @internal
      */
-    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
+    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss a';
 
 
     /**
@@ -1822,8 +1808,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
     ) {
-        this.validators  = _validators;
-     }
+        this.validators = _validators;
+    }
 
     /**
      * @hidden
@@ -2168,8 +2154,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            index === grid._pinnedColumns.length - 1 ? 
-            grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
+            index === grid._pinnedColumns.length - 1 ?
+                grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {

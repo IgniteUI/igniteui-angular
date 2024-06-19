@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input, TemplateRef } from '@angular/core';
+import { Directive, HostBinding, Input, TemplateRef, booleanAttribute } from '@angular/core';
 
 @Directive({
     selector: '[igxDrawerItem]',
@@ -10,17 +10,27 @@ export class IgxNavDrawerItemDirective {
     /**
      * @hidden
      */
-    @Input('active') public active = false;
+    @Input({ alias: 'active', transform: booleanAttribute }) public active = false;
 
     /**
      * @hidden
      */
-    @Input('isHeader') public isHeader = false;
+    @Input({ alias: 'disabled', transform: booleanAttribute }) public disabled = false;
+
+    /**
+     * @hidden
+     */
+    @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
 
     /**
      * @hidden
      */
     public readonly activeClass = 'igx-nav-drawer__item--active';
+
+     /**
+     * @hidden
+     */
+     public readonly disabledClass = 'igx-nav-drawer__item--disabled';
 
     /**
      * @hidden
@@ -35,7 +45,7 @@ export class IgxNavDrawerItemDirective {
      */
     @HostBinding('class.igx-nav-drawer__item--active')
     public get currentCSS(): boolean {
-        return this.active && !this.isHeader;
+        return this.active && !this.isHeader && !this.disabled;
     }
 
     /**
@@ -44,6 +54,14 @@ export class IgxNavDrawerItemDirective {
     @HostBinding('class.igx-nav-drawer__item--header')
     public get headerCSS(): boolean {
         return this.isHeader;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-nav-drawer__item--disabled')
+    public get disabledCSS(): boolean {
+        return this.disabled;
     }
 }
 
@@ -54,7 +72,7 @@ export class IgxNavDrawerItemDirective {
 export class IgxNavDrawerTemplateDirective {
 
     constructor(public template: TemplateRef<any>) {
-     }
+    }
 }
 
 @Directive({
@@ -64,5 +82,5 @@ export class IgxNavDrawerTemplateDirective {
 export class IgxNavDrawerMiniTemplateDirective {
 
     constructor(public template: TemplateRef<any>) {
-     }
+    }
 }

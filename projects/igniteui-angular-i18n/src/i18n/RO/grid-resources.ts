@@ -165,8 +165,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Intrarea trebuie să aibă cel puțin {0} caractere',
     igx_grid_max_length_validation_error: 'Intrarea nu trebuie să aibă mai mult de {0} caractere',
     igx_grid_email_validation_error: 'Ar trebui introdusă o adresă de e-mail validă',
-    igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut',
-    igx_grid_pivot_no_aggregator: 'Nu a fost găsit niciun agregator valid pentru {0}. Vă rugăm să setați un „aggregatorName” sau un „aggregator” valid.'
+    igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut'
 };
 
 /**

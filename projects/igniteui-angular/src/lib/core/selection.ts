@@ -46,7 +46,7 @@ export class IgxSelectionAPIService {
      * Removes selection for a component.
      * @param componentID
      */
-    public delete(componentID: string) {
+      public delete(componentID: string) {
         this.selection.delete(componentID);
     }
 

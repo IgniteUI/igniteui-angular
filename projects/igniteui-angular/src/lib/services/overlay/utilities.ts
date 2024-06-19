@@ -49,6 +49,14 @@ export enum AbsolutePosition {
     Center = 'center'
 }
 
+/**
+ * Determines whether to add or set the offset values.
+ */
+export enum OffsetMode {
+    Add,
+    Set
+}
+
 // TODO: make this interface
 export class Point {
     constructor(public x: number, public y: number) { }
@@ -63,12 +71,6 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
-    /**
-     * Attaching target for the component to show
-     *
-     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
-     */
-    target?: Point | HTMLElement;
     /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
     /** Direction in which the component should show */

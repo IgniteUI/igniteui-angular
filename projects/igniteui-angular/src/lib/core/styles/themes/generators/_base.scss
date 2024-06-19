@@ -459,6 +459,14 @@
         @include icon($icon-theme-map);
     }
 
+    @if is-used('igx-icon-button', $exclude) {
+        $icon-button-theme-map: icon-button-theme(
+            $schema: $schema,
+        );
+        $icon-button-theme-map: meta.call($theme-handler, $icon-button-theme-map);
+        @include icon-button($icon-button-theme-map);
+    }
+
     @if is-used('igx-input-group', $exclude) {
         $input-group-theme-map: input-group-theme(
             $schema: $schema,

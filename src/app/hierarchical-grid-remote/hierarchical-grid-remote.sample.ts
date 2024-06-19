@@ -11,6 +11,7 @@ import { RemoteService } from '../shared/remote.service';
 @Component({
     selector: 'app-hierarchical-grid-remote-sample',
     templateUrl: 'hierarchical-grid-remote.sample.html',
+    styleUrls: ['hierarchical-grid-remote.sample.scss'],
     providers: [RemoteService],
     standalone: true,
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]

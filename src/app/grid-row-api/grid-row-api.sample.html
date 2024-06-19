@@ -2,14 +2,14 @@
     <h4 class="sample-title">igxGrid</h4>
     <div class="sample-wrapper">
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="togglePinning(grid, true, index, key)">Pin Row by index</button>
-            <button igxButton="raised" (click)="togglePinning(grid, false, index, key)">Pin Row by key</button>
-            <button igxButton="raised" (click)="deleteRow(grid, index)">Delete</button>
-            <button igxButton="raised" (click)="toggle(grid, index)">Expand/collapse</button>
-            <button igxButton="raised" (click)="select(grid, index)">Select</button>
-            <button igxButton="raised" (click)="selectChildren(grid, index)">Select Children</button>
-            <button igxButton="raised" (click)="selectParent(grid, index)">Select Parent</button>
-            <button igxButton="raised" (click)="logState(grid, index, gridLogger)">Log row state</button>
+            <button igxButton="contained" (click)="togglePinning(grid, true, index, key)">Pin Row by index</button>
+            <button igxButton="contained" (click)="togglePinning(grid, false, index, key)">Pin Row by key</button>
+            <button igxButton="contained" (click)="deleteRow(grid, index)">Delete</button>
+            <button igxButton="contained" (click)="toggle(grid, index)">Expand/collapse</button>
+            <button igxButton="contained" (click)="select(grid, index)">Select</button>
+            <button igxButton="contained" (click)="selectChildren(grid, index)">Select Children</button>
+            <button igxButton="contained" (click)="selectParent(grid, index)">Select Parent</button>
+            <button igxButton="contained" (click)="logState(grid, index, gridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
             <input name="index" type="number" [(ngModel)]="index" />
@@ -38,7 +38,7 @@
                 </div>
             </ng-template>
 
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -65,14 +65,14 @@
     <h4 class="sample-title">IgxTreeGrid Hierarchical Data</h4>
     <div class="sample-wrapper">
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="togglePinning(treeGridHier, true, tHIndex, tHKey)">Pin Row by index</button>
-            <button igxButton="raised" (click)="togglePinning(treeGridHier, false, tHIndex, tHKey)">Pin Row by key</button>
-            <button igxButton="raised" (click)="deleteRow(treeGridHier, tHIndex)">Delete Row by Index</button>
-            <button igxButton="raised" (click)="toggle(treeGridHier, tHIndex)">Expand/collapse</button>
-            <button igxButton="raised" (click)="select(treeGridHier, tHIndex)">Select</button>
-            <button igxButton="raised" (click)="selectChildren(treeGridHier, tHIndex)">Select Children</button>
-            <button igxButton="raised" (click)="selectParent(treeGridHier, tHIndex)">Select Parent</button>
-            <button igxButton="raised" (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log row state</button>
+            <button igxButton="contained" (click)="togglePinning(treeGridHier, true, tHIndex, tHKey)">Pin Row by index</button>
+            <button igxButton="contained" (click)="togglePinning(treeGridHier, false, tHIndex, tHKey)">Pin Row by key</button>
+            <button igxButton="contained" (click)="deleteRow(treeGridHier, tHIndex)">Delete Row by Index</button>
+            <button igxButton="contained" (click)="toggle(treeGridHier, tHIndex)">Expand/collapse</button>
+            <button igxButton="contained" (click)="select(treeGridHier, tHIndex)">Select</button>
+            <button igxButton="contained" (click)="selectChildren(treeGridHier, tHIndex)">Select Children</button>
+            <button igxButton="contained" (click)="selectParent(treeGridHier, tHIndex)">Select Parent</button>
+            <button igxButton="contained" (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
             <input name="tHIndex" type="number" [(ngModel)]="tHIndex" />
@@ -89,7 +89,7 @@
                 [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="c.minWidth"
                 [maxWidth]="c.maxWidth">
             </igx-column>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar >
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -116,15 +116,15 @@
     <h4 class="sample-title">IgxTreeGrid Flat Data</h4>
     <div class="sample-wrapper">
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="togglePinning(treeGrid, true, tIndex, tKey)">Pin Row by index</button>
+            <button igxButton="contained" (click)="togglePinning(treeGrid, true, tIndex, tKey)">Pin Row by index</button>
             <br />
-            <button igxButton="raised" (click)="togglePinning(treeGrid, false, tIndex, tKey)">Pin Row by key</button>
-            <button igxButton="raised" (click)="deleteRow(treeGrid, tIndex)">Delete Row by Index</button>
-            <button igxButton="raised" (click)="toggle(treeGrid, tIndex)">Expand/collapse</button>
-            <button igxButton="raised" (click)="select(treeGrid, tIndex)">Select</button>
-            <button igxButton="raised" (click)="selectChildren(treeGrid, tIndex)">Select Children</button>
-            <button igxButton="raised" (click)="selectParent(treeGrid, tIndex)">Select Parent</button>
-            <button igxButton="raised" (click)="logState(treeGrid, tIndex, tGridLogger)">Log row state</button>
+            <button igxButton="contained" (click)="togglePinning(treeGrid, false, tIndex, tKey)">Pin Row by key</button>
+            <button igxButton="contained" (click)="deleteRow(treeGrid, tIndex)">Delete Row by Index</button>
+            <button igxButton="contained" (click)="toggle(treeGrid, tIndex)">Expand/collapse</button>
+            <button igxButton="contained" (click)="select(treeGrid, tIndex)">Select</button>
+            <button igxButton="contained" (click)="selectChildren(treeGrid, tIndex)">Select Children</button>
+            <button igxButton="contained" (click)="selectParent(treeGrid, tIndex)">Select Parent</button>
+            <button igxButton="contained" (click)="logState(treeGrid, tIndex, tGridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
             <input name="tIndex" type="number" [(ngModel)]="tIndex" />
@@ -141,7 +141,7 @@
                 [maxWidth]="c.maxWidth" [hasSummary]="true">
             </igx-column>
 
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar >
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -166,13 +166,13 @@
     <h4 class="sample-title">igxHierarchicalGrid</h4>
     <div class="sample-wrapper">
         <div class="sample-buttons">
-            <button igxButton="raised" (click)="togglePinning(hGrid, true, hIndex, hKey)">Pin Row by index</button>
+            <button igxButton="contained" (click)="togglePinning(hGrid, true, hIndex, hKey)">Pin Row by index</button>
             <br />
-            <button igxButton="raised" (click)="togglePinning(hGrid, false, hIndex, hKey)">Pin Row by key</button>
-            <button igxButton="raised" (click)="deleteRow(hGrid, hIndex)">Delete Row by Index</button>
-            <button igxButton="raised" (click)="toggle(hGrid, hIndex)">Expand/collapse</button>
-            <button igxButton="raised" (click)="select(hGrid, hIndex)">Select</button>
-            <button igxButton="raised" (click)="logState(hGrid, hIndex, hGridLogger)">Log row state</button>
+            <button igxButton="contained" (click)="togglePinning(hGrid, false, hIndex, hKey)">Pin Row by key</button>
+            <button igxButton="contained" (click)="deleteRow(hGrid, hIndex)">Delete Row by Index</button>
+            <button igxButton="contained" (click)="toggle(hGrid, hIndex)">Expand/collapse</button>
+            <button igxButton="contained" (click)="select(hGrid, hIndex)">Select</button>
+            <button igxButton="contained" (click)="logState(hGrid, hIndex, hGridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
             <input name="hIndex" type="number" [(ngModel)]="hIndex" />
@@ -195,7 +195,7 @@
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

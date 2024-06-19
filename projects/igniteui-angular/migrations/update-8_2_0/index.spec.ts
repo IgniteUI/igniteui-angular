@@ -35,8 +35,7 @@ describe('Update 8.2.0', () => {
                 <ng-template igxExcelStylePinningTemplate><div class="esf-custom-pinning">Pinning Template</div></ng-template>
             </igx-grid>`);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-10', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
             `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
@@ -52,8 +51,7 @@ describe('Update 8.2.0', () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html',
             `<div igxDrag [renderGhost]="true" [ghostImageClass]="'casper'" [dragGhostHost]="host">Drag me</div>`);
-        const tree = await schematicRunner.runSchematicAsync('migration-10', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
@@ -72,8 +70,7 @@ describe('Update 8.2.0', () => {
             <div igxDrop (onEnter)="enterHandler($event)" (onLeave)="leaveHandler($event)" (onDrop)="dropHandler($event)">drop area</div>
             `);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-10', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
             `<div igxDrag (ghostCreate)="ghostCreateHandler($event)"
@@ -98,8 +95,7 @@ describe('Update 8.2.0', () => {
                 public onDropHandler(event: IgxDropEventArgs) {}
             }`);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-10', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
             // V.S. 18th May 2021: No longer leave duplicate imports in post-migration file
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(

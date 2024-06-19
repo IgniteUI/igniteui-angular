@@ -12,10 +12,11 @@
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $banner-background [null]- The background color used banner background.
-/// @param {Color} $banner-message-color [null]- The color used for banner label.
-/// @param {Color} $banner-border-color [null] - The border color used banner border.
-/// @param {Color} $banner-illustration-color [null] - The color used banner illustration.
+/// @param {Color} $banner-background [null] - The color used for the banner background.
+/// @param {Color} $banner-message-color [null] - The color used for the banner label.
+/// @param {Color} $banner-border-color [null] - The color used for the banner border.
+/// @param {Color} $banner-illustration-color [null] - The color used for the banner illustration.
+/// @param {Number} $border-radius [null] - The border-radius for the banner.
 ///
 /// @requires $light-material-schema
 ///
@@ -28,7 +29,8 @@
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
-    $banner-illustration-color: null
+    $banner-illustration-color: null,
+    $border-radius: null,
 ) {
     $name: 'igx-banner';
     $selector: 'igx-banner, .igx-banner';
@@ -54,19 +56,19 @@
         banner-message-color: $banner-message-color,
         banner-border-color: $banner-border-color,
         banner-illustration-color: $banner-illustration-color,
+        border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin banner($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
-
-    $padding: rem(8px);
-    $padding-inline-start: calc(#{$padding} * 2);
 
     %igx-banner-host {
         igx-expansion-panel-body {
@@ -94,29 +96,28 @@
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: rem(8px);
-
-        padding-inline-start: pad-inline($padding-inline-start);
-        padding-inline-end: pad-inline($padding);
-        padding-block: pad-block($padding);
+        padding: rem(16px) rem(8px);
+        min-width: rem(320px);
         background: var-get($theme, 'banner-background');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
+        border-radius: var-get($theme, 'border-radius');
+
+        @if $variant == 'indigo-design' {
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
+            padding: rem(16px);
+        }
+
+        igc-icon,
+        igx-icon,
+        igc-button,
+        [igxButton] {
+            --component-size: var(--ig-size, 2) !important;
+        }
     }
 
     %igx-banner__illustration {
         justify-content: center;
-        width: rem(40px);
-        min-width: rem(40px);
-        height: rem(40px);
         color: var-get($theme, 'banner-illustration-color');
-    }
-
-    %igx-banner__border-top {
-        border-block-start: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: rem(-1px);
-    }
-
-    %igx-banner__border-bottom {
-        border-block-end: rem(1px) solid var-get($theme, 'banner-border-color');
-        inset-block-start: 0;
     }
 
     %igx-banner__text {
@@ -128,21 +129,23 @@
         }
     }
 
-
     %igx-banner__message {
         min-width: rem(150px);
         flex: 1 0 0%;
         gap: rem(16px);
+
+        @if $variant == 'indigo-design' {
+            gap: rem(8px);
+        } @else {
+            padding: 0 rem(8px);
+        }
     }
 
     %igx-banner__actions,
     %igx-banner__actions > igx-banner-actions {
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: center;
         align-self: flex-end;
         gap: rem(8px);
-        min-height: rem(40px);
     }
 }
 

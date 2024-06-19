@@ -5,6 +5,7 @@
         "sourceMap": false,
         "composite": true,
         "declaration": true,
-        "outDir": "../../../dist/igniteui-angular/schematics/"
+        "outDir": "../../../dist/igniteui-angular/schematics/",
+        "skipLibCheck": true
     }
 }

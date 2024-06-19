@@ -13,10 +13,10 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ master, 16.1.x, 15.1.x ]
+    branches: [ master, 17.2.x, 16.1.x, 15.1.x ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master, 16.1.x, 15.1.x ]
+    branches: [ master, 17.2.x, 16.1.x, 15.1.x ]
   schedule:
     - cron: '33 4 * * 4'
 

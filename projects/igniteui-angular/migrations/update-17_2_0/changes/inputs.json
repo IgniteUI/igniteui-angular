@@ -1,0 +1,62 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "vertical",
+            "replaceWith": "orientation",
+            "valueTransform": "vertical_to_orientation",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "roundShape",
+            "remove": true,
+            "owner": {
+                "selector": "igx-avatar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "type",
+            "remove": true,
+            "owner": {
+                "selector": "igx-card",
+                "type": "component"
+            }
+        },
+        {
+            "name": "leftButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "leftButtonBackgroundColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rightButtonColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rightButtonBackgroundColor",
+            "remove": true,
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        }
+    ]
+}

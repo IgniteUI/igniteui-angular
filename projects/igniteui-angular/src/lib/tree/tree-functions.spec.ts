@@ -7,6 +7,8 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 export const TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-tree-node__select';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const TREE_NODE_CSS_CLASS = 'igx-tree-node';
+const TREE_NODE_WRAPPER_CSS_CLASS = 'igx-tree-node__wrapper';
+const TREE_NODE_EXPAND_INDICATOR_CSS_CLASS = 'igx-tree-node__toggle-button';
 
 export class TreeTestFunctions {
 
@@ -18,14 +20,36 @@ export class TreeTestFunctions {
         return nodeDOM.querySelector(`.${TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS}`);
     }
 
+    public static getNodeExpandIndicatorDiv(nodeDOM: HTMLElement): HTMLElement {
+        return nodeDOM.querySelector(`.${TREE_NODE_EXPAND_INDICATOR_CSS_CLASS}`);
+    }
+
     public static getNodeCheckboxInput(nodeDOM: HTMLElement): HTMLInputElement {
         return TreeTestFunctions.getNodeCheckboxDiv(nodeDOM).querySelector(CHECKBOX_INPUT_CSS_CLASS);
+    }
+
+    public static getNodeWrapperDiv(nodeDOM: HTMLElement): HTMLInputElement {
+        return nodeDOM.querySelector(`.${TREE_NODE_WRAPPER_CSS_CLASS}`);
     }
 
     public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): Event {
         const checkboxElement = TreeTestFunctions.getNodeCheckboxDiv(node.nativeElement);
         const event = new Event('click', {});
         checkboxElement.dispatchEvent(event);
+        return event;
+    }
+
+    public static clickNodeExpandIndicator(node: IgxTreeNodeComponent<any>): Event {
+        const indicatorElement = TreeTestFunctions.getNodeExpandIndicatorDiv(node.nativeElement);
+        const event = new Event('click', {});
+        indicatorElement.dispatchEvent(event);
+        return event;
+    }
+
+    public static clickOnTreeNode(nodeDOM: HTMLElement): Event {
+        const nodeWrapperElement = this.getNodeWrapperDiv(nodeDOM);
+        const event = new MouseEvent('pointerdown', { button: 0 });
+        nodeWrapperElement.dispatchEvent(event);
         return event;
     }
 

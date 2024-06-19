@@ -13,9 +13,9 @@ import {
     AfterViewInit,
     Output,
     EventEmitter,
-    Optional,
-    Inject,
-    SimpleChanges
+    SimpleChanges,
+    booleanAttribute,
+    Inject
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -27,11 +27,10 @@ import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { NgIf } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -122,11 +121,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public allowItemsFocus = false;
 
     /**
-     * An @Input property that set aria-labelledby attribute
+     * Sets aria-labelledby attribute value.
      * ```html
      * <igx-drop-down [labelledby]="labelId"></igx-drop-down>
      * ```
@@ -134,8 +133,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @Input()
     public labelledBy: string;
 
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
-    protected virtDir: IgxForOfDirective<any>;
+    @ContentChild(IgxForOfToken)
+    protected virtDir: IgxForOfToken<any>;
 
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
@@ -230,9 +229,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, _displayDensityOptions);
+        @Inject(DOCUMENT) document: any,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, document);
     }
 
     /**
@@ -342,6 +341,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return;
         }
         let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
+        // TODO: This logic _cannot_ be right, those are optional user-provided inputs that can be strings with units, refactor:
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
         this.virtDir.getScroll().scrollTop = targetScroll;
@@ -368,7 +368,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public onToggleContentAppended(_event: ToggleViewEventArgs) {
         if (!this.virtDir && this.selectedItem) {
-           this.scrollToItem(this.selectedItem);
+            this.scrollToItem(this.selectedItem);
         }
     }
 
@@ -524,7 +524,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 index: newSelection.index
             } as IgxDropDownItemBaseDirective;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
         this.selectionChanging.emit(args);
 
         if (!args.cancel) {
@@ -572,8 +572,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     protected isSelectionValid(selection: any): boolean {
         return selection === null
-        || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
-        || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
+            || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+            || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 
     protected scrollToItem(item: IgxDropDownItemBaseDirective) {

@@ -11,6 +11,7 @@ import {
     Optional,
     Renderer2,
     Self,
+    booleanAttribute,
 } from '@angular/core';
 import {
     AbstractControl,
@@ -63,8 +64,6 @@ export enum IgxInputState {
     standalone: true
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
-    private static ngAcceptInputType_required: boolean | '';
-    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -158,10 +157,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('disabled')
     public set disabled(value: boolean) {
-        this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
+        this._disabled = this.inputGroup.disabled = value;
         if (this.focused && this._disabled) {
             // Browser focus may not fire in good time and mess with change detection, adjust here in advance:
             this.inputGroup.isFocused = false;
@@ -191,9 +190,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set required(value: boolean) {
-        this.nativeElement.required = this.inputGroup.isRequired = (value as any === '') || value;
+        this.nativeElement.required = this.inputGroup.isRequired = value;
     }
 
     /**

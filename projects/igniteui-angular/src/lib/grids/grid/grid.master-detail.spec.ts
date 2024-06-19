@@ -88,7 +88,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const tracedInput: any =
                 document.elementFromPoint(inputElemPos.left + inputElemPos.height / 2, inputElemPos.top + inputElemPos.height / 2);
 
-            checkboxElem.componentInstance.nativeCheckbox.nativeElement.click();
+            checkboxElem.componentInstance.nativeInput.nativeElement.click();
             fix.detectChanges();
 
             expect(checkboxElem.nativeElement.contains(tracedCheckbox)).toBeTruthy();

@@ -6,7 +6,8 @@ import {
     Input,
     Output,
     Directive,
-    ContentChild
+    ContentChild,
+    booleanAttribute
 } from '@angular/core';
 
 import { IgxIconComponent } from '../icon/icon.component';
@@ -60,7 +61,7 @@ let NEXT_ID = 0;
 
 export class IgxNavbarComponent {
     /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-navbar [id]="'igx-navbar-12'" title="Sample App" actionButtonIcon="menu">
      * ```
@@ -70,7 +71,7 @@ export class IgxNavbarComponent {
     public id = `igx-navbar-${NEXT_ID++}`;
 
     /**
-     * An @Input property that sets the icon of the `IgxNavbarComponent`.
+     * Sets the icon of the `IgxNavbarComponent`.
      * ```html
      * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
      * ```
@@ -78,7 +79,7 @@ export class IgxNavbarComponent {
     @Input() public actionButtonIcon: string;
 
     /**
-     * An @Input property that sets the title of the `IgxNavbarComponent`.
+     * Sets the title of the `IgxNavbarComponent`.
      * ```html
      * <igx-navbar title="Sample App" actionButtonIcon="menu">
      * ```
@@ -101,7 +102,7 @@ export class IgxNavbarComponent {
     @Output() public action = new EventEmitter<IgxNavbarComponent>();
 
     /**
-     * An @Input property that sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
+     * Sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
      * ```html
      * <igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
      * ```
@@ -143,7 +144,7 @@ export class IgxNavbarComponent {
      * }
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isActionButtonVisible(): boolean {
         if (this.actionIconTemplate || !this.actionButtonIcon) {
             return false;

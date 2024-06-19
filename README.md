@@ -12,7 +12,7 @@
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 [![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch, Adobe XD and Figma [UI kits](https://www.infragistics.com/products/appbuilder/ui-toolkit) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) using Google's [Angular](https://angular.io/) framework.
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete library of Angular-native, Material-based Angular UI components designed to enable developers to build enterprise-ready HTML5 & JavaScript apps for modern desktop browsers. It packs full-featured components, including Pivot Grids, Dock Manager, Hierarchical Grid, Bottom Navigation, etc., 60+ high-performance Angular Charts for all business needs and any app scenario, and more.
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 Or visit [Ignite UI for Angular Discord](https://discord.com/channels/836634487483269200/836636712292581456) and join the dev community there.
@@ -64,11 +64,6 @@ Ignite UI for Angular arrives with an extensive library of data visualizations t
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
 
-### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Create](https://github.com/IgniteUI/igniteui-angular/assets/52001020/8f40a0a6-44f8-43fa-8407-c8800a7eae89)
-### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Generate](https://github.com/IgniteUI/igniteui-angular/assets/52001020/78628738-6752-4ff3-b201-8a6b8cf279cf)
-
 ### Current List of Components Include:
 
 |Components|Status|||Added in|Directives|Status|||Added in|
@@ -116,6 +111,51 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |toast|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|5.1.0||||
 |tree|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)|12.0.0||||
 |tree grid|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)|6.2.0||||
+
+### Release History
+
+|Ignite UI for Angular|Release date|
+|:----|:----|
+| | |
+|4.0.0|18-April-17|
+|4.1.0|12-May-17|
+|4.2.0|20-Jul-17|
+|5.0.0|03-Nov-17|
+|5.1.0|17-Jan-18|
+|5.2.0|23-Feb-18|
+|5.3.0|24-Apr-18|
+|6.0.0|21-May-18|
+|6.1.0|05-Jul-18|
+|6.2.0|05-Nov-18|
+|7.0.0|26-Nov-18|
+|7.1.0|13-Dec-18|
+|7.2.0|08-Mar-19|
+|7.3.0|13-May-19|
+|8.0.0|19-Jun-19|
+|8.1.0|22-Jul-19|
+|8.2.0|26-Sep-19|
+|9.0.0|11-Feb-20|
+|9.1.0|01-Jun-20|
+|10.0.0|25-Jun-20|
+|10.1.0|12-Aug-20|
+|10.2.0|20-Oct-20|
+|11.0.0|13-Nov-20|
+|11.1.0|17-Feb-21|
+|12.0.0|14-May-21|
+|12.1.0|02-Aug-21|
+|12.2.0|04-Oct-21|
+|13.0.0|23-Nov-21|
+|13.1.0|02-Mar-22|
+|13.2.0|25-May-22|
+|14.0.0|09-Jun-22|
+|14.1.0|13-Sep-22|
+|14.2.0|06-Oct-22|
+|15.0.0|23-Nov-22|
+|15.1.0|27-Mar-23|
+|16.0.0|15-May-23|
+|16.1.0|02-Oct-23|
+|17.0.0|09-Nov-23|
+|17.1.0|26-Feb-24|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, ElementRef, Inject, OnInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -17,17 +17,9 @@ import {
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
-    DisplayDensity,
-    ButtonGroupAlignment,
-    IDisplayDensityOptions,
-    DisplayDensityToken,
-    IButtonGroupEventArgs
+    ButtonGroupAlignment
 } from 'igniteui-angular';
-
-interface Selection {
-    selected: boolean;
-    label: string | DisplayDensity;
-}
+import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 @Component({
     selector: 'app-chips-sample',
@@ -49,10 +41,11 @@ interface Selection {
         NgIf,
         FormsModule,
         IgxAvatarComponent,
-        IgxDropDirective
+        IgxDropDirective,
+        SizeSelectorComponent
     ]
 })
-export class ChipsSampleComponent implements OnInit {
+export class ChipsSampleComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     private chipsArea: IgxChipsAreaComponent;
 
@@ -141,30 +134,9 @@ export class ChipsSampleComponent implements OnInit {
 
     public isSelected = false;
 
-    public density: DisplayDensity = 'comfortable';
+    public size: string = 'large';
 
-    public getSize() {
-        if(this.density === 'comfortable') {
-            return 'large'
-        }
-
-        if(this.density === 'cosy') {
-            return 'medium'
-        }
-
-        if(this.density === 'compact') {
-            return 'small'
-        }
-    }
-
-    public displayDensities: Selection[];
-
-    constructor(public cdr: ChangeDetectorRef, @Inject(DisplayDensityToken)
-    public displayDensityOptions: IDisplayDensityOptions,) { }
-
-    public selectDensity(event: IButtonGroupEventArgs) {
-        this.density = this.displayDensities[event.index].label as DisplayDensity;
-    }
+    constructor(public cdr: ChangeDetectorRef) { }
 
     public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
@@ -186,23 +158,6 @@ export class ChipsSampleComponent implements OnInit {
 
     public removeChip(chip: IgxChipComponent) {
         chip.nativeElement.remove();
-    }
-
-    public ngOnInit(): void {
-        this.displayDensities = [
-            {
-                label: 'comfortable',
-                selected: this.density === 'comfortable',
-            },
-            {
-                label: 'cosy',
-                selected: this.density === 'cosy',
-            },
-            {
-                label: 'compact',
-                selected: this.density === 'compact',
-            },
-        ];
     }
 
     public onChipsSelected(event: IChipsAreaSelectEventArgs) {

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgFor, JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IChangeRadioEventArgs, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, DisplayDensity, DisplayDensityToken } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
 
 
 @Component({
@@ -12,11 +12,7 @@ import { DateRange, IChangeRadioEventArgs, IgxButtonDirective, IgxDateRangeEndCo
         {
             provide: IGX_INPUT_GROUP_TYPE,
             useValue: 'border'
-        },
-        {
-            provide: DisplayDensityToken,
-            useFactory: () => ({ displayDensity: DisplayDensity.cosy })
-        },
+        }
     ],
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
@@ -60,7 +56,7 @@ export class DateRangeSampleComponent {
         });
     }
 
-    public updateOnChange(e: IChangeRadioEventArgs) {
+    public updateOnChange(e: IChangeCheckboxEventArgs) {
         Object.keys(this.reactiveForm.controls).forEach(name => {
             const control = this.reactiveForm.controls[name];
             const value = control.value;

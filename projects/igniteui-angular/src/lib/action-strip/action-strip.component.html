@@ -3,7 +3,7 @@
     <ng-container *ngIf="menuItems.length > 0">
         <button
             type="button"
-            igxButton="icon"
+            igxIconButton="flat"
             igxRipple
             [igxToggleAction]="dropdown"
             [overlaySettings]="menuOverlaySettings"
@@ -14,7 +14,7 @@
             <igx-icon>more_vert</igx-icon>
         </button>
     </ng-container>
-    <igx-drop-down #dropdown [displayDensity]="displayDensity">
+    <igx-drop-down #dropdown>
         <igx-drop-down-item
             *ngFor="let item of menuItems"
             class="igx-action-strip__menu-item"

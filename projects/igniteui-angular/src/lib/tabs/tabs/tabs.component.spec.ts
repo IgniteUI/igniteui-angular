@@ -45,7 +45,6 @@ describe('IgxTabs', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [],
             imports: [
                 NoopAnimationsModule,
                 RouterTestingModule.withRoutes(testRoutes),

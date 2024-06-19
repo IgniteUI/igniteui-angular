@@ -6,7 +6,8 @@ import {
     Input,
     forwardRef,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 
@@ -54,7 +55,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override set collapsible(value: boolean) {
         this._collapsible = value;
         this.collapsibleChange.emit(this._collapsible);
@@ -82,7 +83,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override set expanded(value: boolean) {
         this._expanded = value;
         this.expandedChange.emit(this._expanded);
@@ -135,7 +136,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override searchable = true;
 
      /* blazorSuppress */
@@ -179,7 +180,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * @hidden
      */
-    public override set selectable(value: boolean) {}
+    public override set selectable(value: boolean) { }
 
     /* blazorSuppress */
     /**
@@ -234,7 +235,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override get hidden() {
         return this.allChildren.every(c => c.hidden);
     }

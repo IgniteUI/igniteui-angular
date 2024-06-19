@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxRippleDirective, IgxYearsViewComponent } from 'igniteui-angular';
 
@@ -8,6 +8,7 @@ import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewCompone
     templateUrl: 'calendar-views.sample.html',
     styleUrls: ['calendar-views.sample.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
         IgxCardComponent,
@@ -32,6 +33,7 @@ export class CalendarViewsSampleComponent implements OnInit {
     public locale = 'en';
     public localeFr = 'fr';
     public localeDe = 'de';
+	public isActive = true;
 
     public formatOptions = {
         day: '2-digit',
@@ -86,6 +88,10 @@ export class CalendarViewsSampleComponent implements OnInit {
         console.log(`selected date: ${date}`);
     }
 
+    public get activeDate() {
+        return Array.isArray(this.date) ? this.date.at(0) : this.date;
+    }
+
     // public select() {
     //     // this.calendar.selectDate(new Date(2019, 1, 13));
     //     this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
@@ -98,11 +104,13 @@ export class CalendarViewsSampleComponent implements OnInit {
 
     public selectDV() {
         this.daysView.selectDate(new Date(2019, 1, 13));
+		this.isActive = false;
         // this.daysView.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
     public deselectDV() {
         this.daysView.deselectDate(new Date(2019, 1, 13));
+	    this.isActive = true;
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 }

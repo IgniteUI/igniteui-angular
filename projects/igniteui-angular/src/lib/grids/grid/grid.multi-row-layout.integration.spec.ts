@@ -1,5 +1,5 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -841,6 +841,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
+            await wait(16); // needed because of throttleTime on the resize observer
+            fixture.detectChanges();
             grid.height = '600px';
             grid.groupBy({
                 dir: SortingDirection.Desc,
@@ -856,7 +858,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -871,7 +873,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(lastRowOffset).toEqual(tbody.scrollHeight);
         });
 
-        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', fakeAsync(() => {
+        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async () => {
+            await wait(16); // needed because of throttleTime on the resize observer
+            fixture.detectChanges();
             grid.height = '600px';
             fixture.detectChanges();
             grid.groupBy({
@@ -887,15 +891,15 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            tick(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
-            tick(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
-        }));
+        });
     });
 
     describe('Resizing', () => {
@@ -1310,7 +1314,7 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" displayDensity="compact">
+    <igx-grid #grid [data]="data" height="500px" [style.--ig-size]="1">
         <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'

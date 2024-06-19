@@ -72,6 +72,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin snackbar($theme) {
     @include css-vars($theme);
@@ -81,7 +83,6 @@
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
-    $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
         position: relative;
@@ -107,6 +108,15 @@
             color: var-get($theme, 'button-color');
             -webkit-tap-highlight-color: transparent;
             box-shadow: none;
+        }
+
+        @if $variant == 'indigo-design' {
+            padding: rem(4px) rem(16px);
+            min-height: rem(36px);
+
+            [igxButton] {
+                --ig-size: 2;
+            }
         }
     }
 

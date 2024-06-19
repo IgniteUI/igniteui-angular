@@ -31,7 +31,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
         const pathElem = currPath.shift();
         const childrenForLayout = this.childGrids.get(pathElem.rowIslandKey);
         if (childrenForLayout) {
-            const childGrid = childrenForLayout.get(pathElem.rowID);
+            const childGrid = childrenForLayout.get(pathElem.rowKey);
             if (currPath.length === 0) {
                 grid = childGrid;
             } else {

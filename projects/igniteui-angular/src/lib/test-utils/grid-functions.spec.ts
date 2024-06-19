@@ -1,4 +1,3 @@
-
 import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
@@ -24,7 +23,6 @@ import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -738,8 +736,8 @@ export class GridFunctions {
 
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
-        const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-        const applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        const containedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--contained'));
+        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'apply');
         return applyButton;
     }
 
@@ -771,8 +769,8 @@ export class GridFunctions {
 
     public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--raised'));
-        const applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--contained'));
+        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'apply');
         return applyButton as HTMLElement;
     }
 
@@ -784,8 +782,8 @@ export class GridFunctions {
 
     public static clickClearFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
-        const button: any = raisedButtons.find((rb: any) => rb.innerText === 'Clear filter');
+        const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
+        const button: any = containedButtons.find((rb: any) => rb.innerText === 'Clear filter');
         button.click();
         fix.detectChanges();
     }
@@ -1143,7 +1141,7 @@ export class GridFunctions {
     public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
-        return Array.from(headerArea.querySelectorAll('.igx-button--icon'));
+        return Array.from(headerArea.querySelectorAll('.igx-icon-button'));
     }
 
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {

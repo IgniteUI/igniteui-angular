@@ -1,15 +1,14 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { fadeOut } from '../../animations/fade';
-import { scaleInCenter } from '../../animations/scale';
 import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
 import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
+import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -36,7 +35,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
  * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
  * ```
  */
- @Directive({
+@Directive({
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]',
     standalone: true
@@ -92,7 +91,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input('tooltipDisabled')
+    @Input({ alias: 'tooltipDisabled', transform: booleanAttribute })
     public tooltipDisabled = false;
 
     /**
@@ -115,9 +114,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         return this._target;
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     @Input()
     public set tooltip(content: any) {
         if (!this.target && (typeof content === 'string' || content instanceof String)) {
@@ -186,7 +185,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
 
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {

@@ -48,8 +48,7 @@ $theme: igx-avatar-theme(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -75,8 +74,7 @@ $theme: igx-avatar-theme(
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -98,7 +96,7 @@ $theme: igx-avatar-theme(
             ></igx-slider>`
         );
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree).toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/slider.component.html')).toEqual(
             `<igx-slider
@@ -114,7 +112,7 @@ $theme: igx-avatar-theme(
             `<igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>`
         );
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree).toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/linear.component.html')).toEqual(
             `<igx-linear-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-linear-bar>`
@@ -127,7 +125,7 @@ $theme: igx-avatar-theme(
             `<igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>`
         );
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree).toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/circular.component.html')).toEqual(
             `<igx-circular-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-circular-bar>`
@@ -143,8 +141,7 @@ $theme: igx-avatar-theme(
     <div>Some Content</div>
 </igx-tabs-group>
 </igx-tabs>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -175,8 +172,7 @@ ${noteText}
 </ng-template>
 </igx-tab-item>
 </igx-tabs>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -219,8 +215,7 @@ ${noteText}
 </igx-bottom-nav-content>
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -260,8 +255,7 @@ ${noteText}
 <div>Tab Content</div>
 </igx-tabs-group>
 </igx-tabs>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -287,8 +281,7 @@ ${noteText}
 Some Content
 </igx-tab-panel>
 </igx-bottom-nav>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -316,8 +309,7 @@ Some Content
 </ng-template>
 </igx-tab>
 </igx-bottom-nav>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -342,8 +334,7 @@ ${noteText}
 <div>Tab Content</div>
 </igx-tab-panel>
 </igx-bottom-nav>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
@@ -375,8 +366,7 @@ igx-tab {
     padding: 8px;
 }`);
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.scss'))
             .toEqual(`
@@ -405,8 +395,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -426,8 +415,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -448,8 +436,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -469,8 +456,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -490,8 +476,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -511,8 +496,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -532,8 +516,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -553,8 +536,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -574,8 +556,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -595,8 +576,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -616,8 +596,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -637,8 +616,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -658,8 +636,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -679,8 +656,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -700,8 +676,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -721,8 +696,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -742,8 +716,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -763,8 +736,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -785,8 +757,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -806,8 +777,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -827,8 +797,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -848,8 +817,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -869,8 +837,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -890,8 +857,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -911,8 +877,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -932,8 +897,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -953,8 +917,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -975,8 +938,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -996,8 +958,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1017,8 +978,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1038,8 +998,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1059,8 +1018,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1080,8 +1038,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1104,8 +1061,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1126,8 +1082,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1147,8 +1102,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1168,8 +1122,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1189,8 +1142,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1210,8 +1162,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1232,8 +1183,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1254,8 +1204,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1276,8 +1225,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1298,8 +1246,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1320,8 +1267,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1341,8 +1287,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1362,8 +1307,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1383,8 +1327,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1404,8 +1347,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1426,8 +1368,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1448,8 +1389,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1470,8 +1410,7 @@ igx-bottom-nav-header {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1503,8 +1442,7 @@ export class PickerModeComponent {
 `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
 import { PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
@@ -1551,8 +1489,7 @@ export class HGridMultiRowDragComponent {
         const treeRowComp: this.gridAPI.get_row_by_index(0) as IgxTreeGridRowComponent;
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
             .toEqual(`
@@ -1586,8 +1523,7 @@ export class HGridMultiRowDragComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1617,8 +1553,7 @@ export class SimpleComponent {
         this.toast.hide();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
             .toEqual(`
@@ -1655,8 +1590,7 @@ export class SimpleComponent {
         }
         `);
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
         import { IgxColumnComponent, GridColumnDataType } from 'igniteui-angular';
@@ -1689,8 +1623,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1714,8 +1647,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1739,8 +1671,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1764,8 +1695,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1789,8 +1719,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
@@ -1814,8 +1743,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         // this is the expected output
         // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
@@ -1840,8 +1768,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         // this is the expected output
         // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
@@ -1866,8 +1793,7 @@ export class SimpleComponent {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         // this is the expected output
         // putting just the disabled attribute on an igx-input-group is an invalid scenario
         expect(
@@ -1891,8 +1817,7 @@ export class SimpleComponent {
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, { shouldInvokeLS: false }, appTree)
-            .toPromise();
+            .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')

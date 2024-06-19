@@ -1,7 +1,7 @@
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -18,7 +18,6 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -32,12 +31,16 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
-    oldSelection: any[];
+    oldValue: any[];
     /** An array containing the values that will be selected after this event */
+    newValue: any[];
+    /** An array containing the items that are currently selected */
+    oldSelection: any[];
+    /** An array containing the items that will be selected after this event */
     newSelection: any[];
-    /** An array containing the values that will be added to the selection (if any) */
+    /** An array containing the items that will be added to the selection (if any) */
     added: any[];
-    /** An array containing the values that will be removed from the selection (if any) */
+    /** An array containing the items that will be removed from the selection (if any) */
     removed: any[];
     /** The text that will be displayed in the combo text box */
     displayText: string;
@@ -123,22 +126,18 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, DoCheck, EditorProvider {
     /**
-     * An @Input property that controls whether the combo's search box
-     * should be focused after the `opened` event is called
+     * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
     /**
-     * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
+     * Enables/disables filtering in the list. The default is `true`.
      *
-     * An @Input property that enabled/disables filtering in the list. The default is `true`.
-     * ```html
-     * <igx-combo [filterable]="false">
-     * ```
+     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get filterable(): boolean {
         return this.filteringOptions.filterable;
     }
@@ -176,13 +175,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
 
-    /**
-     * @hidden @internal
-     */
-    public get inputEmpty(): boolean {
-        return this.displayValue.length === 0 && !this.placeholder;
-    }
-
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this.filteringOptions.filterable ? this._filteredData : this.data;
@@ -210,10 +202,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
         _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        super(elementRef, cdr, selectionService, comboAPI, _iconService, document, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 
@@ -267,12 +259,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
+    public ngDoCheck(): void {
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
-        super.ngDoCheck();
     }
 
     /**
@@ -427,15 +418,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = diffInSets(this.selectionService.get(this.id), newSelection);
-        const added = diffInSets(newSelection, this.selectionService.get(this.id));
-        const newSelectionAsArray = Array.from(newSelection);
-        const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(this.convertKeysToItems(newSelectionAsArray), oldSelectionAsArray);
+    protected setSelection(selection: Set<any>, event?: Event): void {
+        const currentSelection = this.selectionService.get(this.id);
+        const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
+        const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
+        const newValue = Array.from(selection);
+        const oldValue = Array.from(currentSelection || []);
+        const newSelection = this.convertKeysToItems(newValue);
+        const oldSelection = this.convertKeysToItems(oldValue);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newValue), oldValue);
         const args: IComboSelectionChangingEventArgs = {
-            newSelection: newSelectionAsArray,
-            oldSelection: oldSelectionAsArray,
+            newValue,
+            oldValue,
+            newSelection,
+            oldSelection,
             added,
             removed,
             event,
@@ -445,16 +441,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         };
         this.selectionChanging.emit(args);
         if (!args.cancel) {
-            this.selectionService.select_items(this.id, args.newSelection, true);
-            this._value = args.newSelection;
+            this.selectionService.select_items(this.id, args.newValue, true);
+            this._value = args.newValue;
             if (displayText !== args.displayText) {
                 this._displayValue = this._displayText = args.displayText;
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newSelection);
+            this._onChangeCallback(args.newValue);
         } else if (this.isRemote) {
-            this.registerRemoteEntries(args.added, false);
+            this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
     }
 

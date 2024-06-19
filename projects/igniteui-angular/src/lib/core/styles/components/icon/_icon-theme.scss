@@ -45,6 +45,8 @@
 }
 
 // stylelint-disable font-family-no-missing-generic-family-keyword
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin icon($theme) {
     @include css-vars($theme);
@@ -55,7 +57,7 @@
     // this approach effectively enables us to eliminate any potential style conflicts without the need of !important
     %igx-icon-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         display: inline-flex;
         font-size: $size;

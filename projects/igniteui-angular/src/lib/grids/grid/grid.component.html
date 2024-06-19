@@ -7,7 +7,6 @@
         [grid]="this"
         [expressions]="groupingExpressions"
         [sortingExpressions]="sortingExpressions"
-        [density]="displayDensity"
         [dropAreaTemplate]="dropAreaTemplate"
         [dropAreaMessage]="dropAreaMessage"
     >
@@ -18,7 +17,6 @@
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
-    [density]="displayDensity"
     [activeDescendant]="activeDescendant"
     [width]="calcWidth"
     [pinnedColumnCollection]="pinnedColumns"
@@ -203,7 +201,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button type="button" igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="contained" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>

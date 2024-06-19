@@ -2,6 +2,7 @@ import {
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -22,12 +23,11 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -127,22 +127,22 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /**
-     * An @Input property that sets input placeholder.
+     * Sets input placeholder.
      *
      */
     @Input() public placeholder;
 
 
     /**
-     * An @Input property that disables the `IgxSelectComponent`.
+     * Disables the component.
      * ```html
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
      */
-    @Input() public disabled = false;
+    @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom OverlaySettings `IgxSelectComponent`.
      * ```html
      * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
      * ```
@@ -281,7 +281,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _type = null;
 
     /**
-     * An @Input property that gets/sets the component value.
+     * Gets/Sets the component value.
      *
      * ```typescript
      * // get
@@ -309,7 +309,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /**
-     * An @Input property that sets how the select will be styled.
+     * Sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>
@@ -317,8 +317,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public get type(): IgxInputGroupType {
-            return this._type || this._inputGroupType || 'line';
-        }
+        return this._type || this._inputGroupType || 'line';
+    }
 
     public set type(val: IgxInputGroupType) {
         this._type = val;
@@ -341,12 +341,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        super(elementRef, cdr, document, selection);
     }
 
     //#region ControlValueAccessor
@@ -390,7 +390,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             return;
         }
 
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
         this.selectionChanging.emit(args);
 
         if (args.cancel) {
@@ -438,7 +438,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             return;
         }
         this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
-}
+    }
 
     /** @hidden @internal */
     public ngAfterContentInit() {
@@ -466,7 +466,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public handleOpening(e: ToggleViewCancelableEventArgs) {
-        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.opening.emit(args);
 
         e.cancel = args.cancel;
@@ -492,7 +492,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public handleClosing(e: ToggleViewCancelableEventArgs) {
-        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.closing.emit(args);
         e.cancel = args.cancel;
     }
@@ -523,7 +523,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
     }
 
     /**
@@ -595,8 +594,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.inputGroup.isRequired = error && error.required;
             this.cdr.markForCheck();
 
-        // If validator is dynamically cleared and no required HTML attribute is set,
-        // reset label's required class(asterisk) and IgxInputState #6896
+            // If validator is dynamically cleared and no required HTML attribute is set,
+            // reset label's required class(asterisk) and IgxInputState #6896
         } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
             this.input.valid = IgxInputState.INITIAL;
             this.inputGroup.isRequired = false;

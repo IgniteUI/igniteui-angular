@@ -1,6 +1,5 @@
 'use strict';
 
-const browserSync = require('browser-sync').create();
 const del = require('del');
 const gulp = require('gulp');
 const process = require('process');
@@ -9,16 +8,10 @@ const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const path = require('path');
 const { series } = require('gulp');
-const { spawnSync } = require('child_process');
 const slash = require('slash');
 const concat = require('gulp-concat');
 
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
-
-const TYPEDOC_THEME = {
-    SRC: slash(path.join(__dirname, 'node_modules', 'ig-typedoc-theme', 'dist')),
-    OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
-};
 
 module.exports.copyGitHooks = async (cb) => {
 
@@ -95,112 +88,9 @@ module.exports.copySchematics = (cb) => {
     cb();
 };
 
-const typedocBuildTheme = (cb) => {
-    spawnSync(`typedoc`, [
-        TYPEDOC.PROJECT_PATH,
-        "--tsconfig",
-        path.join(__dirname, "tsconfig.typedoc.json")],
-        { stdio: 'inherit', shell: true });
-    cb();
-};
-typedocBuildTheme.displayName = 'typedoc-build:theme';
-
-const browserReload = (cb) => {
-    browserSync.reload();
-
-    cb();
-};
-
-const typedocServe = (cb) => {
-    const config = {
-        server: {
-            baseDir: TYPEDOC_THEME.OUTPUT
-        },
-        port: 3000
-    }
-
-    browserSync.init(config);
-
-    cb();
-};
-
-function typedocWatchFunc(cb) {
-    gulp.watch([
-        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'js', 'src', '/**/*.{ts,js}')),
-        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
-        slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
-        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
-    ], series(typedocBuildTheme, browserReload));
-
-    cb();
-}
-
-
-const TYPEDOC = {
-    EXPORT_JSON_PATH: slash(path.join(DOCS_OUTPUT_PATH, 'typescript-exported')),
-    PROJECT_PATH: slash(path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'public_api.ts')),
-    TEMPLATE_STRINGS_PATH: slash(path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json'))
-};
-
-function typedocBuildExportFn(cb) {
-    const childProcess = spawnSync('typedoc', [
-        TYPEDOC.PROJECT_PATH,
-        "--generate-json",
-        TYPEDOC.EXPORT_JSON_PATH,
-        "--tsconfig",
-        path.join(__dirname, "tsconfig.typedoc.json")],
-        { stdio: 'inherit', shell: true });
-    process.exitCode = childProcess.status || 0;
-    cb();
-}
-
-function typedocImportJsonFn(cb) {
-    const childProcess = spawnSync('typedoc', [
-        TYPEDOC.PROJECT_PATH,
-        "--generate-from-json",
-        TYPEDOC.EXPORT_JSON_PATH,
-        "--warns",
-        "--tsconfig",
-        path.join(__dirname, "tsconfig.typedoc.json")],
-        { stdio: 'inherit', shell: true });
-    process.exitCode = childProcess.status || 0;
-    cb();
-}
 
 function createDocsOutputDirFn(cb) {
     !fs.existsSync(DOCS_OUTPUT_PATH) && fs.mkdirSync(DOCS_OUTPUT_PATH);
-    cb();
-}
-
-function cleanTypedocOutputDirFn(cb) {
-    del.sync(slash(path.join(DOCS_OUTPUT_PATH, 'typescript')));
-    cb();
-}
-
-function typedocBuildDocsJA(cb) {
-    const childProcess = spawnSync('typedoc', [
-        TYPEDOC.PROJECT_PATH,
-        '--generate-from-json',
-        slash(path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')),
-        '--templateStrings',
-        TYPEDOC.TEMPLATE_STRINGS_PATH,
-        '--warns',
-        '--localize',
-        'jp',
-        "--tsconfig",
-        path.join(__dirname, "tsconfig.typedoc.json")], { stdio: 'inherit', shell: true });
-    process.exitCode = childProcess.status || 0;
-    cb();
-}
-
-function typedocBuildDocsEN(cb) {
-    const childProcess = spawnSync('typedoc', [
-        TYPEDOC.PROJECT_PATH,
-        '--localize',
-        'en',
-        "--tsconfig",
-        path.join(__dirname, "tsconfig.typedoc.json")], { stdio: 'inherit', shell: true });
-    process.exitCode = childProcess.status || 0;
     cb();
 }
 
@@ -276,29 +166,6 @@ function sassdocBuildEN(cb) {
 }
 
 module.exports.createDocsOutputDir = createDocsOutputDirFn;
-
-/**
- * Typedoc build tasks
- */
-module.exports.exportTypedocJson = typedocBuildExportFn;
-module.exports.cleanTypedocOutputDir = cleanTypedocOutputDirFn;
-module.exports.typedocBuildTheme = typedocBuildTheme;
-module.exports.importTypedocJson = typedocImportJsonFn;
-module.exports.typedocServe = series(
-    typedocBuildTheme,
-    typedocWatchFunc,
-    typedocServe
-);
-module.exports.typedocBuildDocsJA = series(
-    this.createDocsOutputDir,
-    this.cleanTypedocOutputDir,
-    typedocBuildDocsJA
-);
-module.exports.typedocBuildDocsEN = series(
-    this.createDocsOutputDir,
-    this.cleanTypedocOutputDir,
-    typedocBuildDocsEN
-);
 
 /**
  * Sassdoc build tasks

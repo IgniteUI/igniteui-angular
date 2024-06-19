@@ -7,12 +7,9 @@ import {
     Directive,
     OnDestroy,
     HostBinding,
-    Input,
-    ViewChildren,
-    QueryList
+    Input
 } from '@angular/core';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
@@ -42,7 +39,7 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
 import { ITreeNodeSelectionEvent } from '../../../tree/common';
 import { Navigate } from '../../../drop-down/drop-down.common';
-
+import { Size } from '../../common/enums';
 @Directive({
     selector: '[igxExcelStyleLoading]',
     standalone: true
@@ -119,9 +116,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
-    @ViewChildren(IgxCheckboxComponent)
-    protected checkboxes: QueryList<IgxCheckboxComponent>;
-    
     /**
      * @hidden @internal
      */
@@ -293,7 +287,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        const selectedIndex = this.displayedListData.indexOf(eventArgs.checkbox.value);
+        const selectedIndex = this.displayedListData.indexOf(eventArgs.owner.value);
         const selectAllBtn = this.displayedListData[0];
 
         if (selectedIndex === 0) {
@@ -306,7 +300,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
             selectAllBtn.indeterminate = false;
         } else {
-            eventArgs.checkbox.value.isSelected = eventArgs.checked;
+            eventArgs.owner.value.isSelected = eventArgs.checked;
             const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilterItem) > -1 ? 2 : 1;
 
             const slicedArray =
@@ -364,9 +358,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get itemSize() {
         let itemSize = '40px';
-        switch (this.esf.displayDensity) {
-            case DisplayDensity.cosy: itemSize = '32px'; break;
-            case DisplayDensity.compact: itemSize = '24px'; break;
+        const esf = this.esf as any;
+        switch (esf.size) {
+            case Size.Medium: itemSize = '32px'; break;
+            case Size.Small: itemSize = '24px'; break;
             default: break;
         }
         return itemSize;
@@ -808,7 +803,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const dataItem = this.displayedListData[this.focusedItem.index];
         const args: IChangeCheckboxEventArgs = {
             checked: !dataItem.isSelected,
-            checkbox: this.checkboxes.find(x => x.value === dataItem)
+            owner: {
+                value: dataItem
+            }
         }
         this.onCheckboxChange(args);
     }

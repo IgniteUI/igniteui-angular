@@ -9,12 +9,12 @@ import {
     Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { fadeIn, fadeOut } from '../animations/main';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
     PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 /**

@@ -25,17 +25,37 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: CellType;
     /* blazorCSSuppress */
     /**
-     * Represents the original event that occurred
+     * Represents the original event that ocurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
 }
 
+/** Represents an event argument related to grid row interactions. */
+export interface IGridRowEventArgs extends IBaseEventArgs {
+    /** Represents the grid row that triggered the event. */
+    row: RowType;
+    /**
+     * Represents the original event that ocurred
+     * Examples of such events include: selecting, clicking, double clicking, etc.
+     */
+    event: Event;
+}
+
+/** Represents an event argument for the grid contextMenu output */
+export interface IGridContextMenuEventArgs extends IGridCellEventArgs, IGridRowEventArgs {}
+
 /** Represents event arguments related to grid editing completion. */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
-    rowID: any; // deprecated
-    primaryKey: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
-    /** `cellID` is optional; specifies the cell the editing is being done on. */
+    /**
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
+     */
+    rowID: any;
+    /**
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
+     */
+    primaryKey: any;
+    rowKey: any;
     cellID?: {
         rowID: any;
         columnID: any;
@@ -94,6 +114,30 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
+export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
+    /**
+     * @deprecated
+     */
+    cellID?: {
+        rowID: any;
+        columnID: any;
+        rowIndex: number;
+    };
+    /**
+     * @deprecated
+     */
+    oldValue: any;
+    /**
+     * @deprecated
+     */
+    newValue?: any;
+    /**
+     * @deprecated
+     */
+    isAddRow?: boolean;
+    owner: GridType;
+}
+
 /**
  * The event arguments after a column's pin state is changed.
  * `insertAtIndex`specifies at which index in the pinned/unpinned area the column was inserted.
@@ -128,16 +172,23 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  * Example for events: adding, deleting, selection, transaction, etc.
  */
 export interface IRowDataEventArgs extends IBaseEventArgs {
+    /**
+     * @deprecated since version 17.1.0. Use the `rowData` property instead.
+     */
     data: any;
+    rowData: any
     /**
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     primaryKey: any;
+    rowKey: any;
     /* blazorSuppress */
     /** Represents the grid instance that owns the edit event. */
     owner: GridType;
 }
+
 
 /** The event arguments when a column is being resized */
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
@@ -353,8 +404,12 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 
 /** Represents event arguments related to the row's expansion state being changed in a grid */
 export interface IRowToggleEventArgs extends IBaseEventArgs {
-    /** Represents the ID of the row that emitted the event (which state is changed) */
+    /**
+     * Represents the ID of the row that emitted the event (which state is changed)
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
+     */
     rowID: any;
+    rowKey: any;
     /**
      * Returns the state of the row after the operation has ended
      * Indicating whether the row is being expanded (true) or collapsed (false)
@@ -381,9 +436,11 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * The ID of the row, that was pinned/unpinned.
-     *   ID is either the primaryKey value or the data record instance.
+     * ID is either the primaryKey value or the data record instance.
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     readonly rowID: any;
+    readonly rowKey: any;
     row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;

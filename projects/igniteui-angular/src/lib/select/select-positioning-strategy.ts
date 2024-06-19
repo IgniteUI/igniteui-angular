@@ -1,10 +1,11 @@
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from '../services/overlay/utilities';
 import { IPositionStrategy } from '../services/overlay/position';
-import { fadeOut, fadeIn } from '../animations/main';
+
 import { IgxSelectBase } from './select.common';
 import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
 import { PlatformUtil } from '../core/utils';
 import { Optional } from '@angular/core';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
@@ -44,7 +45,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
                     document?: Document,
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {
-        const targetElement = target || this.settings.target;
+        const targetElement = target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {

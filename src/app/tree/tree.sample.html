@@ -4,7 +4,7 @@
             <input placeholder="Search by key..." #searchCriteria igxInput id="search-b-key" type="text">
         </igx-input-group>
 
-        <button igxButton="raised" (click)="customSearch(searchCriteria.value)">Log node</button>
+        <button igxButton="contained" (click)="customSearch(searchCriteria.value)">Log node</button>
     </div>
 </div>
 <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
@@ -49,14 +49,15 @@
 
         </div>
         <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode()"></igx-buttongroup>
-        <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
+        <size-selector #sizeSelector></size-selector>
 
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
                 <igx-tree #tree1
                     [singleBranchExpand]="singleBranchExpand"
-                    [displayDensity]="density"
+                    [toggleNodeOnClick]="true"
+                    [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
                     [selection]="'Cascading'"
                     [animationSettings]="animationSettings"
                     (nodeSelection)="nodeSelection($event)"
@@ -80,6 +81,9 @@
                     <igx-tree-node>Link children
                         <igx-tree-node #myNode *ngFor="let node of [].constructor(7); let i = index">
                             <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNode }"></ng-template>
+                            <igx-tree-node #myNodel2 *ngFor="let node of [].constructor(2); let i = index">
+                                <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNodel2 }"></ng-template>
+                            </igx-tree-node>
                         </igx-tree-node>
                     </igx-tree-node>
                     <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true"
@@ -109,7 +113,7 @@
 
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree 2: The Branching</p>
-                <igx-tree>
+                <igx-tree [toggleNodeOnClick]="true">
                     <igx-tree-node *ngFor="let node of data" [data]="node">
                         {{ node.CompanyName }}
                         <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">

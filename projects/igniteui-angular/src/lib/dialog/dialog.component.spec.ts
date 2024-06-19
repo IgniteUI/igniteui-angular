@@ -7,9 +7,9 @@ import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent } fro
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import { slideOutBottom, slideInTop } from '../animations/main';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
+import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
@@ -201,15 +201,11 @@ describe('Dialog', () => {
 
         dialog.open();
         expect(dialog.leftButtonLabel).toEqual('left button');
-        expect(dialog.leftButtonType).toEqual('raised');
-        expect(dialog.leftButtonColor).toEqual('black');
-        expect(dialog.leftButtonBackgroundColor).toEqual('darkblue');
+        expect(dialog.leftButtonType).toEqual('contained');
         expect(dialog.leftButtonRipple).toEqual('pink');
 
         expect(dialog.rightButtonLabel).toEqual('right button');
-        expect(dialog.rightButtonType).toEqual('raised');
-        expect(dialog.rightButtonColor).toEqual('orange');
-        expect(dialog.rightButtonBackgroundColor).toEqual('lightblue');
+        expect(dialog.rightButtonType).toEqual('contained');
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
@@ -543,14 +539,10 @@ class AlertComponent {
     <div #wrapper>
         <igx-dialog #dialog title="dialog" message="message"
             leftButtonLabel="left button"
-            leftButtonType="raised"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
+            leftButtonType="contained"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
+            rightButtonType="contained"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -567,14 +559,10 @@ class DialogComponent {
         <igx-dialog #dialog title="dialog" message="message"
             [(isOpen)]="myDialog"
             leftButtonLabel="left button"
-            leftButtonType="raised"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
+            leftButtonType="contained"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
+            rightButtonType="contained"
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
@@ -591,14 +579,10 @@ class DialogTwoWayDataBindingComponent {
     <div #wrapper>
         <igx-dialog #dialog
             leftButtonLabel="left button"
-            leftButtonType="raised"
-            leftButtonColor="black"
-            leftButtonBackgroundColor="darkblue"
+            leftButtonType="contained"
             leftButtonRipple="pink"
             rightButtonLabel="right button"
-            rightButtonType="raised"
-            rightButtonColor="orange"
-            rightButtonBackgroundColor="lightblue"
+            rightButtonType="contained"
             rightButtonRipple="white">
             <div class="custom-sample">
                 <h2>Custom Sample</h2>

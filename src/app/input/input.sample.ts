@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IChangeRadioEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCheckboxComponent, IgxIconComponent, IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
+import { IChangeCheckboxEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCheckboxComponent, IgxIconComponent, IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
 
 
 @Component({
@@ -71,7 +71,7 @@ export class InputSampleComponent {
         console.log(value);
     }
 
-    public onRadioChanged(event: IChangeRadioEventArgs) {
+    public onRadioChanged(event: IChangeCheckboxEventArgs) {
         console.log(event);
     }
 

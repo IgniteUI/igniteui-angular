@@ -166,8 +166,7 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'A bejegyzésnek legalább {0} karakter hosszúságúnak kell lennie',
     igx_grid_max_length_validation_error: 'A bejegyzés legfeljebb {0} karakter hosszúságú lehet',
     igx_grid_email_validation_error: 'Érvényes e-mail címet kell megadni',
-    igx_grid_pattern_validation_error: 'A bejegyzés nem felel meg a szükséges sémának',
-    igx_grid_pivot_no_aggregator: 'Nem található érvényes összesítő a következőhöz: {0}. Adjon meg egy érvényes „aggregatorName” vagy „aggregator” értéket.'
+    igx_grid_pattern_validation_error: 'A bejegyzés nem felel meg a szükséges sémának'
 };
 
 /**

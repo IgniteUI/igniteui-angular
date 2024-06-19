@@ -85,3 +85,7 @@ p {
 [igxButton="outlined"] {
     margin: 1.5rem 0 4rem;
 }
+
+.grid-size {
+    --ig-size: var(--ig-size-small);
+}

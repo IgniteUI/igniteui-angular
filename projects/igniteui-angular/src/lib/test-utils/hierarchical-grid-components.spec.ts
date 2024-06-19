@@ -11,7 +11,7 @@ import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-
 import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
@@ -30,7 +30,7 @@ import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
+            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -104,7 +104,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-column-group>
         <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
+            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -352,16 +352,16 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
         [primaryKey]="'ID'" [autoGenerate]="true">
         <igx-grid-toolbar>
-            <button type="button" igxButton="raised">Parent Button</button>
+            <button type="button" igxButton="contained">Parent Button</button>
         </igx-grid-toolbar>
         <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true">
-            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
-                <button type="button" igxButton="raised">Child 1 Button</button>
+            <igx-grid-toolbar *igxGridToolbar>
+                <button type="button" igxButton="contained">Child 1 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
-            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
-                <button type="button" igxButton="raised">Child2 Button</button>
+            <igx-grid-toolbar *igxGridToolbar>
+                <button type="button" igxButton="contained">Child2 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
     </igx-hierarchical-grid>`,
@@ -369,6 +369,53 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [autoGenerate]="true">
+        <igx-grid-toolbar>
+            <button type="button" igxButton="contained">Parent Button</button>
+        </igx-grid-toolbar>
+        <ng-template #toolbarTemplate let-grid>
+            <igx-grid-toolbar>
+                <button type="button" igxButton="contained"> {{grid.parentIsland.key}} Button</button>
+            </igx-grid-toolbar>
+        </ng-template>
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true" [toolbarTemplate]="toolbarTemplate">
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true" [toolbarTemplate]="toolbarTemplate">
+        </igx-row-island>
+
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
+})
+export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [autoGenerate]="true">
+        <igx-grid-toolbar>
+            <button type="button" igxButton="contained">Parent Button</button>
+        </igx-grid-toolbar>
+        <ng-template #paginatorTemplate let-grid>
+            <igx-paginator>
+                <igx-paginator-content>
+                    <button type="button" igxButton="contained"> {{grid.parentIsland.key}} Button</button>
+                </igx-paginator-content>
+            </igx-paginator>
+        </ng-template>
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [autoGenerate]="true" [paginatorTemplate]="paginatorTemplate">
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true" [paginatorTemplate]="paginatorTemplate">
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, IgxRowIslandComponent, IgxButtonDirective]
+})
+export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchicalGridTestBaseComponent { }
 
 @Component({
     template: `
@@ -535,22 +582,22 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
 @Component({
     template: `
     <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
-        <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
 
         <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
-            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column-group [movable]="true" header="Personal Details">
-                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group header="Personal Details">
+                    <igx-column field="ContactName" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
             </igx-column-group>
             <igx-column-group header="Address Information">
                 <igx-column-group header="Location">
-                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Address" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="Contact Information">
                     <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>

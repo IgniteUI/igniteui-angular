@@ -2,9 +2,10 @@ import { AnimationReferenceMetadata } from '@angular/animations';
 import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { growVerIn, growVerOut } from '../animations/grow';
+
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
+import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 /**@hidden @internal */
 export interface ToggleAnimationSettings {

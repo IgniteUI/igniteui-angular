@@ -12,7 +12,6 @@ import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { ExpressionUI } from './common';
@@ -27,6 +26,7 @@ import { IgxSelectItemComponent } from '../../../select/select-item.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgIf, NgFor } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
+import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
 /**
  * @hidden
@@ -43,7 +43,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
     standalone: true,
-    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective]
+    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
@@ -57,9 +57,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     @Input()
     public grid: any;
-
-    @Input()
-    public displayDensity: DisplayDensity;
 
     @Output()
     public expressionRemoved = new EventEmitter<ExpressionUI>();

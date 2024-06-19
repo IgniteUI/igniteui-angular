@@ -56,7 +56,7 @@ export interface ISliderValueChangeEventArgs {
     value: number | IRangeSliderValue;
 }
 
-export const IgxSliderType = mkenum({
+export const IgxSliderType = /*@__PURE__*/mkenum({
     /**
      * Slider with single thumb.
      */
@@ -68,7 +68,7 @@ export const IgxSliderType = mkenum({
 });
 export type IgxSliderType = (typeof IgxSliderType)[keyof typeof IgxSliderType];
 
-export const SliderHandle = mkenum({
+export const SliderHandle = /*@__PURE__*/mkenum({
     FROM: 'from',
     TO: 'to'
 });
@@ -77,7 +77,7 @@ export type SliderHandle = (typeof SliderHandle)[keyof typeof SliderHandle];
 /**
  * Slider Tick labels Orientation
  */
-export const TickLabelsOrientation = mkenum({
+export const TickLabelsOrientation = /*@__PURE__*/mkenum({
     Horizontal: 'horizontal',
     TopToBottom: 'toptobottom',
     BottomToTop: 'bottomtotop'
@@ -87,7 +87,7 @@ export type TickLabelsOrientation = (typeof TickLabelsOrientation)[keyof typeof 
 /**
  * Slider Ticks orientation
  */
-export const TicksOrientation = mkenum({
+export const TicksOrientation = /*@__PURE__*/mkenum({
     Top: 'top',
     Bottom: 'bottom',
     Mirror: 'mirror'

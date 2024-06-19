@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, booleanAttribute } from '@angular/core';
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -60,7 +60,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public ariaHidden = true;
 
     /**
-     * An @Input property that sets the value of the `family`. By default it's "material".
+     * Sets the value of the `family`. By default it's "material".
      *
      * @example
      * ```html
@@ -71,18 +71,18 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public family: string;
 
     /**
-     * An @Input property that allows you to disable the `active` property. By default it's applied.
+     * Gets/Sets whether the active state is applied. By default it's true.
      *
      * @example
      * ```html
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input('active')
+    @Input({ alias: 'active', transform: booleanAttribute })
     public active = true;
 
     /**
-     *  An @Input property that allows you to set the `name` of the icon.
+     *  Set the `name` of the icon.
      *
      *  @example
      * ```html

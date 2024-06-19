@@ -21,10 +21,9 @@
 <ng-template #uploadButton>
     <igx-prefix *ngIf="isFileType" class="igx-input-group__upload-button">
         <button
-            igxButton="raised"
+            igxButton="contained"
             type="button"
             (click)="uploadButtonHandler()"
-            [displayDensity]="displayDensity"
             [disabled]="disabled"
             [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
         >

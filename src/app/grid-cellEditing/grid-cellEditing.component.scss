@@ -2,7 +2,7 @@ button {
     margin: 0.2rem;
 }
 
-[igxButton="raised"] {
+[igxButton="contained"] {
     margin: 0.5rem 0.5rem 0.5rem 0;
 
     &:nth-child(12) {
@@ -21,4 +21,8 @@ button {
         display: block;
         width: 500px;
     }
+}
+
+.grid-size {
+    --ig-size: var(--ig-size-small);
 }

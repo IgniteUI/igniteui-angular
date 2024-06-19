@@ -22,7 +22,8 @@ import {
     QueryList,
     Renderer2,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    booleanAttribute
 } from '@angular/core';
 import { NgIf } from '@angular/common';
 import {
@@ -36,18 +37,17 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges, IFormattingViews, IFormattingOptions
+     IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
+import { isDateInRanges } from '../calendar/common/helpers';
 import {
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { fadeIn, fadeOut } from '../animations/fade';
+
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -57,16 +57,18 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  AbsoluteScrollStrategy,
-  AutoPositionStrategy,
-  IgxOverlayService,
-  OverlayCancelableEventArgs,
-  OverlayEventArgs,
-  OverlaySettings
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    IgxOverlayService,
+    OverlayCancelableEventArgs,
+    OverlayEventArgs,
+    OverlaySettings
 } from '../services/public_api';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 
@@ -120,7 +122,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * let hideOutsideDays = this.datePicker.hideOutsideDays;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
 
     /**
@@ -149,7 +151,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [showWeekNumbers]="true"></igx-date-picker>
      * ``
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
 
     /**
@@ -204,7 +206,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [spinLoop]="false"></igx-date-picker>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public spinLoop = true;
 
     /**
@@ -373,7 +375,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public resourceStrings: IDatePickerResourceStrings;
 
     /** @hidden @internal */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public readOnly = false;
 
     /**
@@ -457,7 +459,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
-    private _resourceStrings = CurrentResourceStrings.DatePickerResourceStrings;
+    private _resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN);
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;
@@ -511,9 +513,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
 
@@ -751,11 +752,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#endregion
 
     /** @hidden @internal */
-    public override ngOnInit(): void {
+    public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
-        super.ngOnInit();
     }
 
     /** @hidden @internal */
@@ -783,10 +783,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this._ngControl) {
             this._statusChanges$ =
                 this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
-                if (this._ngControl.control.validator) {
-                    this.inputGroup.isRequired = this.required;
-                    this.cdr.detectChanges();
-                }
+            if (this._ngControl.control.validator) {
+                this.inputGroup.isRequired = this.required;
+                this.cdr.detectChanges();
+            }
         }
     }
 
@@ -902,14 +902,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-            if (this._calendar?.daysView?.selectedDates) {
-                this._calendar?.daysView?.focusActiveDate();
-                return;
-            }
+
+            // INFO: Commented out during the calendar refactoring as I couldn't
+            // determine why this is needed.
+            // if (this._calendar?.daysView?.selectedDates) {
+            //     return;
+            // }
+
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
-                this._calendar?.daysView?.dates
-                    .find(d => d.date.date.getTime() === this._targetViewDate.getTime())?.nativeElement.focus();
+                // INFO: We need to set the active date to the target view date so there's something to
+                // navigate when the calendar is opened.
+                this._calendar.activeDate = this._targetViewDate;
             }
         });
 
@@ -957,16 +961,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        const isVertical = this.headerOrientation === PickerHeaderOrientation.Vertical;
         this._calendar.hasHeader = !this.isDropdown;
         this._calendar.formatOptions = this.pickerCalendarFormat;
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
-        this._calendar.vertical = isVertical;
         this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
         this._calendar.showWeekNumbers = this.showWeekNumbers;
@@ -980,7 +983,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.setCalendarViewDate();
 
         componentInstance.mode = this.mode;
-        componentInstance.vertical = isVertical;
+        // componentInstance.headerOrientation = this.headerOrientation;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;

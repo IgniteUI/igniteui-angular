@@ -4,8 +4,9 @@
 
 /**
  * Animations
+ * MOVED TO igniteui-angular/animations
  */
-export * from './lib/animations/main';
+//export * from './lib/animations/main';
 
 /**
  * Directives
@@ -18,10 +19,13 @@ export * from './lib/directives/drag-drop/public_api';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/focus-trap/focus-trap.directive';
-export * from './lib/directives/for-of/for_of.directive';
+export {
+    IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
+} from './lib/directives/for-of/for_of.directive';
+export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
-export * from './lib/directives/radio/radio-group.directive';
+export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
@@ -102,7 +106,6 @@ export * from './lib/query-builder/public_api';
  */
 export * from './lib/services/public_api';
 export * from './lib/core/dates';
-export * from './lib/core/density';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { GridSelectionRange } from './lib/grids/common/types';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
@@ -110,22 +113,22 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 /**
  * i18n
  */
-export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
-export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
-export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
-export { IComboResourceStrings } from './lib/core/i18n/combo-resources';
-export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
-export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
-export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
-export { IDatePickerResourceStrings } from './lib/core/i18n/date-picker-resources';
-export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
-export { IListResourceStrings } from './lib/core/i18n/list-resources';
-export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
-export { IInputResourceStrings } from './lib/core/i18n/input-resources';
-export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
-export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
-export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-resources';
-export { IBannerResourceStrings } from './lib/core/i18n/banner-resources';
+export { igxI18N, IResourceStrings, changei18n } from './lib/core/i18n/resources';
+export { ICarouselResourceStrings, CarouselResourceStringsEN } from './lib/core/i18n/carousel-resources';
+export { IGridResourceStrings, GridResourceStringsEN } from './lib/core/i18n/grid-resources';
+export { IComboResourceStrings, ComboResourceStringsEN } from './lib/core/i18n/combo-resources';
+export { IPaginatorResourceStrings, PaginatorResourceStringsEN } from './lib/core/i18n/paginator-resources';
+export { ICalendarResourceStrings, CalendarResourceStringsEN } from './lib/core/i18n/calendar-resources';
+export { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './lib/core/i18n/time-picker-resources';
+export { IDatePickerResourceStrings, DatePickerResourceStringsEN } from './lib/core/i18n/date-picker-resources';
+export { IDateRangePickerResourceStrings, DateRangePickerResourceStringsEN } from './lib/core/i18n/date-range-picker-resources';
+export { IListResourceStrings, ListResourceStringsEN } from './lib/core/i18n/list-resources';
+export { ITreeResourceStrings, TreeResourceStringsEN } from './lib/core/i18n/tree-resources';
+export { IInputResourceStrings, InputResourceStringsEN } from './lib/core/i18n/input-resources';
+export { IChipResourceStrings, ChipResourceStringsEN } from './lib/core/i18n/chip-resources';
+export { IActionStripResourceStrings, ActionStripResourceStringsEN } from './lib/core/i18n/action-strip-resources';
+export { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from './lib/core/i18n/query-builder-resources';
+export { IBannerResourceStrings, BannerResourceStringsEN } from './lib/core/i18n/banner-resources';
 
 /* IMPORTANT: The following are NgModules exported for backwards-compatibility before standalone components */
 export * from './lib/accordion/accordion.module';

@@ -46,8 +46,7 @@ describe(`Update to ${version}`, () => {
         }
         `);
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
         import { HorizontalAnimationType } from 'igniteui-angular';
@@ -99,8 +98,7 @@ describe(`Update to ${version}`, () => {
         <igx-column [field]="'CompanyName'" dataType="string" [sortable]="true"></igx-column>
     </igx-grid>
 </div>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
@@ -153,8 +151,7 @@ export class AppModule {}
 `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/app.module.ts')
@@ -220,8 +217,7 @@ export class AppModule {}
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
@@ -270,8 +266,7 @@ export class AppModule {}
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
@@ -307,8 +302,7 @@ export class AppModule {}
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
@@ -339,8 +333,7 @@ export class AppModule {}
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -379,8 +372,7 @@ export class AppModule {}
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
             </igx-hierarchical-grid>`);
 
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -423,8 +415,7 @@ export class AppModule {}
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -452,8 +443,7 @@ export class AppModule {}
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -484,8 +474,7 @@ export class AppModule {}
 </igx-grid-toolbar-actions>
 </igx-grid-toolbar>
 </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -521,8 +510,7 @@ export class AppModule {}
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -558,8 +546,7 @@ export class AppModule {}
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`

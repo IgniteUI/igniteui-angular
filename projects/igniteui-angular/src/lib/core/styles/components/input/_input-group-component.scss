@@ -112,8 +112,14 @@
             }
         }
 
+        @include m(suffixed) {
+            @extend %suffixed !optional;
+        }
+
         // Textarea modifier
         @include m(textarea-group) {
+            @extend %textarea-group !optional;
+
             @include e(bundle-main) {
                 @extend  %form-group-textarea-group-bundle-main !optional;
             }
@@ -125,6 +131,14 @@
             @include e(label) {
                 @extend  %form-group-textarea-label !optional;
             }
+        }
+
+        @include mx(textarea-group, border) {
+            @extend %textarea-group--outlined !optional;
+        }
+
+        @include mx(textarea-group, box) {
+            @extend %textarea-group--box !optional;
         }
 
         @include mx(textarea-group, focused) {
@@ -783,6 +797,10 @@
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
             }
+
+            @include e(upload-button) {
+                @extend %indigo-upload-button !optional;
+            }
         }
 
         @include mx(indigo, focused) {
@@ -792,18 +810,6 @@
 
             @include e(label) {
                 @extend %indigo-label--focused !optional;
-            }
-        }
-
-        @include mx(indigo, invalid) {
-            @include e(label) {
-                @extend %indigo-label--invalid !optional;
-            }
-        }
-
-        @include mx(indigo, valid) {
-            @include e(label) {
-                @extend %indigo-label--success !optional;
             }
         }
 

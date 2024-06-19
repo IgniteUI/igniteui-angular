@@ -1,8 +1,8 @@
 <article #toggle igxToggle
     class="igx-excel-filter__secondary"
     [ngClass]="{
-        'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
-        'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
+        'igx-excel-filter__secondary--cosy': grid.gridSize === '2',
+        'igx-excel-filter__secondary--compact': grid.gridSize === '1'
     }"
     (keydown)="onKeyDown($event)"
     (opening)="onCustomDialogOpening()"
@@ -20,7 +20,6 @@
                 [expressionUI]="expression"
                 [column]="column"
                 [grid]="grid"
-                [displayDensity]="displayDensity"
                 [expressionsList]="expressionsList"
                 (expressionRemoved)="onExpressionRemoved($event)"
                 (logicOperatorChanged)="onLogicOperatorChanged($event)">
@@ -33,14 +32,13 @@
                 [expressionUI]="expression"
                 [column]="column"
                 [grid]="grid"
-                [displayDensity]="displayDensity"
                 [expressionsList]="expressionsList"
                 (expressionRemoved)="onExpressionRemoved($event)"
                 (logicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-default-expression>
         </ng-container>
 
-        <button type="button" igxButton [displayDensity]="displayDensity"
+        <button type="button" igxButton
             class="igx-excel-filter__add-filter"
             (click)="onAddButtonClick()">
             <igx-icon>add</igx-icon>
@@ -52,7 +50,6 @@
         <div class="igx-excel-filter__clear">
             <button type="button"
                 igxButton="flat"
-                [displayDensity]="displayDensity"
                 (click)="onClearButtonClick()">
                     {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
             </button>
@@ -60,15 +57,13 @@
         <div class="igx-excel-filter__cancel">
             <button type="button"
                 igxButton="flat"
-                [displayDensity]="displayDensity"
                 (click)="closeDialog()">
                     {{ grid.resourceStrings.igx_grid_excel_cancel }}
             </button>
         </div>
         <div class="igx-excel-filter__apply">
             <button type="button"
-                igxButton="raised"
-                [displayDensity]="displayDensity"
+                igxButton="contained"
                 (click)="onApplyButtonClick()"
                 (keydown)="onApplyButtonKeyDown($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}

@@ -18,9 +18,9 @@
             @extend %igx-button--flat !optional;
         }
 
-        // RAISED BUTTON
-        @include m(raised) {
-            @extend %igx-button--raised !optional;
+        // CONTAINED BUTTON
+        @include m(contained) {
+            @extend %igx-button--contained !optional;
         }
 
         // OUTLINED BUTTON
@@ -34,10 +34,20 @@
             @extend %igx-button--fab !optional;
         }
 
-        // ICON BUTTON
-        @include m(icon) {
-            @extend %igx-button--round !optional;
-            @extend %igx-button--icon !optional;
+        @include mx(flat, focused) {
+            @extend %igx-button--flat-focused !optional;
+        }
+
+        @include mx(contained, focused) {
+            @extend %igx-button--contained-focused !optional;
+        }
+
+        @include mx(outlined, focused) {
+            @extend %igx-button--outlined-focused !optional;
+        }
+
+        @include mx(fab, focused) {
+            @extend %igx-button--fab-focused !optional;
         }
 
         // DISABLED BUTTON

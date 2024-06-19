@@ -1,13 +1,13 @@
 <div class="sample-column">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <igx-tree-grid #grid1 selectionType="multi" [autoGenerate]="true" [batchEditing]="true" [data]="data"
         childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
-        [rowSelection]="selectionMode" [displayDensity]="density" [height]="'500px'"
+        [rowSelection]="selectionMode" [height]="'500px'"
         [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" [filterStrategy]="filterStrategy">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -28,20 +28,20 @@
         <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
         <igx-switch [(ngModel)]="grid1.rowEditable">Enable RowEditing</igx-switch>
         <div class="sample-buttons">
-            <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
-            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  displayDensity="comfortable">
+            <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection: {{grid1.rowSelection}}</button>
+            <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  class="size">
                 <igx-drop-down-item *ngFor="let item of selectionModes" [value]="item">
                         {{ item }}
                 </igx-drop-down-item>
             </igx-drop-down>
-            <button igxButton="raised" (click)="addRow()">Add row</button>
-            <button igxButton="raised" (click)="addChildRow()">Add child row</button>
-            <button igxButton="raised" (click)="deleteRow()">Delete Selected Row</button>
-            <button igxButton="raised" (click)="undo()">Undo</button>
-            <button igxButton="raised" (click)="redo()">Redo</button>
-            <button igxButton="raised" (click)="commit()">Commit</button>
-            <button igxButton="raised" (click)="exportToExcel()">Export to Excel</button>
-            <button igxButton="raised" (click)="exportToCSV()">Export to CSV</button>
+            <button igxButton="contained" (click)="addRow()">Add row</button>
+            <button igxButton="contained" (click)="addChildRow()">Add child row</button>
+            <button igxButton="contained" (click)="deleteRow()">Delete Selected Row</button>
+            <button igxButton="contained" (click)="undo()">Undo</button>
+            <button igxButton="contained" (click)="redo()">Redo</button>
+            <button igxButton="contained" (click)="commit()">Commit</button>
+            <button igxButton="contained" (click)="exportToExcel()">Export to Excel</button>
+            <button igxButton="contained" (click)="exportToCSV()">Export to CSV</button>
         </div>
     </div>
 </div>

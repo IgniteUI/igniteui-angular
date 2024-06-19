@@ -11,6 +11,7 @@ import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
+import { OffsetMode } from '../../services/overlay/utilities';
 
 describe('IgxToggle', () => {
     configureTestSuite();
@@ -212,6 +213,34 @@ describe('IgxToggle', () => {
         expect(toggle.closing.emit).toHaveBeenCalled();
         expect(toggle.closed.emit).toHaveBeenCalled();
     }));
+
+    it('should offset the toggle content correctly using setOffset method and optional offsetMode', () => {
+        const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
+        const component = fixture.componentInstance;
+        const toggle = component.toggle;
+        const overlayId = toggle.overlayId;
+        fixture.detectChanges();
+
+        const overlayService = TestBed.inject(IgxOverlayService);
+        spyOn(overlayService, 'setOffset').and.callThrough();
+        fixture.detectChanges();
+
+        // Set initial offset
+        toggle.setOffset(20, 20);
+        expect(overlayService.setOffset).toHaveBeenCalledWith(overlayId, 20, 20, undefined);
+
+        // Add offset values to the existing ones (default behavior)
+        toggle.setOffset(10, 10);
+        expect(overlayService.setOffset).toHaveBeenCalledWith(overlayId, 10, 10, undefined);
+
+        // Add offset values using OffsetMode.Add
+        toggle.setOffset(20, 20, OffsetMode.Add);
+        expect(overlayService.setOffset).toHaveBeenCalledWith(overlayId, 20, 20, OffsetMode.Add);
+
+        // Set offset values using OffsetMode.Set
+        toggle.setOffset(10, 10, OffsetMode.Set);
+        expect(overlayService.setOffset).toHaveBeenCalledWith(overlayId, 10, 10, OffsetMode.Set);
+    });
 
     it('Toggle should be registered into navigationService if it is passed through identifier', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleServiceInjectComponent);
@@ -678,6 +707,7 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
         </div>
     `,
     standalone: true,
+    selector: 'igx-toggle-service-inject',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxToggleServiceInjectComponent {
@@ -716,6 +746,7 @@ export class IgxOverlayServiceComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
+    selector: 'igx-test-with-on-push',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithOnPushComponent {

@@ -97,6 +97,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
@@ -132,6 +134,8 @@
     );
 
     %igx-grid-toolbar {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
         position: relative;
         width: 100%;
         display: flex;

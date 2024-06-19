@@ -249,6 +249,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin chip($theme) {
     @include css-vars($theme);
@@ -293,7 +295,7 @@
 
     %igx-chip {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --chip-size: var(--component-size);
 
         position: relative;
@@ -409,8 +411,6 @@
             max-width: sizable(rem(14px), rem(18px), rem(24px));
             height: sizable(rem(14px), rem(18px), rem(24px));
         }
-
-        @extend  %igx-chip-custom-icon;
 
         igx-prefix,
         [igxPrefix] {
@@ -693,15 +693,6 @@
 
         &:empty {
             display: none;
-        }
-    }
-
-    %igx-chip-custom-icon {
-        igx-icon {
-            width: sizable(rem(16px), rem(20px), rem(20px));
-            height: sizable(rem(16px), rem(20px), rem(20px));
-            font-size: sizable(rem(16px), rem(20px), rem(20px));
-            outline-style: none;
         }
     }
 

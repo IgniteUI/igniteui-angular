@@ -70,6 +70,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin query-builder($theme) {
     @include css-vars($theme);
@@ -214,6 +216,10 @@
         }
 
         > igx-chip {
+            @container style(--ig-size: 1) {
+                --ig-size: 2;
+            }
+
             @if $variant != 'indigo-design' {
                 .igx-chip__item {
                     border-block: none;
@@ -223,7 +229,6 @@
             .igx-filter-tree__expression-column {
                 padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
             }
-            
             igx-prefix {
                 display: flex;
             }
@@ -284,6 +289,10 @@
         justify-content: space-between;
         align-items: center;
 
+        igx-input-group {
+            --ig-size: 1;
+        }
+
         igx-select + igx-select,
         igx-select + igx-input-group,
         igx-select + igx-date-picker,
@@ -307,11 +316,11 @@
         margin: 0 rem(8px);
         align-items: center;
 
-        [igxButton] {
+        [igxIconButton] {
             transition: none;
         }
 
-        [igxButton] + [igxButton] {
+        [igxIconButton] + [igxIconButton] {
             margin-inline-start: rem(8px);
         }
     }

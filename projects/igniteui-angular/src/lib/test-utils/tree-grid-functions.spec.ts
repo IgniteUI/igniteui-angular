@@ -299,7 +299,7 @@ export class TreeGridFunctions {
         const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
         const checkboxComponent = checkboxDiv.query(By.css('igx-checkbox')).componentInstance as IgxCheckboxComponent;
         expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
-        expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+        expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
 
         // Verify selection of row
         expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
@@ -352,7 +352,7 @@ export class TreeGridFunctions {
         if (expectedCheckboxState === null) {
             expect(checkboxComponent.indeterminate).toBe(true);
             expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
 
             // Verify selection of row
             expect(rowComponent.selected).toBe(false, 'Incorrect row selection state');
@@ -361,9 +361,9 @@ export class TreeGridFunctions {
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
             expect(selectedRows.includes(rowComponent.key)).toBe(false);
-        }  else {
+        } else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(
+            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(
                 expectedCheckboxState, 'Incorrect native checkbox selection state');
 
             // Verify selection of row
@@ -388,11 +388,11 @@ export class TreeGridFunctions {
         if (expectedSelection === null) {
             expect(checkboxComponent.indeterminate).toBe(true);
             expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
         } else {
             expect(checkboxComponent.indeterminate).toBe(false);
             expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection,
+            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedSelection,
                 'Incorrect native checkbox selection state');
         }
     }
