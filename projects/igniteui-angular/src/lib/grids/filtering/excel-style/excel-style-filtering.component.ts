@@ -499,7 +499,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 value: v
             }));
 
-            this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            const isDescendingDirection = this.checkSortingDirection(items);
+
+            const sortingDirection = isDescendingDirection ? SortingDirection.Desc : SortingDirection.Asc;
+
+            this.uniqueValues = this.column.sortStrategy.sort(
+                items,
+                'value',
+                sortingDirection,
+                this.column.sortingIgnoreCase,
                 (obj, key) => {
                     let resolvedValue = obj[key];
                     if (this.column.dataType === GridColumnDataType.Time) {
@@ -507,11 +515,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                             resolvedValue.getHours(),
                             resolvedValue.getMinutes(),
                             resolvedValue.getSeconds(),
-                            resolvedValue.getMilliseconds());
+                            resolvedValue.getMilliseconds()
+                        );
                     }
-
                     return resolvedValue;
-                });
+                }
+            );
 
             this.renderValues();
             this.loadingEnd.emit();
@@ -769,5 +778,14 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         return value;
+    }
+
+    private checkSortingDirection(items: any[]): boolean {
+        for (let i = 1; i < items.length; i++) {
+            if (items[i].value > items[i - 1].value) {
+                return false;
+            }
+        }
+        return true;
     }
 }
