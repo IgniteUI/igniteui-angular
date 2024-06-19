@@ -454,9 +454,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 value: v
             }));
 
-            const isDescending = this.checkIfDescending(items);
+            const isDescendingDirection = this.checkSortingDirection(items);
 
-            const sortingDirection = isDescending ? SortingDirection.Desc : SortingDirection.Asc;
+            const sortingDirection = isDescendingDirection ? SortingDirection.Desc : SortingDirection.Asc;
 
             this.uniqueValues = this.column.sortStrategy.sort(
                 items,
@@ -735,7 +735,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return value;
     }
 
-    private checkIfDescending(items: any[]): boolean {
+    private checkSortingDirection(items: any[]): boolean {
         for (let i = 1; i < items.length; i++) {
             if (items[i].value > items[i - 1].value) {
                 return false;
