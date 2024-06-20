@@ -102,7 +102,7 @@
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
 
-        &:after {
+        &::after {
             content: '';
             position: absolute;
             width: 100%;
