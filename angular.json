@@ -255,12 +255,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/igniteui-angular-elements",
+            "outputPath": {
+              "base": "dist/igniteui-angular-elements"
+            },
             "index": "projects/igniteui-angular-elements/src/index.html",
-            "main": "projects/igniteui-angular-elements/src/main.ts",
-            "polyfills": "projects/igniteui-angular-elements/src/polyfills.ts",
+            "polyfills": [
+              "projects/igniteui-angular-elements/src/polyfills.ts"
+            ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -277,7 +280,8 @@
             ],
             "stylePreprocessorOptions": {
                 "includePaths": ["node_modules"]
-            }
+            },
+            "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -304,9 +308,7 @@
               "externalDependencies": ["lit-html"]
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -318,10 +320,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "igniteui-angular-elements:build:production"
+              "buildTarget": "igniteui-angular-elements:build:production"
             },
             "development": {
-              "browserTarget": "igniteui-angular-elements:build:development"
+              "buildTarget": "igniteui-angular-elements:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -329,7 +331,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "igniteui-angular-elements:build"
+            "buildTarget": "igniteui-angular-elements:build"
           }
         },
         "test": {
