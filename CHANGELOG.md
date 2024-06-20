@@ -76,6 +76,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. For this reason the event argument of the event is now of type `IGridContextMenuEventArgs` which contains the row object as well as the cell one. The latter will be `null` if the event didn't originate from a cell. **This is not a breaking change** as the new type extends the old.
+- `IgxSimpleCombo`
+    - **Behavioral Change** The `selectionChanging` event will now trigger when typing the first character in the input if there is a previously selected value in the `IgxSimpleCombo`.
 
 ## 17.1.0
 ### New Features
