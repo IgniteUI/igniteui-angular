@@ -240,7 +240,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            this.filterValue = this.searchValue = '';
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
@@ -281,11 +280,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override handleInputChange(event?: any): void {
-        if (event !== undefined) {
-            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
-        }
         if (this.collapsed && this.comboInput.focused) {
             this.open();
+        }
+        if (event !== undefined) {
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         if (!this.comboInput.value.trim() && super.selection.length) {
             // handle clearing of input by space
