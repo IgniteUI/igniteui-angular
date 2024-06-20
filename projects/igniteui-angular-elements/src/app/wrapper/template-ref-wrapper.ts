@@ -8,7 +8,7 @@ const PREFIX_IMPLICIT_PROP = '$implicit';
 /**
  * Wraps a template ref and exposes the entire context to the template as additional prop
  */
-export class TemplateRefWrapper<C> extends TemplateRef<C> {
+export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
     get elementRef(): ElementRef<any> {
         return this.innerTemplateRef.elementRef;
@@ -27,24 +27,43 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
     /** @internal Angular 16 impl gets called directly... */
     createEmbeddedViewImpl(context: C, injector?: Injector, _hydrationInfo: any = null): EmbeddedViewRef<C> {
-        context[CONTEXT_PROP] = context;
-        context[CONTEXT_PROP] = context;
-        context[IMPLICIT_PROP] = context[PREFIX_IMPLICIT_PROP];
-
+        //#region bridged template props
         let isBridged = !!this._templateFunction.___isBridged;
-
-        const viewRef = (this.innerTemplateRef as any).createEmbeddedViewImpl(context, injector);
-
         let contentContext: TemplateRefWrapperContentContext;
-        if (isBridged) {
-            let root = viewRef.rootNodes[0];
+        let contentId: string;
+        let root: any;
+        //#endregion
 
+        /**  Angular 17+ context is behind a proxy: will throw on set for templates without context & underlying object will change, so Proxy extra props on top */
+        let ctx = <C>new Proxy(context, {
+            get(target, prop, receiver) {
+                if (prop === CONTEXT_PROP) {
+                    // redirect context prop to this proxy that implements other props:
+                    return receiver;
+                }
+                if (prop === IMPLICIT_PROP) {
+                    prop = PREFIX_IMPLICIT_PROP
+                }
+                if (isBridged && prop === '___contentId') {
+                    return contentId;
+                }
+                if (isBridged && prop === '___immediate') {
+                    return true;
+                }
+                if (isBridged && prop === '___root') {
+                    return root;
+                }
+                return Reflect.get(target, prop, receiver);
+            },
+        });
+
+        const viewRef = (this.innerTemplateRef as any).createEmbeddedViewImpl(ctx, injector);
+
+        if (isBridged) {
+            root = viewRef.rootNodes[0];
 
             contentContext = new TemplateRefWrapperContentContext();
-            let contentId = uuidv4() as string;
-            (context as any).___contentId = contentId;
-            (context as any).___immediate = true;
-            (context as any).___root = root;
+            contentId = uuidv4() as string;
             contentContext._id = contentId;
             root._id = contentId;
             contentContext.root = root;
@@ -53,36 +72,12 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             this._contentContext.set(contentId, contentContext);
             this._templateFunction.___onTemplateInit(this._templateFunction, root, contentContext);
             //contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, context);
-        }
 
-
-
-
-        if (isBridged) {
             viewRef.onDestroy(() => {
                 this.destroyingBridgedView(contentContext);
             });
         }
 
-        var original = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(viewRef), 'context');
-        Object.defineProperty(viewRef, "context", {
-            set: function(val) {
-                val[CONTEXT_PROP] = val;
-                val[IMPLICIT_PROP] = val[PREFIX_IMPLICIT_PROP];
-                if (isBridged) {
-                    (val as any).___contentId = contentContext._id;
-                    (val as any).___immediate = true;
-                    (val as any).___root = contentContext.root;
-                }
-                original.set.call(this, val);
-                // if (isBridged) {
-                //     contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, val);
-                // }
-            },
-            get: function() {
-                return original.get.call(this);
-            }
-        });
         return viewRef;
     }
 
