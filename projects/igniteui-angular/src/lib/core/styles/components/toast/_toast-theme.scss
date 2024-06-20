@@ -82,8 +82,8 @@
     $margin: rem(42px) auto;
 
     $padding: map.get((
-        'material': rem(16px) rem(24px),
-        'fluent': rem(16px) rem(24px),
+        'material': rem(10px) rem(16px),
+        'fluent': rem(8px) rem(12px),
         'bootstrap': rem(12px),
         'indigo-design': rem(10px) rem(16px)
     ), $variant);
@@ -92,15 +92,24 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        margin: $margin;
+        // !important is needed to override the typography styles
+        margin: $margin !important;
         padding: $padding;
         min-width: $width;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
-        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
+
+        &:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+        }
     }
 }
 
