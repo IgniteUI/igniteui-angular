@@ -696,11 +696,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
     * Returns true if the `IgxCarouselComponent` theme is Indigo.
-    *
+    * 
     * ```typescript
     * @ViewChild("carousel")
     * public carousel: IgxCarouselComponent;
-    *
+    * 
     * ngAfterViewInit(){
     *    let isTypeIndigo = this.carousel.isTypeIndigo;
     * }

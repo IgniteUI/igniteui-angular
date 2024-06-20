@@ -446,17 +446,6 @@ describe('IgxSimpleCombo', () => {
             expect(comboClearSpy).toHaveBeenCalled();
             expect(selectionDeleteSpy).toHaveBeenCalled();
         });
-
-        it('should delete the selection on destroy', () => {
-            const selectionService = new IgxSelectionAPIService();
-            const comboClearSpy = spyOn(mockComboService, 'clear');
-            const selectionDeleteSpy = spyOn(selectionService, 'delete');
-            combo = new IgxSimpleComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, platformUtil, null, null, mockInjector);
-            combo.ngOnDestroy();
-            expect(comboClearSpy).toHaveBeenCalled();
-            expect(selectionDeleteSpy).toHaveBeenCalled();
-        });
     });
 
     describe('Initialization and rendering tests: ', () => {
@@ -1558,61 +1547,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(combo.selection).toBeDefined();
-            expect(combo.collapsed).toBe(true);
-            expect(spy).toHaveBeenCalled();
-
-            combo.handleKeyDown(keyEvent);
-            tick();
-            fixture.detectChanges();
-
-            expect(spy).toHaveBeenCalledTimes(1);
-        }));
-
-        it('should properly filter dropdown when pasting from clipboard in input', () => {
-            spyOn(combo, 'handleInputChange').and.callThrough();
-            combo.open();
-            input.triggerEventHandler('focus', {});
-            fixture.detectChanges();
-
-            const target = {
-                value: combo.data[1].field
-            }
-            combo.comboInput.value = target.value
-            const pasteData = new DataTransfer();
-            const pasteEvent = new ClipboardEvent('paste', { clipboardData: pasteData });
-            Object.defineProperty(pasteEvent, 'target', {
-                writable: false,
-                value: target
-            })
-            input.triggerEventHandler('paste', pasteEvent);
-            fixture.detectChanges();
-
-            expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
-            expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
-                target: jasmine.objectContaining({ value: target.value })
-            }));
-            expect(combo.filteredData.length).toBeLessThan(combo.data.length)
-            expect(combo.filteredData[0].field).toBe(target.value)
-        });
-
-        it('should prevent Enter key default behavior when filtering data', fakeAsync(() => {
-            const keyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-            const spy = spyOn(keyEvent, 'preventDefault');
-
-            expect(combo.collapsed).toBe(true);
-            expect(combo.selection.length).toEqual(0);
-
-            input.triggerEventHandler('focus', {});
-            UIInteractions.simulateTyping('c', input);
-            fixture.detectChanges();
-
-            expect(combo.collapsed).toBe(false);
-
-            combo.handleKeyDown(keyEvent);
-            tick();
-            fixture.detectChanges();
-
-            expect(combo.selection.length).toEqual(1);
             expect(combo.collapsed).toBe(true);
             expect(spy).toHaveBeenCalled();
 

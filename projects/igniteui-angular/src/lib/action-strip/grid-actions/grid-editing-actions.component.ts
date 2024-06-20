@@ -23,7 +23,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, IgxGridActionButtonComponent]
 })
 
-
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
 
     /**

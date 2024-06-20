@@ -1,7 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
-
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 

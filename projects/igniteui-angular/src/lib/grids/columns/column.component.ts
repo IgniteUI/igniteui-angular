@@ -447,6 +447,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
     public disablePinning = false;
+
     /**
      * Gets the `width` of the column.
      * ```typescript
@@ -1054,6 +1055,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get summaries(): any {
         return this._summaries;
     }
+
     /* treatAsRef */
     /**
      * Sets the column `summaries`.
@@ -1109,7 +1111,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
-
 
     /**
      * Sets the column `sortStrategy`.
@@ -1645,6 +1646,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get filteringExpressionsTree(): FilteringExpressionsTree {
         return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
     }
+
     /* alternateName: parentColumn */
     /**
      * Sets/gets the parent column.

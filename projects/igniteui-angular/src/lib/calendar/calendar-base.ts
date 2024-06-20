@@ -700,7 +700,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (typeof value === 'string') {
             value = DateTimeUtil.parseIsoDate(value);
         }
-
+ 
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
             return;
         }

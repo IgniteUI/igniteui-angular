@@ -201,7 +201,7 @@
     %node-select {
         margin-inline-end: $icon-space;
     }
-
+    
     @if $variant == 'indigo-design' {
         %node-select {
             margin-inline-end: rem(8px);

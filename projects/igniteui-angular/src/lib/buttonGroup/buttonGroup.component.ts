@@ -350,8 +350,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        this.updateSelected(index);
-
         const button = this.buttons[index];
         button.select();
     }
@@ -486,8 +484,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     public _clickHandler(index: number) {
-        this.mutationObserver.disconnect();
-
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { owner: this, button, index };
 
@@ -508,8 +504,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
                 this.deselected.emit(args);
             }
         }
-
-        this.mutationObserver.observe(this._el.nativeElement, this.observerConfig);
     }
 
     private setMutationsObserver() {
