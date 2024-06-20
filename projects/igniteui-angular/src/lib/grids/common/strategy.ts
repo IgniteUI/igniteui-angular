@@ -286,7 +286,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
 /**
  * Represents a class extending the IgxSorting class
- * Provids custom data record sorting.
+ * Provides custom data record sorting.
  */
 export class IgxDataRecordSorting extends IgxSorting {
    /**
