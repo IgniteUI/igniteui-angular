@@ -29,7 +29,7 @@ describe('IgxGridToolbarAdvancedFilteringComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should extract unique field names from filtering tree', () => {
+  it('should extract unique field names from filtering tree', () => {
     const tree = new FilteringExpressionsTree(FilteringLogic.And);
     tree.filteringOperands.push({
       fieldName: 'ID',

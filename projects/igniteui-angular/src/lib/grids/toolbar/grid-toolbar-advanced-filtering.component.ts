@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -28,8 +28,11 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, NgClass, IgxIconComponent, NgIf]
 })
-export class IgxGridToolbarAdvancedFilteringComponent {
-
+export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
+    /**
+     * @hidden @internal
+     */
+    public numberOfColumns: number;
     /**
      * Returns the grid containing this component.
      */
@@ -40,11 +43,19 @@ export class IgxGridToolbarAdvancedFilteringComponent {
     @Input()
     public overlaySettings: OverlaySettings;
 
-    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
+    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) {
+        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
+            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
+        });
+    }
 
-    protected extractUniqueFieldNamesFromFilterTree(filteringTree: IFilteringExpressionsTree) : string[] {
-        const columnNames = [];    
+    public ngAfterViewInit(): void {
+        this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
+    }
 
+    protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
+        const columnNames = [];
+        if (!filteringTree) return columnNames;
         filteringTree.filteringOperands.forEach((expr) => {
             if (expr instanceof FilteringExpressionsTree) {
                 columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr));
@@ -52,7 +63,6 @@ export class IgxGridToolbarAdvancedFilteringComponent {
                 columnNames.push((expr as IFilteringExpression).fieldName);
             }
         });
-
         return columnNames.filter((value, index, self) => self.indexOf(value) === index);
     }
 }
