@@ -8,18 +8,18 @@ const isOutput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Output')
 const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
 
 export class AnalyzerComponent {
-    #checker: ts.TypeChecker;
+    private checker: ts.TypeChecker;
 
     /** The AST node representing the component/class declaration. */
-    #node: ts.Node;
+    private node: ts.Node;
 
     /** The `ts.Node` as a `ts.InterfaceType` */
-    #component: ts.InterfaceType;
+    private component: ts.InterfaceType;
 
     constructor(component: ts.Node, checker: ts.TypeChecker) {
-        this.#node = component;
-        this.#checker = checker;
-        this.#component = checker.getTypeAtLocation(component) as ts.InterfaceType;
+        this.node = component;
+        this.checker = checker;
+        this.component = checker.getTypeAtLocation(component) as ts.InterfaceType;
     }
 
     /**
@@ -28,8 +28,8 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get type() {
-        return this.#component;
+    public get type() {
+        return this.component;
     }
 
     /**
@@ -38,8 +38,8 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get name() {
-        return asString(this.#component.symbol);
+    public get name() {
+        return asString(this.component.symbol);
     }
 
     /**
@@ -49,22 +49,22 @@ export class AnalyzerComponent {
      * @type {ComponentMetadata}
      * @memberof AnalyzerComponent
      */
-    get metadata(): ComponentMetadata<string> {
+    public get metadata(): ComponentMetadata<string> {
         let parents = this.parents;
         let provideAs!: ts.Type;
 
         if (parents.length) {
             parents = this.standaloneParents;
-            const provideAsNode = getProvidedAs(this.#node as ts.ClassDeclaration, this.#component);
+            const provideAsNode = getProvidedAs(this.node as ts.ClassDeclaration, this.component);
 
             if (provideAsNode) {
-                provideAs = this.#checker.getTypeAtLocation(provideAsNode);
+                provideAs = this.checker.getTypeAtLocation(provideAsNode);
             }
         }
 
         return {
             parents,
-            contentQueries: this.#parseQueryProps(),
+            contentQueries: this.parseQueryProps(),
             methods: this.publicMethods.map(m => ({ name: m.name })),
             additionalProperties: this.additionalProperties.map(p => ({ name: p.name, writable: !isReadOnly(p)})),
             booleanProperties: this.booleanProperties.map(asString),
@@ -80,8 +80,8 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get publicProperties() {
-        return this.#component.getProperties()
+    private get publicProperties() {
+        return this.component.getProperties()
             .filter(isProperty)
             .filter(isPublic);
     }
@@ -92,8 +92,8 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get publicMethods() {
-        return this.#component.getProperties()
+    private get publicMethods() {
+        return this.component.getProperties()
             .filter(isMethod)
             .filter(isPublic);
     }
@@ -104,7 +104,7 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get inputProperties() {
+    private get inputProperties() {
         return this.publicProperties
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isInput));
     }
@@ -115,7 +115,7 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get outputProperties() {
+    private get outputProperties() {
         return this.publicProperties
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isOutput));
     }
@@ -123,14 +123,14 @@ export class AnalyzerComponent {
     /**
      * Return all leftover exposed properties (non-inputs)
      */
-    get additionalProperties() {
+    private get additionalProperties() {
         // TODO: Better handling of collisions with HTMLElement:
         const forbiddenNames = ['children'];
 
         const additionalProperties = this.publicProperties
             .filter(prop => !prop.declarations?.some(x => ts.canHaveDecorators(x) && getDecorators(x)?.some(isInputOutput)))
             .filter(x => !forbiddenNames.includes(x.name))
-            .filter(x => !this.isOverrideOfParentInput(x, this.#component));
+            .filter(x => !this.isOverrideOfParentInput(x, this.component));
 
         return additionalProperties;
     }
@@ -141,9 +141,9 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get booleanProperties() {
+    private get booleanProperties() {
         return this.inputProperties
-            .filter(prop => this.#checker.getTypeAtLocation(prop.valueDeclaration!).getFlags() & ts.TypeFlags.Boolean);
+            .filter(prop => this.checker.getTypeAtLocation(prop.valueDeclaration!).getFlags() & ts.TypeFlags.Boolean);
     }
 
     /**
@@ -152,10 +152,10 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get numericProperties() {
+    private get numericProperties() {
         return this.inputProperties
             .filter(prop => {
-                const type = this.#checker.getTypeAtLocation(prop.valueDeclaration!);
+                const type = this.checker.getTypeAtLocation(prop.valueDeclaration!);
                 return type.getFlags() & ts.TypeFlags.Number && !type.isUnionOrIntersection();
             });
     }
@@ -166,10 +166,10 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get templateProperties() {
+    private get templateProperties() {
         return this.inputProperties
             .filter(prop => {
-                const type = this.#checker.getTypeAtLocation(prop.valueDeclaration!);
+                const type = this.checker.getTypeAtLocation(prop.valueDeclaration!);
                 if (type.getFlags() & ts.TypeFlags.Object && (type as ts.ObjectType).objectFlags & ts.ObjectFlags.Reference) {
                     const target = (type as ts.TypeReference).target;
                     return target.symbol.escapedName === 'TemplateRef';
@@ -184,9 +184,9 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get queryProperties() {
+    private get queryProperties() {
         const isQuery = (dec: ts.Decorator) => getDecoratorName(dec).includes('ContentChild');
-        return this.#component.getProperties()
+        return this.component.getProperties()
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isQuery));
     }
 
@@ -196,8 +196,8 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get parents() {
-        const parents = this.#component.symbol.getJsDocTags()
+    private get parents() {
+        const parents = this.component.symbol.getJsDocTags()
             .filter(tag => tag.name === 'igxParent');
 
         return parents.length < 1 ? [] : first(first(parents)?.text?.filter(({ kind }) => kind === 'text')).text.split(/\s*,\s*/);
@@ -210,11 +210,11 @@ export class AnalyzerComponent {
      * @readonly
      * @memberof AnalyzerComponent
      */
-    get standaloneParents() {
+    private get standaloneParents() {
         return this.parents.filter(p => p !== '*');
     }
 
-    #parseQueryProps() {
+    private parseQueryProps() {
         const queries: ContentQuery[] = [];
 
         const checker = (e: ts.Expression): e is ts.ObjectLiteralExpression => e?.kind === ts.SyntaxKind.ObjectLiteralExpression;
@@ -233,7 +233,7 @@ export class AnalyzerComponent {
 
             if (rest.length < 1 && checker(secondArg)) {
                 const readProp = secondArg.properties.find(x => x?.name?.getText() === 'read') as ts.PropertyAssignment;
-                if (readProp && this.#checker.getTypeAtLocation(queryType!) !== this.#checker.getTypeAtLocation(readProp.initializer)) {
+                if (readProp && this.checker.getTypeAtLocation(queryType!) !== this.checker.getTypeAtLocation(readProp.initializer)) {
                     // reading something else, i.e. not straight up component child query. ignore
                     queryType = null;
                 }
@@ -245,7 +245,7 @@ export class AnalyzerComponent {
             if (queryType) {
                 queries.push({
                     property: asString(prop),
-                    childType: this.#checker.getTypeAtLocation(queryType) as ts.InterfaceType,
+                    childType: this.checker.getTypeAtLocation(queryType) as ts.InterfaceType,
                     isQueryList: getDecoratorName(decorator!) === 'ContentChildren',
                     descendants
                 });
