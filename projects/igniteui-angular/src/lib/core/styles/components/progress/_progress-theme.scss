@@ -148,6 +148,8 @@
 
         @if $variant == 'indigo-design' {
             gap: rem(4px);
+        } @else if $variant == 'fluent' {
+            gap: rem(2px);
         }
 
         &[dir='rtl'],
@@ -384,18 +386,9 @@
 @mixin linear-bar-typography($categories: (value: 'subtitle-2')) {
     $value: map.get($categories, 'value');
 
-    @if $value != null {
-        %linear-value {
-            @include type-style($value) {
-                margin: 0;
-            }
-        }
-    } @else {
-        %linear-value {
-            font-size: rem(14px);
-            font-weight: 600;
-            line-height: rem(20px);
-            letter-spacing: rem(.1px);
+    %linear-value {
+        @include type-style($value) {
+            margin: 0;
         }
     }
 }
@@ -471,7 +464,7 @@
     $variant: map.get($theme, '_meta', 'variant');
 
     $circular-size: map.get((
-        material: rem(106px),
+        material: rem(32px),
         fluent: rem(32px),
         bootstrap: rem(54px),
         indigo-design: rem(48px),
@@ -573,15 +566,17 @@
 }
 
 // Adds typography styles for the igx-circular-bar component.
-/// Uses the 'h4' category from the typographic scale.
+/// Uses custom typography
 /// @group typography
-/// @param {Map} $categories [(text: 'h4')] - The categories from the typographic scale used for type styles.
-@mixin circular-bar-typography($categories: (text: 'h4')) {
+/// @param {Map} $categories [(text: 'h6')] - The categories from the typographic scale used for type styles.
+@mixin circular-bar-typography($categories: (text: 'h6')) {
     $text: map.get($categories, 'text');
 
     @if $text != null {
         %circular-text {
             @include type-style($text) {
+                font-size: rem(12px);
+                line-height: rem(16px);
                 margin: 0;
             }
         }
@@ -589,8 +584,7 @@
         %circular-text {
             font-size: rem(12px);
             font-weight: 700;
-            line-height: rem(24px);
-            letter-spacing: rem(.25px);
+            line-height: rem(16px);
         }
     }
 }

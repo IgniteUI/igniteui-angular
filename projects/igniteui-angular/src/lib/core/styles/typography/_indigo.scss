@@ -79,9 +79,7 @@
         helper-text: 'caption',
         input-text: 'body-2'
     ));
-    @include linear-bar-typography($categories: (
-        value: 'subtitle-2'
-    ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         header: 'overline',
         item: 'body-2',
