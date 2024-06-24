@@ -22,6 +22,11 @@
         width: 100%;
         padding: 0 .5rem;
     }
+    .grid1-actions {
+        display: flex;
+        gap: .5rem;
+        padding: .5rem;
+    }
   </style>
 </head>
 <body class="ig-typography">
@@ -75,14 +80,18 @@
         <igc-paginator per-page="10"></igc-paginator>
     </igc-grid>
 
-    <button id="saveState">Save state</button>
-    <button id="restoreState">Restore</button>
-    <button onclick="changeColumns()">Change columns</button>
-    <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
-    <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
-    <button onclick="grid1.displayDensity = 'compact'">Compact</button>
-    <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
-    <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
+    <div class="grid1-actions">
+        <button id="saveState">Save state</button>
+        <button id="restoreState">Restore</button>
+        <button onclick="changeColumns()">Change columns</button>
+        <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+        <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+        <igc-button-group selection="single-required">
+            <igc-toggle-button value="small">Small</igc-toggle-button>
+            <igc-toggle-button value="medium">Medium</igc-toggle-button>
+            <igc-toggle-button value="large" selected>Large</igc-toggle-button>
+        </igc-button-group>
+    </div>
 
     <h3 class="ig-typography__h6">Standalone paginator</h3>
     <igc-paginator per-page="25" total-records="150"></igc-paginator>
@@ -121,12 +130,14 @@
     import { html, nothing } from "/lit-html.js";
     import { Directive, directive } from "/directive.js";
 
-    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent } from "igniteui-webcomponents";
+    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent } from "igniteui-webcomponents";
     // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
-    defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent);
+    defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent);
     const grid1 = document.getElementById('grid1');
     const grid2 = document.getElementById('grid2');
+    const buttonGroup = document.querySelector('igc-button-group');
+
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
@@ -207,6 +218,10 @@
         stateComponent.options = {
             paging: false
         };
+    });
+
+    buttonGroup.addEventListener("igcSelect", (e) => {
+        grid1.style.setProperty('--ig-size', `var(--ig-size-${e.detail})`);
     });
 
     function saveState() {
