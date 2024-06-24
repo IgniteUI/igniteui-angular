@@ -24,9 +24,6 @@ export class AnalyzerComponent {
 
     /**
      * Returns the component node as a ts.InterfaceType
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     public get type() {
         return this.component;
@@ -34,9 +31,6 @@ export class AnalyzerComponent {
 
     /**
      * Returns the name of the underlying class/component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     public get name() {
         return asString(this.component.symbol);
@@ -44,10 +38,6 @@ export class AnalyzerComponent {
 
     /**
      * Returns the resolved metadata for the current component.
-     *
-     * @readonly
-     * @type {ComponentMetadata}
-     * @memberof AnalyzerComponent
      */
     public get metadata(): ComponentMetadata<string> {
         let parents = this.parents;
@@ -76,9 +66,6 @@ export class AnalyzerComponent {
 
     /**
      * Return all public properties of the underlying class.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get publicProperties() {
         return this.component.getProperties()
@@ -88,9 +75,6 @@ export class AnalyzerComponent {
 
     /**
      * Returns all public methods of the underlying class.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get publicMethods() {
         return this.component.getProperties()
@@ -100,9 +84,6 @@ export class AnalyzerComponent {
 
     /**
      * Return all `@Input` properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get inputProperties() {
         return this.publicProperties
@@ -111,9 +92,6 @@ export class AnalyzerComponent {
 
     /**
      * Return all `@Output` properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get outputProperties() {
         return this.publicProperties
@@ -136,10 +114,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all boolean @Input properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
+     * Return all boolean `@Input` properties of the underlying component.
      */
     private get booleanProperties() {
         return this.inputProperties
@@ -147,10 +122,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all numeric @Input properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
+     * Return all numeric `@Input` properties of the underlying component.
      */
     private get numericProperties() {
         return this.inputProperties
@@ -161,10 +133,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all TemplateRef properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
+     * Return all `TemplateRef` properties of the underlying component.
      */
     private get templateProperties() {
         return this.inputProperties
@@ -179,10 +148,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all @ContentChild | @ContentChildren properties of the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
+     * Return all `@ContentChild` or `@ContentChildren` properties of the underlying component.
      */
     private get queryProperties() {
         const isQuery = (dec: ts.Decorator) => getDecoratorName(dec).includes('ContentChild');
@@ -192,9 +158,6 @@ export class AnalyzerComponent {
 
     /**
      * Return the parent JsDoc tags for the underlying component.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get parents() {
         const parents = this.component.symbol.getJsDocTags()
@@ -206,9 +169,6 @@ export class AnalyzerComponent {
     /**
      * Returns the parents left after skipping the wildcard tag '*', i.e. components
      * that can be standalone.
-     *
-     * @readonly
-     * @memberof AnalyzerComponent
      */
     private get standaloneParents() {
         return this.parents.filter(p => p !== '*');
