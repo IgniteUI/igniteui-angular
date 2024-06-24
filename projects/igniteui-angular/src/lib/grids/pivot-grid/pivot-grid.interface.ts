@@ -153,8 +153,6 @@ export interface IPivotValue {
      * Active aggregator definition with key, label and aggregator.
      */
     aggregate: IPivotAggregator;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotAggregatorCollection */
     /**
      * List of aggregates to show in aggregate drop-down.
      */
