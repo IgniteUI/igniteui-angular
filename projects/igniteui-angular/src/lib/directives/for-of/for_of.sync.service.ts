@@ -21,6 +21,11 @@ export class IgxForOfSyncService {
      */
     public setMaster(directive: IgxGridForOfDirective<any, any[]>, forced = false) {
         const orientation = directive.igxForScrollOrientation;
+        // in case master is not in dom, set a new master
+        const isMasterInDom = this._master.get(orientation)?.dc?.instance?._viewContainer.element.nativeElement.isConnected;
+        if (!isMasterInDom) {
+            forced = true;
+        }
         if (orientation && (forced || !this._master.has(orientation))) {
             this._master.set(orientation, directive);
         }

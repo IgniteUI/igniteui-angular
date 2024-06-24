@@ -2529,6 +2529,55 @@ describe('igxCombo', () => {
                 expect(combo.value).toEqual([]);
                 expect(combo.displayValue).toEqual('Selected Count: 0');
             });
+            it('should handle selection for combo with array type value key correctly - issue #14103', () => {
+                fixture = TestBed.createComponent(ComboArrayTypeValueKeyComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+                const items = fixture.componentInstance.items;
+                expect(combo).toBeDefined();
+
+                const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+                let expectedResults: IComboSelectionChangingEventArgs = {
+                    newValue: [combo.data[1][combo.valueKey]],
+                    oldValue: [],
+                    newSelection: [combo.data[1]],
+                    oldSelection: [],
+                    added: [combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[1][combo.displayKey]}`,
+                    cancel: false
+                };
+
+                let expectedDisplayText = items[1][combo.displayKey];
+                combo.select([fixture.componentInstance.items[1].value]);
+                fixture.detectChanges();
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+                expect(input.nativeElement.value).toEqual(expectedDisplayText);
+
+                expectedDisplayText = `${items[1][combo.displayKey]}, ${items[2][combo.displayKey]}`;
+                expectedResults = {
+                    newValue: [combo.data[1][combo.valueKey], combo.data[2][combo.valueKey]],
+                    oldValue: [combo.data[1][combo.valueKey]],
+                    newSelection: [combo.data[1], combo.data[2]],
+                    oldSelection: [combo.data[1]],
+                    added: [combo.data[2]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: expectedDisplayText,
+                    cancel: false
+                };
+
+                combo.select([items[2].value]);
+                fixture.detectChanges();
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+                expect(input.nativeElement.value).toEqual(expectedDisplayText);
+            });
         });
         describe('Grouping tests: ', () => {
             beforeEach(() => {
@@ -3952,5 +4001,34 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
             { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
             this.cdr.detectChanges();
         }, 1000);
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    standalone: true,
+    imports: [IgxComboComponent]
+})
+export class ComboArrayTypeValueKeyComponent {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items: any[] = [];
+
+    constructor() {
+        this.items = [
+            {
+                item: "Item1",
+                value: [1, 2, 3]
+            },
+            {
+                item: "Item2",
+                value: [4, 5, 6]
+            },
+            {
+                item: "Item3",
+                value: [7, 8, 9]
+            }
+        ];
     }
 }
