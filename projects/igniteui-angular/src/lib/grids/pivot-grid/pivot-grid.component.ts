@@ -403,6 +403,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._superCompactMode = value;
     }
 
+    /** @hidden @internal */
     public override get gridSize() {
         if (this.superCompactMode) {
             return Size.Small;

@@ -54,7 +54,7 @@
     "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
     "build:elements": "ng build igniteui-angular-elements && npm run pack:elements && gulp copyPackageForElements",
     "pack:elements": "node projects/igniteui-angular-elements/esbuild.mjs && node scripts/build-elements-styles.mjs",
-    "elements:configure": "ts-node -T -H --skip-project ./projects/igniteui-angular-elements/src/analyzer/analyzer.ts",
+    "elements:configure": "ts-node -T -H --skip-project --compilerOptions {\\\"moduleResolution\\\":\\\"NodeNext\\\"} ./projects/igniteui-angular-elements/src/analyzer/analyzer.ts",
     "test:elements:configure": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js --config=projects/igniteui-angular-elements/jasmine.json",
     "postinstall": "gulp copyGitHooks",
     "cypress:open": "cypress open --config-file=cypress.config.ts",

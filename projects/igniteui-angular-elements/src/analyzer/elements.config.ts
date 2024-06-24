@@ -1,27 +1,29 @@
 import {
+  IgxGridComponent,
   IgxHierarchicalGridComponent,
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
-  IgxRowIslandComponent,
   IgxTreeGridComponent,
 } from "../../../igniteui-angular/src/public_api";
-import { IgxGridComponent } from "../../../igniteui-angular/src/lib/grids/grid/grid.component";
-import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component";
-import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component";
-import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component";
-import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component";
-import { IgxGridToolbarComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/src/lib/paginator/paginator.component";
-import { IgxColumnComponent } from "../../../igniteui-angular/src/lib/grids/columns/column.component";
-import { IgxColumnGroupComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-group.component";
-import { IgxColumnLayoutComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-layout.component";
-import { IgxToolbarToken } from "../../../igniteui-angular/src/lib/grids/toolbar/token";
+import { IgxPaginatorToken } from "../../../igniteui-angular/src/lib/paginator/token";
 import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/src/lib/action-strip/token";
 import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component";
 import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-actions-base.directive";
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
+import { IgxColumnComponent } from "../../../igniteui-angular/src/lib/grids/columns/column.component";
+import { IgxColumnGroupComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-group.component";
+import { IgxColumnLayoutComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-layout.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
+import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component";
+import { IgxGridToolbarComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component";
+import { IgxToolbarToken } from "../../../igniteui-angular/src/lib/grids/toolbar/token";
+import { IgxRowIslandComponent } from "../../../igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component";
+import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component";
+import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component";
+import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
@@ -52,6 +54,7 @@ export var registerConfig = [
     additionalProperties: [],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
+    provideAs: IgxActionStripToken,
   },
   {
     component: IgxColumnComponent,
@@ -108,7 +111,6 @@ export var registerConfig = [
       "hidden",
       "disableHiding",
       "disablePinning",
-      "movable",
       "filteringIgnoreCase",
       "sortingIgnoreCase",
       "searchable",
@@ -176,7 +178,6 @@ export var registerConfig = [
       "hasSummary",
       "disableHiding",
       "disablePinning",
-      "movable",
       "filteringIgnoreCase",
       "sortingIgnoreCase",
       "pinned",
@@ -238,7 +239,6 @@ export var registerConfig = [
       "hasSummary",
       "disableHiding",
       "disablePinning",
-      "movable",
       "filteringIgnoreCase",
       "sortingIgnoreCase",
       "pinned",
@@ -258,17 +258,13 @@ export var registerConfig = [
       },
       {
         property: "actionStripComponents",
-        childType: IgxActionStripComponent,
+        childType: IgxActionStripToken,
         isQueryList: true,
       },
-      {
-        property: "toolbar",
-        childType: IgxGridToolbarComponent,
-        isQueryList: true,
-      },
+      { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
-        childType: IgxPaginatorComponent,
+        childType: IgxPaginatorToken,
         isQueryList: true,
       },
     ],
@@ -535,13 +531,13 @@ export var registerConfig = [
       },
       {
         property: "paginatorList",
-        childType: IgxPaginatorComponent,
+        childType: IgxPaginatorToken,
         isQueryList: true,
         descendants: true,
       },
       {
         property: "actionStripComponents",
-        childType: IgxActionStripComponent,
+        childType: IgxActionStripToken,
         isQueryList: true,
       },
       {
@@ -550,14 +546,10 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      {
-        property: "toolbar",
-        childType: IgxGridToolbarComponent,
-        isQueryList: true,
-      },
+      { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
-        childType: IgxPaginatorComponent,
+        childType: IgxPaginatorToken,
         isQueryList: true,
       },
     ],
@@ -712,6 +704,7 @@ export var registerConfig = [
     ],
     methods: ["nextPage", "previousPage", "paginate"],
     numericProps: ["page", "perPage", "totalRecords"],
+    provideAs: IgxPaginatorToken,
   },
   {
     component: IgxPivotDataSelectorComponent,
@@ -736,20 +729,15 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      {
-        property: "toolbar",
-        childType: IgxGridToolbarComponent,
-        isQueryList: true,
-      },
+      { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
-        childType: IgxPaginatorComponent,
+        childType: IgxPaginatorToken,
         isQueryList: true,
       },
     ],
     additionalProperties: [
       { name: "dimensionsSortingExpressions" },
-      { name: "defaultRowHeight" },
       { name: "allDimensions" },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -762,6 +750,7 @@ export var registerConfig = [
       { name: "navigation", writable: true },
       { name: "virtualizationState" },
       { name: "nativeElement" },
+      { name: "defaultRowHeight" },
       { name: "defaultHeaderGroupMinWidth" },
       { name: "visibleColumns" },
       { name: "dataView" },
@@ -813,6 +802,7 @@ export var registerConfig = [
     ],
     templateProps: [
       "valueChipTemplate",
+      "rowDimensionHeaderTemplate",
       "emptyPivotGridTemplate",
       "emptyGridTemplate",
       "loadingGridTemplate",
@@ -833,7 +823,7 @@ export var registerConfig = [
     ],
     numericProps: ["rowHeight"],
     boolProps: [
-      "showPivotConfigurationUI",
+      "autoGenerateConfig",
       "superCompactMode",
       "defaultExpandState",
       "isLoading",
@@ -861,7 +851,7 @@ export var registerConfig = [
       },
       {
         property: "actionStrips",
-        childType: IgxActionStripComponent,
+        childType: IgxActionStripToken,
         isQueryList: true,
       },
       {
@@ -872,7 +862,7 @@ export var registerConfig = [
       },
       {
         property: "actionStripComponents",
-        childType: IgxActionStripComponent,
+        childType: IgxActionStripToken,
         isQueryList: true,
       },
     ],
@@ -1015,17 +1005,13 @@ export var registerConfig = [
       },
       {
         property: "actionStripComponents",
-        childType: IgxActionStripComponent,
+        childType: IgxActionStripToken,
         isQueryList: true,
       },
-      {
-        property: "toolbar",
-        childType: IgxGridToolbarComponent,
-        isQueryList: true,
-      },
+      { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
-        childType: IgxPaginatorComponent,
+        childType: IgxPaginatorToken,
         isQueryList: true,
       },
     ],
