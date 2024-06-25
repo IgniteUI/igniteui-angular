@@ -28,10 +28,10 @@ export class HelperTestFunctions {
     public static RANGE_CSSCLASS = 'igx-days-view__date--range';
     public static CALENDAR_ROW_CSSCLASS = '.igx-days-view__row';
     public static CALENDAR_ROW_WRAP_CSSCLASS = '.igx-days-view__row--wrap';
-    public static MONTH_CSSCLASS = '.igx-months-view__month';
-    public static CURRENT_MONTH_CSSCLASS = '.igx-months-view__month--selected';
-    public static YEAR_CSSCLASS = '.igx-years-view__year';
-    public static CURRENT_YEAR_CSSCLASS = '.igx-years-view__year--selected';
+    public static MONTH_CSSCLASS = '.igx-calendar-view__item';
+    public static CURRENT_MONTH_CSSCLASS = '.igx-calendar-view__item--selected';
+    public static YEAR_CSSCLASS = '.igx-calendar-view__item';
+    public static CURRENT_YEAR_CSSCLASS = '.igx-calendar-view__item--selected';
 
     public static CALENDAR_PREV_BUTTON_CSSCLASS = '.igx-calendar-picker__prev';
     public static CALENDAR_NEXT_BUTTON_CSSCLASS = '.igx-calendar-picker__next';
@@ -134,17 +134,17 @@ export class HelperTestFunctions {
 
     public static getMonthsFromMonthView(fixture) {
         return fixture.nativeElement.querySelector('igx-months-view')
-            .querySelectorAll('.igx-months-view__month, .igx-months-view__month--current');
+            .querySelectorAll('.igx-calendar-view__item, .igx-calendar-view__item--current');
     }
 
     public static getYearsFromYearView(fixture) {
         return fixture.nativeElement.querySelector('igx-years-view')
-            .querySelectorAll('.igx-years-view__year, .igx-years-view__year--selected');
+            .querySelectorAll('.igx-calendar-view__item, .igx-calendar-view__item--selected');
     }
 
     public static getCurrentYearsFromYearView(fixture) {
         return fixture.nativeElement.querySelector('igx-years-view')
-            .querySelector('.igx-years-view__year--current');
+            .querySelector('.igx-calendar-view__item--current');
     }
 
     public static getNexArrowElement(fixture) {
