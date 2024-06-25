@@ -2909,6 +2909,11 @@
         background: var-get($theme, 'filtering-row-background');
         box-shadow: elevation(12);
 
+        @if $variant == 'indigo-design' {
+            box-shadow: elevation(24);
+            border-radius: rem(10px);
+        }
+
         igx-query-builder {
             --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
             --igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
@@ -2916,6 +2921,10 @@
             --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
             --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
+
+            @if $variant == 'indigo-design' {
+                border-radius: rem(10px);
+            }
         }
 
         igx-query-builder-header {
