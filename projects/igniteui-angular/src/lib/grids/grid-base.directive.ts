@@ -7552,7 +7552,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let border = 1;
         if (this.rowList.toArray().length > 0) {
             const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
-            border = Math.ceil(parseFloat(rowStyles.borderBottomWidth));
+            border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;
     }
