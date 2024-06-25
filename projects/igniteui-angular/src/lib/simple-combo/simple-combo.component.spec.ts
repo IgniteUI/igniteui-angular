@@ -1732,6 +1732,31 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toEqual(1);
             expect(combo.filteredData[0].field).toEqual('Arizona');
         }));
+
+        it('should select the first non-header item when Enter is pressed and no item is focused', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            // Simulate typing to filter the list
+            UIInteractions.simulateTyping('ariz', input);
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toBeGreaterThan(0);
+
+            // Simulate pressing ArrowDown to focus the first item
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
+            tick();
+            fixture.detectChanges();
+
+            // Simulate pressing Enter key
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            tick();
+            fixture.detectChanges();
+
+            // Check if the first non-header item is selected
+            const firstNonHeaderItem = combo.filteredData.find(item => !item.isHeader);
+            expect(combo.selection).toEqual(firstNonHeaderItem);
+        }));
     });
 
     describe('Display density', () => {
