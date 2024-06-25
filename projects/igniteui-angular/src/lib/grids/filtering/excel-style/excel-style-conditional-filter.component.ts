@@ -40,7 +40,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
 
-    public get filterNumber() {
+    protected get filterNumber() {
         return this.esf.expressionsList.length;
     }
 
@@ -124,7 +124,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public getSelectedCondition(condition: string): boolean {
+    protected getSelectedCondition(condition: string): boolean {
         const expressions = this.esf.expressionsList;
         if (expressions.length < 1) {
             return false;
