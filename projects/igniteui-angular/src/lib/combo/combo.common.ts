@@ -180,6 +180,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (selection) {
             this.selectionService.set(this._id, selection);
         }
+        if (this.dropdown.open) {
+            this.dropdown.close();
+        }
     }
 
     /**
