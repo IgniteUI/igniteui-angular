@@ -92,7 +92,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                         return s;
                     }
                     // ref - https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
-                    if (s instanceof Object && 'input' in s) {
+                    if (typeof s === "object" && 'input' in s) {
                         return s.input as string;
                     }
                 })
