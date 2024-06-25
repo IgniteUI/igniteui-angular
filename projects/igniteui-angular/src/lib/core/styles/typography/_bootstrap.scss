@@ -20,6 +20,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -54,6 +55,9 @@
         label: 'body-1',
     ));
     @include chip-typography();
+    @include circular-bar-typography($categories: (
+        text: 'subtitle-1'
+    ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
@@ -77,6 +81,7 @@
         helper-text: 'body-2',
         input-text: 'body-1'
     ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         item: 'body-2',
         title: 'body-1',
