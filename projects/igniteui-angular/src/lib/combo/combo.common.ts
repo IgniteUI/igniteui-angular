@@ -28,7 +28,7 @@ import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
@@ -46,6 +46,7 @@ import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/comb
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { DOCUMENT } from '@angular/common';
 import { Size } from '../grids/common/enums';
+import { isEqual } from 'lodash-es';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -1286,9 +1287,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
 
         return keys.map(key => {
-            const item = isNaNvalue(key)
-                ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
-                : this.data.find(entry => entry[this.valueKey] === key);
+            const item = this.data.find(entry => isEqual(entry[this.valueKey], key));
 
             return item !== undefined ? item : { [this.valueKey]: key };
         });
