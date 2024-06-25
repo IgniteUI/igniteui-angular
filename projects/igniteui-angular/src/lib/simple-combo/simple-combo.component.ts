@@ -326,19 +326,21 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public override handleKeyDown(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ENTER) {
-            const filtered = this.filteredData.find(this.findAllMatches);
-            if (filtered === null || filtered === undefined) {
+            if (!this.dropdown.collapsed) {
+                const itemToSelect = this.dropdown.focusedItem && !this.dropdown.focusedItem.isHeader
+                    ? this.dropdown.focusedItem
+                    : this.dropdown.items.find(item => !item.isHeader);
+
+                if (itemToSelect) {
+                    this.select(itemToSelect.itemID);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                this.close();
+                // manually trigger text selection as it will not be triggered during editing
+                this.textSelection.trigger();
                 return;
             }
-            if (!this.dropdown.collapsed) {
-                this.select(this.dropdown.focusedItem.itemID);
-                event.preventDefault();
-                event.stopPropagation();
-                this.close();
-            }
-            // manually trigger text selection as it will not be triggered during editing
-            this.textSelection.trigger();
-            return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
             || event.key === this.platformUtil.KEYMAP.DELETE) {

@@ -1732,6 +1732,37 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toEqual(1);
             expect(combo.filteredData[0].field).toEqual('Arizona');
         }));
+
+        it('should select the first non-header item when Enter is pressed and no item is focused', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('ariz', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.dropdown.collapsed).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            combo.dropdown.focusedItem = undefined;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            const firstNonHeaderItem = combo.dropdown.items.find(item => !item.isHeader);
+            expect(combo.selection.field).toEqual(firstNonHeaderItem.itemID);
+        }));
     });
 
     describe('Display density', () => {
