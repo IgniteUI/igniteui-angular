@@ -1,10 +1,10 @@
 @use 'sass:map';
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typeface: $material-typeface;
-$type-scale: $material-type-scale;
+$palette: $light-indigo-palette;
+$schema: $light-indigo-schema;
+$typeface: $indigo-typeface;
+$type-scale: $indigo-type-scale;
 $variant: map.get($schema, '_meta', 'variant');
 
 :root {
