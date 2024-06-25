@@ -32,7 +32,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     /**
      * @hidden @internal
      */
-    public numberOfColumns: number;
+    protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
      */

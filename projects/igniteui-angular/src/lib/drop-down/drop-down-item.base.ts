@@ -293,11 +293,11 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         if (this._selected) {
             const dropDownSelectedItem = this.dropDown.selectedItem;
             if (!dropDownSelectedItem) {
-                this.dropDown.selectItemWithoutEvent(this);
+                this.dropDown.selectItem(this, false);
             } else if (this.hasIndex
                 ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
                 this !== dropDownSelectedItem) {
-                this.dropDown.selectItemWithoutEvent(this);
+                this.dropDown.selectItem(this, false);
             }
         }
     }
