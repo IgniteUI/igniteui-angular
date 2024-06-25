@@ -1738,24 +1738,30 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
 
-            // Simulate typing to filter the list
             UIInteractions.simulateTyping('ariz', input);
-            fixture.detectChanges();
-            expect(combo.filteredData.length).toBeGreaterThan(0);
-
-            // Simulate pressing ArrowDown to focus the first item
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
             tick();
             fixture.detectChanges();
 
-            // Simulate pressing Enter key
-            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            expect(combo.dropdown.collapsed).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
             tick();
             fixture.detectChanges();
 
-            // Check if the first non-header item is selected
-            const firstNonHeaderItem = combo.filteredData.find(item => !item.isHeader);
-            expect(combo.selection).toEqual(firstNonHeaderItem);
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            combo.dropdown.focusedItem = undefined;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            const firstNonHeaderItem = combo.dropdown.items.find(item => !item.isHeader);
+            expect(combo.selection.field).toEqual(firstNonHeaderItem.itemID);
         }));
     });
 
