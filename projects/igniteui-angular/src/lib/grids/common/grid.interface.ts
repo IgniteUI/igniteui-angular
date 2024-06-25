@@ -1249,6 +1249,7 @@ export interface PivotGridType extends GridType {
     /** @hidden @internal */
     dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
+    getRowDimensionByName(name: string): IPivotDimension;
     /** Represents a method declaration for seting up the columns for the pivot grid based on the pivot configuration */
     setupColumns(): void;
     /** Represents a method declaration that allows toggle of expansion state of a row (taken as a parameter) in the pivot grid */

@@ -1830,10 +1830,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         dimension.sortDirection = sortDirection;
         // apply same sort direction to children.
         let dim = dimension;
-        while (dim.childLevel) {
-            dim.childLevel.sortDirection = dimension.sortDirection;
-            dim = dim.childLevel;
+        if (this.pivotUI.rowLayout === PivotRowLayoutType.Vertical) {
+            while (dim.childLevel) {
+                dim.childLevel.sortDirection = dimension.sortDirection;
+                dim = dim.childLevel;
+            }
         }
+
         this.pipeTrigger++;
         this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
         if (dimensionType === PivotDimensionType.Column) {
@@ -1863,6 +1866,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
         }
         this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getRowDimensionByName(memberName: string) {
+        const visibleRows = this.pivotUI.rowLayout === PivotRowLayoutType.Vertical ?
+         this.pivotConfiguration.rows :
+         PivotUtil.flatten(this.pivotConfiguration.rows);
+        const dimIndex = visibleRows.findIndex((target) => target.memberName === memberName);
+        const dim = visibleRows[dimIndex];
+        return dim;
     }
 
     /**
