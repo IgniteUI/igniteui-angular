@@ -8,6 +8,8 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { NgTemplateOutlet, NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
 
+/* blazorIndirectRender */
+/* blazorElement */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-row',

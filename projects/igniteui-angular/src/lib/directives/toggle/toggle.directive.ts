@@ -25,6 +25,7 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    /* blazorSuppress */
     event?: Event;
 }
 
@@ -245,6 +246,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.overlayService.show(this._overlayId, overlaySettings);
     }
 
+    /* blazorSuppress */
     /**
      * Closes the toggle.
      *

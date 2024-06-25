@@ -29,7 +29,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
                 ColGridComponent,
-                ColPercentageGridComponent
+                ColPercentageGridComponent,
+                ColAutosizeGridComponent
             ]
         });
     }));

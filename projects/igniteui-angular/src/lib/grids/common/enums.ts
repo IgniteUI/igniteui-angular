@@ -42,8 +42,8 @@ export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[key
  */
 export type GridValidationTrigger = 'change' | 'blur' ;
 
-/** 
- * Type representing the type of the target object (elements of the grid) for keydown (fired when a key is pressed) events in the grid. 
+/**
+ * Type representing the type of the target object (elements of the grid) for keydown (fired when a key is pressed) events in the grid.
  * - 'dataCell': Represents a data cell within the grid. It contains and displays individual data values
  * - 'summaryCell': Summary cells display aggregated/summarized data at the bottom of the grid. They provide insights like total record count, min/max values, etc.
  * - 'groupRow': Group row within the grid. Group rows are used to group related data rows by columns. Contains the related group expression, level, sub-records and group value.
@@ -81,6 +81,7 @@ export const ColumnDisplayOrder = mkenum({
 });
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning columns.
  * - Start: Columns are pinned to the start of the grid.
@@ -91,6 +92,7 @@ export enum ColumnPinningPosition {
     End
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning rows.
  * - Top: Rows are pinned to the top of the grid.
@@ -101,6 +103,7 @@ export enum RowPinningPosition {
     Bottom
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing different paging modes for the grid.
  * - Local: The grid will use local data to extract pages during paging.
@@ -111,6 +114,7 @@ export enum GridPagingMode {
     Remote
 }
 
+/* mustCoerceToInt */
 export enum GridInstanceType {
     Grid,
     TreeGrid

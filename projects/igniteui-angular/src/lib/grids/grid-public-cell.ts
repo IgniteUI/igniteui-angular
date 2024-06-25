@@ -32,6 +32,7 @@ export class IgxGridCell implements CellType {
         this._column = column;
     }
 
+    /* marshalByValueIgnore */
     /**
      * Returns the row containing the cell.
      * ```typescript

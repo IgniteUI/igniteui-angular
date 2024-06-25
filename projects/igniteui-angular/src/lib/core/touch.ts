@@ -2,6 +2,7 @@ import { Inject, Injectable, NgZone } from '@angular/core';
 import { ɵgetDOM as getDOM } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from './utils';
+import { HammerManager, HammerOptions, HammerStatic } from './touch-annotations';
 
 const EVENT_SUFFIX = 'precise';
 
@@ -13,6 +14,7 @@ const EVENT_SUFFIX = 'precise';
  */
 @Injectable()
 export class HammerGesturesManager {
+    public static Hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
@@ -23,16 +25,16 @@ export class HammerGesturesManager {
 
     constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any, private platformUtil: PlatformUtil) {
         this.platformBrowser = this.platformUtil.isBrowser;
-        if (this.platformBrowser) {
+        if (this.platformBrowser && HammerGesturesManager.Hammer) {
             this.hammerOptions = {
                 // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
                 // see https://github.com/IgniteUI/igniteui-angular/issues/447#issuecomment-324601803
-                inputClass: Hammer.TouchInput,
+                inputClass: HammerGesturesManager.Hammer.TouchInput,
                 recognizers: [
-                    [Hammer.Pan, { threshold: 0 }],
-                    [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL }],
-                    [Hammer.Tap],
-                    [Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
+                    [HammerGesturesManager.Hammer.Pan, { threshold: 0 }],
+                    [HammerGesturesManager.Hammer.Swipe, { direction: HammerGesturesManager.Hammer.DIRECTION_HORIZONTAL }],
+                    [HammerGesturesManager.Hammer.Tap],
+                    [HammerGesturesManager.Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
                 ]
             };
         }
@@ -57,10 +59,14 @@ export class HammerGesturesManager {
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
+            if (!HammerGesturesManager.Hammer) {
+                //no hammer
+                return;
+            }
             let mc: HammerManager = this.getManagerForElement(element);
             if (mc === null) {
                 // new Hammer is a shortcut for Manager with defaults
-                mc = new Hammer(element, Object.assign(this.hammerOptions, options));
+                mc = new HammerGesturesManager.Hammer(element, Object.assign(this.hammerOptions, options));
                 this.addManagerForElement(element, mc);
             }
             const handler = (eventObj) => this._zone.run(() => eventHandler(eventObj));
@@ -76,7 +82,7 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
-        if (!this.platformBrowser) {
+        if (!this.platformBrowser || !HammerGesturesManager.Hammer) {
             return;
         }
 

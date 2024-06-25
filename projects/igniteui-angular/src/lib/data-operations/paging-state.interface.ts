@@ -4,9 +4,12 @@ export enum PagingError {
     IncorrectRecordsPerPage
 }
 
+/* marshalByValue */
+/* tsPlainInterface */
 export declare interface IPagingState {
     index: number;
     recordsPerPage: number;
+    /* blazorSuppress */
     metadata?: {
         countPages: number;
         error: PagingError;

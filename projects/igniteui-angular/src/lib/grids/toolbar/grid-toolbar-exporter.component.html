@@ -5,7 +5,7 @@
     <span #ref>
         <ng-content></ng-content>
     </span>
-    <span *ngIf="!ref.childNodes.length">
+    <span *ngIf="!ref.textContent.trim()">
         {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
     </span>
     <igx-icon>arrow_drop_down</igx-icon>
@@ -15,23 +15,21 @@
     <ul class="igx-grid-toolbar__dd-list" igxToggle #toggleRef="toggle">
         <li *ngIf="exportExcel" #btnExportExcel id="btnExportExcel"
             class="igx-grid-toolbar__dd-list-items" igxRipple (click)="export('excel', toggleRef)">
-            <ng-template #excel>
+            <span #excel>
                 <ng-content select=[excelText],excel-text></ng-content>
-            </ng-template>
-            <excel-text *ngIf="!hasExcelAttr">
+            </span>
+            <excel-text *ngIf="!excel.childNodes.length">
                 {{ grid?.resourceStrings.igx_grid_toolbar_exporter_excel_entry_text}}
             </excel-text>
-            <ng-container *ngTemplateOutlet="excel"></ng-container>
         </li>
 
         <li *ngIf="exportCSV" #btnExportCsv id="btnExportCsv" class="igx-grid-toolbar__dd-list-items"
             igxRipple (click)="export('csv', toggleRef)">
-            <ng-template #csv>
+            <span #csv>
                 <ng-content select=[csvText],csv-text></ng-content>
-            </ng-template>
-            <csv-text *ngIf="!hasCSVAttr">
+            </span>
+            <csv-text *ngIf="!csv.childNodes.length">
                 {{ grid?.resourceStrings.igx_grid_toolbar_exporter_csv_entry_text }}</csv-text>
-            <ng-container *ngTemplateOutlet="csv"></ng-container>
         </li>
     </ul>
 </div>

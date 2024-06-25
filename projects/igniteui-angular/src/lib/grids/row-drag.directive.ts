@@ -161,7 +161,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     };
 
     private get isHierarchicalGrid() {
-        return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        return /^ig.-hierarchical-grid$/.test(this.row.grid.nativeElement.tagName.toLowerCase());
     }
 }
 

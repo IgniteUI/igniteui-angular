@@ -6,12 +6,14 @@ import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
+/* blazorAlternateName: GridHorizontalAlignment */
 export enum HorizontalAlignment {
     Left = -1,
     Center = -0.5,
     Right = 0
 }
 
+/* blazorAlternateName: GridVerticalAlignment */
 export enum VerticalAlignment {
     Top = -1,
     Middle = -0.5,
@@ -75,8 +77,10 @@ export interface PositionSettings {
     horizontalStartPoint?: HorizontalAlignment;
     /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
+    /* blazorSuppress */
     /** Animation applied while overlay opens */
     openAnimation?: AnimationReferenceMetadata;
+    /* blazorSuppress */
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */
@@ -96,6 +100,7 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
+    /* blazorSuppress */
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
@@ -115,6 +120,7 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     elementRef?: ElementRef<any>;
     /** Will provide the overlay settings which will be used when the component is attached */
     settings?: OverlaySettings;
+    /* blazorSuppress */
     /** Will provide the original keyboard event if closed from ESC or click */
     event?: Event;
 }
@@ -163,6 +169,7 @@ export interface OverlayInfo {
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
+    /* blazorSuppress */
     event?: Event;
     wrapperElement?: HTMLElement;
 }

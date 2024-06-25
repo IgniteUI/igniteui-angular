@@ -63,6 +63,21 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -374,6 +389,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    /* treatAsRef */
     @Input()
     public get data(): any[] | null {
         return this._data;
@@ -436,6 +452,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public groupingPerformed$: Observable<void> = this.groupingPerformedSubject.asObservable();
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * Gets/Sets the group by state.
      *
@@ -472,7 +489,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._applyGrouping();
             this.notifyChanges();
         }
-        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this._columns) {
+        if (!this._init && JSON.stringify(oldExpressions, this.stringifyCallback) !== JSON.stringify(newExpressions, this.stringifyCallback) && this._columns) {
             const groupedCols: IgxColumnComponent[] = [];
             const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
@@ -1248,7 +1265,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.perPage) : allItems);
     }
 
@@ -1341,5 +1358,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    private stringifyCallback(key: string, val: any) {
+        // Workaround for Blazor, since its wrappers inject this externalObject that cannot serialize.
+        if (key === 'externalObject') {
+            return undefined;
+        }
+        return val;
     }
 }

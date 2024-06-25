@@ -6,5 +6,7 @@
     <span #ref>
         <ng-content></ng-content>
     </span>
-    <span *ngIf="!ref.childNodes.length">{{ grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_label }}</span>
+    <!-- D.P. fix(elements): Angular trims child nodes, native doesn't leaving white space when other items project
+    textContent (avoids layout trash of innerText) should avoid wiping the default text without user set one -->
+    <span *ngIf="!ref.textContent.trim()">{{ grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_label }}</span>
 </button>

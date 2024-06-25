@@ -23,7 +23,8 @@ export interface IGridClipboardEvent {
 export interface IGridCellEventArgs extends IBaseEventArgs {
     /** Represents the grid cell that triggered the event. */
     cell: CellType;
-    /** 
+    /* blazorCSSuppress */
+    /**
      * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
@@ -56,14 +57,15 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * When there is no `newValue` and the event has ended, the value of the cell returns to the `oldValue`
      */
     newValue?: any;
-    /** 
+    /* blazorSuppress */
+    /**
      * Optional
-     * Represents the original event, that has triggered the edit 
+     * Represents the original event, that has triggered the edit
      */
     event?: Event;
-    /** 
+    /**
      * Optional
-     * Represents the column information of the edited cell 
+     * Represents the column information of the edited cell
      */
     column?: ColumnType;
     /**
@@ -76,15 +78,15 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * Indicates if the editing consists of adding a new row
      */
     isAddRow?: boolean;
-    /** 
+    /**
      * Optional
-     * Indicates if the new value would be valid. 
-     * It can be set to return the result of the methods for validation of the grid 
+     * Indicates if the new value would be valid.
+     * It can be set to return the result of the methods for validation of the grid
      */
     valid?: boolean;
 }
 
-/** 
+/**
  * Represents event arguments related to grid editing.
  * The event is cancelable
  * It contains information about the row and the column, as well as the old and nwe value of the element/cell
@@ -121,17 +123,18 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
 export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
 }
 
-/** 
- * Represents event arguments related to events, that can occur for rows in a grid 
+/**
+ * Represents event arguments related to events, that can occur for rows in a grid
  * Example for events: adding, deleting, selection, transaction, etc.
  */
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
-    /** 
-     * Represents the unique key, the row can be associated with. 
+    /**
+     * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
      */
     primaryKey: any;
+    /* blazorSuppress */
     /** Represents the grid instance that owns the edit event. */
     owner: GridType;
 }
@@ -146,16 +149,16 @@ export interface IColumnResizeEventArgs extends IBaseEventArgs {
     newWidth: string;
 }
 
-/** 
- * The event arguments when a column is being resized 
+/**
+ * The event arguments when a column is being resized
  * It contains information about the column, it's old and new width
  * The event can be canceled
  */
 export interface IColumnResizingEventArgs extends IColumnResizeEventArgs, CancelableEventArgs {
 }
 
-/** 
- * The event arguments when the selection state of a row is being changed 
+/**
+ * The event arguments when the selection state of a row is being changed
  * The event is cancelable
  */
 export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -163,18 +166,19 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     readonly oldSelection: any[];
     /** Represents the newly selected rows */
     newSelection: any[];
-    /** 
+    /**
      * Represents an array of all added rows
      * Whenever a row has been selected, the array is "refreshed" with the selected rows
      */
     readonly added: any[];
-    /** 
+    /**
      * Represents an array of all rows, removed from the selection
-     * Whenever a row has been deselected, the array is "refreshed" with the rows, 
+     * Whenever a row has been deselected, the array is "refreshed" with the rows,
      * that have been previously selected, but are no longer
      */
     readonly removed: any[];
-    /** 
+    /* blazorSuppress */
+    /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
      */
@@ -192,17 +196,18 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
     readonly oldSelection: string[];
     /** Represents the newly selected columns */
     newSelection: string[];
-    /** 
+    /**
      * Represents an array of all added columns
      * Whenever a column has been selected, the array is "refreshed" with the selected columns
      */
     readonly added: string[];
-    /** 
+    /**
      * Represents an array of all columns, removed from the selection
      * Whenever a column has been deselected, the array is "refreshed" with the columns, that have been previously selected, but are no longer
      */
     readonly removed: string[];
-    /** 
+    /* blazorSuppress */
+    /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
      */
@@ -214,24 +219,26 @@ export interface ISearchInfo extends IBaseSearchInfo {
     activeMatchIndex: number;
 }
 
+/* jsonAPIPlainObject */
+/*  tsPlainInterface */
 /**
  * Represents the arguments for the grid toolbar export event.
- * It provides information about the grid instance, exporter service, export options, 
+ * It provides information about the grid instance, exporter service, export options,
  * and allows the event to be canceled.
  */
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     /** `grid` represents a reference to the instance of the grid te event originated from */
     grid: GridType;
-    /** 
+    /**
      * The `exporter` is a base service.
      * The type (an abstract class `IgxBaseExporter`) has it's own properties and methods
-     * It is used to define the format and options of the export, the exported element 
+     * It is used to define the format and options of the export, the exported element
      * and methods for preparing the data from the elements for exporting
      */
     exporter: IgxBaseExporter;
     /**
      * Represents the different settings, that can be given to an export
-     * The type (an abstract class `IgxExporterOptionsBase`) has properties for column settings 
+     * The type (an abstract class `IgxExporterOptionsBase`) has properties for column settings
      * (whether they should be ignored) as well as method for generating a file name
      */
     options: IgxExporterOptionsBase;
@@ -284,8 +291,8 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     cancel: boolean;
 }
 
-/** 
- * Represents an event, emitted when keydown is triggered over element inside grid's body 
+/**
+ * Represents an event, emitted when keydown is triggered over element inside grid's body
  * This event is fired only if the key combination is supported in the grid.
  */
 export interface IGridKeydownEventArgs extends IBaseEventArgs {
@@ -293,9 +300,10 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     /** Represents the information and details of the object itself */
     target: any;
+    /* blazorCSSuppress */
     /** Represents the original event, that occurred. */
     event: Event;
-    /** 
+    /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -305,8 +313,10 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
 
 /** The event is triggered when getting the current position of a certain cell */
 export interface ICellPosition {
+    /* doNotStringify */
     /** It returns the position (index) of the row, the cell is in */
     rowIndex: number;
+    /* doNotStringify */
     /**
      * It returns the position (index) of the column, the cell is in
      * Counts only the visible (non hidden) columns
@@ -320,14 +330,15 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
     /** `animation` returns whether the event is animated */
     animation: boolean;
 }
 
-/** 
- * Emitted when a dragging operation is starting (when the row is "picked") 
+/**
+ * Emitted when a dragging operation is starting (when the row is "picked")
  * The event is cancelable
  */
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -335,6 +346,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
 }
@@ -343,17 +355,18 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     /** Represents the ID of the row that emitted the event (which state is changed) */
     rowID: any;
-    /** 
+    /**
      * Returns the state of the row after the operation has ended
      * Indicating whether the row is being expanded (true) or collapsed (false)
      */
     expanded: boolean;
-    /** 
+    /* blazorSuppress */
+    /**
      * Optional
      * Represents the original event, that has triggered the expansion/collapse
      */
     event?: Event;
-    /** 
+    /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -384,6 +397,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The scroll direction - vertical or horizontal. */
     direction: string;
+    /* blazorCSSuppress */
     /** The original browser scroll event. */
     event: Event;
     /** The new scroll position */
@@ -408,13 +422,13 @@ export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
     /** Represents the column index of the active node */
     column: number;
     /**
-     * Optional 
-     * Represents the hierarchical level of the active node 
+     * Optional
+     * Represents the hierarchical level of the active node
      */
     level?: number;
-    /** 
-     * Represents the type of the active node. 
-     * The GridKeydownTargetType is an enum or that specifies the possible target types 
+    /**
+     * Represents the type of the active node.
+     * The GridKeydownTargetType is an enum or that specifies the possible target types
      */
     tag: GridKeydownTargetType;
 }
@@ -426,7 +440,7 @@ export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
 export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * Optional
-     * Represents the sorting expressions applied to the grid. 
+     * Represents the sorting expressions applied to the grid.
      * It can be a single sorting expression or an array of them
      * The expression contains information like file name, whether the letter case should be taken into account, etc.
      */
@@ -440,6 +454,12 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
     groupingExpressions?: IGroupingExpression | Array<IGroupingExpression>;
 }
 
+export interface IColumnsAutoGeneratedEventArgs extends IBaseEventArgs {
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    columns?: ColumnType[]
+}
+
 /**
  * Represents event arguments related to filtering operations
  * The event is cancelable
@@ -447,7 +467,7 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
      * Represents the filtering expressions applied to the grid.
-     * The expression contains information like filtering operands and operator, an expression or condition, etc. 
+     * The expression contains information like filtering operands and operator, an expression or condition, etc.
      */
     filteringExpressions: IFilteringExpressionsTree;
 }

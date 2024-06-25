@@ -514,6 +514,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
