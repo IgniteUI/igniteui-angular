@@ -22,7 +22,6 @@ import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { Size } from '../../common/enums';
-import { IgxIconService } from '../../../icon/icon.service';
 
 /**
  * @hidden
@@ -85,13 +84,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     constructor(
         public cdr: ChangeDetectorRef,
         public filteringService: IgxFilteringService,
-        protected iconService?: IgxIconService,
     ) {
         this.filteringService.subscribeToEvents();
-        this.iconService.addIconRef('filter_list', 'default', {
-            name: 'filter_list',
-            family: 'material'
-        });
     }
 
     public ngOnInit(): void {

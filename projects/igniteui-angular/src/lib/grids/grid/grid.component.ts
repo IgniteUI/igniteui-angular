@@ -54,7 +54,6 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { Observable, Subject } from 'rxjs';
-import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -98,7 +97,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        IgxIconService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
