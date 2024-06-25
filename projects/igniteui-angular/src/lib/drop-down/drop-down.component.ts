@@ -505,9 +505,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden
      * @internal
      * @param newSelection
+     * @param emit
      * @param event
      */
-    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {
+    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, emit = true, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this.focusedItem;
@@ -524,18 +525,22 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 index: newSelection.index
             } as IgxDropDownItemBaseDirective;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
-        this.selectionChanging.emit(args);
+        let args: ISelectionEventArgs;
+        if (emit) {
+            args = { oldSelection, newSelection, cancel: false, owner: this };
+            this.selectionChanging.emit(args);
+        }
 
-        if (!args.cancel) {
-            if (this.isSelectionValid(args.newSelection)) {
-                this.selection.set(this.id, new Set([args.newSelection]));
+        if (!emit || (emit && !args.cancel)) {
+            const selection = args?.newSelection ?? newSelection;
+            if (this.isSelectionValid(selection)) {
+                this.selection.set(this.id, new Set([selection]));
                 if (!this.virtDir) {
                     if (oldSelection) {
                         oldSelection.selected = false;
                     }
-                    if (args.newSelection) {
-                        args.newSelection.selected = true;
+                    if (selection) {
+                        selection.selected = true;
                     }
                 }
                 if (event) {
@@ -544,38 +549,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } else {
                 throw new Error('Please provide a valid drop-down item for the selection!');
             }
-        }
-    }
-
-     /**
-     *
-     * @hidden
-     * @internal
-     * @param newSelection
-     */
-     public selectItemWithoutEvent(item: IgxDropDownItemBaseDirective) {
-        const oldSelection = this.selectedItem;
-        if (item instanceof IgxDropDownItemBaseDirective && item.isHeader) {
-            return;
-        }
-        if (this.virtDir) {
-            item = {
-                value: item.value,
-                index: item.index
-            } as IgxDropDownItemBaseDirective;
-        }
-        if (this.isSelectionValid(item)) {
-            this.selection.set(this.id, new Set([item]));
-            if (!this.virtDir) {
-                if (oldSelection) {
-                    oldSelection.selected = false;
-                }
-                if (item) {
-                    item.selected = true;
-                }
-            }
-        } else {
-            throw new Error('Please provide a valid drop-down item for the selection!');
         }
     }
 
