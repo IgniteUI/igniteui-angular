@@ -10,7 +10,7 @@ import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { FlatGridType } from '../common/grid.interface';
 import { IgxGroupByAreaDirective, IgxGroupByMetaPipe } from './group-by-area.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxGroupAreaDropDirective } from '../grid/grid.directives';
+import { IgxGroupAreaDropDirective } from '../grid.directives';
 import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxChipComponent } from '../../chips/chip.component';

@@ -34,6 +34,7 @@ import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { HammerGesturesManager } from '../core/touch';
 
 let NEXT_ID = 0;
 
@@ -46,7 +47,7 @@ export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientatio
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
     };
 }
 /**
@@ -269,9 +270,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>add</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>add</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -292,9 +293,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>remove</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon>remove</igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```

@@ -88,6 +88,7 @@ const GridResourceStringsIT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Filtro valuta',
     igx_grid_excel_custom_filter: 'Filtro personalizzato…',
     igx_grid_excel_no_matches: 'Nessuna corrispondenza',
+    igx_grid_excel_matches_count: '{0} corrispondenze',
     igx_grid_advanced_filter_title: 'Filtro avanzato',
     igx_grid_advanced_filter_and_group: 'Gruppo "And"',
     igx_grid_advanced_filter_or_group: 'Gruppo "Or"',

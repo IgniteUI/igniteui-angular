@@ -8,9 +8,10 @@ import {
     Renderer2,
     HostListener,
     Optional,
-    Inject
+    Inject,
+    AfterContentInit
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 
@@ -43,14 +44,14 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
  *
  * @example
  * ```html
- * <button igxButton="outlined">A Button</button>
+ * <button type="button" igxButton="outlined">A Button</button>
  * ```
  */
 @Directive({
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends DisplayDensityBase {
+export class IgxButtonDirective extends DisplayDensityBase implements AfterContentInit {
     private static ngAcceptInputType_type: IgxButtonType | '';
     private static ngAcceptInputType_disabled: boolean | '';
 
@@ -127,19 +128,15 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
+     * <button type="button" igxButton="flat" [selected]="button.selected"></button>
      * ```
      */
     @Input()
     public set selected(value: boolean) {
         if(this._selected !== value) {
-            if(!this._selected) {
-                this.buttonSelected.emit({
-                    button: this
-                });
-            }
-
             this._selected = value;
+
+            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
         }
     }
 
@@ -152,7 +149,15 @@ export class IgxButtonDirective extends DisplayDensityBase {
         private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
+    }
+
+    public ngAfterContentInit() {
+        this.nativeElement.addEventListener('click', () => {
+            this.buttonSelected.emit({
+                button: this
+            });
+        });
     }
 
     /**
@@ -176,7 +181,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="icon"></button>
+     * <button type="button" igxButton="icon"></button>
      * ```
      */
     @Input('igxButton')
@@ -192,7 +197,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton igxButtonColor="orange"></button>
+     * <button type="button" igxButton igxButtonColor="orange"></button>
      * ```
      */
     @Input('igxButtonColor')
@@ -206,7 +211,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton igxButtonBackground="red"></button>
+     * <button type="button" igxButton igxButtonBackground="red"></button>
      * ```
      */
     @Input('igxButtonBackground')
@@ -220,7 +225,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton="flat" igxLabel="Label"></button>
+     * <button type="button" igxButton="flat" igxLabel="Label"></button>
      * ```
      */
     @Input('igxLabel')
@@ -248,7 +253,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton= "fab" [disabled]="true"></button>
+     * <button type="button" igxButton="fab" [disabled]="true"></button>
      * ```
      */
     public set disabled(val: boolean) {
@@ -304,18 +309,9 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-button--cosy')
-    public get cosy(): boolean {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--compact')
-    public get compact(): boolean {
-        return this.displayDensity === DisplayDensity.compact;
+    @HostBinding('style.--component-size')
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /**
@@ -340,16 +336,10 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     public deselect() {
-        this._selected = false;
+        this.selected = false;
     }
 }
 
 export interface IButtonEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
 }
-
-/**
- *
- * @hidden
- */
-

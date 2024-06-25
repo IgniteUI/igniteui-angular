@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
-import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
+import { IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
+import { IgxGroupByAreaDirective } from './grouping/group-by-area.directive';
 import {
     ColumnType,
     IgxGridMasterDetailContext,
@@ -9,7 +9,7 @@ import {
     IgxGridHeaderTemplateContext,
     IgxGridRowTemplateContext,
     IgxGridTemplateContext
-} from '../common/grid.interface';
+} from './common/grid.interface';
 
 /**
  * @hidden

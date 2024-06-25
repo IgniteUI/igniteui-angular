@@ -312,6 +312,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
@@ -320,6 +321,7 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(element: ElementRef, settings?: OverlaySettings): string;
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
@@ -334,6 +336,7 @@ export class IgxOverlayService implements OnDestroy {
         component: Type<any>,
         settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
+    /* blazorSuppress */
     /**
      * Generates an Id. Provide this Id when calling the `show(id)` method
      *
@@ -342,6 +345,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
+    /* blazorSuppress */
     public attach(
         componentOrElement: ElementRef | Type<any>,
         viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
@@ -435,7 +439,7 @@ export class IgxOverlayService implements OnDestroy {
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
-            document,
+            this._document,
             true,
             info.settings.target);
         this.addModalClasses(info);
@@ -451,6 +455,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Hides the component with the ID provided as a parameter.
      * ```typescript
@@ -484,7 +489,7 @@ export class IgxOverlayService implements OnDestroy {
     public reposition(id: string) {
         const overlayInfo = this.getOverlayById(id);
         if (!overlayInfo || !overlayInfo.settings) {
-            console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
+            console.warn('Wrong id provided in overlay.reposition method. Id: ', id);
             return;
         }
         if (!overlayInfo.visible) {

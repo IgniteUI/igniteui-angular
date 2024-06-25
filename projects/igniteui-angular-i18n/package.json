@@ -4,6 +4,7 @@
   "description": "IgniteUI for Angular localization resources package",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/IgniteUI/igniteui-angular.git",

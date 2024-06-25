@@ -55,7 +55,7 @@
     $meta: map.get($theme, '_meta');
 
     @if not($track-border-radius) {
-        $track-border-radius: border-radius(map.get($theme, 'track-border-radius')...);
+        $track-border-radius: map.get($theme, 'track-border-radius');
     }
 
     @return extend($theme, (

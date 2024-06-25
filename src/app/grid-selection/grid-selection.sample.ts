@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { RemoteService } from '../shared/remote.service';
 import { IgxButtonDirective, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
+import { data } from '../shared/data';
 
 @Component({
     selector: 'app-grid-selection-sample',
@@ -21,14 +22,16 @@ export class GridSelectionComponent implements AfterViewInit {
     public remote: Observable<any[]>;
     public selection = true;
     public selectionModes = ['none', 'single', 'multiple'];
+    public data = [];
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = () => this.remoteService.url;
      }
 
      public ngAfterViewInit() {
-        this.remote = this.remoteService.remoteData;
-        this.remoteService.getData(this.grid1.data);
+/*         this.remote = this.remoteService.remoteData;
+        this.remoteService.getData(this.grid1.data); */
+        this.data = data;
         this.cdr.detectChanges();
     }
 
@@ -84,6 +87,9 @@ export class GridSelectionComponent implements AfterViewInit {
 
     public log(args) {
         console.log(args);
+        console.log('WIDTH ', this.grid1.calcWidth);
+        console.log((this.grid1 as any)._columns.map(c => c.calcWidth));
+        console.log('UnpinnedWidth: ', this.grid1.unpinnedWidth);
     }
 
     public callSelectAll() {

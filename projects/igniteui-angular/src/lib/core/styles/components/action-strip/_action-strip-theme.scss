@@ -48,7 +48,7 @@
     }
 
     @if not($actions-border-radius) {
-        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius')...);
+        $actions-border-radius: map.get($theme, 'actions-border-radius');
     }
 
     @return extend($theme, (
@@ -68,15 +68,20 @@
 @mixin action-strip($theme) {
     @include css-vars($theme);
 
-    $padding-inline: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
-    );
-
     $variant: map.get($theme, '_meta', 'variant');
+    $icon-button-size: map.get((
+        material: rem(36px),
+        fluent: rem(32px),
+        bootstrap: rem(36px),
+        indigo-design: rem(36px),
+    ), $variant);
+    $button-size: sizable(rem(28px), rem(28px), $icon-button-size);
+    $icon-size: sizable(rem(14px), rem(14px), rem(18px));
 
-    %igx-action-strip-display {
+    %igx-action-strip {
+        @include sizable();
+        --action-strip-size: var(--component-size);
+
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -88,27 +93,24 @@
         inset-inline-start: 0;
         background: var-get($theme, 'background');
         color: inherit;
-        padding-inline: pad-inline(map.get($padding-inline, 'compact'), map.get($padding-inline, 'cosy'), map.get($padding-inline, 'comfortable'));
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-block: 0;
         z-index: 9999;
-    }
 
-    %action-icons-density {
         [igxButton='icon'] {
-            width: rem(28px);
-            height: rem(28px);
+            --component-size: var(--action-strip-size) !important;
+
+            width: $button-size;
+            height: $button-size;
 
             igx-icon {
-                width: var(--igx-icon-size, #{rem(14px)});
-                height: var(--igx-icon-size, #{rem(14px)});
-                font-size: var(--igx-icon-size, #{rem(14px)});
+                --component-size: var(--action-strip-size);
+
+                width: var(--ig-icon-size, $icon-size);
+                height: var(--ig-icon-size, $icon-size);
+                font-size: var(--ig-icon-size, $icon-size);
             }
         }
-    }
-
-    %igx-action-strip--cosy,
-    %igx-action-strip--compact {
-        @extend %action-icons-density;
     }
 
     %igx-action-strip__editing-actions,
@@ -124,24 +126,16 @@
         }
 
         igx-icon {
+            --component-size: var(--action-strip-size);
+
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
         }
 
-        igx-icon + [igxLabel] {
-            margin-inline-start: rem(12px);
-        }
-
-        &%igx-drop-down__item--cosy {
+        &%igx-drop-down__item {
             igx-icon + [igxLabel] {
-                margin-inline-start: rem(10px);
-            }
-        }
-
-        &%igx-drop-down__item--compact {
-            igx-icon + [igxLabel] {
-                margin-inline-start: rem(8px);
+                margin-inline-start: pad-inline(rem(8px), rem(10px), rem(12px));
             }
         }
     }

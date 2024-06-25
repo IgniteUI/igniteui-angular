@@ -19,7 +19,15 @@ import { IgxLinearProgressBarComponent } from '../../progressbar/progressbar.com
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 
-
+/* blazorElement */
+/* mustUseNGParentAnchor */
+/* wcElementTag: igc-grid-toolbar */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a context-aware container component for UI operations for the grid components.
  *
@@ -113,7 +121,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }

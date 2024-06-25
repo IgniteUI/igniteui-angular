@@ -560,7 +560,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         this.stepperService.expand(this);
 
         if (!this.animationSettings.closeAnimation) {
-            this.stepperService.previousActiveStep.openAnimationPlayer?.finish();
+            this.stepperService.previousActiveStep?.openAnimationPlayer?.finish();
         }
 
         if (!this.animationSettings.openAnimation) {

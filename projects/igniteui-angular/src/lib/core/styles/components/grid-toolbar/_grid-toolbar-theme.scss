@@ -38,7 +38,8 @@
     $item-hover-background: null,
     $item-hover-text-color: null,
     $item-focus-background: null,
-    $item-focus-text-color: null
+    $item-focus-text-color: null,
+    $size: null,
 ) {
     $name: 'igx-grid-toolbar';
     $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
@@ -92,6 +93,7 @@
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
@@ -146,7 +148,7 @@
 
         background: var-get($theme, 'background-color');
         height: auto;
-        min-height: sizable(map.get($grid-toolbar-height, 'compact'), map.get($grid-toolbar-height, 'cosy'), map.get($grid-toolbar-height, 'comfortable'));
+        min-height: var-get($theme, 'size');
         padding-block: 0;
         padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start, 'compact'), map.get($grid-toolbar-padding-start, 'cosy'), map.get($grid-toolbar-padding-start, 'comfortable'));
         padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end, 'compact'), map.get($grid-toolbar-padding-end, 'cosy'), map.get($grid-toolbar-padding-end, 'comfortable'));

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
-    DisplayDensity, DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
+    DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
 } from '../core/density';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -157,22 +157,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._filled || (this.input && this.input.value);
     }
 
-    /** @hidden */
-    @HostBinding('class.igx-input-group--cosy')
-    public get isDisplayDensityCosy() {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--comfortable')
-    public get isDisplayDensityComfortable() {
-        return this.displayDensity === DisplayDensity.comfortable;
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--compact')
-    public get isDisplayDensityCompact() {
-        return this.displayDensity === DisplayDensity.compact;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get componentSize() {
+        return this.getComponentSizeStyles();
     }
 
     /** @hidden */
@@ -250,7 +238,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef
     ) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
 
         this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;

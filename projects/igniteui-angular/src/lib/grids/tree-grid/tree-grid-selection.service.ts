@@ -118,7 +118,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         };
 
         this.calculateRowsNewSelectionState(args, !!this.grid.primaryKey);
-        args.newSelection = Array.from(this.allData.filter(r => this.rowsToBeSelected.has(this.grid.primaryKey ? r[this.grid.primaryKey] : r)));
+        args.newSelection = Array.from(this.grid.gridAPI.get_all_data().filter(r => this.rowsToBeSelected.has(this.grid.primaryKey ? r[this.grid.primaryKey] : r)));
 
         // retrieve rows/parents/children which has been added/removed from the selection
         this.handleAddedAndRemovedArgs(args);

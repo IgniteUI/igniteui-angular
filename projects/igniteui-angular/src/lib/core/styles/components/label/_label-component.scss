@@ -1,0 +1,16 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+
+@mixin component {
+    @include register-component(
+        $name: 'igx-label',
+        $deps: ()
+    );
+
+    [igxLabel] {
+        @extend %label-base !optional;
+    }
+}

@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
-    template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>',
+	templateUrl: 'select-item.component.html',
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {

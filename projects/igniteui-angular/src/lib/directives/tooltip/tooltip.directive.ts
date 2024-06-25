@@ -17,7 +17,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button [igxTooltipTarget]="tooltipRef">Hover me</button>
+ * <button type="button" igxButton [igxTooltipTarget]="tooltipRef">Hover me</button>
  * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
  * ```
  */

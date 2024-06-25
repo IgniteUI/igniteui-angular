@@ -3,6 +3,7 @@
     <h4>{{ esf.column.header || esf.column.field }}</h4>
     <div class="igx-excel-filter__menu-header-actions">
         <button *ngIf="showSelecting"
+            type="button"
             igxButton="icon"
             (click)="esf.onSelect()"
             [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
@@ -11,6 +12,7 @@
             <igx-icon>done</igx-icon>
         </button>
         <button *ngIf="showPinning"
+            type="button"
             igxButton="icon"
             (click)="esf.onPin()"
             [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
@@ -18,6 +20,7 @@
             <igx-icon family="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
+            type="button"
             igxButton="icon"
             (click)="esf.onHideToggle()"
             [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"

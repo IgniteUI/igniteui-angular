@@ -23,7 +23,7 @@ By exporting the IgxTooltip directive and assigning it to the IgxTooltipTarget p
 
 Let's say we have a button and we would like it to have a tooltip that provides some additional text information.
 ```html
-<button [igxTooltipTarget]="tooltipRef">
+<button type="button" igxButton [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 
@@ -37,7 +37,7 @@ Let's say we have a button and we would like it to have a tooltip that provides 
 Since the tooltip itself is a simple DOM element, we can inject whatever content we want inside of it and it will be displayed as an ordinary tooltip.
 
 ```html
-<button [igxTooltipTarget]="tooltipRef">
+<button type="button" igxButton [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 
@@ -54,7 +54,7 @@ Since the tooltip itself is a simple DOM element, we can inject whatever content
 The **IgxTooltipTarget** directive exposes `showDelay` and `hideDelay` inputs, which can be used to set the amount of time (in milliseconds) that has to pass before showing and hiding the tooltip respectively.
 
 ```html
-<button [igxTooltipTarget]="tooltipRef" showDelay="1500" hideDelay="1500">
+<button type="button" igxButton [igxTooltipTarget]="tooltipRef" showDelay="1500" hideDelay="1500">
     Hover me
 </button>
 
@@ -67,10 +67,10 @@ The **IgxTooltipTarget** directive exposes `showDelay` and `hideDelay` inputs, w
 While the tooltip's default behavior is to show when its target is hovered and hide when its target is unhovered, we can also do this manually by using the `showTooltip` and the `hideTooltip` methods of the IgxTooltipTarget directive.
 
 ```html
-<button (click)="targetBtn.showTooltip()">Show tooltip</button>
-<button (click)="targetBtn.hideTooltip()">Hide tooltip</button>
+<button type="button" igxButton (click)="targetBtn.showTooltip()">Show tooltip</button>
+<button type="button" igxButton (click)="targetBtn.hideTooltip()">Hide tooltip</button>
 
-<button #targetBtn="tooltipTarget" [igxTooltipTarget]="tooltipRef">
+<button type="button" igxButton #targetBtn="tooltipTarget" [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 

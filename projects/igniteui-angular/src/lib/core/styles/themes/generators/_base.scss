@@ -475,6 +475,14 @@
         @include list($list-theme-map);
     }
 
+    @if is-used('igx-label', $exclude) {
+        $label-theme-map: label-theme(
+            $schema: $schema,
+        );
+        $label-theme-map: meta.call($theme-handler, $label-theme-map);
+        @include label($label-theme-map);
+    }
+
     @if is-used('igx-navbar', $exclude) {
         $navbar-theme-map: navbar-theme(
             $schema: $schema,

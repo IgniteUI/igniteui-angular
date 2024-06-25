@@ -196,6 +196,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     @Output()
     public dataChanged = new EventEmitter<any>();
 
+    /* blazorSuppress */
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 
@@ -438,7 +439,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true }),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
@@ -523,7 +524,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange();
+            const prevSize = parseInt(changes[containerSize].previousValue, 10);
+            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            this._recalcOnContainerChange({prevSize, newSize});
         }
     }
 
@@ -862,7 +865,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
     public resetScrollPosition() {
         this.scrollPosition = 0;
         this.scrollComponent.scrollAmount = 0;
-        this.state.startIndex = 0;
     }
 
     /**
@@ -902,6 +904,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
+        }
+    }
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateScroll(): void {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const scrollAmount = this.scrollComponent.nativeElement["scrollLeft"];
+            this.scrollComponent.scrollAmount = scrollAmount;
+            this._updateScrollOffset();
         }
     }
 
@@ -1035,6 +1050,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
+        if (!node) {
+            return;
+        }
         const document = node.getRootNode() as Document | ShadowRoot;
         const activeElement = document.activeElement as HTMLElement;
 
@@ -1295,24 +1313,25 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         return end;
     }
 
-    protected _recalcScrollBarSize() {
+    protected _recalcScrollBarSize(containerSizeInfo = null) {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
-        const scrollable = this.isScrollable();
+        const scrollable = containerSizeInfo ? this.scrollComponent.size > containerSizeInfo.prevSize : this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this.initSizesCache(this.igxForOf) : 0;
-            this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
-            this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.resetScrollPosition();
             }
+            this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
+            this.scrollComponent.size = totalWidth;
         }
         if (this.igxForScrollOrientation === 'vertical') {
-            this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
-            this.scrollComponent.size = this._calcHeight();
-            if (this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
+            const totalHeight = this._calcHeight();
+            if (totalHeight <= parseInt(this.igxForContainerSize, 10)) {
                 this.resetScrollPosition();
             }
+            this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
+            this.scrollComponent.size = totalHeight;
         }
         if (scrollable !== this.isScrollable()) {
             // scrollbar visibility has changed
@@ -1335,17 +1354,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> implements OnInit, OnChan
         return height;
     }
 
-    protected _recalcOnContainerChange() {
+    protected _recalcOnContainerChange(containerSizeInfo = null) {
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+        this._recalcScrollBarSize(containerSizeInfo);
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
-        }
-        if (this.sizesCache && this.igxForScrollOrientation === 'horizontal') {
-            // Updating horizontal chunks and offsets based on the new scrollLeft
-            const scrollOffset = this.fixedUpdateAllElements(this.scrollPosition);
-            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
     }
 
@@ -1616,7 +1630,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange();
+            const prevSize = parseInt(changes[containerSize].previousValue, 10);
+            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            this._recalcOnContainerChange({prevSize, newSize});
         }
     }
 

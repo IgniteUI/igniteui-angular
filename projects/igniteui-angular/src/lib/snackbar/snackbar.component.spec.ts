@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { HorizontalAlignment, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
+import { HorizontalAlignment, IgxButtonDirective, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
 
 describe('IgxSnackbar', () => {
@@ -215,13 +215,17 @@ describe('IgxSnackbar with custom content', () => {
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
         expect(customContent).toBeTruthy('Custom content is not found');
 
+        // Verify the custom button is displayed instead of the snackbar actionText
+        const button = fixture.debugElement.query(By.css('.igx-button'));
+        expect(button.nativeElement.innerText).toEqual('Read More');
+        expect(button.nativeElement.innerText).not.toContain(snackbar.actionText);
+
         // Verify the message is displayed on the left side of the custom content
         const messageElRect = messageEl.nativeElement.getBoundingClientRect();
         const customContentRect = customContent.nativeElement.getBoundingClientRect();
         expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
 
         // Verify the custom content element is on the left side of the button
-        const button = fixture.debugElement.query(By.css('.igx-snackbar__button'));
         const buttonRect = button.nativeElement.getBoundingClientRect();
         expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
         expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
@@ -263,9 +267,10 @@ class SnackbarInitializeTestComponent {
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                     <span class="igx-snackbar__content">Custom content</span>
+                    <button igxButton>Read More</button>
                </igx-snackbar>`,
     standalone: true,
-    imports: [IgxSnackbarComponent]
+    imports: [IgxSnackbarComponent, IgxButtonDirective]
 })
 class SnackbarCustomContentComponent {
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;

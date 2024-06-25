@@ -1,6 +1,6 @@
 import { IgxStepComponent } from './step/step.component';
 import { IgxStepperComponent } from './stepper.component';
-import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubTitleDirective, IgxStepTitleDirective } from './stepper.directive';
+import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 
 export * from './stepper.component';
 export * from './step/step.component';
@@ -19,7 +19,7 @@ export const IGX_STEPPER_DIRECTIVES = [
     IgxStepComponent,
     IgxStepperComponent,
     IgxStepTitleDirective,
-    IgxStepSubTitleDirective,
+    IgxStepSubtitleDirective,
     IgxStepIndicatorDirective,
     IgxStepContentDirective,
     IgxStepActiveIndicatorDirective,

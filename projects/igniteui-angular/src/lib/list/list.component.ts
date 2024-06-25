@@ -27,7 +27,7 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { IListResourceStrings } from '../core/i18n/list-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -469,7 +469,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, element);
     }
 
     /**
@@ -484,8 +484,10 @@ export class IgxListComponent extends IgxListBaseDirective {
         return null;
     }
 
+    private _role = 'list';
+
     /**
-     * Gets the `role` attribute value.
+     * Gets/Sets the `role` attribute value.
      *
      * @example
      * ```typescript
@@ -493,8 +495,13 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
     public get role() {
-        return 'list';
+        return this._role;
+    }
+
+    public set role(val: string) {
+        this._role = val;
     }
 
     /**
@@ -516,25 +523,15 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
+        return !this.isListEmpty;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list--compact')
-    public get cssClassCompact(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list--cosy')
-    public get cssClassCosy(): boolean {
-        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
+    /** @hidden @internal */
+    @HostBinding('style.--component-size')
+    public get componentSize() {
+        if (!this.isListEmpty) {
+            return this.getComponentSizeStyles();
+        }
     }
 
     /**

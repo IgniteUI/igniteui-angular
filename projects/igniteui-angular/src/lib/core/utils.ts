@@ -136,6 +136,9 @@ export const cloneValue = (value: any): any => {
         const result = {};
 
         for (const key of Object.keys(value)) {
+            if (key === "externalObject") {
+                continue;
+            }
             result[key] = cloneValue(value[key]);
         }
         return result;
@@ -422,6 +425,7 @@ export interface IBaseEventArgs {
 }
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
+    /* blazorSuppress */
     /** Browser event */
     event?: Event;
 }
@@ -831,6 +835,11 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
+    const base = parseFloat(getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
+}
+
+/** Get the size of the component as derived from the CSS size variable */
+export function getComponentSize(el: Element) {
+    return globalThis.window?.getComputedStyle(el).getPropertyValue('--component-size');
 }

@@ -23,6 +23,8 @@
 /// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
+/// @param {Color} hover-color [null] - The background color used for the tree node on hover.
+/// @param {Color} hover-selected-color [null] - The background color used for the selected tree node on hover.
 /// @requires $light-material-schema
 ///
 /// @example scss Change the tree background
@@ -43,8 +45,12 @@
     $foreground-disabled: null,
     $drop-area-color: null,
     $border-color: null,
+    $hover-color: null,
+    $hover-selected-color: null,
+    $size: null,
 ) {
     $name: 'igx-tree';
+    $selector: 'igx-tree-node';
     $tree-schema: ();
 
     @if map.has-key($schema, 'tree') {
@@ -74,6 +80,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         background: $background,
         foreground: $foreground,
         background-selected: $background-selected,
@@ -86,9 +93,12 @@
         foreground-disabled: $foreground-disabled,
         drop-area-color: $drop-area-color,
         border-color: $border-color,
+        hover-color: $hover-color,
+        hover-selected-color: $hover-selected-color,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
@@ -105,14 +115,14 @@
         compact: rem(12px)
     );
 
-    $node-height: (
-        comfortable: rem(50px),
-        cosy: rem(40px),
-        compact: rem(32px)
-    );
-
     $icon-size: rem(24px);
     $icon-space: rem(8px);
+
+    $circular-bar-size: (
+        comfortable: #{$icon-size},
+        cosy: calc(#{$icon-size} - 4px),
+        compact: calc(#{$icon-size} - 6px)
+    );
 
     $drop-indicator-width: (
         comfortable: calc(100% - ((#{map.get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space}))),
@@ -135,6 +145,10 @@
     }
 
     %tree-node {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --tree-size: var(--component-size);
         flex-direction: column;
     }
 
@@ -160,9 +174,7 @@
     }
 
     %node-wrapper {
-        --component-size: var(--ig-size, var(--ig-size-large));
-        --size: #{sizable(#{map.get($node-height, 'compact')}, #{map.get($node-height, 'cosy')}, #{map.get($node-height, 'comfortable')})};
-        min-height: var(--size);
+        min-height: var-get($theme, 'size');
         padding-inline: pad-inline(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         padding-block: 0;
         position: relative;
@@ -204,50 +216,21 @@
         }
 
         igx-circular-bar {
-            width: $icon-size;
-            height: $icon-size;
-        }
-
-        &--cosy {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-
-            %node-spacer {
-                --component-size: var(--ig-size, var(--ig-size-medium));
-            }
-
-            %node-drop-indicator {
-                inset-inline-end: map.get($node-indent, 'cosy');
-                width: map.get($drop-indicator-width, 'cosy');
-            }
-
-            igx-circular-bar {
-                width: calc(#{$icon-size} - 4px);
-                height: calc(#{$icon-size} - 4px);
-            }
-        }
-
-        &--compact {
-            --component-size: var(--ig-size, var(--ig-size-small));
-
-            %node-spacer {
-                --component-size: var(--ig-size, var(--ig-size-small));
-            }
-
-            %node-drop-indicator {
-                inset-inline-end: map.get($node-indent, 'compact');
-                width: map.get($drop-indicator-width, 'compact');
-            }
-
-            igx-circular-bar {
-                width: calc(#{$icon-size} - 6px);
-                height: calc(#{$icon-size} - 6px);
-            }
+            --circular-bar: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})};
+            width: var(--circular-bar);
+            height: var(--circular-bar);
         }
     }
 
     %node-wrapper--selected {
         background: var-get($theme, 'background-selected');
         color: var-get($theme, 'foreground-selected');
+
+        &:hover {
+            &::after {
+                background: var-get($theme, 'hover-selected-color');
+            }
+        }
     }
 
     %node-wrapper--active {
@@ -294,9 +277,9 @@
     }
 
     %node-spacer {
-        --component-size: var(--ig-size, var(--ig-size-large));
-        --size: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
-        width: var(--size);
+        --component-size: var(--tree-size);
+        --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+        width: var(--spacer);
         display: inline-block;
     }
 
@@ -318,9 +301,9 @@
         display: flex;
         visibility: hidden;
         position: absolute;
-        inset-inline-end: map.get($node-indent, 'comfortable');
+        inset-inline-end: pad(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
         bottom: 0;
-        width: map.get($drop-indicator-width, 'comfortable');
+        width: pad(map.get($drop-indicator-width, 'compact'), map.get($drop-indicator-width, 'cosy'), map.get($drop-indicator-width, 'comfortable'));
 
         > div {
             flex: 1;

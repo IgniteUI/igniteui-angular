@@ -47,7 +47,6 @@ export class ButtonGroupSampleComponent implements OnInit {
     @ViewChild('programmatic')
     private bg: IgxButtonGroupComponent;
 
-    public multi = true;
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public alignOptions: Button[];
     public fontOptions: Button[];

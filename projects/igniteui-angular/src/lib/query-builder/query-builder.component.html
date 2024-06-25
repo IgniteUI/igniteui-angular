@@ -12,7 +12,7 @@
     (scroll)="onExpressionsScrolled()"
 >
     <ng-container *ngIf="!rootGroup">
-        <button
+        <button type="button"
             #addRootAndGroupButton
             igxButton="outlined"
             [displayDensity]="this.displayDensity"
@@ -22,7 +22,7 @@
             <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
         </button>
 
-        <button
+        <button type="button"
             igxButton="outlined"
             [displayDensity]="this.displayDensity"
             (click)="addOrGroup()"
@@ -43,7 +43,7 @@
         let-expressionItem
         let-afterExpression="afterExpression"
     >
-        <button
+        <button type="button"
             #addConditionButton
             igxButton="outlined"
             [displayDensity]="this.displayDensity"
@@ -56,7 +56,7 @@
             }}</span>
         </button>
 
-        <button
+        <button type="button"
             igxButton="outlined"
             [displayDensity]="this.displayDensity"
             [disabled]="hasEditedExpression"
@@ -66,7 +66,7 @@
             <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
         </button>
 
-        <button
+        <button type="button"
             igxButton="outlined"
             [displayDensity]="this.displayDensity"
             [disabled]="hasEditedExpression"
@@ -360,7 +360,7 @@
             </igx-input-group>
 
             <div class="igx-filter-tree__inputs-actions">
-                <button
+                <button type="button"
                     igxButton="icon"
                     [displayDensity]="this.displayDensity"
                     [disabled]="!operandCanBeCommitted()"
@@ -368,7 +368,7 @@
                 >
                     <igx-icon>check</igx-icon>
                 </button>
-                <button
+                <button type="button"
                     igxButton="icon"
                     [displayDensity]="this.displayDensity"
                     (click)="cancelOperandEdit()"
@@ -390,7 +390,7 @@
                 "
             >
             </ng-container>
-            <button
+            <button type="button"
                 igxButton="icon"
                 [displayDensity]="this.displayDensity"
                 (click)="cancelOperandAdd()"
@@ -438,7 +438,7 @@
                         "
                     >
                     </ng-container>
-                    <button
+                    <button type="button"
                         igxButton="outlined"
                         *ngIf="expressionItem !== rootGroup"
                         [displayDensity]="this.displayDensity"
@@ -476,7 +476,7 @@
             'igx-filter-contextual-menu--compact': displayDensity === 'compact'
         }"
     >
-        <button
+        <button type="button"
             igxButton="icon"
             class="igx-filter-contextual-menu__close-btn"
             (click)="clearSelection()"
@@ -487,14 +487,13 @@
         <ng-container *ngIf="contextualGroup">
             <igx-buttongroup
                 [displayDensity]="this.displayDensity"
-                [multiSelection]="false"
                 [values]="filteringLogics"
                 type="outline"
                 (selected)="selectFilteringLogic($event)"
             >
             </igx-buttongroup>
 
-            <button
+            <button type="button"
                 igxButton="outlined"
                 [displayDensity]="this.displayDensity"
                 [disabled]="!contextualGroup.parent"
@@ -505,7 +504,7 @@
                     this.resourceStrings.igx_query_builder_ungroup
                 }}</span>
             </button>
-            <button
+            <button type="button"
                 igxButton="outlined"
                 [displayDensity]="this.displayDensity"
                 (click)="deleteGroup()"
@@ -516,21 +515,21 @@
             </button>
         </ng-container>
         <ng-container *ngIf="!contextualGroup">
-            <button
+            <button type="button"
                 igxButton="outlined"
                 [displayDensity]="this.displayDensity"
                 (click)="createAndGroup()"
             >
                 {{ this.resourceStrings.igx_query_builder_create_and_group }}
             </button>
-            <button
+            <button type="button"
                 igxButton="outlined"
                 [displayDensity]="this.displayDensity"
                 (click)="createOrGroup()"
             >
                 {{ this.resourceStrings.igx_query_builder_create_or_group }}
             </button>
-            <button
+            <button type="button"
                 igxButton="outlined"
                 [displayDensity]="this.displayDensity"
                 (click)="deleteFilters()"

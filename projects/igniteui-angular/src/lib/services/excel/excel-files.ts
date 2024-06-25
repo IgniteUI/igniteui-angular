@@ -406,7 +406,7 @@ export class WorksheetFile implements IExcelFile {
             this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isGroupedGrid && isSummaryRecord)
         }
 
-        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && !this.isValidGrid) {
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && worksheetData.isGroupedGrid) {
             this.setRootSummaryStartCoordinate(column, key);
 
             if (this.firstColumn > column) {
@@ -459,10 +459,10 @@ export class WorksheetFile implements IExcelFile {
                     return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
                 }
 
-                return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
+                return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
             }
 
-            return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
+            return `<c r="${columnName}" s="1"><f>${summaryFunc}</f></c>`;
         }
     }
 
@@ -583,9 +583,10 @@ export class WorksheetFile implements IExcelFile {
 
     private setRootSummaryStartCoordinate(column: number, key: string) {
         const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this.firstDataRow);
+        const targetMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
 
-        if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
-            this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
+        if (targetMap.get(key).startCoordinate !== firstDataRecordColName) {
+            targetMap.get(key).startCoordinate = firstDataRecordColName;
         }
     }
 

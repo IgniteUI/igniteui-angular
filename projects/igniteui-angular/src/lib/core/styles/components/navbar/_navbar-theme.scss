@@ -119,7 +119,7 @@
         flex-grow: 1;
         user-select: text;
         display: flex;
-        flex-direction: row
+        flex-direction: row;
     }
 
     %igx-navbar-bundle {
@@ -131,9 +131,12 @@
         }
     }
 
-    %igx-navbar-icon-display {
-        >igx-icon,
+    %igx-navbar-icon-display,
+    %igx-navbar-part {
+        igx-icon,
         [igxButton='icon'] {
+            --component-size: 3;
+
             cursor: pointer;
             color: var-get($theme, 'idle-icon-color');
             transition: color .15s $out-quad;

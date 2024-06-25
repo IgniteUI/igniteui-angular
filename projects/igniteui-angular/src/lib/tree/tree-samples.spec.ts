@@ -1,7 +1,8 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
+import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
 import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { IgxIconComponent } from '../icon/icon.component';
 
 @Component({
     template: `
@@ -118,10 +119,13 @@ export class IgxTreeNavigationComponent {
                 </igx-tree-node>
             </igx-tree-node>
         </igx-tree-node>
+        <ng-template igxTreeExpandIndicator let-expanded>
+            <igx-icon>{{ expanded ? "close_fullscreen": "open_in_full"}}</igx-icon>
+        </ng-template>
     </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent, NgFor]
 })
 export class IgxTreeScrollComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;

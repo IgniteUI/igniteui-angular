@@ -1,4 +1,5 @@
 import {
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -21,11 +22,11 @@ import {
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass, DOCUMENT } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -72,7 +73,7 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
-export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements OnDestroy {
+export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewChecked, OnDestroy {
 
     /**
      * @hidden @internal
@@ -214,6 +215,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     public isHierarchical = false;
 
     private _minHeight;
+    private _sizeSubscription: Subscription;
+    private _size: string;
+    private _size$ = new Subject();
 
     /**
      * Gets the minimum height.
@@ -291,15 +295,30 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public get displayDensity() {
-        return this.grid?.displayDensity;
+        switch (this._size) {
+            case '1':
+                return DisplayDensity.compact;
+            case '2':
+                return DisplayDensity.cosy;
+            case '3':
+            default:
+                return DisplayDensity.comfortable;
+        }
     }
 
     constructor(
         cdr: ChangeDetectorRef,
         element: ElementRef<HTMLElement>,
         platform: PlatformUtil,
+        @Inject(DOCUMENT)
+        private document: any,
         @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType) {
         super(cdr, element, platform);
+
+        this._sizeSubscription = this._size$.asObservable().subscribe(value => {
+            this._size = value as string;
+            this.cdr.detectChanges();
+        });
     }
 
     /**
@@ -307,7 +326,28 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public ngOnDestroy(): void {
         this.subscriptions?.unsubscribe();
+        this._sizeSubscription?.unsubscribe();
         delete this.overlayComponentId;
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewChecked() {
+        // TODO: Should only check for the value of `--ig-size` in 17.0;
+        const sizeVar = this.grid ? '--grid-size' : '--ig-size';
+
+        if (!this._size) {
+            const cssProp = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue(sizeVar)
+                .trim();
+
+            if (cssProp !== '') {
+                Promise.resolve().then(() => {
+                    this._size$.next(cssProp);
+                    this.cdr.markForCheck();
+                });
+            }
+        }
     }
 
     /**
@@ -460,18 +500,18 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             }));
 
             this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
-            (obj, key) => {
-                let resolvedValue = obj[key];
-                if (this.column.dataType === GridColumnDataType.Time) {
-                    resolvedValue = new Date().setHours(
-                        resolvedValue.getHours(),
-                        resolvedValue.getMinutes(),
-                        resolvedValue.getSeconds(),
-                        resolvedValue.getMilliseconds());
-                }
+                (obj, key) => {
+                    let resolvedValue = obj[key];
+                    if (this.column.dataType === GridColumnDataType.Time) {
+                        resolvedValue = new Date().setHours(
+                            resolvedValue.getHours(),
+                            resolvedValue.getMinutes(),
+                            resolvedValue.getSeconds(),
+                            resolvedValue.getMilliseconds());
+                    }
 
-                return resolvedValue;
-            });
+                    return resolvedValue;
+                });
 
             this.renderValues();
             this.loadingEnd.emit();

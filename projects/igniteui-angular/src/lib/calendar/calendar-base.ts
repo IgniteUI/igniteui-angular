@@ -3,7 +3,7 @@ import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingView
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, PlatformUtil } from '../core/utils';
+import { isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
@@ -654,8 +654,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private selectSingle(value: Date) {
-        this.selectedDates = this.getDateOnly(value);
-        this._onChangeCallback(this.selectedDates);
+        if (!isEqual(this.selectedDates, value)) {
+            this.selectedDates = this.getDateOnly(value);
+            this._onChangeCallback(this.selectedDates);
+        }
     }
 
     /**

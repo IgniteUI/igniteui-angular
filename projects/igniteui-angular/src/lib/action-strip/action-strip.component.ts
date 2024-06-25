@@ -13,7 +13,8 @@ import {
     TemplateRef,
     AfterContentInit,
     ChangeDetectorRef,
-    AfterViewInit
+    AfterViewInit,
+    ElementRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
@@ -39,6 +40,14 @@ export class IgxActionStripMenuItemDirective {
     ) { }
 }
 
+/* blazorElement */
+/* jsonAPIManageItemInMarkup */
+/* wcElementTag: igc-action-strip */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /**
  * Action Strip provides templatable area for one or more actions.
  *
@@ -81,6 +90,8 @@ export class IgxActionStripMenuItemDirective {
 })
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
+
+    /* blazorSuppress */
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -93,6 +104,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      */
     @Input()
     public context: any;
+
     /**
      * Menu Items ContentChildren inside the Action Strip
      *
@@ -103,6 +115,10 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
 
+    /* blazorInclude */
+    /* contentChildren */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: GridActionsBaseDirectiveCollection */
     /**
      * ActionButton as ContentChildren inside the Action Strip
      *
@@ -190,10 +206,11 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     constructor(
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
+        protected el: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions);
+        super(_displayDensityOptions, el);
     }
 
     /**
@@ -227,15 +244,13 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      /**
       * Host `attr.class` binding.
       */
-     @HostBinding('class')
-     private get hostClasses(): string {
-         let hostClass = this.getComponentDensityClass('igx-action-strip');
-         if (hostClass !== 'igx-action-strip') {
-             // action strip requires the base class to be always present:
-             hostClass = `igx-action-strip ${hostClass}`;
-         }
-         return hostClass;
-     }
+    @HostBinding('class.igx-action-strip')
+    protected hostClass = 'igx-action-strip';
+
+    @HostBinding('style.--component-size')
+    protected get componentSize() {
+        return this.getComponentSizeStyles();
+    }
 
     /**
      * @hidden

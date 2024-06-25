@@ -11,7 +11,6 @@
     <div *ngIf="column.dataType !== 'boolean' && column.dataType !== 'image' || (column.dataType === 'boolean' && this.formatter)"
         igxTextHighlight
         class="igx-grid__td-text"
-        style="pointer-events: none;"
         [cssClass]="highlightClass"
         [activeCssClass]="activeHighlightClass"
         [groupName]="gridID"
@@ -53,7 +52,7 @@
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
     <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
-        igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+        igxTextHighlight class="igx-grid__td-text"
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"

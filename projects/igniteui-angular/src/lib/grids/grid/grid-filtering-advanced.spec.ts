@@ -14,7 +14,8 @@ import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
-    IgxGridAdvancedFilteringBindingComponent
+    IgxGridAdvancedFilteringBindingComponent,
+    IgxGridAdvancedFilteringOverlaySettingsComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -2152,7 +2153,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(2);
-                
+
                 // Select two chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
@@ -2163,7 +2164,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 buttons[2].click();
                 tick(100);
                 fix.detectChanges();
-                         
+
                 // Close dialog through API.
                 grid.closeAdvancedFilteringDialog(true);
                 tick(100);
@@ -2172,12 +2173,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Open Advanced Filtering dialog.
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
-                
+
                 // Verify tree layout after the group change through context menu.
                 rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(3);
-                
+
                 // Verify the filter changes are applied.
                 expect(grid.filteredData.length).toEqual(3);
             }));
@@ -3043,6 +3044,29 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.filteredData).toBe(null);
         }));
     });
+
+    describe('Overlay settings - ', () => {
+        it('Should respect the overlay settings set in the component.', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridAdvancedFilteringOverlaySettingsComponent);
+            const grid: IgxGridComponent = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Verify context menu is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            // Press 'Escape' on the context menu.
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', GridFunctions.getRowEditingOverlay(fix));
+            tick();
+            fix.detectChanges();
+
+            // Verify context menu is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+        }));
+    });
 });
 
 const selectColumnInEditModeExpression = (fix, dropdownItemIndex: number) => {
@@ -3088,9 +3112,9 @@ const verifyExpressionChipContent = (fix, path: number[], columnText: string, op
     const columnSpan = chipSpans[0];
     const operatorSpan = chipSpans[1];
     const valueSpan = chipSpans[2];
-    expect(columnSpan.innerText.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
-    expect(operatorSpan.innerText.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
-    expect(valueSpan.innerText.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+    expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
+    expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
+    expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
 };
 
 const verifyExpressionChipSelection = (fix, path: number[], shouldBeSelected: boolean) => {

@@ -4,6 +4,7 @@ import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxList
 
 export * from './list.component';
 export {
+    IgxListBaseDirective,
     IgxListPanState,
     IgxEmptyListTemplateDirective,
     IgxDataLoadingTemplateDirective,

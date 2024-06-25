@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [18.x, 20.5.x]
 
     steps:
       - name: Checkout
@@ -36,6 +36,10 @@ jobs:
         run: npm run lint:i18n
       - name: Build Lib
         run: npm run build:lib
+      - name: Build Schematics
+        run: npm run build:schematics
+      - name: Build Migrations
+        run: npm run build:migrations
       - name: Build TypeDoc & SassDoc
         run: |
             npm run build:typedoc:en:production
@@ -52,8 +56,10 @@ jobs:
         run: |
             npm run build:i18n
             npm run test:i18n:dist
+      - name: Bundle Tree-Shake Test
+        run: npm run build:bundletest
       - name: Publish to coveralls.io
-        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '16.x'
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '18.x'
         uses: coverallsapp/github-action@v1.2.1
         with:
             github-token: ${{ github.token }}

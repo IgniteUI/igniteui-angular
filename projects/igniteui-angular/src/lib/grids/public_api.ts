@@ -1,19 +1,67 @@
-import { IGX_PAGINATOR_DIRECTIVES } from '../paginator/public_api';
-import { IGX_GRID_COLUMN_ACTIONS_DIRECTIVES } from './column-actions/public_api';
-import { IGX_GRID_COLUMN_DIRECTIVES, IGX_GRID_VALIDATION_DIRECTIVES } from './columns/public_api';
+import {
+    IgxColumnActionsComponent,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective
+} from './column-actions/public_api';
+import {
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellFooterTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent
+} from './columns/public_api';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES } from './filtering/excel-style/public_api';
+import {
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleHeaderComponent,
+    IgxExcelStyleSortingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleHidingComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxExcelStyleClearFiltersComponent,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective
+} from './filtering/excel-style/public_api';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
-import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective } from './grid.rowEdit.directive';
-import { IgxExcelStyleHeaderIconDirective, IgxGroupAreaDropDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid/grid.directives';
-import { IGX_GRID_HEADERS_DIRECTIVES } from './headers/public_api';
+import { IgxExcelStyleHeaderIconDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid.directives';
+import {
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent
+} from './headers/public_api';
 import { IgxDragIndicatorIconDirective, IgxRowDragGhostDirective } from './row-drag.directive';
 import { IgxRowDirective } from './row.directive';
-import { IGX_GRID_SELECTION_DIRECTIVES } from './selection/public_api';
+import {
+    IgxRowSelectorDirective,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective
+} from './selection/public_api';
 import { IgxGridStateDirective } from './state.directive';
-import { IGX_GRID_TOOLBAR_DIRECTIVES } from './toolbar/public_api';
+import {
+    IgxCSVTextDirective,
+    IgxExcelTextDirective,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarDirective
+} from './toolbar/public_api';
 
 export { IgxRowDirective } from './row.directive';
+export * from './grid.directives';
 export * from './grid-public-row';
 export * from './grid-public-cell';
 export {
@@ -26,13 +74,18 @@ export {
     IgxRowEditActionsDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
+export { IGridState, IColumnState, IGridStateCollection, IGridStateOptions, GridFeatures } from './state-base.directive';
 export * from './state.directive';
 export * from './columns/public_api';
+export * from './headers/public_api';
 export * from './common/public_api';
 export * from './grid-footer/grid-footer.component';
 export { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+export * from './filtering/excel-style/public_api';
+export * from './selection/public_api';
 export * from './summaries/grid-summary';
 export * from './column-actions/public_api';
+export * from './toolbar/public_api';
 
 /*
 export * from './api.service';
@@ -41,7 +94,6 @@ export * from './api.service';
 export * from './columns/interfaces';
 // export * from './headers/headers.module';
 // export * from './filtering/base/filtering.module';
-// export { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 export * from './grid-base.directive';
 export * from './grid.common';
 // export * from './grid-common.module';
@@ -64,10 +116,6 @@ export { DropPosition } from './moving/moving.service';
 */
 export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxRowDirective,
-    IgxRowAddTextDirective,
-    IgxRowEditActionsDirective,
-    IgxRowEditTextDirective,
-    IgxRowEditTabStopDirective,
     IgxGridFooterComponent,
     IgxAdvancedFilteringDialogComponent,
     IgxRowExpandedIndicatorDirective,
@@ -78,16 +126,56 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective,
     IgxSortHeaderIconDirective,
-    IgxGroupAreaDropDirective,
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,
-    ...IGX_GRID_HEADERS_DIRECTIVES,
-    ...IGX_GRID_COLUMN_DIRECTIVES,
-    ...IGX_GRID_VALIDATION_DIRECTIVES,
-    ...IGX_GRID_COLUMN_ACTIONS_DIRECTIVES,
-    ...IGX_GRID_SELECTION_DIRECTIVES,
-    ...IGX_GRID_TOOLBAR_DIRECTIVES,
-    ...IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES,
-    ...IGX_PAGINATOR_DIRECTIVES
+    // IGX_GRID_HEADERS_DIRECTIVES:
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    // IGX_GRID_COLUMN_DIRECTIVES:
+    IgxFilterCellTemplateDirective,
+    IgxSummaryTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellFooterTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    // IGX_GRID_COLUMN_ACTIONS_DIRECTIVES:
+    IgxColumnActionsComponent,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective,
+    // IGX_GRID_SELECTION_DIRECTIVES:
+    IgxRowSelectorDirective,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    // IGX_GRID_TOOLBAR_DIRECTIVES:
+    IgxCSVTextDirective,
+    IgxExcelTextDirective,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
+    IgxGridToolbarDirective,
+    // IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES:
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleHeaderComponent,
+    IgxExcelStyleSortingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleHidingComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxExcelStyleClearFiltersComponent,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective
 ] as const;

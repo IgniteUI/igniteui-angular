@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
-import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,7 @@ describe('IgxRadioGroupDirective', () => {
                 ReactiveFormsModule,
                 NoopAnimationsModule,
                 RadioGroupComponent,
+                RadioGroupOnPushComponent,
                 RadioGroupSimpleComponent,
                 RadioGroupWithModelComponent,
                 RadioGroupRequiredComponent,
@@ -47,6 +48,16 @@ describe('IgxRadioGroupDirective', () => {
         const buttonWithGroupValue = radioInstance.radioButtons.find((btn) => btn.value === radioInstance.value);
         expect(buttonWithGroupValue).toBeDefined();
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
+    }));
+
+    it('Properly initializes FormControlValue with OnPush change detection strategy', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupOnPushComponent);
+        const radioInstance = fixture.componentInstance.radio;
+
+        fixture.detectChanges();
+        tick();
+
+        expect(radioInstance.checked).toBeTrue();
     }));
 
     it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {
@@ -300,6 +311,29 @@ class RadioGroupRequiredComponent {
 interface Person {
     name: string;
     favoriteSeason: string;
+}
+
+@Component({
+    template: `
+<form [formGroup]="form">
+    <igx-radio-group formControlName="radio">
+        <igx-radio #checkedRadio value="value1">value1</igx-radio>
+        <igx-radio value="value2">value2</igx-radio>
+        <igx-radio value="value3">value3</igx-radio>
+    </igx-radio-group>
+</form>
+`,
+    standalone: true,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class RadioGroupOnPushComponent {
+    @ViewChild('checkedRadio', { read: IgxRadioComponent, static: true })
+    public radio: IgxRadioComponent;
+
+    public form = new FormGroup({
+        radio: new FormControl('value1'),
+    });
 }
 
 @Component({

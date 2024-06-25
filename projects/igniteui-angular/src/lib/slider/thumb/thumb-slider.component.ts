@@ -66,6 +66,9 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public thumbChange = new EventEmitter<any>();
 
     @Output()
+    public thumbBlur = new EventEmitter<void>();
+
+    @Output()
     public hoverChange = new EventEmitter<boolean>();
 
     @HostBinding('attr.tabindex')
@@ -188,6 +191,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         this.isActive = false;
         this.zIndex = 0;
         this.focused = false;
+        this.thumbBlur.emit();
     }
 
     @HostListener('focus')

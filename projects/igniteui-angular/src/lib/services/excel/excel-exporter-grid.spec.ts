@@ -771,6 +771,21 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportGriWithDateData);
         });
+
+        it('Should respect column formatter', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            const nameCol = grid.getColumnByName('Name');
+            nameCol.formatter = fix.componentInstance.formatter;
+            grid.getColumnByName('JobTitle').hidden = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGriWithFormattedColumn);
+        });
     });
 
     describe('', () => {

@@ -1,9 +1,0 @@
-{
-  "integrationFolder": "e2e//cypress/integration",
-  "supportFile": "e2e//cypress/support/index.ts",
-  "videosFolder": "e2e//cypress/videos",
-  "screenshotsFolder": "e2e//cypress/screenshots",
-  "pluginsFile": "e2e//cypress/plugins/index.ts",
-  "fixturesFolder": "e2e//cypress/fixtures",
-  "baseUrl": "http://localhost:4200"
-}

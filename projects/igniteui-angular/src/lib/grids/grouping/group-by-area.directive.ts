@@ -39,16 +39,6 @@ export abstract class IgxGroupByAreaDirective {
     @HostBinding('class.igx-grid-grouparea')
     public defaultClass = true;
 
-    @HostBinding('class.igx-grid-grouparea--cosy')
-    public get cosyStyle() {
-        return this.density === 'cosy';
-    }
-
-    @HostBinding('class.igx-grid-grouparea--compact')
-    public get compactStyle() {
-        return this.density === 'compact';
-    }
-
     /** The parent grid containing the component. */
     @Input()
     public grid: FlatGridType | GridType;

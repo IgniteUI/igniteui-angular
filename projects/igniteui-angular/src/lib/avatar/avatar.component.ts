@@ -237,7 +237,8 @@ export class IgxAvatarComponent implements OnInit {
      * @hidden
      * @internal
      */
-    private _size: string | IgxAvatarSize = IgxAvatarSize.SMALL;
+    private _size: string | IgxAvatarSize;
+
     /**
      * Returns the size of the avatar.
      *
@@ -248,7 +249,7 @@ export class IgxAvatarComponent implements OnInit {
      */
     @Input()
     public get size(): string | IgxAvatarSize {
-        return this._size;
+        return this._size || IgxAvatarSize.SMALL;
     }
 
     /**
@@ -270,22 +271,6 @@ export class IgxAvatarComponent implements OnInit {
             default:
                 this._size = 'small';
         }
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--small')
-    public get _isSmallSize(): boolean {
-        return this.size === 'small';
-    }
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--medium')
-    public get _isMediumSize(): boolean {
-        return this.size === 'medium';
-    }
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--large')
-    public get _isLargeSize(): boolean {
-        return this.size === 'large';
     }
 
     /**
@@ -326,6 +311,13 @@ export class IgxAvatarComponent implements OnInit {
     @HostBinding('class.igx-avatar--initials')
     public get _isInitialsType(): boolean {
         return this.type === IgxAvatarType.INITIALS;
+    }
+
+    @HostBinding('style.--component-size')
+    protected get componentSize() {
+        if (this._size) {
+            return `var(--ig-size-${this._size})`;
+        } 
     }
 
     /**

@@ -388,12 +388,38 @@ export class Calendar {
         return this.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 
-    public getWeekNumber(date: Date) {
-        const firstJan = new Date(date.getFullYear(), 0, 1).getTime();
-        const today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    public getWeekNumber(date: Date, weekStart: WEEKDAYS | number) {
+        // current year
+        const yearStart = new Date(date.getFullYear(), 0, 1);
+        // first day number of the current year
+        let firstDayOfTheYear = yearStart.getDay() - weekStart;
+        firstDayOfTheYear = firstDayOfTheYear >= 0 ? firstDayOfTheYear : firstDayOfTheYear + 7;
         const dayInMilSeconds = 86400000;
-        const dayOfYear = ((today - firstJan + 1) / dayInMilSeconds);
-        return Math.ceil(dayOfYear / 7);
+        // day number in the year
+        const dayNumber = Math.floor((date.getTime() - yearStart.getTime() - 
+        (date.getTimezoneOffset() - yearStart.getTimezoneOffset()) * 60000) / dayInMilSeconds) + 1;
+        let weekNumber;
+        // if 01 Jan is Monday to Thursday, is considered 1st week of the year 
+        // if 01 Jan starts Friday to Sunday, is considered last week of previous year
+        if (firstDayOfTheYear < 4) {
+            // when calculating the week number we add 1 for the 1st week
+            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7) + 1;
+        } else {
+            // calculating the week number
+            weekNumber = Math.floor((dayNumber + firstDayOfTheYear - 1) / 7);
+        }
+        // if the week number is greater than week 52
+        if (weekNumber > 52) {
+            // next year
+            const nextYear = new Date(date.getFullYear() + 1, 0, 1);
+            // first day of the next year
+            let nextYearFirstDay = nextYear.getDay() - weekStart;
+            nextYearFirstDay = nextYearFirstDay >= 0 ? nextYearFirstDay : nextYearFirstDay + 7;
+            // if 01 Jan of the next year is Monday to Thursday, is considered 1st week of the next year 
+            // if 01 Jan is Friday to Sunday, is considered 53rd week of the current year
+            weekNumber = nextYearFirstDay < 4 ? 1 : 53;
+        }
+        return weekNumber;
     }
 
     private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {

@@ -15,7 +15,9 @@ import {
     AfterContentInit,
     TemplateRef,
     ContentChildren,
-    QueryList
+    QueryList,
+    RendererStyleFlags2,
+    EmbeddedViewRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
@@ -277,6 +279,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @Input()
     public ghostClass = '';
 
+    /**
+     * Set styles that will be added to the `ghostElement` element.
+     * ```html
+     * <div igxDrag [ghostStyle]="{'--ig-size': 'var(--ig-size-small)'}">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     *
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public ghostStyle = {};
 
     /**
      * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
@@ -610,7 +624,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _ghostStartY;
     protected _ghostHostX = 0;
     protected _ghostHostY = 0;
-    protected _dynamicGhostRef;
+    protected _dynamicGhostRef: EmbeddedViewRef<any>;
 
     protected _pointerDownId = null;
     protected _clicked = false;
@@ -915,19 +929,20 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this._clicked = true;
-        this._pointerDownId = event.pointerId;
-
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until ghostElement is created.
         const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
-        const targetElement = handleFound ? handleFound.element.nativeElement : this.element.nativeElement;
-        if (this.pointerEventsEnabled) {
+        const targetElement = handleFound ? handleFound.element.nativeElement : event.target || this.element.nativeElement;
+        if (this.pointerEventsEnabled && targetElement.isConnected) {
+            this._pointerDownId = event.pointerId;
             targetElement.setPointerCapture(this._pointerDownId);
-        } else {
+        } else if (targetElement.isConnected) {
             targetElement.focus();
             event.preventDefault();
+        } else {
+            return;
         }
 
+        this._clicked = true;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
             // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
             this._startX = event.pageX;
@@ -1117,6 +1132,25 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
+        // When the base element is moved to previous index, angular reattaches the ghost template as a sibling by default.
+        // This is the defaut place for the EmbededViewRef when recreated.
+        // That's why we need to move it to the proper place and set pointer capture again.
+        if (this._pointerDownId && this.ghostElement && this._dynamicGhostRef && !this._dynamicGhostRef.destroyed) {
+            let ghostReattached = false;
+            if (this.ghostHost && !Array.from(this.ghostHost.children).includes(this.ghostElement)) {
+                ghostReattached = true;
+                this.ghostHost.appendChild(this.ghostElement);
+            } else if (!this.ghostHost && !Array.from(document.body.children).includes(this.ghostElement)) {
+                ghostReattached = true;
+                document.body.appendChild(this.ghostElement);
+            }
+
+            if (ghostReattached) {
+                this.ghostElement.setPointerCapture(this._pointerDownId);
+                return;
+            }
+        }
+
         const eventArgs = {
             originalEvent: event,
             owner: this,
@@ -1202,7 +1236,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghostTemplate) {
-            this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            this.zone.run(() => {
+                // Create template in zone, so it gets updated by it automatically.
+                this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
+            });
             if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
                 // Change the display to default since display contents does not position the element absolutely.
                 this._dynamicGhostRef.rootNodes[0].style.display = 'block';
@@ -1222,6 +1259,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (this.ghostClass) {
             this.renderer.addClass(this.ghostElement, this.ghostClass);
+        }
+
+        if (this.ghostStyle) {
+            Object.entries(this.ghostStyle).map(([name, value]) => {
+                this.renderer.setStyle(this.ghostElement, name, value, RendererStyleFlags2.DashCase);
+            });
         }
 
         const createEventArgs = {

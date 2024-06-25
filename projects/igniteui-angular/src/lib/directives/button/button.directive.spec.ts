@@ -8,10 +8,9 @@ import { DisplayDensity } from '../../core/density';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { getComponentSize } from '../../core/utils';
 
 const BUTTON_COMFORTABLE = 'igx-button';
-const BUTTON_COSY = 'igx-button--cosy';
-const BUTTON_COMPACT = 'igx-button--compact';
 
 describe('IgxButton', () => {
     configureTestSuite();
@@ -89,29 +88,29 @@ describe('IgxButton', () => {
         const iconButton = fixture.componentInstance.iconButton;
         const iconButtonDOM = fixture.debugElement.query(By.css('.iconBtn'));
 
-        verifyDisplayDensity(flatButton, flatButtonDOM, 'flat', DisplayDensity.comfortable);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, 'raised', DisplayDensity.comfortable);
-        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, 'outlined', DisplayDensity.comfortable);
-        verifyDisplayDensity(fabButton, fabButtonDOM, 'fab', DisplayDensity.comfortable);
-        verifyDisplayDensity(iconButton, iconButtonDOM, 'icon', DisplayDensity.comfortable);
+        verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.comfortable);
+        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.comfortable);
+        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.comfortable);
+        verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.comfortable);
+        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.comfortable);
 
         fixture.componentInstance.density = DisplayDensity.compact;
         fixture.detectChanges();
 
-        verifyDisplayDensity(flatButton, flatButtonDOM, 'flat', DisplayDensity.compact);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, 'raised', DisplayDensity.compact);
-        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, 'outlined', DisplayDensity.compact);
-        verifyDisplayDensity(fabButton, fabButtonDOM, 'fab', DisplayDensity.compact);
-        verifyDisplayDensity(iconButton, iconButtonDOM, 'icon', DisplayDensity.compact);
+        verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.compact);
+        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.compact);
+        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.compact);
+        verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.compact);
+        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.compact);
 
         fixture.componentInstance.density = DisplayDensity.cosy;
         fixture.detectChanges();
 
-        verifyDisplayDensity(flatButton, flatButtonDOM, 'flat', DisplayDensity.cosy);
-        verifyDisplayDensity(raisedButton, raisedButtonDOM, 'raised', DisplayDensity.cosy);
-        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, 'outlined', DisplayDensity.cosy);
-        verifyDisplayDensity(fabButton, fabButtonDOM, 'fab', DisplayDensity.cosy);
-        verifyDisplayDensity(iconButton, iconButtonDOM, 'icon', DisplayDensity.cosy);
+        verifyDisplayDensity(flatButton, flatButtonDOM, DisplayDensity.cosy);
+        verifyDisplayDensity(raisedButton, raisedButtonDOM, DisplayDensity.cosy);
+        verifyDisplayDensity(outlinedButton, outlinedButtonDOM, DisplayDensity.cosy);
+        verifyDisplayDensity(fabButton, fabButtonDOM, DisplayDensity.cosy);
+        verifyDisplayDensity(iconButton, iconButtonDOM, DisplayDensity.cosy);
     });
 
     it('Should set the correct CSS class on the element using the "type" input', () => {
@@ -146,6 +145,24 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
+    });
+
+    it('Should emit the buttonSelected event only on user interaction, not on initialization', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+        fixture.detectChanges();
+        const button = fixture.componentInstance.button;
+        spyOn(button.buttonSelected, 'emit');
+
+        button.ngOnInit();
+        expect(button.buttonSelected.emit).not.toHaveBeenCalled();
+
+        button.nativeElement.click();
+        fixture.detectChanges();
+        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(1);
+
+        button.nativeElement.click();
+        fixture.detectChanges();
+        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -208,29 +225,21 @@ class ButtonsWithDisplayDensityComponent {
 /**
  * Verifies the display density of the igxButton based on its type.
  */
-const verifyDisplayDensity = (buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) => {
-    let expectedButtonDensityClass = '';
+const verifyDisplayDensity = (buttonDirective, buttonDebugEl, expectedDisplayDensity: DisplayDensity) => {
+    let expectedButtonSize = '';
 
     switch (expectedDisplayDensity) {
         case DisplayDensity.compact:
-            expectedButtonDensityClass = BUTTON_COMPACT;
+            expectedButtonSize = '1';
             break;
         case DisplayDensity.cosy:
-            expectedButtonDensityClass = BUTTON_COSY;
+            expectedButtonSize = '2';
             break;
+        case DisplayDensity.comfortable:
         default:
-            expectedButtonDensityClass = BUTTON_COMFORTABLE;
+            expectedButtonSize = '3';
     }
 
-    const buttonNativeElement = buttonDebugEl.nativeElement;
-    if (expectedDisplayDensity === DisplayDensity.comfortable) {
-        // For 'comfortable', the buttons should have no additional CSS classes added.
-        expect(buttonNativeElement.classList.length).toBe(3);
-        expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(true, 'Contains density class!');
-    } else {
-        // For 'compact' and 'cosy', the buttons should have an additional CSS class added.
-        expect(buttonNativeElement.classList.length).toBe(4);
-        expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(true, 'Missing density class!');
-    }
+    expect(getComponentSize(buttonDebugEl.nativeElement)).toBe(expectedButtonSize);
     expect(buttonDirective.displayDensity).toBe(expectedDisplayDensity);
 };

@@ -1,0 +1,6 @@
+dist/
+projects/igniteui-angular/migrations/
+projects/igniteui-angular/schematics/
+projects/igniteui-angular/cypress/
+cypress/
+cypress.config.ts

@@ -34,10 +34,10 @@
             (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp()"/>
-            <igx-suffix *ngIf="value || value === 0" >
-                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
-                <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
-            </igx-suffix>
+        <igx-suffix *ngIf="value || value === 0" >
+            <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
+            <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
+        </igx-suffix>
     </igx-input-group>
 </ng-template>
 
@@ -90,19 +90,19 @@
         (keydown)="onInputKeyDown($event)"
         (click)="expression.condition.isUnary ? null : picker.open()">
         <igx-prefix #inputGroupPrefix
-        tabindex="0"
-        (click)="inputGroupPrefixClick($event)"
-        (keydown)="onPrefixKeyDown($event)"
-        [igxDropDownItemNavigation]="inputGroupConditions">
-        <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
-    </igx-prefix>
-    <igx-suffix *ngIf="value">
-        <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
-        <igx-icon tabindex="0" (keydown)="onClearKeyDown($event)" (click)="clearInput($event)">clear</igx-icon>
-    </igx-suffix>
-    <!-- disable default icons -->
-    <igx-picker-toggle></igx-picker-toggle>
-    <igx-picker-clear></igx-picker-clear>
+            tabindex="0"
+            (click)="inputGroupPrefixClick($event)"
+            (keydown)="onPrefixKeyDown($event)"
+            [igxDropDownItemNavigation]="inputGroupConditions">
+            <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+        </igx-prefix>
+        <igx-suffix *ngIf="value">
+            <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
+            <igx-icon tabindex="0" (keydown)="onClearKeyDown($event)" (click)="clearInput($event)">clear</igx-icon>
+        </igx-suffix>
+        <!-- disable default icons -->
+        <igx-picker-toggle></igx-picker-toggle>
+        <igx-picker-clear></igx-picker-clear>
     </igx-time-picker>
 </ng-template>
 
@@ -144,7 +144,7 @@
     <div>
          <igx-chips-area #chipsArea>
             <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
-                <igx-chip #chip id='chip'
+                <igx-chip #chip id="chip"
                     (pointerdown)="onChipPointerdown($event, chip)"
                     (click)="onChipClick($event, item)"
                     (keydown)="onChipKeyDown($event, item)"
@@ -161,7 +161,7 @@
                     <span>{{filteringService.getChipLabel(item.expression)}}</span>
                 </igx-chip>
 
-                <span id='operand' *ngIf="!last">
+                <span id="operand" *ngIf="!last">
                     <button igxButton type="button" (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="displayDensity">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>

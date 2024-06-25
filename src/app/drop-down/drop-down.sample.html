@@ -1,22 +1,22 @@
 <section class="sample-content">
     <div class="sample-button-group">
         <h5>Action</h5>
-        <igx-buttongroup [multiSelection]="false">
+        <igx-buttongroup>
             <button igxButton #button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle</button>
             <button igxButton (click)="open()">Open</button>
             <button igxButton (click)="close()">Close</button>
         </igx-buttongroup>
 
         <h5>With Action directive</h5>
-        <igx-buttongroup [multiSelection]="false">
+        <igx-buttongroup>
             <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Drop-down</button>
             <button igxButton [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">Outlet</button>
             <button igxButton [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
             <button igxButton [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
         </igx-buttongroup>
 
-        <h5>Density types</h5>
-        <igx-buttongroup [multiSelection]="false">
+        <h5>Density types - Prefix/suffix</h5>
+        <igx-buttongroup>
             <button igxButton [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Comfortable</button>
             <button igxButton [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy" displayDensity="cosy">Cosy</button>
             <button igxButton [igxToggleAction]="dropDownCompact" [igxDropDownItemNavigation]="dropDownCompact" displayDensity="compact">Compact</button>
@@ -58,19 +58,25 @@
 
     <igx-drop-down #dropDownComfortable (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="comfortable">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 
     <igx-drop-down #dropDownCosy (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'  displayDensity="cosy">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 
     <igx-drop-down #dropDownCompact (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' displayDensity="compact">
         <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
             {{ item.field }}
+            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
         </igx-drop-down-item>
     </igx-drop-down>
 </section>

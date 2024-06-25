@@ -4,7 +4,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '16.x'
+    versionSpec: '18.x'
   displayName: 'Install Node.js'
 
 - script: npm ci
@@ -19,6 +19,12 @@ steps:
 
 - script: npm run build:lib
   displayName: 'Build source code and styles'
+
+- script: npm run build:schematics
+  displayName: 'Build schematics'
+
+- script: npm run build:migrations
+  displayName: 'Build migrations'
 
 - script: npm run build:typedoc:en:production
   displayName: 'Build typedoc EN'

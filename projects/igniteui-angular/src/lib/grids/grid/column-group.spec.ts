@@ -697,6 +697,25 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(columnWidth);
         });
+
+        it("Columns with percent width headers should sum to exactly the parent column group's header width", () => {
+            const gridWidth = "700px";
+            grid.width = gridWidth;
+            fixture.detectChanges();
+            const columnWidth = "30%";
+            componentInstance.columnWidth = columnWidth;
+            fixture.detectChanges();
+
+            const headersWidth = grid.nativeElement
+                .querySelector("igx-grid-header")
+                .getBoundingClientRect().width;
+            const expectedWidth = headersWidth * 3;
+            expect(headersWidth).toBe(Math.floor((parseFloat(columnWidth) / 100) * grid.calcWidth));
+            const locationColGroupHeaderWidth = grid.nativeElement
+                .querySelector("igx-grid-header-group")
+                .getBoundingClientRect().width;
+            expect(locationColGroupHeaderWidth).toBe(expectedWidth);
+        });
     });
 
     describe('Column hiding: ', () => {

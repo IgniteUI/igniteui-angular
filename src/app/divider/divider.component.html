@@ -1,0 +1,46 @@
+<div class="preview sample-min-width">
+    <div #dividerWrapper class="preview__sample" [class.preview__sample--vertical]="direction">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa officiis suscipit veniam vitae. Ab ad, dolores iure nostrum quo ratione rerum sapiente ullam. Adipisci alias architecto eligendi est, expedita, explicabo fugiat iure laudantium minima molestiae molestias nam obcaecati placeat provident, quam repellendus vitae! Cupiditate eveniet, facere harum hic quisquam sed.</p>
+        <igx-divider [middle]="middle" [inset]="inset" [vertical]="direction"></igx-divider>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa officiis suscipit veniam vitae. Ab ad, dolores iure nostrum quo ratione rerum sapiente ullam. Adipisci alias architecto eligendi est, expedita, explicabo fugiat iure laudantium minima molestiae molestias nam obcaecati placeat provident, quam repellendus vitae! Cupiditate eveniet, facere harum hic quisquam sed.</p>
+        <igx-divider [middle]="middle" [inset]="inset" [vertical]="direction"></igx-divider>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa officiis suscipit veniam vitae. Ab ad, dolores iure nostrum quo ratione rerum sapiente ullam. Adipisci alias architecto eligendi est, expedita, explicabo fugiat iure laudantium minima molestiae molestias nam obcaecati placeat provident, quam repellendus vitae! Cupiditate eveniet, facere harum hic quisquam sed.</p>
+    </div>
+
+    <div class="preview__settings">
+        Component settings
+        <!-- Use igx-switch for Toggle Direction -->
+        <igx-switch [checked]="direction" (change)="toggleDirection($event)">
+            Toggle Direction
+        </igx-switch>
+
+        <!-- Use igx-switch for Change type -->
+        <igx-switch [checked]="dashed" (change)="toggleType($event)">
+            Toggle Type
+        </igx-switch>
+
+        <!-- Use igx-switch for Toggle Middle -->
+        <igx-switch [checked]="middle" (change)="toggleMiddle($event)">
+            Toggle Middle
+        </igx-switch>
+
+        <!-- Add igx-input-group and igx-button for inset and middle -->
+        <igx-input-group type="border">
+            <label igxLabel>Provide Inset value</label>
+            <input igxInput type="text" [formControl]="insetControl" (input)="onInsetInputChange($event)"/>
+            <igx-hint position="start">
+                Provide a valid CSS unit (1px, 1em, 1rem, etc.)
+            </igx-hint>
+        </igx-input-group>
+
+        <span><strong>Parent flex-direction</strong>: {{ direction ? 'row' : 'column' }}</span>
+        <span><strong>Divider [vertical]</strong>: {{ direction ? 'true' : 'false' }}</span>
+
+        <a class="preview__info" href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/divider">
+            <igx-icon>link</igx-icon>
+            <span class="preview__info-link-text">Open docs page.</span>
+        </a>
+
+        <small class="preview__warning">There is no Wiki for this component!</small>
+    </div>
+</div>

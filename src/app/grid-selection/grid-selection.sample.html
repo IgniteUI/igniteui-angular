@@ -1,5 +1,6 @@
 <div class="sample-container">
     <div class="sample-actions">
+        <button (click)="log('')">LOG</button>
         <igx-switch [(ngModel)]="grid1.hideRowSelectors">Hide row selectors</igx-switch>
 
         <button igxButton="raised" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
@@ -16,17 +17,41 @@
         </igx-drop-down>
     </div>
 
-    <igx-grid #grid1 [data]="remote | async" [allowFiltering]="true" [primaryKey]="'ProductID'" (selected)="handleRowSelection()"
-            [width]="'800px'" [height]="'600px'"  (rowSelectionChanging)="log($event)">
-        <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
-        <igx-column [field]="'ProductName'"></igx-column>
-        <igx-column [field]="'UnitsInStock'"></igx-column>
-
-        <!-- <ng-template igxRowSelector let-rowContext>
-            <span class="rowNumberChild">{{ rowContext.key }}</span>
-            <igx-checkbox (click)="handleRowSelectorClick(rowContext)" [checked]="rowContext.selected">
-            </igx-checkbox>
-        </ng-template> -->
+    <igx-grid #grid1 [data]="data" [allowFiltering]="true" [primaryKey]="'ProductID'" (selected)="handleRowSelection()" [rowSelection]="'single'"
+    [height]="'550px'" width="100%" (rowSelectionChanging)="log($event)">
+            <igx-column
+            [field]="'ProductName'"
+            dataType="string"
+            [sortable]="true"
+          ></igx-column>
+          <igx-column
+            [field]="'SupplierID'"
+            dataType="string"
+            [sortable]="true"
+          ></igx-column>
+          <igx-column
+            [field]="'OrderDate'"
+            dataType="date"
+            [sortable]="true"
+          ></igx-column>
+          <igx-column
+            [field]="'ProductID'"
+            dataType="number"
+            [sortable]="true"
+            width="15%"
+          ></igx-column>
+          <igx-column
+            [field]="'UnitsInStock'"
+            dataType="number"
+            [sortable]="true"
+            width="15%"
+          ></igx-column>
+          <igx-column
+            [field]="'Discontinued'"
+            dataType="boolean"
+            [sortable]="true"
+            width="15%"
+          ></igx-column>
     </igx-grid>
 
     <div class="sample-actions">

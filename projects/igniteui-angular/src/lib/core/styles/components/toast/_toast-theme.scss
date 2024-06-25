@@ -16,6 +16,7 @@
 ///
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $text-color [null] - The text-color used for the toast.
+/// @param {Color} $border-color [null] - The border-color used for the toast.
 ///
 /// @param {List} $border-radius [null] - The border radius used for the toast component.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
@@ -30,6 +31,7 @@
     $schema: $light-material-schema,
 
     $border-radius: null,
+    $border-color: null,
     $background: null,
     $text-color: null,
     $shadow: null,
@@ -55,15 +57,12 @@
         $text-color: text-contrast($background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
+        border-color: $border-color,
         shadow: $shadow,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -87,13 +86,6 @@
         'indigo-design': rem(14px) rem(24px)
     ), $variant);
 
-    $border: map.get((
-        'material': none,
-        'fluent': none,
-        'bootstrap': rem(1px) solid color(null, 'gray', 300),
-        'indigo-design': none
-    ), $variant);
-
     %igx-toast-display {
         display: inline-flex;
         justify-content: center;
@@ -103,7 +95,7 @@
         min-width: $width;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
-        border: $border;
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);

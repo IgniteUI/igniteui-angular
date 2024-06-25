@@ -891,6 +891,7 @@ export class IgxSliderComponent implements
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._lowerValue !== adjustedValue) {
             this._lowerValue = adjustedValue;
+            this.lowerValueChange.emit(this._lowerValue);
             this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
@@ -929,6 +930,7 @@ export class IgxSliderComponent implements
         const adjustedValue = this.valueInRange(value, this.lowerBound, this.upperBound);
         if (this._upperValue !== adjustedValue) {
             this._upperValue = adjustedValue;
+            this.upperValueChange.emit(this._upperValue);
             this.value = { lower: this._lowerValue, upper: this._upperValue };
         }
     }
@@ -1031,13 +1033,13 @@ export class IgxSliderComponent implements
         this.setTickInterval();
         this.changeThumbFocusableState(this.disabled);
 
-        this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
-        this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
+        this.subscribeToEvents(this.thumbFrom);
+        this.subscribeToEvents(this.thumbTo);
 
         this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
             const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
             this.positionHandler(thumbFrom, null, this.lowerValue);
-            this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
+            this.subscribeToEvents(thumbFrom);
             this.changeThumbFocusableState(this.disabled);
         });
 
@@ -1070,7 +1072,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public writeValue(value: IRangeSliderValue | number): void {
-        if (!value) {
+        if (this.isNullishButNotZero(value)) {
             return;
         }
 
@@ -1113,7 +1115,6 @@ export class IgxSliderComponent implements
         // Finally do positionHandlersAndUpdateTrack the DOM
         // based on data values
         this.positionHandlersAndUpdateTrack();
-        this._onTouchedCallback();
     }
 
     /**
@@ -1124,28 +1125,26 @@ export class IgxSliderComponent implements
 
         if (this.isRange) {
             if (thumbType === SliderHandle.FROM) {
-                const newLower = this.lowerValue + value;
-                if (newLower >= this.lowerBound && newLower <= this.upperValue) {
-                    this._lowerValue = newLower;
-                    this.lowerValueChange.emit(this._lowerValue);
+                if (this.lowerValue + value > this.upperValue) {
+                    this.upperValue = this.lowerValue + value;
                 }
+                this.lowerValue += value;
             } else {
-                const newUpper = this.upperValue + value;
-                if (newUpper <= this.upperBound && newUpper >= this.lowerValue) {
-                    this._upperValue = newUpper;
-                    this.upperValueChange.emit(this._upperValue);
+                if (this.upperValue + value < this.lowerValue) {
+                    this.lowerValue = this.upperValue + value;
                 }
+                this.upperValue += value;
             }
 
             const newVal: IRangeSliderValue = {
-                lower: this._lowerValue,
-                upper: this._upperValue
+                lower: this.lowerValue,
+                upper: this.upperValue
             }
 
             // Swap the thumbs if a collision appears.
-            if (newVal.lower == newVal.upper) {
-                this.toggleThumb();
-            }
+            // if (newVal.lower == newVal.upper) {
+            //     this.toggleThumb();
+            // }
 
             this.value = newVal;
 
@@ -1237,11 +1236,11 @@ export class IgxSliderComponent implements
         return this._el.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
-    private toggleThumb() {
-        return this.thumbFrom.isActive ?
-            this.thumbTo.nativeElement.focus() :
-            this.thumbFrom.nativeElement.focus();
-    }
+    // private toggleThumb() {
+    //     return this.thumbFrom.isActive ?
+    //         this.thumbTo.nativeElement.focus() :
+    //         this.thumbFrom.nativeElement.focus();
+    // }
 
     private valueInRange(value, min = 0, max = 100) {
         return Math.max(Math.min(value, max), min);
@@ -1374,6 +1373,10 @@ export class IgxSliderComponent implements
         return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
     }
 
+    private isNullishButNotZero(value: any): boolean {
+        return !value && value !== 0;
+    }
+
     /**
      * @hidden
      * Normalizе the value when two-way data bind is used and {@link this.step} is set.
@@ -1408,14 +1411,18 @@ export class IgxSliderComponent implements
         }
     }
 
-    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: string) => void) {
+    private subscribeToEvents(thumb: IgxSliderThumbComponent) {
         if (!thumb) {
             return;
         }
 
         thumb.thumbValueChange
             .pipe(takeUntil(this.unsubscriber(thumb)))
-            .subscribe(value => callback(value, thumb.type));
+            .subscribe(value => this.thumbChanged(value, thumb.type));
+
+        thumb.thumbBlur
+            .pipe(takeUntil(this.unsubscriber(thumb)))
+            .subscribe(() => this._onTouchedCallback());
     }
 
     private unsubscriber(thumb: IgxSliderThumbComponent) {

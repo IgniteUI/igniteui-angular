@@ -8,7 +8,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Simple Snackbar
 
 ```html
-<button (click)="snackbar.open()">Show snackbar</button>
+<button type="button" igxButton (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
             message="This is a simple snackbar!">
@@ -23,7 +23,7 @@ You can show the snackbar by using `snackbar.open()` method.
 ## Snackbar with button and action
 
 ```html
-<button (click)="snackbar.open()">Show snackbar</button>
+<button type="button" igxButton (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
              message="This is a snackbar with a button and action!"
@@ -45,7 +45,7 @@ By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds
 ## Snackbar with custom content
 
 ```html
-<button (click)="snackbar.open()">Show snackbar</button>
+<button type="button" igxButton (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
              actionName="Dismiss"

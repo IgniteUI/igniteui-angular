@@ -52,7 +52,7 @@
     }
 
     igc-rating::part(value-label) {
-        color: color(null, 'gray', 900);
+        color: var-get($theme, 'value-label');
     }
 
     igc-rating[disabled]::part(label),
@@ -61,9 +61,9 @@
     }
 
     igc-rating[disabled] {
-        --symbol-empty-color: var(--disabled-empty-symbol-color);
-        --symbol-full-color: var(--disabled-full-symbol-color);
-        --symbol-empty-filter: grayscale(100%) opacity(50%);
-        --symbol-full-filter: grayscale(50%);
+        --symbol-empty-color: #{var-get($theme, 'disabled-empty-symbol-color')};
+        --symbol-full-color: #{var-get($theme, 'disabled-full-symbol-color')};
+        --disabled-symbol-empty-filter: #{var-get($theme, 'symbol-empty-filter')};
+        --disabled-symbol-full-filter: #{var-get($theme, 'symbol-full-filter')};
     }
 }

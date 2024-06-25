@@ -18,7 +18,6 @@ import {
     ViewContainerRef,
     Optional,
     LOCALE_ID,
-    ApplicationRef,
     Injector,
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA
@@ -84,6 +83,21 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 
 let NEXT_ID = 0;
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Tree Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
@@ -159,6 +173,7 @@ let NEXT_ID = 0;
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    /* blazorAlternateType: string */
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -170,6 +185,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public childDataKey;
 
+    /* blazorAlternateType: string */
     /**
      * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
@@ -182,6 +198,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public foreignKey;
 
+    /* blazorAlternateType: string */
     /**
      * An @Input property that sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
@@ -210,6 +227,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public cascadeOnDelete = true;
 
+    /* csSuppress */
     /**
      * An @Input property that provides a callback for loading child rows on demand.
      * ```html
@@ -291,6 +309,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public rootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all `ITreeGridRecord`s.
      * ```typescript
@@ -313,6 +332,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
      * ```typescript
@@ -324,6 +344,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    /* blazorSuppress */
     /**
      * @hidden
      */
@@ -335,6 +356,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
+     /* treatAsRef */
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
      * ```html
@@ -348,6 +370,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
+     /* treatAsRef */
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
@@ -359,6 +382,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         this.cdr.markForCheck();
     }
+
 
     /**
      * Get transactions service for the grid.
@@ -434,7 +458,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        appRef: ApplicationRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
@@ -448,7 +471,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation, filteringService,
+            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
@@ -591,7 +614,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-
+    /* blazorCSSuppress */
     /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
@@ -834,7 +857,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByIndex(rowIndex);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, columnField);
+            return new IgxGridCell(this as any, rowIndex, column);
         }
     }
 
@@ -854,7 +877,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const row = this.getRowByKey(rowSelector);
         const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this as any, row.index, columnField);
+            return new IgxGridCell(this as any, row.index, column);
         }
     }
 

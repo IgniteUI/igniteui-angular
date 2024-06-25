@@ -132,10 +132,6 @@
         $shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -169,7 +165,6 @@
     $group-item-min-width: rem(24px);
     $group-item-border-thickness: rem(1px);
     $group-items-margin: rem(10px, 16px);
-    $transition: all 140ms $in-out-quad;
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -178,7 +173,6 @@
     %igx-group-display {
         display: flex;
         box-shadow: var-get($theme, 'shadow');
-        transition: $transition;
         border-radius: var-get($theme, 'border-radius');
 
         button {
@@ -203,7 +197,6 @@
         user-select: none;
         position: relative;
         z-index: 0;
-        transition: $transition;
 
         &[igxButton] {
             border-radius: 0;

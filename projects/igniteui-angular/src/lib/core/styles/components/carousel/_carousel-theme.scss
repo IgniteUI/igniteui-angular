@@ -89,10 +89,6 @@
         }
     }
 
-    @if not($border-radius){
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
 
@@ -161,6 +157,10 @@
         color: var-get($theme, 'button-arrow-color');
         background: var-get($theme, 'button-background');
         box-shadow: var-get($theme, 'button-shadow');
+
+        igx-icon {
+            --component-size: 3;
+        }
     }
 
     %igx-nav-arrow--disabled {

@@ -14,7 +14,7 @@ import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOper
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { GridSummaryCalculationMode, RowPinningPosition } from '../grids/common/enums';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/grid/public_api';
+import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/public_api';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxTreeGridGroupingPipe } from '../grids/tree-grid/tree-grid.grouping.pipe';
 

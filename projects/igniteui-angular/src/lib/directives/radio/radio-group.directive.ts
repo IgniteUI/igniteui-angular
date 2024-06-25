@@ -1,6 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
+    ChangeDetectorRef,
     ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
@@ -487,6 +488,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     constructor(
         @Optional() @Self() public ngControl: NgControl,
         private _directionality: IgxDirectionality,
+        private cdr: ChangeDetectorRef,
     ) {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
@@ -506,6 +508,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
                 if (button.value === this._value) {
                     button.checked = true;
                     this._selected = button;
+                    this.cdr.markForCheck();
                 }
 
                 button.change.pipe(

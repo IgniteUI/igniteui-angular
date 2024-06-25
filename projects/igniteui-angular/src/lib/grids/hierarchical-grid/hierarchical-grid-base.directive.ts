@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     ChangeDetectorRef,
     createComponent,
     Directive,
@@ -48,6 +47,10 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
@@ -98,6 +101,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this._maxLevelHeaderDepth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
@@ -108,6 +112,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
+    /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
@@ -138,6 +143,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
+    /* blazorSuppress */
     public abstract expandChildren: boolean;
 
     constructor(
@@ -152,7 +158,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        appRef: ApplicationRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
@@ -175,7 +180,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             cdr,
             differs,
             viewRef,
-            appRef,
             injector,
             envInjector,
             navigation,
@@ -203,13 +207,19 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.updateColumns(result);
         this.initPinning();
 
+        result.forEach(col => {
+            this.columnInit.emit(col);
+        });
+
         const mirror = reflectComponentType(IgxColumnComponent);
         const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columns.forEach(column => {
                 if (column[output.propName]) {
                     column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
-                        const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
+                        const rowIslandColumn = this.parentIsland.columnList.find((col) => col.field
+                            ? col.field === column.field
+                            : col.header === column.header);
                         rowIslandColumn[output.propName].emit({ args, owner: this });
                     });
                 }

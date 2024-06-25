@@ -326,6 +326,19 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
+    @HostBinding('style.--component-size')
+    public get size(): string {
+        switch(this.tree.displayDensity) {
+            case DisplayDensity.compact:
+                return 'var(--ig-size, var(--ig-size-small))';
+            case DisplayDensity.cosy:
+                return 'var(--ig-size, var(--ig-size-medium))';
+            case DisplayDensity.comfortable:
+            default:
+                return 'var(--ig-size, var(--ig-size-large))';
+        }
+    }
+
     /** @hidden @internal */
     @HostBinding('attr.role')
     public get role() {
@@ -511,7 +524,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public get expandIndicatorTemplate(): TemplateRef<any> {
-        return this.tree?.expandIndicator ? this.tree.expandIndicator : this._defaultExpandIndicatorTemplate;
+        return this.tree?.expandIndicator || this._defaultExpandIndicatorTemplate;
     }
 
     /**
@@ -599,7 +612,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.toggle()">Toggle Node</button>
+     * <button type="button" igxButton (click)="node.toggle()">Toggle Node</button>
      * ```
      *
      * ```typescript
@@ -641,7 +654,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.expand()">Expand Node</button>
+     * <button type="button" igxButton (click)="node.expand()">Expand Node</button>
      * ```
      *
      * ```typescript
@@ -676,7 +689,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * <igx-tree>
      *      <igx-tree-node #node>My Node</igx-tree-node>
      * </igx-tree>
-     * <button igxButton (click)="node.collapse()">Collapse Node</button>
+     * <button type="button" igxButton (click)="node.collapse()">Collapse Node</button>
      * ```
      *
      * ```typescript

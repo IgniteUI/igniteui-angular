@@ -51,7 +51,7 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-import 'hammerjs';
+import "./app/ssr-shim";
 
 /**
  * Temporary workaround to kick abort controller listeners out of zone handling

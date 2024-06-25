@@ -60,6 +60,8 @@ interface IDataSelectorPanel {
     dragChannels: string[];
 }
 
+/* blazorIndirectRender 
+   blazorComponent */
 /**
  * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
  *
@@ -208,6 +210,8 @@ export class IgxPivotDataSelectorComponent {
         ),
         scrollStrategy: new AbsoluteScrollStrategy(),
     };
+
+    /* blazorSuppress */
     public animationSettings = {
         closeAnimation: useAnimation(fadeOut, {
             params: {
@@ -296,6 +300,7 @@ export class IgxPivotDataSelectorComponent {
         return this.grid?.displayDensity;
     }
 
+    /* treatAsRef */
     /**
      * An @Input property that sets the grid.
      */
@@ -304,6 +309,7 @@ export class IgxPivotDataSelectorComponent {
         this._grid = value;
     }
 
+    /* treatAsRef */
     /**
      * Returns the grid.
      */
