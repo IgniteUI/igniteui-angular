@@ -30,7 +30,7 @@ import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
@@ -46,6 +46,7 @@ import {
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { isEqual } from 'lodash-es';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -1282,9 +1283,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
 
         return keys.map(key => {
-            const item = isNaNvalue(key)
-                ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
-                : this.data.find(entry => entry[this.valueKey] === key);
+            const item = this.data.find(entry => isEqual(entry[this.valueKey], key));
 
             return item !== undefined ? item : { [this.valueKey]: key };
         });
