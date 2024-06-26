@@ -29,9 +29,6 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
     imports: [IgxButtonDirective, IgxRippleDirective, NgClass, IgxIconComponent, NgIf]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
-    /**
-     * @hidden @internal
-     */
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
