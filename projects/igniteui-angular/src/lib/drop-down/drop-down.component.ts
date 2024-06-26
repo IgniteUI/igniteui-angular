@@ -499,16 +499,16 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-    /**
+        /**
      * Handles the `selectionChanging` emit and the drop down toggle when selection changes
      *
      * @hidden
      * @internal
      * @param newSelection
-     * @param emit
      * @param event
+     * @param emit
      */
-    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, emit = true, event?: Event) {
+    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this.focusedItem;
@@ -525,22 +525,21 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 index: newSelection.index
             } as IgxDropDownItemBaseDirective;
         }
-        let args: ISelectionEventArgs;
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
+
         if (emit) {
-            args = { oldSelection, newSelection, cancel: false, owner: this };
             this.selectionChanging.emit(args);
         }
 
-        if (!emit || (emit && !args.cancel)) {
-            const selection = args?.newSelection ?? newSelection;
-            if (this.isSelectionValid(selection)) {
-                this.selection.set(this.id, new Set([selection]));
+        if (!args.cancel) {
+            if (this.isSelectionValid(args.newSelection)) {
+                this.selection.set(this.id, new Set([args.newSelection]));
                 if (!this.virtDir) {
                     if (oldSelection) {
                         oldSelection.selected = false;
                     }
-                    if (selection) {
-                        selection.selected = true;
+                    if (args?.newSelection) {
+                        args.newSelection.selected = true;
                     }
                 }
                 if (event) {
