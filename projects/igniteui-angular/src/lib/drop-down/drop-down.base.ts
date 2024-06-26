@@ -201,7 +201,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
         switch (key) {
             case DropDownActionKey.ENTER:
             case DropDownActionKey.SPACE:
-                this.selectItem(this.focusedItem, event, true);
+                this.selectItem(this.focusedItem, event);
                 break;
             case DropDownActionKey.ESCAPE:
         }
