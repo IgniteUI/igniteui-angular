@@ -353,7 +353,6 @@
         indigo-design: rem(8px)
     ), $variant);
 
-    $step-body-padding: rem(16px);
     $title-gap: rem(8px);
     $indicator-gap: rem(4px);
     $indicator-padding: rem(2px);
@@ -571,6 +570,12 @@
         }
 
         %igx-stepper__step-title {
+            @if $variant == 'indigo-design' {
+                /* stylelint-disable scss/at-extend-no-missing-placeholder */
+                @extend .ig-typography__subtitle-2;
+                /* stylelint-enable scss/at-extend-no-missing-placeholder */
+            }
+
             color: var-get($theme, 'current-title-color');
         }
 
@@ -655,7 +660,7 @@
 
     %igx-stepper__step-content-wrapper,
     %igx-stepper__body-content {
-        padding: $step-body-padding;
+        padding: rem(16px);
     }
 
     %igx-stepper__body-content--active {
@@ -666,7 +671,7 @@
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
         position: relative;
-        min-height: rem(32px);
+        min-height: if($variant == 'indigo-design', rem(24px), rem(32px));
 
         &::before {
             content: '';
@@ -676,6 +681,14 @@
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
             border-inline-start: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+        }
+    }
+
+    @if $variant == 'indigo-design' {
+        [aria-selected='false'] {
+            %igx-stepper__step-content-wrapper {
+                padding: 0 rem(16px);
+            }
         }
     }
 
@@ -981,12 +994,14 @@
     $categories: (
         title: 'body-2',
         subtitle: 'caption',
-        indicator: 'caption'
+        indicator: 'caption',
+        body-content: 'body-2'
     )
 ) {
     $title: map.get($categories, 'title');
     $subtitle: map.get($categories, 'subtitle');
     $indicator: map.get($categories, 'indicator');
+    $body-content: map.get($categories, 'body-content');
 
     %igx-stepper__step-indicator {
         @include type-style($indicator) {
@@ -1012,6 +1027,14 @@
     %igx-stepper__step-header--current {
         %igx-stepper__step-title {
             font-weight: 600;
+        }
+    }
+
+    %igx-stepper__step-content-wrapper,
+    %igx-stepper__body-content {
+        @include type-style($body-content) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

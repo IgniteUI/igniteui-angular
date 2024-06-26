@@ -113,7 +113,8 @@
     @include stepper-typography($categories: (
         title: 'body-2',
         subtitle: 'caption',
-        indicator: 'button'
+        indicator: 'button',
+        body-content: 'body-2'
     ));
     @include toast-typography();
     @include tooltip-typography($categories: (
