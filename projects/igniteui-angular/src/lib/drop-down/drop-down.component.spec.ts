@@ -862,7 +862,7 @@ describe('IgxDropDown ', () => {
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
-                expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, true, UIInteractions.getKeyboardEvent('keydown', 'Enter'));
+                expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, UIInteractions.getKeyboardEvent('keydown', 'Enter'));
                 expect(dropdown.selectedItem).toEqual(dropdownItem);
                 expect(dropdown.collapsed).toEqual(true);
             }));
