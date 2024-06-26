@@ -187,7 +187,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
         switch (key) {
             case DropDownActionKey.ENTER:
             case DropDownActionKey.SPACE:
-                this.selectItem(this.focusedItem, true, event);
+                this.selectItem(this.focusedItem, event, true);
                 break;
             case DropDownActionKey.ESCAPE:
         }
@@ -200,7 +200,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
      * @param newSelection the item selected
      * @param event the event that triggered the call
      */
-    public selectItem(newSelection?: IgxDropDownItemBaseDirective, emit = true, event?: Event) {  // eslint-disable-line
+    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event,  emit = true) {  // eslint-disable-line
         this.selectionChanging.emit({
             newSelection,
             oldSelection: null,
