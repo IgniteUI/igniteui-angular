@@ -10,7 +10,7 @@ import {
     booleanAttribute,
 } from "@angular/core";
 import { IgxIconService, IconReference } from "./icon.service";
-import { first, takeUntil } from "rxjs/operators";
+import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
 import { NgIf, NgTemplateOutlet } from "@angular/common";
@@ -140,10 +140,13 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
 
         this.iconService.iconLoaded
             .pipe(
-                first((e) => e.name === this.name && e.family === this.family),
+                filter((e) => e.name === this.name && e.family === this.family),
                 takeUntil(this._destroy$),
             )
-            .subscribe(() => this.ref.detectChanges());
+            .subscribe(() => {
+                this.setIcon();
+                this.ref.detectChanges()
+            });
     }
 
     /**

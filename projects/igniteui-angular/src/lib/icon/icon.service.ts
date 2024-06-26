@@ -33,8 +33,8 @@ export type IconReference = IconMeta & FamilyMeta;
 export interface IgxIconLoadedEvent {
     /** Name of the icon */
     name: string;
-    /** The actual SVG text */
-    value: string;
+    /** The actual SVG text, if any */
+    value?: string;
     /** The font-family for the icon. Defaults to material. */
     family: string;
 }
@@ -164,7 +164,7 @@ export class IgxIconService {
         const iconRef = this._iconRefs.get(family)?.get(name);
 
         if (!iconRef) {
-            this.setIconRef(name, family, icon);
+            this.setIconRef(name, family, icon, false);
         }
     }
 
@@ -174,7 +174,7 @@ export class IgxIconService {
      *   this.iconService.setIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
      * ```
      */
-    public setIconRef(name: string, family: string, icon: IconMeta) {
+    public setIconRef(name: string, family: string, icon: IconMeta, update = true) {
         let familyRef = this._iconRefs.get(family);
 
         if (!familyRef) {
@@ -184,6 +184,10 @@ export class IgxIconService {
 
         const familyType = this.familyType(icon?.family);
         familyRef.set(name, { ...icon, type: icon.type ?? familyType });
+
+        if (update) {
+            this._iconLoaded.next({ name, family });
+        }
     }
 
     /**
