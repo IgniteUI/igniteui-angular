@@ -70,17 +70,17 @@ export abstract class IgxCalendarViewBaseDirective {
     standalone: true
 })
 export class IgxCalendarYearDirective extends IgxCalendarViewBaseDirective {
-    @HostBinding('class.igx-years-view__year--current')
+    @HostBinding('class.igx-calendar-view__item--current')
     public get isCurrent(): boolean {
         return CalendarDay.today.year === this.value.getFullYear();
     }
 
-    @HostBinding('class.igx-years-view__year--selected')
+    @HostBinding('class.igx-calendar-view__item--selected')
     public get isSelected(): boolean {
         return this.value.getFullYear() === this.date.getFullYear();
     }
 
-    @HostBinding('class.igx-years-view__year--active')
+    @HostBinding('class.igx-calendar-view__item--active')
     public get isActive(): boolean {
         return this.isSelected && this.showActive;
     }
@@ -95,21 +95,21 @@ export class IgxCalendarYearDirective extends IgxCalendarViewBaseDirective {
     standalone: true
 })
 export class IgxCalendarMonthDirective extends IgxCalendarViewBaseDirective {
-    @HostBinding('class.igx-months-view__month--current')
+    @HostBinding('class.igx-calendar-view__item--current')
     public get isCurrent(): boolean {
         const today = CalendarDay.today;
         const date = CalendarDay.from(this.value);
         return date.year === today.year && date.month === today.month;
     }
 
-    @HostBinding('class.igx-months-view__month--selected')
+    @HostBinding('class.igx-calendar-view__item--selected')
     public get isSelected(): boolean {
         return (this.value.getFullYear() === this.date.getFullYear() &&
             this.value.getMonth() === this.date.getMonth()
         );
     }
 
-    @HostBinding('class.igx-months-view__month--active')
+    @HostBinding('class.igx-calendar-view__item--active')
     public get isActive(): boolean {
         return this.isSelected && this.showActive;
     }
