@@ -1,0 +1,236 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$month-hover-foreground",
+      "replaceWith": "$ym-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-hover-foreground",
+      "replaceWith": "$ym-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-hover-background",
+      "replaceWith": "$ym-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-hover-background",
+      "replaceWith": "$ym-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-current-foreground",
+      "replaceWith": "$ym-current-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-current-foreground",
+      "replaceWith": "$ym-current-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-current-background",
+      "replaceWith": "$ym-current-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-current-background",
+      "replaceWith": "$ym-current-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-current-hover-foreground",
+      "replaceWith": "$ym-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-current-hover-foreground",
+      "replaceWith": "$ym-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-current-hover-background",
+      "replaceWith": "$ym-current-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-current-hover-background",
+      "replaceWith": "$ym-current-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+
+    {
+      "name": "$month-selected-foreground",
+      "replaceWith": "$ym-selected-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-foreground",
+      "replaceWith": "$ym-selected-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-background",
+      "replaceWith": "$ym-selected-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-background",
+      "replaceWith": "$ym-selected-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-hover-foreground",
+      "replaceWith": "$ym-selected-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-hover-foreground",
+      "replaceWith": "$ym-selected-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-hover-background",
+      "replaceWith": "$ym-selected-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-hover-background",
+      "replaceWith": "$ym-selected-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+
+    {
+      "name": "$month-selected-current-foreground",
+      "replaceWith": "$ym-selected-current-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-current-foreground",
+      "replaceWith": "$ym-selected-current-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-current-background",
+      "replaceWith": "$ym-selected-current-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-current-background",
+      "replaceWith": "$ym-selected-current-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-current-hover-foreground",
+      "replaceWith": "$ym-selected-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-current-hover-foreground",
+      "replaceWith": "$ym-selected-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-selected-current-hover-background",
+      "replaceWith": "$ym-selected-current-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$year-selected-current-hover-background",
+      "replaceWith": "$ym-selected-current-hover-background",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$current-outline-color",
+      "replaceWith": "$ym-current-outline-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$current-hover-outline-color",
+      "replaceWith": "$ym-current-outline-hover-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$current-focus-outline-color",
+      "replaceWith": "$ym-current-outline-focus-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-outline-color",
+      "replaceWith": "$ym-selected-outline-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-hover-outline-color",
+      "replaceWith": "$ym-selected-hover-outline-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-focus-outline-color",
+      "replaceWith": "$ym-selected-focus-outline-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+
+    {
+      "name": "$selected-current-outline-color",
+      "replaceWith": "$ym-selected-current-outline-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-current-outline-hover-color",
+      "replaceWith": "$ym-selected-current-outline-hover-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$selected-current-outline-focus-color",
+      "replaceWith": "$ym-selected-current-outline-focus-color",
+      "owner": "calendar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$month-year-border-radius",
+      "replaceWith": "$ym-border-radius",
+      "owner": "calendar-theme",
+      "type": "property"
+    }
+  ]
+}

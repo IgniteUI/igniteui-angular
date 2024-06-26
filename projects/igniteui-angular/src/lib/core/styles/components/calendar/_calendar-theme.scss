@@ -39,57 +39,42 @@
 /// @param {Color} $week-number-foreground [null] - The foreground of the week number column.
 /// @param {Color} $week-number-background [null] - The background of the week number column.
 ///
-/// @param {Color} $year-hover-foreground [null] - The :hover foreground of the year inside the years view.
-/// @param {Color} $year-hover-background [null] - The :focus foreground of the year inside the years view.
-///
-/// @param {Color} $year-current-foreground [null] - The foreground of the current year in years view.
-/// @param {Color} $year-current-background [null] - The background of the current year in years view.
-/// @param {Color} $year-current-hover-foreground [null] - The :hover foreground of the current year in years view.
-/// @param {Color} $year-current-hover-background [null] - The :hover background of the current year in years view.
-///
-/// @param {Color} $year-selected-foreground [null] - The foreground of the selected year in years view.
-/// @param {Color} $year-selected-background [null] - The background of the selected year in years view.
-/// @param {Color} $year-selected-hover-foreground [null] - The :hover foreground of the selected year in years view.
-/// @param {Color} $year-selected-hover-background [null] - The :hover background of the selected year in years view.
-///
-/// @param {Color} $year-selected-current-foreground [null] - The foreground for the current selected year years view.
-/// @param {Color} $year-selected-current-background [null] - The background for the current selected year in years view.
-/// @param {Color} $year-selected-current-hover-foreground [null] - The :hover foreground for the current selected year in years view.
-/// @param {Color} $year-selected-current-hover-background [null] - The :hover background on hover for the current year in years view.
+/// @param {Color} $ym-selected-current-hover-foreground [null] - The :hover foreground for the current selected month/year.
+/// @param {Color} $ym-selected-current-hover-background [null] - The :hover background on hover for the current month/year.
 ///
 /// @param {Color} $navigation-color [null] - The color of the icon button responsible for month navigation.
 /// @param {Color} $navigation-hover-color [null] - The :hover color of the icon button responsible for month navigation.
 /// @param {Color} $navigation-focus-color [null] - The :focus color of the icon button responsible for month navigation.
 ///
-/// @param {Color} $month-hover-foreground [null] - The :hover foreground of the month inside the months view.
-/// @param {Color} $month-hover-background [null] - The :hover background of the month inside the months view.
+/// @param {Color} $ym-hover-foreground [null] - The :hover foreground of the month/year.
+/// @param {Color} $ym-hover-background [null] - The :hover background of the month/year.
 ///
-/// @param {Color} $month-current-foreground [null]- The foreground of the current month in month view.
-/// @param {Color} $month-current-background [null]- The background of the current month in month view.
-/// @param {Color} $month-current-hover-foreground [null]- The :hover foreground of the current month in month view.
-/// @param {Color} $month-current-hover-background [null]- The :hover background of the current month in month view.
+/// @param {Color} $ym-current-foreground [null]- The foreground of the current month/year.
+/// @param {Color} $ym-current-background [null]- The background of the current month/year.
+/// @param {Color} $ym-current-hover-foreground [null]- The :hover foreground of the current month/year.
+/// @param {Color} $ym-current-hover-background [null]- The :hover background of the current month/year.
 ///
-/// @param {Color} $month-selected-foreground [null]- The foreground color of the selected month in month view.
-/// @param {Color} $month-selected-background [null]- The background color of the selected month in month view.
-/// @param {Color} $month-selected-hover-foreground [null] - The :hover foreground color of the current selected in month view.
-/// @param {Color} $month-selected-hover-background [null] - The :hover background color of the current selected in month view.
+/// @param {Color} $ym-selected-foreground [null]- The foreground color of the selected month/year.
+/// @param {Color} $ym-selected-background [null]- The background color of the selected month/year.
+/// @param {Color} $ym-selected-hover-foreground [null] - The :hover foreground color of the currently selected month/year.
+/// @param {Color} $ym-selected-hover-background [null] - The :hover background color of the currently selected month/year.
 ///
-/// @param {Color} $month-selected-current-foreground [null]- The foreground color of the selected current month in month view.
-/// @param {Color} $month-selected-current-background [null]- The background color of the selected current month in month view.
-/// @param {Color} $month-selected-current-hover-foreground [null] - The :hover foreground color of the current selected month in month view.
-/// @param {Color} $month-selected-current-hover-background [null] - The :hover background color of the current selected month in month view.
+/// @param {Color} $ym-selected-current-foreground [null]- The foreground color of the selected current month/year.
+/// @param {Color} $ym-selected-current-background [null]- The background color of the selected current month/year.
+/// @param {Color} $ym-selected-current-hover-foreground [null] - The :hover foreground color of the current selected month/year.
+/// @param {Color} $ym-selected-current-hover-background [null] - The :hover background color of the current selected month/year.
 ///
-/// @param {Color} $current-outline-color [null] - The outline color of the current year/month in year/month views.
-/// @param {Color} $current-hover-outline-color [null] - The :hover outline color of the current year/month in year/month views.
-/// @param {Color} $current-focus-outline-color [null] - The :focus outline color of the current year/month in year/month views.
+/// @param {Color} $ym-current-outline-color [null] - The outline color of the current month/year.
+/// @param {Color} $ym-current-outline-hover-color [null] - The :hover outline color of the current month/year.
+/// @param {Color} $ym-current-outline-focus-color [null] - The :focus outline color of the current month/year.
 ///
-/// @param {Color} $selected-outline-color [null] - The outline color of the selected year/month in year/month views.
-/// @param {Color} $selected-hover-outline-color [null] - The :hover outline color of the selected year/month in year/month views.
-/// @param {Color} $selected-focus-outline-color [null] - The :focus outline color of the selected year/month in year/month views.
+/// @param {Color} $ym-selected-outline-color [null] - The outline color of the selected month/year.
+/// @param {Color} $ym-selected-hover-outline-color [null] - The :hover outline color of the selected month/year.
+/// @param {Color} $ym-selected-focus-outline-color [null] - The :focus outline color of the selected month/year.
 ///
-/// @param {Color} $selected-current-outline-color [null] - The outline color of the selected current year/month in year/month views.
-/// @param {Color} $selected-current-outline-hover-color [null] - The :hover outline color of the selected current year/month in year/month views.
-/// @param {Color} $selected-current-outline-hover-color [null] - The :focus outline color of the selected current year/month in year/month views.
+/// @param {Color} $ym-selected-current-outline-color [null] - The outline color of the selected current month/year.
+/// @param {Color} $ym-selected-current-outline-hover-color [null] - The :hover outline color of the selected current month/year.
+/// @param {Color} $ym-selected-current-outline-focus-color [null] - The :focus outline color of the selected current month/year.
 ///
 /// @param {Color} $date-hover-foreground [null] - The :hover foreground in idle state of a date.
 /// @param {Color} $date-hover-background [null] - The :hover background in idle state of a date.
@@ -174,7 +159,7 @@
 /// @param {List} $border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
-/// @param {List} $month-year-border-radius [null] - The border radius used for the month/year in month/year view.
+/// @param {List} $ym-border-radius [null] - The border radius used for the month/year.
 ///
 /// @param {Color} $actions-divider-color [null] - The border color used for the date-picker actions divider.
 ///
@@ -209,57 +194,40 @@
     $week-number-foreground: null,
     $week-number-background: null,
 
-    $year-hover-foreground: null,
-    $year-hover-background: null,
-
-    $year-current-foreground: null,
-    $year-current-background: null,
-    $year-current-hover-foreground: null,
-    $year-current-hover-background: null,
-
-    $year-selected-foreground: null,
-    $year-selected-background: null,
-    $year-selected-hover-foreground: null,
-    $year-selected-hover-background: null,
-
-    $year-selected-current-foreground: null,
-    $year-selected-current-background: null,
-    $year-selected-current-hover-foreground: null,
-    $year-selected-current-hover-background: null,
+    $ym-selected-current-hover-foreground: null,
+    $ym-selected-current-hover-background: null,
 
     $navigation-color: null,
     $navigation-hover-color: null,
     $navigation-focus-color: null,
 
-    $month-hover-foreground: null,
-    $month-hover-background: null,
+    $ym-hover-foreground: null,
+    $ym-hover-background: null,
 
-    $month-current-foreground: null,
-    $month-current-background: null,
-    $month-current-hover-foreground: null,
-    $month-current-hover-background: null,
+    $ym-current-foreground: null,
+    $ym-current-background: null,
+    $ym-current-hover-foreground: null,
+    $ym-current-hover-background: null,
 
-    $month-selected-current-foreground: null,
-    $month-selected-current-background: null,
-    $month-selected-current-hover-foreground: null,
-    $month-selected-current-hover-background: null,
+    $ym-selected-current-foreground: null,
+    $ym-selected-current-background: null,
 
-    $month-selected-foreground: null,
-    $month-selected-background: null,
-    $month-selected-hover-foreground: null,
-    $month-selected-hover-background: null,
+    $ym-selected-foreground: null,
+    $ym-selected-background: null,
+    $ym-selected-hover-foreground: null,
+    $ym-selected-hover-background: null,
 
-    $current-outline-color: null,
-    $current-outline-hover-color: null,
-    $current-outline-focus-color: null,
+    $ym-current-outline-color: null,
+    $ym-current-outline-hover-color: null,
+    $ym-current-outline-focus-color: null,
 
-    $selected-outline-color: null,
-    $selected-hover-outline-color: null,
-    $selected-focus-outline-color: null,
+    $ym-selected-outline-color: null,
+    $ym-selected-hover-outline-color: null,
+    $ym-selected-focus-outline-color: null,
 
-    $selected-current-outline-color: null,
-    $selected-current-outline-hover-color: null,
-    $selected-current-outline-focus-color: null,
+    $ym-selected-current-outline-color: null,
+    $ym-selected-current-outline-hover-color: null,
+    $ym-selected-current-outline-focus-color: null,
 
     $date-hover-background: null,
     $date-focus-background: null,
@@ -345,7 +313,7 @@
     $date-border-radius: null,
     $week-number-border-radius: null,
     $date-range-border-radius: null,
-    $month-year-border-radius: null,
+    $ym-border-radius: null,
 
     $actions-divider-color: null,
 
@@ -353,7 +321,7 @@
     $inner-size: null,
 ) {
     $name: 'igx-calendar';
-    $selector: 'igx-calendar, .igx-days-view--standalone, .igx-months-view--standalone, .igx-years-view--standalone, .igx-date-picker, .igx-month-picker';
+    $selector: 'igx-calendar, .igx-days-view--standalone, .igx-calendar-view--standalone, .igx-date-picker, .igx-month-picker';
     $calendar-schema: ();
 
     @if map.has-key($schema, 'calendar') {
@@ -558,15 +526,15 @@
         }
     }
 
-    @if not($month-hover-foreground) and $month-hover-background {
-        @if meta.type-of($month-hover-background) == 'color' {
-            $month-hover-foreground: text-contrast($month-hover-background);
+    @if not($ym-hover-foreground) and $ym-hover-background {
+        @if meta.type-of($ym-hover-background) == 'color' {
+            $ym-hover-foreground: text-contrast($ym-hover-background);
         }
     }
 
-    @if not($month-current-hover-foreground) and $month-hover-background {
-        @if meta.type-of($month-hover-background) == 'color' {
-            $month-current-hover-foreground: text-contrast($month-hover-background);
+    @if not($ym-current-hover-foreground) and $ym-hover-background {
+        @if meta.type-of($ym-hover-background) == 'color' {
+            $ym-current-hover-foreground: text-contrast($ym-hover-background);
         }
     }
 
@@ -590,57 +558,39 @@
         picker-hover-foreground: $picker-hover-foreground,
         picker-focus-foreground: $picker-focus-foreground,
 
-        year-hover-foreground: $year-hover-foreground,
-        year-hover-background: $year-hover-background,
-
-        year-current-foreground: $year-current-foreground,
-        year-current-background: $year-current-background,
-        year-current-hover-foreground: $year-current-hover-foreground,
-        year-current-hover-background: $year-current-hover-background,
-
-        year-selected-foreground: $year-selected-foreground,
-        year-selected-background: $year-selected-background,
-        year-selected-hover-foreground: $year-selected-hover-foreground,
-        year-selected-hover-background: $year-selected-hover-background,
-
-        year-selected-current-foreground: $year-selected-current-foreground,
-        year-selected-current-background: $year-selected-current-background,
-        year-selected-current-hover-foreground: $year-selected-current-hover-foreground,
-        year-selected-current-hover-background: $year-selected-current-hover-background,
-
         navigation-color: $navigation-color,
         navigation-hover-color: $navigation-hover-color,
         navigation-focus-color: $navigation-focus-color,
 
-        month-hover-foreground: $month-hover-foreground,
-        month-hover-background: $month-hover-background,
+        ym-hover-foreground: $ym-hover-foreground,
+        ym-hover-background: $ym-hover-background,
 
-        month-current-background: $month-current-background,
-        month-current-foreground: $month-current-foreground,
-        month-current-hover-foreground: $month-current-hover-foreground,
-        month-current-hover-background: $month-current-hover-background,
+        ym-current-background: $ym-current-background,
+        ym-current-foreground: $ym-current-foreground,
+        ym-current-hover-foreground: $ym-current-hover-foreground,
+        ym-current-hover-background: $ym-current-hover-background,
 
-        month-selected-foreground: $month-selected-foreground,
-        month-selected-background: $month-selected-background,
-        month-selected-hover-foreground: $month-selected-hover-foreground,
-        month-selected-hover-background: $month-selected-hover-background,
+        ym-selected-foreground: $ym-selected-foreground,
+        ym-selected-background: $ym-selected-background,
+        ym-selected-hover-foreground: $ym-selected-hover-foreground,
+        ym-selected-hover-background: $ym-selected-hover-background,
 
-        month-selected-current-foreground: $month-selected-current-foreground,
-        month-selected-current-background: $month-selected-current-background,
-        month-selected-current-hover-foreground: $month-selected-current-hover-foreground,
-        month-selected-current-hover-background: $month-selected-current-hover-background,
+        ym-selected-current-foreground: $ym-selected-current-foreground,
+        ym-selected-current-background: $ym-selected-current-background,
+        ym-selected-current-hover-foreground: $ym-selected-current-hover-foreground,
+        ym-selected-current-hover-background: $ym-selected-current-hover-background,
 
-        current-outline-color: $current-outline-color,
-        current-outline-hover-color: $current-outline-hover-color,
-        current-outline-focus-color: $current-outline-focus-color,
+        ym-current-outline-color: $ym-current-outline-color,
+        ym-current-outline-hover-color: $ym-current-outline-hover-color,
+        ym-current-outline-focus-color: $ym-current-outline-focus-color,
 
-        selected-outline-color: $selected-outline-color,
-        selected-hover-outline-color: $selected-hover-outline-color,
-        selected-focus-outline-color: $selected-focus-outline-color,
+        ym-selected-outline-color: $ym-selected-outline-color,
+        ym-selected-hover-outline-color: $ym-selected-hover-outline-color,
+        ym-selected-focus-outline-color: $ym-selected-focus-outline-color,
 
-        selected-current-outline-color: $selected-current-outline-color,
-        selected-current-outline-hover-color: $selected-current-outline-hover-color,
-        selected-current-outline-focus-color: $selected-current-outline-focus-color,
+        ym-selected-current-outline-color: $ym-selected-current-outline-color,
+        ym-selected-current-outline-hover-color: $ym-selected-current-outline-hover-color,
+        ym-selected-current-outline-focus-color: $ym-selected-current-outline-focus-color,
 
         date-hover-background: $date-hover-background,
         date-focus-background: $date-focus-background,
@@ -710,7 +660,7 @@
         border-radius: $border-radius,
         date-border-radius: $date-border-radius,
         date-range-border-radius: $date-range-border-radius,
-        month-year-border-radius: $month-year-border-radius,
+        ym-border-radius: $ym-border-radius,
         week-number-border-radius: $week-number-border-radius,
         date-border-color: $date-border-color,
         date-hover-border-color: $date-hover-border-color,
@@ -819,24 +769,21 @@
         overflow: hidden;
 
         %days-view,
-        %months-view,
-        %years-view {
+        %calendar-view {
             background: inherit;
             color: inherit;
             box-shadow: none;
         }
 
         %days-view,
-        %months-view,
-        %years-view,
+        %calendar-view,
         %views-navigation {
             border-radius: 0;
         }
     }
 
     %days-view,
-    %months-view,
-    %years-view {
+    %calendar-view {
         @include sizable();
 
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
@@ -855,8 +802,7 @@
         }
     }
 
-    %months-view,
-    %years-view {
+    %calendar-view {
         display: flex;
         justify-content: center;
         position: relative;
@@ -934,8 +880,7 @@
 
         display: flex;
 
-        %years-view,
-        %months-view {
+        %calendar-view {
             color: inherit;
             background: inherit;
             box-shadow: none;
@@ -1334,8 +1279,7 @@
         }
     }
 
-    %years-grid,
-    %months-grid {
+    %calendar-items {
         display: grid;
         grid-template-columns: repeat(3, minmax(max-content, 1fr));
         row-gap: rem(4px);
@@ -1343,14 +1287,13 @@
         width: 100%;
     }
 
-    %years-view__year-inner,
-    %months-view__month-inner {
+    %calendar-view__item-inner {
         display: flex;
         justify-content: center;
         align-items: center;
         height: $date-height;
         width: 100%;
-        border-radius: var-get($theme, 'month-year-border-radius');
+        border-radius: var-get($theme, 'ym-border-radius');
         padding: 0 rem(12px);
         outline: none;
         cursor: pointer;
@@ -1373,206 +1316,101 @@
         }
     }
 
-    %years-view__year-inner-hover {
-        color: var-get($theme, 'year-hover-foreground');
-        background: var-get($theme, 'year-hover-background');
-    }
-
-    %years-view__year-current {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-current-foreground');
-            background: var-get($theme, 'year-current-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-color');
-
-            &:hover {
-                color: var-get($theme, 'year-current-hover-foreground');
-                background: var-get($theme, 'year-current-hover-background');
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
-            }
-        }
-    }
-
-    %years-view__year-current-active {
-        %years-view__year-inner {
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-focus-color');
-            } @else {
-                box-shadow: inset 0 0 0 $border-size var(--content-background),
-                    0 0 0 $border-size var-get($theme, 'current-outline-focus-color');
-            }
-        }
-    }
-
-    %years-view__year-selected {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-foreground');
-            background: var-get($theme, 'year-selected-background');
-
-            @if not $bootstrap-theme and $variant != 'fluent' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-outline-color');
-            }
-
-            &:hover {
-                color: var-get($theme, 'year-selected-hover-foreground');
-                background: var-get($theme, 'year-selected-hover-background');
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
-            }
-        }
-    }
-
-    %years-view__year-selected-active {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-hover-foreground');
-            background: var-get($theme, 'year-selected-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-focus-outline-color');
-        }
-    }
-
-    %years-view__year-selected-current {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-current-foreground');
-            background: var-get($theme, 'year-selected-current-background');
+    %calendar-view__item-selected-current-active {
+        %calendar-view__item-inner {
+            color: var-get($theme, 'ym-selected-current-hover-foreground');
+            background: var-get($theme, 'ym-selected-current-hover-background');
 
             @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-color');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-focus-color');
             } @else {
                 &::after {
-                    border-color: var-get($theme, 'selected-current-outline-color');
+                    border-color: var-get($theme, 'ym-selected-current-outline-focus-color');
+                }
+            }
+        }
+    }
+
+    %calendar-view__item-inner-hover {
+        color: var-get($theme, 'ym-hover-foreground');
+        background: var-get($theme, 'ym-hover-background');
+    }
+
+    %calendar-view__item-current {
+        %calendar-view__item-inner {
+            color: var-get($theme, 'ym-current-foreground');
+            background: var-get($theme, 'ym-current-background');
+            box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-current-outline-color');
+
+            &:hover {
+                color: var-get($theme, 'ym-current-hover-foreground');
+                background: var-get($theme, 'ym-current-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-current-outline-hover-color');
+            }
+        }
+    }
+
+    %calendar-view__item-current-active {
+        %calendar-view__item-inner {
+            @if $variant == 'fluent' or $variant == 'bootstrap' {
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-current-outline-focus-color');
+            } @else {
+                box-shadow: inset 0 0 0 $border-size var(--content-background),
+                    0 0 0 rem(1px) var-get($theme, 'ym-current-outline-focus-color');
+            }
+        }
+    }
+
+    %calendar-view__item-selected {
+        %calendar-view__item-inner {
+            color: var-get($theme, 'ym-selected-foreground');
+            background: var-get($theme, 'ym-selected-background');
+
+            @if not $bootstrap-theme and $variant != 'fluent' {
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-outline-color');
+            }
+
+            &:hover {
+                color: var-get($theme, 'ym-selected-hover-foreground');
+                background: var-get($theme, 'ym-selected-hover-background');
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-hover-outline-color');
+            }
+        }
+    }
+
+    %calendar-view__item-selected-active {
+        %calendar-view__item-inner {
+            color: var-get($theme, 'ym-selected-hover-foreground');
+            background: var-get($theme, 'ym-selected-hover-background');
+            box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-focus-outline-color');
+        }
+    }
+
+    %calendar-view__item-selected-current {
+        %calendar-view__item-inner {
+            color: var-get($theme, 'ym-selected-current-foreground');
+            background: var-get($theme, 'ym-selected-current-background');
+
+            @if $variant != 'indigo-design' {
+                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-color');
+            } @else {
+                &::after {
+                    border-color: var-get($theme, 'ym-selected-current-outline-color');
                 }
             }
 
             &:hover {
-                color: var-get($theme, 'year-selected-current-hover-foreground');
-                background: var-get($theme, 'year-selected-current-hover-background');
+                color: var-get($theme, 'ym-selected-current-hover-foreground');
+                background: var-get($theme, 'ym-selected-current-hover-background');
 
                 // stylelint-disable-next-line
                 @if $variant != 'indigo-design' {
-                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
+                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-hover-color');
                 } @else {
                     // stylelint-disable-next-line
                     &::after {
-                        border-color: var-get($theme, 'selected-current-outline-hover-color');
+                        border-color: var-get($theme, 'ym-selected-current-outline-hover-color');
                     }
-                }
-            }
-        }
-    }
-
-    %years-view__year-selected-current-active {
-        %years-view__year-inner {
-            color: var-get($theme, 'year-selected-current-hover-foreground');
-            background: var-get($theme, 'year-selected-current-hover-background');
-
-            @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-focus-color');
-            } @else {
-                &::after {
-                    border-color: var-get($theme, 'selected-current-outline-focus-color');
-                }
-            }
-        }
-    }
-
-    %months-view__month-inner-hover {
-        color: var-get($theme, 'month-hover-foreground');
-        background: var-get($theme, 'month-hover-background');
-    }
-
-    %months-view__month-inner-current-hover {
-        color: var-get($theme, 'month-hover-foreground');
-        background: var-get($theme, 'month-hover-background');
-    }
-
-    %months-view__month-current {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-current-foreground');
-            background: var-get($theme, 'month-current-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-color');
-
-            &:hover {
-                color: var-get($theme, 'month-current-hover-foreground');
-                background: var-get($theme, 'month-current-hover-background');
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-hover-color');
-            }
-        }
-    }
-
-    %months-view__month-current-active {
-        %months-view__month-inner {
-            @if $variant == 'fluent' or $variant == 'bootstrap' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'current-outline-focus-color');
-            } @else {
-                box-shadow: inset 0 0 0 $border-size var(--content-background),
-                    0 0 0 rem(1px) var-get($theme, 'current-outline-focus-color');
-            }
-        }
-    }
-
-    %months-view__month-selected {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-foreground');
-            background: var-get($theme, 'month-selected-background');
-
-            @if not $bootstrap-theme and $variant != 'fluent' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-outline-color');
-            }
-
-            &:hover {
-                color: var-get($theme, 'month-selected-hover-foreground');
-                background: var-get($theme, 'month-selected-hover-background');
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-hover-outline-color');
-            }
-        }
-    }
-
-    %months-view__month-selected-active {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-hover-foreground');
-            background: var-get($theme, 'month-selected-hover-background');
-            box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-focus-outline-color');
-        }
-    }
-
-    %months-view__month-selected-current {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-current-foreground');
-            background: var-get($theme, 'month-selected-current-background');
-
-            @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-color');
-            } @else {
-                &::after {
-                    border-color: var-get($theme, 'selected-current-outline-color');
-                }
-            }
-
-            &:hover {
-                color: var-get($theme, 'month-selected-current-hover-foreground');
-                background: var-get($theme, 'month-selected-current-hover-background');
-
-                // stylelint-disable-next-line
-                @if $variant != 'indigo-design' {
-                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-hover-color');
-                } @else {
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'selected-current-outline-hover-color');
-                    }
-                }
-            }
-        }
-    }
-
-    %months-view__month-selected-current-active {
-        %months-view__month-inner {
-            color: var-get($theme, 'month-selected-current-hover-foreground');
-            background: var-get($theme, 'month-selected-current-hover-background');
-
-            @if $variant != 'indigo-design' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'selected-current-outline-focus-color');
-            } @else {
-                &::after {
-                    border-color: var-get($theme, 'selected-current-outline-focus-color');
                 }
             }
         }
@@ -2813,8 +2651,7 @@
         }
     }
 
-    %years-view,
-    %months-view,
+    %calendar-view,
     %date-inner {
         @include type-style($content, false) {
             font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
