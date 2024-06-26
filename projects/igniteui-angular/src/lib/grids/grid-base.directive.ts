@@ -1146,6 +1146,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ActionStripCollection */
+    /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     /** @hidden @internal */
     @ContentChildren(IgxActionStripToken)

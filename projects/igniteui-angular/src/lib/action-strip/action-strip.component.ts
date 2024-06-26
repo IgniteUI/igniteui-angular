@@ -42,6 +42,7 @@ export class IgxActionStripMenuItemDirective {
 
 /* blazorElement */
 /* jsonAPIManageItemInMarkup */
+/* jsonAPIManageCollectionInMarkup */
 /* wcElementTag: igc-action-strip */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
