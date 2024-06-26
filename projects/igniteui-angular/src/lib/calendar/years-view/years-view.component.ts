@@ -41,14 +41,14 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      *
      * @hidden
      */
-    @HostBinding("class.igx-years-view")
+    @HostBinding("class.igx-calendar-view")
     public readonly viewClass = true;
 
     /**
      * @hidden @internal
      */
     @Input()
-	@HostBinding('class.igx-years-view--standalone')
+	@HostBinding('class.igx-calendar-view--standalone')
 	public get standalone() {
         return this.#standalone;
     }

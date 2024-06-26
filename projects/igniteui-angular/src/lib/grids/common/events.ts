@@ -25,7 +25,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: CellType;
     /* blazorCSSuppress */
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
@@ -36,7 +36,7 @@ export interface IGridRowEventArgs extends IBaseEventArgs {
     /** Represents the grid row that triggered the event. */
     row: RowType;
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
