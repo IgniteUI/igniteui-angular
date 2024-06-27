@@ -815,7 +815,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify the state of the grid after filtering.
             expect(grid.filteredData.length).toBe(2);
-            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('2');
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('(2)');
+            expect(GridFunctions.getExcelFilterIconFiltered(fix, 'ProductName')).toBeDefined();
+            expect(GridFunctions.getExcelFilterIconFiltered(fix, 'Downloads')).toBeDefined();
 
             // Clear filters through API.
             grid.advancedFilteringExpressionsTree = null;
