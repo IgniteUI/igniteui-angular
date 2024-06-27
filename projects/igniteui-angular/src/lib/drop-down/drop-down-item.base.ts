@@ -291,7 +291,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
             } else if (this.hasIndex
                 ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
                 this !== dropDownSelectedItem) {
-                this.dropDown.selectItem(this, null, false);
+                this.dropDown.selectItem(this, undefined, false);
             }
         }
     }
