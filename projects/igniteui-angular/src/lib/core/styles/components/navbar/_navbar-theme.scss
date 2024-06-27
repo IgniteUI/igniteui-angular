@@ -110,21 +110,38 @@
         overflow: hidden;
         border-bottom: rem(1px) solid var-get($theme, 'border-color');
 
-        igx-avatar,
-        igx-input-group,
-        [igxIconButton],
-        igc-avatar,
-        igc-input,
-        igc-icon-button {
+        igx-avatar {
             --ig-size: 1;
         }
 
-        [igxButton],
-        igc-button {
-            --ig-size: 2;
+        @if $variant == 'material' {
+            igx-input-group {
+                --ig-size: 1;
+            }
+        }
+
+        @if $variant == 'bootstrap' {
+            igc-input,
+            igc-icon-button {
+                --ig-size: 1;
+            }
+
+            [igxButton],
+            igc-button,
+            [igxIconButton],
+            igx-input-group {
+                --ig-size: 2;
+            }
+        }
+
+        @if $variant == 'fluent' {
+            igx-input-group {
+                --ig-size: 2;
+            }
         }
 
         @if $variant == 'indigo-design' {
+            igx-avatar,
             igc-icon-button,
             [igxIconButton] {
                 --ig-size: 2;
