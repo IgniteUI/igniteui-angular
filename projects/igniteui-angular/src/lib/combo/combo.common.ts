@@ -183,6 +183,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.dropdown.open) {
             this.dropdown.close();
         }
+        if (this.inputGroup?.isFocused) {
+            this.inputGroup.element.nativeElement.blur();
+            this.inputGroup.isFocused = false;
+        }
     }
 
     /**
