@@ -164,7 +164,7 @@ export class IgxIconService {
         const iconRef = this._iconRefs.get(family)?.get(name);
 
         if (!iconRef) {
-            this.setIconRef(name, family, icon, false);
+            this.setIconRef(name, family, icon);
         }
     }
 
@@ -174,7 +174,7 @@ export class IgxIconService {
      *   this.iconService.setIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
      * ```
      */
-    public setIconRef(name: string, family: string, icon: IconMeta, update = true) {
+    public setIconRef(name: string, family: string, icon: IconMeta) {
         let familyRef = this._iconRefs.get(family);
 
         if (!familyRef) {
@@ -185,9 +185,7 @@ export class IgxIconService {
         const familyType = this.familyType(icon?.family);
         familyRef.set(name, { ...icon, type: icon.type ?? familyType });
 
-        if (update) {
-            this._iconLoaded.next({ name, family });
-        }
+        this._iconLoaded.next({ name, family });
     }
 
     /**
