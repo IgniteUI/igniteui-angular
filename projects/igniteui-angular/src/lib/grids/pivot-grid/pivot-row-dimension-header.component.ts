@@ -8,7 +8,7 @@ import { SortingIndexPipe } from '../headers/pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PivotRowLayoutType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 

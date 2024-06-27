@@ -16,6 +16,11 @@
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
 
+                <span igxDrawerItem [disabled]="true">
+                    <igx-icon>web</igx-icon>
+                    <span class="navdrawer-ellipsis">Disabled Item</span>
+                </span>
+
                 <!--Directives-->
                 <span igxDrawerItem [isHeader]="true">Directives</span>
 
@@ -38,6 +43,10 @@
             <nav>
                 <span *ngFor="let item of componentLinks" igxRipple igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon>{{item.icon}}</igx-icon>
+                </span>
+
+                <span igxDrawerItem [disabled]="true">
+                    <igx-icon>web</igx-icon>
                 </span>
 
                 <span *ngFor="let item of directiveLinks" igxDrawerItem igxRipple routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
