@@ -685,9 +685,17 @@
     }
 
     @if $variant == 'indigo-design' {
+        [aria-selected='true'] {
+            %igx-stepper__step-content-wrapper {
+                padding-block: rem(16px);
+                padding-inline-start: $v-line-indent;
+                padding-inline-end: rem(16px);
+            }
+        }
+
         [aria-selected='false'] {
             %igx-stepper__step-content-wrapper {
-                padding: 0 rem(16px);
+                padding-block: 0;
             }
         }
     }
