@@ -19,6 +19,7 @@
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
+/// @param {Color} $border-color [null] - The toolbar border-bottom color.
 /// @requires $light-material-schema
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
@@ -40,6 +41,7 @@
     $item-focus-background: null,
     $item-focus-text-color: null,
     $size: null,
+    $border-color: null,
 ) {
     $name: 'igx-grid-toolbar';
     $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
@@ -94,6 +96,7 @@
             variant: map.get($schema, '_meta', 'theme')
         )),
         size: $size,
+        border-color: $border-color
     ));
 }
 
@@ -162,13 +165,7 @@
         justify-content: space-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-
-        @if $bootstrap-theme {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 100);
-        } @else {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 300);
-        }
-
+        border-bottom: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'background-color');
         height: auto;
         min-height: var-get($theme, 'size');
