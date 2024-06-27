@@ -415,6 +415,25 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
+    public get weekNumberHeader(): { short: string, long: string } {
+        const weekOfYear = (style: 'narrow' | 'long') => {
+            const dn = new Intl.DisplayNames(this.locale, {
+                type: 'dateTimeField',
+                style,
+            });
+
+            return dn.of('weekOfYear');
+        }
+
+        return {
+            short: weekOfYear('narrow'),
+            long: weekOfYear('long'),
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public rowTracker(index: number, item: CalendarDay[]): string {
         return `${item[index].month}${item[index].date}`;
     }
