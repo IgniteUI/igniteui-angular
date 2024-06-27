@@ -1,16 +1,16 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
-    AfterViewChecked, ChangeDetectorRef, Component,
+    ChangeDetectorRef,
+    Component,
     ContentChild,
     ContentChildren,
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    OnDestroy, Optional, QueryList, booleanAttribute
+    Optional, QueryList, booleanAttribute
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { mkenum, PlatformUtil } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -24,18 +24,8 @@ import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-
-const IgxInputGroupTheme = /*@__PURE__*/mkenum({
-    Material: 'material',
-    Fluent: 'fluent',
-    Bootstrap: 'bootstrap',
-    IndigoDesign: 'indigo-design'
-});
-
-/**
- * Determines the Input Group theme.
- */
-export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInputGroupTheme];
+import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 @Component({
     selector: 'igx-input-group',
@@ -44,7 +34,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
+export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -131,9 +121,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
 
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _theme: IgxInputGroupTheme;
-    private _theme$ = new Subject();
-    private _subscription: Subscription;
+    private _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -198,7 +186,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
      * }
      */
     @Input()
-    public set theme(value: IgxInputGroupTheme) {
+    public set theme(value: IgxTheme) {
         this._theme = value;
     }
 
@@ -212,7 +200,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
      *  let inputTheme = this.inputGroup.theme;
      * }
      */
-    public get theme(): IgxInputGroupTheme {
+    public get theme(): IgxTheme {
         return this._theme;
     }
 
@@ -224,11 +212,14 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
         @Inject(DOCUMENT)
         private document: any,
         private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private themeService: ThemeService,
+        private iconService?: IgxIconService
     ) {
-        this._subscription = this._theme$.asObservable().subscribe(value => {
-            this._theme = value as IgxInputGroupTheme;
-            this.cdr.detectChanges();
+        this.theme = this.themeService.theme;
+        this.iconService.addIconRef('clear', 'default', {
+            name: 'clear',
+            family: 'material',
         });
     }
 
@@ -417,7 +408,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
-        return this._theme === 'indigo-design';
+        return this._theme === 'indigo';
     }
 
     /**
@@ -443,27 +434,5 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
     /** @hidden */
     public set filled(val) {
         this._filled = val;
-    }
-
-    /** @hidden @internal */
-    public ngAfterViewChecked() {
-        if (!this._theme) {
-            const cssProp = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--theme')
-                .trim();
-
-            if (cssProp !== '') {
-                Promise.resolve().then(() => {
-                    this._theme$.next(cssProp);
-                    this.cdr.markForCheck();
-                });
-            }
-        }
-    }
-
-    /** @hidden @internal */
-    public ngOnDestroy() {
-        this._subscription.unsubscribe();
     }
 }

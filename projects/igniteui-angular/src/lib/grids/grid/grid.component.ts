@@ -96,7 +96,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
