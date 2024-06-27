@@ -3318,6 +3318,38 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
+        it('Should show the previously entered filter value when reopen esf dialog.', fakeAsync(() => {
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(1);
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(30);
+            fix.detectChanges();
+            debugger;
+
+            expect(GridFunctions.getExcelStyleFilteringComponent(fix).querySelector('.igx-drop-down__item--selected')).toBeDefined();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 10);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('Angular');
+        }));
+
         it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
@@ -3331,7 +3363,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
-            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('2');
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(2)');
             expect(grid.filteredData.length).toEqual(2);
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
