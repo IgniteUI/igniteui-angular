@@ -783,6 +783,47 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('1');
+        }));
+
+        it('Applying/Clearing filter through the API should correctly update the UI and correctly show number of filtered columns', fakeAsync(() => {
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify the initial state of the grid and that no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number')).toBeNull();
+
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push(orTree);
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Verify the state of the grid after filtering.
+            expect(grid.filteredData.length).toBe(2);
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('2');
+
+            // Clear filters through API.
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+
+            // Verify there are not filters present and that the default text is shown.
+            expect(grid.advancedFilteringExpressionsTree).toBeNull();
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number')).toBeNull();
         }));
 
         it('Applying/Clearing filter through the API should correctly update the UI.', fakeAsync(() => {
