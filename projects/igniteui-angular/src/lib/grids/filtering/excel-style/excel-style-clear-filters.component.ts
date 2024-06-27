@@ -14,7 +14,10 @@ import { NgIf, NgClass } from '@angular/common';
     imports: [NgIf, NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleClearFiltersComponent {
-    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) { }
+    constructor(
+        public esf: BaseFilteringComponent,
+        protected platform: PlatformUtil,
+    ) { }
 
     /**
      * @hidden @internal

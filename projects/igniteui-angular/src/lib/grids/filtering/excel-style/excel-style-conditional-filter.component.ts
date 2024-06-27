@@ -58,7 +58,10 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
+    constructor(
+        public esf: BaseFilteringComponent,
+        protected platform: PlatformUtil,
+    ) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;
