@@ -8,7 +8,7 @@
         aria-haspopup="true"
         [attr.aria-controls]="this.subMenu.listId"
         [attr.aria-activedescendant]="!this.subMenu.collapsed ? this.subMenu.focusedItem?.id : null">
-        <span>{{ subMenuText }} <ng-container *ngIf="filterNumber > 0">({{filterNumber}})</ng-container></span>
+        <span class="igx-excel-filter__filter-number">{{ subMenuText }} <ng-container *ngIf="filterNumber > 0">({{filterNumber}})</ng-container></span>
         <igx-icon name="chevron_right" family="default"></igx-icon>
     </div>
 

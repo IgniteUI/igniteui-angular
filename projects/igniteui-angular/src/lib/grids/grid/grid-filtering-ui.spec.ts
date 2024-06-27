@@ -3335,11 +3335,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('2');
             expect(grid.filteredData.length).toEqual(2);
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(30);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelStyleFilteringComponent(fix).querySelector('.igx-drop-down__item--selected')).toBeDefined();
         }));
 
         it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
@@ -4811,6 +4818,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number')).toBeNull();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
