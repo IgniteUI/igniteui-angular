@@ -44,9 +44,17 @@
 </div>
 
 <ng-template #defaultSelectIcon>
-    <igx-icon [attr.aria-label]="resourceStrings.igx_chip_select">done</igx-icon>
+    <igx-icon
+        [attr.aria-label]="resourceStrings.igx_chip_select"
+        family="default"
+        name="selected"
+    ></igx-icon>
 </ng-template>
 
 <ng-template #defaultRemoveIcon>
-    <igx-icon [attr.aria-label]="resourceStrings.igx_chip_remove">cancel</igx-icon>
+    <igx-icon
+        [attr.aria-label]="resourceStrings.igx_chip_remove"
+        family="default"
+        name="remove"
+    ></igx-icon>
 </ng-template>

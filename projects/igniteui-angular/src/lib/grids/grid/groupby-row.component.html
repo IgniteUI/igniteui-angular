@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="rowDraggable">
         <div class="igx-grid__drag-indicator igx-grid__tr-action">
-            <igx-icon [style.visibility]="'hidden'">drag_indicator</igx-icon>
+            <igx-icon family="default" name="drag_indicator" [style.visibility]="'hidden'"></igx-icon>
         </div>
     </ng-container>
 
@@ -31,17 +31,17 @@
     </div>
 
     <ng-template #defaultGroupByExpandedTemplate>
-        <igx-icon>expand_more</igx-icon>
+        <igx-icon family="default" name="expand"></igx-icon>
     </ng-template>
 
     <ng-template #defaultGroupByCollapsedTemplate>
-        <igx-icon>chevron_right</igx-icon>
+        <igx-icon family="default" name="chevron_right"></igx-icon>
     </ng-template>
 
 
     <ng-template #defaultGroupByTemplate>
         <div class="igx-group-label">
-            <igx-icon class="igx-group-label__icon">group_work</igx-icon>
+            <igx-icon family="default" name="group_work" class="igx-group-label__icon"></igx-icon>
             <span class="igx-group-label__column-name">
                 {{ groupRow.column && groupRow.column.header ?
                 groupRow.column.header :
