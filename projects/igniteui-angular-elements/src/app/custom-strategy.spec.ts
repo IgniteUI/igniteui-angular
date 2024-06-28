@@ -3,9 +3,7 @@ import { waitForAsync } from '@angular/core/testing';
 import { createApplication } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
-import { IgxHierarchicalGridComponent } from 'igniteui-angular';
-import { IgxColumnComponent, IgxGridComponent } from 'projects/igniteui-angular/src/lib/grids/grid/public_api';
-import { resizeObserverIgnoreError } from 'projects/igniteui-angular/src/lib/test-utils/helper-utils.spec';
+import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { timer } from 'rxjs';
 import { registerConfig } from '../analyzer/elements.config';
 import { createIgxCustomElement } from './create-custom-element';
@@ -19,7 +17,6 @@ describe('Elements: ', () => {
     beforeAll(async () =>{
         appRef = await createApplication({ providers: [ importProvidersFrom(BrowserTestingModule, NoopAnimationsModule) ]});
 
-        resizeObserverIgnoreError();
         const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: appRef.injector, registerConfig });
         customElements.define("igc-column", column);
         const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: appRef.injector, registerConfig });
