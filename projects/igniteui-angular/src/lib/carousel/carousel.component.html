@@ -7,28 +7,14 @@
 <ng-template #defaultNextButton let-disabled>
     <span class="igx-nav-arrow"
           [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>arrow_forward</igx-icon>
+        <igx-icon aria-hidden="true" family="default" name="carousel_next"></igx-icon>
     </span>
 </ng-template>
 
 <ng-template #defaultPrevButton let-disabled>
     <span class="igx-nav-arrow"
           [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>arrow_back</igx-icon>
-    </span>
-</ng-template>
-
-<ng-template #indigoPrevButton let-disabled>
-    <span class="igx-nav-arrow"
-        [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>chevron_left</igx-icon>
-    </span>
-</ng-template>
-
-<ng-template #indigoNextButton let-disabled>
-    <span class="igx-nav-arrow"
-        [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon>chevron_right</igx-icon>
+        <igx-icon aria-hidden="true" family="default" name="carousel_prev"></igx-icon>
     </span>
 </ng-template>
 

@@ -94,7 +94,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     constructor(
         protected overlayService: IgxOverlayService,
         private cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil
+        protected platform: PlatformUtil,
     ) { }
 
     public ngAfterViewInit(): void {
