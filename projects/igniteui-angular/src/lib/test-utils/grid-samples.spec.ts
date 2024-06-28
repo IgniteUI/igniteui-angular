@@ -1738,7 +1738,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         <igx-grid [data]="data">
             <igx-column [editable]="true" field="fullName">
             </igx-column>
-            <igx-column field="age" [editable]="true" [dataType]="'number'">   
+            <igx-column field="age" [editable]="true" [dataType]="'number'">
             </igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
             <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
@@ -1900,7 +1900,6 @@ export class CollapsibleColumnGroupTestComponent {
         </igx-column-group>
         <igx-column field="ID"></igx-column>
         <igx-column-group header="Country Information">
-
             <igx-column-group header="Region Information">
                 <igx-column  field="Country" [selectable]="false"></igx-column>
                 <igx-column field="Region" ></igx-column>

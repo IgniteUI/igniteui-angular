@@ -11,6 +11,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
+import { IgxIconService } from '../icon/icon.service';
 
 /** @hidden @internal */
 @Directive({
@@ -238,6 +239,25 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         month: true,
         year: false
     };
+
+    private _icons = [
+        {
+            family: 'default',
+            name: 'arrow_next',
+            ref: {
+                name: 'keyboard_arrow_right',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_prev',
+            ref: {
+                name: 'keyboard_arrow_left',
+                family: 'material',
+            }
+        }
+    ];
 
     /**
      * An accessor that sets the resource strings.
@@ -654,10 +674,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         @Inject(LOCALE_ID)
         protected _localeId: string,
         protected keyboardNavigation?: KeyboardNavigationService,
-        protected cdr?: ChangeDetectorRef
+        protected cdr?: ChangeDetectorRef,
+        protected iconService?: IgxIconService,
     ) {
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
+
+        for (const icon of this._icons) {
+            this.iconService?.addIconRef(icon.name, icon.family, icon.ref);
+        }
+
         this.initFormatters();
     }
 
@@ -700,7 +726,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (typeof value === 'string') {
             value = DateTimeUtil.parseIsoDate(value);
         }
- 
+
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
             return;
         }
