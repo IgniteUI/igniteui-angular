@@ -1,3 +1,11 @@
+<ng-template #addIcon>
+    <igx-icon family="default" name="add"></igx-icon>
+</ng-template>
+
+<ng-template #closeIcon>
+    <igx-icon family="default" name="close"></igx-icon>
+</ng-template>
+
 <igx-query-builder-header
     *ngIf="!headerContent"
     [title]="this.resourceStrings.igx_query_builder_title"
@@ -17,7 +25,7 @@
             igxButton="outlined"
             (click)="addAndGroup()"
         >
-            <igx-icon>add</igx-icon>
+            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
         </button>
 
@@ -25,7 +33,7 @@
             igxButton="outlined"
             (click)="addOrGroup()"
         >
-            <igx-icon>add</igx-icon>
+            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
         </button>
 
@@ -47,7 +55,7 @@
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
         >
-            <igx-icon>add</igx-icon>
+            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
                 this.resourceStrings.igx_query_builder_add_condition
             }}</span>
@@ -58,7 +66,7 @@
             [disabled]="hasEditedExpression"
             (click)="addAndGroup(expressionItem, afterExpression)"
         >
-            <igx-icon>add</igx-icon>
+            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
         </button>
 
@@ -67,7 +75,7 @@
             [disabled]="hasEditedExpression"
             (click)="addOrGroup(expressionItem, afterExpression)"
         >
-            <igx-icon>add</igx-icon>
+            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
         </button>
     </ng-template>
@@ -95,7 +103,7 @@
                 }}</span>
                 <igx-prefix>
                     <igx-icon
-                        family="imx-icons"
+                        family="default"
                         [name]="expressionItem.expression.condition.iconName"
                     >
                     </igx-icon>
@@ -140,13 +148,16 @@
                 "
             >
                 <igx-icon
+                    family="default"
+                    name="edit"
                     tabindex="0"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)"
                 >
-                    edit
                 </igx-icon>
                 <igx-icon
+                    family="default"
+                    name="add"
                     tabindex="0"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionAdd(expressionItem)"
@@ -159,7 +170,6 @@
                                 ])
                     "
                 >
-                    add
                 </igx-icon>
             </div>
         </div>
@@ -201,7 +211,7 @@
                     "
                 >
                     <igx-icon
-                        family="imx-icons"
+                        family="default"
                         [name]="
                             selectedField.filters.condition(
                                 conditionSelect.value
@@ -218,7 +228,7 @@
                 >
                     <div class="igx-grid__filtering-dropdown-items">
                         <igx-icon
-                            family="imx-icons"
+                            family="default"
                             [name]="
                                 selectedField.filters.condition(condition)
                                     .iconName
@@ -351,13 +361,13 @@
                     [disabled]="!operandCanBeCommitted()"
                     (click)="commitOperandEdit()"
                 >
-                    <igx-icon>check</igx-icon>
+                    <igx-icon family="default" name="check"></igx-icon>
                 </button>
                 <button type="button"
                     igxIconButton="flat"
                     (click)="cancelOperandEdit()"
                 >
-                    <igx-icon>close</igx-icon>
+                    <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
                 </button>
             </div>
         </div>
@@ -378,7 +388,7 @@
                 igxIconButton="flat"
                 (click)="cancelOperandAdd()"
             >
-                <igx-icon>close</igx-icon>
+                <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
             </button>
         </div>
     </ng-template>
@@ -459,7 +469,7 @@
             class="igx-filter-contextual-menu__close-btn"
             (click)="clearSelection()"
         >
-            <igx-icon>close</igx-icon>
+            <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
         </button>
 
         <ng-container *ngIf="contextualGroup">
@@ -475,7 +485,7 @@
                 [disabled]="!contextualGroup.parent"
                 (click)="ungroup()"
             >
-                <igx-icon family="imx-icons" name="ungroup"></igx-icon>
+                <igx-icon family="default" name="ungroup"></igx-icon>
                 <span>{{
                     this.resourceStrings.igx_query_builder_ungroup
                 }}</span>
@@ -485,7 +495,7 @@
                 (click)="deleteGroup()"
                 class="igx-filter-contextual-menu__delete-btn"
             >
-                <igx-icon>delete</igx-icon>
+                <igx-icon family="default" name="delete"></igx-icon>
                 <span>{{ this.resourceStrings.igx_query_builder_delete }}</span>
             </button>
         </ng-container>

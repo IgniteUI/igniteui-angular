@@ -47,8 +47,7 @@ export class IgxGridToolbarComponent implements OnDestroy {
     /**
      * Gets/sets the grid component for the toolbar component.
      *
-     * @deprecated since version 17.1.0.
-     * No longer required to be set for the Hierarchical Grid child grid template
+     * @deprecated since version 17.1.0. No longer required to be set for the Hierarchical Grid child grid template
      *
      * @remarks
      * Usually you should not set this property in the context of the default grid/tree grid.
@@ -96,6 +95,8 @@ export class IgxGridToolbarComponent implements OnDestroy {
     ) {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addIconRef(pinLeft.name, 'default', { name: pinLeft.name, family: 'imx-icons' });
+        this.iconService.addIconRef(unpinLeft.name, 'default', { name: unpinLeft.name, family: 'imx-icons' });
     }
 
     /** @hidden @internal */

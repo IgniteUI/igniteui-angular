@@ -60,14 +60,14 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      *
      * @hidden
      */
-    @HostBinding("class.igx-months-view")
+    @HostBinding("class.igx-calendar-view")
     public readonly viewClass = true;
 
     /**
      * @hidden @internal
      */
     @Input()
-    @HostBinding("class.igx-months-view--standalone")
+    @HostBinding("class.igx-calendar-view--standalone")
     public get standalone() {
         return this.#standalone;
     }

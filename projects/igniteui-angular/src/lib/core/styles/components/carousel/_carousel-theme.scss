@@ -146,10 +146,6 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    igx-carousel {
-        --theme: #{$variant};
-    }
-
     %igx-carousel-display {
         display: flex;
         position: relative;

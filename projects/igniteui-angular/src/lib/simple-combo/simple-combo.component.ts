@@ -145,13 +145,22 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
-        _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
         @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, document, _inputGroupType, _injector);
+        @Optional() _injector: Injector,
+        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+    ) {
+        super(
+            elementRef,
+            cdr,
+            selectionService,
+            comboAPI,
+            document,
+            _inputGroupType,
+            _injector,
+            _iconService
+        );
         this.comboAPI.register(this);
     }
 
