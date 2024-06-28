@@ -222,7 +222,7 @@ export class IgxGridStateDirective {
                         Object.assign(ref1.instance, colState);
                         ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent);
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent  && e.columnGroup);
                             columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
                             ref1.instance.parent = columnGroup;
                         }
@@ -233,7 +233,7 @@ export class IgxGridStateDirective {
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent && e.columnGroup);
                             if (columnGroup) {
                                 ref.instance.parent = columnGroup;
                                 columnGroup.children.reset([...columnGroup.children.toArray(), ref.instance]);

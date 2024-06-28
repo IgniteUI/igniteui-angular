@@ -17,6 +17,8 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrat
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxGridComponent } from '../grids/grid/grid.component';
+import { IGX_GRID_DIRECTIVES } from '../grids/grid/public_api';
 
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -2477,7 +2479,108 @@ describe('IgxSimpleCombo', () => {
             expect(combo.comboInput.value).toEqual('');
         });
     });
+
+    describe('Integration', () => {
+        let grid: IgxGridComponent;
+
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxSimpleComboInGridComponent
+                ]
+            }).compileComponents();
+        }));
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboInGridComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        });
+        it('Combo in IgxGrid cell display template correctly handles selection - issue #14305', async () => {
+            const firstRecRegionCell = grid.gridAPI.get_cell_by_index(0, 'Region') as any;
+            let comboNativeEl = firstRecRegionCell.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
+            const comboToggleButton = comboNativeEl.querySelector(`.${CSS_CLASS_TOGGLEBUTTON}`);
+
+            UIInteractions.simulateClickEvent(comboToggleButton);
+            fixture.detectChanges();
+
+            const comboDropDownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST}`));
+            const firstItem = comboDropDownList.nativeElement.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+
+            UIInteractions.simulateClickEvent(firstItem);
+            fixture.detectChanges();
+
+            const firstRegionCellObject = grid.getCellByColumn(0, 'Region');
+            expect(firstRegionCellObject.value).toEqual(fixture.componentInstance.regions[0]);
+
+            try {
+                // combo should not throw from the selection getter at this point
+                grid.navigateTo(fixture.componentInstance.data.length - 1, 0);
+                await wait(30);
+                fixture.detectChanges();
+            } catch (error) {
+                fail(`Test failed with error: ${error}`)
+            }
+
+            const virtState = grid.verticalScrollContainer.state;
+            expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
+
+            // These will fail in case the editor (combo) in the cell display template is not bound to the cell value
+            // as the first record's selected value will be applied on the reused combos bc of the virtualization
+            for (let i = virtState.startIndex; i < virtState.startIndex + virtState.chunkSize && i < grid.dataView.length; i++) {
+                const targetCell = grid.gridAPI.get_cell_by_index(i, 'Region') as any;
+                comboNativeEl = targetCell.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
+                const comboInput = comboNativeEl.querySelector('input');
+                expect(comboInput.value).toBe('', `Failed on index: ${i.toString()}`);
+            }
+
+            for (let i = virtState.startIndex; i < virtState.startIndex + virtState.chunkSize && i < grid.dataView.length; i++) {
+                const cell = grid.getCellByColumn(i, 'Region');
+                expect(cell.value).toBe(undefined);
+            }
+        });
+    });
 });
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [autoGenerate]="false" width="100%" height="500px" [primaryKey]="'ID'">
+            <igx-column field="ID" header="ID" [dataType]="'number'" width="100px">
+            </igx-column>
+            <igx-column field="Region" header="Region" dataType="string" width="220px">
+                <ng-template igxCell let-cell="cell">
+                    <div>
+                        <igx-simple-combo [id]="'region-' + cell.row.data.ID"
+                            [data]="regions" placeholder="Choose Region..."
+                            [(ngModel)]="cell.value"
+                            >
+                        </igx-simple-combo>
+                    </div>
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, IGX_GRID_DIRECTIVES, FormsModule]
+})
+class IgxSimpleComboInGridComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public data = [];
+    public regions = [];
+    constructor() {
+        for (let i = 1; i <= 15; i++) {
+            this.data.push({
+                ID: i,
+                region: undefined
+            });
+        }
+        for (let i = 1; i <= 5; i++) {
+            this.regions.push(`Region ${i}`);
+        }
+    }
+}
 
 @Component({
     template: `
