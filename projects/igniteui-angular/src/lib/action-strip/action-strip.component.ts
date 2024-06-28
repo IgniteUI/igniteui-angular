@@ -29,15 +29,14 @@ import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
     standalone: true
 })
 export class IgxActionStripMenuItemDirective {
-    constructor(
-        public templateRef: TemplateRef<any>
-    ) { }
+    constructor(public templateRef: TemplateRef<any>) {}
 }
 
 /* blazorElement */
@@ -202,7 +201,14 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         private renderer: Renderer2,
         protected el: ElementRef,
         /** @hidden @internal **/
-        public cdr: ChangeDetectorRef) {}
+        public cdr: ChangeDetectorRef,
+        protected _iconService: IgxIconService,
+    ) {
+        this._iconService.addIconRef('more_vert', 'default', {
+            name: 'more_vert',
+            family: 'material',
+        });
+    }
 
     /**
      * Menu Items list.

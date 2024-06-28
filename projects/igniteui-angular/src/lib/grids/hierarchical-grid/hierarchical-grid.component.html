@@ -178,11 +178,16 @@
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button">unfold_more</igx-icon>
+    <igx-icon family="default" name="unfold_more" role="button"></igx-icon>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [active]="hasExpandedRecords() && hasExpandableChildren">unfold_less</igx-icon>
+    <igx-icon
+        family="default"
+        name="unfold_less"
+        role="button"
+        [active]="hasExpandedRecords() && hasExpandableChildren">
+    </igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -218,7 +223,7 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

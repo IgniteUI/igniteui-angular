@@ -46,6 +46,7 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 import { Size } from '../../common/enums';
+import { IgxIconService } from '../../../icon/icon.service';
 
 /**
  * @hidden
@@ -193,6 +194,64 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private _icons = [
+        {
+            name: 'clear',
+            family: 'default',
+            ref: {
+                name: 'clear',
+                family: 'material'
+            }
+        },
+        {
+            name: 'close',
+            family: 'default',
+            ref: {
+                name: 'close',
+                family: 'material'
+            }
+        },
+        {
+            name: 'done',
+            family: 'default',
+            ref: {
+                name: 'done',
+                family: 'material'
+            }
+        },
+        {
+            name: 'prev',
+            family: 'default',
+            ref: {
+                name: 'navigate_before',
+                family: 'material'
+            }
+        },
+        {
+            name: 'next',
+            family: 'default',
+            ref: {
+                name: 'navigate_next',
+                family: 'material'
+            }
+        },
+        {
+            name: 'expand',
+            family: 'default',
+            ref: {
+                name: 'expand_more',
+                family: 'material'
+            }
+        },
+        {
+            name: 'refresh',
+            family: 'default',
+            ref: {
+                name: 'refresh',
+                family: 'material'
+            }
+        },
+    ];
 
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
@@ -203,8 +262,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         public filteringService: IgxFilteringService,
         public ref: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil
-    ) { }
+        protected platform: PlatformUtil,
+        protected iconService: IgxIconService,
+    ) {
+        for (const icon of this._icons) {
+            this.iconService.addIconRef(icon.name, icon.family, {
+                name: icon.ref.name,
+                family: icon.ref.family
+            });
+        }
+    }
 
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt: KeyboardEvent) {

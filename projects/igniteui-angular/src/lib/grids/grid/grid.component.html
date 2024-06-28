@@ -214,17 +214,28 @@
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" class="igx-grid__group-expand-btn"
+    <igx-icon
+        family="default"
+        name="unfold_less"
+        role="button"
         [ngClass]="{
-        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-    }">unfold_less</igx-icon>
+            'igx-grid__group-expand-btn': true,
+            'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+        }"
+    >
+    </igx-icon>
 </ng-template>
 
  <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button" class="igx-grid__group-expand-btn"
+    <igx-icon
+        family="default"
+        name="unfold_more"
+        role="button"
         [ngClass]="{
-        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-    }">unfold_more</igx-icon>
+            'igx-grid__group-expand-btn': true,
+            'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+        }"
+    ></igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -263,7 +274,7 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

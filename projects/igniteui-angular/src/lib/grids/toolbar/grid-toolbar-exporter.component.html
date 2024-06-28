@@ -1,14 +1,14 @@
 <button [title]="grid?.resourceStrings.igx_grid_toolbar_exporter_button_tooltip" [disabled]="isExporting"
     igxButton="outlined" type="button" igxRipple #btn (click)="toggle(btn, toggleRef)">
 
-    <igx-icon>import_export</igx-icon>
+    <igx-icon family="default" name="import_export"></igx-icon>
     <span #ref>
         <ng-content></ng-content>
     </span>
     <span *ngIf="!ref.textContent.trim()">
         {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
     </span>
-    <igx-icon>arrow_drop_down</igx-icon>
+    <igx-icon family="default" name="arrow_drop_down"></igx-icon>
 </button>
 
 <div class="igx-grid-toolbar__dropdown" id="btnExport">
