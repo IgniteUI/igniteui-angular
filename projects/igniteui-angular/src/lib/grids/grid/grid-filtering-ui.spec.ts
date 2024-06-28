@@ -3322,7 +3322,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
-        it('Should show the previously entered filter value when reopen esf dialog.', fakeAsync(() => {
+        it('Should show the previously entered filter value when reopen esf dialog from Custom filter menu.', fakeAsync(() => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
@@ -3344,7 +3344,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick(30);
             fix.detectChanges();
-            debugger;
 
             expect(GridFunctions.getExcelStyleFilteringComponent(fix).querySelector('.igx-drop-down__item--selected')).toBeDefined();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 10);
