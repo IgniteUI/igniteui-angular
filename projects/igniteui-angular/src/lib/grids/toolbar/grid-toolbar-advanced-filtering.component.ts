@@ -63,6 +63,6 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
                 columnNames.push((expr as IFilteringExpression).fieldName);
             }
         });
-        return columnNames.filter((value, index, self) => self.indexOf(value) === index);
+        return [...new Set(columnNames)];
     }
 }
