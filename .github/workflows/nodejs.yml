@@ -56,6 +56,10 @@ jobs:
         run: |
             npm run build:i18n
             npm run test:i18n:dist
+      - name: Build Elements
+        run: npm run build:elements
+      - name: Test Elements
+        run: npm run test:elements
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
