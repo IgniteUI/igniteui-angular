@@ -540,7 +540,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                     if (oldSelection) {
                         oldSelection.selected = false;
                     }
-                    if (args?.newSelection) {
+                    if (args.newSelection) {
                         args.newSelection.selected = true;
                     }
                 }
