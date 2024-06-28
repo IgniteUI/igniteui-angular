@@ -130,7 +130,7 @@ export interface IPivotDimension {
     width?: string;
     /** Level of the dimension. */
     level?: number;
-    /** hidden */
+    /** @hidden @internal */
     autoWidth?: number;
 }
 /**
