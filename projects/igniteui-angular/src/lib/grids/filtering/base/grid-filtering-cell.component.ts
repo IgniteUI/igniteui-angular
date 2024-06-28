@@ -31,7 +31,17 @@ import { Size } from '../../common/enums';
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html',
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor, NgIf, NgClass, IgxBadgeComponent, NgTemplateOutlet]
+    imports: [
+        IgxChipsAreaComponent,
+        IgxChipComponent,
+        IgxIconComponent,
+        IgxPrefixDirective,
+        NgFor,
+        NgIf,
+        NgClass,
+        IgxBadgeComponent,
+        NgTemplateOutlet
+    ]
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     @Input()
@@ -71,7 +81,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
+    constructor(
+        public cdr: ChangeDetectorRef,
+        public filteringService: IgxFilteringService,
+    ) {
         this.filteringService.subscribeToEvents();
     }
 

@@ -145,13 +145,22 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
-        _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
         @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, document, _inputGroupType, _injector);
+        @Optional() _injector: Injector,
+        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+    ) {
+        super(
+            elementRef,
+            cdr,
+            selectionService,
+            comboAPI,
+            document,
+            _inputGroupType,
+            _injector,
+            _iconService
+        );
         this.comboAPI.register(this);
     }
 
@@ -239,7 +248,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            this.filterValue = this.searchValue = '';
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
@@ -279,11 +287,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override handleInputChange(event?: any): void {
-        if (event !== undefined) {
-            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
-        }
         if (this.collapsed && this.comboInput.focused) {
             this.open();
+        }
+        if (event !== undefined) {
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
         if (!this.comboInput.value.trim() && super.selection.length) {
             // handle clearing of input by space
@@ -292,7 +300,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.filterValue = '';
         }
         if (super.selection.length) {
-            this.selectionService.clear(this.id);
+            const args: ISimpleComboSelectionChangingEventArgs = {
+                newValue: undefined,
+                oldValue: this.selectedItem,
+                newSelection: undefined,
+                oldSelection: this.selection,
+                displayText: typeof event === 'string' ? event : event?.target?.value,
+                owner: this,
+                cancel: false
+            };
+            this.selectionChanging.emit(args);
+            if (!args.cancel) {
+                this.selectionService.select_items(this.id, [], true);
+            }
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
@@ -388,13 +408,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.disabled) {
             return;
         }
+
+        const oldSelection = this.selection;
         this.clearSelection(true);
+
         if(!this.collapsed){
             this.focusSearchInput(true);
         }
         event.stopPropagation();
 
-        this.comboInput.value = this.filterValue = this.searchValue = '';
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this.filterValue = this.searchValue = '';
+        }
+
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
@@ -486,6 +512,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);
+        } else {
+            args.displayText = this.createDisplayText(oldItems, []);
+
+            const oldSelectionArray = args.oldSelection ? [args.oldSelection] : [];
+            this.comboInput.value = this._displayValue = this.searchValue = this.createDisplayText(oldSelectionArray, []);
+
+            if (this.isRemote) {
+                this.registerRemoteEntries(newValueAsArray, false);
+            }
         }
     }
 
@@ -558,7 +593,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this.comboInput.value = this._displayValue = this.searchValue = '';
+        const oldSelection = this.selection;
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this._displayValue = this.searchValue = '';
+        }
     }
 
     private isValid(value: any): boolean {

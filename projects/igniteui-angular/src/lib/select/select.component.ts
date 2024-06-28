@@ -48,6 +48,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import { IgxIconService } from '../icon/icon.service';
 
 /** @hidden @internal */
 @Directive({
@@ -279,6 +280,36 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _overlayDefaults: OverlaySettings;
     private _value: any;
     private _type = null;
+    private _icons = [
+        {
+            name: 'expand',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_more',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_down',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'collapse',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_less',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_up',
+                    family: 'material'
+                }
+            }))
+        }
+    ];
 
     /**
      * Gets/Sets the component value.
@@ -345,7 +376,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        private _injector: Injector) {
+        private _injector: Injector,
+        @Optional() @Inject(IgxIconService)
+        protected iconService?: IgxIconService,
+    ) {
         super(elementRef, cdr, document, selection);
     }
 
@@ -523,6 +557,24 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
+
+        for (const icon of this._icons) {
+            switch (this.inputGroup?.theme) {
+                case "material":
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("material"),
+                    );
+                    break;
+                default:
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("all"),
+                    );
+            }
+        }
     }
 
     /**
@@ -535,6 +587,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
+
         this.cdr.detectChanges();
     }
 
@@ -547,6 +600,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
+    }
+
+    /** @hidden @internal */
+    public get toggleIcon(): string {
+        return this.collapsed ? 'expand' : 'collapse';
     }
 
     /**

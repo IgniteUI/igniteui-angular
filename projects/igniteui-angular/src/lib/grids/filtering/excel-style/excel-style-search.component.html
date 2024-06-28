@@ -1,7 +1,5 @@
-<igx-input-group
-            type="box"
-            >
-    <igx-icon igxPrefix>search</igx-icon>
+<igx-input-group type="box">
+    <igx-icon igxPrefix family="default" name="search"></igx-icon>
     <input
         #input
         igxInput
@@ -12,18 +10,19 @@
         [placeholder]="esf.column?.grid.resourceStrings.igx_grid_excel_search_placeholder"
         autocomplete="off"/>
     <igx-icon
+        family="default"
+        name="clear"
         igxSuffix
         *ngIf="searchValue || searchValue === 0"
         (click)="clearInput()"
         tabindex="0">
-        clear
     </igx-icon>
 </igx-input-group>
 
 <igx-list #list role="listbox" [isLoading]="isLoading" *ngIf="!isHierarchical()" (keydown)="handleKeyDown($event)" tabindex="0"
 [attr.aria-activedescendant]="this.activeDescendant" (focus)="onFocus()" (focusout)="onFocusOut()">
     <div style="overflow: hidden; position: relative;">
-        <igx-list-item [class.igx-list__item-base--active]="focusedItem?.id === this.getItemId(i)" [attr.id]="getItemId(i)" role="option" 
+        <igx-list-item [class.igx-list__item-base--active]="focusedItem?.id === this.getItemId(i)" [attr.id]="getItemId(i)" role="option"
         *igxFor="let item of displayedListData;index as i; scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
                 [value]="item"
