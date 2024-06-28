@@ -3904,11 +3904,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /** @hidden @internal */
     public setUpPaginator() {
         if (this.paginator) {
-            if (this._rendered) {
-                // D.P.: update existing pipe pagingState if none was set
-                this.pipeTrigger++;
-                this.cdr.markForCheck();
-            }
             this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
                 .subscribe(() => {
                     this.selectionService.clear(true);

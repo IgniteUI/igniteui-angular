@@ -135,5 +135,6 @@ declare global {
     interface HTMLElementTagNameMap {
       'igc-grid': NgElement & WithProperties<GridType>;
       'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
+      'igc-paginator': NgElement & WithProperties<IgxPaginatorComponent>;
     }
   }
