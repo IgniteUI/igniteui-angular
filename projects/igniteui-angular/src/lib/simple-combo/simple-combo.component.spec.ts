@@ -1851,7 +1851,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData[0].field).toEqual('Arizona');
         }));
 
-        it('should select the first non-header item when Enter is pressed and no item is focused', fakeAsync(() => {
+        it('should not select the first item when combo is focused there is no focus item and Enter is pressed', fakeAsync(() => {
             combo.open();
             tick();
             fixture.detectChanges();
@@ -1878,8 +1878,7 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
 
-            const firstNonHeaderItem = combo.dropdown.items.find(item => !item.isHeader);
-            expect(combo.selection.field).toEqual(firstNonHeaderItem.itemID);
+            expect(combo.comboInput.value).toEqual('ariz');
         }));
     });
 
