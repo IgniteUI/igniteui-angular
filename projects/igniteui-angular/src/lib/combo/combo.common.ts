@@ -167,7 +167,27 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-combo-${NEXT_ID++}`;
+    public get id(): string {
+        return this._id;
+    }
+
+    public set id(value: string) {
+        if (!value) {
+            return;
+        }
+        const selection = this.selectionService.get(this._id);
+        this._id = value;
+        if (selection) {
+            this.selectionService.set(this._id, selection);
+        }
+        if (this.dropdown.open) {
+            this.dropdown.close();
+        }
+        if (this.inputGroup?.isFocused) {
+            this.inputGroup.element.nativeElement.blur();
+            this.inputGroup.isFocused = false;
+        }
+    }
 
     /**
      * Sets the style width of the element
@@ -943,6 +963,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected compareCollator = new Intl.Collator();
     protected computedStyles;
 
+    private _id: string = `igx-combo-${NEXT_ID++}`;
     private _type = null;
     private _dataType = '';
     private _itemHeight = null;
