@@ -4850,7 +4850,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
 
-            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).not.toContain('9');
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).not.toContain('(');
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
