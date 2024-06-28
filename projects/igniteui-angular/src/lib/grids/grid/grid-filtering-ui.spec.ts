@@ -6407,6 +6407,55 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
 
+        it('Verify date values are displayed in descending order in the Excel Style Filter dropdown', fakeAsync(() => {
+            const values = [
+                new Date(2024, 6, 17), // Jul 17, 2024
+                new Date(2024, 6, 4), // Jul 4, 2024
+                new Date(2024, 5, 29), // Jun 29, 2024
+                new Date(2024, 5, 20), // Jun 20, 2024
+                new Date(2024, 5, 11), // Jun 11, 2024
+                new Date(2024, 4, 13)  // May 13, 2024
+            ];
+            
+            spyOn(grid, 'uniqueColumnValuesStrategy').and.callFake((column, expressionsTree, callback) => {
+                // Simulate asynchronous behavior by delaying callback execution
+                setTimeout(() => {
+                    callback(values);
+                }, 1000); // Adjust the delay as necessary to match your component's behavior
+            });
+        
+            // Set the column to trigger rendering of column values remotely
+            fix.componentInstance.column = grid.columns.find(col => col.field === 'ReleaseDate');
+            tick();
+            fix.detectChanges();
+        
+            // Open the Excel Style Filter dropdown for the 'ReleaseDate' column
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(1050);
+            fix.detectChanges();
+        
+            // Get the list items in the dropdown
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+        
+            // Create a DatePipe instance with the correct locale
+            const datePipe = new DatePipe(grid.locale);
+        
+            for (let i = 0; i < values.length; i++) {
+                console.log(values[i])
+            }
+
+            for (let i = 0; i < listItems.length; i++) {
+                console.log(listItems[i].innerText.trim())
+            }
+
+            // Verify the list items are in descending order
+            expect(listItems[0].innerText.trim()).toEqual('Select All');
+            for (let i = 1; i < listItems.length; i++) {
+                const expectedDate = datePipe.transform(values[i-1], 'MMM d, yyyy');
+                expect(listItems[i].innerText.trim()).toEqual(expectedDate);
+            }
+        }));
+
         it('Should not execute done callback for null column', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             fix.detectChanges();
