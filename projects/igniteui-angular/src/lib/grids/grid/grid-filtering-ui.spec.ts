@@ -3344,7 +3344,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick(30);
             fix.detectChanges();
-            debugger;
 
             expect(GridFunctions.getExcelStyleFilteringComponent(fix).querySelector('.igx-drop-down__item--selected')).toBeDefined();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 10);
