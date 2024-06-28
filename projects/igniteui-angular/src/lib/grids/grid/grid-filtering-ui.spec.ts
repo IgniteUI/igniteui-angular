@@ -2014,7 +2014,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
-            
+
             firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
@@ -3340,7 +3340,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             tick(30);
             fix.detectChanges();
-            debugger;
 
             expect(GridFunctions.getExcelStyleFilteringComponent(fix).querySelector('.igx-drop-down__item--selected')).toBeDefined();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 10);
