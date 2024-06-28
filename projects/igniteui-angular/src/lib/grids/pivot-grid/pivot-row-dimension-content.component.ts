@@ -179,13 +179,15 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     protected extractFromDimensions() {
-        const col = this.extractFromDimension(this.dimension, this.rowData);
-        const prevDims = [];
-        this.rowDimensionData = {
-            column: col,
-            dimension: this.dimension,
-            prevDimensions: prevDims
-        };
+        if (this.dimension && this.rowData) {
+            const col = this.extractFromDimension(this.dimension, this.rowData);
+            const prevDims = [];
+            this.rowDimensionData = {
+                column: col,
+                dimension: this.dimension,
+                prevDimensions: prevDims
+            };
+        }
     }
 
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {

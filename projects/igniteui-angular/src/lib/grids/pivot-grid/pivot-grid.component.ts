@@ -2232,7 +2232,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 ref.instance.field = value.member;
                 ref.instance.parent = parent;
                 ref.instance.sortable = true;
-                ref.instance.dataType = value.dataType || this.resolveDataTypes(data[0][value.member]);
+                ref.instance.dataType = value.dataType || this.resolveDataTypes(data.length ? data[0][value.member] : null);
                 ref.instance.formatter = value.formatter;
                 columns.push(ref.instance);
             });
