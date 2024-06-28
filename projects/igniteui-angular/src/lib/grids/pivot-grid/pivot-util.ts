@@ -150,6 +150,12 @@ export class PivotUtil {
                             childRec.dimensionValues.set(key, value);
                         });
                     }
+
+                    childRec.dimensions.forEach((dim) => {
+                        if (!visibleDimensions.find(recDim => recDim.memberName === dim.memberName)) {
+                            visibleDimensions.push(dim);
+                        }
+                    });
                 });
 
                 if (dimension.horizontalSummary) {
