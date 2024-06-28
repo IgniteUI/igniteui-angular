@@ -1,6 +1,7 @@
 <ng-container *ngIf="esf.column">
     <div tabindex="0"
         class="igx-excel-filter__actions-filter"
+        [ngClass]="filterNumber > 0 ? 'igx-excel-filter__actions-filter--active' : ''"
         (keydown)="onTextFilterKeyDown($event)"
         (click)="onTextFilterClick($event)"
         [igxDropDownItemNavigation]="subMenu"
