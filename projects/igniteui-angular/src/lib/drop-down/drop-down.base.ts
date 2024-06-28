@@ -193,7 +193,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
         @Inject(DOCUMENT) public document: any) {}
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement); 
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** Keydown Handler */

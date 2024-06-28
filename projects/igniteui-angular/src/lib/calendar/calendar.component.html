@@ -65,15 +65,14 @@
     <span>{{ getDecadeRange().start }} - {{ getDecadeRange().end }}</span>
 </ng-template>
 
-<!-- TODO: Make arrows templatable via external templates and based on theme -->
 <!-- Previous arrow icon -->
 <ng-template #prevArrow let-obj>
-    <igx-icon aria-hidden="true">keyboard_arrow_left</igx-icon>
+    <igx-icon aria-hidden="true" family="default" name="arrow_prev"></igx-icon>
 </ng-template>
 
 <!-- Next arrow icon -->
 <ng-template #nextArrow let-obj>
-    <igx-icon aria-hidden="true">keyboard_arrow_right</igx-icon>
+    <igx-icon aria-hidden="true" family="default" name="arrow_next"></igx-icon>
 </ng-template>
 
 <!-- Previous picker button -->

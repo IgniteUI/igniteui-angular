@@ -1,11 +1,13 @@
-<ng-template #noLigature></ng-template>
-
-<ng-template #explicitLigature>
+<!-- This is only here for backwards compatibility in case  -->
+<!-- ligatures are used and the name is provided as content -->
+@if (!iconRef.name) {
     <ng-content></ng-content>
-</ng-template>
+}
 
-<ng-template #svgImage>
-    <div [innerHTML]="getSvg"></div>
-</ng-template>
+@switch (iconRef.type) {
+    @case ("liga") {{{ iconRef.name }}}
 
-<ng-container *ngTemplateOutlet="template"></ng-container>
+    @case ("svg") {
+        <div [innerHTML]="getSvg"></div>
+    }
+}
