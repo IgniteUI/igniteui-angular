@@ -27,8 +27,6 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
-// import { WrapperComponent } from './wrapper/wrapper.component';
-// import { ChildStandaloneComponent } from './wrapper/child-standalone/child-standalone.component';
 
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
@@ -48,11 +46,6 @@ export class AppModule {
   constructor(private injector: Injector) {}
 
   ngDoBootstrap() {
-    // const wrapper = createCustomElement(WrapperComponent, { injector: this.injector });
-    // customElements.define("app-wrapper", wrapper);
-
-    // const child = createCustomElement(ChildStandaloneComponent, { injector: this.injector });
-    // customElements.define("app-child-standalone", child);
 
     const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid", grid);
