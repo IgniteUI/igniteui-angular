@@ -249,6 +249,7 @@ export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
             if (curGroup.length === 0 || curRecValue === curGroupValue) {
                 curGroup.push(curRec);
             } else {
+                curGroup["height"] = this.grid.renderedRowHeight * curGroup.length;
                 res.push(curGroup);
                 curGroup = [curRec];
                 curGroupValue = curRecValue;
