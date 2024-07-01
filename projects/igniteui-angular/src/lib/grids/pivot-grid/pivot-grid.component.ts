@@ -660,6 +660,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected _pivotValueCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     protected override _defaultExpandState = false;
     protected override _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy();
+    protected regroupTrigger = 0;
     private _data;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
@@ -2449,5 +2450,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.pivotUI.showRowHeaders ?
             (this.theadRow.pivotFilterContainer?.nativeElement.offsetHeight || 0) + (this.theadRow.pivotRowContainer?.nativeElement.offsetHeight || 0) :
             this.theadRow.nativeElement.offsetHeight;
+    }
+
+    protected override updateDefaultRowHeight() {
+        super.updateDefaultRowHeight();
+        if (this.hasHorizontalLayout) {
+            // Trigger pipes to recalc heights for the horizontal layout mrl rows.
+            this.regroupTrigger++;
+        }
     }
 }

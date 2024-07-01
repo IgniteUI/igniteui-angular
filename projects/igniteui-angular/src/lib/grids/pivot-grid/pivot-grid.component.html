@@ -148,7 +148,7 @@
 
 <ng-template #horizontalRowDimensionsTemplate>
     <div tabindex="0" class="igx-grid__tbody-pivot-mrl-dimension" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
-        <ng-container *ngIf="dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger as groupedData">
+        <ng-container *ngIf="dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger:regroupTrigger as groupedData">
             <ng-template #verticalRowDimScrollContainer role="rowgroup" igxGridFor let-rowGroup let-rowIndex="index"
                     [igxGridForOf]="groupedData"
                     [igxForScrollOrientation]="'vertical'"

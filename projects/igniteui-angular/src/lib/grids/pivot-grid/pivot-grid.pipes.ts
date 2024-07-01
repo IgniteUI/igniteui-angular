@@ -235,7 +235,8 @@ export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
-        _pipeTrigger?: number
+        _pipeTrigger?: number,
+        _regroupTrigger?: number
     ): IPivotGridRecord[][] {
         if (collection.length === 0 || config.rows.length === 0) return null;
         const data: IPivotGridRecord[] = collection ? cloneArray(collection, true) : [];
