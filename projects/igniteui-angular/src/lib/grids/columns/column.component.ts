@@ -2335,7 +2335,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let topLevelParent =  this.column.topLevelParent;
      * ```
-     * @hidden
      *
      * @memberof IgxColumnComponent
      */
