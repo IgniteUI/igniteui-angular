@@ -15,7 +15,7 @@ const report = {
 
 const STYLES = {
     SRC: "projects/igniteui-angular-elements/src/themes",
-    DIST: "../dist/igniteui-angular-elements/themes",
+    DIST: "../dist/igniteui-angular-elements/browser/themes",
     CONFIG: {
         style: "compressed",
         loadPaths: ["node_modules"],

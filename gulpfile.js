@@ -188,5 +188,5 @@ module.exports.concatElements = (cb) => {
 module.exports.copyPackageForElements = (cb) => {
     return gulp.src([
         path.join(__dirname, 'projects/igniteui-angular-elements/package.json')
-    ]).pipe(gulp.dest(path.join(__dirname, 'dist/igniteui-angular-elements')));
+    ]).pipe(gulp.dest(path.join(__dirname, 'dist/igniteui-angular-elements/browser')));
 };
