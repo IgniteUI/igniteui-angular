@@ -835,7 +835,7 @@
             &::before {
                 content: '';
                 width: auto;
-                min-width: rem(10px);
+                min-width: if($variant == 'indigo-design', rem(40px), rem(10px));
                 height: $separator-size;
                 flex: 1;
                 position: relative;
@@ -846,7 +846,6 @@
 
             &:first-of-type {
                 flex-grow: 0;
-                min-width: 0;
 
                 &::before {
                     display: none;
