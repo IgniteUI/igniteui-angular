@@ -61,7 +61,7 @@ jobs:
       - name: Check for Elements config changes
         run: |
             if [ -n "$(git status --porcelain -- projects/igniteui-angular-elements/**/elements.config.ts)" ]; then
-                echo "Error: There are changes to the Elements config. Run `npm run elements:configure` and commit." >&2
+                echo "Error: There are changes to the Elements config. Run 'npm run elements:configure' and commit." >&2
                 exit 1
             fi
       - name: Test Elements
