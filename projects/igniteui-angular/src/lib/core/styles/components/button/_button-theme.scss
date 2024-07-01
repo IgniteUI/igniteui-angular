@@ -513,7 +513,7 @@
     }
 
     igx-grid-filtering-row {
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             --filtering-row-button-size: #{sizable(
                 #{map.get($filtering-row-button-size, 'compact')},
                 #{map.get($filtering-row-button-size, 'cosy')},
@@ -562,14 +562,14 @@
                 color: var-get($flat-theme, 'active-foreground');
             }
 
-            @if ($variant == 'indigo-design') {
+            @if $variant == 'indigo-design' {
                 igx-icon {
                     color: var-get($flat-theme, 'icon-color-hover');
                 }
             }
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             border-width: rem(2px);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
@@ -606,11 +606,11 @@
             }
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border-color: var-get($flat-theme, 'active-border-color');
 
             &::after {
@@ -620,7 +620,7 @@
             }
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
 
             &:active {
@@ -688,7 +688,7 @@
             }
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border: rem(1px) solid var-get($flat-theme, 'border-color');
         }
     }
@@ -734,7 +734,7 @@
             }
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border-color: var-get($outlined-theme, 'focus-border-color');
 
             &::after {
@@ -779,7 +779,7 @@
             }
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             border-width: rem(2px);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
@@ -810,7 +810,7 @@
             box-shadow: $contained-shadow--active;
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border-color: var-get($contained-theme, 'active-border-color');
 
             &::after {
@@ -838,7 +838,7 @@
             color: var-get($contained-theme, 'focus-foreground');
             background: var-get($contained-theme, 'focus-background');
 
-            @if ($variant == 'indigo-design') {
+            @if $variant == 'indigo-design' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -918,7 +918,7 @@
                 color: var-get($fab-theme, 'active-foreground');
             }
 
-            @if ($variant == 'indigo-design') {
+            @if $variant == 'indigo-design' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -941,7 +941,7 @@
             box-shadow: $contained-shadow--focus;
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border-color: var-get($contained-theme, 'active-border-color');
 
             &::after {
@@ -966,7 +966,7 @@
             background: var-get($fab-theme, 'focus-background');
             color: var-get($fab-theme, 'focus-foreground');
 
-            @if ($variant == 'indigo-design') {
+            @if $variant == 'indigo-design' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
