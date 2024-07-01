@@ -252,34 +252,20 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     private createInitialExpressionUIElement() {
-        if (this.expressionsList.length == 1) {
-            const currentExprUI = this.expressionsList.pop();
-            if (currentExprUI.expression.condition.name === this.selectedOperator) {
-                currentExprUI.beforeOperator = FilteringLogic.And;
-                const secondExprUI = new ExpressionUI();
-                secondExprUI.expression = {
-                    condition: null,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.filteringIgnoreCase,
-                    searchVal: null
-                };
-                currentExprUI.afterOperator = FilteringLogic.And;
-                this.expressionsList.push(currentExprUI);
-                this.expressionsList.push(secondExprUI);
-                return;
-            }
+        let firstExprUI = new ExpressionUI();
+        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition.name === this.selectedOperator) {
+            firstExprUI = this.expressionsList.pop();
+        } else {
+            this.expressionsList = [];
+            firstExprUI.expression = {
+                condition: this.createCondition(this.selectedOperator),
+                fieldName: this.column.field,
+                ignoreCase: this.column.filteringIgnoreCase,
+                searchVal: null
+            };
         }
-        this.expressionsList = [];
-        const firstExprUI = new ExpressionUI();
 
-        firstExprUI.expression = {
-            condition: this.createCondition(this.selectedOperator),
-            fieldName: this.column.field,
-            ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: null
-        };
         firstExprUI.afterOperator = FilteringLogic.And;
-
         this.expressionsList.push(firstExprUI);
 
         const secondExprUI = new ExpressionUI();
