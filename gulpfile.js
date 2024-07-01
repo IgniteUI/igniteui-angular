@@ -9,7 +9,6 @@ const sassdoc = require('sassdoc');
 const path = require('path');
 const { series } = require('gulp');
 const slash = require('slash');
-const concat = require('gulp-concat');
 
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
@@ -175,15 +174,6 @@ module.exports.sassdocImportJson = sassdocImportJson;
 module.exports.sassdocBuildJson = sassdocBuildJson;
 module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocBuildJA);
 module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocBuildEN);
-
-module.exports.concatElements = (cb) => {
-    return gulp.src([
-        path.join(__dirname, 'dist/igniteui-angular-elements/runtime.js'),
-        path.join(__dirname, 'dist/igniteui-angular-elements/polyfills.js'),
-        path.join(__dirname, 'dist/igniteui-angular-elements/main.js')
-    ]).pipe(concat('elements.js'))
-    .pipe(gulp.dest(path.join(__dirname, 'dist/igniteui-angular-elements')));
-};
 
 module.exports.copyPackageForElements = (cb) => {
     return gulp.src([
