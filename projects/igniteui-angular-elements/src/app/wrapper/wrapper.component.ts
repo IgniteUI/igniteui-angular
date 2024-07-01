@@ -1,15 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, NgModule, QueryList, TemplateRef, ViewChildren } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgFor } from '@angular/common';
+import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
 import { render, TemplateResult } from 'lit-html';
 
 type TemplateFunction = (arg: any) => TemplateResult;
+
 @Component({
-  selector: 'app-wrapper',
-  templateUrl: './wrapper.component.html',
-  styleUrls: ['./wrapper.component.scss']
+    selector: 'app-wrapper',
+    templateUrl: './wrapper.component.html',
+    styleUrls: ['./wrapper.component.scss'],
+    standalone: true,
+    imports: [NgFor]
 })
 export class TemplateWrapperComponent {
 
@@ -42,19 +44,3 @@ export class TemplateWrapperComponent {
         return this.templateFunctions[index - 1];
     }
 }
-
-@NgModule({
-    declarations: [
-        TemplateWrapperComponent,
-        ChildStandaloneComponent
-    ],
-    exports: [
-        TemplateWrapperComponent,
-        ChildStandaloneComponent
-    ],
-    imports: [
-      BrowserModule,
-      CommonModule
-    ]
-  })
-  export class WrapperModule {}

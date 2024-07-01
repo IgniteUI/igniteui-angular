@@ -8,8 +8,8 @@ describe('WrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TemplateWrapperComponent ]
-    })
+    imports: [TemplateWrapperComponent]
+})
     .compileComponents();
   });
 
