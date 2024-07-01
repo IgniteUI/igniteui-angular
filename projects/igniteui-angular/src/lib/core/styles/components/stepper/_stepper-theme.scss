@@ -846,6 +846,7 @@
 
             &:first-of-type {
                 flex-grow: 0;
+                min-width: 0;
 
                 &::before {
                     display: none;
