@@ -29,8 +29,9 @@ import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-import { OverlaySettings } from '../services/overlay/utilities';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
 import { DOCUMENT, NgIf } from '@angular/common';
+import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -48,6 +49,18 @@ import { DOCUMENT, NgIf } from '@angular/common';
  * </igx-drop-down>
  * ```
  */
+
+const defaultOverlaySettings: OverlaySettings = {
+    closeOnOutsideClick: true,
+    modal: false,
+    positionStrategy: new ConnectedPositioningStrategy({
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Bottom,
+        horizontalDirection: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom
+    })
+};
+
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
@@ -242,7 +255,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(overlaySettings);
+        const settings = overlaySettings || { ...defaultOverlaySettings };
+        this.toggleDirective.open(settings);
         this.updateScrollPosition();
     }
 
