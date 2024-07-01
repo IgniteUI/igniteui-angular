@@ -287,9 +287,15 @@
             "production": {
               "budgets": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "type": "allScript",
+                  "maximumWarning": "2.1mb",
+                  "maximumError": "2.5mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "styles",
+                  "maximumWarning": "450kb",
+                  "maximumError": "480kb"
                 },
                 {
                   "type": "anyComponentStyle",
