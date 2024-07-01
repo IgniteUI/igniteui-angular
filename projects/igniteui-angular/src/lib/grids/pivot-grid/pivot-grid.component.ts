@@ -1584,11 +1584,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden @internal
     */
     public override dataRebinding(event: IForOfDataChangingEventArgs) {
-        super.dataRebinding(event);
-
         if (this.hasHorizontalLayout) {
-            this.setupColumns();
+            this.dimensionDataColumns = this.generateDimensionColumns();
         }
+
+        super.dataRebinding(event);
     }
 
     /**
