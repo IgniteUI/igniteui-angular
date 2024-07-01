@@ -294,6 +294,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
@@ -302,6 +303,7 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(element: ElementRef, settings?: OverlaySettings): string;
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
@@ -320,6 +322,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
+    /* blazorSuppress */
     public attach(
         componentOrElement: ElementRef | Type<any>,
         viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
@@ -429,6 +432,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Hides the component with the ID provided as a parameter.
      * ```typescript

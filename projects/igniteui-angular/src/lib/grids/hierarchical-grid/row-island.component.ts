@@ -49,10 +49,30 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
+/* blazorCopyInheritedMembers */
+/* blazorElement */
+/* wcElementTag: igc-row-island */
+/* blazorIndirectRender */
+/* jsonAPIManageCollectionInMarkup */
+/* jsonAPIManageItemInMarkup */
+/* mustUseNGParentAnchor */
+/* additionalIdentifier: ChildDataKey */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
+/**
+ * Row island
+ *
+ * @igxModule IgxHierarchicalGridModule
+ * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: ``,
+    template: `<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+    <ng-content select="igx-row-island,igc-row-island"></ng-content>
+    </div>`,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
@@ -62,6 +82,8 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+
+    /* blazorSuppress */
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -77,11 +99,33 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @Input()
     public key: string;
 
+    /** @hidden **/
+    /**
+     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
+     */
+    @Input()
+    public get childDataKey() {
+        return this.key;
+    }
+    public set childDataKey(value: string) {
+        this.key = value;
+    }
+
     /**
      * @hidden
      */
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
+
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /**
+     * @hidden
+     */
+    @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
+    public childLayoutList = new QueryList<IgxRowIslandComponent>();
 
     /**
      * @hidden
@@ -89,12 +133,19 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     protected paginatorDirectiveTemplate: TemplateRef<any>;
 
+    /* csSuppress */
     /**
      * Sets/Gets the toolbar template for each child grid created from this row island.
     */
@@ -102,11 +153,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
         return this._toolbarTemplate || this.toolbarDirectiveTemplate;
     }
-
     public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
         this._toolbarTemplate = template;
     }
 
+
+    /* csSuppress */
     /**
      * Sets/Gets the paginator template for each child grid created from this row island.
     */

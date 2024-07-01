@@ -76,7 +76,6 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
-import { IgxActionStripToken } from '../../action-strip/token';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -105,6 +104,22 @@ let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
 const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorAdditionalDependency: PivotDateDimension */
+/* blazorIndirectRender */
 /**
  * Pivot Grid provides a way to present and manipulate data in a pivot table view.
  *
@@ -306,7 +321,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Input()
     public rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
 
-    @Input()
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
+    /* @tsTwoWayProperty (true, "PivotConfigurationChange", "Detail.PivotConfiguration", false) */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
      *
@@ -315,6 +331,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
+    @Input()
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.emitInitEvents(this._pivotConfiguration);
@@ -325,6 +342,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.notifyChanges(true);
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     public get pivotConfiguration() {
         return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
@@ -365,7 +383,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('attr.role')
     public role = 'grid';
-
 
     /**
      * Enables a super compact theme for the component.
@@ -664,6 +681,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._defaultExpandState = val;
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -672,9 +690,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set pagingMode(_val: GridPagingMode) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -684,6 +704,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set hideRowSelectors(_value: boolean) {
     }
 
@@ -695,7 +716,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override actionStrip: IgxActionStripToken;
+    public override get actionStrip() {
+        return undefined as any;
+    }
 
     /**
      * @hidden @internal
@@ -712,6 +735,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public override toolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -720,10 +744,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
-
+    /* blazorSuppress */
     public override set rowDraggable(_val: boolean) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -732,9 +757,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
+    /* blazorSuppress */
     public override set allowAdvancedFiltering(_value) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -743,9 +770,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return FilterMode.quickFilter;
     }
 
+    /* blazorSuppress */
     public override set filterMode(_value: FilterMode) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -754,6 +783,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
+    /* blazorSuppress */
     public override set allowFiltering(_value) {
     }
 
@@ -765,6 +795,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return 0;
     }
 
+    /* blazorSuppress */
     public override set page(_val: number) {
     }
 
@@ -776,6 +807,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set perPage(_val: number) {
     }
 
@@ -814,6 +846,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return super.pinnedWidth;
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -821,6 +854,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override set summaryRowHeight(_value: number) {
     }
 
+    /* blazorSuppress */
     public override get summaryRowHeight(): number {
         return 0;
     }
@@ -834,6 +868,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
 
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -841,9 +876,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set dragIndicatorIconTemplate(_val: TemplateRef<any>) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -853,9 +890,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set rowEditable(_val: boolean) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -863,9 +902,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override get pinning() {
         return {};
     }
+    /* blazorSuppress */
     public override set pinning(_value) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -874,9 +915,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set summaryPosition(_value: GridSummaryPosition) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @interal
      */
@@ -885,9 +928,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set summaryCalculationMode(_value: GridSummaryCalculationMode) {
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @interal
      */
@@ -896,6 +941,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set showSummaryOnCollapse(_value: boolean) {
     }
 
@@ -913,6 +959,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return null;
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -921,9 +968,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set batchEditing(_val: boolean) {
     }
 
+    /* csSuppress */
     public override get selectedRows(): any[] {
         if (this.selectionService.getSelectedRows().length === 0) {
             return [];
@@ -1083,6 +1132,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.pivotRowWidths;
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the value of the `id` attribute.
      *
@@ -1098,10 +1148,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get id(): string {
         return this.p_id;
     }
+    /* blazorSuppress */
     public set id(value: string) {
         this.p_id = value;
     }
 
+    /* treatAsRef */
+    /* blazorAlternateType: object */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -1125,6 +1178,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
+    /* treatAsRef */
+    /* blazorAlternateType: object */
     /**
      * Returns an array of data set to the component.
      * ```typescript
@@ -1295,6 +1350,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      */
@@ -1303,6 +1359,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return;
     }
 
+    /* blazorSuppress */
     public override set totalRecords(_total: number) {
     }
 

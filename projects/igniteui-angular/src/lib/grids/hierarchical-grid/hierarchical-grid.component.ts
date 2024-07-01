@@ -5,7 +5,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -126,6 +125,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
+    /* blazorSuppress */
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
@@ -134,6 +134,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public hGrid: IgxHierarchicalGridComponent;
 
+    /* blazorSuppress */
     /**
      * Get a reference to the grid that contains the selected row.
      *
@@ -195,6 +196,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
         this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
+        this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -268,6 +270,29 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
+
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorAdditionalDependency: RowIsland */
+/* blazorIndirectRender */
+/**
+ * Hierarchical grid
+ *
+ * @igxModule IgxHierarchicalGridModule
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
@@ -334,6 +359,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @HostBinding('attr.role')
     public role = 'grid';
 
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -409,8 +439,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripToken, { read: IgxActionStripToken, descendants: false } )
-    public override actionStrip: IgxActionStripToken;
+    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -435,6 +465,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
+    /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -1079,7 +1110,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     protected resizeNotifyHandler() {
         // do not trigger reflow if element is detached or if it is child grid.
-        if (this.nativeElement.isConnected && !this.parent) {
+        if (this.nativeElement?.isConnected && !this.parent) {
             this.notifyChanges(true);
         }
     }

@@ -253,7 +253,7 @@ export class PivotUtil {
             } else if (dataType === 'time') {
                 aggregators = aggregators.concat(IgxPivotTimeAggregate.aggregators());
             }
-            aggregator = aggregators.find(x => x.key === aggregate.aggregatorName)?.aggregator;
+            aggregator = aggregators.find(x => x.key.toLocaleLowerCase() === aggregate.aggregatorName.toLocaleLowerCase())?.aggregator;
         }
         return aggregator;
     }

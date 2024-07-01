@@ -126,6 +126,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
     public errorIcon: IgxIconComponent;
 
+    /* blazorSuppress */
     /**
      * Gets the default error template.
      * @hidden @internal
@@ -1019,7 +1020,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        const isHierarchicalGrid = /^ig.-hierarchical-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
         if (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -1049,7 +1051,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        const isHierarchicalGrid = /^ig.-hierarchical-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
             this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;

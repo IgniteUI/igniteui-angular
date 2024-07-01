@@ -1,5 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
+/* tsPlainInterface */
+/* marshalByValue */
 /**
  * Represents a range selection between certain rows and columns of the grid.
  * Range selection can be made either through drag selection or through keyboard selection.
@@ -9,11 +11,13 @@ export interface GridSelectionRange {
     rowStart: number;
      /** The index of the ending row of the selection range. */
     rowEnd: number;
+    /* blazorAlternateType: double */
     /**
      * The identifier or index of the starting column of the selection range.
      * It can be either a string representing the column's field name or a numeric index.
      */
     columnStart: string | number;
+    /* blazorAlternateType: double */
     /**
      * The identifier or index of the ending column of the selection range.
      * It can be either a string representing the column's field name or a numeric index.

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
+import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -19,6 +19,7 @@ import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IColumnState, IGridState } from './state-base.directive';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {

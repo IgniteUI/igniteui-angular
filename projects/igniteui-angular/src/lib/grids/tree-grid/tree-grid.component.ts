@@ -85,6 +85,21 @@ import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Tree Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
@@ -160,6 +175,7 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    /* blazorAlternateType: string */
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -171,6 +187,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public childDataKey;
 
+    /* blazorAlternateType: string */
     /**
      * Sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
@@ -183,6 +200,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public foreignKey;
 
+    /* blazorAlternateType: string */
     /**
      * Sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
@@ -211,6 +229,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
 
+    /* csSuppress */
     /**
      * Sets a callback for loading child rows on demand.
      * ```html
@@ -292,6 +311,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public rootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all `ITreeGridRecord`s.
      * ```typescript
@@ -314,6 +334,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
      * ```typescript
@@ -325,6 +346,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    /* blazorSuppress */
     /**
      * @hidden
      */
@@ -336,6 +358,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
+     /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -349,6 +372,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
+     /* treatAsRef */
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
@@ -360,6 +384,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         this.cdr.markForCheck();
     }
+
 
     /**
      * Get transactions service for the grid.
@@ -613,7 +638,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-
+    /* blazorCSSuppress */
     /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
