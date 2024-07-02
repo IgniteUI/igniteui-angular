@@ -123,7 +123,10 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
         this.grid.navigation.isRowHeaderActive = false;
         return {
             row: this.rowIndex, column: this.visibleIndex, level: null,
-            mchCache: null,
+            mchCache: {
+                level: 0,
+                visibleIndex:  this.visibleIndex
+            },
             layout: null
         };
     }

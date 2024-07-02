@@ -1207,7 +1207,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const isPercent = dim.width && dim.width.indexOf('%') !== -1;
         const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
         if (isPercent) {
-            return parseFloat(dim.width) / 100 * this.calcWidth;
+            return Math.round(parseFloat(dim.width) / 100 * this.calcWidth);
         } else if (isAuto) {
             return dim.autoWidth;
         } else {
@@ -1613,7 +1613,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 headers.push(dimensionHeader);
             }
             const autoWidth = this.getLargesContentWidth(headers);
-            dimension.width = autoWidth;
+            if (dimension.width === "auto") {
+                dimension.autoWidth = parseFloat(autoWidth);
+            } else {
+                dimension.width = autoWidth;
+            }
             this.pipeTrigger++;
             this.cdr.detectChanges();
         }
@@ -2143,7 +2147,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.headerTemplate = this.rowDimensionHeaderTemplate;
             ref.instance.resizable = this.rowDimensionResizing;
             ref.instance.sortable = dim.sortable === undefined ? true : dim.sortable;
-            ref.instance.width = this.rowDimensionWidthToPixels(dim) + 'px';
+            ref.instance.width = this.rowDimensionWidth(dim);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });
@@ -2162,8 +2166,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected autoSizeDimensionsInView() {
         if (!this.hasDimensionsToAutosize) return;
-        for (const dim of this.rowDimensions) {
-            if (dim.width === 'auto') {
+        for (const dim of this.visibleRowDimensions) {
+            if (dim.width === 'auto' && !this.hasHorizontalLayout) {
                 const contentWidths = [];
                 const relatedDims = PivotUtil.flatten([dim]).map(x => x.memberName);
                 const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
@@ -2176,6 +2180,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
                 const maxSize = Math.ceil(Math.max(...contentWidths));
                 dim.autoWidth = maxSize;
+            } else if (dim.width === 'auto') {
+                this.autoSizeRowDimension(dim);
             }
         }
     }
