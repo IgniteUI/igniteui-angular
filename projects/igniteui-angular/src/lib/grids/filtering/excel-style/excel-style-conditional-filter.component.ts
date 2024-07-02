@@ -14,7 +14,7 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 
 
@@ -25,7 +25,7 @@ import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
     standalone: true,
-    imports: [NgIf, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
+    imports: [NgIf, NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
@@ -39,6 +39,10 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
+
+    protected get filterNumber() {
+        return this.esf.expressionsList.length;
+    }
 
     private shouldOpenSubMenu = true;
     private destroy$ = new Subject<boolean>();
@@ -115,6 +119,17 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public getCondition(value: string): IFilteringOperation {
         return this.esf.column.filters.condition(value);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getSelectedCondition(condition: string): boolean {
+        const expressions = this.esf.expressionsList;
+        if (expressions.length < 1) {
+            return false;
+        }
+        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
     }
 
     /**
