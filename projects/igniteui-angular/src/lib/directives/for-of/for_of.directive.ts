@@ -818,7 +818,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
-                // Get the computed height of the root node
                 const height = window.getComputedStyle(rNode).getPropertyValue('height');
                 const h = parseFloat(height);
                 const index = this.state.startIndex + i;
@@ -827,7 +826,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                     continue;
                 }
 
-                // Calculate the new size and the difference from the old size
                 const oldVal = this.individualSizeCache[index] || 0;
                 const newVal = h + this.getMargin(rNode, dimension);
                 this.individualSizeCache[index] = newVal;
@@ -835,21 +833,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 diffs.push(currDiff);
                 totalDiff += currDiff;
 
-                // Update the sizes cache
                 this.sizesCache[index + 1] = this.sizesCache[index] + newVal;
             }
         }
 
-        // Adjust sizes for the remaining items in the cache
         for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
             this.sizesCache[j] += totalDiff;
         }
 
-        // Recalculate and update the scroll component size
         const oldScrollSize = this.scrollComponent.size;
         this.scrollComponent.size = this._calcSize();
 
-        // Emit events if the scroll size has changed
         if (this.scrollComponent.size !== oldScrollSize) {
             this._zone.run(() => {
                 this.scrollbarVisibilityChanged.emit();
@@ -857,7 +851,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             });
         }
 
-        // Adjust the scroll position if there was a total difference
         if (Math.abs(totalDiff) > 0) {
             this._adjustScrollPositionAfterSizeChange(totalDiff);
         }

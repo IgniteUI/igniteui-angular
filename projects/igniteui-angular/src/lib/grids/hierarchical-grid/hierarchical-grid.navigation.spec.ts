@@ -647,39 +647,31 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture.detectChanges();
             await wait();
 
-            // Simulate initial filter application
             hierarchicalGrid.filter('Artist', 'd', IgxStringFilteringOperand.instance().condition('contains'));
             fixture.detectChanges();
             await wait();
 
-            // Expand the third row
             hierarchicalGrid.expandRow(6);
             fixture.detectChanges();
             await wait();
 
-            // Scroll to bottom
             hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
-            // Clear the filter
             hierarchicalGrid.clearFilter();
             fixture.detectChanges();
             await wait();
 
-            // Scroll to bottom again
             hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
-            // Get rects
             const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
             const lastRowRect = hierarchicalGrid.dataRowList.last.nativeElement.getBoundingClientRect();
 
-            // Calculate the empty space
             const emptySpace = hierarchicalGridRect.bottom - lastRowRect.bottom;
 
-            // Check if the empty space is within an acceptable range
             expect(emptySpace).toBeLessThan(5);
         });
     });
