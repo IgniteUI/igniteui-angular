@@ -395,7 +395,7 @@
     igx-input-group,
     igx-date-range-start,
     igx-date-range-end {
-        --theme: #{map.get($theme, 'variant')};
+        --theme: #{$variant};
     }
 
     %form-group-display--box {
