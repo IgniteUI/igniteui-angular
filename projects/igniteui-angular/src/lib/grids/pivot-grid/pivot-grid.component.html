@@ -157,7 +157,7 @@
                     [igxForItemSize]="renderedRowHeight"
                     [igxForSizePropName]="'height'"
             >
-                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData"></igx-pivot-row-dimension-mrl-row>
+                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         </ng-container>
     </div>
