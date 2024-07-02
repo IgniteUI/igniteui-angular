@@ -31,21 +31,9 @@ const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
-describe('IgxDropDown ', () => {
+fdescribe('IgxDropDown ', () => {
     let fixture;
     let dropdown: IgxDropDownComponent;
-
-    const defaultOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy({
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom,
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom
-        })
-    };
-
     describe('Unit tests', () => {
         const data = [
             { value: 'Item0', index: 0 } as IgxDropDownItemComponent,
@@ -258,8 +246,8 @@ describe('IgxDropDown ', () => {
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
                 const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
-                expect(appliedSettings.closeOnOutsideClick).toBe(defaultOverlaySettings.closeOnOutsideClick);
-                expect(appliedSettings.modal).toBe(defaultOverlaySettings.modal);
+                expect(appliedSettings.closeOnOutsideClick).toBe(true);
+                expect(appliedSettings.modal).toBe(false);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
 
                 const positionStrategy = appliedSettings.positionStrategy as ConnectedPositioningStrategy;

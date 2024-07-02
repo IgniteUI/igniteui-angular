@@ -29,7 +29,7 @@ import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
+import { OverlaySettings } from '../services/overlay/utilities';
 import { DOCUMENT, NgIf } from '@angular/common';
 import { ConnectedPositioningStrategy } from '../services/public_api';
 
@@ -49,17 +49,6 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
  * </igx-drop-down>
  * ```
  */
-
-const defaultOverlaySettings: OverlaySettings = {
-    closeOnOutsideClick: true,
-    modal: false,
-    positionStrategy: new ConnectedPositioningStrategy({
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Bottom,
-        horizontalDirection: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom
-    })
-};
 
 @Component({
     selector: 'igx-drop-down',
@@ -255,9 +244,20 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        const settings = overlaySettings || { ...defaultOverlaySettings };
+        const settings = overlaySettings || this.getDefaultOverlaySettings();
         this.toggleDirective.open(settings);
         this.updateScrollPosition();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getDefaultOverlaySettings(): OverlaySettings {
+        return {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: new ConnectedPositioningStrategy()
+        };
     }
 
     /**
