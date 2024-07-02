@@ -31,7 +31,7 @@ const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
-fdescribe('IgxDropDown ', () => {
+describe('IgxDropDown ', () => {
     let fixture;
     let dropdown: IgxDropDownComponent;
     describe('Unit tests', () => {
