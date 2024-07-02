@@ -30,7 +30,6 @@ const STYLES = {
 };
 
 const { copySync } = fsExtra;
-const renderSass = sass.compileAsync;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEST_DIR = path.join.bind(null, path.resolve(__dirname, STYLES.DIST));
 
@@ -55,30 +54,46 @@ const postProcessor = postcss([
 
 async function createFile(fileName, content) {
     const outputFile = DEST_DIR(fileName);
-    
+
     makeDir(path.dirname(outputFile), { recursive: true });
     await writeFile(outputFile, content, "utf-8");
 }
 
 async function buildThemes() {
     const paths = await globby(`${STYLES.SRC}/**/*.scss`);
+    const compiler = await sass.initAsyncCompiler();
 
-    for (const sassFile of paths) {
-        const result = await renderSass(sassFile, STYLES.CONFIG);
-        const fileName = sassFile.replace(/\.scss$/, ".css").replace(STYLES.SRC, "");
-        const sourceMapComment = `/*# sourceMappingURL=maps${fileName}.map */`;
+    try {
+        await Promise.all(
+            paths.map(async (path) => {
+                const result = await compiler.compileAsync(path, STYLES.CONFIG);
+                const fileName = path
+                    .replace(/\.scss$/, ".css")
+                    .replace(STYLES.SRC, "");
+                const sourceMapComment = `/*# sourceMappingURL=maps${fileName}.map */`;
 
-        let outCss = postProcessor.process(result.css).css;
+                let outCss = postProcessor.process(result.css).css;
 
-        if (outCss.charCodeAt(0) === 0xfeff) {
-            outCss = outCss.substring(1);
-        }
+                if (outCss.charCodeAt(0) === 0xfeff) {
+                    outCss = outCss.substring(1);
+                }
 
-        outCss = outCss + "\n".repeat(2) + sourceMapComment;
+                outCss = outCss + "\n".repeat(2) + sourceMapComment;
 
-        await createFile(fileName, outCss);
-        await createFile(`maps/${fileName}.map`, JSON.stringify(result.sourceMap));
+                await createFile(fileName, outCss);
+                await createFile(
+                    `maps/${fileName}.map`,
+                    JSON.stringify(result.sourceMap),
+                );
+            }),
+        );
+    } catch (err) {
+        await compiler.dispose();
+        report.error(err);
+        process.exit(1);
     }
+
+    await compiler.dispose();
 }
 
 (async () => {
@@ -91,6 +106,6 @@ async function buildThemes() {
     console.info("Building themes...");
     await buildThemes();
     report.success(
-        `Themes generated in ${Math.round((Date.now() - startTime) / 1000)}s`
+        `Themes generated in ${Math.round((Date.now() - startTime) / 1000)}s`,
     );
 })();

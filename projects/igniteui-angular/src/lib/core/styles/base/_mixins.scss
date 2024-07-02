@@ -40,7 +40,7 @@
         $d: ();
         $u: ();
 
-        @if $c != null {
+        @if $c {
             $cu: map.get($c, 'usedBy');
 
             $d: map.get($c, 'deps');

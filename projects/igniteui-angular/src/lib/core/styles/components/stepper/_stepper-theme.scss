@@ -663,7 +663,7 @@
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
-            border-inline-start: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+            border-inline-start: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
         }
     }
 
@@ -718,7 +718,7 @@
 
             &::after {
                 border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
             }
         }
 
@@ -752,7 +752,7 @@
 
         %igx-stepper__step-content-wrapper {
             &::before {
-                border-inline-start-style: unquote(var-get($theme, 'complete-step-separator-style'));
+                border-inline-start-style: var-get($theme, 'complete-step-separator-style');
                 border-inline-start-color: var-get($theme, 'complete-step-separator-color');
             }
         }
@@ -761,13 +761,13 @@
     %igx-stepper__step--completed + %igx-stepper__step {
         &::before {
             border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-            border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+            border-top-style: var-get($theme, 'complete-step-separator-style') !important;
         }
 
         %igx-stepper__step-header {
             &::before {
                 border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
             }
         }
     }
@@ -808,7 +808,7 @@
                 position: relative;
                 z-index: -1;
                 top: $separator-title-bottom;
-                border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
             }
 
             &:first-of-type {
@@ -836,7 +836,7 @@
                 width: calc(50% - (#{$indicator-size} - #{$indicator-gap}));
                 top: $separator-title-bottom;
                 flex: 1;
-                border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
             }
 
             &::before {
@@ -885,7 +885,7 @@
 
             &%igx-stepper__step {
                 &::before {
-                    border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                    border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
                     top: $separator-title-top;
                 }
             }
