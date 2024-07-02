@@ -798,75 +798,57 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
-
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
      */
     public recalcUpdateSizes() {
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            this.igxForSizePropName : 'height';
+        const dimension = this.igxForScrollOrientation === 'horizontal' ? this.igxForSizePropName : 'height';
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
+
         const rNodes = this._embeddedViews.map(view =>
             view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling);
+
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
                 const height = window.getComputedStyle(rNode).getPropertyValue('height');
-                const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
+                const h = parseFloat(height);
                 const index = this.state.startIndex + i;
+
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
                 }
-                const margin = this.getMargin(rNode, dimension);
-                const oldVal = this.individualSizeCache[index];
-                const newVal = (dimension === 'height' ? h : rNode.clientWidth) + margin;
+
+                const oldVal = this.individualSizeCache[index] || 0;
+                const newVal = h + this.getMargin(rNode, dimension);
                 this.individualSizeCache[index] = newVal;
                 const currDiff = newVal - oldVal;
                 diffs.push(currDiff);
                 totalDiff += currDiff;
-                this.sizesCache[index + 1] += totalDiff;
+
+                this.sizesCache[index + 1] = this.sizesCache[index] + newVal;
             }
         }
-        // update cache
+
+        for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
+            this.sizesCache[j] += totalDiff;
+        }
+
+        const oldScrollSize = this.scrollComponent.size;
+        this.scrollComponent.size = this._calcSize();
+
+        if (this.scrollComponent.size !== oldScrollSize) {
+            this._zone.run(() => {
+                this.scrollbarVisibilityChanged.emit();
+                this.contentSizeChange.emit();
+            });
+        }
+
         if (Math.abs(totalDiff) > 0) {
-            for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
-                this.sizesCache[j] += totalDiff;
-            }
-
-            // update scrBar heights/widths
-            const reducer = (acc, val) => acc + val;
-
-            const hSum = this.individualSizeCache.reduce(reducer);
-            if (hSum > this._maxSize) {
-                this._virtRatio = hSum / this._maxSize;
-            }
-            this.scrollComponent.size = Math.min(this.scrollComponent.size + totalDiff, this._maxSize);
-            this._virtSize = hSum;
-            if (!this.scrollComponent.destroyed) {
-                this.scrollComponent.cdr.detectChanges();
-            }
-            const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
-            if (scrToBottom && !this._isAtBottomIndex) {
-                const containerSize = parseInt(this.igxForContainerSize, 10);
-                const maxVirtScrollTop = this._virtSize - containerSize;
-                this._bScrollInternal = true;
-                this._virtScrollPosition = maxVirtScrollTop;
-                this.scrollPosition = maxVirtScrollTop;
-                return;
-            }
-            if (this._adjustToIndex) {
-                // in case scrolled to specific index where after scroll heights are changed
-                // need to adjust the offsets so that item is last in view.
-                const updatesToIndex = this._adjustToIndex - this.state.startIndex + 1;
-                const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer);
-                if (sumDiffs !== 0) {
-                    this.addScroll(sumDiffs);
-                }
-                this._adjustToIndex = null;
-            }
+            this._adjustScrollPositionAfterSizeChange(totalDiff);
         }
     }
 
