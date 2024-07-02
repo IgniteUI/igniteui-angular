@@ -154,7 +154,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     public get filterIconClassName() {
-        return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+        return this.column.filteringExpressionsTree || this.isAdvancedFilterApplied() ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
     public get selectable() {
@@ -274,6 +274,13 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected getSortDirection() {
         const expr = this.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
+    }
+
+    protected isAdvancedFilterApplied() {
+        if(!this.grid.advancedFilteringExpressionsTree) {
+            return false;
+        }
+        return !!this.grid.advancedFilteringExpressionsTree.find(this.column.field);
     }
 
     private triggerSort() {
