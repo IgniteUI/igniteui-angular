@@ -1276,6 +1276,13 @@
                     border: 0;
                 }
             }
+
+            > i {
+                @include ellipsis();
+
+                padding: rem(4px);
+                font-style: normal;
+            }
         }
     }
 
