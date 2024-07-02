@@ -193,7 +193,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
         @Inject(DOCUMENT) public document: any) {}
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement); 
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** Keydown Handler */
@@ -214,7 +214,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @param newSelection the item selected
      * @param event the event that triggered the call
      */
-    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {  // eslint-disable-line
+    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event,  emit = true) {  // eslint-disable-line
         this.selectionChanging.emit({
             newSelection,
             oldSelection: null,
