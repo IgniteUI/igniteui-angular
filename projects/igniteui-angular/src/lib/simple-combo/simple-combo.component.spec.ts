@@ -1850,6 +1850,36 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData.length).toEqual(1);
             expect(combo.filteredData[0].field).toEqual('Arizona');
         }));
+
+        it('should not select the first item when combo is focused there is no focus item and Enter is pressed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('ariz', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.dropdown.collapsed).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            combo.dropdown.focusedItem = undefined;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.comboInput.value).toEqual('ariz');
+        }));
     });
 
     describe('Display density', () => {
