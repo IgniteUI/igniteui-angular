@@ -428,7 +428,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         }
 
         return {
-            short: weekOfYear('narrow'),
+            short: weekOfYear('narrow').substring(0, 1),
             long: weekOfYear('long'),
         }
     }
