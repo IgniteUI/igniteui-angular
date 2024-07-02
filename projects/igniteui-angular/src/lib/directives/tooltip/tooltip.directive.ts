@@ -38,7 +38,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-tooltip--desktop')
+    @HostBinding('class.igx-tooltip')
     public override get defaultClass() {
         return !this.collapsed;
     }
