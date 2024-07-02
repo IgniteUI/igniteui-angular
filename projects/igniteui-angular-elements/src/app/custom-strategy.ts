@@ -125,8 +125,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
          * Modified copy of super.initializeComponent:
          */
         const childInjector = Injector.create({ providers: [], parent: (this as any).injector });
-        const projectableNodes =
-            extractProjectableNodes(element, this._componentFactory.ngContentSelectors);
+        const projectableNodes = extractProjectableNodes(
+            element,
+            this._componentFactory.ngContentSelectors,
+        );
         (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
         this.setComponentRef((this as any).componentRef);
         (this as any).viewChangeDetectorRef = (this as any).componentRef.injector.get(ChangeDetectorRef);
@@ -207,7 +209,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
-    public override setInputValue(property: string, value: any): void {
+    public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
         if ((this as any).componentRef === null ||
             !(this as any).componentRef.instance) {
             (this as any).initialInputValues.set(property, value);
@@ -246,7 +248,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (componentConfig.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
             value = value.ngElementStrategy?.componentRef?.instance || value;
         }
-        super.setInputValue(property, value);
+        super.setInputValue(property, value, transform);
     }
 
     public override getInputValue(property: string): any {
