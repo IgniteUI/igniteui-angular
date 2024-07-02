@@ -3138,6 +3138,7 @@
                         map.get($grid-header-padding-inline, 'cosy'),
                         map.get($grid-header-padding-inline, 'comfortable')
                     );
+                    align-self: center;
                 }
             }
 

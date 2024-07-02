@@ -1237,8 +1237,6 @@ export interface PivotGridType extends GridType {
     /** @hidden @internal */
     visibleRowDimensions: IPivotDimension[];
     /** @hidden @internal */
-    flattenedRowDimensions: IPivotDimension[];
-    /** @hidden @internal */
     hasHorizontalLayout: boolean;
     /** @hidden @internal */
     values: IPivotValue[];
