@@ -13,6 +13,7 @@ import type {
     ExpansionCase,
     HtmlParser,
     HtmlTagDefinition,
+    LetDeclaration,
     Node,
     Text,
     Visitor
@@ -285,6 +286,10 @@ class SerializerVisitor implements Visitor {
 
     public visitBlockParameter(parameter: BlockParameter, _context: any) {
         return parameter.expression;
+    }
+
+    public visitLetDeclaration(decl: LetDeclaration, _context: any) {
+        return decl;
     }
 
     private _visitAll(nodes: Node[], separator = '', prefix = ''): string {

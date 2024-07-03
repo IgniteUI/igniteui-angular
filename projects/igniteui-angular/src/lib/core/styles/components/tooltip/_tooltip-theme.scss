@@ -105,7 +105,7 @@
 ) {
     $tooltip-text: map.get($categories, 'tooltip-text');
 
-    @if $tooltip-text != null {
+    @if $tooltip-text {
         %tooltip-display {
             @include type-style($tooltip-text);
         }
