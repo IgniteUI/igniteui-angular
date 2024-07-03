@@ -857,6 +857,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
             this._adjustScrollPositionAfterSizeChange(totalDiff);
         }
+
+        const oldScrollSize = this.scrollComponent.size;
+        if (this.scrollComponent.size !== oldScrollSize) {
+            this._zone.run(() => {
+                this.scrollbarVisibilityChanged.emit();
+                this.contentSizeChange.emit();
+            });
+        }
     }
 
     /**
