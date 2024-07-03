@@ -666,6 +666,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
             hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
 
             const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
             const lastRowRect = hierarchicalGrid.dataRowList.last.nativeElement.getBoundingClientRect();
