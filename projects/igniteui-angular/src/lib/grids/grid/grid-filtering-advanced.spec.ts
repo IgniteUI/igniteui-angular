@@ -26,7 +26,6 @@ import { IFilteringEventArgs } from '../public_api';
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
-const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 
@@ -311,7 +310,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         fakeAsync(() => {
             // Verify that the advanced filtering button indicates there are no filters.
             let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
                 .toBe(false, 'Button indicates there is active filtering.');
 
             // Open Advanced Filtering dialog.
@@ -338,7 +337,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
                 .toBe(true, 'Button indicates there is no active filtering.');
 
             // Open Advanced Filtering dialog.
@@ -355,7 +354,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are no filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
                 .toBe(false, 'Button indicates there is active filtering.');
         }));
 
@@ -783,6 +782,49 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('1');
+        }));
+
+        it('Applying/Clearing filter through the API should correctly update the UI and correctly show number of filtered columns', fakeAsync(() => {
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify the initial state of the grid and that no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number')).toBeNull();
+
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push(orTree);
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Verify the state of the grid after filtering.
+            expect(grid.filteredData.length).toBe(2);
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('(2)');
+            expect(GridFunctions.getExcelFilterIconFiltered(fix, 'ProductName')).toBeDefined();
+            expect(GridFunctions.getExcelFilterIconFiltered(fix, 'Downloads')).toBeDefined();
+
+            // Clear filters through API.
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+
+            // Verify there are not filters present and that the default text is shown.
+            expect(grid.advancedFilteringExpressionsTree).toBeNull();
+            expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number')).toBeNull();
         }));
 
         it('Applying/Clearing filter through the API should correctly update the UI.', fakeAsync(() => {
