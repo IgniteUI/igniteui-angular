@@ -108,7 +108,6 @@
     "@types/jasmine": "^5.1.1",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^20.8.9",
-    "@types/prettier": "^2.7.3",
     "@types/sass-true": "^6.0.2",
     "@types/webpack-env": "^1.18.3",
     "@typescript-eslint/eslint-plugin": "^6.10.0",

@@ -67,12 +67,12 @@ export class Analyzer {
         return out;
     }
 
-    public analyze() {
+    public async analyze() {
         this.sourceFiles.flatMap(file => this.getComponents(file.statements))
             .forEach(comp => this.configMap.set(comp.name, comp));
 
         this.resolvedMap = this.resolve();
-        this.printer.run(this.resolvedMap);
+        await this.printer.run(this.resolvedMap);
     }
 
 }

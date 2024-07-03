@@ -92,7 +92,7 @@ export class AnalyzerPrinter {
         return ts.factory.createObjectLiteralExpression(properties);
     }
 
-    public run(config: Map<ts.InterfaceType, ComponentMetadata>) {
+    public async run(config: Map<ts.InterfaceType, ComponentMetadata>) {
         const outFile = path.join(path.dirname(this.configPath), this.out);
         const placeholder = ts.createSourceFile(outFile, '', ts.ScriptTarget.Latest);
 
@@ -143,6 +143,7 @@ export class AnalyzerPrinter {
         ].join('\n');
 
 
-        fs.writeFileSync(outFile, format(data, { parser: 'babel-ts' }), { encoding: 'utf8' });
+        const content = await format(data, { parser: 'babel-ts' });
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
     }
 }
