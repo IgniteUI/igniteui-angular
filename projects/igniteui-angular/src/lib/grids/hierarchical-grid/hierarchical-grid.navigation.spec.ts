@@ -645,15 +645,15 @@ describe('IgxHierarchicalGrid Navigation', () => {
             // eslint-disable-next-line @typescript-eslint/no-shadow
             const hierarchicalGrid = fixture.componentInstance.hierarchicalGrid;
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.filter('Artist', 'd', IgxStringFilteringOperand.instance().condition('contains'));
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.expandRow(6);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
             fixture.detectChanges();
@@ -661,7 +661,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             hierarchicalGrid.clearFilter();
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
             fixture.detectChanges();
