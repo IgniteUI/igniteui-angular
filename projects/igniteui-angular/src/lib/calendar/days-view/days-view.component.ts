@@ -414,10 +414,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         return weekdays;
     }
 
-    /**
-     * @hidden
-     */
-    public get weekNumberHeader(): { short: string, long: string } {
+    protected get weekNumberHeader(): { short: string, long: string } {
         const weekOfYear = (style: 'narrow' | 'long') => {
             const dn = new Intl.DisplayNames(this.locale, {
                 type: 'dateTimeField',
