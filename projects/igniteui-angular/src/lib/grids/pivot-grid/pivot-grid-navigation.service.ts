@@ -118,8 +118,10 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     public override handleAlt(key: string, event: KeyboardEvent): void {
         event.preventDefault();
 
-        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
-        const expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[this.activeNode.column])
+        const rowIndex = this.grid.hasHorizontalLayout ? this.activeNode.row + this.activeNode.layout.rowStart - 1 : this.activeNode.row
+        const row = this.grid.gridAPI.get_row_by_index(rowIndex);
+        const dimIndex = this.grid.hasHorizontalLayout ? this.activeNode.layout.colStart - 1 : this.activeNode.column;
+        const expansionRowKey = PivotUtil.getRecordKey(row.data, this.grid.visibleRowDimensions[dimIndex]);
         const isExpanded = this.grid.expansionStates.get(expansionRowKey) ?? true;
 
         if (ROW_EXPAND_KEYS.has(key) && !isExpanded) {
@@ -127,7 +129,14 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         } else if (ROW_COLLAPSE_KEYS.has(key) && isExpanded) {
             this.grid.gridAPI.set_row_expansion_state(expansionRowKey, false, event)
         }
+        this.updateActiveNodeLayout();
         this.grid.notifyChanges();
+    }
+
+    public updateActiveNodeLayout() {
+        const mrlRow = this.grid.rowDimensionMrlRowsCollection.toArray()[this.activeNode.row];
+        const activeCell = mrlRow.contentCells.toArray()[this.activeNode.column];
+        this.activeNode.layout = activeCell.layout;
     }
 
     public override headerNavigation(event: KeyboardEvent) {

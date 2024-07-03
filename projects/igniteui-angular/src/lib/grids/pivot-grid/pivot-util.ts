@@ -122,7 +122,7 @@ export class PivotUtil {
                 });
             }
 
-            const expansionRowKey = PivotUtil.getRecordKey(rec, dimension, true);
+            const expansionRowKey = PivotUtil.getRecordKey(rec, dimension);
             const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
                 defaultExpand :
                 expansionStates.get(expansionRowKey);
@@ -384,20 +384,14 @@ export class PivotUtil {
         return leafs;
     }
 
-    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension, horizontalLayout: boolean = false) {
+    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension) {
         const parentFields = [];
 
-        if (!horizontalLayout) {
-            const currentDimIndex = rec.dimensions.findIndex(x => x.memberName === currentDim.memberName) + 1;
-            const prevDims = rec.dimensions.slice(0, currentDimIndex);
-            for (const prev of prevDims) {
-                const prevValue = rec.dimensionValues.get(prev.memberName);
-                parentFields.push(prevValue);
-            }
-        } else {
-            for(let i = 0; i < rec.dimensions.length; i++) {
-                parentFields.push(rec.dimensionValues.get(rec.dimensions[i].memberName));
-            }
+        const currentDimIndex = rec.dimensions.findIndex(x => x.memberName === currentDim.memberName) + 1;
+        const prevDims = rec.dimensions.slice(0, currentDimIndex);
+        for (const prev of prevDims) {
+            const prevValue = rec.dimensionValues.get(prev.memberName);
+            parentFields.push(prevValue);
         }
 
         return parentFields.join('-');
