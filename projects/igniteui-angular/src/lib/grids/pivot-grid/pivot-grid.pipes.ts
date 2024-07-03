@@ -193,14 +193,14 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
         const enabledRows = this.grid.hasHorizontalLayout ? (this.grid as any).visibleRowDimensions :  config.rows?.filter(x => x.enabled);
-        const index = enabledRows.indexOf(dim);
+        const dimIndex = enabledRows.indexOf(dim);
         for (const rec of data) {
             let currentDim;
             if (this.grid.hasHorizontalLayout) {
                 currentDim = dim;
                 rec.dimensions = enabledRows;
             } else {
-                currentDim = rec.dimensions[index];
+                currentDim = rec.dimensions[dimIndex];
             }
 
             const id = PivotUtil.getRecordKey(rec, currentDim);
@@ -246,7 +246,8 @@ export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
         const groupDim = config.rows.filter(dim => dim.enabled)[0];
         let curGroup = [];
         let curGroupValue = data[0].dimensionValues.get(groupDim.memberName);
-        for (const curRec of data) {
+        for (const [index, curRec] of data.entries()) {
+            curRec.dataIndex = index;
             const curRecValue = curRec.dimensionValues.get(groupDim.memberName);
             if (curGroup.length === 0 || curRecValue === curGroupValue) {
                 curGroup.push(curRec);
