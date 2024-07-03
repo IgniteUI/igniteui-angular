@@ -103,7 +103,6 @@
     "@microsoft/signalr": "^7.0.12",
     "@types/estree": "^1.0.0",
     "@types/express": "^4.17.17",
-    "@types/glob": "^8.1.0",
     "@types/hammerjs": "^2.0.40",
     "@types/jasmine": "^5.1.1",
     "@types/jasminewd2": "^2.0.10",
