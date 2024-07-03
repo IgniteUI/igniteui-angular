@@ -156,11 +156,10 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         for (const expr of expressionsTree.filteringOperands) {
             if ((expr instanceof FilteringExpressionsTree)) {
                 return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
-            } else {
-                return (expr as IFilteringExpression).fieldName === fieldName;
+            } else if ((expr as IFilteringExpression).fieldName === fieldName) {
+                return true;
             }
         }
-
         return false;
     }
 }
