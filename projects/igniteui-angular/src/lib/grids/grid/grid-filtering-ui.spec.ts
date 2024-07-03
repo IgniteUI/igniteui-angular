@@ -2616,7 +2616,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should position filter row and chips correctly when grid has column groups and one is hidden.',
-            (async() => {
+            fakeAsync(() => {
                 const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
                 const expression = {
                     fieldName: 'ProductName',
@@ -2638,8 +2638,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 GridFunctions.clickFilterCellChip(fix, 'AnotherField');
                 fix.detectChanges();
-                await wait(30);
-                fix.detectChanges();
+
                 // check if it is positioned at the bottom of the thead.
                 const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
                 const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
