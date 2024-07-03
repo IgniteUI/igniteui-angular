@@ -29,8 +29,8 @@ const enum DateParts {
 
 /** A map of the pre-defined date-time format options that resolve to numeric parts only (and period)
  *  Ref: https://angular.dev/api/common/DatePipe?tab=usage-notes
+ * @hidden
  */
-/** @hidden */
 const predefinedNumericFormats = new Map<string, string>([
     ['short', 'M/d/yy, h:mm a'],
     ['shortDate', 'M/d/yy'],
@@ -540,7 +540,7 @@ export abstract class DateTimeUtil {
      */
     public static getNumericInputFormat(locale: string, inputFormat: string): string {
         let resultFormat = '';
-        if(DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
+        if (DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
             resultFormat = inputFormat;
         } else if (predefinedNumericFormats.has(inputFormat)) {
             resultFormat = predefinedNumericFormats.get(inputFormat);
