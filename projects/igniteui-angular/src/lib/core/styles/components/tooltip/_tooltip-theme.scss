@@ -100,7 +100,7 @@
         @include type-style($text-mobile);
     }
 
-    @if $text-desktop != null {
+    @if $text-desktop {
         %tooltip--desktop {
             @include type-style($text-desktop);
         }
