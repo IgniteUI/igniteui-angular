@@ -505,9 +505,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden
      * @internal
      * @param newSelection
+     * @param emit
      * @param event
      */
-    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {
+    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this.focusedItem;
@@ -525,7 +526,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } as IgxDropDownItemBaseDirective;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
-        this.selectionChanging.emit(args);
+
+        if (emit) {
+            this.selectionChanging.emit(args);
+        }
 
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {
