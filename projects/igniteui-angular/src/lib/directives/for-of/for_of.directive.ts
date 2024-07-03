@@ -819,39 +819,42 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             const rNode = rNodes[i];
             if (rNode) {
                 const height = window.getComputedStyle(rNode).getPropertyValue('height');
-                const h = parseFloat(height);
+                const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
 
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
                 }
 
+                const margin = this.getMargin(rNode, dimension);
                 const oldVal = this.individualSizeCache[index] || 0;
-                const newVal = h + this.getMargin(rNode, dimension);
+                const newVal = (dimension === 'height' ? h : rNode.clientWidth) + margin;
                 this.individualSizeCache[index] = newVal;
                 const currDiff = newVal - oldVal;
                 diffs.push(currDiff);
                 totalDiff += currDiff;
 
-                this.sizesCache[index + 1] = this.sizesCache[index] + newVal;
+                this.sizesCache[index + 1] = (this.sizesCache[index] || 0) + newVal;
             }
         }
 
-        for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
-            this.sizesCache[j] += totalDiff;
-        }
-
-        const oldScrollSize = this.scrollComponent.size;
-        this.scrollComponent.size = this._calcSize();
-
-        if (this.scrollComponent.size !== oldScrollSize) {
-            this._zone.run(() => {
-                this.scrollbarVisibilityChanged.emit();
-                this.contentSizeChange.emit();
-            });
-        }
-
         if (Math.abs(totalDiff) > 0) {
+            for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
+                this.sizesCache[j] = (this.sizesCache[j] || 0) + totalDiff;
+            }
+
+            const reducer = (acc, val) => acc + val;
+            const hSum = this.individualSizeCache.reduce(reducer, 0);
+            if (hSum > this._maxSize) {
+                this._virtRatio = hSum / this._maxSize;
+            }
+            this.scrollComponent.size = Math.min(this._calcSize(), this._maxSize);
+            this._virtSize = hSum;
+
+            if (!this.scrollComponent.destroyed) {
+                this.scrollComponent.cdr.detectChanges();
+            }
+
             this._adjustScrollPositionAfterSizeChange(totalDiff);
         }
     }
