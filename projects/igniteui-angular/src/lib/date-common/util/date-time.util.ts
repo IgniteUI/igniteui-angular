@@ -1,5 +1,5 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
+import { DatePipe, formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
 
@@ -26,6 +26,17 @@ const enum DateParts {
     Month = 'month',
     Year = 'year'
 }
+
+/** A map of the pre-defined date-time format options that resolve to numeric parts only (and period)
+ *  Ref: https://angular.dev/api/common/DatePipe?tab=usage-notes
+ */
+/** @hidden */
+const predefinedNumericFormats = new Map<string, string>([
+    ['short', 'M/d/yy, h:mm a'],
+    ['shortDate', 'M/d/yy'],
+    ['shortTime', 'h:mm a'],
+    ['mediumTime', 'h:mm:ss a'],
+]);
 
 /** @hidden */
 export abstract class DateTimeUtil {
@@ -194,7 +205,7 @@ export abstract class DateTimeUtil {
                 break;
         }
 
-        if (datePartInfo.type !== DatePart.AmPm) {
+        if (datePartInfo.type !== DatePart.AmPm && datePartInfo.type !== DatePart.Literal) {
             return this.prependValue(maskedValue, partLength, '0');
         }
 
@@ -504,6 +515,37 @@ export abstract class DateTimeUtil {
         }
 
         return false;
+    }
+
+    public static isFormatNumeric(locale: string, inputFormat: string): boolean {
+        const dateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+        for (let i = 0; i < dateParts.length; i++) {
+            if (dateParts[i].type === DatePart.AmPm) {
+                continue;
+            }
+            const transformedValue = new DatePipe(locale).transform(new Date(), dateParts[i].format);
+            // check for any kind of letter from any language
+            if (/\p{L}+/gu.test(transformedValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns an input format that can be used by the date-time editors, as
+     * - if the input format is already numeric, return it as is
+     * - if it is among the predefined numeric ones, return it as the equivalent numeric date parts
+     * - otherwise, return an empty string
+     */
+    public static getNumericInputFormat(locale: string, inputFormat: string): string {
+        let resultFormat = '';
+        if(DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
+            resultFormat = inputFormat;
+        } else if (predefinedNumericFormats.has(inputFormat)) {
+            resultFormat = predefinedNumericFormats.get(inputFormat);
+        }
+        return resultFormat;
     }
 
     private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {

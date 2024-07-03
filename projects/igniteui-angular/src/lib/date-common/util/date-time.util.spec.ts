@@ -1,5 +1,7 @@
 import { DateTimeUtil } from './date-time.util';
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
+import { registerLocaleData } from '@angular/common';
+import localeBg from '@angular/common/locales/bg';
 
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     obj[x.type] = x;
@@ -627,5 +629,46 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(DateTimeUtil.isValidDate(undefined)).toBeFalse();
         expect(DateTimeUtil.isValidDate(false)).toBeFalse();
         expect(DateTimeUtil.isValidDate(true)).toBeFalse();
+    });
+
+    it('should correctly identify formats that would resolve to only numeric parts (and period) for the date/time parts', () => {
+        // test with locale covering non-ASCII characters as well
+        registerLocaleData(localeBg, 'bg');
+        const locale = 'bg';
+
+        const numericFormats = ['y', 'yy', 'yyy', 'yyyy', 'M', 'MM', 'd', 'dd', 'h', 'hh',
+                                'H', 'HH', 'm', 'mm', 's', 'ss', 'S', 'SS', 'SSS',
+                                'dd-MM-yyyy', 'dd/M/yyyy HH:mm:ss tt', 'dd/M/yyyy HH:mm:ss:SS a'];
+        numericFormats.forEach(format => {
+            expect(DateTimeUtil.isFormatNumeric(locale, format)).withContext(`Format: ${format}`).toBeTrue();
+        });
+
+        const nonNumericFormats = [ 'MMM', 'MMMM', 'MMMMM', 'medium', 'long', 'mediumDate', 'longTime',
+                                    'short', 'medium', 'shortDate', 'shortTime', 'mediumTime',
+                                    'dd-MMM-yyyy', 'dd/MM/yyyy test hh:mm'];
+
+        nonNumericFormats.forEach(format => {
+            expect(DateTimeUtil.isFormatNumeric(locale, format)).withContext(`Format: ${format}`).toBeFalse();
+        });
+    });
+
+    it('should return the equivalent of the numeric predefined date-time formats as date parts' +
+       'that the date-time editors can handle ', () => {
+        const locale = 'en-US';
+
+        // returns the equivalent of the predefined numeric formats as date parts
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'short')).toBe('M/d/yy, h:mm a');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'shortDate')).toBe('M/d/yy');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'shortTime')).toBe('h:mm a');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'mediumTime')).toBe('h:mm:ss a');
+
+        // returns the same format if it is custom and numeric
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'dd-MM-yyyy')).toBe('dd-MM-yyyy');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'dd/M/yyyy hh:mm:ss:SS aa')).toBe('dd/M/yyyy hh:mm:ss:SS aa');
+
+        // returns empty string if predefined and not among the numeric ones
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'medium')).toBe('');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'mediumDate')).toBe('');
+        expect( DateTimeUtil.getNumericInputFormat(locale, 'longTime')).toBe('');
     });
 });
