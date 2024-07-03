@@ -23,7 +23,6 @@ import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
-import { flatten } from '../../core/utils';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -3107,7 +3106,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             pivotGrid.pipeTrigger++;
             fixture.detectChanges();
-            const rowHeaders = fixture.debugElement.queryAll(
+            let rowHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
             const productsHeaderColumn = rowHeaders.filter(x => x.componentInstance.column.header === "ProductCategory")[0].nativeElement;
@@ -3119,8 +3118,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const sortIcon = productsHeaderColumn.querySelectorAll('igx-icon')[0];
             sortIcon.click();
             fixture.detectChanges();
+            sortIcon.click();
+            fixture.detectChanges();
 
-            expect(productRowContentsHeaders).toEqual( ['ProductCategory', 'Components', 'Clothing', 'Bikes', 'Accessories']);
+            rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const updatedProductRowContents = rowHeaders.filter(x => x.componentInstance.column.field === "ProductCategory");
+            const updatedProductRowContentsHeaders = updatedProductRowContents.map(x => x.componentInstance.column.header);
+            expect(updatedProductRowContentsHeaders).toEqual( ['ProductCategory', 'Components', 'Clothing', 'Bikes', 'Accessories']);
         });
 
         it("should allow select/deselect the correct rows on row header click.", () => {
