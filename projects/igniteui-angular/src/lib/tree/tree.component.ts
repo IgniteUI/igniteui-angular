@@ -1,6 +1,21 @@
 import {
-    Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute
+    Component,
+    QueryList,
+    Input,
+    Output,
+    EventEmitter,
+    ContentChild,
+    Directive,
+    TemplateRef,
+    OnInit,
+    AfterViewInit,
+    ContentChildren,
+    OnDestroy,
+    HostBinding,
+    ElementRef,
+    booleanAttribute,
+    Optional,
+    Inject
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -17,6 +32,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { resizeObservable } from '../core/utils';
+import { IgxIconService } from '../icon/icon.service';
 
 /**
  * @hidden @internal
@@ -120,7 +136,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public singleBranchExpand = false;
 
     /** Get/Set if nodes should be expanded/collapsed when clicking over them.
-     * 
+     *
      * ```html
      * <igx-tree [toggleNodeOnClick]="true">
      * ...
@@ -134,7 +150,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      */
     @Input({ transform: booleanAttribute })
     public toggleNodeOnClick = false;
-    
+
 
     /** Get/Set the animation settings that branches should use when expanding/collpasing.
      *
@@ -313,10 +329,22 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>) {
+        private element: ElementRef<HTMLElement>,
+        @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
+    ) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
+
+        iconService?.addIconRef('expand', 'tree', {
+            name: 'keyboard_arrow_right',
+            family: 'material'
+        });
+
+        iconService?.addIconRef('collapse', 'tree', {
+            name: 'keyboard_arrow_down',
+            family: 'material'
+        });
     }
 
     /** @hidden @internal */

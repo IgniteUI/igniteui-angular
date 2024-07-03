@@ -16,16 +16,22 @@
 
 <ng-template #headerTemplate let-column>
     <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
-        <igx-icon [attr.draggable]="false" (click)="toggleRowDimension($event)" style="--component-size: 3">
-            {{ getExpandState() ? 'expand_more' : 'chevron_right'}}</igx-icon>
+        <igx-icon
+            family="default"
+            [name]="getExpandState() ? 'expand' : 'chevron_right'"
+            [attr.draggable]="false"
+            (click)="toggleRowDimension($event)"
+            style="--component-size: 3"
+            >
+        </igx-icon>
         {{column.header}}
     </div>
 </ng-template>
 
 <ng-template #headerDefaultTemplate let-column>
     <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}' style="--component-size: 3">
-        <igx-icon style='flex-shrink: 0;' [attr.draggable]="false">
-        </igx-icon>
+        <!--Using the igx-icon as a sizable spacer spacer here-->
+        <igx-icon style='flex-shrink: 0;' [attr.draggable]="false"></igx-icon>
         {{column.header}}
     </div>
 </ng-template>

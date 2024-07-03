@@ -1,7 +1,8 @@
 import { IActiveNode, IgxGridNavigationService } from '../grid-navigation.service';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
-import { HEADER_KEYS } from '../../core/utils';
+import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/utils';
+import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
 
@@ -35,6 +36,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 level: null,
                 mchCache: null,
                 layout: this.activeNode.layout
+            }
+
+            if (event.altKey) {
+                this.handleAlt(key, event);
+                return;
             }
 
             let verticalContainer;
@@ -107,6 +113,21 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         } else {
             super.handleNavigation(event);
         }
+    }
+
+    public override handleAlt(key: string, event: KeyboardEvent): void {
+        event.preventDefault();
+
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
+        const expansionRowKey = PivotUtil.getRecordKey(row.data, row.data.dimensions[this.activeNode.column])
+        const isExpanded = this.grid.expansionStates.get(expansionRowKey) ?? true;
+
+        if (ROW_EXPAND_KEYS.has(key) && !isExpanded) {
+            this.grid.gridAPI.set_row_expansion_state(expansionRowKey, true, event)
+        } else if (ROW_COLLAPSE_KEYS.has(key) && isExpanded) {
+            this.grid.gridAPI.set_row_expansion_state(expansionRowKey, false, event)
+        }
+        this.grid.notifyChanges();
     }
 
     public override headerNavigation(event: KeyboardEvent) {
