@@ -24,7 +24,6 @@ const STYLES = {
     },
 };
 
-const renderSass = sass.compileAsync;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEST_DIR = path.join.bind(null, path.resolve(__dirname, STYLES.DIST));
 
@@ -56,21 +55,30 @@ async function createFile(fileName, content) {
 
 async function buildThemes() {
     const paths = await globby(`${STYLES.SRC}/**/*.scss`);
+    const compiler = await sass.initAsyncCompiler();
 
-    for (const sassFile of paths) {
-        const result = await renderSass(sassFile, STYLES.CONFIG);
-        const fileName = sassFile.replace(/\.scss$/, ".css").replace(STYLES.SRC, "");
+    try {
+        for (const path of paths) {
+            const result = await compiler.compileAsync(path, STYLES.CONFIG);
+            const fileName = path.replace(/\.scss$/, ".css").replace(STYLES.SRC, "");
 
-        let outCss = postProcessor.process(result.css).css;
+            let outCss = postProcessor.process(result.css).css;
 
-        if (outCss.charCodeAt(0) === 0xfeff) {
-            outCss = outCss.substring(1);
+            if (outCss.charCodeAt(0) === 0xfeff) {
+                outCss = outCss.substring(1);
+            }
+
+            outCss = outCss + "\n";
+
+            await createFile(fileName, outCss);
         }
-
-        outCss = outCss + "\n";
-
-        await createFile(fileName, outCss);
+    } catch (err) {
+        await compiler.dispose();
+        report.error(err);
+        process.exit(1);
     }
+
+    await compiler.dispose();
 }
 
 (async () => {
@@ -80,6 +88,6 @@ async function buildThemes() {
     console.info("Building themes...");
     await buildThemes();
     report.success(
-        `Themes generated in ${Math.round((Date.now() - startTime) / 1000)}s`
+        `Themes generated in ${Math.round((Date.now() - startTime) / 1000)}s`,
     );
 })();
