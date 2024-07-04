@@ -27,7 +27,7 @@
 ///
 /// @param {Color} $header-foreground [null] - The header foreground.
 /// @param {Color} $header-background [null] - The header background.
-//
+///
 /// @param {Color} $picker-foreground [null]- The foreground of the month and year pickers.
 /// @param {Color} $picker-background [null] - The background of the month and year pickers.
 /// @param {Color} $picker-hover-foreground [null]-  The :hover color of the month and year pickers.
@@ -1226,7 +1226,7 @@
             //border-inline: rem(1px) solid var-get($theme, 'week-number-background');
             inset-inline-start: rem(-1px);
             inset-block-start: 100%;
-            height: calc($date-size  / 2);
+            height: calc($date-size / 2);
             width: $date-size;
         }
     }
@@ -1275,6 +1275,13 @@
                     inset-inline-start: 0;
                     border: 0;
                 }
+            }
+
+            > i {
+                @include ellipsis();
+
+                padding: rem(4px);
+                font-style: normal;
             }
         }
     }
