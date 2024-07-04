@@ -1,45 +1,88 @@
-<div role="row" class="igx-calendar__body-row">
-    <div role="columnheader" *ngIf="showWeekNumbers" class="igx-calendar__label igx-calendar__label--week-number">
-        <span>Wk</span>
+<div
+    role="row"
+    class="igx-days-view__row"
+    [title]="weekNumberHeader.long | titlecase"
+>
+    <div
+        role="columnheader"
+        *ngIf="showWeekNumbers"
+        class="igx-days-view__label igx-days-view__label--week-number"
+    >
+        <span>
+            <i>{{ weekNumberHeader.short | titlecase }}</i>
+        </span>
     </div>
-    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
-        {{ dayName | titlecase }}
+    <span
+        role="columnheader"
+        [attr.aria-label]="dayName.long"
+        *ngFor="let dayName of weekHeaderLabels"
+        class="igx-days-view__label"
+    >
+        <span class="igx-days-view__label-inner">
+            {{ dayName.formatted | titlecase }}
+        </span>
     </span>
 </div>
 
-<div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker"
-     class="igx-calendar__body-row" role="row">
-
-    <div *ngIf="showWeekNumbers" class="igx-calendar__date igx-calendar__date--week-number">
-
-        <span role="rowheader" class="igx-calendar__date-content igx-calendar__date-content--week-number">
-            {{getWeekNumber(week[0].date)}}
+<div
+    *ngFor="
+        let week of monthWeeks;
+        last as isLast;
+        index as i;
+        trackBy: rowTracker
+    "
+    class="igx-days-view__row"
+    role="row"
+>
+    <div
+        *ngIf="showWeekNumbers"
+        class="igx-days-view__date igx-days-view__date--week-number"
+    >
+        <span
+            role="rowheader"
+            class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
+        >
+            {{ getWeekNumber(week[0]) }}
         </span>
-
     </div>
 
-    <!-- <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item> -->
     <igx-day-item
-        class="igx-calendar__date"
+        #item
         *ngFor="let day of week; trackBy: dateTracker"
-        [attr.aria-selected]="isSelected(day)"
+        class="igx-days-view__date"
         role="gridcell"
-        [attr.aria-disabled]="isDateDisabled(day.date)"
-        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.date.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.date.toDateString()"
+        [attr.id]="item.isCurrentMonth && day.timestamp"
+        [attr.aria-selected]="isSelected(day)"
+        [attr.aria-disabled]="isDateDisabled(day.native)"
+        [attr.aria-label]="
+            isFirstInRange(day)
+                ? day.native.toDateString() +
+                  ', ' +
+                  resourceStrings.igx_calendar_range_start
+                : isLastInRange(day)
+                  ? day.native.toDateString() +
+                    ', ' +
+                    resourceStrings.igx_calendar_range_end
+                  : day.native.toDateString()
+        "
         [date]="day"
+        [viewDate]="viewDate"
         [selection]="selection"
         [selected]="isSelected(day)"
+        [isActive]="isActiveDate(day)"
         [isLastInRange]="isLastInRange(day)"
         [isFirstInRange]="isFirstInRange(day)"
-        [isWithinRange]="isWithinRange(day.date, true)"
+        [isWithinRange]="isWithinRange(day.native, true)"
+        [isWithinPreviewRange]="isWithinPreviewRange(day.native)"
         [disabledDates]="disabledDates"
         [specialDates]="specialDates"
-        [outOfRangeDates]="outOfRangeDates"
-        [hideOutsideDays]="hideOutsideDays"
-        [attr.tabindex]="tabIndex(day)"
-        (focus)="activeDate = day.date.toLocaleDateString()"
-        (dateSelection)="selectDay($event)">
-        {{ formattedDate(day.date) }}
+        [hideLeadingDays]="hideLeadingDays"
+        [hideTrailingDays]="hideTrailingDays"
+        [attr.tabindex]="-1"
+        (mouseDown)="handleDateClick(item)"
+        (mouseEnter)="changePreviewRange(day.native)"
+        (mouseLeave)="clearPreviewRange()"
+    >
+        {{ formattedDate(day.native) }}
     </igx-day-item>
 </div>
-

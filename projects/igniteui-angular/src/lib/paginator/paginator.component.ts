@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -13,6 +12,8 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxPaginatorToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -30,9 +31,13 @@ export class IgxPaginatorContentDirective {
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
     standalone: true,
-    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)]
+    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    providers: [
+        { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
+    ]
 })
-export class IgxPaginatorComponent extends DisplayDensityBase {
+// switch IgxPaginatorToken to extends once density is dropped
+export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * @hidden
@@ -116,14 +121,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @HostBinding('class.igx-paginator')
     public cssClass = 'igx-paginator';
 
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
-
     /**
-     * An @Input property, sets current page of the `IgxPaginatorComponent`.
+     * Gets/Sets the current page of the paginator.
      * The default is 0.
      * ```typescript
      * let page = this.paginator.page;
@@ -154,7 +153,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     /**
-     * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
+     * Gets/Sets the number of visible items per page in the paginator.
      * The default is 15.
      * ```typescript
      * let itemsPerPage = this.paginator.perPage;
@@ -181,7 +180,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     /**
-     * An @Input property that sets the total records.
+     * Sets the total records.
      * ```typescript
      * let totalRecords = this.paginator.totalRecords;
      * ```
@@ -203,7 +202,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     /**
-     * An @Input property that sets custom options in the select of the paginator
+     * Sets custom options in the select of the paginator
      * ```typescript
      * let options = this.paginator.selectOptions;
      * ```
@@ -221,7 +220,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     /**
-     * An @Input property that sets custom OverlaySettings.
+     * Sets custom OverlaySettings.
      * ```html
      * <igx-paginator [overlaySettings] = "customOverlaySettings"></igx-paginator>
      * ```
@@ -251,10 +250,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this._resourceStrings;
     }
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions, elementRef);
-    }
+    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) { }
 
     /**
      * Returns if the current page is the last page.
@@ -376,11 +372,36 @@ export class IgxPageNavigationComponent {
     public cssClass = 'igx-page-nav';
 
     /**
-     * An @Input property that sets the `role` attribute of the element.
+     * Sets the `role` attribute of the element.
      */
     @HostBinding('attr.role')
     @Input()
     public role = 'navigation';
 
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
+    constructor(
+        @Host()
+        public paginator: IgxPaginatorComponent,
+        @Optional() @Inject(IgxIconService)
+        protected iconService: IgxIconService,
+    ) {
+        this.iconService.addIconRef('first_page', 'default', {
+            name: 'first_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('last_page', 'default', {
+            name: 'last_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_left', 'default', {
+            name: 'chevron_left',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_right', 'default', {
+            name: 'chevron_right',
+            family: 'material',
+        });
+    }
 }

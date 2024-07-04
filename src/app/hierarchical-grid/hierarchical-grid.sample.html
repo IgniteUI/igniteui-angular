@@ -2,13 +2,13 @@
     <h4 class="sample-title">Sample One</h4>
     <button igxButton="contained" (click)="log()">Layout</button>
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <button igxButton="contained" (click)="getState()">Get state</button>
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
-        [displayDensity]="density" [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
-        [rowDraggable]="true" [height]="'600px'" filterMode="excelStyleFilter" [width]="'800px'" [expandChildren]="rootExpanded"
+        [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
+        [rowDraggable]="true" [height]="'600px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
         #hGrid [rowClasses]="rowClasses">
         <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
@@ -53,7 +53,7 @@
         <ng-template igxRowCollapsedIndicator>
             <igx-icon role="button">add</igx-icon>
         </ng-template>
-        <igx-row-island [rowDraggable]="true" [height]='"400px"' [showExpandAll]='true' [key]="'childData'"
+        <igx-row-island [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
             [autoGenerate]="false" [allowFiltering]='true' [rowSelection]='selectionMode' [rowEditable]="true"
             [expandChildren]="firstLevelExpanded" #layout1  [allowFiltering]="true" filterMode="excelStyleFilter">
             <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'360px'">
@@ -66,9 +66,18 @@
                     <igx-excel-style-search></igx-excel-style-search>
                 </igx-excel-style-filter-operations>
             </igx-grid-excel-style-filtering>
+
+            <igx-grid-toolbar *igxGridToolbar>
+                <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
             <igx-paginator *igxPaginator>
             </igx-paginator>
-            <igx-column field="ID" [hasSummary]='false' [dataType]="'number'"></igx-column>
+            <igx-column field="ID" [hasSummary]="false" [dataType]="'number'"></igx-column>
             <igx-column-group header="Information2">
                 <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
                 <igx-column field="ProductName" [resizable]="true" [groupable]="true"></igx-column>
@@ -81,6 +90,9 @@
             </ng-template>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
                 [allowFiltering]="true">
+                <igx-grid-toolbar *igxGridToolbar>
+                    <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
+                </igx-grid-toolbar>
                 <igx-column field="ID" [hasSummary]='true'></igx-column>
                 <igx-column-group header="Information3">
                     <igx-column [resizable]="true" field="ChildLevels"></igx-column>
@@ -125,7 +137,7 @@
         <button igxButton="contained" (click)='toggleFirstIsland()'>Toggle level 1</button>
     </div>
     <igx-hierarchical-grid [showExpandAll]='true' [primaryKey]="'ID'" [data]="localData" [autoGenerate]="true" [height]="'600px'"
-        [width]="'800px'" [rowEditable]="true" #hGrid2>
+        [width]="'100%'" [rowEditable]="true" #hGrid2>
         <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
             <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
@@ -142,7 +154,7 @@
         <button igxButton="contained" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
     </div>
     <igx-hierarchical-grid [batchEditing]="true"
-    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'800px'" #hGrid2>
+    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'100%'" #hGrid2>
         <igx-column *ngIf="columnsReady" field="ID"></igx-column>
         <igx-column *ngIf="columnsReady" field="ProductName"></igx-column>
         <igx-row-island *ngIf="layoutsReady" [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
@@ -172,7 +184,7 @@
         <button igxButton="contained" (click)='changeHeaderRI(ri1, 0)'>Change child col header 1</button>
         <button igxButton="contained" (click)='changeHeaderRI(ri1, 1)'>Change child col header 2</button>
     </div>
-    <igx-hierarchical-grid [batchEditing]="true"[data]="localData1" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
+    <igx-hierarchical-grid [batchEditing]="true"[data]="localData1" [autoGenerate]="false" [height]="'600px'" [width]="'100%'" #hGrid2>
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
         <igx-column field="ProductName" [hasSummary]="true"></igx-column>

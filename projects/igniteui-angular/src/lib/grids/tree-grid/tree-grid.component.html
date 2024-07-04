@@ -87,7 +87,7 @@
                 class="igx-grid__summaries--body" role="row" #summaryRow>
             </igx-grid-summary-row>
         </ng-template>
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
@@ -206,7 +206,7 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

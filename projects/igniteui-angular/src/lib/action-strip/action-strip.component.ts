@@ -5,8 +5,6 @@ import {
     Input,
     Renderer2,
     ViewContainerRef,
-    Optional,
-    Inject,
     ContentChildren,
     QueryList,
     ViewChild,
@@ -17,7 +15,6 @@ import {
     ElementRef,
     booleanAttribute
 } from '@angular/core';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
@@ -31,15 +28,15 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxActionStripToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
     standalone: true
 })
 export class IgxActionStripMenuItemDirective {
-    constructor(
-        public templateRef: TemplateRef<any>
-    ) { }
+    constructor(public templateRef: TemplateRef<any>) {}
 }
 
 /**
@@ -79,10 +76,10 @@ export class IgxActionStripMenuItemDirective {
         IgxIconComponent,
         IgxDropDownComponent,
         IgxDropDownItemComponent
-    ]
+    ],
+    providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-
-export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
+export class IgxActionStripComponent implements IgxActionStripToken, AfterContentInit, AfterViewInit {
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -115,7 +112,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public actionButtons: QueryList<IgxGridActionsBaseDirective>;
 
     /**
-     * An @Input property that set the visibility of the Action Strip.
+     * Gets/Sets the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
      *
      * @example
@@ -184,10 +181,14 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         protected el: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         /** @hidden @internal **/
-        public cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions, el);
+        public cdr: ChangeDetectorRef,
+        protected _iconService: IgxIconService,
+    ) {
+        this._iconService.addIconRef('more_vert', 'default', {
+            name: 'more_vert',
+            family: 'material',
+        });
     }
 
     /**
@@ -223,11 +224,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      */
     @HostBinding('class.igx-action-strip')
     protected hostClass = 'igx-action-strip';
-
-    @HostBinding('style.--component-size')
-    protected get componentSize() {
-        return this.getComponentSizeStyles();
-    }
 
     /**
      * @hidden

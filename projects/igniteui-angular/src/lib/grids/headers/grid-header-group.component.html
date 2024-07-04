@@ -28,7 +28,10 @@
 </ng-template>
 
 <ng-template #defaultCollapseIndicator>
-    <igx-icon>{{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
+    <igx-icon
+        family="default"
+        [name]="column.expanded ? 'expand' : 'chevron_right'">
+    </igx-icon>
 </ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
@@ -92,7 +95,6 @@
         (pointerdown)="activate()"
         [igxColumnMovingDrop]="column"
         [column]="column"
-        [density]="grid.displayDensity"
     >
     </igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>

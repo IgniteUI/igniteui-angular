@@ -3,18 +3,18 @@
         <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"></igx-buttongroup>
     </div>
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <button class="show-summary" igxButton="contained" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse"> {{ grid1.showSummaryOnCollapse }}</button>
 
     <igx-tree-grid #grid1 [moving]="true" [batchEditing]="true" [allowFiltering]="true" [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-        [displayDensity]="density" [width]="'100%'" [height]="'800px'" [moving]="true" [summaryCalculationMode]="summaryMode">
+        [width]="'100%'" [height]="'800px'" [moving]="true" [summaryCalculationMode]="summaryMode">
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
             [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
         </igx-column>
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>

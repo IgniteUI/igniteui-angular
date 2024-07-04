@@ -38,7 +38,7 @@
                 </div>
             </ng-template>
 
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -89,7 +89,7 @@
                 [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="c.minWidth"
                 [maxWidth]="c.maxWidth">
             </igx-column>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar >
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -141,7 +141,7 @@
                 [maxWidth]="c.maxWidth" [hasSummary]="true">
             </igx-column>
 
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar >
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -195,7 +195,7 @@
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
-            <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

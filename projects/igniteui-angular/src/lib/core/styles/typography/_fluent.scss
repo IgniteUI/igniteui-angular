@@ -1,6 +1,8 @@
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
+@use '../components/button-group/button-group-theme' as *;
 @use '../components/calendar/calendar-theme' as *;
 @use '../components/card/card-theme' as *;
 @use '../components/checkbox/checkbox-theme' as *;
@@ -17,6 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -29,12 +32,20 @@
 @use '../components/tree/tree-theme' as *;
 
 @mixin typography() {
+    @include badge-typography();
     @include banner-typography($categories: (
         message: 'caption'
     ));
     @include bottom-nav-typography();
     @include button-typography();
-    @include calendar-typography();
+    @include button-group-typography();
+    @include calendar-typography($categories: (
+        header-year: 'overline',
+        header-date: 'h4',
+        weekday-label: 'body-1',
+        picker-date: 'subtitle-2',
+        content: 'body-1',
+    ));
     @include card-typography($categories: (
         title: 'subtitle-1',
         title-small: 'subtitle-2',
@@ -46,6 +57,9 @@
     ));
     @include chip-typography($categories: (
         text: 'subtitle-2'
+    ));
+    @include circular-bar-typography($categories: (
+        text: null
     ));
     @include column-actions-typography();
     @include date-range-typography();
@@ -63,6 +77,7 @@
         helper-text: 'caption',
         input-text: 'body-2'
     ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         header: 'overline',
         item: 'caption',
@@ -74,7 +89,7 @@
     ));
     @include navdrawer-typography($categories: (
         item: 'body-2',
-        header: 'caption'
+        header: 'subtitle-1'
     ));
     @include radio-typography($categories: (
         label: 'body-2'

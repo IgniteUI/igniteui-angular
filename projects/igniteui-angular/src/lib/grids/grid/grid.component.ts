@@ -96,7 +96,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
@@ -367,7 +367,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
 
     /**
-     * Gets/Sets the array of data that populates the `IgxGridComponent`.
+     * Gets/Sets the array of data that populates the component.
      *
      * @example
      * ```html

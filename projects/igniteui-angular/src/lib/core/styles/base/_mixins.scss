@@ -40,7 +40,7 @@
         $d: ();
         $u: ();
 
-        @if $c != null {
+        @if $c {
             $cu: map.get($c, 'usedBy');
 
             $d: map.get($c, 'deps');
@@ -87,8 +87,9 @@
 @mixin gen-color-class($name, $variant, $prefix, $suffix) {
     $prefix: if($prefix, '#{$prefix}-', '');
     $suffix: if($suffix, '-#{$suffix}', '');
+    $_name: '' + $name;
 
-    .#{$prefix}#{$name}-#{$variant}#{$suffix} {
+    .#{$prefix}#{$_name}-#{$variant}#{$suffix} {
         @content;
     }
 }

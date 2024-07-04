@@ -54,7 +54,6 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
@@ -81,6 +80,8 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -160,7 +161,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
-     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -171,7 +172,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public childDataKey;
 
     /**
-     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
+     * Sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
      * </igx-tree-grid>
@@ -183,7 +184,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public foreignKey;
 
     /**
-     * An @Input property that sets the key indicating whether a row has children.
+     * Sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
@@ -198,7 +199,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public hasChildrenKey;
 
     /**
-     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
+     * Sets whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
@@ -211,7 +212,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public cascadeOnDelete = true;
 
     /**
-     * An @Input property that provides a callback for loading child rows on demand.
+     * Sets a callback for loading child rows on demand.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
      * </igx-tree-grid>
@@ -234,7 +235,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public role = 'treegrid';
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
@@ -336,7 +337,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _expansionDepth = Infinity;
 
     /**
-     * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -373,7 +374,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
+     * Sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
@@ -392,7 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
+     * Template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
      *     <igx-icon>loop</igx-icon>
@@ -438,17 +439,39 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
+        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService,
-            overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
+        super(
+            validationService,
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            _elementRef,
+            _zone,
+            document,
+            cdr,
+            differs,
+            viewRef,
+            injector,
+            envInjector,
+            navigation,
+            filteringService,
+            textHighlightService,
+            overlayService,
+            summaryService,
+            localeId,
+            platform,
+            _diTransactions,
+            iconService
+        );
     }
 
     /**

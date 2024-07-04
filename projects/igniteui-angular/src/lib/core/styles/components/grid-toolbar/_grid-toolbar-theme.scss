@@ -134,6 +134,8 @@
     );
 
     %igx-grid-toolbar {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
         position: relative;
         width: 100%;
         display: flex;
@@ -244,21 +246,6 @@
 
             &:first-child > div {
                 background: color($color: 'secondary');
-            }
-        }
-    }
-
-    %igx-grid-toolbar__adv-filter--filtered {
-        border-color: color($color: 'secondary') !important;
-
-        @if $bootstrap-theme {
-            border-width: rem(2px);
-            border-color: color($color: 'primary', $variant: 800) !important;
-            color: color($color: 'primary', $variant: 800);
-
-            &:hover,
-            &:focus {
-                background: color($color: 'primary', $variant: 800);
             }
         }
     }

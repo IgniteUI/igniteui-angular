@@ -20,7 +20,6 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../../core/density';
 import { ITreeResourceStrings, TreeResourceStringsEN } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
@@ -93,11 +92,12 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 
     private _parentNode: IgxTreeNode<any> = null;
 
-    constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
-    private node: IgxTreeNode<any>,
+    constructor(
+        @Optional() @Inject(IGX_TREE_NODE_COMPONENT)
+        private node: IgxTreeNode<any>,
         private navService: IgxTreeNavigationService,
-        public elementRef: ElementRef) {
-    }
+        public elementRef: ElementRef,
+    ) { }
 
     /** @hidden @internal */
     @HostBinding('attr.tabindex')
@@ -324,19 +324,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
-    @HostBinding('style.--component-size')
-    public get size(): string {
-        switch (this.tree.displayDensity) {
-            case DisplayDensity.compact:
-                return 'var(--ig-size, var(--ig-size-small))';
-            case DisplayDensity.cosy:
-                return 'var(--ig-size, var(--ig-size-medium))';
-            case DisplayDensity.comfortable:
-            default:
-                return 'var(--ig-size, var(--ig-size-large))';
-        }
-    }
-
     /** @hidden @internal */
     @HostBinding('attr.role')
     public get role() {
@@ -384,16 +371,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     private get hasLinkChildren(): boolean {
         return this.linkChildren?.length > 0 || this.registeredChildren?.length > 0;
-    }
-
-    /** @hidden @internal */
-    public get isCompact(): boolean {
-        return this.tree?.displayDensity === DisplayDensity.compact;
-    }
-
-    /** @hidden @internal */
-    public get isCosy(): boolean {
-        return this.tree?.displayDensity === DisplayDensity.cosy;
     }
 
     /** @hidden @internal */

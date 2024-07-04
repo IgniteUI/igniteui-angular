@@ -23,14 +23,14 @@ import { IgxDirectionality } from '../services/direction/directionality';
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 
-export const IgxTextAlign = mkenum({
+export const IgxTextAlign = /*@__PURE__*/mkenum({
     START: 'start',
     CENTER: 'center',
     END: 'end'
 });
 export type IgxTextAlign = (typeof IgxTextAlign)[keyof typeof IgxTextAlign];
 
-export const IgxProgressType = mkenum({
+export const IgxProgressType = /*@__PURE__*/mkenum({
     ERROR: 'error',
     INFO: 'info',
     WARNING: 'warning',
@@ -356,7 +356,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     }
 
     /**
-     * An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
+     * Sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
      * ```html
      * <igx-linear-bar role="progressbar"></igx-linear-bar>
      * ```
@@ -366,7 +366,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public role = 'progressbar';
 
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
      * ```
@@ -510,7 +510,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public cssClass = 'igx-circular-bar';
 
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-circular-bar [id]="'igx-circular-bar-55'" [value]="50"></igx-circular-bar>
      * ```

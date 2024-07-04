@@ -2,14 +2,13 @@
     <h4>Sample 1</h4>
 
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <igx-grid
         #grid1
         [data]="data"
         [moving]="true"
-        [displayDensity]="density"
         [allowFiltering]="true"
         [filterStrategy]="filterStrategy"
         [filterMode]="'excelStyleFilter'"
@@ -17,7 +16,7 @@
         [rowSelection]="selectionMode"
         [height]="'600px'"
         [columnSelection]="'single'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -66,14 +65,13 @@
         #grid2
         [data]="data"
         [moving]="true"
-        [displayDensity]="density"
         [allowFiltering]="true"
         [filterMode]="'excelStyleFilter'"
         [allowAdvancedFiltering]="true"
         [rowSelection]="selectionMode"
         [height]="'600px'"
         [columnSelection]="'single'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

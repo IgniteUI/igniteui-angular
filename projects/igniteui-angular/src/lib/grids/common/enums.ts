@@ -5,7 +5,7 @@ import { mkenum } from '../../core/utils';
  * - quickFilter: Default mode with a filter row UI between the column headers and the first row of records.
  * - excelStyleFilter: Filter mode where an Excel-style filter is used.
  */
-export const FilterMode = mkenum({
+export const FilterMode = /*@__PURE__*/mkenum({
     quickFilter: 'quickFilter',
     excelStyleFilter: 'excelStyleFilter'
 });
@@ -16,7 +16,7 @@ export type FilterMode = (typeof FilterMode)[keyof typeof FilterMode];
  * - top: Default value; Summary rows are displayed at the top of the grid.
  * - bottom: Summary rows are displayed at the bottom of the grid.
  */
-export const GridSummaryPosition = mkenum({
+export const GridSummaryPosition = /*@__PURE__*/mkenum({
     top: 'top',
     bottom: 'bottom'
 });
@@ -28,7 +28,7 @@ export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof Grid
  * - childLevelsOnly: Summaries are calculated only for child levels.
  * - rootAndChildLevels: Default value; Summaries are calculated for both root and child levels.
  */
-export const GridSummaryCalculationMode = mkenum({
+export const GridSummaryCalculationMode = /*@__PURE__*/mkenum({
     rootLevelOnly: 'rootLevelOnly',
     childLevelsOnly: 'childLevelsOnly',
     rootAndChildLevels: 'rootAndChildLevels'
@@ -42,8 +42,8 @@ export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[key
  */
 export type GridValidationTrigger = 'change' | 'blur' ;
 
-/** 
- * Type representing the type of the target object (elements of the grid) for keydown (fired when a key is pressed) events in the grid. 
+/**
+ * Type representing the type of the target object (elements of the grid) for keydown (fired when a key is pressed) events in the grid.
  * - 'dataCell': Represents a data cell within the grid. It contains and displays individual data values
  * - 'summaryCell': Summary cells display aggregated/summarized data at the bottom of the grid. They provide insights like total record count, min/max values, etc.
  * - 'groupRow': Group row within the grid. Group rows are used to group related data rows by columns. Contains the related group expression, level, sub-records and group value.
@@ -66,7 +66,7 @@ export type GridKeydownTargetType =
  * - 'multiple': Default cell selection mode. More than one element can be selected at a time.
  * - 'multipleCascade': Similar to multiple selection. It is used in hierarchical or tree grids. Allows selection not only to an individual item but also all its related or nested items in a single action
  */
-export const GridSelectionMode = mkenum({
+export const GridSelectionMode = /*@__PURE__*/mkenum({
     none: 'none',
     single: 'single',
     multiple: 'multiple',
@@ -75,7 +75,7 @@ export const GridSelectionMode = mkenum({
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
 /** Enumeration representing different column display order options. */
-export const ColumnDisplayOrder = mkenum({
+export const ColumnDisplayOrder = /*@__PURE__*/mkenum({
     Alphabetical: 'Alphabetical',
     DisplayOrder: 'DisplayOrder'
 });
@@ -115,3 +115,18 @@ export enum GridInstanceType {
     Grid,
     TreeGrid
 }
+
+/**
+ * @hidden @internal
+ * 
+ * Enumeration representing the possible predefined size options of the grid.
+ * - Small: This is the smallest size with 32px row height. Left and Right paddings are 12px. Minimal column width is 56px.
+ * - Medium: This is the middle size with 40px row height. Left and Right paddings are 16px. Minimal column width is 64px.
+ * - Large:  this is the default Grid size with the lowest intense and row height equal to 50px. Left and Right paddings are 24px. Minimal column width is 80px.
+ */
+export const Size = /*@__PURE__*/mkenum({
+    Small: '1', 
+    Medium: '2',
+    Large: '3'
+});
+export type Size = (typeof Size)[keyof typeof Size];

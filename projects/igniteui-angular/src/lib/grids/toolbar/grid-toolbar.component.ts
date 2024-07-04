@@ -6,11 +6,9 @@ import {
     Inject,
     Input,
     OnDestroy,
-    Optional,
     booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/density';
 import { IgxIconService } from '../../icon/icon.service';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
@@ -34,7 +32,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
     standalone: true,
     imports: [NgIf, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDestroy {
+export class IgxGridToolbarComponent implements OnDestroy {
 
     /**
      * When enabled, shows the indeterminate progress bar.
@@ -48,6 +46,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
 
     /**
      * Gets/sets the grid component for the toolbar component.
+     *
+     * @deprecated since version 17.1.0. No longer required to be set for the Hierarchical Grid child grid template
      *
      * @remarks
      * Usually you should not set this property in the context of the default grid/tree grid.
@@ -85,37 +85,18 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
     @HostBinding('class.igx-grid-toolbar')
     public defaultStyle = true;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-toolbar--cosy')
-    public get cosyStyle() {
-        return this.displayDensity === 'cosy';
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-toolbar--compact')
-    public get compactStyle() {
-        return this.displayDensity === 'compact';
-    }
-
-
     protected _grid: GridType;
     protected sub: Subscription;
 
     constructor(
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
-        super(_displayDensityOptions, element);
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addIconRef(pinLeft.name, 'default', { name: pinLeft.name, family: 'imx-icons' });
+        this.iconService.addIconRef(unpinLeft.name, 'default', { name: unpinLeft.name, family: 'imx-icons' });
     }
 
     /** @hidden @internal */

@@ -215,8 +215,28 @@
             );
         }
 
-        > igx-chip igx-prefix {
-            display: flex;
+        > igx-chip {
+            @container style(--ig-size: 1) {
+                --ig-size: 2;
+            }
+
+            @if $variant != 'indigo-design' {
+                .igx-chip__item {
+                    border-block: none;
+                }
+            }
+
+            .igx-filter-tree__expression-column {
+                padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+            }
+
+            igx-prefix {
+                display: flex;
+            }
+
+            .igx-chip__end {
+                gap: sizable(rem(3px), rem(6px), rem(8px));
+            }
         }
     }
 
@@ -273,6 +293,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        igx-input-group {
+            --ig-size: 1;
+        }
 
         igx-select + igx-select,
         igx-select + igx-input-group,

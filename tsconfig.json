@@ -2,20 +2,21 @@
     "compileOnSave": false,
     "compilerOptions": {
       "baseUrl": "./",
-      "downlevelIteration": true,
       "importHelpers": true,
-      "module": "es2020",
+      "module": "es2022",
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
       "declaration": false,
       "moduleResolution": "node",
       "experimentalDecorators": true,
+      "forceConsistentCasingInFileNames": true,
+      "esModuleInterop": true,
       "target": "ES2022",
       "typeRoots": [
         "node_modules/@types"
       ],
       "lib": [
-        "es2019",
+        "es2022",
         "dom"
       ],
       "paths": {
@@ -45,6 +46,7 @@
         "generateDeepReexports": true,
         "strictTemplates": true,
         "fullTemplateTypeCheck": true,
-        "strictInjectionParameters": true
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
     }
 }

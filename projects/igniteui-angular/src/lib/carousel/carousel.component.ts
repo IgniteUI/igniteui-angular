@@ -26,28 +26,27 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { HammerGesturesManager } from '../core/touch';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { ThemeService } from '../services/theme/theme.service';
+import type { IgxTheme } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
-export const CarouselIndicatorsOrientation = mkenum({
-    bottom: 'bottom',
-    top: 'top'
-});
-export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
     };
 }
 /**
@@ -144,6 +143,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
+
+    /**
+     * @hidden @internal
+     */
+    protected theme: IgxTheme;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -271,7 +275,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
      *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *              <igx-icon>add</igx-icon>
+     *              <igx-icon name="add"></igx-icon>
      *          </button>
      *      </ng-template>
      *  </igx-carousel>
@@ -286,7 +290,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```typescript
      * // Set in typescript
      * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.nextButtonTemplate = myCustomTemplate;
+     * myComponent.carousel.prevButtonTemplate = myCustomTemplate;
      * ```
      * ```html
      * <!-- Set in markup -->
@@ -294,7 +298,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
      *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *              <igx-icon>remove</igx-icon>
+     *              <igx-icon name="remove"></igx-icon>
      *          </button>
      *      </ng-template>
      *  </igx-carousel>
@@ -393,6 +397,36 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
+    private _icons = [
+        {
+            name: 'carousel_prev',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_back',
+                    family: 'material'
+                },
+                'indigo': {
+                    name: 'keyboard_arrow_left',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'carousel_next',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_forward',
+                    family: 'material'
+                },
+                'indigo': {
+                    name: 'keyboard_arrow_right',
+                    family: 'material'
+                }
+            }))
+        }
+    ]
 
     /**
      * An accessor that sets the resource strings.
@@ -423,7 +457,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.nextButtonTemplate) {
             return this.nextButtonTemplate;
         }
-        return this.defaultNextButton;
+
+        return this.defaultNextButton
     }
 
     /** @hidden */
@@ -431,7 +466,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.prevButtonTemplate) {
             return this.prevButtonTemplate;
         }
-        return this.defaultPrevButton;
+
+        return this.defaultPrevButton
     }
 
     /** @hidden */
@@ -545,9 +581,32 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private element: ElementRef,
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private platformUtil: PlatformUtil) {
+        private platformUtil: PlatformUtil,
+        private themeService: ThemeService,
+        private iconService: IgxIconService
+    ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        this.theme = this.theme ?? this.themeService.theme;
+
+        for (const icon of this._icons) {
+            switch(this.theme) {
+                case 'indigo':
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('indigo'),
+                    );
+                    break;
+                case 'material':
+                default:
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('material'),
+                    );
+            }
+        }
     }
 
 

@@ -34,8 +34,11 @@ import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxIconService } from '../../icon/icon.service';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
+import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
 /**
  *
@@ -50,7 +53,13 @@ import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html',
     standalone: true,
-    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective, NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns]
+    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent,
+        IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective,
+        NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective,
+        IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective,
+        IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns,
+        IgxPivotRowHeaderGroupComponent]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
     public aggregateList: IPivotAggregator[] = [];
@@ -70,6 +79,80 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
+    private _icons = [
+        {
+            family: 'default',
+            name: 'expand',
+            ref: {
+                name: 'expand_more',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'chevron_right',
+            ref: {
+                name: 'chevron_right',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_drop_down',
+            ref: {
+                name: 'arrow_drop_down',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'unfold_more',
+            ref: {
+                name: 'unfold_more',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'drag_handle',
+            ref: {
+                name: 'drag_handle',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'functions',
+            ref: {
+                name: 'functions',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'table_rows',
+            ref: {
+                name: 'table_rows',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'view_column',
+            ref: {
+                name: 'view_column',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'filter_list',
+            ref: {
+                name: 'filter_list',
+                family: 'material',
+            }
+        },
+    ];
 
     /**
      * @hidden @internal
@@ -97,6 +180,11 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     @ViewChild('pivotFilterContainer') public pivotFilterContainer;
 
     /**
+     * @hidden @internal
+     */
+    @ViewChild('pivotRowContainer') public pivotRowContainer;
+
+    /**
     * @hidden
     * @internal
     */
@@ -111,8 +199,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
     public headerContainers: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
+    /**
+    * @hidden
+    * @internal
+    */
+    @ViewChildren('rowDimensionHeaders')
+    public rowDimensionHeaders: QueryList<IgxPivotRowDimensionHeaderGroupComponent>;
+
     public override get headerForOf() {
-        return this.headerContainers.last;
+        return this.headerContainers?.last;
     }
 
     constructor(
@@ -120,8 +215,16 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         ref: ElementRef<HTMLElement>,
         cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
+        protected iconService: IgxIconService
     ) {
         super(ref, cdr);
+
+        for (const icon of this._icons) {
+            this.iconService?.addIconRef(icon.name, icon.family, {
+                family: icon.ref.family,
+                name: icon.ref.name
+            });
+        }
     }
 
     /**
@@ -408,10 +511,12 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onChipSort(_event, dimension: IPivotDimension) {
-        const startDirection = dimension.sortDirection || SortingDirection.None;
-        const direction = startDirection + 1 > SortingDirection.Desc ?
-            SortingDirection.None : startDirection + 1;
-        this.grid.sortDimension(dimension, direction);
+        if (dimension.sortable === undefined || dimension.sortable) {
+            const startDirection = dimension.sortDirection || SortingDirection.None;
+            const direction = startDirection + 1 > SortingDirection.Desc ?
+                SortingDirection.None : startDirection + 1;
+            this.grid.sortDimension(dimension, direction);
+        }
     }
 
     /**
@@ -530,5 +635,9 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         this.aggregateList = PivotUtil.getAggregateList(value, this.grid);
         this.cdr.detectChanges();
         dropdown.open(this._subMenuOverlaySettings);
+    }
+
+    protected getRowDimensionColumn(dim: IPivotDimension): ColumnType {
+        return this.grid.dimensionDataColumns ? this.grid.dimensionDataColumns.find((col) => col.field === dim.memberName) : null;
     }
 }

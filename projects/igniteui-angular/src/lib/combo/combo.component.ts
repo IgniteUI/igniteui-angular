@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
@@ -18,7 +18,6 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -127,20 +126,16 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, DoCheck, EditorProvider {
     /**
-     * An @Input property that controls whether the combo's search box
-     * should be focused after the `opened` event is called
+     * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
      */
     @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
     /**
-     * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
+     * Enables/disables filtering in the list. The default is `true`.
      *
-     * An @Input property that enabled/disables filtering in the list. The default is `true`.
-     * ```html
-     * <igx-combo [filterable]="false">
-     * ```
+     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
      */
     @Input({ transform: booleanAttribute })
     public get filterable(): boolean {
@@ -206,11 +201,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
-        _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        @Optional() _injector: Injector,
+        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+    ) {
+        super(elementRef, cdr, selectionService, comboAPI, document, _inputGroupType, _injector, _iconService);
         this.comboAPI.register(this);
     }
 
@@ -264,12 +260,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
+    public ngDoCheck(): void {
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
-        super.ngDoCheck();
     }
 
     /**

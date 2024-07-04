@@ -29,6 +29,7 @@ export class PivotGridHierarchySampleComponent {
         },
         {
             memberName: 'AllProduct',
+            displayName: "All My Products",
             memberFunction: () => 'All Products',
             enabled: true,
             childLevel:

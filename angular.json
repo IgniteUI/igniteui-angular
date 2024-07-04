@@ -15,14 +15,14 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/igniteui-dev-demos",
-            "main": "./src/main.ts",
+            "outputPath": {
+              "base": "dist/igniteui-dev-demos"
+            },
             "index": "src/index.html",
             "polyfills": [
-                "zone.js",
-                "hammerjs"
+                "zone.js"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
@@ -35,7 +35,6 @@
             ],
             "scripts": [],
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
@@ -44,7 +43,8 @@
               "includePaths": [
                 "node_modules"
               ]
-            }
+            },
+            "browser": "./src/main.ts"
           },
           "configurations": {
             "production": {
@@ -270,6 +270,11 @@
               "includePaths": [
                 "node_modules"
               ]
+            },
+            "server": "projects/bundle-test/src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {

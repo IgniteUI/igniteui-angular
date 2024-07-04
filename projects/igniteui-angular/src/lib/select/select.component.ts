@@ -23,12 +23,11 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -49,6 +48,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import { IgxIconService } from '../icon/icon.service';
 
 /** @hidden @internal */
 @Directive({
@@ -128,14 +128,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /**
-     * An @Input property that sets input placeholder.
+     * Sets input placeholder.
      *
      */
     @Input() public placeholder;
 
 
     /**
-     * An @Input property that disables the `IgxSelectComponent`.
+     * Disables the component.
      * ```html
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
@@ -143,7 +143,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom OverlaySettings `IgxSelectComponent`.
      * ```html
      * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
      * ```
@@ -280,9 +280,39 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _overlayDefaults: OverlaySettings;
     private _value: any;
     private _type = null;
+    private _icons = [
+        {
+            name: 'expand',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_more',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_down',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'collapse',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_less',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_up',
+                    family: 'material'
+                }
+            }))
+        }
+    ];
 
     /**
-     * An @Input property that gets/sets the component value.
+     * Gets/Sets the component value.
      *
      * ```typescript
      * // get
@@ -310,7 +340,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /**
-     * An @Input property that sets how the select will be styled.
+     * Sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>
@@ -342,12 +372,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        private _injector: Injector) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        private _injector: Injector,
+        @Optional() @Inject(IgxIconService)
+        protected iconService?: IgxIconService,
+    ) {
+        super(elementRef, cdr, document, selection);
     }
 
     //#region ControlValueAccessor
@@ -524,7 +557,24 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
+
+        for (const icon of this._icons) {
+            switch (this.inputGroup?.theme) {
+                case "material":
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("material"),
+                    );
+                    break;
+                default:
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("all"),
+                    );
+            }
+        }
     }
 
     /**
@@ -537,6 +587,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
+
         this.cdr.detectChanges();
     }
 
@@ -551,13 +602,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    public override ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-        this.selection.clear(this.id);
+    /** @hidden @internal */
+    public get toggleIcon(): string {
+        return this.collapsed ? 'expand' : 'collapse';
     }
 
     /**

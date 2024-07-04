@@ -7,7 +7,7 @@ import { IgxGridStateDirective } from '../grids/state.directive';
 
 @Component({
     template: `
-    <div style="display:flex;">
+    <div style="display:flex; --ig-size: 2;">
         <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
             [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]="defaultExpand">
         </igx-pivot-grid>

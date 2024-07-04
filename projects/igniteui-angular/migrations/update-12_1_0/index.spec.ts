@@ -231,51 +231,6 @@ export class TestComponent implements OnInit {
 </igx-expansion-panel>`);
     });
 
-it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
-    pending('set up tests for migrations through lang service');
-    appTree.create(
-        '/testSrc/appPrefix/component/expansion-test.component.ts',
-        `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
-export class BannerTestComponent {
-
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-
-public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.banner);
-}
-}`
-    );
-    const tree = await schematicRunner
-        .runSchematic('migration-17', {}, appTree);
-    const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
-export class BannerTestComponent {
-
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-
-public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.owner);
-}
-}`;
-    expect(
-            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
-        ).toEqual(expectedContent);
-});
     it('should remove paging property and define a igx-paginator component instead', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `

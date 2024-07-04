@@ -24,7 +24,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 /**
  * @hidden
  */
- export const DataType = mkenum({
+ export const DataType = /*@__PURE__*/mkenum({
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',

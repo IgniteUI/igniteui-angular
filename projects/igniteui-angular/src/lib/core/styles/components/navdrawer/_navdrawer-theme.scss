@@ -25,6 +25,8 @@
 /// @param {Color} $item-hover-background [null] - The item's hover background color.
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
+/// @param {Color} $item-disabled-text-color [null] - The item's disabled text color.
+/// @param {Color} $item-disabled-icon-color [null] - The item's disabled icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
 /// @param {List} $border-radius [null] - The border radius used for the navdrawer.
 /// @param {List} $item-border-radius [null] - The border radius used for the navdrawer item.
@@ -58,6 +60,9 @@
     $item-hover-background: null,
     $item-hover-text-color: null,
     $item-hover-icon-color: null,
+
+    $item-disabled-text-color: null,
+    $item-disabled-icon-color: null,
     $shadow: null
 ) {
     $name: 'igx-nav-drawer';
@@ -128,6 +133,8 @@
         item-icon-color:$item-icon-color,
         item-active-icon-color:$item-active-icon-color,
         item-hover-icon-color: $item-hover-icon-color,
+        item-disabled-text-color:$item-disabled-text-color,
+        item-disabled-icon-color: $item-disabled-icon-color,
         shadow: $shadow,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -141,37 +148,85 @@
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
-    $drawer-icon-size: rem(24px);
-    $drawer-item-margin: rem(8px);
-    $text-side-padding: rem(8px);
-    $drawer-item-min-h: auto;
-    $drawer-item-max-h: rem(48px);
-    $drawer-item-min-w: rem(32px);
-
     $variant: map.get($theme, '_meta', 'variant');
+    $drawer-icon-size: rem(24px);
+
+    $aside-padding: map.get((
+        material: rem(8px),
+        fluent: 0,
+        bootstrap: rem(16px),
+        indigo-design: rem(8px),
+    ), $variant);
+
+    $item-padding: map.get((
+        material: rem(12px) rem(8px),
+        fluent: rem(10px) rem(8px),
+        bootstrap: rem(8px) rem(16px),
+        indigo-design: rem(8px) rem(16px),
+    ), $variant);
+
+    $item-gap: map.get((
+        material: rem(32px),
+        fluent: rem(8px),
+        bootstrap: rem(8px),
+        indigo-design: rem(16px),
+    ), $variant);
+
+    $item-min-height: map.get((
+        material: rem(48px),
+        fluent: rem(44px),
+        bootstrap: rem(40px),
+        indigo-design: rem(32px),
+    ), $variant);
+
+    $item-mini-size: map.get((
+        material: rem(56px),
+        fluent: rem(40px),
+        bootstrap: rem(88px),
+        indigo-design: rem(48px),
+    ), $variant);
 
     %navdrawer-display {
+        --igx-nav-drawer-size: #{rem(240px)};
+        --igx-nav-drawer-size--mini: #{$item-mini-size};
+
+        flex-basis: 0;
         transition: flex-basis;
         transition-duration: .3s;
         transition-timing-function: $out-quad;
         flex-shrink: 0;
     }
 
+    %navdrawer-display-pinned {
+        flex-basis: var(--igx-nav-drawer-size);
+    }
+
+    %navdrawer-display-mini-pinned {
+        flex-basis: var(--igx-mini-nav-drawer-size, #{$item-mini-size});
+    }
+
     %aside {
         position: fixed;
         height: 100%;
-        max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
+        width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
         z-index: 999;
-        transition: width, transform;
-        transition-timing-function: $out-quad, $out-quad;
+        transition: width, padding, transform;
+        transition-timing-function: $in-out-quad, $in-out-quad;
         box-shadow: var-get($theme, 'shadow');
-        border-inline-end: rem(1px) solid var-get($theme, 'border-color');
+        padding: $aside-padding;
+
+        @if $variant != 'fluent' {
+            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
+        } @else {
+            border: rem(1px) solid var-get($theme, 'border-color');
+        }
+
         border-radius: var-get($theme, 'border-radius');
     }
 
@@ -182,7 +237,6 @@
 
     %aside--pinned {
         position: relative;
-        max-width: 100%;
         box-shadow: none;
         z-index: 0;
     }
@@ -201,6 +255,7 @@
         width: 0;
         overflow: hidden;
         border: none;
+        padding: 0;
     }
 
     %aside--collapsed {
@@ -217,17 +272,21 @@
         inset-inline-start: auto;
         inset-inline-end: 0;
         border-inline-end: none;
-        border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+
+        @if $variant != 'fluent' {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
     }
 
     %aside--mini {
-        width: rem(60px);
         transition-duration: .2s, .2s;
+        width: var(--igx-nav-drawer-size--mini);
 
         %item {
             justify-content: center;
+
             @if $variant == 'indigo-design' {
-                max-width: rem(32px);
+                //max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: rem(14px) auto !important;
             }
@@ -239,8 +298,8 @@
     }
 
     %aside--normal {
-        width: rem(242px);
         transition-duration: .3s, .3s;
+        width: var(--igx-nav-drawer-size);
     }
 
     %overlay {
@@ -281,44 +340,32 @@
         align-items: center;
         flex-flow: row nowrap;
         color: var-get($theme, 'item-text-color');
-        max-height: $drawer-item-max-h;
-        min-width: $drawer-item-min-w;
+        max-height: $item-min-height;
+        gap: $item-gap;
+        padding: $item-padding;
 
-        @if $variant != 'indigo-design' {
-            // important is needed to override the typography margins
-            margin: $drawer-item-margin !important;
-            padding: rem(12px) rem(8px);
-            gap: rem(32px);
-        } @else {
-            // important is needed to override the typography margins
-            margin: rem(15px) $drawer-item-margin !important;
-            padding: rem(4px);
-            gap: calc(rem(32px) - #{$text-side-padding});
+        @if $variant == 'indigo-design' {
+            margin-block-end: rem(4px) !important;
         }
 
         cursor: pointer;
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: var-get($theme, 'item-border-radius');
+
+        // For material the radius is on the after element
+        @if $variant != 'material' {
+            border-radius: var-get($theme, 'item-border-radius');
+        }
+
         text-decoration: none;
-        width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
         justify-content: flex-start;
 
         igx-icon {
-            --component-size: 3;
+            --component-size: #{if($variant == 'indigo-design', 2, 3)};
 
             color: var-get($theme, 'item-icon-color');
-            @if $variant == 'indigo-design' {
-                margin-inline-start: rem(4px);
-            }
-        }
-
-        span {
-            @if $variant == 'indigo-design' {
-                padding-inline-start: $text-side-padding;
-            }
         }
 
         // Need this to override the igx-buttons
@@ -328,7 +375,7 @@
         }
 
         &%igx-button--fab {
-            min-height: $drawer-item-min-h;
+            min-height: auto;
         }
 
         &%igx-icon-button-display {
@@ -336,9 +383,29 @@
             transition: none;
         }
 
+        @if $variant == 'material' {
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                inset-block-start: rem(4px);
+                inset-inline-start: 0;
+                height: calc(100% - #{rem(8px)});
+                border-radius: var-get($theme, 'item-border-radius');
+                z-index: -1;
+            }
+        }
+
         &:hover,
         &:focus {
-            background: var-get($theme, 'item-hover-background');
+            @if $variant == 'material' {
+                &::after {
+                    background: var-get($theme, 'item-hover-background');
+                }
+            } @else {
+                background: var-get($theme, 'item-hover-background');
+            }
+
             color: var-get($theme, 'item-hover-text-color');
             box-shadow: none;
 
@@ -351,7 +418,15 @@
     %item--active {
         // should be app primary color
         color: var-get($theme, 'item-active-text-color');
-        background: var-get($theme, 'item-active-background');
+
+        @if $variant == 'material' {
+            &::after {
+                background: var-get($theme, 'item-active-background');
+            }
+        } @else {
+            background: var-get($theme, 'item-active-background');
+        }
+
 
         igx-icon {
             color: var-get($theme, 'item-active-icon-color');
@@ -360,7 +435,14 @@
         &:focus,
         &:hover {
             color: var-get($theme, 'item-active-text-color');
-            background: var-get($theme, 'item-active-background');
+
+            @if $variant == 'material' {
+                &::after {
+                    background: var-get($theme, 'item-active-background');
+                }
+            } @else {
+                background: var-get($theme, 'item-active-background');
+            }
 
             igx-icon {
                 color: var-get($theme, 'item-active-icon-color');
@@ -390,10 +472,27 @@
     }
 
     %item--header {
-        display: block;
-        padding: rem(12px) rem(16px);
+        display: flex;
+        align-items: center;
+        padding: $item-padding;
+        min-height: $item-min-height;
         white-space: nowrap;
         color: var-get($theme, 'item-header-text-color');
+
+        @if $variant == 'indigo-design' {
+            margin-block-end: rem(4px) !important;
+        }
+    }
+
+    %item--disabled {
+        background: none;
+        color: var-get($theme, 'item-disabled-text-color');
+        cursor: default;
+        pointer-events: none;
+
+        igx-icon {
+            color: var-get($theme, 'item-disabled-icon-color');
+        }
     }
 
     %style-dummy {

@@ -23,10 +23,6 @@ import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/ba
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
-    /**
-     * @deprecated in 12.1.0. To get a reference to the banner, use `owner` instead
-     */
-    banner: IgxBannerComponent;
     event?: Event;
 }
 
@@ -221,9 +217,8 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public open(event?: Event) {
-        this._bannerEvent = { banner: this, owner: this, event};
+        this._bannerEvent = { owner: this, event};
         const openingArgs: BannerCancelEventArgs = {
-            banner: this,
             owner: this,
             event,
             cancel: false
@@ -250,9 +245,8 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public close(event?: Event) {
-        this._bannerEvent = { banner: this, owner: this, event};
+        this._bannerEvent = { owner: this, event};
         const closingArgs: BannerCancelEventArgs = {
-            banner: this,
             owner: this,
             event,
             cancel: false
@@ -296,8 +290,3 @@ export class IgxBannerComponent implements IToggleView {
         this.closed.emit(this._bannerEvent);
     }
 }
-
-/**
- * @hidden
- */
-

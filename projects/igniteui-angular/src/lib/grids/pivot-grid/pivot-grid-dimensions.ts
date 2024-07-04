@@ -100,25 +100,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
     }
 
-    /**
-     * @deprecated since version 15.1.x. Please use the new name `baseDimension` for future versions.
-     *
-     * Gets the base dimension that is used by this class to determine the other dimensions and their values.
-     * Having base dimension set is required in order for the Date Dimensions to show.
-     */
-    public get inBaseDimension(): IPivotDimension {
-        return this._baseDimension;
-    }
-
-    /**
-     * @deprecated since version 15.1.x. Please use the new name `options` for future versions.
-     *
-     * Gets the options for the predefined date dimensions whether to show quarter, years and etc.
-     */
-    public get inOptions(): IPivotDateDimensionOptions {
-        return this._options;
-    }
-
     /** @hidden @internal */
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
@@ -144,6 +125,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
+        this.enabled = inBaseDimension.enabled;
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }

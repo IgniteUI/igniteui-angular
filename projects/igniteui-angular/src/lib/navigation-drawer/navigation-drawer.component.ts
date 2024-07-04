@@ -24,6 +24,7 @@ import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
 import { PlatformUtil } from '../core/utils';
 import { NgTemplateOutlet } from '@angular/common';
+import { HammerInput } from '../core/touch-annotations';
 
 let NEXT_ID = 0;
 /**
@@ -155,7 +156,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public pin = false;
 
     /**
-     * Width of the drawer in its open state. Defaults to "280px".
+     * Width of the drawer in its open state.
      *
      * ```typescript
      * // get
@@ -167,7 +168,15 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public width = '280px';
+    private _width: string;
+
+    @Input()
+    public get width() {
+        return this._width;
+    }
+    public set width(value: string) {
+        this._width = value;
+    }
 
 
     /**
@@ -180,7 +189,7 @@ export class IgxNavigationDrawerComponent implements
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
 
     /**
-     * Width of the drawer in its mini state. Defaults to 68px.
+     * Width of the drawer in its mini state.
      *
      * ```typescript
      * // get
@@ -192,7 +201,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth = '68px';
+    @Input() public miniWidth: string;
 
     /**
      * Pinned state change output for two-way binding.
@@ -272,6 +281,7 @@ export class IgxNavigationDrawerComponent implements
     }
     public set isOpen(value) {
         this._isOpen = value;
+        console.log(value);
         this.isOpenChange.emit(this._isOpen);
     }
 
@@ -308,28 +318,41 @@ export class IgxNavigationDrawerComponent implements
      */
     @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
-        if (!this.isOpen) {
-            this.setDrawerWidth(v ? this.miniWidth : '');
-        }
         this._miniTemplate = v;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-nav-drawer--mini')
+    public get isMini(): boolean {
+        return !!this._miniTemplate && !this.isOpen;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-nav-drawer--pinned')
+    public get pinned(): boolean {
+        return !!this.pin;
     }
 
     /**
      * @hidden
      */
-    @HostBinding('style.flexBasis')
-    public get flexWidth() {
-        if (!this.pin) {
+    @HostBinding('style.--igx-nav-drawer-size')
+    public get normalSize() {
+        if (!this.isOpen) {
             return '0px';
         }
-        if (this.isOpen) {
-            return this.width;
-        }
+
+        return this.width;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.--igx-nav-drawer-size--mini')
+    public get miniSize() {
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
         }
-
-        return '0px';
     }
 
     /** @hidden */
@@ -447,9 +470,6 @@ export class IgxNavigationDrawerComponent implements
         if (this._state) {
             this._state.add(this.id, this);
         }
-        if (this.isOpen) {
-            this.setDrawerWidth(this.width);
-        }
     }
 
     /**
@@ -505,18 +525,7 @@ export class IgxNavigationDrawerComponent implements
             }
         }
 
-        if (changes.width && this.isOpen) {
-            this.setDrawerWidth(changes.width.currentValue);
-        }
-
-        if (changes.isOpen) {
-            this.setDrawerWidth(this.isOpen ? this.width : (this.miniTemplate ? this.miniWidth : ''));
-        }
-
         if (changes.miniWidth) {
-            if (!this.isOpen) {
-                this.setDrawerWidth(changes.miniWidth.currentValue);
-            }
             this.updateEdgeZone();
         }
     }
@@ -547,9 +556,11 @@ export class IgxNavigationDrawerComponent implements
         if (this._panning) {
             this.resetPan();
         }
+
         if (this.isOpen) {
             return;
         }
+
         this.opening.emit();
         this.isOpen = true;
 
@@ -561,7 +572,8 @@ export class IgxNavigationDrawerComponent implements
         //         .onComplete(() => animationCss.setToStyles({'width':'auto'}).start(this.elementRef.nativeElement));
 
         this.elementRef.nativeElement.addEventListener('transitionend', this.toggleOpenedEvent, false);
-        this.setDrawerWidth(this.width);
+
+        requestAnimationFrame(()=>{});
     }
 
     /**
@@ -575,13 +587,14 @@ export class IgxNavigationDrawerComponent implements
         if (this._panning) {
             this.resetPan();
         }
+
         if (!this.isOpen) {
             return;
         }
+
         this.closing.emit();
 
         this.isOpen = false;
-        this.setDrawerWidth(this.miniTemplate ? this.miniWidth : '');
         this.elementRef.nativeElement.addEventListener('transitionend', this.toggleClosedEvent, false);
     }
 
@@ -638,21 +651,6 @@ export class IgxNavigationDrawerComponent implements
 
     private getWindowWidth() {
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    }
-
-    /**
-     * Sets the drawer width.
-     */
-    private setDrawerWidth(width: string) {
-        if (this.platformUtil.isBrowser) {
-            requestAnimationFrame(() => {
-                if (this.drawer) {
-                    this.renderer.setStyle(this.drawer, 'width', width);
-                }
-            });
-        } else {
-            this.renderer.setStyle(this.drawer, 'width', width);
-        }
     }
 
     /**
