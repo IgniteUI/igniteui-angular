@@ -153,7 +153,8 @@ export class WorksheetFile implements IExcelFile {
 
                 const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader &&
                      c.headerType !== ExportHeaderType.MultiRowHeader &&
-                     c.headerType !== ExportHeaderType.PivotRowHeader);
+                     c.headerType !== ExportHeaderType.PivotRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotMergedHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
