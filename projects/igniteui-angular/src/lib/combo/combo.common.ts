@@ -32,6 +32,7 @@ import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from '../services/public_api';
@@ -981,6 +982,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                     name: 'expand_more',
                     family: 'material',
                 },
+                'indigo': {
+                    name: 'chevron_down',
+                    family: 'indigo',
+                },
                 'all': {
                     name: 'arrow_drop_down',
                     family: 'material'
@@ -994,6 +999,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                 'material': {
                     name: 'expand_less',
                     family: 'material',
+                },
+                'indigo': {
+                    name: 'chevron_up',
+                    family: 'indigo',
                 },
                 'all': {
                     name: 'arrow_drop_up',
@@ -1009,6 +1018,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                     name: 'cancel',
                     family: 'material',
                 },
+                'indigo': {
+                    name: 'clear',
+                    family: 'indigo'
+                },
                 'all': {
                     name: 'clear',
                     family: 'material'
@@ -1020,6 +1033,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             family: 'combo',
             ref: new Map(Object.entries({
                 'material': {
+                    name: 'case-sensitive',
+                    family: 'imx-icons'
+                },
+                'indigo': {
                     name: 'case-sensitive',
                     family: 'imx-icons'
                 },
@@ -1071,11 +1088,22 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public ngOnInit() {
+        const indigoIcons = [
+            IndigoIcons.get('chevron_down'),
+            IndigoIcons.get('chevron_up'),
+            IndigoIcons.get('clear'),
+        ];
 
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
-        this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+
+        this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+
+        for (const icon of indigoIcons) {
+            this._iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
+
 
         for (const icon of this._icons) {
             switch (this.inputGroup?.theme) {
@@ -1086,6 +1114,15 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                         icon.ref.get("material"),
                     );
                     break;
+
+                case "indigo":
+                    this._iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("indigo"),
+                    );
+                    break;
+
                 default:
                     this._iconService?.addIconRef(
                         icon.name,

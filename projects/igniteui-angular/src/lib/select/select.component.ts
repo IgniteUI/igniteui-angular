@@ -49,6 +49,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxIconService } from '../icon/icon.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 
 /** @hidden @internal */
 @Directive({
@@ -289,6 +290,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
                     name: 'expand_more',
                     family: 'material',
                 },
+                'indigo': {
+                    name: 'chevron_down',
+                    family: 'indigo',
+                },
                 'all': {
                     name: 'arrow_drop_down',
                     family: 'material'
@@ -302,6 +307,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
                 'material': {
                     name: 'expand_less',
                     family: 'material',
+                },
+                'indigo': {
+                    name: 'chevron_up',
+                    family: 'indigo',
                 },
                 'all': {
                     name: 'arrow_drop_up',
@@ -558,6 +567,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
 
+        const indigoIcons = [
+            IndigoIcons.get('chevron_down'),
+            IndigoIcons.get('chevron_up'),
+            IndigoIcons.get('clear'),
+        ];
+
+        for (const icon of indigoIcons) {
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
+
         for (const icon of this._icons) {
             switch (this.inputGroup?.theme) {
                 case "material":
@@ -565,6 +584,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
                         icon.name,
                         icon.family,
                         icon.ref.get("material"),
+                    );
+                    break;
+                case "indigo":
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("indigo"),
                     );
                     break;
                 default:
