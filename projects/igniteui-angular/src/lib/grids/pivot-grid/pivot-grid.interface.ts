@@ -253,6 +253,8 @@ export interface IPivotGridRecord {
     dimensions: IPivotDimension[];
     /** Describes if this is a total record for a dimension */
     totalRecord?: boolean;
+    /** The index of the record in the total view */
+    dataIndex?: number;
 }
 
 export interface IPivotGridGroupRecord extends IPivotGridRecord {

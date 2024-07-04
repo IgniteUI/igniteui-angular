@@ -1276,7 +1276,7 @@ export abstract class IgxBaseExporter {
         return result;
     }
 
-    public addPivotRowHeaders(grid: any) {
+    private addPivotRowHeaders(grid: any) {
         if (grid?.pivotUI?.showRowHeaders) {
             const headersList = this._ownersMap.get(DEFAULT_OWNER);
             const enabledRows = grid.visibleRowDimensions.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
@@ -1299,7 +1299,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    public addPivotGridColumns(grid: any) {
+    private addPivotGridColumns(grid: any) {
         if (grid.nativeElement.tagName.toLowerCase() !== 'igx-pivot-grid') {
             return;
         }

@@ -168,24 +168,26 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     public getLevel() {
-        return this.dimension.level;
+        return this.grid.hasHorizontalLayout ? 0 : this.dimension.level;
     }
 
     protected getHeaderWidthFromDimension() {
         if (this.grid.hasHorizontalLayout) {
             return this.width;
         }
-        return this.grid.rowDimensionWidthToPixels(this.rootDimension);
+        return this.grid.rowDimensionWidth(this.rootDimension);
     }
 
     protected extractFromDimensions() {
-        const col = this.extractFromDimension(this.dimension, this.rowData);
-        const prevDims = [];
-        this.rowDimensionData = {
-            column: col,
-            dimension: this.dimension,
-            prevDimensions: prevDims
-        };
+        if (this.dimension && this.rowData) {
+            const col = this.extractFromDimension(this.dimension, this.rowData);
+            const prevDims = [];
+            this.rowDimensionData = {
+                column: col,
+                dimension: this.dimension,
+                prevDimensions: prevDims
+            };
+        }
     }
 
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {

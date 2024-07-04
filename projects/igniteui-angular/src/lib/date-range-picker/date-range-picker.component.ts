@@ -35,6 +35,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { IgxIconService } from '../icon/icon.service';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -440,9 +441,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType,
+        @Optional() @Inject(IgxIconService) protected iconService?: IgxIconService) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
+
+        iconService?.addIconRef("date_range", "default", {
+            name: "date_range",
+            family: "material"
+        });
     }
 
     /** @hidden @internal */

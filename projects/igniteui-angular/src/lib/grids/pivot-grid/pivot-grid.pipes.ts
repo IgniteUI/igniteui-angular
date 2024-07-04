@@ -155,11 +155,12 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
 
         let finalData = data;
         if (this.grid.hasHorizontalLayout) {
-            this.grid.visibleRowDimensions = horizontalRowDimensions;
+            const allRowDims = PivotUtil.flatten(this.grid.rowDimensions);
+            this.grid.visibleRowDimensions = allRowDims.filter((rowDim) => horizontalRowDimensions.some(targetDim => targetDim.memberName === rowDim.memberName));
         } else {
             this.grid.visibleRowDimensions = enabledRows;
-                finalData = enabledRows.length > 0 ?
-                finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
+            finalData = enabledRows.length > 0 ?
+            finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
         }
 
         if (this.grid) {
@@ -192,14 +193,14 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
         const enabledRows = this.grid.hasHorizontalLayout ? (this.grid as any).visibleRowDimensions :  config.rows?.filter(x => x.enabled);
-        const index = enabledRows.indexOf(dim);
+        const dimIndex = enabledRows.indexOf(dim);
         for (const rec of data) {
             let currentDim;
             if (this.grid.hasHorizontalLayout) {
                 currentDim = dim;
                 rec.dimensions = enabledRows;
             } else {
-                currentDim = rec.dimensions[index];
+                currentDim = rec.dimensions[dimIndex];
             }
 
             const id = PivotUtil.getRecordKey(rec, currentDim);
@@ -235,20 +236,23 @@ export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
-        _pipeTrigger?: number
+        _pipeTrigger?: number,
+        _regroupTrigger?: number
     ): IPivotGridRecord[][] {
-        if (collection.length === 0 || config.rows.length === 0) return [collection];
+        if (collection.length === 0 || config.rows.length === 0) return null;
         const data: IPivotGridRecord[] = collection ? cloneArray(collection, true) : [];
         const res: IPivotGridRecord[][] = [];
 
         const groupDim = config.rows.filter(dim => dim.enabled)[0];
         let curGroup = [];
         let curGroupValue = data[0].dimensionValues.get(groupDim.memberName);
-        for (const curRec of data) {
+        for (const [index, curRec] of data.entries()) {
+            curRec.dataIndex = index;
             const curRecValue = curRec.dimensionValues.get(groupDim.memberName);
             if (curGroup.length === 0 || curRecValue === curGroupValue) {
                 curGroup.push(curRec);
             } else {
+                curGroup["height"] = this.grid.renderedRowHeight * curGroup.length;
                 res.push(curGroup);
                 curGroup = [curRec];
                 curGroupValue = curRecValue;

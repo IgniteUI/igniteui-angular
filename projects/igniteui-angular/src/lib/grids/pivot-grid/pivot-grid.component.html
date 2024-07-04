@@ -119,9 +119,12 @@
 
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header">
-        <igx-icon [attr.draggable]="false"
-                  (click)="toggleColumn(column)">
-                  {{getColumnGroupExpandState(column) ? "chevron_right" : "expand_more"}}</igx-icon>
+        <igx-icon
+            family="default"
+            [name]="getColumnGroupExpandState(column) ? 'chevron_right' : 'expand'"
+            [attr.draggable]="false"
+            (click)="toggleColumn(column)">
+        </igx-icon>
         {{column.header}}
     </div>
 </ng-template>
@@ -147,8 +150,8 @@
 </ng-template>
 
 <ng-template #horizontalRowDimensionsTemplate>
-    <div tabindex="0" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
-        <ng-container *ngIf="dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger as groupedData">
+    <div tabindex="0" class="igx-grid__tbody-pivot-mrl-dimension" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        <ng-container *ngIf="dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger:regroupTrigger as groupedData">
             <ng-template #verticalRowDimScrollContainer role="rowgroup" igxGridFor let-rowGroup let-rowIndex="index"
                     [igxGridForOf]="groupedData"
                     [igxForScrollOrientation]="'vertical'"
@@ -157,7 +160,7 @@
                     [igxForItemSize]="renderedRowHeight"
                     [igxForSizePropName]="'height'"
             >
-                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData"></igx-pivot-row-dimension-mrl-row>
+                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         </ng-container>
     </div>
