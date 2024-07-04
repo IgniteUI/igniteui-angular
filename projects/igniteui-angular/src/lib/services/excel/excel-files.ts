@@ -607,7 +607,7 @@ export class WorksheetFile implements IExcelFile {
         for (const currentCol of headersForLevel) {
             const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
 
-            if (currentCol.level === i) {
+            if (currentCol.level === i && currentCol.headerType !== ExportHeaderType.PivotMergedHeader) {
                 let columnCoordinate;
                 const column = isVertical
                     ? this.rowIndex
@@ -641,6 +641,10 @@ export class WorksheetFile implements IExcelFile {
                 if (i !== maxLevel) {
                     this.mergeCellsCounter++;
                     this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
+
+                    if (currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + rowCoordinate;
+                    }
 
                     if (currentCol.headerType === ExportHeaderType.ColumnHeader) {
                         const col = isVertical

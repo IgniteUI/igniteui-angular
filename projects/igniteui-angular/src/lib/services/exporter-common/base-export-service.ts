@@ -32,6 +32,7 @@ export enum ExportHeaderType {
     MultiRowHeader = 'MultiRowHeader',
     MultiColumnHeader = 'MultiColumnHeader',
     PivotRowHeader = 'PivotRowHeader',
+    PivotMergedHeader = 'PivotMergedHeader',
 }
 
 export interface IExportRecord {
@@ -259,7 +260,7 @@ export abstract class IgxBaseExporter {
             this.pivotGridKeyValueMap = new Map<string, string>();
             this.pivotGridRowDimensionsMap = new Map<string, string>();
 
-            grid.pivotConfiguration.rows.filter(r => r.enabled).forEach(rowDimension => {
+            grid.visibleRowDimensions.filter(r => r.enabled).forEach(rowDimension => {
                 this.addToRowDimensionsMap(rowDimension, rowDimension.memberName);
             });
 
@@ -1278,7 +1279,7 @@ export abstract class IgxBaseExporter {
     public addPivotRowHeaders(grid: any) {
         if (grid?.pivotUI?.showRowHeaders) {
             const headersList = this._ownersMap.get(DEFAULT_OWNER);
-            const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
+            const enabledRows = grid.visibleRowDimensions.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
             let startIndex = 0;
             enabledRows.forEach(x => {
                 headersList.columns.unshift({
@@ -1303,7 +1304,7 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, i) => ({ name: r.memberName, level: i }));
+        const enabledRows = grid.visibleRowDimensions.map((r, i) => ({ name: r.memberName, level: i }));
 
         this.preparePivotGridColumns(enabledRows);
         this.pivotGridFilterFieldsCount = enabledRows.length;
@@ -1325,7 +1326,6 @@ export abstract class IgxBaseExporter {
         const key = keys[0];
         const records = this.flatRecords.map(r => r.data);
         const groupedRecords = {};
-
         records.forEach(obj => {
             const keyValue = obj[key.name];
             if (!groupedRecords[keyValue]) {
@@ -1351,7 +1351,9 @@ export abstract class IgxBaseExporter {
         for (const k of Object.keys(groupedRecords)) {
             const rowSpan = groupedRecords[k].length;
 
+
             const rowDimensionColumn: IColumnInfo = {
+                columnSpan: 1,
                 rowSpan,
                 field: k,
                 header: k,
@@ -1362,7 +1364,10 @@ export abstract class IgxBaseExporter {
                 dataType: 'string',
                 headerType: groupedRecords[k].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
-
+            if (k === 'undefined') {
+                this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
+                rowDimensionColumn.headerType = ExportHeaderType.PivotMergedHeader;
+            }
             if (columnGroupParent) {
                 rowDimensionColumn.columnGroupParent = columnGroupParent;
             } else {
