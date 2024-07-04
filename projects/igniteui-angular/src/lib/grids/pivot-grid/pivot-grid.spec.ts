@@ -1982,7 +1982,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
 
-            it ('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
+            it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
                 pivotGrid.data = [];
@@ -2993,7 +2993,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.rowList.toArray().length).toBe(1);
         });
 
-        it("should allow navigation in the row layouts.", () => {
+        it("should allow navigation in the row layouts.", fakeAsync(() => {
             fixture.detectChanges();
             const layoutContainer = fixture.debugElement.query(
                 By.directive(IgxPivotRowDimensionMrlRowComponent));
@@ -3013,59 +3013,69 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col0.nativeElement);
+            tick();
             fixture.detectChanges();
+
             GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col1.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col2.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row0Col3.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row0Col3.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row1Col3.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row2Col3.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row2Col3.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row1Col3.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col2.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col1.nativeElement);
+            tick();
             fixture.detectChanges();
             GridFunctions.verifyHeaderIsFocused(row0Col0.parent);
             activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
             expect(activeCells.length).toBe(1);
-        });
+        }));
 
         it("should allow resizing the row dimension.", fakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
