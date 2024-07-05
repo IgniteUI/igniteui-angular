@@ -27,7 +27,6 @@ import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-/* omitModule */
 @Directive({
     selector: '[igxRowBaseComponent]',
     standalone: true
