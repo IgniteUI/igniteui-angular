@@ -5,8 +5,8 @@ import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/util
 import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { take, timeout } from 'rxjs';
-
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
@@ -174,6 +174,22 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 layout: null
             }
 
+            if (ctrl) {
+                const dimIndex = this.activeNode.column;
+                const dim = this.grid.visibleRowDimensions[dimIndex];
+                if (this.activeNode.row === -1) {
+                    if (key.includes('down') || key.includes('up')) {
+                        let newSortDirection = SortingDirection.None;
+                        if (key.includes('down')) {
+                            newSortDirection = (dim.sortDirection === SortingDirection.Desc) ? SortingDirection.None : SortingDirection.Desc;
+                        } else if (key.includes('up')) {
+                            newSortDirection = (dim.sortDirection === SortingDirection.Asc) ? SortingDirection.None : SortingDirection.Asc;
+                        }
+                        this.grid.sortDimension(dim, newSortDirection);
+                        return;
+                    }
+                }
+            }
             if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
                 newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             }
