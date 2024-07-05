@@ -296,16 +296,6 @@ export interface RowType {
     unpin?: () => void;
 }
 
-export interface IgxColumn {
-    field: string;
-    header?: string;
-    dataType?: GridColumnDataType;
-    width?: string;
-    hidden?: boolean;
-    sortable?: boolean;
-    groupable?: boolean;
-    editable?: boolean;
-}
 export interface FieldType {
     label?: string;
     field: string;

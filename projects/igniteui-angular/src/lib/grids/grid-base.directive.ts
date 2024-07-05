@@ -130,7 +130,6 @@ import {
     ColumnType,
     GridServiceType,
     GridType,
-    IgxColumn,
     IGridFormGroupCreatedEventArgs,
     IGridValidationStatusEventArgs,
     IgxGridEmptyTemplateContext,
@@ -3041,10 +3040,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _columnConfig: IgxColumn[] = [];
-    /**
-     * @hidden
-     */
     protected _pinnedColumns: IgxColumnComponent[] = [];
     /**
      * @hidden
@@ -4577,15 +4572,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._columns || [];
     }
 
-    @Input()
-    public set columns(config: IgxColumn[]) {
-        this._columnConfig = config;
-        if (this._rendered) {
-            this.configToColumns(config);
-            this.onColumnsChanged(this.columnList);
-        }
-    }
-
     /**
      * Gets an array of the pinned `IgxColumnComponent`s.
      *
@@ -5911,7 +5897,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
 
-
     /**
      * Select specified columns.
      *
@@ -6821,9 +6806,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             this._columns = this.getColumnList();
         }
-        if (!this.columnList.length && this._columnConfig.length) {
-            this.configToColumns(this._columnConfig);
-        }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
@@ -7618,27 +7600,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.detectChanges();
         colSum += this.featureColumnsWidth();
         return colSum;
-    }
-
-    private configToColumns(config: IgxColumn[]) {
-        const columns: IgxColumnComponent[] = [];
-
-        config.forEach(column => {
-            let  newCol: IgxColumnComponent | undefined;
-            if (column instanceof IgxColumnComponent) {
-                newCol = column;
-            } else {
-                const newColumn = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
-                for (const prop in column) {
-                    newColumn.instance[prop] = column[prop];
-                }
-                newColumn.changeDetectorRef.detectChanges();
-                newCol = newColumn.instance;
-            }
-            columns.push(newCol);
-        });
-
-        this.columnList.reset(columns);
     }
 
     /**
