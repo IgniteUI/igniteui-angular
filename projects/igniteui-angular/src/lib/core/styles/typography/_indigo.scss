@@ -110,8 +110,15 @@
         header-hour: 'h5',
         selected-time: 'h6'
     ));
-    @include stepper-typography();
+    @include stepper-typography($categories: (
+        title: 'body-2',
+        subtitle: 'caption',
+        indicator: 'button',
+        body-content: 'body-2'
+    ));
     @include toast-typography();
-    @include tooltip-typography();
+    @include tooltip-typography($categories: (
+        tooltip-text: 'subtitle-2'
+    ));
     @include tree-typography();
 }
