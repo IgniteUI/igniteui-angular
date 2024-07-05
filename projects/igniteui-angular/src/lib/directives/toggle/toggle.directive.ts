@@ -256,7 +256,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.overlayService.show(this._overlayId, overlaySettings);
     }
 
-    /* blazorSuppress */
     /**
      * Closes the toggle.
      *
