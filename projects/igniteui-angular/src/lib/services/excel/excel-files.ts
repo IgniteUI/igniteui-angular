@@ -643,10 +643,6 @@ export class WorksheetFile implements IExcelFile {
                     this.mergeCellsCounter++;
                     this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
-                    if (currentCol.columnSpan && currentCol.columnSpan > 1 ) {
-                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + rowCoordinate;
-                    }
-
                     if (currentCol.headerType === ExportHeaderType.ColumnHeader) {
                         const col = isVertical
                             ? maxLevel
@@ -674,6 +670,9 @@ export class WorksheetFile implements IExcelFile {
                                 ? this.pivotGridRowHeadersMap.set(row, str)
                                 : this.sheetData += str
                         }
+                    }
+                    if (currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
                     }
 
                     this.mergeCellStr += `${columnCoordinate}" />`;
