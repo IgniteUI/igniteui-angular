@@ -122,7 +122,6 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     elementRef?: ElementRef<any>;
     /** Will provide the overlay settings which will be used when the component is attached */
     settings?: OverlaySettings;
-    /* blazorSuppress */
     /** Will provide the original keyboard event if closed from ESC or click */
     event?: Event;
 }
@@ -171,7 +170,6 @@ export interface OverlayInfo {
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
-    /* blazorSuppress */
     event?: Event;
     wrapperElement?: HTMLElement;
 }
