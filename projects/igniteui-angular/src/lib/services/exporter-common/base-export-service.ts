@@ -1349,37 +1349,41 @@ export abstract class IgxBaseExporter {
         }
 
         for (const k of Object.keys(groupedRecords)) {
+            let groupKey = k;
             const rowSpan = groupedRecords[k].length;
 
 
             const rowDimensionColumn: IColumnInfo = {
                 columnSpan: 1,
                 rowSpan,
-                field: k,
-                header: k,
+                field: groupKey,
+                header: groupKey,
                 startIndex,
                 skip: false,
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[k].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
+                headerType: groupedRecords[groupKey].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
-            if (k === 'undefined') {
+            if (groupKey === 'undefined') {
                 this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
                 rowDimensionColumn.headerType = ExportHeaderType.PivotMergedHeader;
+                groupKey = columnGroupParent;
             }
             if (columnGroupParent) {
                 rowDimensionColumn.columnGroupParent = columnGroupParent;
             } else {
-                rowDimensionColumn.columnGroup = k;
+                rowDimensionColumn.columnGroup = groupKey;
             }
 
             this.pivotGridColumns.push(rowDimensionColumn);
 
             if (keys.length > 1) {
-                this.pivotGridKeyValueMap.set(key.name, k);
+                if (groupKey !== columnGroupParent) {
+                    this.pivotGridKeyValueMap.set(key.name, groupKey);
+                }
                 const newKeys = keys.filter(kdd => kdd !== key);
-                this.preparePivotGridColumns(newKeys, k)
+                this.preparePivotGridColumns(newKeys, groupKey)
                 this.pivotGridKeyValueMap.delete(key.name);
             }
 
