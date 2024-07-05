@@ -131,8 +131,8 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
 
             if (ctrl) {
                 const dimIndex = this.activeNode.column;
-                const flatRowDImensions = PivotUtil.flatten(this.grid.rowDimensions)
-                const dim = flatRowDImensions[dimIndex];
+                const flatRowDimensions = PivotUtil.flatten(this.grid.visibleRowDimensions)
+                const dim = flatRowDimensions[dimIndex];
                 if (this.activeNode.row === -1) {
                     if (key.includes('down') || key.includes('up')) {
                         let newSortDirection = SortingDirection.None;
