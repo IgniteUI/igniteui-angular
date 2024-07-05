@@ -55,25 +55,26 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('100px');
             expect(grid.columnList.get(0).resizable).toBeTruthy();
             expect(grid.columnList.get(2).resizable).toBeFalsy();
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 15 });
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 15);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 15);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 250, clientY: 15 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 250, clientY: 15 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('250px');
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 250, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 250, clientY: 0 });
             fixture.detectChanges();
+
             resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 40, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 40, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 40, clientY: 5 })
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 40, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('80px');
@@ -89,14 +90,15 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         it('should resize column outside grid view.', fakeAsync(() => {
             expect(grid.columnList.get(0).width).toEqual('100px');
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 700, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 700, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 700, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 700, clientY: 5 });
+            tick(200);
+
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('700px');
@@ -109,25 +111,25 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(1).resizable).toBeTruthy();
             headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 370, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 370, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('250px');
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 350, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 350, clientY: 0 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('70px');
@@ -139,26 +141,26 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.resizable).toBe(true);
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 10, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 10, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 10, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 10, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
             column.minWidth = '50';
             fixture.detectChanges();
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 80, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 10, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 10, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 10, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 10, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(column.width).toEqual('50px');
@@ -169,13 +171,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.defaultMinWidth).toBe('80');
             expect(column.resizable).toBe(true);
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
+
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 10, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 10, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 10, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 10, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
@@ -184,13 +187,13 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.defaultMinWidth).toBe('64');
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 80, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 80, clientY: 0 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 10, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 10, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 10, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 10, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(column.width).toEqual('64px');
@@ -199,13 +202,13 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.defaultMinWidth).toBe('56');
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 64, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 64, clientY: 0 })
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 10, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 10, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 10, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 10, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(column.width).toEqual('56px');
@@ -220,14 +223,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(colsRendered.length).toEqual(4);
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 700, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 700, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 700, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 700, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('700px');
@@ -252,14 +255,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('100px');
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 250, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 250, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('250px');
@@ -287,14 +290,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(1).width).toEqual('100px');
             headers = GridFunctions.getColumnHeaders(fixture);
             headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 350, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 350, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 350, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 350, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('250px');
@@ -311,26 +314,27 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('100px');
             expect(grid.columnList.get(1).width).toEqual('100px');
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 450, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 450, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 450, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 450, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('450px');
             expect(grid.columnList.get(1).width).toEqual('100px');
 
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 300, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 300, clientY: 0 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('250px');
@@ -457,15 +461,15 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: startPos, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with 100px, which is 25%
-            UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: startPos + 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: startPos + 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
             expect(grid.columnList.get(0).width).toBe('50%');
         }));
@@ -479,15 +483,15 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: startPos, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with +100px, which is 25%
-            UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: startPos + 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: startPos + 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toBe(grid.columnList.get(0).maxWidth);
@@ -502,14 +506,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: startPos, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             // resize with -100px
-            UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: startPos - 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: startPos - 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toBe(grid.columnList.get(0).minWidth);
@@ -524,15 +528,15 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: startPos, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with +200px, which is 50%
-            UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 200, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 200, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: startPos + 200, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: startPos + 200, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
             expect(grid.columnList.get(0).width).toBe('50%');
         }));
@@ -547,14 +551,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: startPos, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             // resize with -100px
-            UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: startPos - 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: startPos - 100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toBe('12.5%');
@@ -600,14 +604,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(2).sortable).toBeTruthy();
             expect(grid.columnList.get(2).cells[0].value).toEqual(254);
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             // column has maxWidth='150px'
@@ -655,14 +659,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toEqual('150px');
 
             const headerResArea = GridFunctions.getHeaderResizeArea(headers[0]).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 150, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 150, clientY: 5 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             let resizingArgs: IColumnResizeEventArgs = { column: grid.columnList.get(0), prevWidth: '150px', newWidth: '300px' };
@@ -770,51 +774,51 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(parseInt(grid.columnList.get(0).width, 10)).not.toBeNaN();
 
             let headerResArea = GridFunctions.getHeaderResizeArea(headers[0]).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 126, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 126, clientY: 5 });
             fixture.detectChanges();
 
             let resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 250, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 250, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual('200px');
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 50, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 50, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 50, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 50, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(0).width).toEqual(grid.columnList.get(0).minWidth + 'px');
 
             headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 197, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 197, clientY: 5 });
             fixture.detectChanges();
 
             expect(parseInt(grid.columnList.get(1).width, 10)).not.toBeNaN();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(parseInt(grid.columnList.get(1).width, 10)).toBeGreaterThanOrEqual(100);
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 300, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 300, clientY: 5 });
             fixture.detectChanges();
 
             resizer = GridFunctions.getResizer(fixture).nativeElement;
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 50, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 50, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 50, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 50, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('80px');
@@ -1009,7 +1013,7 @@ export class ColPercentageGridComponent implements OnInit {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`width="1500px" height="600px"`, ``,
-    `<igx-column [field]="'Items'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
+        `<igx-column [field]="'Items'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'ID'" [width]="'auto'" [header]="'ID'" [resizable]="true"></igx-column>
     <igx-column [field]="'ProductName'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'Test'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>

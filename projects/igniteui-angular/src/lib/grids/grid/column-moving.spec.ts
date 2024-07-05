@@ -10,7 +10,7 @@ import {
     MovableTemplatedColumnsComponent,
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
- } from '../../test-utils/grid-samples.spec';
+} from '../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
@@ -351,14 +351,14 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
-            UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
-            await wait(250);
+            UIInteractions.pointerEvents.firePointerDown(resizeHandle, { clientX: 200, clientY: 80 });
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(COLUMN_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            await wait(200);
             fixture.detectChanges();
 
             expect(grid.columns[0].width).toEqual('250px');
@@ -958,7 +958,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(25, 'Phone');
-            const selectedData = [{ Phone: '40.32.21.21'}];
+            const selectedData = [{ Phone: '40.32.21.21' }];
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
@@ -992,7 +992,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const newSelectedData = [{Country: 'France'}];
+            const newSelectedData = [{ Country: 'France' }];
             GridSelectionFunctions.verifySelectedRange(grid, 25, 25, 9, 9);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
@@ -1903,7 +1903,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 2, 2);
-            expect(grid.getSelectedData()).toEqual([{CompanyName: 'Alfreds Futterkiste' }]);
+            expect(grid.getSelectedData()).toEqual([{ CompanyName: 'Alfreds Futterkiste' }]);
 
             // step 3 - navigate right and verify cell selection is updated
             const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
@@ -1913,7 +1913,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 3, 3);
-            expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
+            expect(grid.getSelectedData()).toEqual([{ ContactName: 'Maria Anders' }]);
         }));
 
         it('MCH - should pin only top level columns.', (async () => {

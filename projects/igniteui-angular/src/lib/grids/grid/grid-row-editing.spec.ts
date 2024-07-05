@@ -326,9 +326,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             // check event args
             const rowAddArgs: IRowDataCancelableEventArgs = {
                 cancel: false,
-                oldValue: { ProductID: generatedId},
-                rowData: { ProductID: generatedId, ProductName: "NewValue"},
-                data: { ProductID: generatedId, ProductName: "NewValue"},
+                oldValue: { ProductID: generatedId },
+                rowData: { ProductID: generatedId, ProductName: "NewValue" },
+                data: { ProductID: generatedId, ProductName: "NewValue" },
                 rowID: generatedId,
                 primaryKey: generatedId,
                 rowKey: generatedId,
@@ -339,8 +339,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             }
 
             const rowAddedArgs: IRowDataEventArgs = {
-                rowData: { ProductID: generatedId, ProductName: "NewValue"},
-                data: { ProductID: generatedId, ProductName: "NewValue"},
+                rowData: { ProductID: generatedId, ProductName: "NewValue" },
+                data: { ProductID: generatedId, ProductName: "NewValue" },
                 primaryKey: generatedId,
                 rowKey: generatedId,
                 owner: grid
@@ -1599,12 +1599,12 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
             const headerResArea = headers[2].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 500, clientY: 0 });
             const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 0 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 0 });
+            tick(200);
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(0);

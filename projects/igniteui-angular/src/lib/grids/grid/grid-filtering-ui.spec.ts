@@ -1619,7 +1619,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 filterUIRow = grid.theadRow.filterRow;
                 expect(filterUIRow).toBeUndefined();
-        }));
+            }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             pending('Should be fixed with headers navigation');
@@ -2230,7 +2230,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const prefix = GridFunctions.getFilterRowPrefix(fix).nativeElement;
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , prefix);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', prefix);
             fix.detectChanges();
 
             expect(console.error).not.toHaveBeenCalled();
@@ -2433,12 +2433,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[1].children[2].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -2475,12 +2475,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filteringRow).toBeTruthy();
             expect(headers[1].nativeElement.offsetWidth).toEqual(250);
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
+
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -2524,12 +2525,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Make 'Downloads' column bigger
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[2].children[2].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('Downloads', fix);

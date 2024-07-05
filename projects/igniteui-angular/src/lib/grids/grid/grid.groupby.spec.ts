@@ -2222,17 +2222,17 @@ describe('IgxGrid - GroupBy #grid', () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', headerResArea, 200, 5);
-        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 5 });
+        UIInteractions.pointerEvents.firePointerUp(headerResArea, { clientX: 200, clientY: 5 });
         tick(200);
-        UIInteractions.simulateMouseEvent('mouseup', headerResArea, 200, 5);
         fix.detectChanges();
 
-        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
-        tick(200);
+        UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 5 });
         const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
-        UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-        UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+        UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 0 });
+        UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 0 });
+        tick(200);
         fix.detectChanges();
 
         expect(grid.columns[0].width).toEqual('550px');
@@ -3512,28 +3512,28 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
         }));
 
-        it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
-            fakeAsync(() => {
-                const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
-                fix.detectChanges();
-                const grid = fix.componentInstance.instance;
-                fix.componentInstance.columns = [];
-                grid.hideGroupedColumns = true;
-                fix.detectChanges();
-                tick();
-                fix.detectChanges();
-                fix.componentInstance.columns = [
-                    { field: 'A', width: 100 },
-                    { field: 'B', width: 100 },
-                    { field: 'C', width: 100 }
-                ];
-                grid.groupingExpressions = [
-                    { fieldName: 'A', dir: SortingDirection.Asc }
-                ];
-                fix.detectChanges();
-                tick();
+    it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.columns = [];
+            grid.hideGroupedColumns = true;
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+            fix.componentInstance.columns = [
+                { field: 'A', width: 100 },
+                { field: 'B', width: 100 },
+                { field: 'C', width: 100 }
+            ];
+            grid.groupingExpressions = [
+                { fieldName: 'A', dir: SortingDirection.Asc }
+            ];
+            fix.detectChanges();
+            tick();
 
-                expect(grid.getColumnByName('A').hidden).toBe(true);
+            expect(grid.getColumnByName('A').hidden).toBe(true);
         }));
 
     it('should respect current sorting direction when grouping', (async () => {

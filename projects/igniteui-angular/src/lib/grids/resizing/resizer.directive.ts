@@ -1,16 +1,17 @@
 import {
     Directive,
     ElementRef,
-    Inject,
     Input,
     NgZone,
     Output,
     OnInit,
-    OnDestroy,
+    inject,
+    DestroyRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DOCUMENT } from '@angular/common';
-import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
-import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { Subject, fromEvent } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -20,7 +21,18 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
     selector: '[igxResizer]',
     standalone: true
 })
-export class IgxColumnResizerDirective implements OnInit, OnDestroy {
+export class IgxColumnResizerDirective implements OnInit {
+
+    private _ref: ElementRef<HTMLElement> = inject(ElementRef);
+    private document = inject(DOCUMENT);
+    private zone = inject(NgZone);
+    private destroyRef = inject(DestroyRef);
+
+    private _left: number;
+
+    protected get element() {
+        return this._ref.nativeElement;
+    }
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -32,96 +44,78 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public restrictResizerTop: number;
 
     @Output()
-    public resizeEnd = new Subject<MouseEvent>();
+    public resizeEnd = new Subject<PointerEvent>();
 
     @Output()
-    public resizeStart = new Subject<MouseEvent>();
+    public resizeStart = new Subject<PointerEvent>();
 
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output() public resize = new Subject<any>();
+    @Output() public resize = new Subject<PointerEvent>();
 
-    private _left: number;
-    private _destroy = new Subject<boolean>();
-
-    constructor(
-        public element: ElementRef<HTMLElement>,
-        @Inject(DOCUMENT) public document,
-        public zone: NgZone
-    ) {
-
+    constructor() {
         this.resizeStart.pipe(
-            takeUntil<MouseEvent>(this._destroy),
+            takeUntilDestroyed(this.destroyRef),
             map((event) => event.clientX),
             switchMap((offset) => this.resize
                 .pipe(
-                    takeUntil(this._destroy),
-                    takeUntil<MouseEvent>(this.resizeEnd),
+                    takeUntilDestroyed(this.destroyRef),
+                    takeUntil<PointerEvent>(this.resizeEnd),
                     map((event) => event.clientX - offset),
                 ))
         )
-            .subscribe((pos) => {
-                const left = this._left + pos;
-                const min = this._left - this.restrictHResizeMin;
-                const max = this._left + this.restrictHResizeMax;
+            .subscribe((pos) => this.setMaxLeft(pos))
+    }
 
-                this.left = left < min ? min : left;
+    private setMaxLeft(value: number) {
+        const left = this._left + value;
+        const minLeft = this._left - this.restrictHResizeMin;
+        const maxLeft = this._left + this.restrictHResizeMax;
 
-                if (left > max) {
-                    this.left = max;
-                }
-            });
-
+        this.setLeft(Math.max(minLeft, Math.min(left, maxLeft)))
     }
 
     public ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, 'mousemove')
-                .pipe(
-                    takeUntil<MouseEvent>(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler)),
-                )
-                .subscribe((res) => this.onMousemove(res));
+            fromEvent(this.document.defaultView, 'pointermove')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event: PointerEvent) => this.onPointerMove(event));
 
-            fromEvent(this.document.defaultView, 'mouseup')
-                .pipe(takeUntil<MouseEvent>(this._destroy))
-                .subscribe((res) => this.onMouseup(res));
+            fromEvent(this.document.defaultView, 'pointerup')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event: PointerEvent) => this.onPointerUp(event));
         });
     }
 
-    public ngOnDestroy() {
-        this._destroy.next(true);
-        this._destroy.complete();
+    protected setLeft(value: number) {
+        requestAnimationFrame(() => Object.assign(this.element.style, { left: `${value}px` }));
     }
 
-    public set left(val: number) {
-        requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
+    protected setTop(value: number) {
+        const top = this.restrictResizerTop ?? value;
+        requestAnimationFrame(() => Object.assign(this.element.style, { top: `${top}px` }));
     }
 
-    public set top(val: number) {
-        if (this.restrictResizerTop != undefined) {
-            requestAnimationFrame(() => this.element.nativeElement.style.top = this.restrictResizerTop + 'px');
-        } else {
-            requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
-        }
-    }
-
-    public onMouseup(event: MouseEvent) {
+    protected onPointerUp(event: PointerEvent) {
         this.resizeEnd.next(event);
         this.resizeEnd.complete();
     }
 
-    public onMousedown(event: MouseEvent) {
+    protected onPointerDown(event: PointerEvent) {
         event.preventDefault();
-        const parent = this.element.nativeElement.parentElement.parentElement;
+        const parent = this.element.parentElement.parentElement;
+        const parentRect = parent.getBoundingClientRect();
+        const targetRect = (event.target as Element).getBoundingClientRect();
 
-        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
-        this.top = (event.target as HTMLElement).getBoundingClientRect().top - parent.getBoundingClientRect().top;
+        const left = event.clientX - parentRect.left;
+
+        this._left = left;
+        this.setLeft(left);
+        this.setTop(targetRect.top - parentRect.top);
 
         this.resizeStart.next(event);
     }
 
-    public onMousemove(event: MouseEvent) {
-        event.preventDefault();
+    protected onPointerMove(event: PointerEvent) {
         this.resize.next(event);
     }
 }

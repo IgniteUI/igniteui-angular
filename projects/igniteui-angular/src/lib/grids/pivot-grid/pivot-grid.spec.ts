@@ -533,7 +533,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.superCompactMode = false;
             fixture.detectChanges();
             tick();
-            
+
             setElementSize(pivotGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
@@ -1223,8 +1223,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
-                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
@@ -1262,8 +1262,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
-                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
@@ -1979,7 +1979,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
 
-            it ('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
+            it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
                 pivotGrid.data = [];
@@ -2150,14 +2150,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2181,14 +2181,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2237,14 +2237,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, -400, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, -400, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: -400, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: -400, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2276,14 +2276,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, -100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, -100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: -100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: -100, clientY: 5 });
+            tick(200);
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2651,12 +2651,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             //check rows
             const rows = pivotGrid.rowList.toArray();
-                expect(rows.length).toBe(4);
-                const expectedHeaders = ['Accessories', 'Bikes', 'Clothing', 'Components'];
-                const rowHeaders = fixture.debugElement.queryAll(
-                    By.directive(IgxPivotRowDimensionHeaderComponent));
-                const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
-                expect(rowDimensionHeaders).toEqual(expectedHeaders);
+            expect(rows.length).toBe(4);
+            const expectedHeaders = ['Accessories', 'Bikes', 'Clothing', 'Components'];
+            const rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+            expect(rowDimensionHeaders).toEqual(expectedHeaders);
 
             // check columns
             const colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
@@ -2669,7 +2669,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         });
 
-        it('should allow formatting based on additional record and column data',() => {
+        it('should allow formatting based on additional record and column data', () => {
             pivotGrid.pivotConfiguration = {
                 columns: [
                     {
@@ -2692,7 +2692,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         },
                         enabled: true,
                         formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => {
-                          return  rowData.dimensionValues.get('ProductCategory') + '/' + columnData.dimensionValues.get('City')+':' + value;
+                            return rowData.dimensionValues.get('ProductCategory') + '/' + columnData.dimensionValues.get('City') + ':' + value;
                         }
                     }
                 ]

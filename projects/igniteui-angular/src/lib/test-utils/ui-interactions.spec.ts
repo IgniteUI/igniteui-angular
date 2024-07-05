@@ -324,6 +324,27 @@ export class UIInteractions {
         return pointerEvent;
     }
 
+    public static pointerEvents = {
+        firePointerDown: function (element: HTMLElement, options: PointerEventInit) {
+            UIInteractions.firePointerEvent('pointerdown', element, options);
+        },
+        firePointerMove: function (element: HTMLElement, options: PointerEventInit) {
+            UIInteractions.firePointerEvent('pointermove', element, options);
+        },
+        firePointerUp: function (element: HTMLElement, options: PointerEventInit) {
+            UIInteractions.firePointerEvent('pointerup', element, options);
+        },
+    }
+
+    public static firePointerEvent(type: string, element: HTMLElement, options?: PointerEventInit) {
+        element.dispatchEvent(new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            ...options
+        }))
+    }
+
     public static simulatePointerEvent(eventName: string, element, x, y) {
         const options: PointerEventInit = {
             view: window,

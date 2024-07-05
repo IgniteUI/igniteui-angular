@@ -27,11 +27,8 @@ import { IgxIconComponent } from '../../icon/icon.component';
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
 
-    /**
-     * @hidden
-     */
     @HostBinding('style.user-select')
-    public userSelect = 'none';
+    protected userSelect = 'none';
 
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
@@ -70,11 +67,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         return this.column.header;
     }
 
-    /**
-     * @hidden @internal
-     */
     @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
+    protected onClick(event: MouseEvent) {
         if (this.grid.rowSelection === 'none') {
             return;
         }
@@ -86,14 +80,14 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             this.grid.selectionService.selectRowById(key, true, event);
         }
 
-        this.zone.run(() => {});
+        this.zone.run(() => { });
     }
 
     /**
      * @hidden
      * @internal
      */
-    public get visibleIndex(): number {
+    protected get visibleIndex(): number {
         const field = this.column.field;
         const rows = this.grid.rowDimensions;
         const rootDimension = this.findRootDimension(field);
@@ -101,7 +95,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     }
 
     @HostBinding('class.igx-grid-th--active')
-    public override get active() {
+    protected override get active() {
         const nav = this.grid.navigation;
         const node = nav.activeNode;
         return node && !this.column.columnGroup ?
@@ -137,26 +131,16 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     }
 
 
-    public override activate() {
+    protected override activate() {
         this.grid.navigation.isRowHeader = true;
         this.grid.navigation.setActiveNode(this.activeNode);
     }
 
-    /**
-     * @hidden @internal
-     */
-    public override pointerdown(_event: PointerEvent): void {
+    protected override pointerdown(_: PointerEvent): void {
         this.activate();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public override onMouseDown(_event: MouseEvent): void {
-        this.activate();
-    }
-
-    public override get selectable(): boolean {
+    protected override get selectable(): boolean {
         return false;
     }
 }

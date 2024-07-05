@@ -809,7 +809,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const filterIcons = fixture.debugElement.queryAll(By.css('.igx-excel-filter__icon'));
             expect(filterIcons.length).not.toBe(0);
 
-            const gridFirstRow =  grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow, true);
@@ -939,14 +939,15 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[1].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 600, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 600, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 600, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 600, clientY: 5 });
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
@@ -979,14 +980,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[4].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 5 });
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
@@ -1019,14 +1020,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[8].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 5 });
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
@@ -1059,14 +1060,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 5 });
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
@@ -1102,14 +1103,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 450, clientY: 0 });
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 550, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 550, clientY: 5 });
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 600px 100px 100px 200px');
@@ -1144,15 +1145,13 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[5].children[1].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 950, 0);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 950, clientY: 0 });
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 850, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 850, 5);
-            fixture.detectChanges();
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 850, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 850, clientY: 5 });
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 

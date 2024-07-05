@@ -87,7 +87,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 0);
         }));
 
-        it('should persist the indentation on all pages when using paging',  fakeAsync(() => {
+        it('should persist the indentation on all pages when using paging', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
@@ -139,11 +139,11 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             expect(header.nativeElement.getBoundingClientRect().width).toBe(225);
 
             // Resize the tree column
+            UIInteractions.pointerEvents.firePointerDown(resizer, { clientX: 225, clientY: 5 });
             UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
-            tick(200);
             fix.detectChanges();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 370, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 370, clientY: 5 });
             tick(200);
             fix.detectChanges();
 
@@ -299,11 +299,10 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             expect(header.nativeElement.getBoundingClientRect().width).toBe(180);
 
             // Resize the tree column
-            UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(resizer, { clientX: 180, clientY: 5 });
             fix.detectChanges();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 370, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 370, clientY: 5 });
             tick(200);
             fix.detectChanges();
 

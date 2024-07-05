@@ -1,9 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    Input,
-    NgZone
-} from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { ColumnType } from '../../common/grid.interface';
 import { PivotRowHeaderGroupType } from '../../pivot-grid/pivot-grid.interface';
 import { IgxPivotColumnResizingService } from './pivot-resizing.service'
@@ -18,6 +13,7 @@ import { IgxResizeHandleDirective } from '../resize-handle.directive';
     standalone: true
 })
 export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
+    protected override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
      * @hidden
@@ -37,17 +33,10 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     @Input('igxPivotResizeHandleHeader')
     public rowHeaderGroup: PivotRowHeaderGroupType;
 
-    constructor(zone: NgZone,
-        element: ElementRef,
-        public override colResizingService: IgxPivotColumnResizingService) {
-        super(zone, element, colResizingService);
-    }
-
     /**
      * @hidden
      */
     public override onDoubleClick() {
-        this._dblClick = true;
         this.initResizeService();
         this.rowHeaderGroup.grid.autoSizeRowDimension(this.rowHeaderGroup.parent.rootDimension);
     }
@@ -55,7 +44,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     /**
      * @hidden
      */
-    protected override initResizeService(event = null) {
+    protected override initResizeService(event?: PointerEvent) {
         super.initResizeService(event);
         this.colResizingService.rowHeaderGroup = this.rowHeaderGroup;
     }
