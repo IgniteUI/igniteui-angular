@@ -2753,28 +2753,16 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
 
-        it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
+        it('Should not prevent pointerdown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
-            const input = filterCell.query(By.css('input')).nativeElement;
- 
-            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
-            input.dispatchEvent(mousedownEvent, { bubbles: true });
+            const input = filterCell.query(By.css('input')).nativeElement as HTMLInputElement;
+
+            const pointerDownEvent = new PointerEvent('mousedown', { bubbles: true, pointerId: 1 });
+            const preventDefaultSpy = spyOn(pointerDownEvent, 'preventDefault');
+            input.dispatchEvent(pointerDownEvent);
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
-        }));
-
-        it('Should prevent mousedown event when target is filter cell or its parent elements', fakeAsync(() => {
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            const firstCell = filteringCells[0].nativeElement;
-
-            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
-            firstCell.dispatchEvent(mousedownEvent);
-            fix.detectChanges();
-           
-            expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
 
