@@ -58,20 +58,22 @@ async function buildThemes() {
     const compiler = await sass.initAsyncCompiler();
 
     try {
-        for (const path of paths) {
-            const result = await compiler.compileAsync(path, STYLES.CONFIG);
-            const fileName = path.replace(/\.scss$/, ".css").replace(STYLES.SRC, "");
+        await Promise.all(
+            paths.map(async (path) => {
+                const result = await compiler.compileAsync(path, STYLES.CONFIG);
+                const fileName = path.replace(/\.scss$/, ".css").replace(STYLES.SRC, "");
 
-            let outCss = postProcessor.process(result.css).css;
+                let outCss = postProcessor.process(result.css).css;
 
-            if (outCss.charCodeAt(0) === 0xfeff) {
-                outCss = outCss.substring(1);
-            }
+                if (outCss.charCodeAt(0) === 0xfeff) {
+                    outCss = outCss.substring(1);
+                }
 
-            outCss = outCss + "\n";
+                outCss = outCss + "\n";
 
-            await createFile(fileName, outCss);
-        }
+                await createFile(fileName, outCss);
+            }),
+        );
     } catch (err) {
         await compiler.dispose();
         report.error(err);
@@ -85,7 +87,7 @@ async function buildThemes() {
     const startTime = new Date();
 
     // Build theme presets
-    console.info("Building themes...");
+    console.info("Building Elements themes...");
     await buildThemes();
     report.success(
         `Themes generated in ${Math.round((Date.now() - startTime) / 1000)}s`,
