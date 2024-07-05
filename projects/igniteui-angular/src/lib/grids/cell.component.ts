@@ -126,7 +126,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
     public errorIcon: IgxIconComponent;
 
-    /* blazorSuppress */
     /**
      * Gets the default error template.
      * @hidden @internal
