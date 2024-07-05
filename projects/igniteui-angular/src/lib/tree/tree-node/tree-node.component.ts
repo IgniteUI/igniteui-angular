@@ -92,11 +92,12 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 
     private _parentNode: IgxTreeNode<any> = null;
 
-    constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
-    private node: IgxTreeNode<any>,
+    constructor(
+        @Optional() @Inject(IGX_TREE_NODE_COMPONENT)
+        private node: IgxTreeNode<any>,
         private navService: IgxTreeNavigationService,
-        public elementRef: ElementRef) {
-    }
+        public elementRef: ElementRef,
+    ) { }
 
     /** @hidden @internal */
     @HostBinding('attr.tabindex')

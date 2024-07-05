@@ -15,12 +15,22 @@ export class IgxNavDrawerItemDirective {
     /**
      * @hidden
      */
+    @Input({ alias: 'disabled', transform: booleanAttribute }) public disabled = false;
+
+    /**
+     * @hidden
+     */
     @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
 
     /**
      * @hidden
      */
     public readonly activeClass = 'igx-nav-drawer__item--active';
+
+     /**
+     * @hidden
+     */
+     public readonly disabledClass = 'igx-nav-drawer__item--disabled';
 
     /**
      * @hidden
@@ -35,7 +45,7 @@ export class IgxNavDrawerItemDirective {
      */
     @HostBinding('class.igx-nav-drawer__item--active')
     public get currentCSS(): boolean {
-        return this.active && !this.isHeader;
+        return this.active && !this.isHeader && !this.disabled;
     }
 
     /**
@@ -44,6 +54,14 @@ export class IgxNavDrawerItemDirective {
     @HostBinding('class.igx-nav-drawer__item--header')
     public get headerCSS(): boolean {
         return this.isHeader;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-nav-drawer__item--disabled')
+    public get disabledCSS(): boolean {
+        return this.disabled;
     }
 }
 

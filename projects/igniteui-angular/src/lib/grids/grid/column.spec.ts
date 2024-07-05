@@ -1445,7 +1445,6 @@ describe('IgxGrid - Column properties #grid', () => {
                 hidden
                 disableHiding
                 disablePinning
-                movable
                 filteringIgnoreCase
                 sortingIgnoreCase
                 searchable
@@ -1660,7 +1659,6 @@ export class ColumnHaederClassesComponent {
                 hidden
                 disableHiding
                 disablePinning
-                movable
                 filteringIgnoreCase
                 sortingIgnoreCase
                 searchable

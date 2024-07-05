@@ -8,7 +8,9 @@ import { SortingIndexPipe } from '../headers/pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { PivotRowLayoutType } from './pivot-grid.interface';
+import { PivotUtil } from './pivot-util';
 
 /**
  * @hidden
@@ -54,8 +56,7 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
      */
     public override onSortingIconClick(event) {
         event.stopPropagation();
-        const dimIndex = this.pivotGrid.rowDimensions.findIndex((target) => target.memberName === this.column.field);
-        const dim = this.pivotGrid.rowDimensions[dimIndex];
+        const dim = this.pivotGrid.getRowDimensionByName(this.column.field);
         const startDirection = dim.sortDirection || SortingDirection.None;
         const direction = startDirection + 1 > SortingDirection.Desc ?
             SortingDirection.None : startDirection + 1;
@@ -63,19 +64,22 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
     }
 
     protected override getSortDirection() {
-        const dim = this.pivotGrid.rowDimensions.find((x) => x.memberName === this.column.field);
+        const dim = this.pivotGrid.getRowDimensionByName(this.column.field);
         this.sortDirection = dim?.sortDirection || SortingDirection.None;
     }
 
     protected setSortIndex() {
         if (this.column.sortable && this.sortIconContainer) {
-            const dimIndex = this.pivotGrid.rowDimensions.findIndex((target) => target.memberName === this.column.field);
-            const dim = this.pivotGrid.rowDimensions[dimIndex];
+            const visibleRows = this.pivotGrid.pivotUI.rowLayout === PivotRowLayoutType.Vertical ?
+            this.pivotGrid.pivotConfiguration.rows :
+            PivotUtil.flatten(this.pivotGrid.pivotConfiguration.rows);
+            const dimIndex = visibleRows.findIndex((target) => target.memberName === this.column.field);
+            const dim = visibleRows[dimIndex];
             let newSortIndex = -1;
             if (dim.sortDirection) {
                 let priorSortedDims = 0;
                 for (let i = 0; i < dimIndex; i++) {
-                    if (this.pivotGrid.rowDimensions[i].sortDirection) {
+                    if (visibleRows[i].sortDirection) {
                         priorSortedDims++;
                     }
                 }

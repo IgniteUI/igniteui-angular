@@ -109,7 +109,7 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
 
     public rowDimensionWidthCombined(dims: IPivotDimension[]) {
         let resWidth = 0;
-        for (const dim of dims) {
+        for (const dim of (dims || [])) {
             resWidth += this.grid.rowDimensionWidthToPixels(dim);
         }
         return resWidth;
