@@ -262,12 +262,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event: MouseEvent): void {
-        if (!this.grid.allowFiltering || 
-            (event.composedPath().findIndex(el =>
-                (el as Element).tagName?.toLowerCase() === 'igx-grid-filtering-cell') < 1)) {
-                // Hack for preventing text selection in IE and Edge while dragging the resize element
-                event.preventDefault();
-        }
+        // hack for preventing text selection in IE and Edge while dragging the resize element
+        event.preventDefault();
     }
 
     /**
