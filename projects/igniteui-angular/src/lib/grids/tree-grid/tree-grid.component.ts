@@ -175,7 +175,6 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
-    /* blazorAlternateType: string */
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -185,9 +184,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public childDataKey;
+    public childDataKey: string;
 
-    /* blazorAlternateType: string */
     /**
      * Sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
@@ -198,9 +196,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public foreignKey;
+    public foreignKey: string;
 
-    /* blazorAlternateType: string */
     /**
      * Sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
@@ -214,7 +211,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public hasChildrenKey;
+    public hasChildrenKey: string;
 
     /**
      * Sets whether child records should be deleted when their parent gets deleted.
@@ -346,7 +343,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
-    /* blazorSuppress */
     /**
      * @hidden
      */
@@ -384,7 +380,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         this.cdr.markForCheck();
     }
-
 
     /**
      * Get transactions service for the grid.
