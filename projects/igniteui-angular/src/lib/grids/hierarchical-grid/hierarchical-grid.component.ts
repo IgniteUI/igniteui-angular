@@ -438,9 +438,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childRow: IgxChildGridRowComponent;
 
-    /** @hidden @internal */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
     protected override actionStripComponents: QueryList<IgxActionStripToken>;
+
+    /** @hidden @internal */
+    public override get actionStrip() {
+        return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
+    }
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -657,8 +661,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
-
-        this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 
         this.headSelectorsTemplates = this.parentIsland ?
             this.parentIsland.headSelectorsTemplates :

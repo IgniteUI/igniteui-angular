@@ -850,7 +850,7 @@ export var registerConfig = [
         isQueryList: true,
       },
       {
-        property: "actionStrips",
+        property: "actionStripComponents",
         childType: IgxActionStripToken,
         isQueryList: true,
       },
@@ -859,11 +859,6 @@ export var registerConfig = [
         childType: IgxColumnComponent,
         isQueryList: true,
         descendants: true,
-      },
-      {
-        property: "actionStripComponents",
-        childType: IgxActionStripToken,
-        isQueryList: true,
       },
     ],
     additionalProperties: [

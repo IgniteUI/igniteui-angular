@@ -171,8 +171,16 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._paginatorTemplate = template;
     }
 
+    // TODO(api-analyzer): Shouldn't need all tags to copy from base or hidden/internal due to include tag
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ActionStripCollection */
+    /* blazorCollectionItemName: ActionStrip */
+    /* ngQueryListName: actionStripComponents */
+    /** @hidden @internal */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected actionStrips: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
@@ -387,7 +395,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 });
             }
         });
-        this.actionStrip = this.actionStrips.first;
+
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
