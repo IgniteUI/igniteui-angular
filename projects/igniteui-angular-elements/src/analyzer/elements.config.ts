@@ -482,10 +482,7 @@ export var registerConfig = [
     component: IgxGridToolbarExporterComponent,
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
-    additionalProperties: [
-      { name: "isExporting", writable: true },
-      { name: "grid" },
-    ],
+    additionalProperties: [{ name: "grid" }],
     methods: ["export"],
     boolProps: ["exportCSV", "exportExcel"],
   },
