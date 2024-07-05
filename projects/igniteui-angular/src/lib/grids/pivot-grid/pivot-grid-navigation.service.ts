@@ -6,7 +6,6 @@ import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { PivotUtil } from './pivot-util';
 import { take, timeout } from 'rxjs';
 
 @Injectable()
@@ -177,8 +176,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
 
             if (ctrl) {
                 const dimIndex = this.activeNode.column;
-                const flatRowDimensions = PivotUtil.flatten(this.grid.visibleRowDimensions)
-                const dim = flatRowDimensions[dimIndex];
+                const dim = this.grid.visibleRowDimensions[dimIndex];
                 if (this.activeNode.row === -1) {
                     if (key.includes('down') || key.includes('up')) {
                         let newSortDirection = SortingDirection.None;
