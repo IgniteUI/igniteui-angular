@@ -101,7 +101,7 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
         } else if (this.grid.visibleRowDimensions && this.grid.dimensionDataColumns) {
             const res = [];
             this.grid.visibleRowDimensions.forEach(dim => {
-                res.push(this.grid.rowDimensionWidthToPixels(dim) + "px");
+                res.push(this.grid.rowDimensionWidth(dim));
             });
             return  res.join(' ');
         }
@@ -110,7 +110,12 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
     public rowDimensionWidthCombined(dims: IPivotDimension[]) {
         let resWidth = 0;
         for (const dim of (dims || [])) {
-            resWidth += this.grid.rowDimensionWidthToPixels(dim);
+            const rowDimWidth = this.grid.rowDimensionWidth(dim);
+            if (rowDimWidth === 'fit-content') {
+                return -1;
+            } else {
+                resWidth += parseFloat(rowDimWidth);
+            }
         }
         return resWidth;
     }
