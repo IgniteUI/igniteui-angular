@@ -71,21 +71,6 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
         elementCtor.prototype.getFilterFactory = getFilterFactory;
     }
 
-    // TODO: all 'template' props, setInput check for componentRef!, accumulated Props before init, object componentRef
-    // let propName = 'sortHeaderIconTemplate';
-    // Object.defineProperty(elementCtor.prototype, propName, {
-    //     get(): any {
-    //         // TODO:
-    //         throw 'Not implemented';
-    //     },
-    //     set(newValue: any): void {
-    //         if (!newValue) return;
-    //         this.ngElementStrategy.assignTemplateCallback(propName, newValue);
-    //     },
-    //     configurable: true,
-    //     enumerable: true,
-    // });
-
     return elementCtor;
 }
 

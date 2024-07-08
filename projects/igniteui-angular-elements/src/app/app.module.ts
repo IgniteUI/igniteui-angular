@@ -91,13 +91,6 @@ export class AppModule {
     const pinningActions = createIgxCustomElement(IgxGridPinningActionsComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-pinning-actions", pinningActions);
 
-    /**
-     * WARN: createCustomElement default setup is ONLY FOR ROOT ELEMENTS!
-     * TODO: MUST be the parent injector!!!!! Otherwise NullInjectorError: No provider for IgxToolbarToken!
-     * TODO: In order to provide the parent injector correctly, this can ONLY be registered/initialized
-     * after the parent is CREATED - i.e. this should be a custom form of *child def for igc-grid-toolbar*
-     * which means custom factory more than likely to handle the component creation process.
-     */
     const toolbarTitle = createIgxCustomElement(IgxGridToolbarTitleComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar-title", toolbarTitle);
 
