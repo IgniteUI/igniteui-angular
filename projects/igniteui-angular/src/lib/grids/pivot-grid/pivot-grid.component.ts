@@ -2430,7 +2430,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             // no enabled values and dimensions
             return this.emptyPivotGridTemplate || this.defaultEmptyPivotGridTemplate;
         }
-        super.template;
+        return super.template;
     }
 
     private emitInitEvents(pivotConfig: IPivotConfiguration) {
