@@ -19,6 +19,8 @@ import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgIf } from '@angular/common';
 import { IgxIconService } from '../icon/icon.service';
+import { IndigoIcons } from '../icon/icons.indigo';
+import { ThemeService } from '../services/theme/theme.service';
 
 /**
  * @hidden
@@ -220,18 +222,30 @@ export class IgxExpansionPanelHeaderComponent {
         {
             family: 'default',
             name: 'expand',
-            ref: {
-                name: 'expand_more',
-                family: 'material',
-            }
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_down',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'expand_more',
+                    family: 'material',
+                }
+            }))
         },
         {
             family: 'default',
             name: 'collapse',
-            ref: {
-                name: 'expand_less',
-                family: 'material',
-            }
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_up',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'expand_less',
+                    family: 'material',
+                }
+            }))
         }
     ];
 
@@ -240,12 +254,37 @@ export class IgxExpansionPanelHeaderComponent {
         public panel: IgxExpansionPanelBase,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
-        protected iconsService: IgxIconService
+        protected iconService: IgxIconService,
+        protected themeService: ThemeService
     ) {
         this.id = `${this.panel.id}-header`;
 
+        const indigoIcons = [
+            IndigoIcons.get('chevron_up'),
+            IndigoIcons.get('chevron_down'),
+        ];
+
+        for (const icon of indigoIcons) {
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
+
         for (const icon of this._icons) {
-            iconsService.addIconRef(icon.name, icon.family, icon.ref);
+            switch (this.themeService?.theme) {
+                case "indigo":
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("indigo")
+                    );
+                    break;
+
+                default:
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("default")
+                    );
+            }
         }
     }
 

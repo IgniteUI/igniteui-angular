@@ -39,6 +39,7 @@ import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums'
 import { ThemeService } from '../services/theme/theme.service';
 import type { IgxTheme } from '../services/theme/theme.service';
 import { IgxIconService } from '../icon/icon.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 
 let NEXT_ID = 0;
 
@@ -407,8 +408,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                     family: 'material'
                 },
                 'indigo': {
-                    name: 'keyboard_arrow_left',
-                    family: 'material'
+                    name: 'chevron_left',
+                    family: 'indigo'
                 }
             }))
         },
@@ -421,8 +422,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                     family: 'material'
                 },
                 'indigo': {
-                    name: 'keyboard_arrow_right',
-                    family: 'material'
+                    name: 'chevron_right',
+                    family: 'indigo'
                 }
             }))
         }
@@ -588,6 +589,15 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
         this.theme = this.theme ?? this.themeService.theme;
+
+        const indigoIcons = [
+            IndigoIcons.get('chevron_left'),
+            IndigoIcons.get('chevron_right'),
+        ];
+
+        for (const icon of indigoIcons) {
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
 
         for (const icon of this._icons) {
             switch(this.theme) {
