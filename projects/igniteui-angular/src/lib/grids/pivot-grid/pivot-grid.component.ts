@@ -357,6 +357,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotUI(value: IPivotUISettings) {
         this._pivotUI = Object.assign(this._pivotUI, value || {});
+        this.pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     public get pivotUI() {
