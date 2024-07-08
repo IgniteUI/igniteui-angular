@@ -30,9 +30,11 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: `<div #sink style="display: none;">
-    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
-</div>`,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {

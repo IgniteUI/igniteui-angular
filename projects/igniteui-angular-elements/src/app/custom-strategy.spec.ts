@@ -10,13 +10,17 @@ import { createIgxCustomElement } from './create-custom-element';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/src/lib/test-utils/sample-test-data.spec';
+import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
     let appRef: ApplicationRef;
 
     beforeAll(async () =>{
-        appRef = await createApplication({ providers: [ importProvidersFrom(BrowserTestingModule, NoopAnimationsModule) ]});
+        appRef = await createApplication({ providers: [
+            importProvidersFrom(BrowserTestingModule, NoopAnimationsModule),
+            { provide: ELEMENTS_TOKEN, useValue: true }
+        ]});
 
         const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: appRef.injector, registerConfig });
         customElements.define("igc-column", column);

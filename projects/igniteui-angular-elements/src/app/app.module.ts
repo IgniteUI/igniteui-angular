@@ -31,6 +31,7 @@ import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.in
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
+import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { IgxGridStateComponent } from '../lib/state.component';
     BrowserAnimationsModule
   ],
   providers: [
+    { provide: ELEMENTS_TOKEN, useValue: true }
   ],
 //   bootstrap: []
 })
