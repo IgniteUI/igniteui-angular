@@ -49,6 +49,9 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
         });
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit(): void {
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
     }
