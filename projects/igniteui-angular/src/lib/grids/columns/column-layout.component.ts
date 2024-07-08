@@ -24,9 +24,11 @@ import { IgxColumnGroupComponent } from './column-group.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: `<div #sink style="display: none;">
-    <ng-content select="igx-column,igc-column"></ng-content>
-</div>`,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {

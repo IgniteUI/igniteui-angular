@@ -212,7 +212,9 @@
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
-<div #sink style="display: none;">
-    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
-    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
-</div>
+@if (platform.isElements) {
+    <div #sink style="display: none;">
+        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+    </div>
+}

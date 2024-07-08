@@ -1,9 +1,12 @@
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
+
+/** @hidden @internal */
+export const ELEMENTS_TOKEN = new InjectionToken<boolean>('elements environment');
 
 /**
  * @hidden
@@ -245,6 +248,9 @@ export class PlatformUtil {
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
     public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
+
+    /** @hidden @internal */
+    public isElements = inject(ELEMENTS_TOKEN, { optional: true });
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',

@@ -77,7 +77,7 @@ describe('IgxSimpleCombo', () => {
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockIconService = new IgxIconService(null, null, null, null);
-        const platformUtil = new PlatformUtil('browser');
+        const platformUtil = TestBed.inject(PlatformUtil);
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
