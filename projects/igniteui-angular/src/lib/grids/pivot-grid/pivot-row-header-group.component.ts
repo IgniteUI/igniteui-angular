@@ -83,13 +83,19 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
      * @internal
      */
     public get visibleIndex(): number {
-        const rows = this.grid.rowDimensions;
+        const rows = this.grid.visibleRowDimensions;
         return rows.indexOf(this.rootDimension);
     }
 
     @HostBinding('class.igx-grid-th--active')
     public override get active() {
-        return false;
+        const nav = this.grid.navigation;
+        const node = nav.activeNode;
+        return node && !this.column.columnGroup ?
+            nav.isRowDimensionHeaderActive &&
+            node.row === this.rowIndex &&
+            node.column === this.visibleIndex :
+            false;
     }
 
     @HostBinding('class.asc')
@@ -113,10 +119,21 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     }
 
     protected override get activeNode() {
-        return null;
+        this.grid.navigation.isRowDimensionHeaderActive = true;
+        this.grid.navigation.isRowHeaderActive = false;
+        return {
+            row: this.rowIndex, column: this.visibleIndex, level: null,
+            mchCache: {
+                level: 0,
+                visibleIndex:  this.visibleIndex
+            },
+            layout: null
+        };
     }
 
-    public override activate() { }
+    public override activate() {
+        this.grid.navigation.setActiveNode(this.activeNode);
+    }
 
     /**
      * @hidden @internal

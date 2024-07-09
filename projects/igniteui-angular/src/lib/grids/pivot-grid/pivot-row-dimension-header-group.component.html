@@ -23,6 +23,7 @@
         (pointerdown)="pointerdown($event)"
         [igxColumnMovingDrop]="column"
         [column]="column"
+        (keydown)="grid.navigation.headerNavigation($event)"
     >
     </igx-pivot-row-dimension-header>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
