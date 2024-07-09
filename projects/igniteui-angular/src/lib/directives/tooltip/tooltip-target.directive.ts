@@ -258,7 +258,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('touchstart')
     public onTouchStart() {
         if (this.tooltipDisabled) {
             return;
@@ -270,7 +269,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('document:touchstart', ['$event'])
     public onDocumentTouchStart(event) {
         if (this.tooltipDisabled) {
             return;
@@ -300,6 +298,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
+        this.nativeElement.addEventListener('touchstart', this.onTouchStart, {passive: true});
+        document.addEventListener('touchstart', this.onDocumentTouchStart, {passive: true});
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
@@ -314,6 +314,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     public ngOnDestroy() {
+        this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
+        document.removeEventListener('touchstart', this.onDocumentTouchStart);
         this.destroy$.next();
         this.destroy$.complete();
     }
