@@ -381,13 +381,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public set data(value: any[] | null) {
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
 
-        if (this.autoGenerate && this._data.length > 0) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRegenerateColumns(oldData, this._data)) {
             this.setupColumns();
         }
 
@@ -1342,5 +1343,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    private shouldRegenerateColumns(oldData: any[], newData: any[]): boolean {
+        return !oldData.length || !newData.length || Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
     }
 }
