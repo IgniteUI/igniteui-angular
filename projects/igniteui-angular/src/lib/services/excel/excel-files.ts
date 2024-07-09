@@ -671,7 +671,8 @@ export class WorksheetFile implements IExcelFile {
                                 : this.sheetData += str
                         }
                     }
-                    if (currentCol.headerType === ExportHeaderType.RowHeader && currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                    if ((currentCol.headerType === ExportHeaderType.RowHeader || currentCol.headerType === ExportHeaderType.MultiRowHeader) &&
+                        currentCol.columnSpan && currentCol.columnSpan > 1 ) {
                         columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
                     }
 
