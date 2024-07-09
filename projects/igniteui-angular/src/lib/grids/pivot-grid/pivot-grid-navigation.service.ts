@@ -5,8 +5,8 @@ import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/util
 import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { take, timeout } from 'rxjs';
-
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
@@ -83,15 +83,19 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 }
 
                 verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column];
-                if (key.includes('up') && this.activeNode.row > 0) {
-                    newActiveNode.row = ctrl ? 0 : this.activeNode.row - 1;
-                } else if (key.includes('up')) {
-                    newActiveNode.row = 0;
-                    newActiveNode.column = newActiveNode.layout.colStart - 1;
-                    newActiveNode.layout = null;
-                    this.isRowDimensionHeaderActive = true;
-                    this.isRowHeaderActive = false;
-                    this.grid.theadRow.nativeElement.focus();
+                if (key.includes('up')) {
+                    if (ctrl) {
+                        newActiveNode.row = 0;
+                    } else if (this.activeNode.row > 0) {
+                        newActiveNode.row = this.activeNode.row - 1;
+                    } else {
+                        newActiveNode.row = -1;
+                        newActiveNode.column = newActiveNode.layout ? newActiveNode.layout.colStart - 1 : 0;
+                        newActiveNode.layout = null;
+                        this.isRowDimensionHeaderActive = true;
+                        this.isRowHeaderActive = false;
+                        this.grid.theadRow.nativeElement.focus();
+                    }
                 }
 
                 if (key.includes('down') && this.activeNode.row < this.findLastDataRowIndex()) {
@@ -170,6 +174,22 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 layout: null
             }
 
+            if (ctrl) {
+                const dimIndex = this.activeNode.column;
+                const dim = this.grid.visibleRowDimensions[dimIndex];
+                if (this.activeNode.row === -1) {
+                    if (key.includes('down') || key.includes('up')) {
+                        let newSortDirection = SortingDirection.None;
+                        if (key.includes('down')) {
+                            newSortDirection = (dim.sortDirection === SortingDirection.Desc) ? SortingDirection.None : SortingDirection.Desc;
+                        } else if (key.includes('up')) {
+                            newSortDirection = (dim.sortDirection === SortingDirection.Asc) ? SortingDirection.None : SortingDirection.Asc;
+                        }
+                        this.grid.sortDimension(dim, newSortDirection);
+                        return;
+                    }
+                }
+            }
             if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
                 newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             }

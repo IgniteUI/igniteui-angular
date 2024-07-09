@@ -173,7 +173,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     protected getHeaderWidthFromDimension() {
         if (this.grid.hasHorizontalLayout) {
-            return this.width;
+            return this.width === -1 ? 'fit-content' : this.width;
         }
         return this.grid.rowDimensionWidth(this.rootDimension);
     }

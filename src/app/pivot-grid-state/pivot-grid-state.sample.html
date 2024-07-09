@@ -1,6 +1,9 @@
 <div class="sample-flex-row">
     <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
     <button igxButton="contained" (click)="restoreState()">RESTORE STATE</button>
+    <button igxButton="contained" (click)="export()">EXPORT</button>
+    <igx-switch [checked]="pivotUI.showRowHeaders" (change)="onShowHeadersToggle($event)">Show headers</igx-switch>
+    <igx-switch [checked]="pivotUI.rowLayout === 'horizontal'" (change)="onLayoutToggle($event)">Horizontal layout</igx-switch>
 <div class="pivot-container">
     <div>
         <igx-pivot-grid

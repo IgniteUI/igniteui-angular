@@ -436,7 +436,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public primaryKey: any;
+    public primaryKey: string;
 
     /**
      * Gets/Sets a unique values strategy used by the Excel Style Filtering

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject } from '@angular/core';
 
 import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 
@@ -22,7 +22,7 @@ import { PivotUtil } from './pivot-util';
     standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
-export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
+export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent implements AfterViewInit {
     private pivotGrid: PivotGridType;
 
     constructor(
@@ -37,6 +37,10 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
         this.pivotGrid.dimensionsSortingExpressionsChange
             .pipe(takeUntil(this._destroy$))
             .subscribe((_: ISortingExpression[]) => this.setSortIndex());
+    }
+
+    public ngAfterViewInit(): void {
+        this.setSortIndex();
     }
 
     @HostListener('click', ['$event'])

@@ -14,7 +14,11 @@ import {
     IgxPivotDataSelectorComponent,
     IgxPivotRowDimensionHeaderTemplateDirective,
     IPivotUISettings,
-    PivotRowLayoutType
+    PivotRowLayoutType,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions,
+    IgxSwitchComponent,
+    IChangeCheckboxEventArgs
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -50,7 +54,7 @@ export class IgxTotalSaleAggregate {
     styleUrls: ['pivot-grid-state.sample.scss'],
     templateUrl: 'pivot-grid-state.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxButtonDirective,
+    imports: [FormsModule, IgxButtonDirective, IgxSwitchComponent,
         IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent, IgxPivotRowDimensionHeaderTemplateDirective ]
 })
 export class PivotGridStateSampleComponent {
@@ -70,12 +74,6 @@ export class PivotGridStateSampleComponent {
             ),
         ],
         rows: [
-            // {
-            //     memberName: 'AllSellers',
-            //     displayName: 'All Sellers',
-            //     memberFunction: () => 'All',
-            //     enabled: true
-            // },
             {
                 memberName: 'Country',
                 displayName: 'Country',
@@ -171,6 +169,8 @@ export class PivotGridStateSampleComponent {
     @ViewChild(IgxGridStateDirective, { static: true })
     public state!: IgxGridStateDirective;
 
+    constructor(private exportService: IgxExcelExporterService) {}
+
     public saveState() {
         const state = this.state.getState() as string;
         window.sessionStorage.setItem('grid-state', state);
@@ -194,5 +194,17 @@ export class PivotGridStateSampleComponent {
         }
     }
 
+    public export() {
+        this.exportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
+    }
 
+    public onShowHeadersToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.showRowHeaders = event.checked;
+        this.grid1.pivotUI = this.pivotUI;
+    }
+
+    public onLayoutToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.rowLayout = event.checked ? PivotRowLayoutType.Horizontal : PivotRowLayoutType.Vertical;
+        this.grid1.pivotUI = this.pivotUI;
+    }
 }

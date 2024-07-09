@@ -146,7 +146,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         const data = collection ? cloneArray(collection, true) : [];
         const horizontalRowDimensions = [];
         for (const row of enabledRows) {
-            if (this.grid.hasHorizontalLayout) {
+            if (this.grid?.hasHorizontalLayout) {
                 PivotUtil.flattenGroupsHorizontally(data, row, expansionStates, defaultExpand, horizontalRowDimensions);
             } else {
                 PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
@@ -154,11 +154,13 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         }
 
         let finalData = data;
-        if (this.grid.hasHorizontalLayout) {
+        if (this.grid?.hasHorizontalLayout) {
             const allRowDims = PivotUtil.flatten(this.grid.rowDimensions);
             this.grid.visibleRowDimensions = allRowDims.filter((rowDim) => horizontalRowDimensions.some(targetDim => targetDim.memberName === rowDim.memberName));
         } else {
-            this.grid.visibleRowDimensions = enabledRows;
+            if (this.grid) {
+                this.grid.visibleRowDimensions = enabledRows;
+            }
             finalData = enabledRows.length > 0 ?
             finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
         }

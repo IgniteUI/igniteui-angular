@@ -357,6 +357,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotUI(value: IPivotUISettings) {
         this._pivotUI = Object.assign(this._pivotUI, value || {});
+        this.pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     public get pivotUI() {
@@ -1083,9 +1085,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public get allVisibleDimensions() {
         const config = this._pivotConfiguration;
+        if (!config) return [];
         const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows.find(configRow => configRow.memberName === dim.memberName));
         const rows = (config.rows || []).concat(...uniqueVisibleRowDims);
-        if (!config) return [];
         return rows.concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
@@ -1599,14 +1601,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public autoSizeRowDimension(dimension: IPivotDimension) {
         if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
             const relatedDims: string[] = PivotUtil.flatten([dimension]).map((x: IPivotDimension) => x.memberName);
-            let contentCollection = [];
-            if (this.hasHorizontalLayout) {
-                const allMrlContents = this.rowDimensionMrlRowsCollection.map(mrlRow => mrlRow.contentCells.toArray()).flat();
-                contentCollection = allMrlContents.filter(cell => cell.rootDimension === dimension);
-            } else {
-                contentCollection = this.rowDimensionContentCollection.toArray();
-            }
-
+            const contentCollection =  this.getContentCollection(dimension);
             const content = contentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
             const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
             if (this.pivotUI.showRowHeaders) {
@@ -1950,10 +1945,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected getPivotRowHeaderContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
-        const headerStyle = this.document.defaultView.getComputedStyle(headerGroup.header.refInstance.nativeElement);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-        return this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement).width + headerPadding;
+        const headerSizes = this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement);
+        return headerSizes.width + headerSizes.padding;
     }
 
     protected getLargesContentWidth(contents: ElementRef[]): string {
@@ -2160,20 +2153,38 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.hasDimensionsToAutosize) {
             this.cdr.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
-                this.autoSizeDimensionsInView();
+                requestAnimationFrame(() => {
+                    this.autoSizeDimensionsInView();
+                });
             });
         }
+    }
+
+    protected getContentCollection(dimenstion: IPivotDimension) {
+        let contentCollection;
+        if (this.hasHorizontalLayout) {
+            const allMrlContents = this.rowDimensionMrlRowsCollection.map(mrlRow => mrlRow.contentCells.toArray()).flat();
+            contentCollection = allMrlContents.filter(cell => cell.rootDimension === dimenstion);
+        } else {
+            contentCollection = this.rowDimensionContentCollection.toArray();
+        }
+        return contentCollection;
     }
 
     protected autoSizeDimensionsInView() {
         if (!this.hasDimensionsToAutosize) return;
         for (const dim of this.visibleRowDimensions) {
-            if (dim.width === 'auto' && !this.hasHorizontalLayout) {
+            if (dim.width === 'auto') {
                 const contentWidths = [];
                 const relatedDims = PivotUtil.flatten([dim]).map(x => x.memberName);
-                const content = this.rowDimensionContentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
+                const contentCollection = this.getContentCollection(dim);
+                const content = contentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
                 const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
                 headers.forEach((header) => contentWidths.push(header?.nativeElement?.offsetWidth || 0));
+                if (this.pivotUI.showRowHeaders) {
+                    const dimensionHeader = this.theadRow.rowDimensionHeaders.find(x => x.column.field === dim.memberName);
+                    contentWidths.push(parseFloat(this.getLargesContentWidth([dimensionHeader])));
+                }
                 const max = Math.max(...contentWidths);
                 if (max === 0) {
                     // cells not in DOM yet...
@@ -2181,8 +2192,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
                 const maxSize = Math.ceil(Math.max(...contentWidths));
                 dim.autoWidth = maxSize;
-            } else if (dim.width === 'auto') {
-                this.autoSizeRowDimension(dim);
             }
         }
     }
@@ -2421,7 +2430,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             // no enabled values and dimensions
             return this.emptyPivotGridTemplate || this.defaultEmptyPivotGridTemplate;
         }
-        super.template;
+        return super.template;
     }
 
     private emitInitEvents(pivotConfig: IPivotConfiguration) {
