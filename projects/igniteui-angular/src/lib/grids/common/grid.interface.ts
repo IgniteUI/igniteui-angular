@@ -309,7 +309,7 @@ export interface ColumnType extends FieldType {
      * Empty without children or if this column is not Group or Layout.
      */
     get childColumns(): ColumnType[];
-    /** An array, containing all the child columns, including nested children. */
+    /** @hidden @internal */
     allChildren: ColumnType[];
     /**
      * The header group component associated with this column.
