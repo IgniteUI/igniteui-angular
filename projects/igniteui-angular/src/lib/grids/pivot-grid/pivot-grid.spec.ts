@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxIconComponent, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -14,16 +14,19 @@ import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponen
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
+import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
+const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
 describe('IgxPivotGrid #pivotGrid', () => {
     configureTestSuite();
@@ -1935,7 +1938,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
             });
 
-            it('should auto-size row dimension when width is set to auto.', () => {
+            it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 let rowDimension = pivotGrid.pivotConfiguration.rows[0];
                 expect(rowDimension.width).toBeUndefined();
@@ -1973,11 +1976,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 };
 
                 fixture.detectChanges();
+                tick(200);
                 rowDimension = pivotGrid.pivotConfiguration.rows[0];
                 expect(rowDimension.autoWidth).toBe(158);
                 expect(rowDimension.width).toBe('auto');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
-            });
+            }));
 
             it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -2815,6 +2819,398 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
             expect(pivotRecord.aggregationValues.get('Japan')).toBe(240);
+        });
+    });
+
+
+    describe('IgxPivotGrid Horizontal Layout #pivotGrid', () => {
+        let fixture: ComponentFixture<any>;
+        let pivotGrid: IgxPivotGridComponent;
+
+        beforeEach(waitForAsync(() => {
+            fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fixture.detectChanges();
+
+            pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotUI = {
+                showRowHeaders: true,
+                showConfiguration: true,
+                rowLayout: PivotRowLayoutType.Horizontal
+            };
+            fixture.detectChanges();
+        }));
+
+        it("should render row hierarchy horizontally.", () => {
+            fixture.detectChanges();
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(7);
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            // check each dimension from hierarchy is on another column.
+            const rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            let dimensions = rowDimensionCol1.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "All cities")).toBeTruthy();
+            const rowDimensionHeadersCol1 = rowDimensionCol1.map(x => x.componentInstance.rowDimensionColumn.header);
+            expect(rowDimensionHeadersCol1).toEqual(["All Cities"]);
+
+            const rowDimensionCol2 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 2);
+            const rowDimensionHeadersCol2 = rowDimensionCol2.map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol2.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "City")).toBeTruthy();
+            expect(rowDimensionHeadersCol2).toEqual(["Ciudad de la Costa", "London", "New York", "Plovdiv", "Sofia", "Yokohama"]);
+
+            const rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3);
+            const rowDimensionHeadersCol3 = rowDimensionCol3.map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol3.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "AllProducts")).toBeTruthy();
+            expect(rowDimensionHeadersCol3).toEqual(["AllProducts", "AllProducts", "AllProducts", "AllProducts", "AllProducts", "AllProducts"]);
+
+            const rowDimensionCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            const rowDimensionHeadersCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4)
+            .map(x => x.componentInstance.rowDimensionColumn.header);
+            dimensions = rowDimensionCol4.map(x => x.componentInstance.dimension);
+            expect(dimensions.every(x => x.memberName === "ProductCategory")).toBeTruthy();
+            expect(rowDimensionHeadersCol4).toEqual(["Bikes", "Clothing", "Accessories",
+             "Clothing",  "Clothing", "Components", "Components"]);
+        });
+
+        it("should  horizontally expand/collapse on a single dimension hierarchy.", () => {
+            fixture.detectChanges();
+            let layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            let contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            // collapse All Products
+            let rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(4);
+            let expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+            expect(expander.nativeElement.innerText).toBe("expand_more");
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            // check cells are merged
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(5);
+
+            // check icon is updated
+            expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+           expect(expander.nativeElement.innerText).toBe("chevron_right");
+
+           // toggle All Products
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            // check cell is no longer merged.
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3)[0];
+            expect(rowDimensionCol3.componentInstance.layout.colStart).toEqual(3);
+            expect(rowDimensionCol3.componentInstance.layout.colEnd).toEqual(4);
+            expander = rowDimensionCol3.query(By.directive(IgxIconComponent));
+            expect(expander.nativeElement.innerText).toBe("expand_more");
+        });
+
+        it("should collapse fully the last dimension if all parent dimensions get collapsed.", () => {
+            pivotGrid.data = [{
+                    ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley Brooker',
+                    Country: 'Bulgaria', City: 'Plovdiv', Date: '01/01/2012', UnitsSold: 282
+                }];
+            fixture.detectChanges();
+            let layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            let contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            const rowDimensionsCol3 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 3);
+            let rowDimensionsCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            expect(rowDimensionsCol4.length).toBe(1);
+            // collapse all from All Products
+            const expander = rowDimensionsCol3[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainer.queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionsCol4 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 4);
+            // nothing is now on column 4 since all are collapsed.
+            expect(rowDimensionsCol4.length).toBe(0);
+        });
+
+        it("should render summary rows when enabled.", () => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(7);
+            let layoutContainers = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(2);
+            const contentRowHeaders = layoutContainers[0].queryAll(
+                By.directive(IgxPivotRowDimensionContentComponent));
+            const summaryRowHeaders = layoutContainers[1].queryAll(
+                    By.directive(IgxPivotRowDimensionContentComponent));
+
+            // check first column of data contains summary
+            const summaryRowHeader = summaryRowHeaders.map(x => x.componentInstance.rowDimensionColumn.header);
+            expect(summaryRowHeader).toEqual(["All Cities Total"]);
+
+            // check summary hides on collapse
+            const rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            const expander = rowDimensionCol1[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            layoutContainers = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(1);
+            expect(pivotGrid.rowList.toArray().length).toBe(1);
+        });
+
+        it("should allow navigation in the row layouts.", fakeAsync(() => {
+            fixture.detectChanges();
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const allGroups = layoutContainer.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const row0Col0 = allGroups[0];
+            const row0Col1 = allGroups.filter(x => x.componentInstance.column.header === "Ciudad de la Costa")[0];
+            const row0Col2 = allGroups.filter(x => x.componentInstance.column.header === "AllProducts")[0];
+            const row0Col3 = allGroups.filter(x => x.componentInstance.column.header === "Bikes")[0];
+            const row1Col3 = allGroups.filter(x => x.componentInstance.column.header === "Clothing")[0];
+            const row2Col3 = allGroups.filter(x => x.componentInstance.column.header === "Accessories")[0];
+            UIInteractions.simulateClickAndSelectEvent(row0Col0);
+            fixture.detectChanges();
+
+            GridFunctions.verifyHeaderIsFocused(row0Col0.parent);
+            let  activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col0.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col1.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', row0Col2.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row0Col3.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', row1Col3.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row2Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row2Col3.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row1Col3.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row1Col3.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col2.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col2.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col1.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', row0Col1.nativeElement);
+            tick();
+            fixture.detectChanges();
+            GridFunctions.verifyHeaderIsFocused(row0Col0.parent);
+            activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));
+            expect(activeCells.length).toBe(1);
+        }));
+
+        it("should allow resizing the row dimension.", fakeAsync(() => {
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');
+
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
+
+            // Resize first column
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            fixture.detectChanges();
+
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
+        }));
+
+        it("should allow sorting each dimension column from the hierarchy.", () => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    childLevel:
+                    {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+            let rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+
+            const productsHeaderColumn = rowHeaders.filter(x => x.componentInstance.column.header === "ProductCategory")[0].nativeElement;
+            const productRowContents = rowHeaders.filter(x => x.componentInstance.column.field === "ProductCategory");
+            const productRowContentsHeaders = productRowContents.map(x => x.componentInstance.column.header);
+
+            expect(productRowContentsHeaders).toEqual( ['ProductCategory', 'Accessories', 'Bikes', 'Clothing', 'Components']);
+
+            const sortIcon = productsHeaderColumn.querySelectorAll('igx-icon')[0];
+            sortIcon.click();
+            fixture.detectChanges();
+            sortIcon.click();
+            fixture.detectChanges();
+
+            rowHeaders = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            const updatedProductRowContents = rowHeaders.filter(x => x.componentInstance.column.field === "ProductCategory");
+            const updatedProductRowContentsHeaders = updatedProductRowContents.map(x => x.componentInstance.column.header);
+            expect(updatedProductRowContentsHeaders).toEqual( ['ProductCategory', 'Components', 'Clothing', 'Bikes', 'Accessories']);
+        });
+
+        it("should allow select/deselect the correct rows on row header click.", () => {
+            fixture.detectChanges();
+            const layoutContainer = fixture.debugElement.query(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            const rowHeaders = layoutContainer.queryAll(
+                By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(pivotGrid.selectedRows).toEqual([]);
+            const pivotRows = GridFunctions.getPivotRows(fixture);
+            const row = pivotRows[2].componentInstance;
+            const secondDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'Accessories');
+            secondDimCell.nativeElement.click();
+            fixture.detectChanges();
+            expect(row.selected).toBeTrue();
+            expect(pivotGrid.selectedRows).not.toBeNull();
+            expect(pivotGrid.selectedRows.length).toBe(1);
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('ProductCategory')).toBe('Accessories');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('AllProducts')).toBe('AllProducts');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('City')).toBe('London');
+            expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('All cities')).toBe("All Cities");
+        });
+
+        it("should render correct rows with noop strategies.", () => {
+            pivotGrid.data = [
+                {
+                    AllProducts: 'All Products', All: 2127, 'Bulgaria': 774, 'USA': 829, 'Uruguay': 524, 'AllProducts_records': [
+                        { ProductCategory: 'Clothing', All: 1523, 'Bulgaria': 774, 'USA': 296, 'Uruguay': 456, },
+                        { ProductCategory: 'Bikes', All: 68, 'Uruguay': 68 },
+                        { ProductCategory: 'Accessories', All: 293, 'USA': 293 },
+                        { ProductCategory: 'Components', All: 240, 'USA': 240 }
+                    ]
+                }
+            ];
+            pivotGrid.pivotConfiguration = {
+                columnStrategy: NoopPivotDimensionsStrategy.instance(),
+                rowStrategy: NoopPivotDimensionsStrategy.instance(),
+                columns: [
+                    {
+                        memberName: 'Country',
+                        enabled: true
+                    },
+                ]
+                ,
+                rows: [
+                    {
+                        memberFunction: () => 'All',
+                        memberName: 'AllProducts',
+                        enabled: true,
+                        width: '25%',
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            enabled: true
+                        }
+                    }
+                ],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'sum',
+                            label: 'Sum'
+                        },
+                        enabled: true
+                    },
+                ],
+                filters: null
+            };
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            const pivotRows = GridFunctions.getPivotRows(fixture);
+            expect(pivotRows.length).toBe(4);
         });
     });
 });
