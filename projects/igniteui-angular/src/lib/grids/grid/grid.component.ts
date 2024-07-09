@@ -387,7 +387,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.validation.updateAll(this._data);
         }
 
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0) {
             this.setupColumns();
         }
 
