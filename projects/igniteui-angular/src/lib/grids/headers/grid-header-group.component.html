@@ -11,11 +11,7 @@
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
                 [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
-                [column]="child"
-                [igxColumnMovingDrag]="child"
-                [ghostHost]="grid.outlet.nativeElement"
-                [attr.droppable]="true"
-                [igxColumnMovingDrop]="child">
+                [column]="child">
             </igx-grid-header-group>
         </ng-container>
     </div>
