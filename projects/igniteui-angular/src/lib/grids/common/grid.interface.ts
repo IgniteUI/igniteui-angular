@@ -299,8 +299,16 @@ export interface FieldType {
 export interface ColumnType extends FieldType {
     /** Represents the instance of the parent `GridType` that contains this column. */
     grid: GridType;
-    /** A list, containing all the child columns under this column (if any). */
+    /**
+     * A list containing all the child columns under this column (if any).
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
+     */
     children: QueryList<ColumnType>;
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    get childColumns(): ColumnType[];
     /** An array, containing all the child columns, including nested children. */
     allChildren: ColumnType[];
     /**
