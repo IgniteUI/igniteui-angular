@@ -39,6 +39,25 @@ export interface IgxIconLoadedEvent {
     family: string;
 }
 
+interface ParsedIcon {
+    svg: string;
+    title?: string;
+  }
+
+export type IgxIconCollection = {
+    [name: string]: ParsedIcon;
+};
+
+enum ActionType {
+    SyncState,
+    UpdateState
+  }
+
+  interface BroadcastIconsChangeMessage {
+    actionType: ActionType,
+    collections:  Map<string, IgxIconCollection>
+  }
+
 /**
  * **Ignite UI for Angular Icon Service** -
  *
@@ -75,6 +94,7 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
+    private iconBroadcastChannel: BroadcastChannel;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
@@ -87,6 +107,31 @@ export class IgxIconService {
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
+            // open broadcast channel for sync with wc icon service.
+            this.iconBroadcastChannel = new BroadcastChannel("ignite-ui-icon-channel");
+            this.iconBroadcastChannel.onmessage = (event) => {
+                const message = event.data as BroadcastIconsChangeMessage;
+                if (message.actionType === ActionType.SyncState) {
+                    const collections = message.collections;
+                    const collectionKeys = collections.keys();
+                    for (const collectionKey of collectionKeys) {
+                    const collection = collections.get(collectionKey);
+                        for (const iconKey in collection) {
+                            const value = collection[iconKey];
+                            const iconRef = this._iconRefs.get('default')?.get(iconKey);
+                            if (iconRef) {
+                                this._iconRefs.get('default').delete(iconKey);
+                            }
+                            this.addSvgIconFromText(iconKey, value.svg, collectionKey);
+                            this.addIconRef(iconKey, 'default', { family: collectionKey, name: iconKey });
+                        }
+                    }
+                }
+              };
+            // send message to sync state
+            this.iconBroadcastChannel.postMessage({
+                actionType: ActionType.SyncState
+            });
         }
     }
 
