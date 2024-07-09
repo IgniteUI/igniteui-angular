@@ -77,6 +77,7 @@ export var registerConfig = [
       { name: "columnGroup" },
       { name: "columnLayout" },
       { name: "columnLayoutChild" },
+      { name: "childColumns" },
       { name: "level" },
       { name: "gridRowSpan" },
       { name: "gridColumnSpan" },
@@ -137,6 +138,7 @@ export var registerConfig = [
     additionalProperties: [
       { name: "cells" },
       { name: "selected", writable: true },
+      { name: "childColumns" },
       { name: "columnGroup" },
       { name: "columnLayout" },
       { name: "index" },
@@ -200,6 +202,7 @@ export var registerConfig = [
       { name: "visibleIndex" },
       { name: "cells" },
       { name: "selected", writable: true },
+      { name: "childColumns" },
       { name: "columnGroup" },
       { name: "index" },
       { name: "defaultMinWidth" },
