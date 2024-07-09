@@ -74,7 +74,7 @@ export interface IPivotAggregator {
      */
     aggregatorName?: PivotAggregationType;
 
-    /* csTreatAsEvent: AggregatorEventHandler */
+    /* blazorAlternateType: AggregatorEventHandler */
     /* blazorOnlyScript */
     /**
      * Aggregator function can be a custom implementation of `PivotAggregation`, or
@@ -159,8 +159,6 @@ export interface IPivotValue {
      * Active aggregator definition with key, label and aggregator.
      */
     aggregate: IPivotAggregator;
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: PivotAggregatorCollection */
     /**
      * List of aggregates to show in aggregate drop-down.
      */
