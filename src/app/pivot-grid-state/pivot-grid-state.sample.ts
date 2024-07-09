@@ -13,7 +13,12 @@ import {
     IgxButtonDirective,
     IgxPivotDataSelectorComponent,
     IgxPivotRowDimensionHeaderTemplateDirective,
-    IPivotUISettings
+    IPivotUISettings,
+    PivotRowLayoutType,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions,
+    IgxSwitchComponent,
+    IChangeCheckboxEventArgs
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -49,7 +54,7 @@ export class IgxTotalSaleAggregate {
     styleUrls: ['pivot-grid-state.sample.scss'],
     templateUrl: 'pivot-grid-state.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxButtonDirective,
+    imports: [FormsModule, IgxButtonDirective, IgxSwitchComponent,
         IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent, IgxPivotRowDimensionHeaderTemplateDirective ]
 })
 export class PivotGridStateSampleComponent {
@@ -70,21 +75,41 @@ export class PivotGridStateSampleComponent {
         ],
         rows: [
             {
-                memberName: 'AllCities',
-                displayName: 'All Cities',
-                memberFunction: () => 'All',
+                memberName: 'Country',
+                displayName: 'Country',
                 enabled: true,
                 sortable: false,
+                horizontalSummary: false,
                 childLevel: {
+                    displayName: 'City',
                     memberName: 'City',
-                    enabled: true,
-                    width: '100px'
+                    horizontalSummary: true,
+                    enabled: true
                 }
             },
             {
-                memberName: 'SellerName',
-                enabled: true
-            }
+                memberName: 'AllProducts',
+                displayName: 'All Products',
+                memberFunction: () => 'All',
+                enabled: true,
+                horizontalSummary: false,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    displayName: 'Product Category',
+                    enabled: true
+                },
+            },
+            // {
+            //     memberName: 'AllSellers',
+            //     displayName: 'All Sellers',
+            //     memberFunction: () => 'All',
+            //     enabled: true,
+            //     childLevel: {
+            //         displayName: 'Seller Name',
+            //         memberName: 'SellerName',
+            //         enabled: true
+            //     }
+            // },
         ],
         values: [
             {
@@ -129,7 +154,7 @@ export class PivotGridStateSampleComponent {
         },
         {
             ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            Country: 'USA', City: 'California', Date: '12/08/2021', UnitsSold: 240
         },
         {
             ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
@@ -137,12 +162,14 @@ export class PivotGridStateSampleComponent {
         }];
 
 
-    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true };
+    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
     public options: IGridStateOptions = {
         pivotConfiguration: true
     };
     @ViewChild(IgxGridStateDirective, { static: true })
     public state!: IgxGridStateDirective;
+
+    constructor(private exportService: IgxExcelExporterService) {}
 
     public saveState() {
         const state = this.state.getState() as string;
@@ -167,5 +194,17 @@ export class PivotGridStateSampleComponent {
         }
     }
 
+    public export() {
+        this.exportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
+    }
 
+    public onShowHeadersToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.showRowHeaders = event.checked;
+        this.grid1.pivotUI = this.pivotUI;
+    }
+
+    public onLayoutToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.rowLayout = event.checked ? PivotRowLayoutType.Horizontal : PivotRowLayoutType.Vertical;
+        this.grid1.pivotUI = this.pivotUI;
+    }
 }
