@@ -120,4 +120,46 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('Should replace deprecated `children` property of Columns', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/expansion-test.component.ts',
+            `import { Component } from '@angular/core';
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-columns-test',
+    templateUrl: './columns-test.component.html',
+    styleUrls: ['./columns-test.component.scss']
+})
+export class ColumnsTestComponent {
+    public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+        const columns = columnGroup.children.toArray();
+    }
+    public toggleColumnGroup2(columnGroup: ColumnType) {
+        const columns = columnGroup.children.toArray();
+    }
+}`
+        );
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const expectedContent =  `import { Component } from '@angular/core';
+import { IgxColumnGroupComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-columns-test',
+    templateUrl: './columns-test.component.html',
+    styleUrls: ['./columns-test.component.scss']
+})
+export class ColumnsTestComponent {
+    public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+        const columns = columnGroup.childColumns;
+    }
+    public toggleColumnGroup2(columnGroup: ColumnType) {
+        const columns = columnGroup.childColumns;
+    }
+}`;
+        expect(
+                tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+            ).toEqual(expectedContent);
+    });
 });

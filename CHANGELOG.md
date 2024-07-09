@@ -10,6 +10,11 @@ All notable changes for each version of this project will be documented in this 
     - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
     - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
 
+### General
+- `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
+    - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+
+
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
@@ -173,7 +178,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-=======
+
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
