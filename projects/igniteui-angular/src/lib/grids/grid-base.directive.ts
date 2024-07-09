@@ -433,7 +433,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Input()
     public rowStyles = null;
 
-    /* alternateType: string */
     /**
      * Gets/Sets the primary key.
      *
