@@ -6172,7 +6172,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this), {passive: true});
     }
 
     /**
