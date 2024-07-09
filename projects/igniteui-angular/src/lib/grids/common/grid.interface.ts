@@ -671,7 +671,7 @@ export interface GridType extends IGridDataBindable {
      /** Indicates whether rows in the grid can be dragged. If te value is true, the rows can be dragged */
     rowDraggable: boolean;
     /** Represents the unique primary key used for identifying rows in the grid */
-    primaryKey: any;
+    primaryKey: string;
     /** Represents the unique identifier of the grid. */
     id: string;
     /** The height of the visible rows in the grid. */
