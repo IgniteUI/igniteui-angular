@@ -401,7 +401,7 @@ export class IgxGridSelectionService {
         }
         const selection = [];
         const gridDataMap = {};
-        this.grid.gridAPI.get_all_data(true).forEach(row => gridDataMap[this.getRecordKey(row)] === row);
+        this.grid.gridAPI.get_all_data(true).forEach(row => gridDataMap[this.getRecordKey(row)] = row);
         this.rowSelection.forEach(rID => {
             const rData = gridDataMap[rID];
             const partialRowData = {};
