@@ -33,6 +33,8 @@ import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { resizeObservable } from '../core/utils';
 import { IgxIconService } from '../icon/icon.service';
+import { ThemeService } from '../services/theme/theme.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 
 /**
  * @hidden @internal
@@ -324,27 +326,67 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private _selection: IgxTreeSelectionType = IgxTreeSelectionType.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
+    private _icons = [
+        {
+            name: 'expand',
+            family: 'tree',
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_right',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'keyboard_arrow_right',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'collapse',
+            family: 'tree',
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_down',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'keyboard_arrow_down',
+                    family: 'material'
+                }
+            }))
+        }];
 
     constructor(
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
+        private themeService: ThemeService,
         @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
     ) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
 
-        iconService?.addIconRef('expand', 'tree', {
-            name: 'keyboard_arrow_right',
-            family: 'material'
-        });
+        const indigoIcons = [
+            IndigoIcons.get('chevron_right'),
+            IndigoIcons.get('chevron_down')
+        ];
 
-        iconService?.addIconRef('collapse', 'tree', {
-            name: 'keyboard_arrow_down',
-            family: 'material'
-        });
+        for (const icon of indigoIcons) {
+            iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
+
+        for (const icon of this._icons) {
+            switch(this.themeService?.theme) {
+                case 'indigo':
+                    iconService.addIconRef(icon.name, icon.family, icon.ref.get('indigo'))
+                    break;
+                default:
+                    iconService.addIconRef(icon.name, icon.family, icon.ref.get('default'))
+
+            }
+        }
     }
 
     /** @hidden @internal */

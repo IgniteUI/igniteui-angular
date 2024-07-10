@@ -9,6 +9,8 @@ import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxIconService } from '../../icon/icon.service';
+import { ThemeService } from '../../services/theme/theme.service';
+import { IndigoIcons } from '../../icon/icons.indigo';
 
 export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
@@ -125,6 +127,35 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
+    private _icons = [
+        {
+            name: 'prev',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_left',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'navigate_before',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'next',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_right',
+                    family: 'indigo',
+                },
+                'default': {
+                    name: 'navigate_next',
+                    family: 'material'
+                }
+            }))
+        }];
 
     constructor(
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
@@ -132,19 +163,30 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         private ngZone: NgZone,
         dir: IgxDirectionality,
         @Optional() @Inject(IgxIconService)
-        protected iconService?: IgxIconService
+        protected iconService: IgxIconService,
+        protected themeService: ThemeService
     ) {
         super(animationService, cdr, dir);
 
-        iconService.addIconRef('prev', 'default', {
-            name: 'navigate_before',
-            family: 'material'
-        });
+        const indigoIcons = [
+            IndigoIcons.get('chevron_left'),
+            IndigoIcons.get('chevron_right')
+        ];
 
-        iconService.addIconRef('next', 'default', {
-            name: 'navigate_next',
-            family: 'material'
-        });
+        for (const icon of indigoIcons) {
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, 'indigo');
+        }
+
+        for (const icon of this._icons) {
+            switch(this.themeService?.theme) {
+                case 'indigo':
+                    this.iconService.addIconRef(icon.name, icon.family, icon.ref.get('indigo'))
+                    break;
+                default:
+                    this.iconService.addIconRef(icon.name, icon.family, icon.ref.get('default'))
+
+            }
+        }
     }
 
 
