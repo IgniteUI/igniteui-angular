@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxPivotGrid`
     - Added horizontal layout for row dimensions. Can be configured through the `pivotUI` `rowLayout` property.
     - Added `horizontalSummary` property for each IPivotDimension, enabling summary row when using horizontal layout.
+    - Added `rowSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
     - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
     - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
 
