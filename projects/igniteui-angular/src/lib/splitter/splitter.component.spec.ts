@@ -306,7 +306,6 @@ describe('IgxSplitter', () => {
 
     it('should reset transform style of vertical splitter bar after dragging', async () => {
         const pane1 =  splitter.panes.toArray()[0];
-        const pane2 = splitter.panes.toArray()[1];
         pane1.size = '200px';
         fixture.detectChanges();
 
