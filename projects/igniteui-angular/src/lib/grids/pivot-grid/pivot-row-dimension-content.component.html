@@ -3,10 +3,12 @@
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles | igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
-                [style.min-width]="grid.rowDimensionWidth(rootDimension)"
-                [style.width]="grid.rowDimensionWidth(rootDimension)"
-                [style.flex-basis]="grid.rowDimensionWidth(rootDimension)"
+                [style.min-width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                 [rowIndex]="rowIndex"
+                [colIndex]="colIndex"
+                [layout]="layout"
                 [parent]='this'>
             </igx-pivot-row-dimension-header-group>
     </div>
