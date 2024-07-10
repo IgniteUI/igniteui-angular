@@ -1450,7 +1450,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public get columnLayoutChild() {
+    public get columnLayoutChild(): boolean {
         return this.parent && this.parent.columnLayout;
     }
 
