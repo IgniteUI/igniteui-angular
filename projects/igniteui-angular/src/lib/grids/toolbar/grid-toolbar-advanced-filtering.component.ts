@@ -32,6 +32,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
+     * @hidden @internal
      */
     public get grid() {
         return this.toolbar.grid;
