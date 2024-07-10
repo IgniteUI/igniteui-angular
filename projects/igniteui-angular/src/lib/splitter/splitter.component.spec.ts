@@ -304,6 +304,26 @@ describe('IgxSplitter', () => {
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
+    it('should reset transform style of vertical splitter bar after dragging', async () => {
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        pane1.size = '200px';
+        fixture.detectChanges();
+
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
+
+        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBar.moveStart.emit(pane1);
+        splitterBar.moving.emit(-150);
+        fixture.detectChanges();
+
+        splitterBar.movingEnd.emit(50);
+        fixture.detectChanges();
+
+        expect(splitterBarComponent.style.transform).not.toBe('translate3d(0px, 0px, 0px)');
+    });
 });
 
 describe('IgxSplitter pane toggle', () => {
