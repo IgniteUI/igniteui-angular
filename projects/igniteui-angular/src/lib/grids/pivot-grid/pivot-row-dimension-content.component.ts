@@ -148,7 +148,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     * @internal
     */
     public toggleRowDimension(event) {
-        this.grid.toggleRow(this.getRowDimensionKey())
+        this.grid.toggleRow(this.getRowDimensionKey());
+        this.grid.navigation.onRowToggle(this.getExpandState(), this.dimension, this.rowData, this.layout);
         event?.stopPropagation();
     }
 
@@ -206,7 +207,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
 
 
-        if (header && dim.childLevel && !this.rowData.totalRecord) {
+        if (header && dim.childLevel && (!this.rowData.totalRecordDimName || this.rowData.totalRecordDimName !== dim.memberName)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

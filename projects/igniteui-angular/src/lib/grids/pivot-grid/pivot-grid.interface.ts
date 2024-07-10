@@ -203,10 +203,16 @@ export enum PivotRowLayoutType {
     Horizontal = "horizontal"
 }
 
+export enum PivotSummaryPosition {
+    Top = "top",
+    Bottom = "bottom"
+}
+
 export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
-    rowLayout?: PivotRowLayoutType
+    rowLayout?: PivotRowLayoutType;
+    rowSummariesPosition?: PivotSummaryPosition;
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
@@ -252,7 +258,7 @@ export interface IPivotGridRecord {
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
     /** Describes if this is a total record for a dimension */
-    totalRecord?: boolean;
+    totalRecordDimName?: string;
     /** The index of the record in the total view */
     dataIndex?: number;
 }

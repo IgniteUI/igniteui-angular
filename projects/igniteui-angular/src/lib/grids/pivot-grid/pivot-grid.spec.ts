@@ -14,7 +14,7 @@ import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponen
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
-import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType } from './pivot-grid.interface';
+import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
@@ -2992,6 +2992,99 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 By.directive(IgxPivotRowDimensionMrlRowComponent));
             expect(layoutContainers.length).toBe(1);
             expect(pivotGrid.rowList.toArray().length).toBe(1);
+        });
+
+        it("should render summary rows on top when enabled", () => {
+            pivotGrid.pivotUI.rowSummariesPosition = PivotSummaryPosition.Top;
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            // check rows
+            const rows = pivotGrid.rowList.toArray();
+            expect(rows.length).toBe(7);
+            let layoutContainers = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(2);
+
+            const contentRowHeaders = layoutContainers[1].queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+            const summaryRowHeaders = layoutContainers[0].queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+            const summaryRowHeader = summaryRowHeaders.map(x => x.componentInstance.rowDimensionColumn.header);
+            expect(summaryRowHeader).toEqual(["All Cities Total"]);
+
+            // check summary hides on collapse
+            const rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+
+            const header = rowDimensionCol1[0].query(By.directive(IgxPivotRowDimensionHeaderComponent));
+            header.nativeElement.dispatchEvent(new PointerEvent('pointerdown'));
+            fixture.detectChanges();
+
+            expect(pivotGrid.navigation.activeNode.row).toEqual(1);
+
+            const expander = rowDimensionCol1[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            layoutContainers = fixture.debugElement.queryAll(
+                By.directive(IgxPivotRowDimensionMrlRowComponent));
+            expect(layoutContainers.length).toBe(1);
+            expect(pivotGrid.rowList.toArray().length).toBe(1);
+            expect(pivotGrid.navigation.activeNode.row).toEqual(0);
+        });
+
+        it("should update active node when top summary rows on and dimension is collapsed/expanded", () => {
+            pivotGrid.pivotUI.rowSummariesPosition = PivotSummaryPosition.Top;
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+
+            let layoutContainers = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionMrlRowComponent));
+            let contentRowHeaders = layoutContainers[1].queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+            let rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            const header = rowDimensionCol1[0].query(By.directive(IgxPivotRowDimensionHeaderComponent));
+            header.nativeElement.dispatchEvent(new PointerEvent('pointerdown'));
+            fixture.detectChanges();
+
+            expect(pivotGrid.navigation.activeNode.row).toEqual(1);
+
+            let expander = rowDimensionCol1[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(pivotGrid.rowList.toArray().length).toBe(1);
+            expect(pivotGrid.navigation.activeNode.row).toEqual(0);
+
+            layoutContainers = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionMrlRowComponent));
+            contentRowHeaders = layoutContainers[0].queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+            rowDimensionCol1 = contentRowHeaders.filter(y => y.componentInstance.layout.colStart === 1);
+            expander = rowDimensionCol1[0].query(By.directive(IgxIconComponent));
+            expander.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(pivotGrid.rowList.toArray().length).toBe(7);
+            expect(pivotGrid.navigation.activeNode.row).toEqual(1);
         });
 
         it("should allow navigation in the row layouts.", fakeAsync(() => {
