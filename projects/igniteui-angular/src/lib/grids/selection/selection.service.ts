@@ -400,8 +400,10 @@ export class IgxGridSelectionService {
             return Array.from(this.rowSelection);
         }
         const selection = [];
+        const gridDataMap = {};
+        this.grid.gridAPI.get_all_data(true).forEach(row => gridDataMap[this.getRecordKey(row)] === row);
         this.rowSelection.forEach(rID => {
-            const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
+            const rData = gridDataMap[rID];
             const partialRowData = {};
             partialRowData[this.grid.primaryKey] = rID;
             selection.push(rData ? rData : partialRowData);
@@ -607,9 +609,9 @@ export class IgxGridSelectionService {
         if (this.allRowsSelected !== undefined && !newSelection) {
             return this.allRowsSelected;
         }
-        const selectedData = newSelection ? newSelection : [...this.rowSelection]
+        const selectedData = new Set(newSelection ? newSelection : [...this.rowSelection]);
         const allData = this.getRowIDs(this.allData);
-        const unSelectedRows = allData.filter(row => !selectedData.includes(row));
+        const unSelectedRows = allData.filter(row => !selectedData.has(row));
         return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
     }
 
