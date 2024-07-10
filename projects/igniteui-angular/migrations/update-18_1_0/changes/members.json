@@ -1,0 +1,29 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "children.toArray()",
+            "replaceWith": "childColumns",
+            "definedIn": [
+                "ColumnType",
+                "IgxColumnComponent",
+                "IgxColumnGroupComponent",
+                "IgxColumnLayoutComponent"
+            ]
+        },
+        {
+            "member": "isFirstPageDisabled",
+            "replaceWith": "isFirstPage",
+            "definedIn": [
+                "IgxPaginatorComponent"
+            ]
+        },
+        {
+            "member": "isLastPageDisabled",
+            "replaceWith": "isLastPage",
+            "definedIn": [
+                "IgxPaginatorComponent"
+            ]
+        }
+    ]
+}
