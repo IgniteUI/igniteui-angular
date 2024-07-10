@@ -44,9 +44,9 @@ interface ParsedIcon {
     title?: string;
   }
 
-export type IgxIconCollection = {
+export interface IgxIconCollection {
     [name: string]: ParsedIcon;
-};
+}
 
 enum ActionType {
     SyncState,
