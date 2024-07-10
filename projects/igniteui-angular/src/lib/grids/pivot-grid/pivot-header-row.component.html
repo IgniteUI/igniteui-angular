@@ -227,18 +227,18 @@
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0">
+            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
                 <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
-                    <ng-container *ngFor="let dim of grid.rowDimensions; index as colIndex;last as isLast">
+                    <ng-container *ngFor="let dim of grid.visibleRowDimensions; index as colIndex;last as isLast">
                         <igx-pivot-row-header-group #rowDimensionHeaders *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
                             [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
-                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                             [column]="dimCol"
-                            [rootDimension]="grid.rowDimensions[colIndex]"
-                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex])"
-                            [rowIndex]="0">
+                            [rootDimension]="grid.visibleRowDimensions[colIndex]"
+                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
+                            [rowIndex]="-1" >
                         </igx-pivot-row-header-group>
                     </ng-container>
                 </div>
@@ -255,7 +255,7 @@
                     </igx-grid-header-group>
                 </ng-container>
             </ng-container>
-            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight'>
+            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight' (click)="grid.navigation.focusOutRowHeader($event)">
                 <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]='totalDepth > 1 ? grid.rowHeight : undefined' *ngFor='let dimLevelColumns of columnDimensionsByLevel; let i = index' [style.width.px]='grid.unpinnedWidth'>
                     <ng-template igxGridFor #headerVirtualContainer let-column
                                  [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"
