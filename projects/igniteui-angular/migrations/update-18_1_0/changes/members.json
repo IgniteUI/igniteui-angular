@@ -10,6 +10,20 @@
                 "IgxColumnGroupComponent",
                 "IgxColumnLayoutComponent"
             ]
+        },
+        {
+            "member": "isFirstPageDisabled",
+            "replaceWith": "isFirstPage",
+            "definedIn": [
+                "IgxPaginatorComponent"
+            ]
+        },
+        {
+            "member": "isLastPageDisabled",
+            "replaceWith": "isLastPage",
+            "definedIn": [
+                "IgxPaginatorComponent"
+            ]
         }
     ]
 }
