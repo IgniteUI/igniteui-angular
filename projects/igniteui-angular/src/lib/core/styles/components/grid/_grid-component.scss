@@ -589,6 +589,10 @@
             @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
         }
 
+        @include e(tbody-pivot-mrl-dimension) {
+            @extend %igx-grid__tbody-pivot-mrl-dimension !optional
+        }
+
         @include e(tr-pivot-toggle-icons) {
             @extend %igx-grid__tr-pivot-toggle-icons !optional;
         }

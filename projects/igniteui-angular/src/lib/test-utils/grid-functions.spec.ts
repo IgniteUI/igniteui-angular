@@ -1892,8 +1892,6 @@ export class GridFunctions {
         } else {
             expect(group.expanded).toEqual(isExpanded);
             const text = isExpanded ? indicatorText[0] : indicatorText[1];
-            console.log(groupHeader);
-            debugger;
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
         }

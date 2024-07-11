@@ -436,7 +436,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public primaryKey: any;
+    public primaryKey: string;
 
     /**
      * Gets/Sets a unique values strategy used by the Excel Style Filtering
@@ -7828,7 +7828,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._lastSearchInfo.matchCount = this._lastSearchInfo.matchInfoCache.length;
     }
 
-    private updateDefaultRowHeight() {
+    protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
             const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
             if (height) {
