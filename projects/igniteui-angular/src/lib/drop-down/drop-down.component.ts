@@ -31,8 +31,9 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { OverlaySettings } from '../services/overlay/utilities';
+import {  OverlaySettings } from '../services/overlay/utilities';
 import { NgIf } from '@angular/common';
+import { ConnectedPositioningStrategy } from '../services/public_api';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -50,6 +51,7 @@ import { NgIf } from '@angular/common';
  * </igx-drop-down>
  * ```
  */
+
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
@@ -244,8 +246,20 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(overlaySettings);
+        const settings = overlaySettings || this.getDefaultOverlaySettings();
+        this.toggleDirective.open(settings);
         this.updateScrollPosition();
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public getDefaultOverlaySettings(): OverlaySettings {
+        return {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: new ConnectedPositioningStrategy()
+        };
     }
 
     /**
@@ -501,15 +515,16 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-    /**
+        /**
      * Handles the `selectionChanging` emit and the drop down toggle when selection changes
      *
      * @hidden
      * @internal
      * @param newSelection
      * @param event
+     * @param emit
      */
-    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {
+    public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this.focusedItem;
@@ -527,7 +542,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } as IgxDropDownItemBaseDirective;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
-        this.selectionChanging.emit(args);
+
+        if (emit) {
+            this.selectionChanging.emit(args);
+        }
 
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {

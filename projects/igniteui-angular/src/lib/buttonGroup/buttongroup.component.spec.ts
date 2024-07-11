@@ -465,6 +465,32 @@ describe('IgxButtonGroup', () => {
         expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
     });
 
+    it('should emit selected event only once per selection', async() => {
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
+        fixture.detectChanges();
+        await wait();
+
+        const buttonGroup = fixture.componentInstance.buttonGroup;
+
+        spyOn(buttonGroup.selected, 'emit').and.callThrough();
+
+        buttonGroup.selectButton(0);
+        await wait();
+        fixture.detectChanges();
+
+        const buttons = fixture.nativeElement.querySelectorAll('button');
+        buttons[1].click();
+        await wait();
+        fixture.detectChanges();
+
+        expect(buttonGroup.selected.emit).toHaveBeenCalledTimes(1);
+
+        buttons[0].click();
+        await wait();
+        fixture.detectChanges();
+
+        expect(buttonGroup.selected.emit).toHaveBeenCalledTimes(2);
+    });
 });
 
 @Component({

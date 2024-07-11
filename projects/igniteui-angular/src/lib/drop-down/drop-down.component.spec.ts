@@ -18,6 +18,7 @@ import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgFor } from '@angular/common';
+import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/public_api';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
@@ -242,6 +243,57 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.opening.emit).toHaveBeenCalledTimes(1);
                 expect(dropdown.opened.emit).toHaveBeenCalledTimes(1);
             }));
+            it('should use default overlay settings if none are provided', () => {
+                const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
+
+                spyOn(toggle, 'open').and.callThrough();
+
+                dropdown.open();
+                fixture.detectChanges();
+                expect(toggle.open).toHaveBeenCalledTimes(1);
+
+                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                expect(appliedSettings.closeOnOutsideClick).toBe(true);
+                expect(appliedSettings.modal).toBe(false);
+                expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
+
+                const positionStrategy = appliedSettings.positionStrategy as ConnectedPositioningStrategy;
+                expect(positionStrategy.settings.horizontalStartPoint).toBe(HorizontalAlignment.Left);
+                expect(positionStrategy.settings.verticalStartPoint).toBe(VerticalAlignment.Bottom);
+                expect(positionStrategy.settings.horizontalDirection).toBe(HorizontalAlignment.Right);
+                expect(positionStrategy.settings.verticalDirection).toBe(VerticalAlignment.Bottom);
+            });
+
+            it('should apply custom overlay settings if provided', () => {
+                const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
+                const customOverlaySettings: OverlaySettings = {
+                    closeOnOutsideClick: false,
+                    modal: true,
+                    positionStrategy: new ConnectedPositioningStrategy({
+                        horizontalStartPoint: HorizontalAlignment.Right,
+                        verticalStartPoint: VerticalAlignment.Top,
+                        horizontalDirection: HorizontalAlignment.Left,
+                        verticalDirection: VerticalAlignment.Top
+                    })
+                };
+
+                spyOn(toggle, 'open').and.callThrough();
+
+                dropdown.open(customOverlaySettings);
+                fixture.detectChanges();
+                expect(toggle.open).toHaveBeenCalledTimes(1);
+
+                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                expect(appliedSettings.closeOnOutsideClick).toBe(customOverlaySettings.closeOnOutsideClick);
+                expect(appliedSettings.modal).toBe(customOverlaySettings.modal);
+                expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
+
+                const positionStrategy = appliedSettings.positionStrategy as ConnectedPositioningStrategy;
+                expect(positionStrategy.settings.horizontalStartPoint).toBe(HorizontalAlignment.Right);
+                expect(positionStrategy.settings.verticalStartPoint).toBe(VerticalAlignment.Top);
+                expect(positionStrategy.settings.horizontalDirection).toBe(HorizontalAlignment.Left);
+                expect(positionStrategy.settings.verticalDirection).toBe(VerticalAlignment.Top);
+            });
             it('#2798 - should allow canceling of open/close through opening/closing events', fakeAsync(() => {
                 const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
                 const onOpeningSpy = spyOn(dropdown.opening, 'emit').and.callThrough();
