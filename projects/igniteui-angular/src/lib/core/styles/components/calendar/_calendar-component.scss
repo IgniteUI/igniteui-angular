@@ -223,8 +223,16 @@
             @extend %date-selected-special-first-last !optional;
         }
 
-        @include e(date, $mods: ('selected', 'special', 'range', 'first', 'last')) {
-            @extend %date-selected-special-range-first-last !optional;
+        @include e(date, $mods: ('selected', 'special', 'current', 'first', 'last')) {
+            @extend %date-selected-special-current-first-last !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'preview', 'first')) {
+            @extend %date-selected-special-current-last !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'preview', 'last')) {
+            @extend %date-selected-special-current-first !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'active')) {
@@ -313,6 +321,10 @@
 
         @include e(date, $mods: ('special', 'current', 'selected')) {
             @extend %date-special-current-selected !optional;
+        }
+
+        @include e(date, $mods: ('special', 'current', 'selected', 'active')) {
+            @extend %date-special-current-selected-active !optional;
         }
 
         @include e(date, $mods: ('special' 'active')) {
