@@ -2,13 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 18.1.0
-### General
-- `IgxCombo` and  `IgxSimpleComboComponent`
-    - **Breaking Change** `filterable` is removed from the `filteringOptions`.
-    - The previously deprecated `filterable` property is also removed.
-    - The filtering in the `IgxCombo` and  `IgxSimpleComboComponent` is always enabled. 
-
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:

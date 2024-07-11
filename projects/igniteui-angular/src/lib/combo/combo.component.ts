@@ -133,6 +133,19 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
+     * Enables/disables filtering in the list. The default is `true`.
+     *
+     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
+     */
+    @Input({ transform: booleanAttribute })
+    public get filterable(): boolean {
+        return this.filteringOptions.filterable;
+    }
+    public set filterable(value: boolean) {
+        this.filteringOptions = Object.assign({}, this.filteringOptions, { filterable: value });
+    }
+
+    /**
      * Defines the placeholder value for the combo dropdown search field
      *
      * ```typescript
@@ -164,7 +177,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this._filteredData;
+        return this.filteringOptions.filterable ? this._filteredData : this.data;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -202,6 +215,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         event.preventDefault();
         event.stopPropagation();
         this.open();
+    }
+
+    /** @hidden @internal */
+    public get displaySearchInput(): boolean {
+        return this.filteringOptions.filterable || this.allowCustomValues;
     }
 
     /**
@@ -245,6 +263,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        }
+        if (this.filteringOptions.filterable && this.searchPlaceholder === 'Add Item') {
+            this.searchPlaceholder = 'Enter a Search Term';
+        } else if (!this.filteringOptions.filterable && this.searchPlaceholder === 'Enter a Search Term') {
+            this.searchPlaceholder = 'Add Item';
         }
     }
 
@@ -388,7 +411,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public focusSearchInput(opening?: boolean): void {
-        if (this.searchInput) {
+        if (this.displaySearchInput && this.searchInput) {
             this.searchInput.nativeElement.focus();
         } else {
             if (opening) {
