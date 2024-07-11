@@ -9,7 +9,7 @@
             [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
             [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
         >
-            <igx-icon>done</igx-icon>
+            <igx-icon family="default" name="selected"></igx-icon>
         </button>
         <button *ngIf="showPinning"
             type="button"
@@ -17,7 +17,7 @@
             (click)="esf.onPin()"
             [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
         >
-            <igx-icon family="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
+            <igx-icon family="default" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
             type="button"
@@ -25,7 +25,7 @@
             (click)="esf.onHideToggle()"
             [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
         >
-            <igx-icon>{{ esf.column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
+            <igx-icon family="default" [name]="esf.column.hidden ? 'visibility' : 'visibility_off'"></igx-icon>
         </button>
     </div>
 </header>

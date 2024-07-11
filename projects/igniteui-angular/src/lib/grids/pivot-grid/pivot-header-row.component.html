@@ -18,8 +18,13 @@
                                       [removable]="true" (remove)="filterRemoved($event)" (dragOver)="onDimDragOver($event, 2)"
                                       (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, filterArea, 2)"
                                       (moveStart)='onDimDragStart($event, filterArea)' (moveEnd)='onDimDragEnd()'>
-                                <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
-                                          (click)='onFilteringIconClick($event, filter)'>filter_list</igx-icon>
+                                <igx-icon
+                                    family="default"
+                                    name="filter_list"
+                                    igxPrefix
+                                    (pointerdown)='onFilteringIconPointerDown($event)'
+                                    (click)='onFilteringIconClick($event, filter)'>
+                                </igx-icon>
                                 {{filter.displayName || filter.memberName}}
                             </igx-chip>
                             <ng-container *ngIf='last'>
@@ -32,7 +37,13 @@
                         </igx-chip>
                     </igx-chips-area>
                     <div class="igx-grid__pivot-filter-toggle" *ngIf="isFiltersButton && grid.filterDimensions.length !== 0">
-                        <igx-icon #filterIcon (pointerdown)='onFilteringIconPointerDown($event)' (click)='onFiltersAreaDropdownClick($event)'>filter_list</igx-icon>
+                        <igx-icon
+                            family="default"
+                            name="filter_list"
+                            #filterIcon
+                            (pointerdown)='onFilteringIconPointerDown($event)'
+                            (click)='onFiltersAreaDropdownClick($event)'>
+                        </igx-icon>
                         <igx-badge value="{{this.filterDropdownDimensions.size}}"></igx-badge>
                     </div>
                 </div>
@@ -53,12 +64,21 @@
                                             (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                             (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
                                             (click)="onChipSort($event, row)">
-                                        <igx-icon igxPrefix>table_rows</igx-icon>
-                                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
-                                                (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
+                                        <igx-icon igxPrefix family="default" name="table_rows"></igx-icon>
+                                        <igx-icon
+                                            family="default"
+                                            name="filter_list"
+                                            igxPrefix
+                                            (pointerdown)='onFilteringIconPointerDown($event)'
+                                            (click)='onFilteringIconClick($event, row)'>
+                                        </igx-icon>
                                         {{ row.displayName || row.memberName}}
-                                        <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward'
-                                            : 'arrow_downward' }}</igx-icon>
+                                        <igx-icon
+                                            family="default"
+                                            [name]="row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                            *ngIf="row.sortDirection"
+                                            igxSuffix>
+                                        </igx-icon>
                                     </igx-chip>
                                 <ng-container *ngIf='last'>
                                 <span class="igx-grid__tr-pivot--chip_drop_indicator"
@@ -89,12 +109,25 @@
                                       (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)"
                                       (moveStart)='onDimDragStart($event, colArea)' (moveEnd)='onDimDragEnd()'
                                       (click)="onChipSort($event, col)">
-                                <igx-icon igxPrefix>view_column</igx-icon>
-                                <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
-                                          (click)='onFilteringIconClick($event, col)'>filter_list</igx-icon>
+                                <igx-icon
+                                    family="default"
+                                    name="view_column"
+                                    igxPrefix>
+                                </igx-icon>
+                                <igx-icon
+                                    family="default"
+                                    name="filter_list"
+                                    igxPrefix
+                                    (pointerdown)='onFilteringIconPointerDown($event)'
+                                    (click)='onFilteringIconClick($event, col)'>
+                                </igx-icon>
                                 {{col.displayName || col.memberName}}
-                                <igx-icon *ngIf="col.sortDirection" igxSuffix> {{ col.sortDirection < 2 ? 'arrow_upward'
-                                    : 'arrow_downward' }}</igx-icon>
+                                <igx-icon
+                                    family="default"
+                                    [name]="col.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                    *ngIf="col.sortDirection"
+                                    igxSuffix>
+                                </igx-icon>
                             </igx-chip>
                             <ng-container *ngIf='last'>
                             <span class="igx-grid__tr-pivot--chip_drop_indicator"
@@ -124,8 +157,8 @@
                                 <div class="igx-grid__tr-pivot-toggle-icons" igxPrefix
                                      (click)='onSummaryClick($event, value, dropdown, currChip)'
                                      (pointerdown)='$event.stopPropagation()' [igxDropDownItemNavigation]="dropdown">
-                                    <igx-icon>functions</igx-icon>
-                                    <igx-icon>arrow_drop_down</igx-icon>
+                                    <igx-icon family="default" name="functions"></igx-icon>
+                                    <igx-icon family="default" name="arrow_drop_down"></igx-icon>
                                 </div>
                                 <ng-container *ngTemplateOutlet="grid.valueChipTemplate ? grid.valueChipTemplate : valueChipDefaultTemplate; context: { $implicit: value }"></ng-container>
                             </igx-chip>
@@ -165,12 +198,21 @@
                                             (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                             (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
                                             (click)="onChipSort($event, row)">
-                                        <igx-icon igxPrefix>table_rows</igx-icon>
-                                        <igx-icon igxPrefix (pointerdown)='onFilteringIconPointerDown($event)'
-                                                (click)='onFilteringIconClick($event, row)'>filter_list</igx-icon>
+                                        <igx-icon igxPrefix family="default" name="table_rows"></igx-icon>
+                                        <igx-icon
+                                            family="default"
+                                            name="filter_list"
+                                            igxPrefix
+                                            (pointerdown)='onFilteringIconPointerDown($event)'
+                                            (click)='onFilteringIconClick($event, row)'>
+                                        </igx-icon>
                                         {{ row.displayName || row.memberName}}
-                                        <igx-icon *ngIf="row.sortDirection" igxSuffix> {{ row.sortDirection < 2 ? 'arrow_upward'
-                                            : 'arrow_downward' }}</igx-icon>
+                                        <igx-icon
+                                            family="default"
+                                            [name]="row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                            *ngIf="row.sortDirection"
+                                            igxSuffix>
+                                        </igx-icon>
                                     </igx-chip>
                                 <ng-container *ngIf='last'>
                                 <span class="igx-grid__tr-pivot--chip_drop_indicator"
@@ -185,18 +227,18 @@
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0">
+            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
                 <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
-                    <ng-container *ngFor="let dim of grid.rowDimensions; index as colIndex;last as isLast">
+                    <ng-container *ngFor="let dim of grid.visibleRowDimensions; index as colIndex;last as isLast">
                         <igx-pivot-row-header-group #rowDimensionHeaders *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
                             [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
-                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                            [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                             [column]="dimCol"
-                            [rootDimension]="grid.rowDimensions[colIndex]"
-                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.rowDimensions[colIndex])"
-                            [rowIndex]="0">
+                            [rootDimension]="grid.visibleRowDimensions[colIndex]"
+                            [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
+                            [rowIndex]="-1" >
                         </igx-pivot-row-header-group>
                     </ng-container>
                 </div>
@@ -213,7 +255,7 @@
                     </igx-grid-header-group>
                 </ng-container>
             </ng-container>
-            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight'>
+            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]='maxContainerHeight' (click)="grid.navigation.focusOutRowHeader($event)">
                 <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]='totalDepth > 1 ? grid.rowHeight : undefined' *ngFor='let dimLevelColumns of columnDimensionsByLevel; let i = index' [style.width.px]='grid.unpinnedWidth'>
                     <ng-template igxGridFor #headerVirtualContainer let-column
                                  [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"
@@ -275,9 +317,13 @@
 
 <div style="visibility: hidden; position: absolute; top: -10000px">
     <igx-chips-area #filterAreaHidden droppable='true'>
-        <igx-chip *ngFor="let filter of grid.filterDimensions" [id]="filter.memberName" [draggable]="true"
-            [removable]="true" (remove)="filterRemoved($event)">
-            <igx-icon igxPrefix>filter_list</igx-icon>
+        <igx-chip
+            *ngFor="let filter of grid.filterDimensions"
+            [id]="filter.memberName"
+            [draggable]="true"
+            [removable]="true"
+            (remove)="filterRemoved($event)">
+            <igx-icon family="default" name="filter_list" igxPrefix></igx-icon>
             {{filter.displayName || filter.memberName}}
         </igx-chip>
     </igx-chips-area>

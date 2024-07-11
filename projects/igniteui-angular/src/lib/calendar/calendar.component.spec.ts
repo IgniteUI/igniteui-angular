@@ -598,7 +598,7 @@ describe("IgxCalendar - ", () => {
 
                         if (idx === 0) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "Wk",
+                                "W",
                             );
                         } else {
                             expect(firstRowItem.firstChild.innerText).toEqual(

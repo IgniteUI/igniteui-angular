@@ -178,6 +178,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxIconService } from '../icon/icon.service';
 
 /*@__PURE__*/IgcTrialWatermark.register();
 
@@ -435,7 +436,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public primaryKey: any;
+    public primaryKey: string;
 
     /**
      * Gets/Sets a unique values strategy used by the Excel Style Filtering
@@ -3155,6 +3156,184 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _icons = [
+        {
+            family: 'default',
+            name: 'check',
+            ref: {
+                name: 'check',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'close',
+            ref: {
+                name: 'close',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'navigate_before',
+            ref: {
+                name: 'navigate_before',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'navigate_next',
+            ref: {
+                name: 'navigate_next',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'expand',
+            ref: {
+                name: 'expand_more',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'chevron_right',
+            ref: {
+                name: 'chevron_right',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'unfold_more',
+            ref: {
+                name: 'unfold_more',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'unfold_less',
+            ref: {
+                name: 'unfold_less',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'drag_indicator',
+            ref: {
+                name: 'drag_indicator',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'group_work',
+            ref: {
+                name: 'group_work',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_upward',
+            ref: {
+                name: 'arrow_upward',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_downward',
+            ref: {
+                name: 'arrow_downward',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_forward',
+            ref: {
+                name: 'arrow_forward',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_back',
+            ref: {
+                name: 'arrow_back',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'filter_list',
+            ref: {
+                name: 'filter_list',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'error',
+            ref: {
+                name: 'error',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'drag_indicator',
+            ref: {
+                name: 'drag_indicator',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'visibility',
+            ref: {
+                name: 'visibility',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'visibility_off',
+            ref: {
+                name: 'visibility_off',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'import_export',
+            ref: {
+                name: 'import_export',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_drop_down',
+            ref: {
+                name: 'arrow_drop_down',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'more_vert',
+            ref: {
+                name: 'more_vert',
+                family: 'material',
+            }
+        },
+    ];
 
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
@@ -3332,12 +3511,20 @@ export abstract class IgxGridBaseDirective implements GridType,
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
+        @Optional() @Inject(IgxIconService) protected iconService?: IgxIconService
     ) {
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+
+        for (const icon of this._icons) {
+            this.iconService?.addIconRef(icon.name, icon.family, {
+                name: icon.ref.name,
+                family: icon.ref.family
+            });
+        }
     }
 
     /**
@@ -7641,7 +7828,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._lastSearchInfo.matchCount = this._lastSearchInfo.matchInfoCache.length;
     }
 
-    private updateDefaultRowHeight() {
+    protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
             const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
             if (height) {

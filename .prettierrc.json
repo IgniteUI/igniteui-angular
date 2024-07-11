@@ -1,0 +1,14 @@
+{
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "singleQuote": true,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": ["*.scss"],
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}
