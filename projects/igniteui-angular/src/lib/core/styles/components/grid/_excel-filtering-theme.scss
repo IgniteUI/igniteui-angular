@@ -16,7 +16,6 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -307,6 +306,11 @@
                 transform: scaleX(-1);
             }
         }
+    }
+
+    %grid-excel-actions__action--active {
+        background: color($color: 'gray', $variant: 100);
+        color: var-get($theme, 'excel-filtering-actions-hover-foreground');
     }
 
     %grid-excel-actions__action--disabled {

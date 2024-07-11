@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Inject, Input, Optional, Output, forwardRef } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -13,6 +13,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
+import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -274,6 +275,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the first pager buttons should be disabled
+     * @hidden
+     * @deprecated in version 18.1.0. Use the `isFirstPage` property instead.
      */
     public get isFirstPageDisabled(): boolean {
         return this.isFirstPage;
@@ -281,6 +284,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the last pager buttons should be disabled
+     * @hidden
+     * @deprecated in version 18.1.0. Use the `isLastPage` property instead.
      */
     public get isLastPageDisabled(): boolean {
         return this.isLastPage;
@@ -377,5 +382,30 @@ export class IgxPageNavigationComponent {
     @Input()
     public role = 'navigation';
 
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
+    constructor(
+        @Host()
+        public paginator: IgxPaginatorComponent,
+        @Optional() @Inject(IgxIconService)
+        protected iconService: IgxIconService,
+    ) {
+        this.iconService.addIconRef('first_page', 'default', {
+            name: 'first_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('last_page', 'default', {
+            name: 'last_page',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_left', 'default', {
+            name: 'chevron_left',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('chevron_right', 'default', {
+            name: 'chevron_right',
+            family: 'material',
+        });
+    }
 }

@@ -461,90 +461,46 @@
         }
     }
 
-    @include b(igx-years-view) {
-        @extend %years-view !optional;
+    @include b(igx-calendar-view) {
+        @extend %calendar-view !optional;
 
-        @include e(grid) {
-            @extend %years-grid !optional;
+        @include e(items) {
+            @extend %calendar-items !optional;
         }
 
-        @include e(year) {
+        @include e(item) {
             @extend %view-item !optional;
         }
 
-        @include e(year, 'current') {
-            @extend %years-view__year-current !optional;
+        @include e(item, 'current') {
+            @extend %calendar-view__item-current !optional;
         }
 
-        @include e(year, $mods: ('current', 'active')) {
-            @extend %years-view__year-current-active !optional;
+        @include e(item, $mods: ('current', 'active')) {
+            @extend %calendar-view__item-current-active !optional;
         }
 
-        @include e(year, 'selected') {
-            @extend %years-view__year-selected !optional;
+        @include e(item, 'selected') {
+            @extend %calendar-view__item-selected !optional;
         }
 
-        @include e(year, $mods: ('selected', 'current')) {
-            @extend %years-view__year-selected-current !optional;
+        @include e(item, $mods: ('selected', 'active')) {
+            @extend %calendar-view__item-selected-active !optional;
         }
 
-        @include e(year, $mods: ('selected', 'active')) {
-            @extend %years-view__year-selected-active !optional;
+        @include e(item, $mods: ('selected', 'current')) {
+            @extend %calendar-view__item-selected-current !optional;
         }
 
-        @include e(year, $mods: ('selected', 'current', 'active')) {
-            @extend %years-view__year-selected-current-active !optional;
+        @include e(item, $mods: ('selected', 'current', 'active')) {
+            @extend %calendar-view__item-selected-current-active !optional;
         }
 
-        @include e(year-inner) {
-            @extend %years-view__year-inner !optional;
+        @include e(item-inner) {
+            @extend %calendar-view__item-inner !optional;
 
             &:hover {
-                @extend %years-view__year-inner-hover !optional;
-            }
-        }
-    }
-
-    @include b(igx-months-view) {
-        @extend %months-view !optional;
-
-        @include e(grid) {
-            @extend %months-grid !optional;
-        }
-
-        @include e(month) {
-            @extend %view-item !optional;
-        }
-
-        @include e(month, 'current') {
-            @extend %months-view__month-current !optional;
-        }
-
-        @include e(month, $mods: ('current', 'active')) {
-            @extend %months-view__month-current-active !optional;
-        }
-
-        @include e(month, 'selected') {
-            @extend %months-view__month-selected !optional;
-        }
-
-        @include e(month, $mods: ('selected', 'active')) {
-            @extend %months-view__month-selected-active !optional;
-        }
-
-        @include e(month, $mods: ('selected', 'current')) {
-            @extend %months-view__month-selected-current !optional;
-        }
-
-        @include e(month, $mods: ('selected', 'current', 'active')) {
-            @extend %months-view__month-selected-current-active !optional;
-        }
-
-        @include e(month-inner) {
-            @extend %months-view__month-inner !optional;
-
-            &:hover {
-                @extend %months-view__month-inner-hover !optional;
+                @extend %calendar-view__item-inner-hover !optional;
             }
         }
     }

@@ -299,9 +299,17 @@ export interface FieldType {
 export interface ColumnType extends FieldType {
     /** Represents the instance of the parent `GridType` that contains this column. */
     grid: GridType;
-    /** A list, containing all the child columns under this column (if any). */
+    /**
+     * A list containing all the child columns under this column (if any).
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
+     */
     children: QueryList<ColumnType>;
-    /** An array, containing all the child columns, including nested children. */
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    get childColumns(): ColumnType[];
+    /** @hidden @internal */
     allChildren: ColumnType[];
     /**
      * The header group component associated with this column.
@@ -671,7 +679,7 @@ export interface GridType extends IGridDataBindable {
      /** Indicates whether rows in the grid can be dragged. If te value is true, the rows can be dragged */
     rowDraggable: boolean;
     /** Represents the unique primary key used for identifying rows in the grid */
-    primaryKey: any;
+    primaryKey: string;
     /** Represents the unique identifier of the grid. */
     id: string;
     /** The height of the visible rows in the grid. */
@@ -1235,12 +1243,17 @@ export interface PivotGridType extends GridType {
     rowDimensions: IPivotDimension[];
     rowDimensionResizing: boolean;
     /** @hidden @internal */
+    visibleRowDimensions: IPivotDimension[];
+    /** @hidden @internal */
+    hasHorizontalLayout: boolean;
+    /** @hidden @internal */
     values: IPivotValue[];
     /** @hidden @internal */
     filterDimensions: IPivotDimension[];
     /** @hidden @internal */
     dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
+    getRowDimensionByName(name: string): IPivotDimension;
     /** Represents a method declaration for setting up the columns for the pivot grid based on the pivot configuration */
     setupColumns(): void;
     /** Represents a method declaration that allows toggle of expansion state of a row (taken as a parameter) in the pivot grid */
