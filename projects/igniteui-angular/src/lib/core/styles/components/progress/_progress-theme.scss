@@ -572,7 +572,7 @@
 @mixin circular-bar-typography($categories: (text: 'h6')) {
     $text: map.get($categories, 'text');
 
-    @if $text != null {
+    @if $text {
         %circular-text {
             @include type-style($text) {
                 font-size: rem(12px);

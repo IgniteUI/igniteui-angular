@@ -36,8 +36,10 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
+import { ISearchInfo } from '../common/events';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { PlatformUtil } from '../../core/utils';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType, IGX_GRID_SERVICE_BASE, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
@@ -168,7 +170,59 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public rootGrid: GridType = null;
+
+    /** @hidden */
     public readonly data: any[] | null;
+
+    /** @hidden */
+    public override get hiddenColumnsCount(): number {
+        return 0;
+    }
+
+    /** @hidden */
+    public override get pinnedColumnsCount(): number {
+        return 0;
+    }
+
+    /** @hidden */
+    public override get lastSearchInfo(): ISearchInfo {
+        return null;
+    }
+
+    /** @hidden */
+    public override get filteredData(): any {
+        return [];
+    }
+
+    /** @hidden */
+    public override get filteredSortedData(): any[] {
+        return [];
+    }
+
+    /** @hidden */
+    public override get virtualizationState(): IForOfState {
+        return null;
+    }
+
+    /** @hidden */
+    public override get pinnedColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /** @hidden */
+    public override get unpinnedColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /** @hidden */
+    public override get visibleColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /** @hidden */
+    public override get dataView(): any[] {
+        return [];
+    }
 
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
