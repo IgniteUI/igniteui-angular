@@ -99,6 +99,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
 
     /**
      * Returns the grid containing this component.
+     * @hidden @internal
      */
     public get grid() {
         return this.toolbar.grid;
