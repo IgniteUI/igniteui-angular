@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
     - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+- `IgxPaginator`
+    - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 
 
 ## 18.0.0
