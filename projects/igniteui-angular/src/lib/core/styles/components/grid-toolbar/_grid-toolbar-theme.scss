@@ -248,21 +248,6 @@
         }
     }
 
-    %igx-grid-toolbar__adv-filter--filtered {
-        border-color: color($color: 'secondary') !important;
-
-        @if $bootstrap-theme {
-            border-width: rem(2px);
-            border-color: color($color: 'primary', $variant: 800) !important;
-            color: color($color: 'primary', $variant: 800);
-
-            &:hover,
-            &:focus {
-                background: color($color: 'primary', $variant: 800);
-            }
-        }
-    }
-
     %igx-grid-toolbar__dropdown {
         position: relative;
     }

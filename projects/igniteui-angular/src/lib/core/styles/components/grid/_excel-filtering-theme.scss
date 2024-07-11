@@ -294,6 +294,11 @@
         }
     }
 
+    %grid-excel-actions__action--active {
+        background: color($color: 'gray', $variant: 100);
+        color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+    }
+
     %grid-excel-actions__action--disabled {
         color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
         pointer-events: none;

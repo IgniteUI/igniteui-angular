@@ -2014,7 +2014,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
-            
+
             firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
@@ -2747,6 +2747,30 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
+
+        it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
+            const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
+            const input = filterCell.query(By.css('input')).nativeElement;
+ 
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            input.dispatchEvent(mousedownEvent, { bubbles: true });
+            fix.detectChanges();
+ 
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+        }));
+
+        it('Should prevent mousedown event when target is filter cell or its parent elements', fakeAsync(() => {
+            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+            const firstCell = filteringCells[0].nativeElement;
+
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            firstCell.dispatchEvent(mousedownEvent);
+            fix.detectChanges();
+           
+            expect(preventDefaultSpy).toHaveBeenCalled();
+        }));
     });
 
     describe(null, () => {
@@ -2823,6 +2847,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(1);
         }));
+
     });
 
     describe('Filtering events', () => {
@@ -3318,6 +3343,74 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
+        it('Should show the previously entered filter value when reopen esf dialog from the applied filter operand', fakeAsync(() => {
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(1);
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('Angular');
+        }));
+
+        it('Should Not show the previously entered filter value when reopen esf dialog from other filterOperand', fakeAsync(() => {
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(1);
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('');
+        }));
+
         it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
@@ -3331,11 +3424,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(2)');
             expect(grid.filteredData.length).toEqual(2);
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(30);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.querySelector('.igx-grid__filtering-dropdown-text').textContent).toMatch('Custom filter...');
         }));
 
         it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
@@ -4807,6 +4909,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).not.toContain('(');
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
