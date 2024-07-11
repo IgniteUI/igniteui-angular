@@ -207,7 +207,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
 
 
-        if (header && dim.childLevel && (!this.rowData.totalRecordDimName || this.rowData.totalRecordDimName !== dim.memberName)) {
+        if (header && dim.childLevel && (!this.rowData.totalRecordDimensionName || this.rowData.totalRecordDimensionName !== dim.memberName)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

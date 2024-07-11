@@ -257,8 +257,8 @@ export interface IPivotGridRecord {
     level?: number;
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
-    /** Describes if this is a total record for a dimension */
-    totalRecordDimName?: string;
+    /** If set, it specifies the name of the dimension, that has total record enabled. */
+    totalRecordDimensionName?: string;
     /** The index of the record in the total view */
     dataIndex?: number;
 }

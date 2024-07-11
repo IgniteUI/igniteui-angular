@@ -128,7 +128,7 @@ export class PivotUtil {
                 defaultExpand :
                 expansionStates.get(expansionRowKey);
             const shouldExpand = isExpanded || !dimension.childLevel || !rec.dimensionValues.get(dimension.memberName);
-            if (shouldExpand && recordsData && !rec.totalRecordDimName) {
+            if (shouldExpand && recordsData && !rec.totalRecordDimensionName) {
                 if (dimension.childLevel) {
                     this.flattenGroupsHorizontally(recordsData, dimension.childLevel, expansionStates, defaultExpand, visibleDimensions, summariesPosition, dimension, rec);
                 } else {
@@ -161,7 +161,7 @@ export class PivotUtil {
 
                 const curDimValue = rec.dimensionValues.get(dimension.memberName);
                 if (dimension.horizontalSummary && curDimValue) {
-                    rec.totalRecordDimName = dimension.memberName;
+                    rec.totalRecordDimensionName = dimension.memberName;
                     rec.dimensionValues.set(dimension.memberName, `${curDimValue} Total`);
                     if (summariesPosition === PivotSummaryPosition.Top) {
                         recordsData.unshift(rec);

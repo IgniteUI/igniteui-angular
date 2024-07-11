@@ -176,7 +176,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     /** Update active cell when toggling row expand when horizontal summaries have position set to top */
     public onRowToggle(newExpandState: boolean, dimension: IPivotDimension, rowData: IPivotGridRecord, prevCellLayout: IMultiRowLayoutNode){
         if (this.grid.hasHorizontalLayout &&
-            rowData.totalRecordDimName !== dimension.memberName &&
+            rowData.totalRecordDimensionName !== dimension.memberName &&
             dimension.horizontalSummary && this.grid.pivotUI.rowSummariesPosition === PivotSummaryPosition.Top) {
             const maxActiveRow = Math.min(this.lastRowDimensionMRLRowIndex, this.activeNode.row);
             const parentRowUpdated = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === maxActiveRow);
