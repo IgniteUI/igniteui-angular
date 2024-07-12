@@ -1106,6 +1106,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public dataChanged = new EventEmitter<any>();
 
+
     /**
      * @hidden @internal
      */
@@ -3410,9 +3411,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public abstract id: string;
-    /**
-     * @hidden @internal
-     */
+    /* blazorSuppress */
     public abstract data: any[] | null;
 
     /**
@@ -4240,7 +4239,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorSuppress */
     /**
      * @hidden
      * @internal
@@ -4513,7 +4511,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public isHorizontalScrollHidden = false;
 
-    /* blazorSuppress */
     /**
      * @hidden @internal
      * Gets the header cell inner width for auto-sizing.
@@ -4565,7 +4562,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```typescript
-     * const columns = this.grid.columns.
+     * const colums = this.grid.columns.
      * ```
      */
     public get columns(): IgxColumnComponent[] {
