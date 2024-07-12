@@ -1152,12 +1152,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._groupingComparer = funcRef;
     }
     /**
-     * Gets the default minimum `width` of the column.
-     * ```typescript
-     * let defaultMinWidth =  this.column.defaultMinWidth;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get defaultMinWidth(): string {
         if (!this.grid) {
@@ -1373,11 +1368,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Gets the cells of the column.
-     * ```typescript
-     * let columnCells = this.column.cells;
-     * ```
-     *
+     * @hidden @internal
      */
     public get cells(): CellType[] {
         return this.grid.dataView
@@ -1477,7 +1468,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public get columnLayoutChild() {
+    public get columnLayoutChild(): boolean {
         return this.parent && this.parent.columnLayout;
     }
 
@@ -1532,9 +1523,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             null;
     }
 
+    /** @hidden @internal **/
     public get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
+    /** @hidden @internal **/
     public get gridColumnSpan(): number {
         return this.colEnd && this.colStart ? this.colEnd - this.colStart : 1;
     }
@@ -2324,47 +2317,31 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let topLevelParent =  this.column.topLevelParent;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public get topLevelParent() {
+    public get topLevelParent(): ColumnType | undefined {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
         }
-        return parent;
+        return parent ?? undefined;
     }
 
     /**
-     * Returns a reference to the header of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let headerCell = column.headerCell;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get headerCell(): IgxGridHeaderComponent {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
     /**
-     * Returns a reference to the filter cell of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let filterell = column.filterell;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
     /**
-     * Returns a reference to the header group of the column.
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get headerGroup(): IgxGridHeaderGroupComponent {
         return this.grid.headerGroupsList.find(group => group.column === this);

@@ -142,7 +142,7 @@ export interface IPivotDimension {
     width?: string;
     /** Level of the dimension. */
     level?: number;
-    /** hidden */
+    /** @hidden @internal */
     autoWidth?: number;
     horizontalSummary? : boolean;
 }
@@ -223,10 +223,16 @@ export enum PivotRowLayoutType {
     Horizontal = "horizontal"
 }
 
+export enum PivotSummaryPosition {
+    Top = "top",
+    Bottom = "bottom"
+}
+
 export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
-    rowLayout?: PivotRowLayoutType
+    rowLayout?: PivotRowLayoutType;
+    horizontalSummariesPosition?: PivotSummaryPosition;
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
@@ -274,8 +280,8 @@ export interface IPivotGridRecord {
     level?: number;
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
-    /** Describes if this is a total record for a dimension */
-    totalRecord?: boolean;
+    /** If set, it specifies the name of the dimension, that has total record enabled. */
+    totalRecordDimensionName?: string;
     /** The index of the record in the total view */
     dataIndex?: number;
 }
