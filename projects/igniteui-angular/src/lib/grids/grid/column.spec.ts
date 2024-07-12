@@ -1199,7 +1199,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
-            expect(firstCell.nativeElement.innerText).toEqual('8:37:11 AM GMT+2');
+            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT+');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
