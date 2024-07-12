@@ -18,7 +18,8 @@ import {
     IgxExcelExporterService,
     IgxExcelExporterOptions,
     IgxSwitchComponent,
-    IChangeCheckboxEventArgs
+    IChangeCheckboxEventArgs,
+    PivotSummaryPosition
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -78,12 +79,11 @@ export class PivotGridStateSampleComponent {
                 memberName: 'Country',
                 displayName: 'Country',
                 enabled: true,
-                sortable: false,
-                horizontalSummary: false,
+                sortable: true,
+                horizontalSummary: true,
                 childLevel: {
                     displayName: 'City',
                     memberName: 'City',
-                    horizontalSummary: true,
                     enabled: true
                 }
             },
@@ -92,7 +92,7 @@ export class PivotGridStateSampleComponent {
                 displayName: 'All Products',
                 memberFunction: () => 'All',
                 enabled: true,
-                horizontalSummary: false,
+                horizontalSummary: true,
                 childLevel: {
                     memberName: 'ProductCategory',
                     displayName: 'Product Category',
@@ -162,7 +162,12 @@ export class PivotGridStateSampleComponent {
         }];
 
 
-    public pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
+    public pivotUI: IPivotUISettings = {
+        showConfiguration: true,
+        showRowHeaders: true,
+        rowLayout: PivotRowLayoutType.Horizontal,
+        horizontalSummariesPosition: PivotSummaryPosition.Top
+    };
     public options: IGridStateOptions = {
         pivotConfiguration: true
     };
