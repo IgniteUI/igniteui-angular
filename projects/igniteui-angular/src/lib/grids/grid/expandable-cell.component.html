@@ -97,6 +97,7 @@
             [(value)]="editValue"
             [igxFocus]="true"
             [formControl]="formControl"
+            [inputFormat]="column.editorOptions?.dateTimeFormat"
         >
         </igx-date-picker>
     </ng-container>
@@ -110,6 +111,7 @@
             [(value)]="editValue"
             [igxFocus]="true"
             [formControl]="formControl"
+            [inputFormat]="column.editorOptions?.dateTimeFormat"
         ></igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
@@ -120,7 +122,8 @@
                 [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
-                [igxDateTimeEditor]="column.defaultDateTimeFormat"
+                [locale]="grid.locale"
+                [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
                 [igxFocus]="true"
             />
         </igx-input-group>
