@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
     - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+    - Several properties have been hidden from the public API, considered internal and not recommended for use. Those include:
+    `filterCell`, `headerCell`, `headerGroup`, `defaultMinWidth`, `gridRowSpan`, `gridColumnSpan` and `cells`.
 - `IgxPaginator`
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 
