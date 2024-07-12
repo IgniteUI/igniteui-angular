@@ -147,7 +147,14 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
         const horizontalRowDimensions = [];
         for (const row of enabledRows) {
             if (this.grid?.hasHorizontalLayout) {
-                PivotUtil.flattenGroupsHorizontally(data, row, expansionStates, defaultExpand, horizontalRowDimensions);
+                PivotUtil.flattenGroupsHorizontally(
+                    data,
+                    row,
+                    expansionStates,
+                    defaultExpand,
+                    horizontalRowDimensions,
+                    this.grid.pivotUI.horizontalSummariesPosition
+            );
             } else {
                 PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
             }
