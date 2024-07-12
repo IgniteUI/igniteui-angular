@@ -2289,15 +2289,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let topLevelParent =  this.column.topLevelParent;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public get topLevelParent() {
+    public get topLevelParent(): ColumnType | undefined {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
         }
-        return parent;
+        return parent ?? undefined;
     }
 
     /**
