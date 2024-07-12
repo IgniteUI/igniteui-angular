@@ -137,15 +137,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
-    /**
-     * @hidden
-     */
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
-    /**
-     * @hidden
-     */
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     protected paginatorDirectiveTemplate: TemplateRef<any>;
 

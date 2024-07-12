@@ -106,6 +106,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     valid?: boolean;
 }
 
+
 /**
  * Represents event arguments related to grid editing.
  * The event is cancelable

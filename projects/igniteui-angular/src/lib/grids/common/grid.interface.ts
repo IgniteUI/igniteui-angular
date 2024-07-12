@@ -640,7 +640,6 @@ export interface GridServiceType {
     deleteRowById(id: any): any;
     /** Represents a method declaration for retrieving the row's current state of expansion (used for tree grids)*/
     get_row_expansion_state(id: any): boolean;
-    /* blazorSuppress */
     /** Represents a method declaration for setting a new expansion state. It can be triggered by an event */
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[];
@@ -666,7 +665,6 @@ export interface GridServiceType {
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
-    /* blazorSuppress */
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
 
     expand_path_to_record?(record: ITreeGridRecord): void;

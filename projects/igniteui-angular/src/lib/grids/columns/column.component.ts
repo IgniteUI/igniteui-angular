@@ -1111,7 +1111,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
-
     /**
      * Sets the column `sortStrategy`.
      * ```typescript
@@ -1679,7 +1678,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
     public children: QueryList<IgxColumnComponent>;
-
     /**
      * @hidden
      */
