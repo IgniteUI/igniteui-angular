@@ -1346,11 +1346,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Gets the cells of the column.
-     * ```typescript
-     * let columnCells = this.column.cells;
-     * ```
-     *
+     * @hidden @internal
      */
     public get cells(): CellType[] {
         return this.grid.dataView
