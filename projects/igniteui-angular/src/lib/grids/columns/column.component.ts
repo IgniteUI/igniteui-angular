@@ -49,13 +49,14 @@ import {
     IgxSummaryTemplateDirective,
     IgxCellValidationErrorDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs, IColumnEditorOptions } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Size } from '../common/enums';
+import { DateTimeUtil } from '../../date-common/util/date-time.util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1565,11 +1566,44 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
+        this.setEditorDateTimeFormat();
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
+    }
+
+    /**
+     * @remarks
+     * Pass optional parameters to control properties of the default column editors.
+     * Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property.
+     * For more details see https://angular.io/api/common/DatePipe
+     * @example
+     * ```typescript
+     * const editorOptions: IColumnEditorOptions = {
+     *      dateTimeFormat: 'MM/dd/YYYY',
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [editorOptions]="editorOptions"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public set editorOptions(value: IColumnEditorOptions) {
+        this._editorOptions = Object.assign(this._editorOptions, value);
+        // Should we guard against setting non-numeric formats here?
+        if (this._editorOptions.dateTimeFormat) {
+            this._editorOptions.dateTimeFormat = DateTimeUtil.getNumericInputFormat(this.grid.locale, this._editorOptions.dateTimeFormat)
+        }
+        this._editorOptionsSetByUser = true;
+        this.grid.pipeTrigger++;
+    }
+    public get editorOptions(): IColumnEditorOptions {
+        return this._editorOptions;
     }
 
     /**
@@ -1763,6 +1797,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
+    private _editorOptions: IColumnEditorOptions = { };
+    private _editorOptionsSetByUser = false;
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
@@ -1818,6 +1854,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this._columnPipeArgs.format = this.dataType === GridColumnDataType.Time ?
                 DEFAULT_TIME_FORMAT : this.dataType === GridColumnDataType.DateTime ?
                     DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
+        }
+        if (!this.editorOptions.dateTimeFormat) {
+            this.setEditorDateTimeFormat();
         }
         if (!this.summaries) {
             switch (this.dataType) {
@@ -2547,6 +2586,20 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set applySelectableClass(value: boolean) {
         if (this.selectable) {
             this._applySelectableClass = value;
+        }
+    }
+
+    private setEditorDateTimeFormat() {
+        if (this.dataType !== GridColumnDataType.Date &&
+            this.dataType !== GridColumnDataType.Time &&
+            this.dataType !== GridColumnDataType.DateTime) {
+            return;
+        }
+        if (!this._editorOptionsSetByUser) {
+            this._editorOptions.dateTimeFormat = DateTimeUtil.getNumericInputFormat(this.grid.locale, this._columnPipeArgs.format);
+            if (this.dataType === GridColumnDataType.Time && !this._editorOptions.dateTimeFormat) {
+                this._editorOptions.dateTimeFormat = DEFAULT_TIME_FORMAT;
+            }
         }
     }
 }
