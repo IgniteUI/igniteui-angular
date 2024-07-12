@@ -128,7 +128,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public childLayoutList = new QueryList<IgxRowIslandComponent>();
@@ -153,6 +153,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public get toolbarTemplate(): TemplateRef<IgxGridToolbarTemplateContext> {
         return this._toolbarTemplate || this.toolbarDirectiveTemplate;
     }
+
     public set toolbarTemplate(template: TemplateRef<IgxGridToolbarTemplateContext>) {
         this._toolbarTemplate = template;
     }
