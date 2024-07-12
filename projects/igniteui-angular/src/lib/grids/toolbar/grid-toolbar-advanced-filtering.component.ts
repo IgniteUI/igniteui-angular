@@ -32,6 +32,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
+     * @hidden @internal
      */
     public get grid() {
         return this.toolbar.grid;
@@ -46,6 +47,9 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
         });
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit(): void {
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
     }

@@ -96,7 +96,7 @@ export class GridColumnGroupsSampleComponent {
     }
 
     public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
-        const columns = columnGroup.children.toArray();
+        const columns = columnGroup.childColumns;
 
         if (columnGroup.header === 'General Information') {
             const col = columns[1];

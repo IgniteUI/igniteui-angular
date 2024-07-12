@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
+import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 
 @Component({
@@ -25,7 +25,10 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    /**
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
+     */
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent,  })
     public override children = new QueryList<IgxColumnComponent>();
 
     /**
@@ -309,6 +312,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 }
             });
 
+    }
+
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    public override get childColumns(): ColumnType[] {
+        return this.children.toArray();
     }
 
     /** @hidden @internal **/

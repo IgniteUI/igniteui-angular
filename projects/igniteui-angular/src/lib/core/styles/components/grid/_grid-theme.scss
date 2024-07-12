@@ -2793,7 +2793,7 @@
             --ig-size: 1;
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             [igxButton] {
                 margin: rem(4px);
             }
@@ -2830,7 +2830,7 @@
             igx-icon {
                 position: absolute;
                 inset-inline-start: rem(12px);
-                /* IE fix for vertical alignment*/
+                // IE fix for vertical alignment
                 top: 50%;
                 transform: translateY(-50%);
             }
@@ -3265,6 +3265,7 @@
                         map.get($grid-header-padding-inline, 'cosy'),
                         map.get($grid-header-padding-inline, 'comfortable')
                     );
+                    align-self: center;
                 }
             }
 
@@ -3273,6 +3274,12 @@
                     border-inline-end: 0;
                 }
             }
+        }
+    }
+
+    %igx-grid__tbody-pivot-mrl-dimension {
+        .igx-grid-th {
+            border-bottom: none;
         }
     }
 

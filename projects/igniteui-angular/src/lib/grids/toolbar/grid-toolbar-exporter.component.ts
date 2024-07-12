@@ -96,7 +96,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     /**
      * Indicates whether there is an export in progress.
      */
-    public isExporting = false;
+    protected isExporting = false;
 
     constructor(
         @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
@@ -106,11 +106,18 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         super(toolbar);
     }
 
-    public export(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective): void {
+    protected exportClicked(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective) {
+        toggleRef?.close();
+        this.export(type);
+    }
+
+    /**
+     * Export the grid's data
+     * @param type File type to export
+     */
+    public export(type: 'excel' | 'csv'): void {
         let options: IgxExporterOptions;
         let exporter: IgxBaseExporter;
-
-        toggleRef?.close();
 
         switch (type) {
             case 'csv':

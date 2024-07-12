@@ -130,8 +130,9 @@ export interface IPivotDimension {
     width?: string;
     /** Level of the dimension. */
     level?: number;
-    /** hidden */
+    /** @hidden @internal */
     autoWidth?: number;
+    horizontalSummary? : boolean;
 }
 /**
 * Configuration of a pivot value aggregation.
@@ -196,9 +197,16 @@ export enum PivotDimensionType {
     Filter
 }
 
+
+export enum PivotRowLayoutType {
+    Vertical = "vertical",
+    Horizontal = "horizontal"
+}
+
 export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
+    rowLayout?: PivotRowLayoutType
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
@@ -225,6 +233,11 @@ export interface PivotRowHeaderGroupType {
     grid: any;
 }
 
+export interface DimensionValueType {
+    value: string;
+    children: Map<string, string | DimensionValueType>;
+}
+
 export interface IPivotGridRecord {
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
@@ -238,11 +251,26 @@ export interface IPivotGridRecord {
     level?: number;
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
+    /** Describes if this is a total record for a dimension */
+    totalRecord?: boolean;
+    /** The index of the record in the total view */
+    dataIndex?: number;
 }
 
 export interface IPivotGridGroupRecord extends IPivotGridRecord {
     height?: number;
     rowSpan?: number;
+}
+
+export interface IPivotGridHorizontalGroup {
+    value?: string;
+    rootDimension?: IPivotDimension;
+    dimensions?: IPivotDimension[];
+    records?: IPivotGridRecord[];
+    rowStart?: number;
+    rowSpan?: number;
+    colStart?: number;
+    colSpan?: number;
 }
 
 export interface IgxPivotGridValueTemplateContext {
