@@ -1459,6 +1459,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.parent && this.parent.columnLayout;
     }
 
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    public get childColumns(): ColumnType[] {
+        return [];
+    }
+
     /** @hidden @internal **/
     public get allChildren(): IgxColumnComponent[] {
         return [];
@@ -1638,11 +1646,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let columnChildren = this.column.children;
      * ```
-     * ```typescript
-     * this.column.children = childrenColumns;
-     * ```
      *
-     * @memberof IgxColumnComponent
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
     public children: QueryList<IgxColumnComponent>;
     /**
