@@ -1437,6 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return vIndex;
     }
 
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
      * ```typescript
@@ -1448,6 +1449,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get columnGroup() {
         return false;
     }
+
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
      * ```typescript
