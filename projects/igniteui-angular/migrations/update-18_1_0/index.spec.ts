@@ -123,7 +123,7 @@ describe(`Update to ${version}`, () => {
     it('Should replace deprecated `children` property of Columns', async () => {
         pending('set up tests for migrations through lang service');
         appTree.create(
-            '/testSrc/appPrefix/component/expansion-test.component.ts',
+            '/testSrc/appPrefix/component/column-test.component.ts',
             `import { Component } from '@angular/core';
 import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
@@ -143,7 +143,7 @@ export class ColumnsTestComponent {
         );
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent =  `import { Component } from '@angular/core';
-import { IgxColumnGroupComponent } from 'igniteui-angular';
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-columns-test',
@@ -159,7 +159,47 @@ export class ColumnsTestComponent {
     }
 }`;
         expect(
-                tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
-            ).toEqual(expectedContent);
+            tree.readContent('/testSrc/appPrefix/component/column-test.component.ts')
+        ).toEqual(expectedContent);
+    });
+
+
+    it('Should replace deprecated `isFirstPageDisabled`/`isLastPageDisabled` on paginator', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/paginator-test.component.ts',
+            `import { Component } from '@angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-paginator-test',
+    templateUrl: './paginator-test.component.html',
+    styleUrls: ['./paginator-test.component.scss']
+})
+export class PaginatorTestComponent {
+    public paginator: IgxPaginatorComponent;
+    public testMethod() {
+        return this.paginator.isFirstPageDisabled || this.paginator.isLastPageDisabled;
+    }
+}`
+        );
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const expectedContent =  `import { Component } from '@angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-paginator-test',
+    templateUrl: './paginator-test.component.html',
+    styleUrls: ['./paginator-test.component.scss']
+})
+export class PaginatorTestComponent {
+    public paginator: IgxPaginatorComponent;
+    public testMethod() {
+        return this.paginator.isFirstPage || this.paginator.isLastPage;
+    }
+}`;
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/paginator-test.component.ts')
+        ).toEqual(expectedContent);
     });
 });
