@@ -212,7 +212,7 @@ export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
     rowLayout?: PivotRowLayoutType;
-    rowSummariesPosition?: PivotSummaryPosition;
+    horizontalSummariesPosition?: PivotSummaryPosition;
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;

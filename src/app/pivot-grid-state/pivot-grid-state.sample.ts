@@ -166,7 +166,7 @@ export class PivotGridStateSampleComponent {
         showConfiguration: true,
         showRowHeaders: true,
         rowLayout: PivotRowLayoutType.Horizontal,
-        rowSummariesPosition: PivotSummaryPosition.Top
+        horizontalSummariesPosition: PivotSummaryPosition.Top
     };
     public options: IGridStateOptions = {
         pivotConfiguration: true

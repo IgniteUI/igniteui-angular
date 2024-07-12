@@ -153,7 +153,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                     expansionStates,
                     defaultExpand,
                     horizontalRowDimensions,
-                    this.grid.pivotUI.rowSummariesPosition
+                    this.grid.pivotUI.horizontalSummariesPosition
             );
             } else {
                 PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);

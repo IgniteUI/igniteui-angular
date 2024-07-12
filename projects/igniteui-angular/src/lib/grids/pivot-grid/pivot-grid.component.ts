@@ -671,7 +671,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         showConfiguration: true,
         showRowHeaders: false,
         rowLayout: PivotRowLayoutType.Vertical,
-        rowSummariesPosition: PivotSummaryPosition.Bottom
+        horizontalSummariesPosition: PivotSummaryPosition.Bottom
     };
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];

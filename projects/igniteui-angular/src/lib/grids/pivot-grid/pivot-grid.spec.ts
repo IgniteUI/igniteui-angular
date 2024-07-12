@@ -2995,7 +2995,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it("should render summary rows on top when enabled", () => {
-            pivotGrid.pivotUI.rowSummariesPosition = PivotSummaryPosition.Top;
+            pivotGrid.pivotUI.horizontalSummariesPosition = PivotSummaryPosition.Top;
             pivotGrid.pivotConfiguration.rows = [
                 {
                     memberName: 'All cities',
@@ -3043,7 +3043,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it("should update active node when top summary rows on and dimension is collapsed/expanded", () => {
-            pivotGrid.pivotUI.rowSummariesPosition = PivotSummaryPosition.Top;
+            pivotGrid.pivotUI.horizontalSummariesPosition = PivotSummaryPosition.Top;
             pivotGrid.pivotConfiguration.rows = [
                 {
                     memberName: 'All cities',
