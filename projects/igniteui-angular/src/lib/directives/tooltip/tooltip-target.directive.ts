@@ -298,8 +298,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
-        this.nativeElement.addEventListener('touchstart', this.onTouchStart.bind(this), {passive: true});
-        document.addEventListener('touchstart', this.onDocumentTouchStart.bind(this), {passive: true});
+        this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), {passive: true});
+        document.addEventListener('touchstart', this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this), {passive: true});
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
