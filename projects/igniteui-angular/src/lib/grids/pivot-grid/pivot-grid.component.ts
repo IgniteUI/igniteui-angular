@@ -1088,7 +1088,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
-    /** @hidden @internal */
     protected get allVisibleDimensions() {
         const config = this._pivotConfiguration;
         if (!config) return [];
