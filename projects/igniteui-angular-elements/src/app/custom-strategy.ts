@@ -1,10 +1,9 @@
 import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
-import { NgElement, NgElementStrategy, NgElementStrategyFactory, } from '@angular/elements';
+import { NgElement } from '@angular/elements';
 import { fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
-// TODO: Should be from '@angular/elements' when actually public
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 

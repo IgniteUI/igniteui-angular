@@ -1,7 +1,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
-import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
+import { NgElement, WithProperties } from '@angular/elements';
 import {
     IgxActionStripComponent,
     IgxColumnComponent,
@@ -25,7 +25,6 @@ import {
     IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 import { registerConfig } from "../analyzer/elements.config";
