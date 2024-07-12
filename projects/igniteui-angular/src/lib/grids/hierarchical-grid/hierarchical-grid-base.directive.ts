@@ -41,6 +41,7 @@ import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxIconService } from '../../icon/icon.service';
+import { ThemeService } from '../../services/theme/theme.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -164,6 +165,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
         @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
+        @Optional() @Inject(ThemeService) themeService?: ThemeService,
     ) {
         super(
             validationService,
@@ -187,7 +189,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             localeId,
             platform,
             _diTransactions,
-            iconService
+            iconService,
+            themeService
         );
     }
 
