@@ -687,3 +687,47 @@ class MyChildSummary {
         return result;
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [autoGenerate]="false" [allowFiltering]='true'
+        [height]="'600px'" [width]="'100%'" [rowHeight]="'65px'" [primaryKey]="'ID'" #hierarchicalGrid>
+        <igx-column field="ID" [hidden]="true"></igx-column>
+        <igx-column field="Artist"></igx-column>
+        <igx-column field="Debut" dataType="number"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" dataType="number"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" dataType="number"></igx-column>
+
+        <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false" [allowFiltering]='true'>
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" dataType="number"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" dataType="number"></igx-column>
+        <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
+        </igx-row-island>
+        </igx-row-island>
+
+        <igx-row-island [height]="null" [key]="'Tours'" [autoGenerate]="false" [allowFiltering]='true'>
+            <igx-column field="Tour"></igx-column>
+            <igx-column field="StartedOn" header="Started on"></igx-column>
+            <igx-column field="Location"></igx-column>
+            <igx-column field="Headliner"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridDefaultComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hierarchicalGrid: IgxHierarchicalGridComponent;
+
+    public data;
+
+    constructor() {
+        this.data = SampleTestData.hierarchicalGridSingersFullData();
+    }
+}
