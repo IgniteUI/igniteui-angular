@@ -220,7 +220,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     @Output()
     public dataChanged = new EventEmitter<any>();
 
-    /* blazorSuppress */
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 
