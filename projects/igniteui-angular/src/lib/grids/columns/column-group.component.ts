@@ -76,7 +76,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this._collapsible && this.checkCollapsibleState();
     }
 
-    /* blazorSuppress */
     /**
      * Set whether the group is expanded or collapsed initially.
      * Applied only if the collapsible property is set to `true`
@@ -103,7 +102,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this._expanded;
     }
 
-     /* blazorSuppress */
     /**
      * Gets the column group `summaries`.
      * ```typescript
@@ -143,8 +141,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     @Input({ transform: booleanAttribute })
     public override searchable = true;
-
-     /* blazorSuppress */
     /**
      * Gets the column group `filters`.
      * ```typescript
@@ -169,7 +165,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public override set filters(classRef: any) { }
 
-    /* blazorSuppress */
     /**
      * Returns if the column group is selectable
      * ```typescript
@@ -187,7 +182,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public override set selectable(value: boolean) { }
 
-    /* blazorSuppress */
     /**
      * @hidden
      */
@@ -217,8 +211,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @hidden
      */
     public override set inlineEditorTemplate(template: TemplateRef<any>) { }
-
-    /* blazorSuppress */
     /**
      * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
      * ```typescript
@@ -230,8 +222,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get cells(): CellType[] {
         return [];
     }
-
-    /* blazorSuppress */
     /**
      * Gets whether the column group is hidden.
      * ```typescript
@@ -274,7 +264,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         }
     }
 
-     /* blazorSuppress */
     /**
      * Returns if the column group is selected.
      * ```typescript
@@ -388,8 +377,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get columnLayout() {
         return false;
     }
-
-     /* blazorSuppress */
     /**
      * Gets the width of the column group.
      * ```typescript
