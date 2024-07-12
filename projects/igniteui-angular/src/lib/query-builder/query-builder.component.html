@@ -323,7 +323,7 @@
                 [locale]="this.locale"
                 [outlet]="pickerOutlet"
                 [formatter]="selectedField.formatter"
-                [inputFormat]="selectedField.defaultTimeFormat"
+                [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
             >
                 <!-- disable default icons -->
                 <igx-picker-toggle></igx-picker-toggle>
@@ -351,7 +351,9 @@
                             selectedField.filters.condition(selectedCondition)
                                 .isUnary)
                     "
-                    [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
+                    [locale]="this.locale"
+                    [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
+                    [displayFormat]="selectedField.pipeArgs.format"
                 />
             </igx-input-group>
 

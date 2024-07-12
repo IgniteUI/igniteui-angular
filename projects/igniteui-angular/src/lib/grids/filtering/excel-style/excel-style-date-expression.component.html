@@ -39,6 +39,7 @@
     [readOnly]="true"
     [placeholder]="inputTimePlaceholder"
     [displayFormat]="column.pipeArgs.format"
+    [inputFormat]="column.editorOptions?.dateTimeFormat"
     [formatter]="column.formatter"
     [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
     type="box">
@@ -50,7 +51,9 @@
 <igx-input-group #dropDownTarget *ngIf="column.dataType === 'dateTime'" #inputGroup type="box">
     <input #input igxInput tabindex="0"
         [placeholder]="inputDatePlaceholder"
-        [igxDateTimeEditor]="column.defaultDateTimeFormat"
+        [locale]="column.grid.locale"
+        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+        [displayFormat]="column.pipeArgs.format"
         [(ngModel)]="expressionUI.expression.searchVal"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
 </igx-input-group>
