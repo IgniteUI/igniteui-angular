@@ -2751,12 +2751,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
             const input = filterCell.query(By.css('input')).nativeElement;
- 
+
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             input.dispatchEvent(mousedownEvent, { bubbles: true });
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
         }));
 
@@ -2768,7 +2768,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             firstCell.dispatchEvent(mousedownEvent);
             fix.detectChanges();
-           
+
             expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
@@ -6510,43 +6510,35 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Verify date values are displayed in descending order in the Excel Style Filter dropdown', fakeAsync(() => {
             const values = [
                 new Date(2024, 6, 17), // Jul 17, 2024
-                new Date(2024, 6, 4), // Jul 4, 2024
+                new Date(2024, 6, 4),  // Jul 4, 2024
                 new Date(2024, 5, 29), // Jun 29, 2024
                 new Date(2024, 5, 20), // Jun 20, 2024
                 new Date(2024, 5, 11), // Jun 11, 2024
                 new Date(2024, 4, 13)  // May 13, 2024
             ];
-            
+
             spyOn(grid, 'uniqueColumnValuesStrategy').and.callFake((column, expressionsTree, callback) => {
                 // Simulate asynchronous behavior by delaying callback execution
                 setTimeout(() => {
                     callback(values);
                 }, 1000); // Adjust the delay as necessary to match your component's behavior
             });
-        
+
             // Set the column to trigger rendering of column values remotely
             fix.componentInstance.column = grid.columns.find(col => col.field === 'ReleaseDate');
             tick();
             fix.detectChanges();
-        
+
             // Open the Excel Style Filter dropdown for the 'ReleaseDate' column
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(1050);
             fix.detectChanges();
-        
+
             // Get the list items in the dropdown
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-        
+
             // Create a DatePipe instance with the correct locale
             const datePipe = new DatePipe(grid.locale);
-        
-            for (let i = 0; i < values.length; i++) {
-                console.log(values[i])
-            }
-
-            for (let i = 0; i < listItems.length; i++) {
-                console.log(listItems[i].innerText.trim())
-            }
 
             // Verify the list items are in descending order
             expect(listItems[0].innerText.trim()).toEqual('Select All');
