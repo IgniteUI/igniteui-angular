@@ -37,7 +37,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -667,7 +667,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
-    private _pivotUI: IPivotUISettings = { showConfiguration: true, showRowHeaders: false, rowLayout: PivotRowLayoutType.Vertical };
+    private _pivotUI: IPivotUISettings = {
+        showConfiguration: true,
+        showRowHeaders: false,
+        rowLayout: PivotRowLayoutType.Vertical,
+        horizontalSummariesPosition: PivotSummaryPosition.Bottom
+    };
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];
 
@@ -1083,7 +1088,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
-    public get allVisibleDimensions() {
+    protected get allVisibleDimensions() {
         const config = this._pivotConfiguration;
         if (!config) return [];
         const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows.find(configRow => configRow.memberName === dim.memberName));
