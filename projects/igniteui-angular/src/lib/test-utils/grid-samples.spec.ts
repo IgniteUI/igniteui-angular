@@ -1176,6 +1176,37 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
+        <igx-column *ngFor="let c of columns"
+            [field]="c.field"
+            [header]="c.header"
+            [width]="c.width"
+            [filterable]="true"
+            [dataType]="c.type">
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
+})
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent {
+    public override data = [];
+    public columns = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string'},
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
+            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+        ];
+        this.data = SampleTestData.excelFilteringData();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar>
             <igx-grid-toolbar-advanced-filtering
                 #filtering
@@ -1738,7 +1769,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         <igx-grid [data]="data">
             <igx-column [editable]="true" field="fullName">
             </igx-column>
-            <igx-column field="age" [editable]="true" [dataType]="'number'">   
+            <igx-column field="age" [editable]="true" [dataType]="'number'">
             </igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
             <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
