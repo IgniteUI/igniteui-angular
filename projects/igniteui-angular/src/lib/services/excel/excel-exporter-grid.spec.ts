@@ -43,7 +43,7 @@ import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/publ
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent } from '../../grids/pivot-grid/public_api';
+import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -1395,6 +1395,33 @@ describe('Excel Exporter', () => {
             grid = fix.componentInstance.pivotGrid;
 
             await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalData, false);
+        });
+
+        it('should export pivot grid with horizontal row layout.', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+            grid.pivotUI.showRowHeaders = true;
+            grid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
+            grid.pivotConfiguration.rows = [{
+                memberName: 'ProductCategory',
+                memberFunction: (data) => data.ProductCategory,
+                enabled: true,
+                childLevel:{
+                    memberName: 'Country',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'Date',
+                        enabled: true
+                    }
+                }
+            }],
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridDataHorizontal, false);
         });
     });
 

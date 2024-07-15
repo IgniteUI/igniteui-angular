@@ -590,13 +590,14 @@ describe('IgxGrid Master Detail #grid', () => {
             setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();

@@ -153,7 +153,8 @@ export class WorksheetFile implements IExcelFile {
 
                 const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader &&
                      c.headerType !== ExportHeaderType.MultiRowHeader &&
-                     c.headerType !== ExportHeaderType.PivotRowHeader);
+                     c.headerType !== ExportHeaderType.PivotRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotMergedHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
@@ -607,7 +608,7 @@ export class WorksheetFile implements IExcelFile {
         for (const currentCol of headersForLevel) {
             const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
 
-            if (currentCol.level === i) {
+            if (currentCol.level === i && currentCol.headerType !== ExportHeaderType.PivotMergedHeader) {
                 let columnCoordinate;
                 const column = isVertical
                     ? this.rowIndex
@@ -669,6 +670,10 @@ export class WorksheetFile implements IExcelFile {
                                 ? this.pivotGridRowHeadersMap.set(row, str)
                                 : this.sheetData += str
                         }
+                    }
+                    if ((currentCol.headerType === ExportHeaderType.RowHeader || currentCol.headerType === ExportHeaderType.MultiRowHeader) &&
+                        currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
                     }
 
                     this.mergeCellStr += `${columnCoordinate}" />`;

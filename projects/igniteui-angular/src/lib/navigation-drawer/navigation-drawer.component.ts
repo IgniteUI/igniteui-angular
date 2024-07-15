@@ -281,7 +281,6 @@ export class IgxNavigationDrawerComponent implements
     }
     public set isOpen(value) {
         this._isOpen = value;
-        console.log(value);
         this.isOpenChange.emit(this._isOpen);
     }
 

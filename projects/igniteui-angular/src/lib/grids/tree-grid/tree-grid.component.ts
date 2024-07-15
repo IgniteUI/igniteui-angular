@@ -170,7 +170,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public childDataKey;
+    public childDataKey: string;
 
     /**
      * Sets the foreign key of the `IgxTreeGridComponent`.
@@ -182,7 +182,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public foreignKey;
+    public foreignKey: string;
 
     /**
      * Sets the key indicating whether a row has children.
@@ -197,7 +197,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public hasChildrenKey;
+    public hasChildrenKey: string;
 
     /**
      * Sets whether child records should be deleted when their parent gets deleted.

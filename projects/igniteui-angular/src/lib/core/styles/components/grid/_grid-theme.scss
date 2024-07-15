@@ -3265,6 +3265,7 @@
                         map.get($grid-header-padding-inline, 'cosy'),
                         map.get($grid-header-padding-inline, 'comfortable')
                     );
+                    align-self: center;
                 }
             }
 
@@ -3273,6 +3274,12 @@
                     border-inline-end: 0;
                 }
             }
+        }
+    }
+
+    %igx-grid__tbody-pivot-mrl-dimension {
+        .igx-grid-th {
+            border-bottom: none;
         }
     }
 

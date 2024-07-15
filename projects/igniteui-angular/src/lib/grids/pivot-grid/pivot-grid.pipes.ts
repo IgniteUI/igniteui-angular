@@ -10,10 +10,10 @@ import {
 } from '../../data-operations/pivot-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../common/strategy';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridHorizontalGroup, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
@@ -28,7 +28,7 @@ import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 })
 export class IgxPivotRowPipe implements PipeTransform {
 
-    constructor() { }
+    constructor(@Inject(IGX_GRID_BASE) private grid?: PivotGridType) { }
 
     public transform(
         collection: any,
@@ -132,7 +132,7 @@ export class IgxPivotAutoTransform implements PipeTransform {
 })
 export class IgxPivotRowExpansionPipe implements PipeTransform {
 
-    constructor(@Inject(IGX_GRID_BASE) private grid?: GridType) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid?: PivotGridType) { }
 
     public transform(
         collection: IPivotGridRecord[],
@@ -144,11 +144,33 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     ): IPivotGridRecord[] {
         const enabledRows = config.rows?.filter(x => x.enabled) || [];
         const data = collection ? cloneArray(collection, true) : [];
+        const horizontalRowDimensions = [];
         for (const row of enabledRows) {
-            PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
+            if (this.grid?.hasHorizontalLayout) {
+                PivotUtil.flattenGroupsHorizontally(
+                    data,
+                    row,
+                    expansionStates,
+                    defaultExpand,
+                    horizontalRowDimensions,
+                    this.grid.pivotUI.horizontalSummariesPosition
+            );
+            } else {
+                PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
+            }
         }
-        const finalData = enabledRows.length > 0 ?
-            data.filter(x => x.dimensions.length === enabledRows.length) : data;
+
+        let finalData = data;
+        if (this.grid?.hasHorizontalLayout) {
+            const allRowDims = PivotUtil.flatten(this.grid.rowDimensions);
+            this.grid.visibleRowDimensions = allRowDims.filter((rowDim) => horizontalRowDimensions.some(targetDim => targetDim.memberName === rowDim.memberName));
+        } else {
+            if (this.grid) {
+                this.grid.visibleRowDimensions = enabledRows;
+            }
+            finalData = enabledRows.length > 0 ?
+            finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
+        }
 
         if (this.grid) {
             this.grid.setFilteredSortedData(finalData, false);
@@ -166,7 +188,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPivotCellMergingPipe implements PipeTransform {
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+    constructor(@Inject(IGX_GRID_BASE) private grid: PivotGridType) { }
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
@@ -177,12 +199,19 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         const data: IPivotGridGroupRecord[] = collection ? cloneArray(collection, true) : [];
         const res: IPivotGridGroupRecord[] = [];
 
-        const enabledRows = config.rows?.filter(x => x.enabled);
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
-        const index = enabledRows.indexOf(dim);
+        const enabledRows = this.grid.hasHorizontalLayout ? (this.grid as any).visibleRowDimensions :  config.rows?.filter(x => x.enabled);
+        const dimIndex = enabledRows.indexOf(dim);
         for (const rec of data) {
-            const currentDim = rec.dimensions[index];
+            let currentDim;
+            if (this.grid.hasHorizontalLayout) {
+                currentDim = dim;
+                rec.dimensions = enabledRows;
+            } else {
+                currentDim = rec.dimensions[dimIndex];
+            }
+
             const id = PivotUtil.getRecordKey(rec, currentDim);
             if (groupData.length > 0 && prevId !== id) {
                 const h = groupData.length > 1 ? groupData.length * this.grid.renderedRowHeight : undefined;
@@ -204,6 +233,130 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ */
+@Pipe({
+    name: "pivotGridHorizontalRowGrouping",
+    standalone: true
+})
+export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+    public transform(
+        collection: IPivotGridRecord[],
+        config: IPivotConfiguration,
+        _pipeTrigger?: number,
+        _regroupTrigger?: number
+    ): IPivotGridRecord[][] {
+        if (collection.length === 0 || config.rows.length === 0) return null;
+        const data: IPivotGridRecord[] = collection ? cloneArray(collection, true) : [];
+        const res: IPivotGridRecord[][] = [];
+
+        const groupDim = config.rows.filter(dim => dim.enabled)[0];
+        let curGroup = [];
+        let curGroupValue = data[0].dimensionValues.get(groupDim.memberName);
+        for (const [index, curRec] of data.entries()) {
+            curRec.dataIndex = index;
+            const curRecValue = curRec.dimensionValues.get(groupDim.memberName);
+            if (curGroup.length === 0 || curRecValue === curGroupValue) {
+                curGroup.push(curRec);
+            } else {
+                curGroup["height"] = this.grid.renderedRowHeight * curGroup.length;
+                res.push(curGroup);
+                curGroup = [curRec];
+                curGroupValue = curRecValue;
+            }
+        }
+        res.push(curGroup);
+
+        return res;
+    }
+}
+
+/**
+ * @hidden
+ */
+@Pipe({
+    name: "pivotGridHorizontalRowCellMerging",
+    standalone: true
+})
+export class IgxPivotGridHorizontalRowCellMerging implements PipeTransform {
+    constructor(@Inject(IGX_GRID_BASE) private grid: PivotGridType) { }
+    public transform(
+        collection: IPivotGridRecord[],
+        config: IPivotConfiguration,
+        _pipeTrigger?: number
+    ): IPivotGridHorizontalGroup[] {
+        if (collection.length === 0 || config.rows.length === 0) return [{
+            colStart: 1,
+            colSpan: 1,
+            rowStart: 1,
+            rowSpan: 1,
+            records: collection
+        }];
+        const data: IPivotGridRecord[] = collection ? cloneArray(collection, true) : [];
+        const res: IPivotGridHorizontalGroup[] = [];
+
+        // Merge vertically for each row dimension.
+        const verticalMergeGroups: IPivotGridHorizontalGroup[][] = [ ...data.map(_ => []) ];
+        for (let dimIndex = 0; dimIndex < this.grid.visibleRowDimensions.length; dimIndex++) {
+            const curDim = this.grid.visibleRowDimensions[dimIndex];
+            let curGroup: IPivotGridHorizontalGroup = {
+                colStart: dimIndex + 1,
+                colSpan: 1,
+                rowStart: 1,
+                rowSpan: 1,
+                value: data[0].dimensionValues.get(curDim.memberName),
+                rootDimension: curDim,
+                dimensions: [curDim],
+                records: [data[0]]
+            };
+            for(let i = 1; i < data.length; i++) {
+                const curRec = data[i];
+                const curRecValue = curRec.dimensionValues.get(curDim.memberName);
+                const previousRowCell = verticalMergeGroups[i][verticalMergeGroups[i].length - 1];
+                if (curRecValue === curGroup.value && !previousRowCell) {
+                    // If previousRowCell is non existing, its merged so we can push in this vertigal group as well.
+                    curGroup.rowSpan++;
+                    curGroup.records.push(curRec);
+                } else {
+                    verticalMergeGroups[curGroup.rowStart - 1].push(curGroup);
+                    curGroup = {
+                        colStart: dimIndex + 1,
+                        colSpan: 1,
+                        rowStart: curGroup.rowStart + curGroup.rowSpan,
+                        rowSpan: 1,
+                        value: curRec.dimensionValues.get(curDim.memberName),
+                        rootDimension: curDim,
+                        dimensions: [curDim],
+                        records: [curRec]
+                    };
+                }
+            }
+
+            verticalMergeGroups[curGroup.rowStart - 1].push(curGroup);
+        }
+
+        // Merge rows in a single array
+        const sortedGroups = verticalMergeGroups.reduce((prev, cur) => prev.concat(...cur), []);
+
+        // Horizontally merge any groups that can be merged or have been
+        res.push(sortedGroups[0]);
+        let prevGroup = sortedGroups[0];
+        for (let i = 1; i < sortedGroups.length; i++) {
+            const curGroup = sortedGroups[i];
+            if (curGroup.value && prevGroup.value !== curGroup.value) {
+                prevGroup = curGroup;
+                res.push(curGroup);
+            } else {
+                prevGroup.dimensions.push(curGroup.rootDimension);
+                prevGroup.colSpan++;
+            }
+        }
+
+        return res;
+    }
+}
 
 /**
  * @hidden

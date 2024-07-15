@@ -1,9 +1,10 @@
 <igx-pivot-grid
     #grid1
     igxGridState
-    [data]="mockData"
+    [data]="data"
     [sortStrategy]='myStrategy'
     [pivotConfiguration]="pivotConfigHierarchy"
+    [pivotUI]="pivotUI"
     height="500px">
 </igx-pivot-grid>
 <button igxButton="contained" (click)="saveState()">SAVE STATE</button>

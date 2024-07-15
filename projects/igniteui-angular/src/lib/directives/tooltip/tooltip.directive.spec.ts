@@ -9,7 +9,7 @@ import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
-const TOOLTIP_CLASS = 'igx-tooltip--desktop';
+const TOOLTIP_CLASS = 'igx-tooltip';
 
 describe('IgxTooltip', () => {
     configureTestSuite();

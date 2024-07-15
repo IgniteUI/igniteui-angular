@@ -1,7 +1,7 @@
 <button
     [title]="paginator.resourceStrings.igx_paginator_first_page_button_text"
-    [disabled]="paginator.isFirstPageDisabled"
-    [attr.aria-disabled]="paginator.isFirstPageDisabled"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.paginate(0)"
     igxIconButton="flat"
     igxRipple
@@ -12,8 +12,8 @@
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_previous_page_button_text"
-    [disabled]="paginator.isFirstPageDisabled"
-    [attr.aria-disabled]="paginator.isFirstPageDisabled"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.previousPage()"
     igxIconButton="flat"
     igxRipple
@@ -33,8 +33,8 @@
 </div>
 <button
     [title]="paginator.resourceStrings.igx_paginator_next_page_button_text"
-    [disabled]="paginator.isLastPageDisabled"
-    [attr.aria-disabled]="paginator.isLastPageDisabled"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.nextPage()"
     igxRipple
     [igxRippleCentered]="true"
@@ -45,8 +45,8 @@
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_last_page_button_text"
-    [disabled]="paginator.isLastPageDisabled"
-    [attr.aria-disabled]="paginator.isLastPageDisabled"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.paginate(paginator.totalPages - 1)"
     igxIconButton="flat"
     igxRipple

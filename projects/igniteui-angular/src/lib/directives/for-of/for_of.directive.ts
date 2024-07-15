@@ -802,7 +802,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
-
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
@@ -831,13 +830,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 const currDiff = newVal - oldVal;
                 diffs.push(currDiff);
                 totalDiff += currDiff;
-                this.sizesCache[index + 1] += totalDiff;
+                this.sizesCache[index + 1] = (this.sizesCache[index] || 0) + newVal;
             }
         }
         // update cache
         if (Math.abs(totalDiff) > 0) {
             for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
-                this.sizesCache[j] += totalDiff;
+                this.sizesCache[j] = (this.sizesCache[j] || 0) + totalDiff;
             }
 
             // update scrBar heights/widths
