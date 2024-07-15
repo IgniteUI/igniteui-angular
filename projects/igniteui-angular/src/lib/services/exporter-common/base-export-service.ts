@@ -244,9 +244,8 @@ export abstract class IgxBaseExporter {
         }
 
         const columnList = this.getColumns(columns);
-        const tagName = grid.nativeElement.tagName.toLowerCase();
 
-        if (tagName === 'igx-hierarchical-grid') {
+        if (grid.type === 'hierarchical') {
             this._ownersMap.set(grid, columnList);
 
             const childLayoutList = grid.childLayoutList;
@@ -254,7 +253,7 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
             }
-        } else if (tagName === 'igx-pivot-grid') {
+        } else if (grid.type === 'pivot') {
             this.pivotGridColumns = [];
             this.isPivotGridExport = true;
             this.pivotGridKeyValueMap = new Map<string, string>();
@@ -540,24 +539,23 @@ export abstract class IgxBaseExporter {
 
     private prepareData(grid: GridType) {
         this.flatRecords = [];
-        const tagName = grid.nativeElement.tagName.toLowerCase();
         const hasFiltering = (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands.length > 0) ||
             (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
         const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
         const hasSorting = expressions && expressions.length > 0;
         let setSummaryOwner = false;
 
-        switch (tagName) {
-            case 'igx-pivot-grid': {
+        switch (grid.type) {
+            case 'pivot': {
                 this.preparePivotGridData(grid);
                 break;
             }
-            case 'igx-hierarchical-grid': {
+            case 'hierarchical': {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 setSummaryOwner = true;
                 break;
             }
-            case 'igx-tree-grid': {
+            case 'tree': {
                 this.prepareTreeGridData(grid, hasFiltering, hasSorting);
                 break;
             }
@@ -1300,7 +1298,7 @@ export abstract class IgxBaseExporter {
     }
 
     private addPivotGridColumns(grid: any) {
-        if (grid.nativeElement.tagName.toLowerCase() !== 'igx-pivot-grid') {
+        if (grid.type !== 'pivot') {
             return;
         }
 

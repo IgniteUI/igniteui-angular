@@ -7220,7 +7220,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+        if (this.type === 'hierarchical') {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7257,7 +7257,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
         let selectionMap;
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+        if (this.type === 'hierarchical' && selectionCollection.size > 0) {
             selectionMap = isRemote ? Array.from(selectionCollection) :
                 Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
         } else {
