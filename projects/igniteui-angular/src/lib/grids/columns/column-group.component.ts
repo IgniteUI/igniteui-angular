@@ -186,12 +186,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public override set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
-     * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
-     * ```typescript
-     * let columnCells = this.columnGroup.cells;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden @internal
      */
     public override get cells(): CellType[] {
         return [];

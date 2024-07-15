@@ -311,17 +311,9 @@ export interface ColumnType extends FieldType {
     get childColumns(): ColumnType[];
     /** @hidden @internal */
     allChildren: ColumnType[];
-    /**
-     * The header group component associated with this column.
-     * Could be of any type
-    */
-    // TYPE
+    /** @hidden @internal */
     headerGroup: any;
-    /**
-     * The header cell component associated with this column.
-     * Could be of any type
-     */
-    // TYPE
+    /** @hidden @internal */
     headerCell: any;
     validators: any[];
 
@@ -418,6 +410,7 @@ export interface ColumnType extends FieldType {
      * If the value is true, the result will not depend on the case (example: `E` will match `e`)
      */
     sortingIgnoreCase: boolean;
+    /** @hidden @internal */
     filterCell: any;
     filteringIgnoreCase: boolean;
     /**
@@ -447,7 +440,9 @@ export interface ColumnType extends FieldType {
     rowEnd: number;
     colStart: number;
     colEnd: number;
+    /** @hidden @internal */
     gridRowSpan: number;
+    /** @hidden @internal */
     gridColumnSpan: number;
     columnLayoutChild: boolean;
     width: string;
