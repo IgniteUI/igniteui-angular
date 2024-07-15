@@ -380,10 +380,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         for (const icon of this._icons) {
             switch(this.themeService?.theme) {
                 case 'indigo':
-                    iconService.addIconRef(icon.name, icon.family, icon.ref.get('indigo'))
+                    iconService?.addIconRef(icon.name, icon.family, icon.ref.get('indigo'))
                     break;
                 default:
-                    iconService.addIconRef(icon.name, icon.family, icon.ref.get('default'))
+                    iconService?.addIconRef(icon.name, icon.family, icon.ref.get('default'))
 
             }
         }

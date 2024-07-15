@@ -696,20 +696,20 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this.viewDate = this.viewDate ? this.viewDate : new Date();
 
         for (const icon of [IndigoIcons.get('chevron_left'), IndigoIcons.get('chevron_right')]) {
-            this.iconService.addSvgIconFromText(icon.name, icon.value, icon.fontSet);
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, icon.fontSet);
         }
 
         for (const icon of this._icons) {
             switch(this.themeService?.theme) {
                 case 'indigo':
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get('indigo'),
                     );
                     break;
                 default:
-                    this.iconService.addIconRef(
+                    this.iconService?.addIconRef(
                         icon.name,
                         icon.family,
                         icon.ref.get('default')
