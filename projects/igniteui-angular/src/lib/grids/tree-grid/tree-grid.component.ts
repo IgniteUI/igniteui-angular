@@ -361,6 +361,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.cdr.markForCheck();
     }
 
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'tree';
+    }
+
     /**
      * Get transactions service for the grid.
      *
