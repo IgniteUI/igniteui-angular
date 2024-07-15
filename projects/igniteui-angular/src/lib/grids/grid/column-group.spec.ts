@@ -958,7 +958,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
             // Get topLevelParent of column with no group
-            expect(grid.getColumnByName('ID').topLevelParent).toBeNull();
+            expect(grid.getColumnByName('ID').topLevelParent).toBeUndefined();
 
             // Get topLevelParent of column
             const addressGroupedColumn = getColGroup(grid, 'Address Information');
@@ -971,8 +971,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getColumnByName('CompanyName').topLevelParent).toEqual(genInfGroupedColumn);
 
             // Get topLevelParent of top group
-            expect(genInfGroupedColumn.topLevelParent).toBeNull();
-            expect(addressGroupedColumn.topLevelParent).toBeNull();
+            expect(genInfGroupedColumn.topLevelParent).toBeUndefined();
+            expect(addressGroupedColumn.topLevelParent).toBeUndefined();
 
             // Get topLevelParent of group
             expect(getColGroup(grid, 'Person Details').topLevelParent).toEqual(genInfGroupedColumn);
