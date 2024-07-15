@@ -1463,6 +1463,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /** Method setting transformation to the base draggable element. */
     protected setTransformXY(x: number, y: number) {
+        if(x === 0 && y === 0) {
+            this.element.nativeElement.style.transform = '';
+            return;
+        }
         this.element.nativeElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
     }
 
