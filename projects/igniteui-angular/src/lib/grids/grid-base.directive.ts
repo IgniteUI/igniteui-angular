@@ -2949,7 +2949,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     public EMPTY_DATA = [];
 
     /** @hidden @internal */
-    public isPivot = false;
+    public get type(): GridType["type"] {
+        return 'flat';
+    }
 
     /** @hidden @internal */
     public _baseFontSize: number;
@@ -7218,7 +7220,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+        if (this.type === 'hierarchical') {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7255,7 +7257,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
         let selectionMap;
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+        if (this.type === 'hierarchical' && selectionCollection.size > 0) {
             selectionMap = isRemote ? Array.from(selectionCollection) :
                 Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
         } else {
@@ -7287,9 +7289,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 columnsArray = this.getSelectableColumnsAt(each);
                 columnsArray.forEach((col) => {
                     if (col) {
-                        const key = !this.isPivot && headers ? col.header || col.field : col.field;
+                        const key = this.type !== 'pivot' && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
-                        const value = this.isPivot ? rowData.aggregationValues.get(col.field)
+                        const value = this.type === 'pivot' ? rowData.aggregationValues.get(col.field)
                             : resolveNestedPath(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {

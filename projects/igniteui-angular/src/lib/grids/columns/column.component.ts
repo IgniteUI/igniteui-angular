@@ -1869,7 +1869,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getGridTemplate(isRow: boolean): string {
         if (isRow) {
-            const rowsCount = !this.grid.isPivot ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
+            const rowsCount = this.grid.type !== 'pivot' ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
             return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
