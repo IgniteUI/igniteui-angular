@@ -7,7 +7,7 @@ import { render, TemplateResult } from 'lit-html';
 type TemplateFunction = (arg: any) => TemplateResult;
 
 @Component({
-    selector: 'app-wrapper',
+    selector: 'igx-template-wrapper',
     templateUrl: './wrapper.component.html',
     styleUrls: ['./wrapper.component.scss'],
     standalone: true,
