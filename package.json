@@ -27,7 +27,7 @@
     "test:styles": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/src/lib/core/styles/spec/tests.ts",
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/src/lib/core/i18n/tests/tests.ts",
     "test:elements": "ng test igniteui-angular-elements --watch=false --no-progress --code-coverage --source-map=false",
-    "test:elements:watch": "ng test igniteui-angular-elements --karma-config=./projects/igniteui-angular-elements/karma.conf.js",
+    "test:elements:watch": "ng test igniteui-angular-elements",
     "build:lib": "ng build igniteui-angular --configuration production && npm run build:styles",
     "build:styles": "node scripts/build-styles.mjs",
     "build:migrations": "gulp copyMigrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
