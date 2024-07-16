@@ -627,8 +627,10 @@ describe('igxOverlay', () => {
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
 
-            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({ id: firstCallId, elementRef: jasmine.any(Object),
-                componentRef: jasmine.any(ComponentRef) as any, settings: os })
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({
+                id: firstCallId, elementRef: jasmine.any(Object),
+                componentRef: jasmine.any(ComponentRef) as any, settings: os
+            })
         }));
 
         it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
@@ -1174,11 +1176,25 @@ describe('igxOverlay', () => {
         it('#14364 - Should provide injector to attach method', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            const injector  = fixture.componentInstance.injector;
+            const injector = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 100 },
+                ],
+            });
             fixture.detectChanges();
 
             const id = overlay.attach(SimpleDynamicComponent, undefined, injector);
             expect(id).toBeDefined();
+
+            const overlayInfo = overlay.getOverlayById(id);
+            expect(overlayInfo).toBeDefined();
+
+            const elementInjector = overlayInfo.componentRef.injector;
+            expect(elementInjector).toBeDefined();
+
+            const result = elementInjector.get('SomeConst');
+            expect(result).toEqual(100);
 
             overlay.detachAll();
         });
