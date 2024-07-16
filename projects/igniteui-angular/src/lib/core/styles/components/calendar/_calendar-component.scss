@@ -146,6 +146,10 @@
             @extend %date-selected-special !optional;
         }
 
+        @include e(date, $mods: ('selected', 'special', 'active')) {
+            @extend %date-selected-special-active !optional;
+        }
+
         @include e(date, $mods: ('selected', 'range')) {
             @extend %date-selected-range !optional;
         }
