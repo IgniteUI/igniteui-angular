@@ -4,7 +4,7 @@ import { FilteringExpressionsTree, FilteringExpressionsTreeType } from 'projects
 import { NoopFilteringStrategy } from 'projects/igniteui-angular/src/lib/data-operations/filtering-strategy';
 import { NoopPivotDimensionsStrategy } from 'projects/igniteui-angular/src/lib/data-operations/pivot-strategy';
 import { SortingDirection } from 'projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
-import { ColumnPinningPosition, GridInstanceType, GridPagingMode, RowPinningPosition } from 'projects/igniteui-angular/src/lib/grids/common/enums';
+import { ColumnPinningPosition, GridPagingMode, RowPinningPosition } from 'projects/igniteui-angular/src/lib/grids/common/enums';
 import { NoopSortingStrategy } from 'projects/igniteui-angular/src/lib/grids/common/strategy';
 import { DropPosition } from 'projects/igniteui-angular/src/lib/grids/moving/moving.service';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid-aggregate';
@@ -47,7 +47,6 @@ export {
     ColumnPinningPosition,
     RowPinningPosition,
     GridPagingMode,
-    GridInstanceType,
     DropPosition,
     PivotDimensionType
 }
