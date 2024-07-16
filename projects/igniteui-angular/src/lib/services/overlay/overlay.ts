@@ -567,7 +567,7 @@ export class IgxOverlayService implements OnDestroy {
         let result: OverlaySettings | undefined;
         if (viewContainerRefOrSettings && !(viewContainerRefOrSettings instanceof ViewContainerRef)) {
             result = viewContainerRefOrSettings;
-        } else if (!injectorOrSettings.toString().includes('Injector')) {
+        } else if (!injectorOrSettings?.toString().includes('Injector')) {
             result = injectorOrSettings as OverlaySettings;
         }
         return result;
@@ -587,7 +587,7 @@ export class IgxOverlayService implements OnDestroy {
             } else {
                 const environmentInjector = this._appRef.injector;
                 let elementInjector: Injector;
-                if (injectorOrSettings.toString().includes('Injector')) {
+                if (injectorOrSettings?.toString().includes('Injector')) {
                     elementInjector = injectorOrSettings as Injector;
                 }
                 dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
