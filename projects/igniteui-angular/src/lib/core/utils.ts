@@ -6,7 +6,7 @@ import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 
 /** @hidden @internal */
-export const ELEMENTS_TOKEN = new InjectionToken<boolean>('elements environment');
+export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
 /**
  * @hidden
