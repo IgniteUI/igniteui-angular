@@ -57,7 +57,7 @@ export class IgxGridSummaryService {
         if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) {
             return;
         }
-        if (this.isTreeGrid) {
+        if (this.grid.type === 'tree') {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
                 // TODO: this.removeChildRowSummaries(rowID, columnName);
@@ -65,7 +65,7 @@ export class IgxGridSummaryService {
                 return;
             }
             this.removeAllTreeGridSummaries(rowID, columnName);
-        } else if (this.isHierarchicalGrid) {
+        } else if (this.grid.type === 'hierarchical') {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
                 this.summaryCacheMap.clear();
@@ -244,15 +244,4 @@ export class IgxGridSummaryService {
             });
         }
     }
-
-    private get isTreeGrid() {
-        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
-        return /^ig.-tree-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
-    }
-
-    private get isHierarchicalGrid() {
-        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
-        return /^ig.-hierarchical-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
-    }
-
 }

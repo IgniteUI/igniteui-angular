@@ -1131,7 +1131,7 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     activeDescendant?: string;
     /** @hidden @internal */
-    isPivot?: boolean;
+    readonly type: 'flat' | 'tree' | 'hierarchical' | 'pivot';
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;

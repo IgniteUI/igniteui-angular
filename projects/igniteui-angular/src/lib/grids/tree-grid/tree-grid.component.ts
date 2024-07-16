@@ -47,7 +47,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridInstanceType, GridSelectionMode } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
@@ -379,6 +379,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.setupColumns();
         }
         this.cdr.markForCheck();
+    }
+
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'tree';
     }
 
     /**
@@ -956,7 +961,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries);
         }
 
         if (!row && rec) {
