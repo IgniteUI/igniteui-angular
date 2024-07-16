@@ -21,7 +21,7 @@ export class GridPerformanceSampleComponent implements OnInit {
     public selectionMode;
 
     public ngOnInit() {
-        this.selectionMode = GridSelectionMode.none;
+        this.selectionMode = GridSelectionMode.multiple;
         const cols = [];
         cols.push({
             field: 'ID',
