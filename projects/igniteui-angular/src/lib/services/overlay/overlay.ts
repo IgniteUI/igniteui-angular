@@ -8,6 +8,7 @@ import {
     EventEmitter,
     Inject,
     Injectable,
+    Injector,
     NgZone,
     OnDestroy,
     Type,
@@ -309,9 +310,10 @@ export class IgxOverlayService implements OnDestroy {
      *
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     * @param injector: Injector to add in the created component ref's injectors tree.
      * @returns Id of the created overlay. Valid until `detach` is called.
      */
-    public attach(component: Type<any>, settings?: OverlaySettings): string;
+    public attach(component: Type<any>, settings?: OverlaySettings, injector?: Injector): string;
     /**
      * Generates an Id. Provide this Id when calling the `show(id)` method
      *
@@ -323,8 +325,8 @@ export class IgxOverlayService implements OnDestroy {
     public attach(
         componentOrElement: ElementRef | Type<any>,
         viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
-        moduleRefOrSettings?: OverlaySettings): string {
-        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, viewContainerRefOrSettings);
+        injectorOrSettings?: Injector | OverlaySettings): string {
+        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, viewContainerRefOrSettings, injectorOrSettings);
 
         if (!info) {
             console.warn('Overlay was not able to attach provided component!');
@@ -333,7 +335,7 @@ export class IgxOverlayService implements OnDestroy {
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        const settings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, moduleRefOrSettings));
+        const settings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, injectorOrSettings));
         // Emit the contentAppending event before appending the content
         const eventArgs = { id: info.id, elementRef: info.elementRef, componentRef: info.componentRef, settings };
         this.contentAppending.emit(eventArgs);
@@ -561,17 +563,20 @@ export class IgxOverlayService implements OnDestroy {
 
     private getUserOverlaySettings(
       viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
-      moduleRefOrSettings?: OverlaySettings): OverlaySettings {
-        let result: OverlaySettings | undefined = moduleRefOrSettings;
+      injectorOrSettings?: Injector | OverlaySettings): OverlaySettings {
+        let result: OverlaySettings | undefined;
         if (viewContainerRefOrSettings && !(viewContainerRefOrSettings instanceof ViewContainerRef)) {
             result = viewContainerRefOrSettings;
+        } else if (!injectorOrSettings.toString().includes('Injector')) {
+            result = injectorOrSettings as OverlaySettings;
         }
         return result;
     }
 
     private getOverlayInfo(
         component: ElementRef | Type<any>,
-        viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings): OverlayInfo | null {
+        viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
+        injectorOrSettings?: Injector | OverlaySettings): OverlayInfo | null {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;
@@ -581,7 +586,11 @@ export class IgxOverlayService implements OnDestroy {
                 dynamicComponent = viewContainerRefOrSettings.createComponent(component);
             } else {
                 const environmentInjector = this._appRef.injector;
-                dynamicComponent = createComponent(component, { environmentInjector });
+                let elementInjector: Injector;
+                if (injectorOrSettings.toString().includes('Injector')) {
+                    elementInjector = injectorOrSettings as Injector;
+                }
+                dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
                 this._appRef.attachView(dynamicComponent.hostView);
             }
             if (dynamicComponent.onDestroy) {
