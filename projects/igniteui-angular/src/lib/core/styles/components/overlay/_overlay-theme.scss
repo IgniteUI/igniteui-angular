@@ -40,6 +40,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin overlay($theme) {
     @include css-vars($theme);
@@ -92,7 +94,29 @@
         position: relative;
     }
 
-    %igx-toggle--hidden {
+    %igx-toggle--hidden:not(%igx-toggle--hidden-webkit) {
         display: none !important;
+    }
+
+    %igx-toggle--hidden-webkit {
+        // WARN: This is a workaround around a bug in Safari.
+        position: absolute;
+        visibility: hidden;
+        // width/height/min-width to 0 needed for bug #14303
+        width: 0;
+        min-width: 0;
+        height: 0;
+        // needed for bug #14302
+        padding: 0 !important;
+        top: 0;
+        left: 0;
+        margin: -1px;
+        border: none;
+        clip: rect(0, 0, 0, 0);
+        outline: 0;
+        pointer-events: none;
+        overflow: hidden;
+        appearance: none;
+        z-index: -1;
     }
 }

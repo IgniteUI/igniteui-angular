@@ -1,80 +1,212 @@
-            <div class="calendar-sample">
-                <h4 class="sample-title">Default Calendar</h4>
-                <div class="calendar-sample-buttons">
-                    <button igxButton="raised" igxRipple (click)="changeLocale('fr-FR')">Change locale to France</button>
-                    <button igxButton="raised" igxRipple (click)="changeLocale('en-US')">Change locale to English</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+<div class="preview sample-min-width">
+    <div class="preview__sample">
+        <div class="calendar-wrapper">
+            <strong>Angular</strong>
+            <igx-calendar
+                #calendar
+                [selection]="selectionType.ng"
+                [locale]="locale"
+                (viewDateChanged)="viewDateChanged($event)"
+                (activeViewChanged)="activeViewChanged($event)"
+                (selected)="onSelection($event)"
+                [formatOptions]="formatOptions"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [hideOutsideDays]="outsideDays"
+                [monthsViewNumber]="visibleMonths"
+                [weekStart]="getWeekDayNumber(weekStart)"
+                [headerOrientation]="headerOrientation"
+                [orientation]="orientation"
+                [(ngModel)]="date"
+                [ngModelOptions]="{updateOn: 'blur'}"
+            >
+            </igx-calendar>
+        </div>
 
-                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
-                    <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
-                    <br>
-                <button igxButton="raised" igxRipple (click)="showHide()">Hide days</button>
-                    <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
-                    <input type="number" #monthsviewnumber style="margin-right: 10px;"/>
-                    <br>
-                    <button igxButton="raised" igxRipple (click)="setSelection('single')">Single</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('multi')">Multi</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('range')">Range</button>
-                    {{calendar.activeDate}}
-                </div>
-                <igx-card>
-                    <igx-calendar #calendar [showWeekNumbers]="true" [selection]="selectionType" (viewDateChanged)="viewDateChanged($event)" (activeViewChanged)="activeViewChanged($event)" (selected)="onSelection($event)" [hideOutsideDays]="false"></igx-calendar>
-                </igx-card>
-            </div>
-<!-- <div class="calendar-sample-component">
-    <section class="sample-content">
+        <div class="calendar-wrapper">
+            <strong>Web Components</strong>
+            <igc-calendar
+                [visibleMonths]="visibleMonths"
+                [showWeekNumbers]="weekNumber"
+                [selection]="selectionType.wc"
+                [locale]="locale"
+                [hideHeader]="calendarHeader"
+                [formatOptions]="formatOptions"
+                [hideOutsideDays]="outsideDays"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [weekStart]="weekStart"
+                [headerOrientation]="headerOrientation"
+                [orientation]="orientation"
+            >
+            </igc-calendar>
+        </div>
+    </div>
 
-        <article class="sample-column">
+    <div class="preview__settings">
+        <small>Change locale</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let item of locales"
+                [selected]="locale === item.iso"
+                (click)="changeLocale(item.text)"
+            >
+                {{ item.text }}
+            </button>
+        </igx-buttongroup>
 
-            <div class="calendar-sample">
-                {{cal.activeDate}}
-                <h4 class="sample-title">Calendar Sample (NO Card wrapper)</h4>
-                <igx-calendar #cal [weekStart]="1"  [selection]="'single'" [activeView]="'year'" [hideOutsideDays]="false" [monthsViewNumber]="2"></igx-calendar>
-            </div>
+        <small>Weekday format</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let option of ['narrow', 'short', 'long']"
+                value="option"
+                (click)="setWeekDayFormat(option)"
+                [selected]="option === formatOptions['weekday']"
+            >
+                {{option}}
+            </button>
+        </igx-buttongroup>
 
-            <div class="calendar-sample">
-                <h4 class="sample-title">Default Calendar</h4>
-                <div class="calendar-sample-buttons">
-                    <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-                    <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
-                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+        <small>Month format</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let option of ['numeric', '2-digit', 'narrow', 'short', 'long']"
+                value="option"
+                (click)="setMonthFormat(option)"
+                [selected]="option === formatOptions['month']"
+            >
+                {{option}}
+            </button>
+        </igx-buttongroup>
 
-                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
-                    <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
-                    <br>
-                    <button igxButton="raised" igxRipple (click)="showHide()">Hide days</button>
-                    <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
-                    <input type="number" #monthsviewnumber style="margin-right: 10px;"/>
-                    <br>
-                    <button igxButton="raised" igxRipple (click)="setSelection('single')">Single</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('multi')">Multi</button>
-                    <button igxButton="raised" igxRipple (click)="setSelection('range')">Range</button>
-                    {{calendar.activeDate}}
-                </div>
-                <igx-card>
-                    <igx-calendar #calendar [showWeekNumbers]="true" [monthsViewNumber]="3" [selection]="selectionType" (viewDateChanged)="viewDateChanged($event)" (activeViewChanged)="activeViewChanged($event)" (selected)="onSelection($event)" [hideOutsideDays]="false"></igx-calendar>
-                </igx-card>
-            </div>
+        <small>Week Start</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let ws of ['monday', 'sunday']"
+                (click)="changeWeekStart(ws)"
+                [selected]="ws === weekStart"
+            >
+                {{ ws }}
+            </button>
+        </igx-buttongroup>
 
-            <div class="calendar-sample">
-                <h4 class="sample-title">Vertical Calendar</h4>
-                <igx-card>
-                    <igx-calendar  [viewDate]="ppNovember" [showWeekNumbers]="true" [weekStart]="1" [vertical]="true"></igx-calendar>
-                </igx-card>
-            </div>
+        <small>Selection type</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                *ngFor="let type of selectionTypes"
+                (click)="setSelectionType(type)"
+                [selected]="type === selectionType"
+            >
+                {{ type.wc }}
+            </button>
+        </igx-buttongroup>
 
-            <div class="calendar-sample dark-calendar">
-                <h4 class="sample-title">Calendar with Special and Disabled Dates</h4>
-                <article class="sample-column calendar-wrapper">
-                    <igx-calendar [showWeekNumbers]="true" #calendar1 [weekStart]="1" [selection]="'multi'" (selected)="selectPTOdays($event)">
-                    </igx-calendar>
-                    <igx-dialog #alert title="Request Time Off" leftButtonLabel="OK" (leftButtonSelect)="alert.close()">
-                    </igx-dialog>
-                    <button igxButton="raised" class="submit" (click)="submitPTOdays()">Submit Request</button>
-                </article>
-            </div>
-        </article>
-    </section>
-</div> -->
+        <small>Header orientation</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                (click)="setHeaderOrientation(ho)"
+                *ngFor="let ho of orientations"
+                [selected]="ho === headerOrientation"
+            >
+                {{ ho }}
+            </button>
+        </igx-buttongroup>
+
+        <small>View orientation</small>
+        <igx-buttongroup selectionMode="singleRequired">
+            <button
+                igxButton
+                (click)="setOrientation(vo)"
+                *ngFor="let vo of orientations"
+                [selected]="vo === orientation"
+            >
+                {{ vo }}
+            </button>
+        </igx-buttongroup>
+
+        <small>Special Dates</small>
+        <igx-date-range-picker
+            mode="dialog"
+            [(ngModel)]="specialRange"
+        ></igx-date-range-picker>
+
+        <small>Toggle options</small>
+        <div class="column gap">
+            <igx-switch (click)="hideHeader()">Hide header</igx-switch>
+            <igx-switch (click)="toggleLeadingTrailing()"
+                >Hide leading/trailing days</igx-switch
+            >
+            <igx-switch (click)="hideWeekNumber()"
+                >Show week numbers</igx-switch
+            >
+        </div>
+
+        <small>Programmatic Selection</small>
+        <div class="row gap">
+            <button igxButton="outlined" (click)="select()">Select</button>
+            <button igxButton="outlined" (click)="deselect()">Deselect</button>
+        </div>
+
+        <small>Number of months</small>
+        <div class="row gap">
+            <igx-input-group type="border">
+                <input
+                    igxInput
+                    name="visible-months"
+                    type="number"
+                    #numMonths
+                    [value]="visibleMonths"
+                    (focus)="numMonths.select()"
+                    (keydown.enter)="setMonthsViewNumber(numMonths.value)"
+                />
+                <div igxHint>Enter the number of months to be visible</div>
+            </igx-input-group>
+        </div>
+
+        <small>Active date</small>
+        <span>{{calendar.activeDate | date }}</span>
+
+        <small>Selected date(s)</small>
+
+        <ol class="selected-dates" [class.multiple]="selection.length > 1">
+            @for (item of selection; track item) {
+                <li>{{item | date }}</li>
+            }
+        </ol>
+
+        <div class="preview__info">
+            <a
+                href="https://www.figma.com/file/6M8cbmxScEGL2pje8lVQgR/Calendar%2C-Date-Picker%2C-Time-Picker?node-id=301:13735&mode=dev"
+                target="_blank"
+            >
+                <igx-icon>link</igx-icon> View Handoff.
+            </a>
+            <a
+                href="https://www.figma.com/file/rPQFTo4Ktj4tMDncnwPtHk/Indigo.Design-UI-Kit-for-Material-1.4-Workfile?type=design&node-id=3264-183625&mode=design&t=gVdJQcROFyukhaUq-0"
+                target="_blank"
+            >
+                <igx-icon>link</igx-icon> View UI Kit.
+            </a>
+
+            <a
+                href="https://github.com/IgniteUI/igniteui-angular/wiki/Calendar-Views-Specification"
+                target="_blank"
+            >
+                <igx-icon>link</igx-icon> View Spec.
+            </a>
+
+            <a
+                href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar"
+                target="_blank"
+            >
+                <igx-icon>link</igx-icon> View Docs.
+            </a>
+        </div>
+    </div>
+</div>

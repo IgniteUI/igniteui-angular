@@ -4,7 +4,7 @@
         <p class="sample-description">Detailed description to be added.</p>
         <br>
         <div class="alertSection">
-            <button class="sample-column-button-mb" igxButton="raised" igxRipple (click)="alert.open()">Open Alert</button>
+            <button class="sample-column-button-mb" igxButton="contained" igxRipple (click)="alert.open()">Open Alert</button>
             <igx-switch (click)="togglePosition()">Toggle position</igx-switch>
         </div>
 
@@ -17,14 +17,14 @@
         <h4 class="sample-title">Fluent</h4>
         <p class="sample-description">Fluent dialog.</p>
         <br>
-        <button igxButton="raised" igxRipple (click)="fluent.open()">Trigger Alert</button>
+        <button igxButton="contained" igxRipple (click)="fluent.open()">Trigger Alert</button>
         <igx-dialog
             #fluent
             title="All emails together"
             message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
             leftButtonLabel="Save"
             rightButtonLabel="Cancel"
-            leftButtonType='raised'
+            leftButtonType='contained'
             rightButtonType='outlined'
             (leftButtonSelect)="fluent.close()"
             (rightButtonSelect)="fluent.close()">
@@ -35,16 +35,16 @@
         <h4 class="sample-title">Bootstrap</h4>
         <p class="sample-description">Bootstrap dialog.</p>
         <br>
-        <button igxButton="raised" igxRipple (click)="bootstrap.open()">Open Modal</button>
+        <button igxButton="contained" igxRipple (click)="bootstrap.open()">Open Modal</button>
         <igx-dialog
             #bootstrap
             title="Modal title"
             message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
             leftButtonLabel="Close"
             rightButtonLabel="Save changes"
-            leftButtonType='raised'
+            leftButtonType='contained'
             leftButtonBackgroundColor='#6c757d'
-            rightButtonType='raised'
+            rightButtonType='contained'
             (leftButtonSelect)="bootstrap.close()"
             (rightButtonSelect)="bootstrap.close()">
         </igx-dialog>
@@ -54,7 +54,7 @@
         <h4 class="sample-title">Generic Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
-        <button igxButton="raised" igxRipple (click)="dialog.open()">Trigger Dialog</button>
+        <button igxButton="contained" igxRipple (click)="dialog.open()">Trigger Dialog</button>
         <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK"
                     (rightButtonSelect)="onDialogOKSelected($event)"
                     message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
@@ -65,7 +65,7 @@
         <h4 class="sample-title">Custom Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
-        <button igxButton="raised" igxRipple (click)="form.open()">Trigger Custom</button>
+        <button igxButton="contained" igxRipple (click)="form.open()">Trigger Custom</button>
 
         <igx-dialog #form title="Custom Content" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
                     (leftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
@@ -94,7 +94,7 @@
         <h4 class="sample-title">Templated Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
-        <button igxButton="raised" igxRipple (click)="templated.open()">Trigger</button>
+        <button igxButton="contained" igxRipple (click)="templated.open()">Trigger</button>
 
         <igx-dialog #templated [closeOnOutsideSelect]="true">
             <igx-dialog-title>Title</igx-dialog-title>

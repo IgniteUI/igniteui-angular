@@ -90,6 +90,7 @@ const GridResourceStringsSV_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Valutafilter',
     igx_grid_excel_custom_filter: 'Anpassat filter ...',
     igx_grid_excel_no_matches: 'Inga träffar',
+    igx_grid_excel_matches_count: '{0} träffar',
     igx_grid_advanced_filter_title: 'Avancerad filtrering',
     igx_grid_advanced_filter_and_group: '"Och" -grupp',
     igx_grid_advanced_filter_or_group: '"Eller" -grupp',
@@ -164,8 +165,7 @@ const GridResourceStringsSV_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Inmatningen ska innehålla minst {0} tecken',
     igx_grid_max_length_validation_error: 'Inmatningen får inte vara längre än {0} tecken',
     igx_grid_email_validation_error: 'En giltig e-postadress borde anges',
-    igx_grid_pattern_validation_error: 'Inmatningen matchar inte det önskade mönstret',
-    igx_grid_pivot_no_aggregator: 'Ingen giltig aggregator hittades för {0}. Ange antingen ett giltigt "aggregatorName" eller "aggregator".'
+    igx_grid_pattern_validation_error: 'Inmatningen matchar inte det önskade mönstret'
 };
 
 /**

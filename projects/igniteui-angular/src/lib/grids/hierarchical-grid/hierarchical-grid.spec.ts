@@ -8,10 +8,9 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
-import { GridSelectionMode } from '../common/enums';
+import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
+import { GridSelectionMode, Size } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { NgFor, NgIf } from '@angular/common';
@@ -21,7 +20,9 @@ import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-sty
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
-import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { getComponentSize } from '../../core/utils';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -41,7 +42,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridAutoSizeColumnsComponent,
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
-                IgxHierarchicalGridToggleRIAndColsComponent
+                IgxHierarchicalGridToggleRIAndColsComponent,
+                IgxHierarchicalGridMCHComponent
             ]
         }).compileComponents();
     }))
@@ -225,15 +227,15 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             // verify row is expanded
             expect(row1.expanded).toBe(true);
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             expect(childGrid).not.toBeNull();
             const childState = new Map<any, boolean>();
             childState.set(fixture.componentInstance.data[0].childData[0], true);
             childGrid.expansionStates = childState;
             childGrid.cdr.detectChanges();
             const grandChildGrid = hierarchicalGrid.gridAPI.getChildGrid([
-                { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
-                { rowID: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
+                { rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
+                { rowID: fixture.componentInstance.data[0].childData[0], rowKey: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
             ]);
             expect(grandChildGrid).not.toBeNull();
 
@@ -302,7 +304,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(fixture.componentInstance.rowIsland.expandChildren).toBeFalsy();
             fixture.componentInstance.rowIsland.expandChildren = true;
             fixture.detectChanges();
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowKey: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
             const childRow = childGrid.getRowByIndex(0);
             expect(childRow.expanded).toBe(true);
             let rows = childGrid.dataRowList.toArray();
@@ -388,27 +390,27 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGridSecondRow.inEditMode).toBe(true);
         });
 
-        it('should render correctly when display density is changed', () => {
+        it('should render correctly when grid size is changed', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid']));
+            expect(hierarchicalGrid.gridSize).toEqual(Size.Large);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy']));
-            expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+            expect(childGrid.gridSize).toBe(Size.Medium);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
-            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact']));
-            expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+            expect(childGrid.gridSize).toBe(Size.Small);
+            expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 
         it('should update child grid data when root grid data is changed.', () => {
@@ -455,6 +457,31 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(childGrid.data).toBe(newData2[0].childData);
+        });
+
+        it('should update already created child grid with new records added to the root data', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            // check by adding multiple rows
+            for (let i = 0; i < 3; i++) {
+                let childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+                let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+                fixture.componentInstance.data[0].childData = [...hierarchicalGrid.data[0].childData ?? [], { ID: i * 10, ProductName: 'New child' + i.toString() }];
+                fixture.componentInstance.data = [...fixture.componentInstance.data];
+                fixture.detectChanges();
+
+                childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+                childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+                const length = fixture.componentInstance.data[0].childData.length;
+                const newRow = childGrid.gridAPI.get_row_by_index(length - 1) as IgxHierarchicalRowComponent;
+
+                expect(newRow).not.toBeUndefined();
+                expect(childGrid.data).toBe(fixture.componentInstance.data[0].childData);
+            }
         });
 
         it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
@@ -600,6 +627,16 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
             expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
+        });
+
+        it('should emit columnInit when a column is added runtime.', async() => {
+            spyOn(hierarchicalGrid.columnInit, 'emit').and.callThrough();
+            fixture.detectChanges();
+            fixture.componentInstance.showAnotherCol = true;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
     });
 
@@ -962,6 +999,45 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid1.data[0].ID).toBe(11);
             expect(childGrid2.data[0].ID).toBe(21);
         });
+
+        it('should expose the (child) grid instance as context of the empty grid template', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridEmptyTemplateComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(fixture.componentInstance.childGridRef).toBe(null);
+
+            const firstDataItem = fixture.componentInstance.data[0];
+            firstDataItem.childData = [];
+            fixture.componentInstance.data[0] = firstDataItem;
+            fixture.detectChanges();
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[0]);
+            fixture.detectChanges();
+
+            const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+            const gridBody = child1Grid.query(By.css('.igx-grid__tbody'));
+            expect(gridBody.nativeElement.innerText).toBe('Get child grid ref'); //text from custom template button
+
+            const button = gridBody.nativeElement.querySelector('button');
+            button.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
+        });
+
+        it('should update columns property of row islands on columns change.', fakeAsync(() => {
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(2, 'Initial columns length should be 2');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(2, 'Initial columnList length should be 2');
+
+            fixture.componentInstance.toggleColumns = false;
+            fixture.detectChanges();
+            tick();
+
+            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
+        }));
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1158,6 +1234,32 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(iconTxt).toBe('unfold_less');
             expect(icon.getActive).toBe(false);
         });
+
+        it('should keep already expanded child grids\' data when expanding subsequent ones', fakeAsync(() => {
+            const hierarchicalGrid = fixture.componentInstance.instance;
+
+            fixture.componentInstance.databind();
+            fixture.detectChanges();
+
+            const row0 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row0.expander);
+            fixture.detectChanges();
+            tick();
+
+            let childGrids = hierarchicalGrid.gridAPI.getChildGrids();
+            expect(childGrids.length).toBe(1);
+            expect(childGrids[0].data.length).toBeGreaterThan(0);
+
+            const row1 = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+            tick();
+
+            childGrids = hierarchicalGrid.gridAPI.getChildGrids();
+            expect(childGrids.length).toBe(2);
+            expect(childGrids[0].data.length).toBeGreaterThan(0);
+            expect(childGrids[1].data.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
@@ -1690,6 +1792,44 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }));
     });
 
+    describe('IgxHierarchicalGrid Multi-Column Headers', () => {
+        let fixture: ComponentFixture<IgxHierarchicalGridMCHComponent>;
+        let hierarchicalGrid: IgxHierarchicalGridComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridMCHComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hGrid;
+        });
+
+        it('should fire expandedChange, hiddenChange and pinnedChange events for child grid.', () => {
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            const columnGroup2 = childGrid.columns[4] as IgxColumnGroupComponent;
+            const columnGroup2Header = GridFunctions.getColumnGroupHeaders(fixture)[3];
+            const expandIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[0];
+            const pinIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[1];
+
+            expect(columnGroup2.expanded).toBeFalse();
+            expect(columnGroup2.pinned).toBeFalse();
+
+            UIInteractions.simulateClickEvent(expandIcon.nativeElement);
+            fixture.detectChanges();
+
+            expect(columnGroup2.expanded).toBeTrue();
+
+            expect(fixture.componentInstance.expandedArgs).toBeDefined();
+            expect(fixture.componentInstance.expandedArgs.args).toBeTrue();
+            expect(fixture.componentInstance.hiddenArgs).toBeDefined();
+            expect(fixture.componentInstance.hiddenArgs.args).toBeTrue();
+
+            UIInteractions.simulateClickEvent(pinIcon.nativeElement);
+            fixture.detectChanges();
+
+            expect(columnGroup2.pinned).toBeTrue();
+            expect(fixture.componentInstance.pinnedArgs).toBeDefined();
+            expect(fixture.componentInstance.pinnedArgs.args).toBeTrue();
+        });
+    });
 });
 
 @Component({
@@ -1697,6 +1837,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     <igx-hierarchical-grid #grid1 [data]="data"
      [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
+     <igx-column field="AnotherColumn" *ngIf="showAnotherCol"></igx-column>
      <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
@@ -1709,7 +1850,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -1717,7 +1858,7 @@ export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
     public data;
     public width = '500px';
-
+    public showAnotherCol = false;
     constructor() {
         // 3 level hierarchy
         this.data = this.generateDataUneven(20, 3);
@@ -1750,8 +1891,8 @@ export class IgxHierarchicalGridTestBaseComponent {
     <igx-column field="ID"></igx-column>
     <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1>
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
+            <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2>
             <igx-column field="Col1"></igx-column>
@@ -1760,12 +1901,13 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
+    public toggleColumns = true;
 }
 
 @Component({
@@ -2108,3 +2250,126 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
+
+@Component({
+    template: `
+    <ng-template #headerTemplate igxHeader let-col>
+        <span >{{ col.header ? col.header : col.field}}</span>
+        <igx-icon (click)="pinColumn(col)">push_pin</igx-icon>
+    </ng-template>
+    <igx-hierarchical-grid #hGrid [data]="data" [height]="'400px'" [width]="'800px'" [expandChildren]="true">
+        <igx-column field="CustomerID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="ContactName" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="ContactTitle" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="Location" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="Address" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="City" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="Country" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="PostalCode" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-row-island [height]="null" [key]="'Orders'" [autoGenerate]="false">
+            <igx-column-group header="Order Details" [collapsible]="true" [expanded]="false">
+                <igx-column field="OrderID" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column field="OrderDate" [dataType]="'date'" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="RequiredDate" [dataType]="'date'" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+            <igx-column-group header="General Shipping Information" [collapsible]="true" [expanded]="false"
+                [headerTemplate]="headerTemplate" (expandedChange)="expandedChange($event)">
+                <igx-column field="ShippedDate" [dataType]="'date'" [visibleWhenCollapsed]="true"
+                    (hiddenChange)="hiddenChange($event)" (pinnedChange)="pinnedChange($event)"></igx-column>
+                <igx-column field="ShipVia" [visibleWhenCollapsed]="false" ></igx-column>
+                <igx-column field="Freight" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="ShipName" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent, IgxCellHeaderTemplateDirective]
+})
+export class IgxHierarchicalGridMCHComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public expandedArgs: any;
+    public hiddenArgs: any;
+    public pinnedArgs: any;
+
+    public data = [
+        {
+            CustomerID: "VINET",
+            CompanyName: "Vins et alcools Chevalier",
+            ContactName: "Paul Henriot",
+            ContactTitle: "Accounting Manager",
+            Location: "59 rue de l'Abbaye, Reims, France",
+            Address: "59 rue de l'Abbaye",
+            City: "Reims",
+            Country: "France",
+            PostalCode: "51100",
+            Orders: [
+                {
+                    OrderID: 10248,
+                    OrderDate: new Date("1996-07-04T00:00:00"),
+                    RequiredDate: new Date("1996-08-01T00:00:00"),
+                    ShippedDate: new Date("1996-07-16T00:00:00"),
+                    ShipVia: 3,
+                    Freight: 32.38,
+                    ShipName: "Vins et alcools Chevalier",
+                },
+            ],
+        },
+    ];
+
+    public pinColumn(col: ColumnType) {
+        col.pinned ? col.unpin() : col.pin();
+    }
+
+    public expandedChange(args: any) {
+        this.expandedArgs = args;
+    }
+
+    public hiddenChange(args: any) {
+        this.hiddenArgs = args;
+    }
+
+    public pinnedChange(args: any) {
+        this.pinnedArgs = args;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid
+        [emptyGridTemplate]="emptyTemplate">
+    <igx-column field="ID"></igx-column>
+    <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [emptyGridTemplate]="emptyTemplate">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <ng-template #emptyTemplate let-grid>
+                <button (click)="getChildGridRef(grid)">
+                    Get child grid ref
+                </button>
+      </ng-template>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGridTestBaseComponent {
+    public childGridRef: IgxHierarchicalGridComponent = null;
+    constructor() {
+        super();
+        const firstDataItem = this.data[0];
+        firstDataItem.childData = [];
+        this.data[0] = firstDataItem;
+    }
+
+    public getChildGridRef(grid: IgxHierarchicalGridComponent) {
+        this.childGridRef = grid;
+    }
+}

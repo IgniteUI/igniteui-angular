@@ -4,17 +4,6 @@ import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_
 import { GridType } from '../grids/common/grid.interface';
 import { Subscription } from 'rxjs';
 
-export const resizeObserverIgnoreError = () => {
-    jasmine.getEnv().allowRespy(true);
-    const spy = spyOn(window, 'onerror').and.callFake((...args) => {
-        if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
-            return;
-        }
-        spy.and.callThrough().withArgs(...args);
-    });
-    return spy;
-};
-
 export let gridsubscriptions: Subscription [] = [];
 
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
@@ -39,6 +28,13 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
 export const clearGridSubs = () => {
     gridsubscriptions.forEach(sub => sub.unsubscribe());
     gridsubscriptions = [];
+}
+
+/**
+ * Sets element size as a inline style
+ */
+export function setElementSize(element: HTMLElement, size: string) {
+    element.style.setProperty('--ig-size', size);
 }
 
 @Injectable()

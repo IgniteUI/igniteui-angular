@@ -15,17 +15,22 @@
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
 /// @param {Color} $header-text-color [null] - The drop-down header text color.
-/// @param {Color} $item-text-color [null] - The drop-down text color.
-/// @param {Color} $hover-item-text-color [null] - The drop-down hover text color.
+/// @param {Color} $item-text-color [null] - The drop-down item text color.
+/// @param {Color} $item-icon-color [null] - The drop-down item icon color.
+/// @param {Color} $hover-item-text-color [null] - The drop-down item hover text color.
+/// @param {Color} $hover-item-icon-color [null] - The drop-down item hover icon color.
 /// @param {Color} $hover-item-background [null] - The drop-down hover item background color.
 /// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
 /// @param {Color} $focused-item-text-color [null] - The drop-down focused item text color.
+/// @param {Color} $focused-item-border-color [null] - The drop-down item focused border color.
 /// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
 /// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
+/// @param {Color} $selected-item-icon-color [null] - The drop-down selected item icon color. 
 /// @param {Color} $selected-hover-item-background [null] - The drop-down selected item hover background color.
 /// @param {Color} $selected-hover-item-text-color [null] - The drop-down selected item hover text color.
+/// @param {Color} $selected-hover-item-icon-color [null] - The drop-down selected item hover icon color.
 /// @param {Color} $selected-focus-item-background [null] - The drop-down selected item focus background color.
-/// @param {Color} selected-focus-item-text-color [null] - The drop-down selected item focus text color.
+/// @param {Color} $selected-focus-item-text-color [null] - The drop-down selected item focus text color.
 /// @param {Color} $disabled-item-background [null] - The drop-down disabled item background color.
 /// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the drop-down.
@@ -49,18 +54,23 @@
     $header-text-color: null,
 
     $item-text-color: null,
+    $item-icon-color: null,
     $hover-item-text-color: null,
+    $hover-item-icon-color: null,
 
     $hover-item-background: null,
 
     $focused-item-background: null,
     $focused-item-text-color: null,
+    $focused-item-border-color: null,
 
     $selected-item-background: null,
     $selected-item-text-color: null,
+    $selected-item-icon-color: null,
 
     $selected-hover-item-background: null,
     $selected-hover-item-text-color: null,
+    $selected-hover-item-icon-color: null,
 
     $selected-focus-item-background: null,
     $selected-focus-item-text-color: null,
@@ -69,7 +79,8 @@
     $disabled-item-text-color: null,
     $border-color: null,
     $border-width: null,
-    $shadow: null
+    $shadow: null,
+    $size: null
 ) {
     $name: 'igx-drop-down';
     $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
@@ -151,14 +162,6 @@
         $shadow: elevation($elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($item-border-radius) {
-        $item-border-radius: border-radius(map.get($theme, 'item-border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -167,14 +170,19 @@
         item-border-radius: $item-border-radius,
         header-text-color: $header-text-color,
         item-text-color: $item-text-color,
+        item-icon-color: $item-icon-color,
         hover-item-text-color: $hover-item-text-color,
+        hover-item-icon-color: $hover-item-icon-color,
         hover-item-background: $hover-item-background,
         focused-item-background: $focused-item-background,
         focused-item-text-color: $focused-item-text-color,
+        focused-item-border-color: $focused-item-border-color,
         selected-item-background: $selected-item-background,
         selected-item-text-color: $selected-item-text-color,
+        selected-item-icon-color: $selected-item-icon-color,
         selected-hover-item-background: $selected-hover-item-background,
         selected-hover-item-text-color: $selected-hover-item-text-color,
+        selected-hover-item-icon-color: $selected-hover-item-icon-color,
         selected-focus-item-background: $selected-focus-item-background,
         selected-focus-item-text-color: $selected-focus-item-text-color,
         disabled-item-background: $disabled-item-background,
@@ -182,52 +190,52 @@
         shadow: $shadow,
         border-color: $border-color,
         border-width: $border-width,
+        size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin drop-down($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
-
-    $item-padding-inline: (
-        comfortable: rem(24px),
-        cosy: rem(20px),
-        compact: rem(16px)
-    );
-
-    $prefix-margin: (
-        comfortable: rem(20px),
-        cosy: rem(16px),
-        compact: rem(12px)
-    );
-
-    $suffix-margin: (
-        comfortable: rem(8px),
-        cosy: rem(6px),
-        compact: rem(4px)
-    );
-
-    $header-item-padding-inline: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
-    );
 
     %igx-drop-down {
         position: absolute;
     }
 
     %igx-drop-down__list {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
         box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+        @if $variant == 'indigo-design' {
+            padding: rem(3px);
+
+            %igx-drop-down__item {
+                margin-block: rem(2px);
+
+                &:first-of-type,
+                &:last-of-type {
+                    margin-block: initial;
+                }
+            }
+
+            %igx-drop-down__header {
+                margin-block-end: rem(2px);
+            }
+        }
     }
 
     %igx-drop-down__list-scroll {
@@ -241,6 +249,7 @@
         display: flex;
         width: 100%;
         align-items: center;
+        gap: rem(8px)
     }
 
     %igx-drop-down__inner {
@@ -249,27 +258,20 @@
         margin-inline-end: auto;
     }
 
+    %igx-drop-down__inner + [igxSuffix],
+    %igx-drop-down__inner + igx-suffix {
+        margin-inline-end: 0;
+    }
+
     %igx-drop-down__header,
     %igx-drop-down__item {
-        --component-size: var(--ig-size, var(--ig-size-large));
-
         display: flex;
         justify-content: flex-start;
         align-items: center;
         width: 100%;
         white-space: nowrap;
         position: relative;
-        height: sizable(#{rem(28px)}, #{rem(32px)}, #{rem(40px)});
-
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix;
-        }
+        height: var-get($theme, 'size');
 
         igx-divider {
             position: absolute;
@@ -277,14 +279,37 @@
             inset-inline-start: 0;
             bottom: 0;
         }
+
+        igx-icon {
+            justify-content: center;
+            --component-size: var(--dropdown-size);
+
+            @if $variant == 'indigo-design' {
+                $icon-size: sizable(rem(14px), rem(16px), rem(16px));
+
+                width: var(--ig-icon-size, $icon-size);
+                height: var(--ig-icon-size, $icon-size);
+                font-size: var(--ig-icon-size, $icon-size);
+            }
+        }
     }
 
     %igx-drop-down__item {
+        @include sizable();
+        --component-size: var(--dropdown-size);
+
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
-        padding-inline: map.get($item-padding-inline, 'comfortable');
-        padding-block: 0;
+        padding-inline: pad-inline(rem(16px), rem(20px), rem(24px));
         border-radius: var-get($theme, 'item-border-radius');
+
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
+        }
 
         &:focus {
             outline: 0;
@@ -296,93 +321,22 @@
         &:hover {
             background: var-get($theme, 'hover-item-background');
             color: var-get($theme, 'hover-item-text-color');
-        }
-    }
 
-    %igx-drop-down__item--cosy {
-        padding-inline: map.get($item-padding-inline, 'cosy')
-    }
-
-    %igx-drop-down__item--cosy,
-    %igx-drop-down__header--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--cosy;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--cosy;
-        }
-    }
-
-    %igx-drop-down__item--compact {
-        padding-inline: map.get($item-padding-inline, 'compact');
-    }
-
-    %igx-drop-down__item--compact,
-    %igx-drop-down__header--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
-
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--compact;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--compact;
-        }
-    }
-
-    %igx-drop-down__prefix {
-        margin-inline-end: map.get($prefix-margin, 'comfortable');
-    }
-
-    %igx-drop-down__suffix {
-        + igx-suffix,
-        + [igxSuffix] {
-            margin-inline-start: map.get($suffix-margin, 'comfortable');
-        }
-    }
-
-    %igx-drop-down__prefix--cosy {
-        margin-inline-end: map.get($prefix-margin, 'cosy');
-    }
-
-    %igx-drop-down__suffix--cosy {
-        + igx-suffix,
-        + [igxSuffix] {
-            margin-inline-start: map.get($suffix-margin, 'cosy');
-        }
-    }
-
-    %igx-drop-down__prefix--compact {
-        margin-inline-end: map.get($prefix-margin, 'compact');
-    }
-
-    %igx-drop-down__suffix--compact {
-        + igx-suffix,
-        + [igxSuffix] {
-            margin-inline-start: map.get($suffix-margin, 'compact');
+            igx-icon {
+                color: var-get($theme, 'hover-item-icon-color');
+            }
         }
     }
 
     %igx-drop-down__header {
         color: var-get($theme, 'header-text-color');
         pointer-events: none;
-        padding-inline: map.get($header-item-padding-inline, 'comfortable');
-        padding-block: 0;
-    }
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-    %igx-drop-down__header--cosy {
-        padding-inline: map.get($header-item-padding-inline, 'cosy');
-    }
-
-    %igx-drop-down__header--compact {
-        padding-inline: map.get($header-item-padding-inline, 'compact');
+        @if $variant == 'indigo-design' {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
+            padding-block: pad-inline(rem(4px), rem(6px), rem(8px));
+        }
     }
 
     %igx-drop-down__group {
@@ -397,9 +351,14 @@
         background: var-get($theme, 'focused-item-background');
         color: var-get($theme, 'focused-item-text-color');
 
-        &:hover {
-            color: var-get($theme, 'focused-item-text-color');
-            background: var-get($theme, 'focused-item-background');
+        @if $variant == 'fluent' {
+            outline: rem(1px) solid var-get($theme, 'border-color');
+            outline-offset: rem(-1px);
+        }
+
+        @if $variant == 'indigo-design' {
+            outline: rem(2px) solid var-get($theme, 'focused-item-border-color');
+            outline-offset: rem(-2px);
         }
     }
 
@@ -407,9 +366,8 @@
         background: var-get($theme, 'selected-item-background');
         color: var-get($theme, 'selected-item-text-color');
 
-        &:hover {
-            background: var-get($theme, 'selected-hover-item-background');
-            color: var-get($theme, 'selected-hover-item-text-color');
+        igx-icon {
+            color: var-get($theme, 'selected-item-icon-color');
         }
     }
 
@@ -418,14 +376,26 @@
         color: var-get($theme, 'selected-focus-item-text-color');
     }
 
+    %igx-drop-down__item--selected,
+    %igx-drop-down__item--selected--focused {
+        &:hover {
+            background: var-get($theme, 'selected-hover-item-background');
+            color: var-get($theme, 'selected-hover-item-text-color');
+
+            igx-icon {
+                color: var-get($theme, 'selected-hover-item-icon-color');
+            }
+        }
+    }
+
     %igx-drop-down__item--disabled {
         background: var-get($theme, 'disabled-item-background');
         color: var-get($theme, 'disabled-item-text-color');
         cursor: default;
         pointer-events: none;
 
-        &:hover {
-            background: var-get($theme, 'disabled-item-background');
+        igx-icon {
+            color: var-get($theme, 'disabled-item-text-color');
         }
     }
 }

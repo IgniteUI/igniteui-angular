@@ -25,15 +25,22 @@
     }
 
     $theme: digest-schema($pivot-data-selector-schema);
+    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     $chip-height-material: (
         comfortable: rem(22px),
@@ -79,16 +86,15 @@
             transform: none;
         }
 
-        %form-group-prefix,
-        %form-group-prefix--cosy,
-        %form-group-prefix--compact {
-            padding-inline-end: rem(16px) !important;
+        %form-group-prefix {
+            @if $variant == 'material' {
+                padding-inline-end: rem(16px) !important;
+            }
+
             box-sizing: content-box;
         }
 
-        %form-group-bundle-main--box,
-        %form-group-bundle-main--box-cosy,
-        %form-group-bundle-main--box-compact {
+        %form-group-bundle-main--box {
             padding-top: 0 !important;
         }
 
@@ -120,6 +126,7 @@
 
             > h6 {
                 font-size: rem(12px);
+                margin-bottom: 0;
             }
         }
 
@@ -138,6 +145,12 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+
+        igx-input-group {
+            @if $variant == 'bootstrap' {
+                padding: rem(4px);
+            }
+        }
 
         igx-list {
             display: flex;
@@ -171,7 +184,12 @@
         }
 
         %igx-chip__item {
-            height: #{sizable(map.get($chip-height-material, 'compact'), map.get($chip-height-material, 'cosy'), map.get($chip-height-material, 'comfortable'))};
+            height: #{
+                sizable(
+                    map.get($chip-height-material, 'compact'),
+                    map.get($chip-height-material, 'cosy'),
+                    map.get($chip-height-material, 'comfortable')
+                )};
         }
 
         %igx-chip__content {

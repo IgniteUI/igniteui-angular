@@ -88,6 +88,7 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: '通貨フィルター',
     igx_grid_excel_custom_filter: 'カスタム フィルター...',
     igx_grid_excel_no_matches: '一致がありませんでした',
+    igx_grid_excel_matches_count: '{0} 件の一致',
     igx_grid_advanced_filter_title: '高度なフィルター',
     igx_grid_advanced_filter_and_group: '"And" グループ',
     igx_grid_advanced_filter_or_group: '"Or" グループ',
@@ -164,8 +165,7 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: '入力の長さは少なくとも {0} 文字である必要があります',
     igx_grid_max_length_validation_error: '入力の長さは {0} 文字以下である必要があります',
     igx_grid_email_validation_error: '有効なメール アドレスを入力してください',
-    igx_grid_pattern_validation_error: '入力が所定のパターンに一致しません',
-    igx_grid_pivot_no_aggregator: '{0} の有効なアグリゲーターが見つかりません。有効な aggregatorName または aggregator を設定してください。'
+    igx_grid_pattern_validation_error: '入力が所定のパターンに一致しません'
 };
 
 /**

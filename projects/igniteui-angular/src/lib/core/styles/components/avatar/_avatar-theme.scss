@@ -13,6 +13,7 @@
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
+/// @param {Color} $icon-color [null] - The icon color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {Number} $border-radius [null] - The border-radius used of the avatar.
 /// @param {Number} $size [null] - The size of the avatar.
@@ -26,6 +27,7 @@
     $schema: $light-material-schema,
     $background: null,
     $color: null,
+    $icon-color: null,
     $border-radius: null,
     $size: null,
 ) {
@@ -45,18 +47,11 @@
         $color: text-contrast($background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
-    @if not($size) {
-        $size: sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)});
-    }
-
     @return extend($theme, (
         name: $name,
         background: $background,
         color: $color,
+        icon-color: $icon-color,
         border-radius: $border-radius,
         size: $size,
         _meta: map.merge(if($meta, $meta, ()), (
@@ -65,13 +60,14 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin avatar($theme) {
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
-
     $box-shadow: map.get((
         material: null,
         fluent: null,
@@ -89,6 +85,10 @@
     }
 
     %igx-avatar-display {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
         position: relative;
         display: inline-flex;
         justify-content: center;
@@ -97,17 +97,30 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
         width: var-get($theme, 'size');
         height: var-get($theme, 'size');
 
+        igx-icon {
+            --component-size: 3;
+
+            color: var-get($theme, 'icon-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                --component-size: 1;
+            }
+        }
+
         &::after {
             box-shadow: none;
+
             @if $bootstrap-theme {
                 @extend %igx-avatar-outline;
             }
+
             transition: box-shadow .15s $in-out-quad;
         }
 
@@ -126,35 +139,16 @@
     }
 
     %igx-avatar--circle {
-        --igx-avatar-border-radius: #{rem(44px)};
+        border-radius: calc(#{var-get($theme, 'size')} / 2);
     }
 
     %igx-avatar--rounded {
-        --igx-avatar-border-radius: #{rem(8px)};
-
-        @if $variant == 'bootstrap' {
-            --igx-avatar-border-radius: #{rem(4px)};
-        }
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-avatar--initials {
         text-transform: uppercase;
         font-size: calc(#{var-get($theme, 'size')} / 2);
         line-height: calc(#{var-get($theme, 'size')} / 2);
-    }
-
-    %igx-avatar--small,
-    %igx-avatar-initials--small {
-        --component-size: var(--ig-size, var(--ig-size-small));
-    }
-
-    %igx-avatar--medium,
-    %igx-avatar-initials--medium {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %igx-avatar--large,
-    %igx-avatar-initials--large {
-        --component-size: var(--ig-size, var(--ig-size-large));
     }
 }

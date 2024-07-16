@@ -3,8 +3,10 @@
 </ng-template>
 
 <ng-template #defaultCollapseIndicator>
-    <igx-icon [attr.draggable]="false" >
-            {{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
+    <igx-icon
+        family="default"
+        [name]="column.expanded ? 'expand' : 'chevron_right'">
+    </igx-icon>
 </ng-template>
 
 <ng-container *ngIf="!column.columnGroup">
@@ -21,10 +23,9 @@
         (pointerdown)="pointerdown($event)"
         [igxColumnMovingDrop]="column"
         [column]="column"
-        [density]="grid.displayDensity"
+        (keydown)="grid.navigation.headerNavigation($event)"
     >
     </igx-pivot-row-dimension-header>
-    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
         [igxPivotResizeHandle]="column"
         [igxPivotResizeHandleHeader]="this"

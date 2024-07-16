@@ -3,12 +3,18 @@ import {
     Component,
     ChangeDetectionStrategy,
     forwardRef,
-    Input
+    Input,
+    booleanAttribute
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
 
-
+/* blazorIndirectRender */
+/* blazorElement */
+/* omitModule */
+/* wcElementTag: igc-column-layout */
+/* additionalIdentifier: Children.Field */
+/* jsonAPIManageCollectionInMarkup */
 /**
  * Column layout for declaration of Multi-row Layout
  *
@@ -18,9 +24,11 @@ import { IgxColumnGroupComponent } from './column-group.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: `<div #sink style="display: none;">
-    <ng-content select="igx-column,igc-column"></ng-content>
-</div>`,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
@@ -39,6 +47,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return width;
     }
 
+    /* blazorSuppress */
     public override set width(val: any) { }
 
     public override get columnLayout() {
@@ -94,11 +103,12 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override get hidden() {
         return this._hidden;
     }
 
+     /* blazorSuppress */
     /**
      * Sets the column layout hidden property.
      * ```typescript

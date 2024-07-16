@@ -1,4 +1,4 @@
-import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild, booleanAttribute } from '@angular/core';
 import { Direction, IgxSlideComponentBase } from '../carousel/carousel-base';
 import { IgxTabHeaderBase, IgxTabItemBase, IgxTabContentBase, IgxTabsBase } from './tabs.base';
 
@@ -28,9 +28,9 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * An @Input property that allows you to enable/disable the item.
+     * Disables the item.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /** @hidden */
@@ -41,9 +41,9 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     private _selected = false;
 
     /**
-     * An @Input property which determines whether an item is selected.
+     * Gets/Sets whether an item is selected.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selected(): boolean {
         return this._selected;
     }

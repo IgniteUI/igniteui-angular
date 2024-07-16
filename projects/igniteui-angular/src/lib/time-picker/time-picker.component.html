@@ -1,14 +1,22 @@
-<igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown">
-    <input [displayValuePipe]="this.formatter ? displayValue : null" igxInput [igxDateTimeEditor]="this.inputFormat"
-        type="text" [readonly]="!this.isDropdown || this.readOnly" [minValue]="this.minValue" [maxValue]="this.maxValue"
-        [locale]="this.locale" [spinDelta]="this.itemsDelta" [spinLoop]="this.spinLoop" [placeholder]="this.placeholder"
-        [disabled]="this.disabled" [displayFormat]="this.displayFormat"
-        [igxTextSelection]="this.isDropdown && !this.readOnly" role="combobox" aria-haspopup="dialog"
-        [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id"
-        (click)="!this.isDropdown && this.toggle()"/>
+<igx-input-group #inputGroup [type]="type">
+    <input [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
+        type="text" [readonly]="!isDropdown || readOnly" [minValue]="minValue" [maxValue]="maxValue"
+        [locale]="locale" [spinDelta]="itemsDelta" [spinLoop]="spinLoop" [placeholder]="placeholder"
+        [disabled]="disabled" [displayFormat]="displayFormat"
+        [igxTextSelection]="isDropdown && !readOnly" role="combobox" aria-haspopup="dialog"
+        [attr.aria-expanded]="!toggleDirective.collapsed" [attr.aria-labelledby]="label?.id"
+        (click)="!isDropdown && toggle()"/>
 
-    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon [title]="this.value ? resourceStrings.igx_time_picker_change_time : resourceStrings.igx_time_picker_choose_time">access_time</igx-icon>
+    <igx-prefix *ngIf="!toggleComponents.length" (click)="toggle()">
+        <igx-icon
+            [title]="
+                value
+                    ? resourceStrings.igx_time_picker_change_time
+                    : resourceStrings.igx_time_picker_choose_time
+            "
+            family="default"
+            name="clock"
+        ></igx-icon>
     </igx-prefix>
 
     <ng-container ngProjectAs="[igxLabel]">
@@ -18,8 +26,8 @@
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="this.showClearButton" (click)="this.clear(); $event.stopPropagation()">
-        <igx-icon>clear</igx-icon>
+    <igx-suffix *ngIf="showClearButton" (click)="clear(); $event.stopPropagation()">
+        <igx-icon family="default" name="clear"></igx-icon>
     </igx-suffix>
 
     <ng-container ngProjectAs="igx-suffix">
@@ -31,60 +39,61 @@
 </igx-input-group>
 
 <ng-template #defaultTimePickerActions>
-    <div *ngIf="this.cancelButtonLabel || this.okButtonLabel" class="igx-time-picker__buttons">
-        <button *ngIf="this.cancelButtonLabel" igxButton="flat" (click)="this.cancelButtonClick()">
-            {{this.cancelButtonLabel}}
+    <div *ngIf="cancelButtonLabel || okButtonLabel" class="igx-time-picker__buttons">
+        <button *ngIf="cancelButtonLabel" type="button" igxButton="flat" (click)="cancelButtonClick()">
+            {{cancelButtonLabel}}
         </button>
-        <button *ngIf="this.okButtonLabel" igxButton="flat" (click)="this.okButtonClick()">
-            {{this.okButtonLabel}}
+        <button *ngIf="okButtonLabel" type="button" igxButton="flat" (click)="okButtonClick()">
+            {{okButtonLabel}}
         </button>
     </div>
 </ng-template>
 
 <div #toggleDirective="toggle" igxToggle role="dialog" class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': this.isVertical && !this.isDropdown}">
-    <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
-        <h2 class="igx-time-picker__header-hour">
-            <span>{{ this.selectedDate | timeFormatPipe }}</span>
-        </h2>
-    </div>
+    [ngClass]="{'igx-time-picker--dropdown': isDropdown, 'igx-time-picker--vertical': isVertical && !isDropdown}">
     <div class="igx-time-picker__main">
+        <div *ngIf="!isDropdown" class="igx-time-picker__header">
+            <h2 class="igx-time-picker__header-hour">
+                <span>{{ selectedDate | timeFormatPipe }}</span>
+            </h2>
+        </div>
         <div class="igx-time-picker__body">
-            <div *ngIf="this.showHoursList" #hourList [igxItemList]="'hourList'">
-                <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
-                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                    [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
-                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let hour of hourItems | timeItemPipe:'hour':this.selectedDate:this.minDropdownValue:this.maxDropdownValue">{{ hour }}</span>
+            <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
+            <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
+                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                  [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
+                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                  *ngFor="let hour of hourItems | timeItemPipe:'hour':selectedDate:minDropdownValue:maxDropdownValue">{{ hour }}</span>
             </div>
-            <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
-                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                    [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
-                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let minute of minuteItems | timeItemPipe:'minutes':this.selectedDate:this.minDropdownValue:this.maxDropdownValue">{{ minute }}</span>
+            <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
+            <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
+                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                  [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
+                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                  *ngFor="let minute of minuteItems | timeItemPipe:'minutes':selectedDate:minDropdownValue:maxDropdownValue">{{ minute }}</span>
             </div>
-            <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
-                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                    [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
-                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let seconds of secondsItems | timeItemPipe:'seconds':this.selectedDate:this.minDropdownValue:this.maxDropdownValue">{{ seconds }}</span>
+            <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
+            <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
+                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                  [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
+                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                  *ngFor="let seconds of secondsItems | timeItemPipe:'seconds':selectedDate:minDropdownValue:maxDropdownValue">{{ seconds }}</span>
             </div>
-            <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
-                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                    [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
-                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let ampm of ampmItems | timeItemPipe:'ampm':this.selectedDate:this.minDropdownValue:this.maxDropdownValue">{{ ampm }}</span>
+            <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
+            <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
+                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                  [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
+                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                  *ngFor="let ampm of ampmItems | timeItemPipe:'ampm':selectedDate:minDropdownValue:maxDropdownValue">{{ ampm }}</span>
             </div>
         </div>
-        <ng-container
-            *ngTemplateOutlet="timePickerActionsDirective ? timePickerActionsDirective.template : defaultTimePickerActions">
-        </ng-container>
     </div>
+    <igx-divider></igx-divider>
+    <ng-container
+            *ngTemplateOutlet="timePickerActionsDirective ? timePickerActionsDirective.template : defaultTimePickerActions">
+    </ng-container>
 </div>

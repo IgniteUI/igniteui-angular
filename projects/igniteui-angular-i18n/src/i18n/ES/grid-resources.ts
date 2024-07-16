@@ -88,6 +88,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Filtro divisa',
     igx_grid_excel_custom_filter: 'Filtro personalizado...',
     igx_grid_excel_no_matches: 'Ninguna coincidencia',
+    igx_grid_excel_matches_count: '{0} coincidencias',
     igx_grid_advanced_filter_title: 'Filtro Avanzado',
     igx_grid_advanced_filter_and_group: 'Grupo "Y"',
     igx_grid_advanced_filter_or_group: '"Grupo "O"',
@@ -164,8 +165,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Escriba {0} caracteres como mínimo',
     igx_grid_max_length_validation_error: 'No escriba más de {0} caracteres',
     igx_grid_email_validation_error: 'Debe introducirse una dirección de correo electrónico válida.',
-    igx_grid_pattern_validation_error: 'La entrada no coincide con el patrón necesario.',
-    igx_grid_pivot_no_aggregator: 'No se encontró un agregador válido para {0}. Establezca un aggregatorName o aggregator válido.'
+    igx_grid_pattern_validation_error: 'La entrada no coincide con el patrón necesario.'
 };
 
 /**

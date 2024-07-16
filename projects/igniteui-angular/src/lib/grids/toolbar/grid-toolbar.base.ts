@@ -1,4 +1,4 @@
-import { Directive,  Input, EventEmitter, OnDestroy, Output, Inject } from '@angular/core';
+import { Directive, Input, EventEmitter, OnDestroy, Output, Inject, booleanAttribute } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -11,7 +11,10 @@ import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../s
 import { IgxToolbarToken } from './token';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 
-
+/* blazorInclude */
+/* blazorElement */
+/* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarBaseAction */
 /**
  * Base class for the pinning/hiding column and exporter actions.
  *
@@ -66,13 +69,13 @@ export abstract class BaseToolbarDirective implements OnDestroy {
      * Emits an event before the toggle container is closed.
      */
 
-     @Output()
+    @Output()
     public closing = new EventEmitter<ToggleViewEventArgs>();
     /**
      * Emits an event after the toggle container is closed.
      */
 
-     @Output()
+    @Output()
     public closed = new EventEmitter<ToggleViewEventArgs>();
 
     /**
@@ -99,6 +102,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
 
     /**
      * Returns the grid containing this component.
+     * @hidden @internal
      */
     public get grid() {
         return this.toolbar.grid;
@@ -123,8 +127,13 @@ export abstract class BaseToolbarDirective implements OnDestroy {
                     `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
             toggleRef.opening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ...this.overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
-            excludeFromOutsideClick: [anchorElement] }});
+        toggleRef.toggle({
+            ...this.overlaySettings, ...{
+                target: anchorElement, outlet: this.grid.outlet,
+                excludeFromOutsideClick: [anchorElement]
+            }
+        });
+
     }
 
     /** @hidden @internal */
@@ -132,9 +141,9 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         columnActions.querySelector('input')?.focus();
     }
 
-    private _setupListeners(toggleRef: IgxToggleDirective, actions? : IgxColumnActionsComponent) {
-        if (actions){
-            if (!this.$sub || this.$sub.closed){
+    private _setupListeners(toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent) {
+        if (actions) {
+            if (!this.$sub || this.$sub.closed) {
                 this.$sub = actions.columnToggled.pipe(takeUntil(this.$destroy)).subscribe((event) => this.columnToggle.emit(event));
             }
         }
@@ -149,14 +158,15 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     }
 }
 
-
+/* blazorElement */
+/* blazorIndirectRender */
 /**
  * @hidden @internal
  * Base class for pinning/hiding column actions
  */
- @Directive()
- export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
-    @Input()
+@Directive()
+export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
+    @Input({ transform: booleanAttribute })
     public hideFilter = false;
 
     @Input()
@@ -189,4 +199,4 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public uncheckAll() {
         this.columnActionsUI.uncheckAllColumns();
     }
- }
+}

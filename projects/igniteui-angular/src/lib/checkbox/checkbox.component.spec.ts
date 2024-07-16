@@ -33,14 +33,14 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         const checkbox = fixture.componentInstance.cb;
-        const nativeCheckbox = checkbox.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkbox.nativeInput.nativeElement;
         const nativeLabel = checkbox.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual('igx-checkbox-0-input');
+        expect(nativeCheckbox.id).toContain('igx-checkbox-');
         expect(nativeCheckbox.getAttribute('aria-label')).toEqual(null);
-        expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-checkbox-0-label');
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-checkbox-');
 
         expect(nativeLabel).toBeTruthy();
         // No longer have a for attribute to not propagate clicks to the native checkbox
@@ -48,7 +48,7 @@ describe('IgxCheckbox', () => {
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-checkbox__label');
-        expect(placeholderLabel.getAttribute('id')).toEqual('igx-checkbox-0-label');
+        expect(placeholderLabel.getAttribute('id')).toContain('igx-checkbox-');
 
         // When aria-label is present, aria-labeledby shouldn't be
         checkbox.ariaLabel = 'New Label';
@@ -63,7 +63,7 @@ describe('IgxCheckbox', () => {
 
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
 
         fixture.detectChanges();
 
@@ -103,7 +103,7 @@ describe('IgxCheckbox', () => {
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(CheckboxExternalLabelComponent);
         const checkboxInstance = fixture.componentInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const externalLabel = fixture.debugElement.query(By.css('#my-label')).nativeElement;
         fixture.detectChanges();
 
@@ -114,7 +114,7 @@ describe('IgxCheckbox', () => {
     it('Initializes with invisible label', () => {
         const fixture = TestBed.createComponent(CheckboxInvisibleLabelComponent);
         const checkboxInstance = fixture.componentInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
         expect(nativeCheckbox.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
@@ -139,7 +139,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
 
         // Before any changes indeterminate should be true
@@ -199,7 +199,7 @@ describe('IgxCheckbox', () => {
 
         const checkboxInstance = fixture.componentInstance;
         checkboxInstance.disabled = true;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement as HTMLInputElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement as HTMLInputElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement as HTMLLabelElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
@@ -220,7 +220,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(CheckboxReadonlyComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
@@ -268,7 +268,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(CheckboxRequiredComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
         expect(checkboxInstance.required).toBe(true);
@@ -287,7 +287,7 @@ describe('IgxCheckbox', () => {
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
         const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
 

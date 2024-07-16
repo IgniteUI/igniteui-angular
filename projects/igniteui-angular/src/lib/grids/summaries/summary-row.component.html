@@ -14,8 +14,6 @@
         <igx-grid-summary-cell
             class="igx-grid-summary igx-grid-summary--fw"
             role="cell"
-            [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
-            [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"
             [class.igx-grid-summary--empty]="!col.hasSummary"
             [class.igx-grid-summary--pinned-last]="col.isLastPinned"
             [column]="col"
@@ -24,14 +22,13 @@
             [summaryResults]="getColumnSummaries(col.field)"
             [summaryTemplate]="col.summaryTemplate"
             [hasSummary]="col.hasSummary"
-            [density]="grid.displayDensity"
             [summaryFormatter]="col.summaryFormatter"
             [active]="isCellActive(col.visibleIndex)"
             [style.max-height.px]="minHeight"
             [style.min-height.px]="minHeight"
-            [style.min-width]="col.getCellWidth()"
-            [style.max-width]="col.getCellWidth()"
-            [style.flex-basis]="col.getCellWidth()">
+            [style.min-width]="col.resolvedWidth"
+            [style.max-width]="col.resolvedWidth"
+            [style.flex-basis]="col.resolvedWidth">
         </igx-grid-summary-cell>
     </ng-template>
     <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
@@ -43,8 +40,6 @@
     <igx-grid-summary-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
             role="cell"
             class="igx-grid-summary igx-grid-summary--fw igx-grid-summary--pinned"
-            [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
-            [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"
             [class.igx-grid-summary--empty]="!col.hasSummary"
             [class.igx-grid-summary--pinned-first]="col.isFirstPinned"
             [class.igx-grid-summary--pinned-last]="col.isLastPinned"
@@ -54,13 +49,12 @@
             [summaryResults]="getColumnSummaries(col.field)"
             [summaryTemplate]="col.summaryTemplate"
             [hasSummary]="col.hasSummary"
-            [density]="grid.displayDensity"
             [active]="isCellActive(col.visibleIndex)"
             [style.max-height.px]="minHeight"
             [style.min-height.px]="minHeight"
-            [style.min-width]="col.getCellWidth()"
-            [style.max-width]="col.getCellWidth()"
-            [style.flex-basis]="col.getCellWidth()"
+            [style.min-width]="col.resolvedWidth"
+            [style.max-width]="col.resolvedWidth"
+            [style.flex-basis]="col.resolvedWidth"
             [style.left]="col.rightPinnedOffset">
         </igx-grid-summary-cell>
 </ng-template>

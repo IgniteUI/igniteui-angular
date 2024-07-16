@@ -1,5 +1,5 @@
 <ng-container *ngIf="!asMenuItem">
-    <button [title]="labelText" igxButton="icon" igxRipple (click)="handleClick($event)" (mousedown)="preventEvent($event)">
+    <button type="button" [title]="labelText" igxIconButton="flat" igxRipple (click)="handleClick($event)" (mousedown)="preventEvent($event)">
         <igx-icon *ngIf="iconSet" [family]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
         <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
     </button>
@@ -7,7 +7,7 @@
 
 <ng-template #menuItemTemplate>
     <ng-container *ngIf="asMenuItem">
-        <div #container [className]='containerClass'>
+        <div #container [className]="containerClass">
             <igx-icon *ngIf="iconSet" [family]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
             <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
             <label igxLabel>{{labelText}}</label>

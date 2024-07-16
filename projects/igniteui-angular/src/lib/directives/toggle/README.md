@@ -17,8 +17,8 @@ Basic initialization
 
 Open/Close toggle through public methods that are provided by exporting the directive with name **toggle**.
 ```html
-<button (click)="toggleRef.open()">Open</button>
-<button (click)="toggleRef.close()">Close</button>
+<button type="button" igxButton (click)="toggleRef.open()">Open</button>
+<button type="button" igxButton (click)="toggleRef.close()">Close</button>
 <div igxToggle #toggleRef="toggle">
     <p>Some content that user would like to make it togglable.</p>
 </div>
@@ -27,7 +27,7 @@ Open/Close toggle through public methods that are provided by exporting the dire
 Open/Close the directive only through one trigger by exporting it with name **toggle** and subscription for event
 handlers when the toggle is opened and respectively closed. 
 ```html
-<button (click)="toggleRef.toggle()">Toggle</button>
+<button type="button" igxButton (click)="toggleRef.toggle()">Toggle</button>
 <div igxToggle #toggleRef="toggle" 
     (opening)="eventHandler($event)" (appended)="eventHandler($event)" (opened)="eventHandler($event)"
     (closing)="eventHandler($event)" (closed)="eventHandler($event)" >
@@ -52,7 +52,7 @@ handlers when the toggle is opened and respectively closed.
 | `close` | --- | `void` | Closes the toggle. |
 | `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 | `reposition` | --- | `void` | Repositions the toggle. |
-| `setOffset`  | Offsets the content along the corresponding axis by the provided amount. |deltaX, deltaY |
+| `setOffset`  | deltaX: `number`, deltaY: `number`, offsetMode?: `OffsetMode` | `void` | Offsets the content along the corresponding axis by the provided amount with optional offsetMode that determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set. |
 
 
 
@@ -70,7 +70,7 @@ import { IgxToggleModule } from "igniteui-angular";
 Basic initialization
 ```html
 
-<button [igxToggleAction]="toggleRef">Toggle</button>
+<button type="button" igxButton [igxToggleAction]="toggleRef">Toggle</button>
 <div igxToggle #toggleRef="toggle">
     <p>Some content that user would like to make it togglable.</p>
 </div>
@@ -78,7 +78,7 @@ Basic initialization
 
 Passing registered component into **IgxNavigationService** by ID.
 ```html
-<button igxToggleAction="toggle">Toggle</button>
+<button type="button" igxButton igxToggleAction="toggle">Toggle</button>
 <div igxToggle id="toggle">
     <p>Some content that user would like to make it togglable.</p>
 </div>
@@ -86,13 +86,13 @@ Passing registered component into **IgxNavigationService** by ID.
 
 Providing reference from custom component which has already implemented **IToggleView** interface.
 ```html
-<button [igxToggleAction]="reference">Toggle</button>
+<button type="button" igxButton [igxToggleAction]="reference">Toggle</button>
 <custom-component #reference></custom-component>
 ```
 
 Providing reference from custom component which has already been registered into **IgxNavigationService**.
 ```html
-<button igxToggleAction="customComponent">Toggle</button>
+<button type="button" igxButton igxToggleAction="customComponent">Toggle</button>
 <custom-component id="customComponent"></custom-component>
 ```
 
@@ -115,6 +115,6 @@ Directive instance is exported as `overlay-outlet`, so it can be assigned within
 ```
 This allows to provide the `outlet` templates variable as a setting to the toggle action:
 ```html
-<button [igxToggleAction]="reference" [igxToggleOutlet]="outlet">Toggle</button>
+<button type="button" igxButton [igxToggleAction]="reference" [igxToggleOutlet]="outlet">Toggle</button>
 <custom-component #reference></custom-component>
 ```

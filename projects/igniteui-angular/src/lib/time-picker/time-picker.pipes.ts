@@ -2,6 +2,7 @@ import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 import { DatePart } from '../directives/date-time-editor/public_api';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const ITEMS_COUNT = 7;
 
@@ -48,8 +49,8 @@ export class TimeItemPipe implements PipeTransform {
                 part = DatePart.Seconds;
                 break;
             case 'ampm':
-                list = this.generateAmPm(min, max);
                 const selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
+                list = this.generateAmPm(min, max, selectedAmPm);
                 list = this.scrollListItem(selectedAmPm, list);
                 part = DatePart.AmPm;
                 break;
@@ -180,17 +181,17 @@ export class TimeItemPipe implements PipeTransform {
         return secondsItems;
     }
 
-    private generateAmPm(min: Date, max: Date): any[] {
+    private generateAmPm(min: Date, max: Date, selectedAmPm: string): any[] {
         const ampmItems = [];
         const minHour = min.getHours();
         const maxHour = max.getHours();
 
         if (minHour < 12) {
-            ampmItems.push('AM');
+            ampmItems.push(DateTimeUtil.getAmPmValue(selectedAmPm.length, true));
         }
 
         if (minHour >= 12 || maxHour >= 12) {
-            ampmItems.push('PM');
+            ampmItems.push(DateTimeUtil.getAmPmValue(selectedAmPm.length, false));
         }
 
         for (let i = 0; i < 5; i++) {

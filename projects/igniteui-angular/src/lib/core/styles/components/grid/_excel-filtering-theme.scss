@@ -12,9 +12,10 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
-
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -39,6 +40,7 @@
     );
 
     %grid-excel-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: block;
         width: rem(320px);
         height: 100%;
@@ -46,6 +48,20 @@
         box-shadow: elevation(12);
         overflow: auto;
         min-width: rem(320px);
+    }
+
+    %igx-excel-filter__sizing {
+        @include sizable();
+        min-height: sizable(
+            rem(330px),
+            rem(465px),
+            rem(645px)
+        );
+        max-height: sizable(
+            rem(405px),
+            rem(565px),
+            rem(775px)
+        );
     }
 
     %grid-excel-filter--inline {
@@ -96,15 +112,35 @@
             --item-hover-background: #{color($color: 'gray', $variant: 100)};
             --item-selected-background: #{color($color: 'gray', $variant: 100)};
             --item-text-color: #{color($color: 'gray', $variant: 700)};
+            --item-icon-color: #{color($color: 'gray', $variant: 700)};
             --item-hover-text-color: #{color($color: 'gray', $variant: 800)};
+            --item-hover-icon-color: #{color($color: 'gray', $variant: 800)};
             --item-selected-text-color: #{if(
                 $variant == 'indigo-design',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
+            --item-selected-icon-color: #{if(
+                $variant == 'indigo-design',
+                contrast-color($color: 'surface'),
+                color($color: 'secondary', $variant: 500)
+            )};
+            --item-selected-hover-icon-color: #{if(
+                $variant == 'fluent',
+                color($color: 'secondary', $variant: 500),
+                contrast-color($color: 'gray', $variant: 50)
+            )};
             --item-border-color: transparent;
+            --item-hover-border-color: transparent;
+            --item-focused-border-color: #{if(
+                $variant == 'fluent',
+                color($color: 'gray', $variant: 700),
+                transparent
+            )};
             --item-selected-border-color: transparent;
+            --item-selected-hover-border-color: transparent;
             --item-disabled-border: transparent;
+            --disabled-selected-border-color: transparent;
         }
 
         @include tree(tree-theme(
@@ -135,7 +171,7 @@
         display: flex;
         align-items: center;
         padding: pad(rem(4px), rem(8px), rem(16px));
-        color: color($color: 'gray', $variant: 700);
+        color: var-get($theme, 'excel-filtering-header-foreground');
     }
 
     %grid-excel-menu__header-actions {
@@ -186,7 +222,7 @@
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
 
         header {
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'excel-filtering-subheader-foreground');
             margin-bottom: rem(4px);
         }
 
@@ -204,7 +240,6 @@
         justify-content: space-between;
 
         header {
-            color: color($color: 'gray', $variant: 700);
             margin-inline-end: auto;
         }
     }
@@ -253,12 +288,17 @@
         padding-block: pad-block(rem(4px), rem(8px), rem(8px));
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         cursor: pointer;
-        color: color($color: 'gray', $variant: 700);
+        color: var-get($theme, 'excel-filtering-actions-foreground');
         outline-style: none;
 
         &:hover,
         &:focus {
             background: color($color: 'gray', $variant: 100);
+            color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+        }
+
+        igx-icon {
+            --component-size: 3;
         }
 
         [dir='rtl'] & {
@@ -268,8 +308,13 @@
         }
     }
 
+    %grid-excel-actions__action--active {
+        background: color($color: 'gray', $variant: 100);
+        color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+    }
+
     %grid-excel-actions__action--disabled {
-        color: color($color: 'gray', $variant: 400);
+        color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
         pointer-events: none;
     }
 
@@ -325,13 +370,25 @@
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
-                height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
-                min-height: #{sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'))};
+                height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
+                min-height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
             }
 
             .igx-tree-node__toggle-button {
                 min-width: rem(20px);
-                margin-inline-start: pad-inline(map.get($tree-node-indent, 'compact'), map.get($tree-node-indent, 'cosy'), map.get($tree-node-indent, 'comfortable'));
+                margin-inline-start: pad-inline(
+                    map.get($tree-node-indent, 'compact'),
+                    map.get($tree-node-indent, 'cosy'),
+                    map.get($tree-node-indent, 'comfortable')
+                );
                 margin-inline-end: pad-inline(rem(4px), rem(8px));
             }
 
@@ -350,7 +407,11 @@
         %igx-excel-filter__tree-alike-item {
             display: flex;
             align-items: center;
-            height: sizable(map.get($tree-node-height, 'compact'), map.get($tree-node-height, 'cosy'), map.get($tree-node-height, 'comfortable'));
+            height: sizable(
+                map.get($tree-node-height, 'compact'),
+                map.get($tree-node-height, 'cosy'),
+                map.get($tree-node-height, 'comfortable')
+            );
             background: color($color: 'surface');
 
             &:hover,
@@ -359,13 +420,16 @@
             }
 
             > igx-checkbox {
-                margin-inline-start: pad-inline(map.get($checkbox-indent, 'compact'), map.get($checkbox-indent, 'cosy'), map.get($checkbox-indent, 'comfortable'));
+                margin-inline-start: pad-inline(
+                    map.get($checkbox-indent, 'compact'),
+                    map.get($checkbox-indent, 'cosy'),
+                    map.get($checkbox-indent, 'comfortable')
+                );
             }
         }
     }
 
     %grid-excel-menu--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
 
         %grid-excel-menu__header {
             justify-content: space-between;
@@ -373,7 +437,6 @@
     }
 
     %grid-excel-menu--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
 
         %grid-excel-menu__header {
             justify-content: space-between;
@@ -423,7 +486,8 @@
             min-width: 30%;
         }
 
-        [igxButton='icon'] {
+        [igxIconButton] {
+            --component-size: var(--grid-size);
             margin-inline-start: rem(16px);
         }
     }
@@ -431,6 +495,11 @@
     %grid-excel-menu__add-filter {
         margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
         margin-block-start: 0;
+
+        @if $bootstrap-theme {
+            // important is needed to override the typography margins
+            margin-block-end: rem(4px) !important;
+        }
 
         igx-icon {
             width: var(--igx-icon-size, #{rem(18px)});
@@ -464,6 +533,13 @@
         %grid-excel-filter__cancel {
             flex-grow: 0;
         }
+    }
+
+    %grid-excel-menu__filter-results {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
     }
 
     igx-excel-style-filter-operations,

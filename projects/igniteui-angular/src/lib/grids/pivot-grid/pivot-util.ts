@@ -1,4 +1,3 @@
-import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -7,7 +6,7 @@ import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
-import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
+import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType, PivotSummaryPosition } from './pivot-grid.interface';
 
 export class PivotUtil {
 
@@ -87,6 +86,97 @@ export class PivotUtil {
             }
         }
     }
+
+    public static flattenGroupsHorizontally(data: IPivotGridRecord[],
+                                            dimension: IPivotDimension,
+                                            expansionStates,
+                                            defaultExpand: boolean,
+                                            visibleDimensions: IPivotDimension[],
+                                            summariesPosition: PivotSummaryPosition,
+                                            parent?: IPivotDimension,
+                                            parentRec?: IPivotGridRecord) {
+        for (let i = 0; i < data.length; i++) {
+            const rec = data[i];
+            const field = dimension.memberName;
+            if (!field) {
+                continue;
+            }
+
+            if (!visibleDimensions.find(recDim => recDim.memberName === rec.dimensions[0].memberName)) {
+                visibleDimensions.push(rec.dimensions[0]);
+            }
+
+            let recordsData = rec.children.get(field);
+            if (!recordsData && parent) {
+                // check parent
+                recordsData = rec.children.get(parent.memberName);
+                if (recordsData) {
+                    dimension = parent;
+                }
+            }
+
+            if (parentRec) {
+                parentRec.dimensionValues.forEach((value, key) => {
+                    rec.dimensionValues.set(key, value);
+                    const dim = parentRec.dimensions.find(x => x.memberName === key);
+                    rec.dimensions.unshift(dim);
+                });
+            }
+
+            const expansionRowKey = PivotUtil.getRecordKey(rec, dimension);
+            const isExpanded = expansionStates.get(expansionRowKey) === undefined ?
+                defaultExpand :
+                expansionStates.get(expansionRowKey);
+            const shouldExpand = isExpanded || !dimension.childLevel || !rec.dimensionValues.get(dimension.memberName);
+            if (shouldExpand && recordsData && !rec.totalRecordDimensionName) {
+                if (dimension.childLevel) {
+                    this.flattenGroupsHorizontally(recordsData, dimension.childLevel, expansionStates, defaultExpand, visibleDimensions, summariesPosition, dimension, rec);
+                } else {
+                    // copy parent values and dims in child
+                    recordsData.forEach(x => {
+                        rec.dimensionValues.forEach((value, key) => {
+                            if (dimension.memberName !== key) {
+                                x.dimensionValues.set(key, value);
+                                const dim = rec.dimensions.find(y => y.memberName === key);
+                                x.dimensions.unshift(dim);
+                            }
+
+                        });
+                    });
+                }
+
+                recordsData.forEach((childRec) => {
+                    if (childRec.dimensions.length === 1) {
+                        rec.dimensionValues.forEach((value: string, key) => {
+                            childRec.dimensionValues.set(key, value);
+                        });
+                    }
+
+                    childRec.dimensions.forEach((dim) => {
+                        if (!visibleDimensions.find(recDim => recDim.memberName === dim.memberName)) {
+                            visibleDimensions.push(dim);
+                        }
+                    });
+                });
+
+                const curDimValue = rec.dimensionValues.get(dimension.memberName);
+                if (dimension.horizontalSummary && curDimValue) {
+                    rec.totalRecordDimensionName = dimension.memberName;
+                    rec.dimensionValues.set(dimension.memberName, `${curDimValue} Total`);
+                    if (summariesPosition === PivotSummaryPosition.Top) {
+                        recordsData.unshift(rec);
+                    } else {
+                        recordsData.push(rec);
+                    }
+                }
+
+                data.splice(i, 1, ...recordsData);
+                i += recordsData.length - 1;
+
+            }
+        }
+    }
+
     public static assignLevels(dims) {
         for (const dim of dims) {
             let currDim = dim;
@@ -185,11 +275,13 @@ export class PivotUtil {
 
     public static flatten(arr, lvl = 0) {
         const newArr = arr.reduce((acc, item) => {
-            item.level = lvl;
-            acc.push(item);
-            if (item.childLevel) {
-                item.expandable = true;
-                acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+            if (item) {
+                item.level = lvl;
+                acc.push(item);
+                if (item.childLevel) {
+                    item.expandable = true;
+                    acc = acc.concat(this.flatten([item.childLevel], lvl + 1));
+                }
             }
             return acc;
         }, []);
@@ -235,7 +327,7 @@ export class PivotUtil {
         for (const pivotValue of values) {
             const aggregator = PivotUtil.getAggregatorForType(pivotValue.aggregate, pivotValue.dataType);
             if (!aggregator) {
-                throw CurrentResourceStrings.GridResStrings.igx_grid_pivot_no_aggregator.replace("{0}", pivotValue.member);
+                throw `No valid aggregator found for ${pivotValue.member}. Please set either a valid aggregatorName or aggregator`;
             }
             result[pivotValue.member] = aggregator(records.map(r => r[pivotValue.member]), records);
         }
@@ -252,7 +344,7 @@ export class PivotUtil {
             } else if (dataType === 'time') {
                 aggregators = aggregators.concat(IgxPivotTimeAggregate.aggregators());
             }
-            aggregator = aggregators.find(x => x.key === aggregate.aggregatorName)?.aggregator;
+            aggregator = aggregators.find(x => x.key.toLocaleLowerCase() === aggregate.aggregatorName.toLocaleLowerCase())?.aggregator;
         }
         return aggregator;
     }
@@ -297,14 +389,16 @@ export class PivotUtil {
         return leafs;
     }
 
-    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension,) {
+    public static getRecordKey(rec: IPivotGridRecord, currentDim: IPivotDimension) {
         const parentFields = [];
+
         const currentDimIndex = rec.dimensions.findIndex(x => x.memberName === currentDim.memberName) + 1;
         const prevDims = rec.dimensions.slice(0, currentDimIndex);
         for (const prev of prevDims) {
             const prevValue = rec.dimensionValues.get(prev.memberName);
             parentFields.push(prevValue);
         }
+
         return parentFields.join('-');
     }
 

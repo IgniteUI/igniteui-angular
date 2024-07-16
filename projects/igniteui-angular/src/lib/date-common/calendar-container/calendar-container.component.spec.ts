@@ -71,7 +71,7 @@ describe('Calendar Container', () => {
         <igx-calendar-container>
         </igx-calendar-container>
         <ng-template igxPickerActions let-calendar>
-            <button igxButton (click)="doWork(calendar)">action</button>
+            <button type="button" igxButton (click)="doWork(calendar)">action</button>
         </ng-template>
         `,
     standalone: true,

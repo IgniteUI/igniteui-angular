@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -6,12 +6,12 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from '../core/density';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgFor } from '@angular/common';
+import { getComponentSize } from '../core/utils';
 
 @Component({
     template: `
@@ -19,7 +19,7 @@ import { NgFor } from '@angular/common';
             <igx-chip #chipElem *ngFor="let chip of chipList" class="custom"
             [id]="chip.id" [draggable]="chip.draggable"
             [removable]="chip.removable" [selectable]="chip.selectable"
-            [displayDensity]="chip.density" (remove)="chipRemoved($event)">
+            [style]="'--ig-size: var(' + chip.chipSize + ')'" (remove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix>drag_indicator</igx-icon>
             </igx-chip>
@@ -53,9 +53,9 @@ class TestChipComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
-        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: 'cosy' }
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-large' },
+        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-small' },
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-medium' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -97,12 +97,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     const CHIP_TEXT_CLASS = 'igx-chip__text';
-    const CHIP_CLASS = 'igx-chip';
-    const CHIP_DISABLED_CLASS = 'igx-chip--disabled';
-    const CHIP_COMPACT_CLASS = 'igx-chip--compact';
-    const CHIP_COSY_CLASS = 'igx-chip--cosy';
     const CHIP_ITEM_CLASS = 'igx-chip__item';
-    const CHIP_GHOST_COMP_CLASS = 'igx-chip__ghost--compact';
 
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
@@ -174,66 +169,6 @@ describe('IgxChip', () => {
             const firstChipIconName = firstChipPrefix[0].nativeElement.textContent;
 
             expect(firstChipIconName).toContain('drag_indicator');
-        });
-
-        it('should make chip comfortable when density is not set or it is set to comfortable', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const firstComponent = components[0];
-            const secondComponent = components[1];
-
-            expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-            expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-
-            // Assert default css class is applied
-            const comfortableComponents = fix.debugElement.queryAll(By.css(`.${CHIP_CLASS}`));
-
-            expect(comfortableComponents.length).toEqual(9);
-            expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
-            expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
-
-            expect(comfortableComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS])
-            );
-
-            firstComponent.componentInstance.disabled = true;
-            fix.detectChanges();
-            expect(comfortableComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_DISABLED_CLASS])
-            );
-        });
-
-        it('should make chip compact when density is set to compact', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const thirdComponent = components[2];
-
-            expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
-
-            // Assert compact css class is added
-            const compactComponents = fix.debugElement.queryAll(By.css(`.${CHIP_COMPACT_CLASS}`));
-
-            expect(compactComponents.length).toEqual(1);
-            expect(compactComponents[0].nativeElement).toBe(thirdComponent.nativeElement);
-
-            expect(compactComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_COMPACT_CLASS])
-            );
-        });
-
-        it('should make chip cosy when density is set to cosy', () => {
-            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const fourthComponent = components[3];
-
-            expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
-
-            // Assert cosy css class is added
-            const cosyComponents = fix.debugElement.queryAll(By.css(`.${CHIP_COSY_CLASS}`));
-
-            expect(cosyComponents.length).toEqual(1);
-            expect(cosyComponents[0].nativeElement).toBe(fourthComponent.nativeElement);
-
-            expect(cosyComponents[0].nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', CHIP_CLASS, CHIP_COSY_CLASS])
-            );
         });
 
         it('should set correctly color of chip when color is set through code', () => {
@@ -331,7 +266,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should affect the ghostElement density when chip has it set to compact', () => {
+        it('should affect the ghostElement size when chip has it set to compact', () => {
             const thirdChip = fix.componentInstance.chips.toArray()[2];
             const thirdChipElem = thirdChip.chipArea.nativeElement;
 
@@ -349,7 +284,7 @@ describe('IgxChip', () => {
             UIInteractions.simulatePointerEvent('pointermove', thirdChipElem, startingX + 10, startingY + 10);
             fix.detectChanges();
 
-            expect(thirdChip.dragDirective.ghostElement.classList.contains(CHIP_GHOST_COMP_CLASS)).toBeTruthy();
+            expect(getComponentSize(thirdChip.dragDirective.ghostElement)).toEqual('1');
         });
 
         it('should fire selectedChanging event when selectable is true', () => {

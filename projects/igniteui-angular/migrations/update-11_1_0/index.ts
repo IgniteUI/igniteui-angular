@@ -1,5 +1,5 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { Options } from '../../schematics/interfaces/options';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Options } from '../../schematics/interfaces/options';
 import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '11.1.0';

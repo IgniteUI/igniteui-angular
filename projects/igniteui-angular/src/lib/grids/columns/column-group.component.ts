@@ -6,14 +6,21 @@ import {
     Input,
     forwardRef,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
+import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
 
+/* blazorElement */
+/* omitModule */
+/* wcElementTag: igc-column-group */
+/* additionalIdentifier: Children.Field */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column Group**
  *
@@ -23,14 +30,25 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: `<div #sink style="display: none;">
-    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
-</div>`,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    /* blazorInclude */
+    /* contentChildren */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    /* blazorCollectionItemName: Column */
+    /* alternateType: HTMLCollection */
+    /**
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
+     */
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent,  })
     public override children = new QueryList<IgxColumnComponent>();
 
     /**
@@ -42,7 +60,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override set collapsible(value: boolean) {
         this._collapsible = value;
         this.collapsibleChange.emit(this._collapsible);
@@ -69,7 +87,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override set expanded(value: boolean) {
         this._expanded = value;
         this.expandedChange.emit(this._expanded);
@@ -96,6 +114,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get summaries(): any {
         return this._summaries;
     }
+
+     /* blazorSuppress */
     /**
      * Sets the column group `summaries`.
      * ```typescript
@@ -105,6 +125,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public override set summaries(classRef: any) { }
+
+     /* blazorSuppress */
     /**
      * Sets/gets whether the column group is `searchable`.
      * Default value is `true`.
@@ -117,7 +139,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override searchable = true;
     /**
      * Gets the column group `filters`.
@@ -131,6 +153,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get filters(): any {
         return this._filters;
     }
+
+     /* blazorSuppress */
     /**
      * Sets the column group `filters`.
      * ```typescript
@@ -156,7 +180,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * @hidden
      */
-    public override set selectable(value: boolean) {}
+    public override set selectable(value: boolean) { }
 
     /**
      * @hidden
@@ -188,12 +212,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public override set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
-     * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
-     * ```typescript
-     * let columnCells = this.columnGroup.cells;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden @internal
      */
     public override get cells(): CellType[] {
         return [];
@@ -206,10 +225,12 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public override get hidden() {
         return this.allChildren.every(c => c.hidden);
     }
+
+    /* blazorSuppress */
     /**
      * Sets the column group hidden property.
      * ```html
@@ -251,6 +272,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
 
+     /* blazorSuppress */
     /**
      * Select/deselect the column group.
      * ```typescript
@@ -287,6 +309,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         }
         this.children.forEach(child => {
             child.parent = this;
+            if (this.pinned) {
+                child.pinned = this.pinned;
+            }
         });
         if (this.collapsible) {
             this.setExpandCollapseState();
@@ -295,11 +320,30 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.changes
             .pipe(takeUntil(this.destroy$))
             .subscribe((change: QueryList<IgxColumnComponent>) => {
-                change.forEach(x => x.parent = this);
+                let shouldReinitPinning = false;
+                change.forEach(x => {
+                    x.parent = this;
+                    if (this.pinned && x.pinned !== this.pinned) {
+                        shouldReinitPinning = true;
+                        x.pinned = this.pinned;
+                    }
+                });
                 if (this.collapsible) {
                     this.setExpandCollapseState();
                 }
+                if (shouldReinitPinning) {
+                    (this.grid as any).initPinning();
+                }
             });
+
+    }
+
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    public override get childColumns(): ColumnType[] {
+        return this.children.toArray();
     }
 
     /** @hidden @internal **/
@@ -346,7 +390,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
+     /* blazorSuppress */
     public override set width(val) { }
+
+    /** @hidden @internal **/
+    public override get resolvedWidth() {
+        return this.width;
+    }
 
     /**
      * @hidden

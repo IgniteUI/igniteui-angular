@@ -90,6 +90,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Para birimi filtresi',
     igx_grid_excel_custom_filter: 'Özel filtre...',
     igx_grid_excel_no_matches: 'Eşleşme yok',
+    igx_grid_excel_matches_count: '{0} eşleşme',
     igx_grid_advanced_filter_title: 'Gelişmiş Filtreleme',
     igx_grid_advanced_filter_and_group: '"Ve" Grubu',
     igx_grid_advanced_filter_or_group: '"Veya" Grubu',
@@ -164,8 +165,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Giriş en az {0} karakter uzunluğunda olmalıdır',
     igx_grid_max_length_validation_error: 'Giriş, {0} karakterden uzun olmamalıdır',
     igx_grid_email_validation_error: 'Geçerli bir e-posta adresi girilmelidir',
-    igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor',
-    igx_grid_pivot_no_aggregator: '{0} için geçerli bir toplayıcı bulunamadı. Lütfen geçerli bir "aggregatorName" veya "aggregator" ayarlayın.'
+    igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor'
 };
 
 /**

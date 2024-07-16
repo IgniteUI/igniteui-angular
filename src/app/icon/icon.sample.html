@@ -3,23 +3,21 @@
         <h4 class="sample-title">Default</h4>
         <div class="sample-icons">
             <!-- Explicit ligature declaration -->
-            <igx-icon family="material">accessible</igx-icon>
-            <!-- Implicit legature declaration no longer supported -->
-            <!-- <igx-icon family="material" name="accessibility"></igx-icon> -->
-            <!-- No need to specify the family if it's the default one -->
-            <igx-icon>account_balance</igx-icon>
-            <igx-icon>account_box</igx-icon>
-            <igx-icon>account_circle</igx-icon>
-            <igx-icon>add_shopping_cart</igx-icon>
-            <igx-icon>alarm</igx-icon>
-            <igx-icon>android</igx-icon>
-            <igx-icon>announcement</igx-icon>
-            <igx-icon>aspect_ratio</igx-icon>
-            <igx-icon>assessment</igx-icon>
-            <igx-icon>assignment</igx-icon>
-            <igx-icon>autorenew</igx-icon>
-            <igx-icon>backup</igx-icon>
+            <igx-icon class="custom-icon" family="default" name="accessible"></igx-icon>
+            <igx-icon name="account_balance"></igx-icon>
+            <igx-icon name="account_box"></igx-icon>
+            <igx-icon name="account_circle"></igx-icon>
+            <igx-icon name="add_shopping_cart"></igx-icon>
+            <igx-icon name="alarm"></igx-icon>
+            <igx-icon name="android"></igx-icon>
+            <igx-icon name="announcement"></igx-icon>
+            <igx-icon name="aspect_ratio"></igx-icon>
+            <igx-icon name="assessment"></igx-icon>
+            <igx-icon name="assignment"></igx-icon>
+            <igx-icon name="autorenew"></igx-icon>
+            <igx-icon name="backup"></igx-icon>
         </div>
+        <button igxButton="contained" (click)="changeIcon()">Change First Icon Ref</button>
     </article>
 
     <article class="sample-column">
@@ -68,7 +66,7 @@
         <h4 class="sample-title">Using Font-Awesome Icons</h4>
         <!-- Using icon glyph fonts -->
         <div class="sample-icons">
-            <igx-icon family="fa-solid" name="fa-coffee"></igx-icon>
+            <igx-icon family="fa-solid" name="coffee"></igx-icon>
             <igx-icon family="fa-solid" name="fa-keyboard"></igx-icon>
             <igx-icon family="fa-solid" name="fa-file-code"></igx-icon>
             <igx-icon family="fa-solid" name="fa-headphones"></igx-icon>
@@ -86,14 +84,14 @@
             <igx-icon family="svg-flags" name="equals"></igx-icon>
             <igx-icon family="svg-flags" name="is_empty"></igx-icon>
             <igx-icon family="svg-flags" name="starts_with"></igx-icon>
-            <igx-icon name="copy"></igx-icon>
+            <igx-icon family="svg-flags" name="copy"></igx-icon>
         </div>
     </article>
 
     <article class="sample-column">
         <h4 class="sample-title">Lazy loaded module with cached SVG icons</h4>
         <div class="sample-icons">
-            <button igxButton="raised" (click)="router.navigate(['lazyIconModule'])">Lazy load icon module</button>
+            <button igxButton="contained" (click)="router.navigate(['lazyIconModule'])">Lazy load icon module</button>
         </div>
     </article>
 </section>

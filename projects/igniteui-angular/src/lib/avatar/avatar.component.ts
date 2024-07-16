@@ -13,14 +13,14 @@ import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
-export const IgxAvatarSize = mkenum({
+export const IgxAvatarSize = /*@__PURE__*/mkenum({
     SMALL: 'small',
     MEDIUM: 'medium',
     LARGE: 'large'
 });
 export type IgxAvatarSize = (typeof IgxAvatarSize)[keyof typeof IgxAvatarSize];
 
-export const IgxAvatarType = mkenum({
+export const IgxAvatarType = /*@__PURE__*/mkenum({
     INITIALS: 'initials',
     IMAGE: 'image',
     ICON: 'icon',
@@ -118,27 +118,6 @@ export class IgxAvatarComponent implements OnInit {
     public id = `igx-avatar-${NEXT_ID++}`;
 
     /**
-     * @deprecated in version 15.1.0.
-     * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
-     * By default the shape of the avatar is a square.
-     * 
-     * @example
-     * ```html
-     * <igx-avatar [roundShape]="true" ></igx-avatar>
-     * ```
-     */
-    /** @hidden @internal */
-    @Input()
-    @HostBinding('class.igx-avatar--circle')
-    public get roundShape() {
-        return this.shape === 'circle';
-    }
-
-    public set roundShape(value: boolean) {
-        this.shape = value === true ? 'circle' : 'square';
-    }  
-
-    /**
      * Sets square, rounded or circular shape to the avatar.
      * By default the shape of the avatar is square.
      *
@@ -156,6 +135,12 @@ export class IgxAvatarComponent implements OnInit {
         return this.shape === 'rounded';
     }
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--circle')
+    public get isCircle(): boolean {
+        return this.shape === 'circle';
+    }
+
     /**
      * Sets the color of the avatar's initials or icon.
      *
@@ -163,6 +148,7 @@ export class IgxAvatarComponent implements OnInit {
      * ```html
      * <igx-avatar color="blue"></igx-avatar>
      * ```
+     * @deprecated in version 17.2.0.
      */
 
     @HostBinding('style.color')
@@ -177,6 +163,7 @@ export class IgxAvatarComponent implements OnInit {
      * <igx-avatar bgColor="yellow"></igx-avatar>
      * ```
      * @igxFriendlyName Background color
+     * @deprecated in version 17.2.0.
      */
 
     @HostBinding('style.background')
@@ -237,7 +224,8 @@ export class IgxAvatarComponent implements OnInit {
      * @hidden
      * @internal
      */
-    private _size: string | IgxAvatarSize = IgxAvatarSize.SMALL;
+    private _size: string | IgxAvatarSize;
+
     /**
      * Returns the size of the avatar.
      *
@@ -248,7 +236,7 @@ export class IgxAvatarComponent implements OnInit {
      */
     @Input()
     public get size(): string | IgxAvatarSize {
-        return this._size;
+        return this._size || IgxAvatarSize.SMALL;
     }
 
     /**
@@ -270,22 +258,6 @@ export class IgxAvatarComponent implements OnInit {
             default:
                 this._size = 'small';
         }
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--small')
-    public get _isSmallSize(): boolean {
-        return this.size === 'small';
-    }
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--medium')
-    public get _isMediumSize(): boolean {
-        return this.size === 'medium';
-    }
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--large')
-    public get _isLargeSize(): boolean {
-        return this.size === 'large';
     }
 
     /**
@@ -326,6 +298,13 @@ export class IgxAvatarComponent implements OnInit {
     @HostBinding('class.igx-avatar--initials')
     public get _isInitialsType(): boolean {
         return this.type === IgxAvatarType.INITIALS;
+    }
+
+    @HostBinding('style.--component-size')
+    protected get componentSize() {
+        if (this._size) {
+            return `var(--ig-size-${this._size})`;
+        }
     }
 
     /**

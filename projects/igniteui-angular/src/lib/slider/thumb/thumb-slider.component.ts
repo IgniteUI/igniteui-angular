@@ -8,7 +8,8 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    TemplateRef
+    TemplateRef,
+    booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
@@ -29,13 +30,13 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public value: any;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public continuous: boolean;
 
     @Input()
-    public thumbLabelVisibilityDuration;
+    public thumbLabelVisibilityDuration: number;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled: boolean;
 
     @Input()
@@ -56,7 +57,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public type: SliderHandle;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public deactiveState: boolean;
 
     @Output()
@@ -64,6 +65,9 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @Output()
     public thumbChange = new EventEmitter<any>();
+
+    @Output()
+    public thumbBlur = new EventEmitter<void>();
 
     @Output()
     public hoverChange = new EventEmitter<boolean>();
@@ -188,6 +192,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         this.isActive = false;
         this.zIndex = 0;
         this.focused = false;
+        this.thumbBlur.emit();
     }
 
     @HostListener('focus')

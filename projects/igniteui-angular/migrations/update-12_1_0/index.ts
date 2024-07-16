@@ -1,9 +1,12 @@
-import { Element } from '@angular/compiler';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Element } from '@angular/compiler';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
-        serializeNodes, makeNgIf, stringifyAttriutes } from '../common/util';
-import { nativeImport } from '../common/import-helper.js';
+import {
+  FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
+  serializeNodes, makeNgIf, stringifyAttributes
+} from '../common/util';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 
 const version = '12.1.0';
 
@@ -19,7 +22,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
   const warnMsg = `\n<!-- Auto migrated template content. Please, check your bindings! -->\n`;
   const deprecatedToken = 'IgxGridTransaction';
   const providerWarnMsg = `/* Injection token 'IgxGridTransaction' has been deprecated. ` +
-  `Please refer to the update guide for more details. */`;
+    `Please refer to the update guide for more details. */`;
   const templateNames = [];
 
   const applyChanges = () => {
@@ -64,7 +67,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
     if (paginatorTemplate && checkForPaginatorInTemplate(path, paginationTemplateName?.value)) {
       const pgCmpt = findElementNodes((paginatorTemplate as Element).children, 'igx-paginator')[0];
-      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${stringifyAttributes((pgCmpt as Element).attrs)}></igx-paginator>`;
     } else {
       // eslint-disable-next-line max-len
       return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;

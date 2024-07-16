@@ -32,15 +32,15 @@ describe('IgxSwitch', () => {
 
         const switchComp = fixture.componentInstance.switch;
         const domSwitch = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
-        const nativeCheckbox = switchComp.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchComp.nativeInput.nativeElement;
         const nativeLabel = switchComp.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-switch__label')).nativeElement;
 
-        expect(domSwitch.id).toContain('igx-switch-');
+        expect(domSwitch.id).toContain('igx-checkbox-');
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toContain('igx-switch-');
+        expect(nativeCheckbox.id).toContain('igx-checkbox-');
         expect(nativeCheckbox.getAttribute('aria-label')).toEqual(null);
-        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-switch-');
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-checkbox-');
 
         expect(nativeLabel).toBeTruthy();
         // No longer have a for attribute to not propagate clicks to the native checkbox
@@ -48,7 +48,7 @@ describe('IgxSwitch', () => {
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-switch__label');
-        expect(placeholderLabel.getAttribute('id')).toContain('igx-switch-');
+        expect(placeholderLabel.getAttribute('id')).toContain('igx-checkbox-');
 
         switchComp.id = 'customSwitch';
         fixture.detectChanges();
@@ -68,7 +68,7 @@ describe('IgxSwitch', () => {
 
         const testInstance = fixture.componentInstance;
         const switchInstance = testInstance.switch;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement;
 
         fixture.detectChanges();
 
@@ -103,7 +103,7 @@ describe('IgxSwitch', () => {
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(SwitchExternalLabelComponent);
         const switchInstance = fixture.componentInstance.switch;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement;
         const externalLabel = fixture.debugElement.query(By.css('#my-label')).nativeElement;
         fixture.detectChanges();
 
@@ -114,7 +114,7 @@ describe('IgxSwitch', () => {
     it('Initializes with invisible label', () => {
         const fixture = TestBed.createComponent(SwitchInvisibleLabelComponent);
         const switchInstance = fixture.componentInstance.switch;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
         expect(nativeCheckbox.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
@@ -139,7 +139,7 @@ describe('IgxSwitch', () => {
         const fixture = TestBed.createComponent(SwitchRequiredComponent);
         const testInstance = fixture.componentInstance;
         const switchInstance = testInstance.switch;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
         expect(switchInstance.required).toBe(true);
@@ -157,7 +157,7 @@ describe('IgxSwitch', () => {
         const fixture = TestBed.createComponent(IgxSwitchComponent);
         const switchInstance = fixture.componentInstance;
         switchInstance.disabled = true;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement as HTMLInputElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement as HTMLInputElement;
         const nativeLabel = switchInstance.nativeLabel.nativeElement;
         const placeholderLabel = switchInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
@@ -178,7 +178,7 @@ describe('IgxSwitch', () => {
         const fixture = TestBed.createComponent(SwitchSimpleComponent);
         const testInstance = fixture.componentInstance;
         const switchInstance = testInstance.switch;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = switchInstance.nativeInput.nativeElement;
         const nativeLabel = switchInstance.nativeLabel.nativeElement;
         const placeholderLabel = switchInstance.placeholderLabel.nativeElement;
         const switchEl = fixture.debugElement.query(By.directive(IgxSwitchComponent)).nativeElement;

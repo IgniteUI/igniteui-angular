@@ -22,7 +22,7 @@ import {
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { useAnimation } from '@angular/animations';
-import { fadeIn, fadeOut } from '../animations/fade';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
 
@@ -35,7 +35,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button (click)="toast.open()">Show notification</button>
+ * <button type="button" igxButton (click)="toast.open()">Show notification</button>
  * <igx-toast #toast displayTime="1000">
  *      Notification displayed
  * </igx-toast>

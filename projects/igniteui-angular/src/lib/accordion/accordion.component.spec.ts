@@ -4,11 +4,11 @@ import { Component, ViewChild } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { slideInLeft, slideOutRight } from '../animations/slide';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../expansion-panel/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
+import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';

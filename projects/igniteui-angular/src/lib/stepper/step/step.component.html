@@ -1,11 +1,11 @@
 <ng-template #defaultTitle>
-    <ng-content *ngIf="isTitleVisible" select='[igxStepTitle]'></ng-content>
-    <ng-content *ngIf="isTitleVisible" select='[igxStepSubTitle]'></ng-content>
+    <ng-content *ngIf="isTitleVisible" select="[igxStepTitle]"></ng-content>
+    <ng-content *ngIf="isTitleVisible" select="[igxStepSubtitle]"></ng-content>
 </ng-template>
 
 <ng-template #contentTemplate>
     <div [ngClass]="contentClasses" #contentContainer>
-        <ng-content *ngIf="active || collapsing" select='[igxStepContent]'></ng-content>
+        <ng-content *ngIf="active || collapsing" select="[igxStepContent]"></ng-content>
     </div>
 </ng-template>
 
@@ -14,7 +14,7 @@
 </ng-template>
 
 <ng-template #customIndicator>
-    <ng-content select='[igxStepIndicator]'></ng-content>
+    <ng-content select="[igxStepIndicator]"></ng-content>
 </ng-template>
 
 <div class="igx-stepper__step-header" igxRipple [ngClass]="stepHeaderClasses" (keydown)="handleKeydown($event)"

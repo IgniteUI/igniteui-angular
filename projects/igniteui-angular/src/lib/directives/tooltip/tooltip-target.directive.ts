@@ -1,15 +1,14 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { fadeOut } from '../../animations/fade';
-import { scaleInCenter } from '../../animations/scale';
 import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
 import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
+import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -32,11 +31,11 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
  *
  * Example:
  * ```html
- * <button [igxTooltipTarget]="tooltipRef">Hover me</button>
+ * <button type="button" igxButton [igxTooltipTarget]="tooltipRef">Hover me</button>
  * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
  * ```
  */
- @Directive({
+@Directive({
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]',
     standalone: true
@@ -52,7 +51,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <!--set-->
-     * <button [igxTooltipTarget]="tooltipRef" showDelay="1500">Hover me</button>
+     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [showDelay]="1500">Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
@@ -69,7 +68,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <!--set-->
-     * <button [igxTooltipTarget]="tooltipRef" hideDelay="1500">Hover me</button>
+     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [hideDelay]="1500">Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
@@ -88,11 +87,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <!--set-->
-     * <button [igxTooltipTarget]="tooltipRef" [tooltipDisabled]="true">Hover me</button>
+     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [tooltipDisabled]="true">Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input('tooltipDisabled')
+    @Input({ alias: 'tooltipDisabled', transform: booleanAttribute })
     public tooltipDisabled = false;
 
     /**
@@ -100,7 +99,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input('igxTooltipTarget')
     public override set target(target: any) {
-        if (target !== null && target !== '') {
+        if (target instanceof IgxTooltipDirective) {
             this._target = target;
         }
     }
@@ -115,9 +114,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         return this._target;
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     @Input()
     public set tooltip(content: any) {
         if (!this.target && (typeof content === 'string' || content instanceof String)) {
@@ -161,8 +160,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      *
      * ```html
-     * <button [igxTooltipTarget]="tooltipRef"
-     *         (tooltipShow)='tooltipShowing($event)'>Hover me</button>
+     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" (tooltipShow)='tooltipShowing($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
@@ -180,15 +178,14 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      *
      * ```html
-     * <button [igxTooltipTarget]="tooltipRef"
-     *         (tooltipHide)='tooltipHiding($event)'>Hover me</button>
+     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" (tooltipHide)='tooltipHiding($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
 
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {

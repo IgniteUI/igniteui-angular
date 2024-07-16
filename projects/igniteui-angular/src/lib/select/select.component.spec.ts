@@ -35,9 +35,6 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
-const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
-const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_GROUP_COMPACT = 'igx-input-group--compact';
 
 const arrowDownKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 const arrowUpKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
@@ -149,7 +146,6 @@ describe('igxSelect', () => {
             expect(select.value).toBeNull();
             // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
-            expect(select.displayDensity).toEqual('comfortable');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -165,8 +161,6 @@ describe('igxSelect', () => {
             expect(select.value).toEqual('Hamburg');
             select.type = 'box';
             expect(select.type).toEqual('box');
-            select.displayDensity = 'compact';
-            expect(select.displayDensity).toEqual('compact');
             select.items[3].disabled = true;
             expect(select.items[3].disabled).toBeTruthy();
             select.items[10].selected = true;
@@ -484,19 +478,6 @@ describe('igxSelect', () => {
             tick();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeTruthy();
         }));
-
-        it('should render display density properly', () => {
-            const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default display density is 'comfortable'
-            expect(select.displayDensity).toEqual('comfortable');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMFORTABLE)).toBeTruthy();
-            select.displayDensity = 'cosy';
-            fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COSY)).toBeTruthy();
-            select.displayDensity = 'compact';
-            fixture.detectChanges();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
-        });
 
         it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
             const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
@@ -2227,7 +2208,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultTextIdent = 8;
         const defItemFontSize = 14;
         const defInputFontSize = 16;
         let selectedItemIndex: number;
@@ -2450,44 +2430,7 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
             }));
         });
-        describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = () => {
-                let prefixesWidth = 0;
-                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
-                Array.from(prefixes).forEach((prefix: DebugElement) => {
-                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
-                    prefixesWidth += prefixRect.width;
-                });
-                return prefixesWidth;
-            };
 
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxSelectAffixComponent);
-                select = fixture.componentInstance.select;
-                fixture.detectChanges();
-                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-            });
-
-            it('should ident option text to the input text',
-                fakeAsync(() => {
-                    selectedItemIndex = 0;
-                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
-                    select.items[selectedItemIndex].selected = true;
-                    fixture.detectChanges();
-                    select.toggle();
-                    tick();
-                    fixture.detectChanges();
-                    getBoundingRectangles();
-                    // bc of the difference of 2px between the font size of the text in the input and the text in the selected item
-                    // we need to take into account that the item list will be slightly to the left of the input to make sure
-                    // that the text in the list is positioned exactly on top of the text in the input
-                    expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
-                        - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
-                        .toBeLessThanOrEqual(2);
-                }));
-        });
         describe('Document bigger than the visible viewport tests: ', () => {
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
@@ -2706,15 +2649,16 @@ describe('igxSelect', () => {
 describe('igxSelect ControlValueAccessor Unit', () => {
     let select: IgxSelectComponent;
     it('Should correctly implement interface methods', () => {
-        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'delete', 'first_item']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
         });
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockDocument, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -2747,6 +2691,10 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         spyOnProperty(select, 'collapsed').and.returnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+
+        // destroy
+        select.ngOnDestroy();
+        expect(mockSelection.delete).toHaveBeenCalled();
     });
 
     it('Should correctly handle ngControl validity', () => {
@@ -2757,7 +2705,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
 @Component({
     template: `
     <input class="dummyInput" #dummyInput/>
-    <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
+    <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
         <label igxLabel #simpleLabel>Select Simple Component</label>
         <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
             {{ item }} {{'©'}}
@@ -2801,7 +2749,7 @@ class IgxSelectSimpleComponent {
 }
 @Component({
     template: `
-    <igx-select #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
+    <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
         <igx-select-item-group *ngFor="let location of locations" [label]="location.continent"> {{location.continent}}
             <igx-select-item *ngFor="let capital of location.capitals" [value]="capital" [text]="capital">
                 {{ capital }} <igx-icon>star</igx-icon>
@@ -2825,7 +2773,7 @@ class IgxSelectGroupsComponent {
 @Component({
     template: `
     <div style="width: 2500px; height: 400px;"></div>
-        <igx-select #select [(ngModel)]="value" >
+        <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" >
             <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
@@ -2847,13 +2795,14 @@ class IgxSelectMiddleComponent {
 }
 @Component({
     template: `
-        <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+        <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
             <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
         </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-top',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2880,6 +2829,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     standalone: true,
+    selector: 'igx-select-bottom',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
 class IgxSelectBottomComponent {
@@ -3067,10 +3017,10 @@ class IgxSelectTemplateFormComponent {
     template: `
         <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
         <igx-select #headerFooterSelect
-        required
-        [placeholder]="'Pick One'"
-        [(ngModel)]="value"
-        [displayDensity]="'cosy'">
+            required
+            [placeholder]="'Pick One'"
+            [(ngModel)]="value"
+            style="--ig-size: var(--ig-size-medium);">
             <label igxLabel>Sample Label</label>
             <igx-prefix>
                 <igx-icon>alarm</igx-icon>
@@ -3085,7 +3035,7 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                    <button type="button" igxButton="contained" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>

@@ -589,56 +589,14 @@
             @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
         }
 
+        @include e(tbody-pivot-mrl-dimension) {
+            @extend %igx-grid__tbody-pivot-mrl-dimension !optional
+        }
+
         @include e(tr-pivot-toggle-icons) {
             @extend %igx-grid__tr-pivot-toggle-icons !optional;
         }
         // pivot end
-
-        @include m(cosy) {
-            @extend %grid-display !optional;
-            @extend %grid-display-cosy !optional;
-
-            @include e(cbx-selection, $m: push) {
-                @extend %grid__cbx-selection--push--cosy !optional;
-            }
-
-            @include e(hierarchical-expander, $m: empty) {
-                @extend %igx-grid__hierarchical-expander--empty !optional;
-            }
-
-            @for $i from 1 through 10 {
-                @include e(row-indentation, $m: level-#{$i}) {
-                    @extend %igx-grid__row-indentation-cosy--level-#{$i} !optional;
-                }
-
-                @include e(group-row, $m: padding-level-#{$i}) {
-                    @extend %igx-grid__group-row-cosy--padding-level-#{$i} !optional;
-                }
-            }
-        }
-
-        @include m(compact) {
-            @extend %grid-display !optional;
-            @extend %grid-display-compact !optional;
-
-            @include e(cbx-selection, $m: push) {
-                @extend %grid__cbx-selection--push--compact !optional;
-            }
-
-            @include e(hierarchical-expander, $m: empty) {
-                @extend %igx-grid__hierarchical-expander--empty !optional;
-            }
-
-            @for $i from 1 through 10 {
-                @include e(row-indentation, $m: level-#{$i}) {
-                    @extend %igx-grid__row-indentation-compact--level-#{$i} !optional;
-                }
-
-                @include e(group-row, $m: padding-level-#{$i}) {
-                    @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
-                }
-            }
-        }
 
         @include excel-filtering-partial();
         @include advanced-filtering-partial();
@@ -659,16 +617,6 @@
 
         @include e(text) {
             @extend %igx-drop-area__text !optional;
-        }
-
-        @include m(compact) {
-            @extend %igx-drop-area !optional;
-            @extend %igx-drop-area--cosy !optional;
-        }
-
-        @include m(cosy) {
-            @extend %igx-drop-area !optional;
-            @extend %igx-drop-area--compact !optional;
         }
     }
 

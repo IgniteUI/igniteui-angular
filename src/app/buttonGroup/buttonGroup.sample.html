@@ -4,9 +4,9 @@
             Exclusive Selection <i class="light">Horizontal</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="!multi"
+            [selectionMode]="'single'"
             [values]="alignOptions"
-            displayDensity="compact"
+            [style.--ig-size]="'var(--ig-size-small)'"
         ></igx-buttongroup>
         <br />
         <span class="ig-typography__body-2"
@@ -20,7 +20,7 @@
             Multiple Selection <i class="light">Horizontal</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="multi"
+            [selectionMode]="'multi'"
             [values]="fontOptions"
             [disabled]="false"
         >
@@ -32,7 +32,7 @@
             Multiple Selection <i class="light">Horizontal Disabled</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="multi"
+            [selectionMode]="'multi'"
             [values]="fontOptions"
             [disabled]="true"
         >
@@ -44,7 +44,7 @@
             Exclusive Selection <i class="light">Vertical</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="false"
+            [selectionMode]="'single'"
             [values]="cities"
             alignment="vertical"
         >
@@ -56,7 +56,7 @@
             Multiple Selection <i class="light">Vertical</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="true"
+            [selectionMode]="'multi'"
             [values]="borders"
             [alignment]="alignment"
         >
@@ -66,7 +66,7 @@
     <article class="sample-column">
         <h4 class="sample-title">Custom class to style the content</h4>
         <igx-buttongroup
-            [multiSelection]="multi"
+            [selectionMode]="'multi'"
             [values]="fontOptions"
             [disabled]="false"
             itemContentCssClass="customContentStyle"
@@ -76,7 +76,7 @@
 
     <article class="sample-column">
         <h4 class="sample-title">Templated buttons.</h4>
-        <igx-buttongroup [multiSelection]="false">
+        <igx-buttongroup [selectionMode]="'single'">
             <button igxButton>
                 <igx-icon>alarm_on</igx-icon>
                 <span>Button 1 text</span>
@@ -93,11 +93,11 @@
             Templated buttons. <i class="light">Vertical</i>
         </h4>
         <igx-buttongroup
-            [multiSelection]="false"
+            [selectionMode]="'single'"
             [alignment]="alignment"
-            displayDensity="compact"
+            [style.--ig-size]="'var(--ig-size-small)'"
         >
-            <button igxButton displayDensity="comfortable">
+            <button igxButton [style.--ig-size]="'var(--ig-size-large)'">
                 <igx-icon>alarm_on</igx-icon>
                 <span>Button 1 text</span>
             </button>
@@ -112,7 +112,7 @@
         <h4 class="sample-title">
             Templated buttons. <i class="light">Multiple selection</i>
         </h4>
-        <igx-buttongroup [multiSelection]="true" [alignment]="alignment">
+        <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment">
             <button igxButton [selected]="true">
                 <igx-icon>alarm_on</igx-icon>
                 <span>Button 1 text</span>
@@ -120,6 +120,57 @@
             <button igxButton>
                 <igx-icon>autorenew</igx-icon>
                 <span>Button 2 text</span>
+            </button>
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">
+            Selection Mode <i class="light">Single</i>
+        </h4>
+        <igx-buttongroup [selectionMode]="'single'">
+            <button igxButton>
+                <span>Button 1</span>
+            </button>
+            <button igxButton>
+                <span>Button 2</span>
+            </button>
+            <button igxButton>
+                <span>Button 3</span>
+            </button>
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">
+            Selection Mode <i class="light">Single Required</i>
+        </h4>
+        <igx-buttongroup [selectionMode]="'singleRequired'">
+            <button igxButton>
+                <span>Button 1</span>
+            </button>
+            <button igxButton>
+                <span>Button 2</span>
+            </button>
+            <button igxButton>
+                <span>Button 3</span>
+            </button>
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">
+            Selection Mode <i class="light">Multi</i>
+        </h4>
+        <igx-buttongroup [selectionMode]="'multi'">
+            <button igxButton>
+                <span>Button 1</span>
+            </button>
+            <button igxButton>
+                <span>Button 2</span>
+            </button>
+            <button igxButton>
+                <span>Button 3</span>
             </button>
         </igx-buttongroup>
     </article>
@@ -138,14 +189,14 @@
         </igx-buttongroup>
         <div igxLayout igxLayoutJustify="flex-end">
             <button
-                igxButton="raised"
+                igxButton="contained"
                 (click)="switchContent()"
                 style="margin: 16px 8px 0 0"
             >
                 Move Selection
             </button>
             <button
-                igxButton="raised"
+                igxButton="contained"
                 (click)="selectLast()"
                 style="margin: 16px 0 0 8px"
             >

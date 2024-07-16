@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { RunSchematicTask, NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 const extSchematicModule = '@igniteui/angular-schematics';

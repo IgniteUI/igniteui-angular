@@ -41,8 +41,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -67,8 +66,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -93,8 +91,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -119,8 +116,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -140,8 +136,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -157,8 +152,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -174,8 +168,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -191,8 +184,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -208,8 +200,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -225,8 +216,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -242,8 +232,7 @@ describe(`Update to ${version}`, () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
@@ -272,8 +261,7 @@ describe(`Update to ${version}`, () => {
         }
         `);
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
         import { IgxGridToolbarTitleComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent } from 'igniteui-angular';
@@ -303,8 +291,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
             <igx-radio-group disabled="true"></igx-radio-group>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -315,8 +302,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
             <igx-radio-group labelPosition="before"></igx-radio-group>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`

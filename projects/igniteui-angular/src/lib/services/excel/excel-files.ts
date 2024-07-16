@@ -151,7 +151,10 @@ export class WorksheetFile implements IExcelFile {
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
                 this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
-                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader && c.headerType !== ExportHeaderType.MultiRowHeader);
+                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader &&
+                     c.headerType !== ExportHeaderType.MultiRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotMergedHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
@@ -406,7 +409,7 @@ export class WorksheetFile implements IExcelFile {
             this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isGroupedGrid && isSummaryRecord)
         }
 
-        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && !this.isValidGrid) {
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && worksheetData.isGroupedGrid) {
             this.setRootSummaryStartCoordinate(column, key);
 
             if (this.firstColumn > column) {
@@ -459,10 +462,10 @@ export class WorksheetFile implements IExcelFile {
                     return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
                 }
 
-                return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
+                return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
             }
 
-            return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
+            return `<c r="${columnName}" s="1"><f>${summaryFunc}</f></c>`;
         }
     }
 
@@ -583,9 +586,10 @@ export class WorksheetFile implements IExcelFile {
 
     private setRootSummaryStartCoordinate(column: number, key: string) {
         const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this.firstDataRow);
+        const targetMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
 
-        if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
-            this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
+        if (targetMap.get(key).startCoordinate !== firstDataRecordColName) {
+            targetMap.get(key).startCoordinate = firstDataRecordColName;
         }
     }
 
@@ -604,16 +608,18 @@ export class WorksheetFile implements IExcelFile {
         for (const currentCol of headersForLevel) {
             const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
 
-            if (currentCol.level === i) {
+            if (currentCol.level === i && currentCol.headerType !== ExportHeaderType.PivotMergedHeader) {
                 let columnCoordinate;
                 const column = isVertical
                     ? this.rowIndex
                     : startValue + (owner.maxRowLevel ?? 0)
 
-                const rowCoordinate = isVertical
+                let rowCoordinate = isVertical
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
-
+                if (currentCol.headerType === ExportHeaderType.PivotRowHeader) {
+                    rowCoordinate = startValue + 1;
+                }
                 const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
@@ -665,12 +671,17 @@ export class WorksheetFile implements IExcelFile {
                                 : this.sheetData += str
                         }
                     }
+                    if ((currentCol.headerType === ExportHeaderType.RowHeader || currentCol.headerType === ExportHeaderType.MultiRowHeader) &&
+                        currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
+                    }
 
                     this.mergeCellStr += `${columnCoordinate}" />`;
                 }
             }
-
-            startValue += spanLength;
+            if (currentCol.headerType !== ExportHeaderType.PivotRowHeader) {
+                startValue += spanLength;
+            }
         }
     }
 }

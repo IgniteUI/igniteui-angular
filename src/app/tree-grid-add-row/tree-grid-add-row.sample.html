@@ -16,7 +16,7 @@
 
     <div class="three-columns">
         <div class="column">
-            <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
+            <button igxButton="contained" (click)="beginAddRowStart()">Add Row At Start</button>
         </div>
 
         <div class="column">
@@ -24,7 +24,7 @@
                 <input igxInput name="index" type="number" #indexInput />
                 <label igxLabel for="index">Index</label>
             </igx-input-group>
-            <button igxButton="raised" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
+            <button igxButton="contained" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
         </div>
 
         <div class="column">
@@ -32,7 +32,7 @@
                 <input igxInput name="string" type="number" #idInput value="10" />
                 <label igxLabel for="string">PK</label>
             </igx-input-group>
-            <button igxButton="raised" (click)="beginAddRowById(idInput.value)">Add Row For ID</button>
+            <button igxButton="contained" (click)="beginAddRowById(idInput.value)">Add Row For ID</button>
         </div>
 
     </div>

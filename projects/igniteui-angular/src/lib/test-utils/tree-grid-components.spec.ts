@@ -3,7 +3,6 @@ import { NgIf } from '@angular/common';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
-import { DisplayDensity } from '../core/density';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
@@ -14,7 +13,7 @@ import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOper
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { GridSummaryCalculationMode, RowPinningPosition } from '../grids/common/enums';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/grid/public_api';
+import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/public_api';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxTreeGridGroupingPipe } from '../grids/tree-grid/tree-grid.grouping.pipe';
 
@@ -618,7 +617,7 @@ export class IgxTreeGridRowPinningComponent {
 @Component({
     template: `
     <div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
-        <igx-tree-grid #treeGrid [data]="data" [displayDensity]="density"
+        <igx-tree-grid #treeGrid [data]="data"
             childDataKey="Employees" primaryKey="ID">
             <igx-column [field]="'ID'" dataType="number"></igx-column>
             <igx-column [field]="'Name'" dataType="string"></igx-column>
@@ -637,7 +636,6 @@ export class IgxTreeGridWrappedInContComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 

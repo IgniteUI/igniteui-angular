@@ -19,34 +19,34 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
-
+import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, HorizontalAnimationType, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { HammerGesturesManager } from '../core/touch';
+import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { ThemeService } from '../services/theme/theme.service';
+import type { IgxTheme } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
-export const CarouselIndicatorsOrientation = mkenum({
-    bottom: 'bottom',
-    top: 'top'
-});
-export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
     public override overrides = {
-        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
     };
 }
 /**
@@ -145,6 +145,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /**
+     * @hidden @internal
+     */
+    protected theme: IgxTheme;
+
+    /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
      * Default value is `true`.
      * ```html
@@ -153,7 +158,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public loop = true;
+    @Input({ transform: booleanAttribute }) public loop = true;
 
     /**
      * Sets whether the carousel will `pause` the slide transitions on user interactions.
@@ -164,46 +169,46 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public pause = true;
+    @Input({ transform: booleanAttribute }) public pause = true;
 
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [navigation] = "false"></igx-carousel>
+     * <igx-carousel [navigation]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public navigation = true;
+    @Input({ transform: booleanAttribute }) public navigation = true;
 
     /**
      * Controls whether the carousel should support keyboard navigation.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
+     * <igx-carousel [keyboardSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public keyboardSupport = true;
+    @Input({ transform: booleanAttribute }) public keyboardSupport = true;
 
     /**
      * Controls whether the carousel should support gestures.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+     * <igx-carousel [gesturesSupport]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public gesturesSupport = true;
+    @Input({ transform: booleanAttribute }) public gesturesSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
      * Default value is `5`.
      * ```html
-     * <igx-carousel [maximumIndicatorsCount] = "10"></igx-carousel>
+     * <igx-carousel [maximumIndicatorsCount]="10"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -269,9 +274,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>add</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon name="add"></igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -285,16 +290,16 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```typescript
      * // Set in typescript
      * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.nextButtonTemplate = myCustomTemplate;
+     * myComponent.carousel.prevButtonTemplate = myCustomTemplate;
      * ```
      * ```html
      * <!-- Set in markup -->
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
-     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon>remove</igx-icon>
-     *           </button>
+     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *              <igx-icon name="remove"></igx-icon>
+     *          </button>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -385,13 +390,43 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
+    private _resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
+    private _icons = [
+        {
+            name: 'carousel_prev',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_back',
+                    family: 'material'
+                },
+                'indigo': {
+                    name: 'keyboard_arrow_left',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'carousel_next',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'arrow_forward',
+                    family: 'material'
+                },
+                'indigo': {
+                    name: 'keyboard_arrow_right',
+                    family: 'material'
+                }
+            }))
+        }
+    ]
 
     /**
      * An accessor that sets the resource strings.
@@ -422,7 +457,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.nextButtonTemplate) {
             return this.nextButtonTemplate;
         }
-        return this.defaultNextButton;
+
+        return this.defaultNextButton
     }
 
     /** @hidden */
@@ -430,7 +466,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.prevButtonTemplate) {
             return this.prevButtonTemplate;
         }
-        return this.defaultPrevButton;
+
+        return this.defaultPrevButton
     }
 
     /** @hidden */
@@ -529,7 +566,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Sets the time `interval` in milliseconds before the slide changes.
      * If not set, the carousel will not change `slides` automatically.
      * ```html
-     * <igx-carousel [interval] = "1000"></igx-carousel>
+     * <igx-carousel [interval]="1000"></igx-carousel>
      * ```
      *
      * @memberof IgxCarouselComponent
@@ -544,9 +581,32 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private element: ElementRef,
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private platformUtil: PlatformUtil) {
+        private platformUtil: PlatformUtil,
+        private themeService: ThemeService,
+        private iconService: IgxIconService
+    ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        this.theme = this.theme ?? this.themeService.theme;
+
+        for (const icon of this._icons) {
+            switch(this.theme) {
+                case 'indigo':
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('indigo'),
+                    );
+                    break;
+                case 'material':
+                default:
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('material'),
+                    );
+            }
+        }
     }
 
 
@@ -1015,8 +1075,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.leaveAnimationPlayer.animationEnd
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                this.slides.find(s => s.active).nativeElement.focus();
-            });
+                    this.slides.find(s => s.active).nativeElement.focus();
+                });
         } else {
             requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }

@@ -30,8 +30,7 @@ describe('Update 7.3.4', () => {
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-time-picker (onOpen)="handler" (onClose)="handler"></igx-time-picker>`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-09', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-09', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
                 `<igx-time-picker (onOpened)="handler" (onClosed)="handler"></igx-time-picker>`);
@@ -42,8 +41,7 @@ describe('Update 7.3.4', () => {
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-date-picker (onOpen)="handler" (onClose)="handler"></igx-date-picker>`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-09', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-09', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
                 `<igx-date-picker (onOpened)="handler" (onClosed)="handler"></igx-date-picker>`);

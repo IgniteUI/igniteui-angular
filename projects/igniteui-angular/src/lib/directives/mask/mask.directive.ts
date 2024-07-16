@@ -1,7 +1,7 @@
 import {
     Directive, ElementRef, EventEmitter, HostListener,
     Output, PipeTransform, Renderer2,
-    Input, OnInit, AfterViewChecked,
+    Input, OnInit, AfterViewChecked, booleanAttribute,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
@@ -52,7 +52,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * <input [includeLiterals] = "true">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public includeLiterals: boolean;
 
     /**
@@ -130,6 +130,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     protected _composing: boolean;
     protected _compositionStartIndex: number;
+    protected _focused = false;
     private _compositionValue: string;
     private _end = 0;
     private _start = 0;
@@ -137,14 +138,13 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _mask: string;
     private _oldText = '';
     private _dataValue = '';
-    private _focused = false;
     private _droppedData: string;
     private _hasDropAction: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
-    private _onTouchedCallback: () => void = noop;
-    private _onChangeCallback: (_: any) => void = noop;
+    protected _onTouchedCallback: () => void = noop;
+    protected _onChangeCallback: (_: any) => void = noop;
 
     constructor(
         protected elementRef: ElementRef<HTMLInputElement>,
@@ -422,6 +422,4 @@ export interface IMaskEventArgs extends IBaseEventArgs {
     rawValue: string;
     formattedValue: string;
 }
-
-/** @hidden */
 

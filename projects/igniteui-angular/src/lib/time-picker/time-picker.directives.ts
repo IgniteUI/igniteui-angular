@@ -17,6 +17,7 @@ import {
 import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { HammerInput, HammerOptions } from '../core/touch-annotations';
 
 /** @hidden */
 @Directive({
@@ -179,7 +180,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnInit() {
-        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
+        const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer?.Pan, { direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL, threshold: 10 }]] };
         this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
     }
 
@@ -261,7 +262,7 @@ export class IgxTimeItemDirective {
                 const secondsPart = inputDateParts.find(element => element.type === 'seconds');
                 return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart, secondsPart.format.length) === currentValue;
             case 'ampmList':
-                const ampmPart = inputDateParts.find(element => element.format === 'tt');
+                const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
                 return DateTimeUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;
         }
     }
@@ -289,7 +290,7 @@ export class IgxTimeItemDirective {
                 }
                 return '00';
             case 'ampmList':
-                const ampmPart = inputDateParts.find(element => element.format === 'tt');
+                const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
                 return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, ampmPart, ampmPart.format.length);
         }
     }
@@ -330,7 +331,7 @@ export class IgxTimeItemDirective {
                     return DateTimeUtil.getPartValue(date, secondsPart, secondsPart.format.length);
                 }
             case 'ampmList':
-                const ampmPart = inputDateParts.find(element => element.format === 'tt');
+                const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
                 return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, ampmPart, ampmPart.format.length);
         }
     }
@@ -354,7 +355,7 @@ export class IgxTimeItemDirective {
     private getHourPart(date: Date): string {
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
-        const ampmPart = inputDateParts.find(element => element.format === 'tt');
+        const ampmPart = inputDateParts.find(element =>element.format.indexOf('a') !== -1 || element.format === 'tt');
         const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);
         if (ampmPart) {
             const ampm = DateTimeUtil.getPartValue(date, ampmPart, ampmPart.format.length);

@@ -1,0 +1,149 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$content-text-color",
+      "replaceWith": "$content-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-border-radius",
+      "replaceWith": "$month-year-border-radius",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-hover-current-text-color",
+      "replaceWith": "$month-current-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$label-color",
+      "replaceWith": "$weekday-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$week-number-color",
+      "replaceWith": "$week-number-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-disabled-background",
+      "remove": true,
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$border-width",
+      "remove": true,
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$header-text-color",
+      "replaceWith": "$header-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-text-color",
+      "replaceWith": "$picker-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-background-color",
+      "replaceWith": "$picker-background",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-text-hover-color",
+      "replaceWith": "$picker-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-arrow-color",
+      "replaceWith": "$navigation-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$picker-arrow-hover-color",
+      "replaceWith": "$navigation-hover-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$inactive-text-color",
+      "replaceWith": "$inactive-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$weekend-text-color",
+      "replaceWith": "$weekend-color",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$year-current-text-color",
+      "replaceWith": "$year-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$year-hover-text-color",
+      "replaceWith": "$year-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-hover-text-color",
+      "replaceWith": "$month-hover-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$month-current-text-color",
+      "replaceWith": "$month-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-selected-text-color",
+      "replaceWith": "$date-selected-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-current-bg-color",
+      "replaceWith": "$date-current-background",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-current-text-color",
+      "replaceWith": "$date-current-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-special-text-color",
+      "replaceWith": "$date-special-foreground",
+      "owner": "calendar-theme",
+      "type":"property"
+    },
+    {
+      "name": "$date-disabled-text-color",
+      "replaceWith": "$date-disabled-foreground",
+      "owner": "calendar-theme",
+      "type": "property"
+    }
+  ]
+}

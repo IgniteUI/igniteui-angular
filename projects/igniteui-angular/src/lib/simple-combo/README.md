@@ -263,17 +263,13 @@ When the combo is opened, allow custom values are enabled and add item button is
 
 <div class="divider--half"></div>
 
-## Display Density
-**igx-simple-combo** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possible display densities are `compact`, `cosy` and `comfortable` (default).
-Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
-
 ### Properties
 | Name                     | Description                                       | Type                        |
 |--------------------------|---------------------------------------------------|-----------------------------|
 | `id`                    | The combo's id.                                          | `string`              |
-| `data`                  | The combo's data source.                                 | `any`                  |
-| `value`                 | The combo's value.                                       | `string`                |
+| `data`                  | The combo's data source.                                 | `any[]`                  |
+| `value`                 | The combo's value.                                       | `any`                |
+| `selection`             | The combo's selected item.                               | `any`                |
 | `allowCustomValue`      | Enables/disables combo custom value.                | `boolean`                     |
 | `valueKey`              | Determines which column in the data source is used to determine the value. | `string` |
 | `displayKey`            | Determines which column in the data source is used to determine the display value. | `string` |

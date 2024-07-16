@@ -8,63 +8,58 @@ import { getDecoratorName, getDecorators, filterRelevantQueries, isChildOfConfig
 
 export class Analyzer {
 
-    #checker: ts.TypeChecker;
-    #program: ts.Program;
-    #printer = new AnalyzerPrinter();
+    private checker: ts.TypeChecker;
+    private program: ts.Program;
+    private printer = new AnalyzerPrinter();
 
-    #configMap = new Map<string, AnalyzerComponent>();
-    #resolvedMap!: Map<ts.InterfaceType, ComponentMetadata>;
+    private configMap = new Map<string, AnalyzerComponent>();
+    private resolvedMap!: Map<ts.InterfaceType, ComponentMetadata>;
 
 
-    get sourceFiles() {
-        return this.#program.getSourceFiles()
+    private get sourceFiles() {
+        return this.program.getSourceFiles()
             .filter(file => !file.isDeclarationFile);
     }
 
-    #getComponents(source: ts.NodeArray<ts.Node>) {
+    private getComponents(source: ts.NodeArray<ts.Node>) {
         const isComponent = (dec: ts.Decorator) => getDecoratorName(dec) === 'Component';
         return source
             .filter(ts.isClassDeclaration)
-            .filter(x => getDecorators(x)!.some(isComponent));
+            .filter(x => getDecorators(x)!.some(isComponent))
+            .map(comp => new AnalyzerComponent(comp, this.checker));
     }
 
     constructor(fileNames: readonly string[], options: ts.CompilerOptions) {
-        this.#program = ts.createProgram(fileNames, options);
-        this.#checker = this.#program.getTypeChecker();
+        this.program = ts.createProgram(fileNames, options);
+        this.checker = this.program.getTypeChecker();
     }
 
-    static fromDefaultTSConfig(compilerOptions?: ts.CompilerOptions) {
+    public static fromDefaultTSConfig(compilerOptions?: ts.CompilerOptions) {
         const { fileNames, options } = readTSConfig();
         return new Analyzer(fileNames, { ...options, ...compilerOptions });
     }
 
-
-    getComponents(source: ts.SourceFile) {
-        return this.#getComponents(source.statements)
-            .map(comp => new AnalyzerComponent(comp, this.#checker));
-    }
-
-    #resolve() {
+    private resolve() {
         const out = new Map<ts.InterfaceType, ComponentMetadata>();
-        const configs = this.#printer.baseExports;
+        const configs = this.printer.baseExports;
 
-        for (const [name, entry] of this.#configMap) {
+        for (const [name, entry] of this.configMap) {
             const meta = entry.metadata;
 
             if (configs.some(({ symbol }) => symbol.escapedName === name)) {
                 out.set(entry.type, {
                     ...meta,
-                    contentQueries: filterRelevantQueries(meta.contentQueries, name, this.#configMap),
-                    parents: meta.parents.map(p => this.#configMap.get(p)!.type)
+                    contentQueries: filterRelevantQueries(meta.contentQueries, name, this.configMap),
+                    parents: meta.parents.map(p => this.configMap.get(p)!.type)
                 });
             }
 
-            if (meta?.parents.length && !out.has(entry.type) && isChildOfConfigComponent(meta.parents, configs, this.#configMap)) {
+            if (meta?.parents.length && !out.has(entry.type) && isChildOfConfigComponent(meta.parents, configs, this.configMap)) {
                 out.set(entry.type, {
                     ...meta,
-                    contentQueries: filterRelevantQueries(meta.contentQueries, name, this.#configMap),
-                    parents: meta.parents.filter(p => isChildOfConfigComponent([p], configs, this.#configMap))
-                        .map(p => this.#configMap.get(p)!.type)
+                    contentQueries: filterRelevantQueries(meta.contentQueries, name, this.configMap),
+                    parents: meta.parents.filter(p => isChildOfConfigComponent([p], configs, this.configMap))
+                        .map(p => this.configMap.get(p)!.type)
                 });
             }
         }
@@ -72,12 +67,12 @@ export class Analyzer {
         return out;
     }
 
-    analyze() {
-        this.sourceFiles.flatMap(file => this.getComponents(file))
-            .forEach(comp => this.#configMap.set(comp.name, comp));
+    public async analyze() {
+        this.sourceFiles.flatMap(file => this.getComponents(file.statements))
+            .forEach(comp => this.configMap.set(comp.name, comp));
 
-        this.#resolvedMap = this.#resolve();
-        this.#printer.run(this.#resolvedMap);
+        this.resolvedMap = this.resolve();
+        await this.printer.run(this.resolvedMap);
     }
 
 }

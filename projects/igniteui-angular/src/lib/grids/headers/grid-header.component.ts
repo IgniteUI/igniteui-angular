@@ -17,7 +17,6 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
-import { DisplayDensity } from '../../core/density';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { SortingIndexPipe } from './pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
@@ -38,9 +37,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @Input()
     public column: ColumnType;
 
-    @Input()
-    public density: DisplayDensity;
-
     /**
      * @hidden
      */
@@ -54,6 +50,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected defaultSortHeaderIconTemplate;
 
     /**
+     * @hidden
+     */
+    @ViewChild('sortIconContainer', { read: ElementRef })
+    protected sortIconContainer: ElementRef;
+
+    /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
@@ -64,24 +66,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostBinding('class.igx-grid-th')
     public get columnGroupStyle() {
         return !this.column.columnGroup;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-th--cosy')
-    public get cosyStyle() {
-        return this.density === 'cosy';
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid-th--compact')
-    public get compactStyle() {
-        return this.density === 'compact';
     }
 
     @HostBinding('class.asc')
@@ -170,7 +154,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     public get filterIconClassName() {
-        return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+        return this.column.filteringExpressionsTree || this.isAdvancedFilterApplied() ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
     public get selectable() {
@@ -194,7 +178,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     public sortDirection = SortingDirection.None;
-    private _destroy$ = new Subject<boolean>();
+    protected _destroy$ = new Subject<boolean>();
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
@@ -247,22 +231,41 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         this.column.applySelectableClass = false;
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngDoCheck() {
         this.getSortDirection();
         this.cdr.markForCheck();
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onPointerDownIndicator(event) {
+        // Stop propagation of pointer events to now allow column dragging using the header indicators.
+        event.stopPropagation();
+    }
 
+    /**
+     * @hidden @internal
+     */
     public onFilteringIconClick(event) {
         event.stopPropagation();
         this.grid.filteringService.toggleFilterDropdown(this.nativeElement, this.column);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSortingIconClick(event) {
         event.stopPropagation();
         this.triggerSort();
@@ -271,6 +274,13 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected getSortDirection() {
         const expr = this.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
+    }
+
+    protected isAdvancedFilterApplied() {
+        if(!this.grid.advancedFilteringExpressionsTree) {
+            return false;
+        }
+        return !!this.grid.advancedFilteringExpressionsTree.find(this.column.field);
     }
 
     private triggerSort() {

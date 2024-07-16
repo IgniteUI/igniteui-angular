@@ -21,6 +21,10 @@
             @include e(ripple) {
                 @extend %radio-ripple--hover !optional;
             }
+
+            @include e(label) {
+                @extend %radio-label--hover !optional;
+            }
         }
 
         &:active {
@@ -64,6 +68,8 @@
             }
 
             &:hover {
+                @extend %igx-checkbox--focused-hovered !optional;
+
                 @include e(ripple) {
                     @extend %radio-ripple--focused !optional;
                 }

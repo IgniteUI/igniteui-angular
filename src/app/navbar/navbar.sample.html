@@ -1,26 +1,14 @@
 <section class="sample-content">
-    <article class="sample-column">
-        <h4 class="sample-title">With nav and action icons</h4>
-        <div class="navbar-sample dark-navbar">
-            <igx-navbar title="Sample App" actionButtonIcon="menu">
-                <igx-icon>search</igx-icon>
-                <igx-icon>favorite</igx-icon>
-                <igx-icon>more_vert</igx-icon>
-            </igx-navbar>
-        </div>
-    </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">With nav icon</h4>
+        <h4 class="sample-title">Nav icon</h4>
         <div class="navbar-sample">
-            <igx-navbar [title]="currentView" actionButtonIcon="arrow_back" [isActionButtonVisible]="true"
-                (onAction)="navigateBack()">
-            </igx-navbar>
+            <igx-navbar actionButtonIcon="menu"></igx-navbar>
         </div>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Without nav icon</h4>
+        <h4 class="sample-title">Title</h4>
         <div class="navbar-sample">
             <igx-navbar [title]="currentView" [isActionButtonVisible]="false">
             </igx-navbar>
@@ -28,23 +16,63 @@
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">With custom nav icon and action icons</h4>
-        <div class="navbar-sample dark-navbar">
+        <h4 class="sample-title">Title + nav icon</h4>
+        <div class="navbar-sample">
+            <igx-navbar title="Sample App" actionButtonIcon="menu"></igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Title, nav and action icons</h4>
+        <div class="navbar-sample">
             <igx-navbar title="Sample App" actionButtonIcon="menu">
                 <igx-icon>search</igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
-
-                <igx-navbar-action>
-                    <igx-icon class="bidirectional-icon">arrow_back</igx-icon>
-                </igx-navbar-action>
             </igx-navbar>
         </div>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Navbar with title directive</h4>
-        <div class="navbar-sample dark-navbar">
+        <h4 class="sample-title">No title</h4>
+        <div class="navbar-sample">
+            <igx-navbar actionButtonIcon="menu">
+                <igx-icon>search</igx-icon>
+                <igx-icon>favorite</igx-icon>
+                <igx-icon>more_vert</igx-icon>
+            </igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Only action icons</h4>
+        <div class="navbar-sample">
+            <igx-navbar>
+                <igx-icon>search</igx-icon>
+                <igx-icon>favorite</igx-icon>
+                <igx-icon>more_vert</igx-icon>
+            </igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">With custom nav icon</h4>
+        <div class="navbar-sample">
+            <igx-navbar title="Sample App" actionButtonIcon="menu">
+                <igx-navbar-action>
+                    <igx-icon class="bidirectional-icon">arrow_back</igx-icon>
+                </igx-navbar-action>
+
+                <igx-icon>search</igx-icon>
+                <igx-icon>favorite</igx-icon>
+                <igx-icon>more_vert</igx-icon>
+            </igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Directives override</h4>
+        <div class="navbar-sample">
             <igx-navbar title="Title sample">
                 <igx-icon igxNavbarAction>home</igx-icon>
 
@@ -58,18 +86,49 @@
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">With icon buttons</h4>
-        <div class="navbar-sample dark-navbar">
-            <igx-navbar title="Sample App">
-                <igx-navbar-action>
-                    <button igxButton="icon">
-                        <igx-icon family="fa" name="fa-home"></igx-icon>
-                    </button>
-                </igx-navbar-action>
-                <button igxButton="icon"><igx-icon>search</igx-icon></button>
-                <button igxButton="icon"><igx-icon>favorite</igx-icon></button>
-                <button igxButton="icon"><igx-icon>more_vert</igx-icon></button>
+        <h4 class="sample-title">icon buttons (flat, outlined, contained)</h4>
+        <div class="navbar-sample">
+            <igx-navbar actionButtonIcon="menu">
+                <button igxIconButton="flat"><igx-icon>search</igx-icon></button>
+                <button igxIconButton="outlined"><igx-icon>favorite</igx-icon></button>
+                <button igxIconButton="contained"><igx-icon>more_vert</igx-icon></button>
             </igx-navbar>
         </div>
     </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">buttons (flat, outlined, contained)</h4>
+        <div class="navbar-sample">
+            <igx-navbar actionButtonIcon="menu">
+                <button igxButton>button</button>
+                <button igxButton="outlined">button</button>
+                <button igxButton="contained">button</button>
+            </igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Avatar and Progressbar</h4>
+        <div class="navbar-sample">
+            <igx-navbar actionButtonIcon="menu">
+                <igx-input-group type="box">
+                    <input name="inputSearchTest" #input igxInput placeholder="Search"/>
+                </igx-input-group>
+                <igx-avatar initials="MP"></igx-avatar>
+                <igx-circular-bar indeterminate></igx-circular-bar>
+            </igx-navbar>
+        </div>
+    </article>
+
+    <article class="sample-column" style="min-width: 100%">
+        <h4 class="sample-title">Search input</h4>
+        <div class="navbar-sample">
+            <igx-navbar actionButtonIcon="menu">
+                <igx-input-group type="search">
+                    <input name="inputSearchTest" #input igxInput placeholder="Search"/>
+                </igx-input-group>
+            </igx-navbar>
+        </div>
+    </article>
+
 </section>

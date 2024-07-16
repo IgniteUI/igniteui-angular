@@ -3,15 +3,14 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
@@ -28,6 +27,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
+import { Size } from "../common/enums";
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -162,9 +162,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
             const cellEditArgs: IGridEditEventArgs = {
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
                 cancel: false,
@@ -175,7 +176,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
             let rowEditArgs: IGridEditEventArgs = {
                 rowID: row.key,
-                primaryKey: cell.row.key,
+                primaryKey: row.key,
+                rowKey: cell.row.key,
                 rowData: initialRowData,
                 oldValue: row.data,
                 cancel: false,
@@ -196,6 +198,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cellID: cell.id,
                 rowID: cell.row.key,
                 primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
                 valid: true,
@@ -206,8 +209,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowEditExitArgs: IGridEditDoneEventArgs = {
-                rowID: row.key,
                 primaryKey: row.key,
+                rowID: row.key,
+                rowKey: row.key,
                 rowData: initialRowData,
                 newValue: initialRowData,
                 oldValue: row.data,
@@ -230,8 +234,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditExitArgs = {
                 cellID: cell.id,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowID: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
@@ -243,10 +248,10 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditArgs.newValue = newCellValue;
             cellEditArgs.rowData = Object.assign({}, row.data, { ProductName: newCellValue });
-
             rowEditArgs = {
+                primaryKey: row.key,
                 rowID: row.key,
-                primaryKey: cell.row.key,
+                rowKey: cell.row.key,
                 rowData: initialRowData,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: row.data,
@@ -260,6 +265,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
                 primaryKey: row.key,
+                rowKey: row.key,
                 cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
@@ -271,8 +277,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
-                rowID: row.key,
                 primaryKey: row.key,
+                rowID: row.key,
+                rowKey: row.key,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: row.data,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
@@ -290,6 +297,56 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith(rowEditArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+        });
+
+        it('Emit rowAdd and rowAdded event with proper arguments', () => {
+            spyOn(grid.rowAdd, 'emit').and.callThrough();
+            spyOn(grid.rowAdded, 'emit').and.callThrough();
+            // start add row
+            grid.beginAddRowById(null);
+            fix.detectChanges();
+
+            const generatedId = grid.getRowByIndex(0).cells[0].value;
+
+            // enter edit mode of cell
+            const prodCell = GridFunctions.getRowCells(fix, 0)[2];
+            UIInteractions.simulateDoubleClickAndSelectEvent(prodCell);
+            fix.detectChanges();
+
+            // input value
+            const cellInput = (prodCell as any).nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, "NewValue");
+            fix.detectChanges();
+
+            // Done button click
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
+            fix.detectChanges();
+
+            // check event args
+            const rowAddArgs: IRowDataCancelableEventArgs = {
+                cancel: false,
+                oldValue: { ProductID: generatedId},
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                rowID: generatedId,
+                primaryKey: generatedId,
+                rowKey: generatedId,
+                valid: true,
+                event: jasmine.anything() as any,
+                owner: grid,
+                isAddRow: true
+            }
+
+            const rowAddedArgs: IRowDataEventArgs = {
+                rowData: { ProductID: generatedId, ProductName: "NewValue"},
+                data: { ProductID: generatedId, ProductName: "NewValue"},
+                primaryKey: generatedId,
+                rowKey: generatedId,
+                owner: grid
+            };
+            expect(grid.rowAdd.emit).toHaveBeenCalledWith(rowAddArgs);
+            expect(grid.rowAdded.emit).toHaveBeenCalledWith(rowAddedArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
@@ -1055,8 +1112,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.endEdit).toHaveBeenCalledWith(false);
         });
 
-        it(`Should exit row editing AND COMMIT on displayDensity change`, () => {
-            grid.displayDensity = DisplayDensity.comfortable;
+        it(`Should exit row editing AND COMMIT on grid size change`, async () => {
+            setElementSize(grid.nativeElement, Size.Large);
             fix.detectChanges();
 
             cell.editMode = true;
@@ -1066,7 +1123,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toBeTruthy();
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
+            fix.detectChanges();
+            await wait(16); // needed because of the throttleTime on the resize observer
             fix.detectChanges();
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
@@ -1464,7 +1523,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
                 ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
-
             GridFunctions.simulateGridContentKeydown(fix, 'enter');
             tick(16);
             fix.detectChanges();
@@ -1785,8 +1843,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEdit.emit).toHaveBeenCalled();
             // TODO: rowEdit should emit updated rowData - issue #7304
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1826,8 +1885,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1852,8 +1912,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.rowEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1884,8 +1945,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEdit.emit).not.toHaveBeenCalled();
             expect(grid.rowEditExit.emit).toHaveBeenCalled();
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -1912,8 +1974,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalled();
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: false,
@@ -1944,8 +2007,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: true,
@@ -1978,8 +2042,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -2010,8 +2075,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
-                rowID: 1,
                 primaryKey: 1,
+                rowID: 1,
+                rowKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -2027,10 +2093,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();
             // TODO: cellEdit should emit updated rowData - issue #7304
-            const cellArgs = {
+            const cellArgs: IGridEditEventArgs = {
                 cellID: cell.id,
-                rowID: cell.row.key,
                 primaryKey: cell.row.key,
+                rowID: cell.row.key,
+                rowKey: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 'Chai',
                 newValue: 'New Value',
@@ -2261,8 +2328,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
-                rowID: cell.row.key,
                 primaryKey: cell.row.key,
+                rowID: cell.row.key,
+                rowKey: cell.row.key,
                 cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: cell.value,
@@ -2274,8 +2342,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
-                rowID: row.key,
                 primaryKey: row.key,
+                rowID: row.key,
+                rowKey: row.key,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: row.data,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),

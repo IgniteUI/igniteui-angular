@@ -1,10 +1,13 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
-
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-pinning-actions */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Grid Pinning Actions for the Action Strip
  *
@@ -138,6 +141,23 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
             this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons', true);
+
+            this.iconService.addIconRef(pinLeft.name, "default", {
+                name: pinLeft.name,
+                family: "imx-icons",
+            });
+            this.iconService.addIconRef(unpinLeft.name, "default", {
+                name: unpinLeft.name,
+                family: "imx-icons",
+            });
+            this.iconService.addIconRef(jumpDown.name, "default", {
+                name: jumpDown.name,
+                family: "imx-icons",
+            });
+            this.iconService.addIconRef(jumpUp.name, "default", {
+                name: jumpDown.name,
+                family: "imx-icons",
+            });
         }
     }
 }

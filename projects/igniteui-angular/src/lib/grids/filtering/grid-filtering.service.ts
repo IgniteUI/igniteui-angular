@@ -9,10 +9,9 @@ import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { OverlayCancelableEventArgs, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { fadeIn } from '../../animations/main';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
@@ -20,6 +19,7 @@ import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
+import { fadeIn } from 'igniteui-angular/animations';
 
 /**
  * @hidden
@@ -45,7 +45,7 @@ export class IgxFilteringService implements OnDestroy {
         modal: false,
         positionStrategy: new ExcelStylePositionStrategy({
             verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
             closeAnimation: null
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
@@ -67,7 +67,7 @@ export class IgxFilteringService implements OnDestroy {
         const filterIcon = column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
         const filterIconTarget = element.querySelector(`.${filterIcon}`) as HTMLElement || element;
 
-        const { id, ref } = this.grid.createFilterDropdown(column, {
+        const id = this.grid.createFilterDropdown(column, {
             ...this._filterMenuOverlaySettings,
             ...{ target: filterIconTarget }
         });
@@ -77,7 +77,13 @@ export class IgxFilteringService implements OnDestroy {
                 first(overlay => overlay.id === id),
                 takeUntil(this.destroy$)
             )
-            .subscribe(() => this.lastActiveNode = this.grid.navigation.activeNode);
+            .subscribe((event: OverlayCancelableEventArgs) => {
+                if (event.componentRef) {
+                    event.componentRef.instance.initialize(column, this._overlayService);
+                    event.componentRef.instance.overlayComponentId = id;
+                }
+                this.lastActiveNode = this.grid.navigation.activeNode;
+            });
 
         this._overlayService.closed
             .pipe(
@@ -86,12 +92,10 @@ export class IgxFilteringService implements OnDestroy {
             )
             .subscribe(() => {
                 this._overlayService.detach(id);
-                ref?.destroy();
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
             });
 
-        this.grid.columnPinned.pipe(first()).subscribe(() => ref?.destroy());
         this._overlayService.show(id);
     }
 
@@ -127,7 +131,7 @@ export class IgxFilteringService implements OnDestroy {
      * Close filtering row if a column is hidden.
      */
     public hideFilteringRowOnColumnVisibilityChange(col: ColumnType) {
-        const filteringRow = this.grid.filteringRow;
+        const filteringRow = this.grid?.filteringRow;
 
         if (filteringRow && filteringRow.column && filteringRow.column === col) {
             filteringRow.close();
@@ -174,7 +178,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
-            filteringIgnoreCase, fieldFilterIndex, true);
+                filteringIgnoreCase, fieldFilterIndex, true);
 
         const eventArgs: IFilteringEventArgs = {
             owner: grid,
@@ -315,9 +319,14 @@ export class IgxFilteringService implements OnDestroy {
      */
     public registerSVGIcons(): void {
         const editorIcons = editor as any[];
-        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+        editorIcons.forEach(icon => {
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+            this.iconService.addIconRef(icon.name, 'default', { family: 'imx-icons', name: icon.name });
+        });
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addIconRef(pinLeft.name, 'default', { family: 'imx-icons', name: pinLeft.name });
+        this.iconService.addIconRef(unpinLeft.name, 'default', { family: 'imx-icons', name: unpinLeft.name });
     }
 
     /**

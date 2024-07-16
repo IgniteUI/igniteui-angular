@@ -4,7 +4,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 ## Usage
 ```html
-<igx-query-builder [displayDensity]="density"
+<igx-query-builder
     [fields]="fields"
     [expressionTree]="customExpressionTree">
 
@@ -27,7 +27,6 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `fields`  | FieldType[]  | An array of fields to be filtered. Contains information about  label, field, type, operands. |
 | `expressionTree`  | IExpressionTree  | Gets/Sets the displayed expressions tree. |
 | `locale`  | string  | Locale settings for the component. If this locale is not set, its value to be determined based on the global Angular application LOCALE_ID. |
-| `displayDensity`  | Gets\Sets the display density.  | DisplayDensity \| string |
 | Content Cell  | Content Cell  | Content Cell |
 | `resourceStrings`  | IQueryBuilderResourceStrings  | Gets/sets the resource strings. |
 

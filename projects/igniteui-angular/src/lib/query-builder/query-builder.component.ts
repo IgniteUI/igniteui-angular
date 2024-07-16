@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
@@ -9,9 +9,7 @@ import { Subject } from 'rxjs';
 import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
@@ -37,13 +35,15 @@ import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
-const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss tt';
-const DEFAULT_TIME_FORMAT = 'hh:mm:ss tt';
+const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss a';
+const DEFAULT_TIME_FORMAT = 'hh:mm:ss a';
 
 @Pipe({
     name: 'fieldFormatter',
@@ -58,7 +58,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionItem {
@@ -71,7 +71,7 @@ class ExpressionItem {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionGroupItem extends ExpressionItem {
@@ -86,7 +86,7 @@ class ExpressionGroupItem extends ExpressionItem {
 
 /**
  * @hidden @internal
- * 
+ *
  * Internal class usage
  */
 class ExpressionOperandItem extends ExpressionItem {
@@ -116,9 +116,9 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
 })
-export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
+export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
@@ -139,7 +139,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the fields.
+     * Sets the fields.
      */
     @Input()
     public set fields(fields: FieldType[]) {
@@ -163,7 +163,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the expression tree.
+     * Sets the expression tree.
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
@@ -380,7 +380,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
-    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -397,9 +397,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     constructor(public cdr: ChangeDetectorRef,
         protected iconService: IgxIconService,
         protected platform: PlatformUtil,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+        protected el: ElementRef,
+        @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
     }
 
@@ -1209,7 +1208,39 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     private registerSVGIcons(): void {
         const editorIcons = editor as any[];
-        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+
+        editorIcons.forEach((icon) => {
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+            this.iconService.addIconRef(icon.name, 'default', {
+                name: icon.name,
+                family: 'imx-icons'
+            });
+        });
+
+        this.iconService.addIconRef('add', 'default', {
+            name: 'add',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('close', 'default', {
+            name: 'close',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('check', 'default', {
+            name: 'check',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('delete', 'default', {
+            name: 'delete',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('edit', 'default', {
+            name: 'edit',
+            family: 'material',
+        });
     }
 }
 

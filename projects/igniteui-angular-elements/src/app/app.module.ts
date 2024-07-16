@@ -1,7 +1,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
-import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
+import { NgElement, WithProperties } from '@angular/elements';
 import {
     IgxActionStripComponent,
     IgxColumnComponent,
@@ -25,13 +25,12 @@ import {
     IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
-// import { WrapperComponent } from './wrapper/wrapper.component';
-// import { ChildStandaloneComponent } from './wrapper/child-standalone/child-standalone.component';
 
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
+import { IgxGridStateComponent } from '../lib/state.component';
+import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
 
 @NgModule({
   imports: [
@@ -39,6 +38,7 @@ import { createIgxCustomElement } from './create-custom-element';
     BrowserAnimationsModule
   ],
   providers: [
+    { provide: ELEMENTS_TOKEN, useValue: true }
   ],
 //   bootstrap: []
 })
@@ -47,11 +47,6 @@ export class AppModule {
   constructor(private injector: Injector) {}
 
   ngDoBootstrap() {
-    // const wrapper = createCustomElement(WrapperComponent, { injector: this.injector });
-    // customElements.define("app-wrapper", wrapper);
-
-    // const child = createCustomElement(ChildStandaloneComponent, { injector: this.injector });
-    // customElements.define("app-child-standalone", child);
 
     const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid", grid);
@@ -88,18 +83,15 @@ export class AppModule {
 
     const actionStrip = createIgxCustomElement(IgxActionStripComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-action-strip", actionStrip);
+
+    const statePersistance = createIgxCustomElement(IgxGridStateComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-state", statePersistance);
+
     const editingActions = createIgxCustomElement(IgxGridEditingActionsComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-editing-actions", editingActions);
     const pinningActions = createIgxCustomElement(IgxGridPinningActionsComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-pinning-actions", pinningActions);
 
-    /**
-     * WARN: createCustomElement default setup is ONLY FOR ROOT ELEMENTS!
-     * TODO: MUST be the parent injector!!!!! Otherwise NullInjectorError: No provider for IgxToolbarToken!
-     * TODO: In order to provide the parent injector correctly, this can ONLY be registered/initialized
-     * after the parent is CREATED - i.e. this should be a custom form of *child def for igc-grid-toolbar*
-     * which means custom factory more than likely to handle the component creation process.
-     */
     const toolbarTitle = createIgxCustomElement(IgxGridToolbarTitleComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar-title", toolbarTitle);
 
@@ -130,5 +122,6 @@ declare global {
     interface HTMLElementTagNameMap {
       'igc-grid': NgElement & WithProperties<GridType>;
       'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
+      'igc-paginator': NgElement & WithProperties<IgxPaginatorComponent>;
     }
   }

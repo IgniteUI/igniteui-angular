@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -22,10 +23,9 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../da
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
-import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass, DOCUMENT } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -40,6 +40,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { IgxIconService } from '../../../icon/icon.service';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -72,13 +73,18 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
-export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements OnDestroy {
+export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter')
     public defaultClass = true;
+
+    @HostBinding('class.igx-excel-filter__sizing')
+    protected get shouldApplySizes(): boolean {
+        return !(this._minHeight || this._maxHeight);
+    }
 
     /**
      * @hidden @internal
@@ -150,7 +156,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     protected defaultExcelFilterOperations: TemplateRef<any>;
 
     /**
-     * An @Input property that sets the column.
+     * Sets the column.
      */
     @Input()
     public set column(value: ColumnType) {
@@ -176,7 +182,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.subscriptions.add(this.grid.columnVisibilityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.sortingExpressionsChange.subscribe(() => this.sortingChanged.emit()));
             this.subscriptions.add(this.grid.filteringExpressionsTreeChange.subscribe(() => this.init()));
-            this.subscriptions.add(this.grid.densityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.columnMovingEnd.subscribe(() => this.cdr.markForCheck()));
         }
     }
@@ -223,16 +228,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         if (this._minHeight || this._minHeight === 0) {
             return this._minHeight;
         }
-
-        if (!this.inline) {
-            let minHeight = 645;
-            switch (this.displayDensity) {
-                case DisplayDensity.cosy: minHeight = 465; break;
-                case DisplayDensity.compact: minHeight = 330; break;
-                default: break;
-            }
-            return `${minHeight}px`;
-        }
     }
 
     /**
@@ -261,16 +256,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         if (this._maxHeight) {
             return this._maxHeight;
         }
-
-        if (!this.inline) {
-            let maxHeight = 775;
-            switch (this.displayDensity) {
-                case DisplayDensity.cosy: maxHeight = 565; break;
-                case DisplayDensity.compact: maxHeight = 405; break;
-                default: break;
-            }
-            return `${maxHeight}px`;
-        }
     }
 
     /**
@@ -287,19 +272,83 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return this.column?.grid ?? this.gridAPI;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public get displayDensity() {
-        return this.grid?.displayDensity;
-    }
+
+    protected _icons = new Map(Object.entries({
+        material: [
+            {
+                name: 'clear',
+                mappedAs: 'clear'
+            },
+            {
+                name: 'chevron_right',
+                mappedAs: 'chevron_right'
+            },
+            {
+                name: 'filter_list',
+                mappedAs: 'filter_list'
+            },
+            {
+                name: 'add',
+                mappedAs: 'add'
+            },
+            {
+                name: 'cancel',
+                mappedAs: 'remove'
+            },
+            {
+                name: 'done',
+                mappedAs: 'selected'
+            },
+            {
+                name: 'visibility',
+                mappedAs: 'visibility'
+            },
+            {
+                name: 'visibility_off',
+                mappedAs: 'visibility_off'
+            },
+            {
+                name: 'arrow_back',
+                mappedAs: 'arrow_back'
+            },
+            {
+                name: 'arrow_forward',
+                mappedAs: 'arrow_forward',
+            },
+            {
+                name: 'arrow_upward',
+                mappedAs: 'arrow_upward',
+            },
+            {
+                name: 'arrow_downward',
+                mappedAs: 'arrow_downward',
+            },
+            {
+                name: 'search',
+                mappedAs: 'search'
+            }
+        ]
+    }));
 
     constructor(
         cdr: ChangeDetectorRef,
         element: ElementRef<HTMLElement>,
         platform: PlatformUtil,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType) {
+        @Inject(DOCUMENT)
+        private document: any,
+        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType,
+        private iconService?: IgxIconService,
+    ) {
         super(cdr, element, platform);
+
+        for (const [family, icons] of this._icons) {
+            icons.forEach(({name, mappedAs}) => {
+                this.iconService?.addIconRef(mappedAs, "default", {
+                    name,
+                    family,
+                });
+            });
+        }
     }
 
     /**
@@ -309,6 +358,14 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.subscriptions?.unsubscribe();
         delete this.overlayComponentId;
     }
+
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.element.nativeElement);
+    }
+
 
     /**
      * @hidden @internal
@@ -395,7 +452,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public hide() {
-        this._originalDisplay = document.defaultView.getComputedStyle(this.element.nativeElement).display;
+        this._originalDisplay = this.computedStyles.display;
         this.element.nativeElement.style.display = 'none';
     }
 
@@ -404,6 +461,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public detectChanges() {
         this.cdr.detectChanges();
+    }
+
+    protected computedStyles;
+
+    protected get size(): string {
+        return this.computedStyles?.getPropertyValue('--component-size');
     }
 
     private init() {
@@ -460,18 +523,18 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             }));
 
             this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
-            (obj, key) => {
-                let resolvedValue = obj[key];
-                if (this.column.dataType === GridColumnDataType.Time) {
-                    resolvedValue = new Date().setHours(
-                        resolvedValue.getHours(),
-                        resolvedValue.getMinutes(),
-                        resolvedValue.getSeconds(),
-                        resolvedValue.getMilliseconds());
-                }
+                (obj, key) => {
+                    let resolvedValue = obj[key];
+                    if (this.column.dataType === GridColumnDataType.Time) {
+                        resolvedValue = new Date().setHours(
+                            resolvedValue.getHours(),
+                            resolvedValue.getMinutes(),
+                            resolvedValue.getSeconds(),
+                            resolvedValue.getMilliseconds());
+                    }
 
-                return resolvedValue;
-            });
+                    return resolvedValue;
+                });
 
             this.renderValues();
             this.loadingEnd.emit();

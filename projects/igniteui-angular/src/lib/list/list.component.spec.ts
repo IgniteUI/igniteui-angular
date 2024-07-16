@@ -27,13 +27,8 @@ import {
     ListDirectivesComponent
 } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
-
-const LIST_CSS_CLASS = 'igx-list';
-const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
-const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
 describe('List', () => {
     configureTestSuite(() => {
@@ -632,55 +627,6 @@ describe('List', () => {
         unsubscribeEvents(list);
     });
 
-    it('display density is properly applied', () => {
-        const fixture = TestBed.createComponent(TwoHeadersListComponent);
-        fixture.detectChanges();
-
-        const list = fixture.componentInstance.list as IgxListComponent;
-        const domList = fixture.debugElement.query(By.css('igx-list'));
-        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
-
-        list.displayDensity = DisplayDensity.compact;
-        fixture.detectChanges();
-        verifyDisplayDensity(list, domList, DisplayDensity.compact);
-
-        list.displayDensity = DisplayDensity.cosy;
-        fixture.detectChanges();
-        verifyDisplayDensity(list, domList, DisplayDensity.cosy);
-
-        list.displayDensity = DisplayDensity.comfortable;
-        fixture.detectChanges();
-        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
-    });
-
-    it('should emit densityChanged with proper event arguments', () => {
-        const fixture = TestBed.createComponent(TwoHeadersListComponent);
-        fixture.detectChanges();
-
-        const list = fixture.componentInstance.list as IgxListComponent;
-
-        spyOn(list.densityChanged, 'emit').and.callThrough();
-        const args: IDensityChangedEventArgs = {
-            oldDensity: undefined,
-            newDensity: DisplayDensity.compact
-        };
-
-        list.displayDensity = DisplayDensity.compact;
-        expect(list.densityChanged.emit).toHaveBeenCalledOnceWith(args);
-
-        list.displayDensity = DisplayDensity.cosy;
-        args.oldDensity = DisplayDensity.compact;
-        args.newDensity = DisplayDensity.cosy;
-        expect(list.densityChanged.emit).toHaveBeenCalledTimes(2);
-        expect(list.densityChanged.emit).toHaveBeenCalledWith(args);
-
-        list.displayDensity = DisplayDensity.comfortable;
-        args.oldDensity = DisplayDensity.cosy;
-        args.newDensity = DisplayDensity.comfortable;
-        expect(list.densityChanged.emit).toHaveBeenCalledTimes(3);
-        expect(list.densityChanged.emit).toHaveBeenCalledWith(args);
-    });
-
     it('should allow setting the index of list items', (async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
@@ -692,8 +638,8 @@ describe('List', () => {
 
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const len = items.length;
-        expect(items[0].nativeElement.textContent).toContain('2');
-        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(1);
+        expect(items[0].nativeElement.textContent).toContain('4');
+        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(3);
         expect(items[len - 1].nativeElement.textContent).toContain('10');
         expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(9);
     }));
@@ -841,44 +787,8 @@ describe('List', () => {
         list.panStateChange.unsubscribe();
         list.rightPan.unsubscribe();
         list.itemClicked.unsubscribe();
-        list.densityChanged.unsubscribe();
         list.startPan.unsubscribe();
         list.resetPan.unsubscribe();
         list.endPan.unsubscribe();
-    };
-
-    /**
-     * Verifies the display density of the IgxList by providing the IgxListComponent,
-     * the list DebugElement and the expected DisplayDensity enumeration value.
-     */
-    const verifyDisplayDensity = (listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) => {
-        let expectedListDensityClass;
-
-        switch (expectedDisplayDensity) {
-            case DisplayDensity.compact: expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS; break;
-            case DisplayDensity.cosy: expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS; break;
-            default: expectedListDensityClass = LIST_CSS_CLASS; break;
-        }
-
-        // Verify list display density.
-        expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
-        expect(listComp.displayDensity).toBe(expectedDisplayDensity);
-        switch (expectedDisplayDensity) {
-            case DisplayDensity.compact: {
-                expect(listComp.cssClass).toBe(false);
-                expect(listComp.cssClassCompact).toBe(true);
-                expect(listComp.cssClassCosy).toBe(false);
-            } break;
-            case DisplayDensity.cosy: {
-                expect(listComp.cssClass).toBe(false);
-                expect(listComp.cssClassCompact).toBe(false);
-                expect(listComp.cssClassCosy).toBe(true);
-            } break;
-            default: {
-                expect(listComp.cssClass).toBe(true);
-                expect(listComp.cssClassCompact).toBe(false);
-                expect(listComp.cssClassCosy).toBe(false);
-            } break;
-        }
     };
 });

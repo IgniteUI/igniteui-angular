@@ -88,6 +88,7 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: '貨幣篩選條件',
     igx_grid_excel_custom_filter: '自訂篩選條件...',
     igx_grid_excel_no_matches: '沒有相符項目',
+    igx_grid_excel_matches_count: '{0} 個相符項目',
     igx_grid_advanced_filter_title: '進階篩選',
     igx_grid_advanced_filter_and_group: '“And” 群組',
     igx_grid_advanced_filter_or_group: '“Or” 群組',
@@ -164,8 +165,7 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: '輸入內容必須至少 {0} 個字元',
     igx_grid_max_length_validation_error: '輸入內容不得超過 {0} 個字元',
     igx_grid_email_validation_error: '必須輸入有效的電子郵件地址',
-    igx_grid_pattern_validation_error: '輸入的內容不符合要求的格式',
-    igx_grid_pivot_no_aggregator: '找不到 {0} 的有效聚合器。請設置有效的 aggregatorName 或 aggregator。'
+    igx_grid_pattern_validation_error: '輸入的內容不符合要求的格式'
 };
 
 /**

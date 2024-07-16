@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
     FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -8,7 +8,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
@@ -22,12 +21,12 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IComboFilteringOptions, IgxComboState } from './combo.common';
+import { IComboFilteringOptions } from './combo.common';
 import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
-import { IgxComboFilteringPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -53,15 +52,6 @@ const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
-const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
-const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
-const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
-const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
-const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
-const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_EMPTY = 'igx-combo__empty';
@@ -89,18 +79,29 @@ describe('igxCombo', () => {
         const elementRef = { nativeElement: null };
         const mockSelection: {
             [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
-        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
+        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register', 'clear']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockIconService = new IgxIconService(null, null, null, null);
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
+
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
@@ -108,13 +109,14 @@ describe('igxCombo', () => {
             combo.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
             // writeValue
-            expect(combo.value).toBe('');
+            expect(combo.displayValue).toEqual('');
             mockSelection.get.and.returnValue(new Set(['test']));
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
-            expect(combo.value).toBe('test');
+            expect(combo.displayValue).toEqual('test');
+            expect(combo.value).toEqual(['test']);
 
             // setDisabledState
             combo.setDisabledState(true);
@@ -137,8 +139,17 @@ describe('igxCombo', () => {
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
         it('should properly call dropdown methods on toggle', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
+
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'close', 'toggle']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -161,8 +172,16 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBe(false);
         });
         it(`should not focus search input when property autoFocusSearch=false`, () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdownContainer = { nativeElement: { focus: () => { } } };
             combo['dropdownContainer'] = dropdownContainer;
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -181,8 +200,16 @@ describe('igxCombo', () => {
             expect(combo.focusSearchInput).toHaveBeenCalledTimes(1);
         });
         it('should call dropdown toggle with correct overlaySettings', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['toggle']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -200,8 +227,16 @@ describe('igxCombo', () => {
             expect(combo.dropdown.toggle).toHaveBeenCalledWith(expectedSettings);
         });
         it('should properly get/set displayKey', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.valueKey = 'field';
@@ -211,8 +246,16 @@ describe('igxCombo', () => {
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
         });
         it('should properly call "writeValue" method', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
@@ -231,8 +274,16 @@ describe('igxCombo', () => {
         });
         it('should select items through setSelctedItem method', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -241,34 +292,53 @@ describe('igxCombo', () => {
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
 
-            const selectedItems = [combo.data[0].country];
+            const selectedItems = [combo.data[0]];
+            const selectedValues = [combo.data[0].country];
             combo.setSelectedItem('UK', true);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedValues);
             combo.setSelectedItem('Germany', true);
-            selectedItems.push(combo.data[2].country);
+            selectedItems.push(combo.data[2]);
+            selectedValues.push(combo.data[2].country);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedValues);
             selectedItems.pop();
+            selectedValues.pop();
             combo.setSelectedItem('Germany', false);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedValues);
             selectedItems.pop();
+            selectedValues.pop();
             combo.setSelectedItem('UK', false);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedValues);
 
             combo.valueKey = null;
             selectedItems.push(combo.data[5]);
             combo.setSelectedItem(combo.data[5], true);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedItems);
             selectedItems.push(combo.data[1]);
             combo.setSelectedItem(combo.data[1], true);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedItems);
             selectedItems.pop();
             combo.setSelectedItem(combo.data[1], false);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedItems);
         });
         it('should set selectedItems correctly on selectItems method call', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -278,22 +348,36 @@ describe('igxCombo', () => {
 
             combo.select([], false);
             expect(combo.selection).toEqual([]);
+            expect(combo.value).toEqual([]);
             combo.select([], true);
             expect(combo.selection).toEqual([]);
+            expect(combo.value).toEqual([]);
             const selectedItems = combo.data.slice(0, 3);
             combo.select(combo.data.slice(0, 3), true);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedItems);
             combo.select([], false);
             expect(combo.selection).toEqual(selectedItems);
+            expect(combo.value).toEqual(selectedItems);
             selectedItems.push(combo.data[3]);
             combo.select([combo.data[3]], false);
             expect(combo.selection).toEqual(combo.data.slice(0, 4));
+            expect(combo.value).toEqual(combo.data.slice(0, 4));
             combo.select([], true);
             expect(combo.selection).toEqual([]);
+            expect(combo.value).toEqual([]);
         });
         it('should emit owner on `opening` and `closing`', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             spyOn(combo.opening, 'emit').and.callThrough();
@@ -307,7 +391,7 @@ describe('igxCombo', () => {
             };
             combo.comboInput = {
                 nativeElement: {
-                    focus: () => {}
+                    focus: () => { }
                 }
             } as any;
             combo.handleOpening(inputEvent);
@@ -332,8 +416,16 @@ describe('igxCombo', () => {
         });
         it('should fire selectionChanging event on item selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -342,12 +434,17 @@ describe('igxCombo', () => {
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             spyOn(combo.selectionChanging, 'emit');
 
+            let oldValue = [];
+            let newValue = [combo.data[1], combo.data[5], combo.data[6]];
+
             let oldSelection = [];
             let newSelection = [combo.data[1], combo.data[5], combo.data[6]];
 
             combo.select(newSelection);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue,
+                newValue,
                 oldSelection,
                 newSelection,
                 added: newSelection,
@@ -360,10 +457,14 @@ describe('igxCombo', () => {
 
             let newItem = combo.data[3];
             combo.select([newItem]);
+            oldValue = [...newValue];
+            newValue.push(newItem);
             oldSelection = [...newSelection];
             newSelection.push(newItem);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue,
+                newValue,
                 oldSelection,
                 newSelection,
                 removed: [],
@@ -374,11 +475,15 @@ describe('igxCombo', () => {
                 cancel: false
             });
 
+            oldValue = [...newValue];
+            newValue = [combo.data[0]];
             oldSelection = [...newSelection];
             newSelection = [combo.data[0]];
             combo.select(newSelection, true);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(3);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue,
+                newValue,
                 oldSelection,
                 newSelection,
                 removed: oldSelection,
@@ -389,6 +494,8 @@ describe('igxCombo', () => {
                 cancel: false
             });
 
+            oldValue = [...newValue];
+            newValue = [];
             oldSelection = [...newSelection];
             newSelection = [];
             newItem = combo.data[0];
@@ -396,6 +503,8 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(4);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue,
+                newValue,
                 oldSelection,
                 newSelection,
                 removed: [combo.data[0]],
@@ -408,8 +517,16 @@ describe('igxCombo', () => {
         });
         it('should properly emit added and removed values in change event on single value selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -419,9 +536,11 @@ describe('igxCombo', () => {
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             const selectionSpy = spyOn(combo.selectionChanging, 'emit');
             const expectedResults: IComboSelectionChangingEventArgs = {
-                newSelection: [combo.data[0][combo.valueKey]],
+                newValue: [combo.data[0][combo.valueKey]],
+                oldValue: [],
+                newSelection: [combo.data[0]],
                 oldSelection: [],
-                added: [combo.data[0][combo.valueKey]],
+                added: [combo.data[0]],
                 removed: [],
                 event: undefined,
                 owner: combo,
@@ -431,19 +550,29 @@ describe('igxCombo', () => {
             combo.select([combo.data[0][combo.valueKey]]);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             Object.assign(expectedResults, {
+                newValue: [],
+                oldValue: [combo.data[0][combo.valueKey]],
                 newSelection: [],
-                oldSelection: [combo.data[0][combo.valueKey]],
+                oldSelection: [combo.data[0]],
                 added: [],
                 displayText: '',
-                removed: [combo.data[0][combo.valueKey]]
+                removed: [combo.data[0]]
             });
             combo.deselect([combo.data[0][combo.valueKey]]);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
         });
         it('should properly emit added and removed values in change event on multiple values selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -452,48 +581,65 @@ describe('igxCombo', () => {
             combo.displayKey = 'city';
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+            const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+
             let oldSelection = [];
             let newSelection = [combo.data[0], combo.data[1], combo.data[2]];
-            const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+            combo.select(newSelection.map(e => e[combo.valueKey]));
             const expectedResults: IComboSelectionChangingEventArgs = {
-                newSelection: newSelection.map(e => e[combo.valueKey]),
+                newValue: newSelection.map(e => e[combo.valueKey]),
+                oldValue: [],
+                newSelection: newSelection,
                 oldSelection,
-                added: newSelection.map(e => e[combo.valueKey]),
+                added: newSelection,
                 removed: [],
                 event: undefined,
                 owner: combo,
                 displayText: `${newSelection.map(entry => entry[combo.displayKey]).join(', ')}`,
                 cancel: false
             };
-            combo.select(newSelection.map(e => e[combo.valueKey]));
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
-            oldSelection = [...newSelection].map(e => e[combo.valueKey]);
+
+            oldSelection = [...newSelection];
             newSelection = [combo.data[1], combo.data[2]];
             combo.deselect([combo.data[0][combo.valueKey]]);
             Object.assign(expectedResults, {
-                newSelection: newSelection.map(e => e[combo.valueKey]),
+                newValue: newSelection.map(e => e[combo.valueKey]),
+                oldValue: oldSelection.map(e => e[combo.valueKey]),
+                newSelection,
                 oldSelection,
                 added: [],
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
-                removed: [combo.data[0][combo.valueKey]]
+                removed: [combo.data[0]]
             });
-            oldSelection = [...newSelection].map(e => e[combo.valueKey]);
-            newSelection = [combo.data[4], combo.data[5], combo.data[6]];
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+
+            oldSelection = [...newSelection];
+            newSelection = [combo.data[4], combo.data[5], combo.data[6]];
+            combo.select(newSelection.map(e => e[combo.valueKey]), true);
             Object.assign(expectedResults, {
-                newSelection: newSelection.map(e => e[combo.valueKey]),
+                newValue: newSelection.map(e => e[combo.valueKey]),
+                oldValue: oldSelection.map(e => e[combo.valueKey]),
+                newSelection,
                 oldSelection,
-                added: newSelection.map(e => e[combo.valueKey]),
+                added: newSelection,
                 displayText: newSelection.map(e => e[combo.displayKey]).join(', '),
                 removed: oldSelection
             });
-            combo.select(newSelection.map(e => e[combo.valueKey]), true);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
         });
         it('should handle select/deselect ALL items', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -513,8 +659,16 @@ describe('igxCombo', () => {
         });
         it('should emit onSelectonChange event on select/deselect ALL items method call', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -525,8 +679,11 @@ describe('igxCombo', () => {
 
             combo.selectAllItems(true);
             expect(combo.selection).toEqual(data);
+            expect(combo.value).toEqual(data);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue: [],
+                newValue: data,
                 oldSelection: [],
                 newSelection: data,
                 added: data,
@@ -539,8 +696,11 @@ describe('igxCombo', () => {
 
             combo.deselectAllItems(true);
             expect(combo.selection).toEqual([]);
+            expect(combo.value).toEqual([]);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(combo.selectionChanging.emit).toHaveBeenCalledWith({
+                oldValue: data,
+                newValue: [],
                 oldSelection: data,
                 newSelection: [],
                 added: [],
@@ -553,15 +713,23 @@ describe('igxCombo', () => {
         });
         it('should properly handle selection manipulation through selectionChanging emit', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
-            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.newSelection = []);
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.newValue = []);
             // No items are initially selected
             expect(combo.selection).toEqual([]);
             // Select the first 5 items
@@ -570,8 +738,16 @@ describe('igxCombo', () => {
             expect(combo.selection).toEqual([]);
         });
         it('should not throw error when setting data to null', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             let errorMessage = '';
@@ -586,8 +762,16 @@ describe('igxCombo', () => {
             expect(combo.data.length).toBe(0);
         });
         it('should not throw error when setting data to undefined', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             let errorMessage = '';
@@ -602,8 +786,16 @@ describe('igxCombo', () => {
             expect(combo.data.length).toBe(0);
         });
         it('should properly handleInputChange', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -642,8 +834,16 @@ describe('igxCombo', () => {
             expect(combo.searchInputUpdate.emit).toHaveBeenCalledTimes(2);
         });
         it('should be able to cancel searchInputUpdate', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
@@ -659,8 +859,16 @@ describe('igxCombo', () => {
             expect(matchSpy).toHaveBeenCalledTimes(1);
         });
         it('should not open on click if combo is disabled', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'close', 'toggle']);
             const spyObj = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -674,8 +882,16 @@ describe('igxCombo', () => {
         });
         it('should not clear value when combo is disabled', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -688,13 +904,21 @@ describe('igxCombo', () => {
             const item = combo.data.slice(0, 1);
             combo.select(item, true);
             combo.handleClearItems(spyObj);
-            expect(combo.value).toEqual(item[0]);
+            expect(combo.displayValue).toEqual(item[0]);
         });
 
         it('should allow canceling and overwriting of item addition', fakeAsync(() => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, null, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             const mockVirtDir = jasmine.createSpyObj('virtDir', ['scrollTo']);
             const mockInput = jasmine.createSpyObj('mockInput', [], {
@@ -790,6 +1014,22 @@ describe('igxCombo', () => {
             expect([...selectionService.get(combo.id)][1]).toBe(subParams.newValue);
             sub.unsubscribe();
         }));
+
+        it('should delete the selection on destroy', () => {
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
+            combo.ngOnDestroy();
+            expect(mockComboService.clear).toHaveBeenCalled();
+            expect(mockSelection.delete).toHaveBeenCalled();
+        });
     });
 
     describe('Combo feature tests: ', () => {
@@ -921,7 +1161,7 @@ describe('igxCombo', () => {
                 // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
                 let itemHeight = defaultDropdownItemHeight;
                 let itemMaxHeight = defaultDropdownItemMaxHeight;
-                combo.displayDensity = DisplayDensity.comfortable;
+                fixture.componentInstance.size = "large";
                 fixture.detectChanges();
                 combo.toggle();
                 tick();
@@ -1195,9 +1435,9 @@ describe('igxCombo', () => {
                 expect(comboData).toEqual(data);
             });
             it('should remove undefined from array of primitive data', () => {
-                combo.data = ['New York', 'Sofia', undefined, 'Istanbul','Paris'];
+                combo.data = ['New York', 'Sofia', undefined, 'Istanbul', 'Paris'];
 
-                expect(combo.data).toEqual(['New York', 'Sofia', 'Istanbul','Paris']);
+                expect(combo.data).toEqual(['New York', 'Sofia', 'Istanbul', 'Paris']);
             });
             it('should render empty template when combo data source is not set', () => {
                 combo.data = [];
@@ -1296,15 +1536,17 @@ describe('igxCombo', () => {
                 const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
                 combo.toggle();
                 combo.select([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
-                expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
-                expect(combo.selection).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+                expect(combo.displayValue).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
+                expect(combo.selection).toEqual([selectedItems[0], selectedItems[1]]);
+                expect(combo.value).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
                 // Clear items while they are in view
                 combo.handleClearItems(spyObj);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toBe('');
+                expect(combo.displayValue).toEqual('');
+                expect(combo.value).toEqual([]);
                 selectedItems = [combo.data[2], combo.data[3]];
                 combo.select([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
-                expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
+                expect(combo.displayValue).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
@@ -1312,9 +1554,74 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo.handleClearItems(spyObj);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toBe('');
+                expect(combo.value).toEqual([]);
+                expect(combo.displayValue).toEqual('');
                 combo.select([combo.data[7][combo.valueKey]]);
-                expect(combo.value).toBe(combo.data[7][combo.displayKey]);
+                expect(combo.displayValue).toEqual(combo.data[7][combo.displayKey]);
+            });
+            it('should add selected items to the input when data is loaded', async () => {
+                expect(combo.selection.length).toEqual(0);
+                expect(combo.value).toEqual([]);
+
+                // current combo data - id: 0 - 9
+                // select item that is not present in the data source yet should be added as partial item
+                combo.select([9, 19]);
+                expect(combo.selection.length).toEqual(2);
+                expect(combo.value.length).toEqual(2);
+
+                const firstItem = combo.data[combo.data.length - 1];
+                expect(combo.displayValue).toEqual(firstItem[combo.displayKey]);
+
+                combo.toggle();
+
+                // scroll to second selected item
+                combo.virtualScrollContainer.scrollTo(19);
+                await wait(30);
+                fixture.detectChanges();
+
+                const secondItem = combo.data[combo.data.length - 1];
+                expect(combo.displayValue).toEqual(`${firstItem[combo.displayKey]}, ${secondItem[combo.displayKey]}`);
+            });
+            it('should fire selectionChanging event with partial data for items out of view', async () => {
+                const selectionSpy = spyOn(combo.selectionChanging, 'emit').and.callThrough();
+                const valueKey = combo.valueKey;
+
+                combo.toggle();
+                combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
+
+                const expectedResults: IComboSelectionChangingEventArgs = {
+                    newValue: [combo.data[0][valueKey], combo.data[1][valueKey]],
+                    oldValue: [],
+                    newSelection: [combo.data[0], combo.data[1]],
+                    oldSelection: [],
+                    added: [combo.data[0], combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[0][combo.displayKey]}, ${combo.data[1][combo.displayKey]}`,
+                    cancel: false
+                };
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+
+                // Scroll selected items out of view
+                combo.virtualScrollContainer.scrollTo(40);
+                await wait();
+                fixture.detectChanges();
+                combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
+                Object.assign(expectedResults, {
+                    newValue: [0, 1, 31, 32],
+                    oldValue: [0, 1],
+                    newSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }, combo.data[0], combo.data[1]],
+                    oldSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }],
+                    added: [combo.data[0], combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `Product 0, Product 1, Product 31, Product 32`,
+                    cancel: false
+                });
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
         });
         describe('Binding to ngModel tests: ', () => {
@@ -1330,7 +1637,8 @@ describe('igxCombo', () => {
                 component.selectedItems = [0, 2];
                 fixture.detectChanges();
                 tick();
-                expect(combo.selection).toEqual([combo.data[0][combo.valueKey], combo.data[2][combo.valueKey]]);
+                expect(combo.selection).toEqual([combo.data[0], combo.data[2]]);
+                expect(combo.value).toEqual([combo.data[0][combo.valueKey], combo.data[2][combo.valueKey]]);
                 combo.select([combo.data[4][combo.valueKey]]);
                 fixture.detectChanges();
                 expect(component.selectedItems).toEqual([0, 2, 4]);
@@ -1340,6 +1648,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 tick();
                 expect(combo.selection).toEqual([combo.data[0], combo.data[2]]);
+                expect(combo.value).toEqual([combo.data[0], combo.data[2]]);
                 combo.select([combo.data[4]]);
                 fixture.detectChanges();
                 expect(component.selectedItems).toEqual([combo.data[0], combo.data[2], combo.data[4]]);
@@ -1351,6 +1660,7 @@ describe('igxCombo', () => {
                 tick();
                 const data = fixture.componentInstance.items;
                 expect(combo.selection).toEqual(component.selectedItems);
+                expect(combo.value).toEqual(component.selectedItems);
                 combo.select([...data].splice(1, 3), true);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.selectedItems).toEqual([...data].splice(1, 3));
@@ -1884,6 +2194,7 @@ describe('igxCombo', () => {
 
                 expect(input.nativeElement.value).toEqual('');
                 expect(combo.selection.length).toEqual(0);
+                expect(combo.value.length).toEqual(0);
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.dropdown.items[1].selected).toBeFalsy();
@@ -1927,15 +2238,18 @@ describe('igxCombo', () => {
 
                 const selectedItem_1 = dropdown.items[1];
                 simulateComboItemClick(1);
-                expect(combo.selection[0]).toEqual(selectedItem_1.value.field);
+                expect(combo.selection[0]).toEqual(selectedItem_1.value);
+                expect(combo.value[0]).toEqual(selectedItem_1.value[combo.valueKey]);
                 expect(selectedItem_1.selected).toBeTruthy();
                 expect(selectedItem_1.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
                 expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
                 expect(combo.selectionChanging.emit).toHaveBeenCalledWith(
                     {
-                        newSelection: [selectedItem_1.value[combo.valueKey]],
+                        newValue: [selectedItem_1.value[combo.valueKey]],
+                        oldValue: [],
+                        newSelection: [selectedItem_1.value],
                         oldSelection: [],
-                        added: [selectedItem_1.value[combo.valueKey]],
+                        added: [selectedItem_1.value],
                         removed: [],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
@@ -1945,15 +2259,18 @@ describe('igxCombo', () => {
 
                 const selectedItem_2 = dropdown.items[5];
                 simulateComboItemClick(5);
-                expect(combo.selection[1]).toEqual(selectedItem_2.value.field);
+                expect(combo.selection[1]).toEqual(selectedItem_2.value);
+                expect(combo.value[1]).toEqual(selectedItem_2.value[combo.valueKey]);
                 expect(selectedItem_2.selected).toBeTruthy();
                 expect(selectedItem_2.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
                 expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(2);
                 expect(combo.selectionChanging.emit).toHaveBeenCalledWith(
                     {
-                        newSelection: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
-                        oldSelection: [selectedItem_1.value[combo.valueKey]],
-                        added: [selectedItem_2.value[combo.valueKey]],
+                        newValue: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
+                        oldValue: [selectedItem_1.value[combo.valueKey]],
+                        newSelection: [selectedItem_1.value, selectedItem_2.value],
+                        oldSelection: [selectedItem_1.value],
+                        added: [selectedItem_2.value],
                         removed: [],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
@@ -1970,10 +2287,12 @@ describe('igxCombo', () => {
                 expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(3);
                 expect(combo.selectionChanging.emit).toHaveBeenCalledWith(
                     {
-                        newSelection: [selectedItem_2.value[combo.valueKey]],
-                        oldSelection: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
+                        newValue: [selectedItem_2.value[combo.valueKey]],
+                        oldValue: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
+                        newSelection: [selectedItem_2.value],
+                        oldSelection: [selectedItem_1.value, selectedItem_2.value],
                         added: [],
-                        removed: [unselectedItem.value[combo.valueKey]],
+                        removed: [unselectedItem.value],
                         event: UIInteractions.getMouseEvent('click'),
                         owner: combo,
                         displayText: selectedItem_2.value[combo.valueKey],
@@ -2008,8 +2327,9 @@ describe('igxCombo', () => {
 
                 item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0');
-                expect(combo.selection).toEqual([ 0 ]);
+                expect(combo.displayValue).toEqual('0');
+                expect(combo.value).toEqual([0]);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }]);
 
                 combo.open();
                 fixture.detectChanges();
@@ -2018,8 +2338,9 @@ describe('igxCombo', () => {
 
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0, false');
-                expect(combo.selection).toEqual([ 0, false ]);
+                expect(combo.displayValue).toEqual('0, false');
+                expect(combo.value).toEqual([0, false]);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }, { field: 'false', value: false }]);
 
                 combo.open();
                 fixture.detectChanges();
@@ -2028,8 +2349,9 @@ describe('igxCombo', () => {
 
                 item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0, false, ');
-                expect(combo.selection).toEqual([ 0, false, '' ]);
+                expect(combo.displayValue).toEqual('0, false, ');
+                expect(combo.value).toEqual([0, false, '']);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }, { field: 'false', value: false }, { field: '', value: '' }]);
 
                 combo.open();
                 fixture.detectChanges();
@@ -2038,8 +2360,9 @@ describe('igxCombo', () => {
 
                 item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0, false, , null');
-                expect(combo.selection).toEqual([ 0, false, '', null ]);
+                expect(combo.displayValue).toEqual('0, false, , null');
+                expect(combo.value).toEqual([0, false, '', null]);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }, { field: 'false', value: false }, { field: '', value: '' }, { field: 'null', value: null }]);
 
                 combo.open();
                 fixture.detectChanges();
@@ -2048,8 +2371,10 @@ describe('igxCombo', () => {
 
                 item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0, false, , null, NaN');
-                expect(combo.selection).toEqual([ 0, false, '', null, NaN ]);
+                expect(combo.displayValue).toEqual('0, false, , null, NaN');
+                expect(combo.value).toEqual([0, false, '', null, NaN]);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }, { field: 'false', value: false },
+                { field: '', value: '' }, { field: 'null', value: null }, { field: 'NaN', value: NaN }]);
 
                 combo.open();
                 fixture.detectChanges();
@@ -2058,8 +2383,10 @@ describe('igxCombo', () => {
 
                 item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.value).toBe('0, false, , null, NaN');
-                expect(combo.selection).toEqual([ 0, false, '', null, NaN ]);
+                expect(combo.displayValue).toEqual('0, false, , null, NaN');
+                expect(combo.value).toEqual([0, false, '', null, NaN]);
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }, { field: 'false', value: false },
+                { field: '', value: '' }, { field: 'null', value: null }, { field: 'NaN', value: NaN }]);
             });
             it('should select falsy values except "undefined" with "writeValue" method', () => {
                 combo.valueKey = 'value';
@@ -2074,29 +2401,35 @@ describe('igxCombo', () => {
                 ];
 
                 combo.writeValue([0]);
-                expect(combo.selection).toEqual([0]);
-                expect(combo.value).toBe('0');
+                expect(combo.selection).toEqual([{ field: '0', value: 0 }]);
+                expect(combo.value).toEqual([0]);
+                expect(combo.displayValue).toEqual('0');
 
                 combo.writeValue([false]);
-                expect(combo.selection).toEqual([false]);
-                expect(combo.value).toBe('false');
+                expect(combo.selection).toEqual([{ field: 'false', value: false }]);
+                expect(combo.value).toEqual([false]);
+                expect(combo.displayValue).toEqual('false');
 
                 combo.writeValue(['']);
-                expect(combo.selection).toEqual(['']);
-                expect(combo.value).toBe('empty');
+                expect(combo.selection).toEqual([{ field: 'empty', value: '' }]);
+                expect(combo.value).toEqual(['']);
+                expect(combo.displayValue).toEqual('empty');
 
                 combo.writeValue([null]);
-                expect(combo.selection).toEqual([null]);
-                expect(combo.value).toBe('null');
+                expect(combo.selection).toEqual([{ field: 'null', value: null }]);
+                expect(combo.value).toEqual([null]);
+                expect(combo.displayValue).toEqual('null');
 
                 combo.writeValue([NaN]);
-                expect(combo.selection).toEqual([NaN]);
-                expect(combo.value).toBe('NaN');
+                expect(combo.selection).toEqual([{ field: 'NaN', value: NaN }]);
+                expect(combo.value).toEqual([NaN]);
+                expect(combo.displayValue).toEqual('NaN');
 
                 // should not select undefined
                 combo.writeValue([undefined]);
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toBe('');
+                expect(combo.value).toEqual([]);
+                expect(combo.displayValue).toEqual('');
             });
             it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
                 combo.displayKey = combo.valueKey = 'value';
@@ -2128,7 +2461,7 @@ describe('igxCombo', () => {
                 combo.onBlur();
                 tick();
                 fixture.detectChanges();
-                expect(combo.value).toBe('Mississippi ');
+                expect(combo.displayValue).toEqual('Mississippi ');
             }));
             it('should prevent selection when selectionChanging is cancelled', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
@@ -2186,13 +2519,64 @@ describe('igxCombo', () => {
                 combo.select([1]);
                 fixture.detectChanges();
 
-                expect(combo.selection).toEqual([1]);
-                expect(combo.value).toBe('Selected Count: 1');
+                expect(combo.selection).toEqual([{ key: 1, value: 'One' }]);
+                expect(combo.value).toEqual([1]);
+                expect(combo.displayValue).toEqual('Selected Count: 1');
 
                 combo.deselect([1]);
 
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toBe('Selected Count: 0');
+                expect(combo.value).toEqual([]);
+                expect(combo.displayValue).toEqual('Selected Count: 0');
+            });
+            it('should handle selection for combo with array type value key correctly - issue #14103', () => {
+                fixture = TestBed.createComponent(ComboArrayTypeValueKeyComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+                const items = fixture.componentInstance.items;
+                expect(combo).toBeDefined();
+
+                const selectionSpy = spyOn(combo.selectionChanging, 'emit');
+                let expectedResults: IComboSelectionChangingEventArgs = {
+                    newValue: [combo.data[1][combo.valueKey]],
+                    oldValue: [],
+                    newSelection: [combo.data[1]],
+                    oldSelection: [],
+                    added: [combo.data[1]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[1][combo.displayKey]}`,
+                    cancel: false
+                };
+
+                let expectedDisplayText = items[1][combo.displayKey];
+                combo.select([fixture.componentInstance.items[1].value]);
+                fixture.detectChanges();
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+                expect(input.nativeElement.value).toEqual(expectedDisplayText);
+
+                expectedDisplayText = `${items[1][combo.displayKey]}, ${items[2][combo.displayKey]}`;
+                expectedResults = {
+                    newValue: [combo.data[1][combo.valueKey], combo.data[2][combo.valueKey]],
+                    oldValue: [combo.data[1][combo.valueKey]],
+                    newSelection: [combo.data[1], combo.data[2]],
+                    oldSelection: [combo.data[1]],
+                    added: [combo.data[2]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: expectedDisplayText,
+                    cancel: false
+                };
+
+                combo.select([items[2].value]);
+                fixture.detectChanges();
+
+                expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+                expect(input.nativeElement.value).toEqual(expectedDisplayText);
             });
         });
         describe('Grouping tests: ', () => {
@@ -2271,6 +2655,39 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('West South Cent');
+
+                combo.groupSortingDirection = SortingDirection.None;
+                combo.toggle();
+                fixture.detectChanges();
+                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
+            });
+            it('should sort groups with diacritics correctly', () => {
+                combo.data = [
+                    { field: "Alaska", region: "Méxícó" },
+                    { field: "California", region: "Méxícó" },
+                    { field: "Michigan", region: "Ángel" },
+                    { field: "Ohio", region: "Ángel" },
+                    { field: "Iowa", region: "México" },
+                    { field: "Kansas", region: "México" },
+                    { field: "Wisconsin", region: "Boris" },
+                ];
+                combo.groupSortingDirection = SortingDirection.Asc;
+                combo.toggle();
+                fixture.detectChanges();
+                let headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
+
+                combo.groupSortingDirection = SortingDirection.Desc;
+                combo.toggle();
+                fixture.detectChanges();
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
+
+                combo.groupSortingDirection = SortingDirection.None;
+                combo.toggle();
+                fixture.detectChanges();
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                expect(headers).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
             });
         });
         describe('Filtering tests: ', () => {
@@ -2407,6 +2824,32 @@ describe('igxCombo', () => {
                 expect(combo.addition.emit).toHaveBeenCalledTimes(1);
                 expect(combo.data[combo.data.length - 1]).toEqual('myItem');
             });
+
+            it('should support filtering strings containing diacritic characters', fakeAsync(() => {
+                combo.filterFunction = comboIgnoreDiacriticsFilter;
+                combo.displayKey = null;
+                combo.valueKey = null;
+                combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: undefined };
+                combo.data = ['José', 'Óscar', 'Ángel', 'Germán', 'Niño', 'México', 'Méxícó', 'Mexico', 'Köln', 'München'];
+                combo.toggle();
+                fixture.detectChanges();
+
+                const searchInput = fixture.debugElement.query(By.css(`input[name="searchInput"]`));
+
+                const verifyFilteredItems = (term: string, expected: number) => {
+                    UIInteractions.triggerInputEvent(searchInput, term);
+                    fixture.detectChanges();
+                    const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
+                    const items = list.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+                    expect(items.length).toEqual(expected);
+                };
+
+                verifyFilteredItems('jose', 1);
+                verifyFilteredItems('mexico', 3);
+                verifyFilteredItems('o', 7);
+                verifyFilteredItems('é', 7);
+            }));
+
             it('should filter the dropdown items when typing in the search input', fakeAsync(() => {
                 let dropdownList;
                 let dropdownItems;
@@ -2491,8 +2934,8 @@ describe('igxCombo', () => {
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
 
                 const verifyFilteredItems = (inputValue: string,
-                                            expectedDropdownItemsNumber: number,
-                                            expectedFilteredItemsNumber: number) => {
+                    expectedDropdownItemsNumber: number,
+                    expectedFilteredItemsNumber: number) => {
                     UIInteractions.triggerInputEvent(searchInput, inputValue);
                     fixture.detectChanges();
                     dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
@@ -2547,7 +2990,8 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.selection).toEqual([]);
-                expect(combo.value).toEqual('');
+                expect(combo.displayValue).toEqual('');
+                expect(combo.value).toEqual([]);
                 expect(combo.comboInput.nativeElement.value).toEqual('');
 
                 combo.searchValue = 'New ';
@@ -2558,13 +3002,15 @@ describe('igxCombo', () => {
 
                 addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(combo.selection).toEqual(['New ']);
+                expect(combo.selection).toEqual([{ field: 'New ', region: 'Other' }]);
+                expect(combo.value).toEqual(['New ']);
                 expect(combo.comboInput.nativeElement.value).toEqual('New ');
 
                 const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                 clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.selection).toEqual([]);
+                expect(combo.value).toEqual([]);
                 expect(combo.comboInput.nativeElement.value).toEqual('');
             });
             it('should remove ADD button when search value matches an already selected item and custom values are enabled ', () => {
@@ -2598,7 +3044,7 @@ describe('igxCombo', () => {
                 combo.handleInputChange();
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('');
+                expect(combo.displayValue).toEqual('');
                 expect(combo.isAddButtonVisible()).toBeTruthy();
 
                 combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
@@ -2607,13 +3053,13 @@ describe('igxCombo', () => {
                 UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('');
+                expect(combo.displayValue).toEqual('');
                 expect(combo.isAddButtonVisible()).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('Enter', dropdownContent);
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('My New Custom Item');
+                expect(combo.displayValue).toEqual('My New Custom Item');
             });
             it(`should handle click on "Add Item" properly`, () => {
                 combo.allowCustomValues = true;
@@ -2624,7 +3070,7 @@ describe('igxCombo', () => {
                 combo.handleInputChange();
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('');
+                expect(combo.displayValue).toEqual('');
                 expect(combo.isAddButtonVisible()).toBeTruthy();
 
                 combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
@@ -2634,13 +3080,13 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 // SPACE does not add item to collection
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('');
+                expect(combo.displayValue).toEqual('');
 
                 const focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
                 focusedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
-                expect(combo.value).toEqual('My New Custom Item');
+                expect(combo.displayValue).toEqual('My New Custom Item');
             });
             it('should enable/disable filtering at runtime', fakeAsync(() => {
                 combo.open(); // Open combo - all data items are in filteredData
@@ -2746,7 +3192,7 @@ describe('igxCombo', () => {
                     return collection.filter(i => filteringOptions.caseSensitive ?
                         i[filteringOptions.filteringKey]?.includes(searchTerm) :
                         i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
-                    }
+                }
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -2784,7 +3230,7 @@ describe('igxCombo', () => {
                     return collection.filter(i => filteringOptions.caseSensitive ?
                         i[filteringOptions.filteringKey]?.includes(searchTerm) :
                         i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
-                    }
+                }
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -2847,28 +3293,29 @@ describe('igxCombo', () => {
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
                     expect(comboFormReference).toBeDefined();
                     expect(combo.selection).toEqual(comboFormReference.value);
+                    expect(combo.value).toEqual(comboFormReference.value);
                     expect(combo.selection.length).toEqual(1);
                     expect(combo.selection[0].field).toEqual('Connecticut');
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
-                    expect(combo.valid).toEqual(IgxComboState.VALID);
+                    expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
                 it('should properly initialize when used as a form control - without validators', () => {
@@ -2878,28 +3325,29 @@ describe('igxCombo', () => {
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
                     expect(comboFormReference).toBeDefined();
                     expect(combo.selection).toEqual(comboFormReference.value);
+                    expect(combo.value).toEqual(comboFormReference.value);
                     expect(combo.selection.length).toEqual(1);
                     expect(combo.selection[0].field).toEqual('Connecticut');
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
                 it('should be possible to be enabled/disabled when used as a form control', () => {
@@ -2940,11 +3388,13 @@ describe('igxCombo', () => {
                     const comboFormReference = form.controls.townCombo;
                     expect(comboFormReference).toBeDefined();
                     expect(combo.selection).toEqual(comboFormReference.value);
+                    expect(combo.value).toEqual(comboFormReference.value);
 
                     // Form -> Combo
                     comboFormReference.setValue([{ field: 'Missouri', region: 'West North Central' }]);
                     fixture.detectChanges();
                     expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
+                    expect(combo.value).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
 
                     // Combo -> Form
                     combo.select([{ field: 'South Carolina', region: 'South Atlantic' }], true);
@@ -2995,20 +3445,20 @@ describe('igxCombo', () => {
                     form.markAllAsTouched();
                     form.get('townCombo').setErrors({ error: true });
                     fixture.detectChanges();
-    
+
                     expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
-                
+
                     // remove the validators and set errors
                     form.get('townCombo').clearValidators();
                     form.markAsUntouched();
                     fixture.detectChanges();
-    
+
                     form.markAllAsTouched();
                     form.get('townCombo').setErrors({ error: true });
                     fixture.detectChanges();
-    
+
                     // no validator, but there is a set error
                     expect((combo as any).comboInput.valid).toBe(IgxInputState.INVALID);
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
@@ -3025,24 +3475,24 @@ describe('igxCombo', () => {
                     inputGroupRequired = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_REQUIRED}`));
                 }));
                 it('should properly initialize when used in a template form control', () => {
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(inputGroupRequired).toBeDefined();
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     input.triggerEventHandler('focus', {});
                     combo.selectAllItems();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.VALID);
+                    expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                     const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                     clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                 });
                 it('should properly init with empty array and handle consecutive model changes', fakeAsync(() => {
@@ -3050,7 +3500,7 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = [];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(model.valid).toBeFalse();
                     expect(model.dirty).toBeFalse();
@@ -3059,36 +3509,39 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = ['Missouri'];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                    expect(combo.selection).toEqual(['Missouri']);
-                    expect(combo.value).toEqual('Missouri');
+                    expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
+                    expect(combo.value).toEqual(['Missouri']);
+                    expect(combo.displayValue).toEqual('Missouri');
                     expect(model.valid).toBeTrue();
                     expect(model.touched).toBeFalse();
 
                     fixture.componentInstance.values = ['Missouri', 'Missouri'];
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                    expect(combo.selection).toEqual(['Missouri']);
-                    expect(combo.value).toEqual('Missouri');
+                    expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
+                    expect(combo.value).toEqual(['Missouri']);
+                    expect(combo.displayValue).toEqual('Missouri');
                     expect(model.valid).toBeTrue();
                     expect(model.touched).toBeFalse();
 
                     fixture.componentInstance.values = null;
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.selection).toEqual([]);
-                    expect(combo.value).toEqual('');
+                    expect(combo.value).toEqual([]);
+                    expect(combo.displayValue).toEqual('');
                     expect(model.valid).toBeFalse();
                     expect(model.touched).toBeFalse();
                     expect(model.dirty).toBeFalse();
 
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                     expect(model.valid).toBeFalse();
                     expect(model.touched).toBeTrue();
@@ -3097,10 +3550,11 @@ describe('igxCombo', () => {
                     fixture.componentInstance.values = ['New Jersey'];
                     fixture.detectChanges();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                    expect(combo.selection).toEqual(['New Jersey']);
-                    expect(combo.value).toEqual('New Jersey');
+                    expect(combo.selection).toEqual([{ field: 'New Jersey', region: 'Mid-Atlan' }]);
+                    expect(combo.value).toEqual(['New Jersey']);
+                    expect(combo.displayValue).toEqual('New Jersey');
                     expect(model.valid).toBeTrue();
                     expect(model.touched).toBeTrue();
                     expect(model.dirty).toBeFalse();
@@ -3115,12 +3569,12 @@ describe('igxCombo', () => {
                 it('should set validity to initial when the form is reset', fakeAsync(() => {
                     combo.onBlur();
                     fixture.detectChanges();
-                    expect(combo.valid).toEqual(IgxComboState.INVALID);
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
                     fixture.componentInstance.form.resetForm();
                     tick();
-                    expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
             });
@@ -3131,42 +3585,14 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
             });
-            it('Should be able to set Display Density as input', () => {
-                expect(combo.displayDensity).toEqual(DisplayDensity.cosy);
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                expect(combo.displayDensity).toEqual(DisplayDensity.compact);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
-            });
-            it('should apply correct styles to items and input when Display Density is set', () => {
-                combo.toggle();
-                fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COSY).length).toBe(2);
-                fixture.componentInstance.density = DisplayDensity.compact;
-                fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMPACT).length).toBe(2);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
-                fixture.detectChanges();
-                expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
-                expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_ITEM).length);
-                expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMFORTABLE).length).toBe(2);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
-                expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
-            });
-            it('should scale items container depending on displayDensity (itemHeight * 10)', () => {
+            it('should scale items container depending on size (itemHeight * 10)', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(320);
-                fixture.componentInstance.density = DisplayDensity.compact;
+                fixture.componentInstance.size = 'small';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(280);
-                fixture.componentInstance.density = DisplayDensity.comfortable;
+                fixture.componentInstance.size = 'large';
                 fixture.detectChanges();
                 expect(combo.itemsMaxHeight).toEqual(400);
             });
@@ -3176,9 +3602,9 @@ describe('igxCombo', () => {
 
 @Component({
     template: `
-    <igx-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
+    <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)">
+        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
@@ -3205,12 +3631,12 @@ class IgxComboSampleComponent {
      */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items = [];
     public initData = [];
+    public size = 'medium';
 
-    constructor() {
+    constructor(public elementRef: ElementRef) {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -3575,5 +4001,34 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
             { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
             this.cdr.detectChanges();
         }, 1000);
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    standalone: true,
+    imports: [IgxComboComponent]
+})
+export class ComboArrayTypeValueKeyComponent {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items: any[] = [];
+
+    constructor() {
+        this.items = [
+            {
+                item: "Item1",
+                value: [1, 2, 3]
+            },
+            {
+                item: "Item2",
+                value: [4, 5, 6]
+            },
+            {
+                item: "Item3",
+                value: [7, 8, 9]
+            }
+        ];
     }
 }

@@ -56,12 +56,17 @@
             "selector": "Decorator[expression.callee.name=HostBinding] Literal[value='attr.class']",
             "message": "Do not use `attr.class` HostBinding in public-facing components"
           }
-        ]
+        ],
+        "no-console": [ "error", { "allow": [ "warn", "error" ] } ],
+        "no-debugger": "error"
       }
     },
     {
       "files": [
         "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {}
     }

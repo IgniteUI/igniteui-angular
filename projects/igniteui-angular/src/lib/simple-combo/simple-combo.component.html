@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup [displayDensity]="displayDensity" [suppressInputAutofocus]="true" [type]="type">
+<igx-input-group #inputGroup [type]="type">
 
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
@@ -12,30 +12,28 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="value" role="combobox"
+    <input #comboInput igxInput [value]="displayValue" role="combobox"
         aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
-        (focus)="onFocus()" (input)="handleInputChange($event)" (click)="handleInputClick()"
-        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
+        (input)="handleInputChange($event)" (click)="handleInputClick()"
+        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="hasSelectedItem" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!clearIconTemplate">
-            {{ clearIcon }}
-        </igx-icon>
+        <igx-icon *ngIf="!clearIconTemplate" family="default" name="clear"></igx-icon>
     </igx-suffix>
 
     <igx-suffix *ngIf="showSearchCaseIcon">
-        <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"
+        <igx-icon family="combo" name="case-sensitive" [active]="filteringOptions.caseSensitive"
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
@@ -44,14 +42,12 @@
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate">
-            {{ toggleIcon }}
-        </igx-icon>
+        <igx-icon *ngIf="!toggleIconTemplate" family="combo" [name]="toggleIcon"></igx-icon>
     </igx-suffix>
 
 </igx-input-group>
 
-<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
+<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down"
     [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()" [singleMode]="true">
@@ -62,10 +58,10 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item  [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
+        <igx-combo-item [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
                 | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
-                | comboGrouping:groupKey:valueKey:groupSortingDirection;
+                | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
                 index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
                 [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item?.isHeader">
@@ -109,7 +105,7 @@
     <span>{{resourceStrings.igx_combo_empty_message}}</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
-    <button igxButton="flat" igxRipple>Add item</button>
+    <button type="button" igxButton="flat" igxRipple>Add item</button>
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}

@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
@@ -44,8 +44,8 @@ export class IgxGridSummaryService {
             }
 
             const isGroupedColumn = (this.grid as FlatGridType).groupingExpressions &&
-            (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
-            if (columnName && isGroupedColumn ) {
+                (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
+            if (columnName && isGroupedColumn) {
                 columnName = undefined;
             }
             this.removeSummaries(args.rowID, columnName);
@@ -71,10 +71,10 @@ export class IgxGridSummaryService {
                 this.summaryCacheMap.clear();
             }
         } else {
-           const summaryIds = this.getSummaryID(rowID, (this.grid as FlatGridType).groupingExpressions);
-           summaryIds.forEach(id => {
-               this.deleteSummaryCache(id, columnName);
-           });
+            const summaryIds = this.getSummaryID(rowID, (this.grid as FlatGridType).groupingExpressions);
+            summaryIds.forEach(id => {
+                this.deleteSummaryCache(id, columnName);
+            });
         }
     }
 
@@ -106,7 +106,7 @@ export class IgxGridSummaryService {
             }
         });
         this.maxSummariesLenght = maxSummaryLength;
-        this.summaryHeight =  maxSummaryLength * this.grid.defaultSummaryHeight;
+        this.summaryHeight = maxSummaryLength * this.grid.defaultSummaryHeight;
         return this.summaryHeight;
     }
 
@@ -131,10 +131,12 @@ export class IgxGridSummaryService {
 
     public resetSummaryHeight() {
         this.summaryHeight = 0;
-        this.grid.summaryPipeTrigger++;
-        if (this.grid.rootSummariesEnabled) {
-            this.retriggerRootPipe++;
-            Promise.resolve().then(() => this.grid.notifyChanges(true));
+        if (this.grid) {
+            this.grid.summaryPipeTrigger++;
+            if (this.grid.rootSummariesEnabled) {
+                this.retriggerRootPipe++;
+                Promise.resolve().then(() => this.grid.notifyChanges(true));
+            }
         }
     }
 
@@ -163,7 +165,7 @@ export class IgxGridSummaryService {
     private deleteSummaryCache(id, columnName) {
         if (this.summaryCacheMap.get(id)) {
             const filteringApplied = columnName && this.grid.filteringExpressionsTree &&
-                    this.grid.filteringExpressionsTree.filteringOperands.map((expr) => expr.fieldName).indexOf(columnName) !== -1;
+                this.grid.filteringExpressionsTree.filteringOperands.map((expr) => expr.fieldName).indexOf(columnName) !== -1;
             if (columnName && this.summaryCacheMap.get(id).get(columnName) && !filteringApplied) {
                 this.summaryCacheMap.get(id).delete(columnName);
             } else {
@@ -190,11 +192,14 @@ export class IgxGridSummaryService {
             );
         }
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
+        if (!rowData) {
+            return summaryIDs;
+        }
         let id = '{ ';
         groupingExpressions.forEach(expr => {
             id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;
-                summaryIDs.push(id.concat(' }'));
-                id += ', ';
+            summaryIDs.push(id.concat(' }'));
+            id += ', ';
         });
         return summaryIDs;
     }
@@ -232,9 +237,9 @@ export class IgxGridSummaryService {
             }
             removedCols.map(col => col.field).forEach(colName => {
                 this.summaryCacheMap.forEach((cache, id) => {
-                   if (id.indexOf(colName) !== -1) {
-                       this.summaryCacheMap.delete(id);
-                   }
+                    if (id.indexOf(colName) !== -1) {
+                        this.summaryCacheMap.delete(id);
+                    }
                 });
             });
         }

@@ -16,14 +16,17 @@
 
 
 <ng-template #defaultIndicator>
-    <igx-icon [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand">
-        {{ expanded ? "keyboard_arrow_down" : "keyboard_arrow_right" }}
+    <igx-icon
+        [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand"
+        [name]="!expanded ? 'expand' : 'collapse'"
+        family="tree"
+    >
     </igx-icon>
 </ng-template>
 
 <!-- separated in a template in case this ever needs to be templatable -->
 <ng-template #selectMarkerTemplate>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
+    <igx-checkbox [checked]="selected" [disabled]="disabled" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
     </igx-checkbox>
 </ng-template>
 
@@ -32,8 +35,6 @@
         [attr.role]="role"
         [tabIndex]="tabIndex"
         [ngClass]="{
-            'igx-tree-node__wrapper--cosy': isCosy,
-            'igx-tree-node__wrapper--compact': isCompact,
             'igx-tree-node__wrapper--selected': selected,
             'igx-tree-node__wrapper--active' : this.active,
             'igx-tree-node__wrapper--focused' : this.focused,
@@ -73,7 +74,7 @@
         <!-- Item selection -->
         <div *ngIf="showSelectors"
             class="igx-tree-node__select"
-            (pointerdown)="$event.preventDefault()"
+            (pointerdown)="onSelectorPointerDown($event)"
             (click)="onSelectorClick($event)">
             <ng-container *ngTemplateOutlet="selectMarkerTemplate">
             </ng-container>

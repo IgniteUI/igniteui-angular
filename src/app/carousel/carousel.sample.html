@@ -9,27 +9,27 @@
             <igx-switch [(ngModel)]="loop">loop</igx-switch>
             <igx-switch [(ngModel)]="pause">pause</igx-switch>
             <br>
-            <button igxButton="raised" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
-            <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)"  displayDensity="comfortable">
+            <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation">Animation Type: {{car.animationType}}</button>
+            <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)" >
                 <igx-drop-down-item *ngFor="let item of animationModes">
                         {{ item }}
                 </igx-drop-down-item>
             </igx-drop-down>
-            <button igxButton="raised" (click)="pauseCar()">pause</button>
-            <button igxButton="raised" (click)="play()">play</button>
-            <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
-            <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
-            <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
+            <button igxButton="contained" (click)="pauseCar()">pause</button>
+            <button igxButton="contained" (click)="play()">play</button>
+            <button igxButton="contained" (click)="changeSlides()">Change slides add</button>
+            <button igxButton="contained" (click)="changeSlidesRemove()">Change slides remove</button>
+            <button igxButton="contained" (click)="changeOrientation()">changeOrientation</button>
             <div style="height: 800px;">
                 <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval">
                     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                         <img [src]="slide.image">
                     </igx-slide>
 
-                    <ng-template igxCarouselIndicator let-slide>
+                    <!-- <ng-template igxCarouselIndicator let-slide>
                             <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
                             <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
-                    </ng-template>
+                    </ng-template> -->
 
                     <!-- <ng-template igxCarouselNextButton let-disabled>
                             <button igxButton="fab" igxRipple="white" [disabled]="disabled">

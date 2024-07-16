@@ -36,10 +36,6 @@
 
     $theme: digest-schema($icon-schema);
 
-    @if not($size) {
-        $size: sizable(rem(16px), rem(20px), rem(24px));
-    }
-
     @return extend($theme, (
         name: $name,
         color: $color,
@@ -49,19 +45,21 @@
 }
 
 // stylelint-disable font-family-no-missing-generic-family-keyword
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin icon($theme) {
     @include css-vars($theme);
 
     $size: var-get($theme, 'size');
 
+    // The igx-icon tag selector in front of the placeholder is on purpose
+    // this approach effectively enables us to eliminate any potential style conflicts without the need of !important
     %igx-icon-display {
         @include sizable();
-        --component-size: var(--ig-size, var(--ig-size-large));
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         display: inline-flex;
-        width: $size;
-        height: $size;
         font-size: $size;
         color: var-get($theme, 'color');
         direction: inherit;
@@ -78,6 +76,13 @@
         &[igxSuffix].material-icons {
             font-family: 'Material Icons';
         }
+    }
+
+    // Using "em" unit here is on purpose see:
+    // https://github.com/IgniteUI/igniteui-angular/issues/13394#event-10241243103
+    igx-icon%igx-icon-display {
+        width: 1em;
+        height: 1em;
     }
 
     %igx-icon--success {

@@ -22,26 +22,14 @@
         width: 100%;
         padding: 0 .5rem;
     }
+    .grid1-actions {
+        display: flex;
+        gap: .5rem;
+        padding: .5rem;
+    }
   </style>
 </head>
 <body class="ig-typography">
-    <!-- <app-wrapper>
-        <app-child-standalone id="childComp">
-            <button onclick="changeText()">Change from child</button>
-        </app-child-standalone>
-    </app-wrapper>
-
-    <template id="tmpl">
-        <p>my templated content</p>
-        <p>{{value}}</p>
-    </template>
-    <script>
-        let changeText = () => {
-            childComp.text = 'Changed directly from child through ng-content.';
-        }
-        childComp.template = tmpl;
-    </script> -->
-
   <section>
     <h3 class="ig-typography__h6">Flat Grid (column groups, toolbar, paginator, row actions)</h3>
     <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-selection="multiple" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
@@ -58,11 +46,12 @@
             <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
         </igc-grid-toolbar-actions>
         </igc-grid-toolbar>
+        <igc-grid-state id="state"></igc-grid-state>
 
-        <igc-column-group header="Test">
+
         <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false"></igc-column>
-        <igc-column field="ProductName" header="Product Name" sortable="true"></igc-column>
-        </igc-column-group>
+        <igc-column field="ProductName" header="Product Name" sortable="true" width="auto"></igc-column>
+
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
         <igc-column field="InStock" header="In Stock" data-type="number"></igc-column>
 
@@ -74,12 +63,17 @@
         <igc-paginator per-page="10"></igc-paginator>
     </igc-grid>
 
-    <button onclick="changeColumns()">Change columns</button>
-    <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
-    <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
-    <button onclick="grid1.displayDensity = 'compact'">Compact</button>
-    <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
-    <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
+    <div class="grid1-actions">
+        <button id="saveState">Save state</button>
+        <button id="restoreState">Restore</button>
+        <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+        <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+        <igc-button-group selection="single-required">
+            <igc-toggle-button value="small">Small</igc-toggle-button>
+            <igc-toggle-button value="medium">Medium</igc-toggle-button>
+            <igc-toggle-button value="large" selected>Large</igc-toggle-button>
+        </igc-button-group>
+    </div>
 
     <h3 class="ig-typography__h6">Standalone paginator</h3>
     <igc-paginator per-page="25" total-records="150"></igc-paginator>
@@ -115,13 +109,17 @@
 
   <script src="assets/data/nw-products.js"></script>
   <script type="module">
-    import { html } from "/lit-html.js";
-    import { defineComponents, IgcSelectComponent, IgcComboComponent } from "igniteui-webcomponents";
+    import { html, nothing } from "/lit-html.js";
+    import { Directive, directive } from "/directive.js";
+
+    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent } from "igniteui-webcomponents";
     // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
-    defineComponents(IgcSelectComponent, IgcComboComponent);
+    defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent);
     const grid1 = document.getElementById('grid1');
     const grid2 = document.getElementById('grid2');
+    const buttonGroup = document.querySelector('igc-button-group');
+
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
@@ -135,13 +133,43 @@
 
     grid1.groupingExpressions = groupingExpression1;
 
+    // In place of https://lit.dev/docs/api/directives/#ref, too annoying to resolve with current angular.json script resources:
+    class RefDirective extends Directive {
+        constructor(partInfo) {
+            super(partInfo);
+            this.partInfo = partInfo;
+        }
+        render(_ref) {
+            _ref(this.partInfo.element);
+            return nothing;
+        }
+    }
+    // Create the directive function
+    const ref = directive(RefDirective);
+
+    // Using callback
+    const focusCallback = (inputElement) => {
+        // needed for callback without Lit's lifecycle; Consider exposing ready-made directive for this
+        requestAnimationFrame(() => {
+            if (inputElement?.isConnected) {
+                inputElement.focus();
+            }
+        });
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
         grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
         grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
         grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.implicit}`;
+        grid1.querySelector('igc-column[field="ProductName"]').bodyTemplate = (context) => {
+            return html`
+            <igc-button size="large" class="button">
+            ${context.implicit}
+            </igc-button>`;
+        };
         grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
             html`<div class="range-wrapper">
-                <input autofocus id="range" type="range"
+                <input ${ref(focusCallback)} id="range" type="range"
                     .value="${context.implicit}"
                     @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
                     />
@@ -149,31 +177,48 @@
             </div>`;
         grid1.querySelector('igc-column[field="CategoryName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-select .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
+            <igc-select ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
                 ${categories.map(x => html`<igc-select-item value="${x}">${x}</igc-select-item>`)}
             </igc-select>
         `;
         grid1.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-combo style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
+            <igc-combo ${ref(focusCallback)} style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
             </igc-combo>
         `;
         grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.implicit.InStock}</span></div>`;
 
         grid2.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
             html`
-            <igc-input .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
+            <igc-input ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcInput=${(e) => ctx.cell.editValue = e.detail}>
             </igc-input>
         `;
+
+        document.getElementById("saveState").addEventListener("click", saveState);
+        document.getElementById("restoreState").addEventListener("click", restoreState);
+        const stateComponent = document.getElementById('state');
+        stateComponent.options = {
+            paging: false
+        };
     });
 
-    function changeColumns() {
-        let columns = [
-            { field: 'ProductID', dataType: 'number', resizable: true },
-            { field: 'ProductName', resizable: true },
-            { field: 'CategoryName', resizable: true }
-        ];
-        grid1.columns = columns;
+    buttonGroup.addEventListener("igcSelect", (e) => {
+        grid1.style.setProperty('--ig-size', `var(--ig-size-${e.detail})`);
+    });
+
+    function saveState() {
+        const stateComponent = document.getElementById('state');
+        const stringData = stateComponent.getStateAsString();
+        window.localStorage.setItem(`grid1-state`, stringData);
+    }
+
+    function restoreState() {
+        const stateComponent = document.getElementById('state');
+        const stateData = window.localStorage.getItem(`grid1-state`);
+        if (stateData) {
+            const obj = JSON.parse(stateData);
+            stateComponent.applyState(obj);
+        }
     }
   </script>
 
@@ -214,14 +259,14 @@
   <!-- END IgxTreeGridComponent -->
 
   <igc-hierarchical-grid id="hgrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-
+    <igc-grid-state id="state2"></igc-grid-state>
     <igc-column field="ProjectId" data-type="number" header="Project Id" sortable="true" selectable="false"></igc-column>
     <igc-column field="Name" data-type="string" header="Name" sortable="true" selectable="false"></igc-column>
     <igc-column field="StartDate" data-type="date" header="Start Date" sortable="true" selectable="false"></igc-column>
     <igc-column field="EndDate" data-type="date" header="End Date" sortable="true" selectable="false"></igc-column>
     <igc-column field="IsPostponed" data-type="boolean" header="Postponed" sortable="true" selectable="false"></igc-column>
 
-      <igc-row-island key="Developers">
+    <igc-row-island id="DevelopersRowIsland" key="Developers">
         <igc-column field="Name" header="Name" sortable="true"></igc-column>
         <igc-column-group header="Position Information">
             <igc-column-group header="Position Details" collapsible>
@@ -234,8 +279,8 @@
             <igc-grid-pinning-actions></igc-grid-pinning-actions>
             <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
         </igc-action-strip>
-        <igc-row-island auto-generate key="VirtualMachines"></igc-row-island>
-        </igc-row-island>
+        <igc-row-island auto-generate id="VirtualMachinesRowIsland" key="VirtualMachines"></igc-row-island>
+    </igc-row-island>
     <igc-paginator per-page="10"></igc-paginator>
     <igc-action-strip>
         <igc-grid-pinning-actions></igc-grid-pinning-actions>
@@ -340,10 +385,35 @@
   <!-- END IgxPivotGridComponent -->
 
   <script type="module">
+    import { html } from "/lit-html.js";
     // jump around vite import analysis with dynamic import url
     const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
     let hgrid = document.getElementById('hgrid1');
     hgrid.data = hgridData;
+
+    let developersRowIsland = document.getElementById('DevelopersRowIsland');
+    let virtualMachinesRowIsland = document.getElementById('VirtualMachinesRowIsland');
+    virtualMachinesRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.toolbarTemplate = (ctx) => html`
+        <igc-grid-toolbar>
+            <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+            <igc-grid-toolbar-actions>
+                <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+                <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                <igc-grid-toolbar-exporter>
+                    <span excelText>Export Excel</span>
+                    <span csvText>Export CSV</span>
+                </igc-grid-toolbar-exporter>
+                <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+            </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+    `;
   </script>
 </body>
 </html>

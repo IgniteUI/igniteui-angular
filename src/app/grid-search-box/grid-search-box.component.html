@@ -1,4 +1,4 @@
-<igx-input-group type="search" [displayDensity]="'compact'" class="search-box">
+<igx-input-group type="search" class="search-box">
     <igx-prefix>
         <igx-icon *ngIf="searchText.length === 0">search</igx-icon>
         <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
@@ -10,19 +10,19 @@
 
     <igx-suffix *ngIf="searchText.length > 0">
         <div class="resultsText" *ngIf="grid.lastSearchInfo">
-            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length > 0">
-                {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchInfoCache.length }}
+            <span *ngIf="grid.lastSearchInfo.matchCount > 0">
+                {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchCount }}
             </span>
-            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length === 0">
+            <span *ngIf="grid.lastSearchInfo.matchCount === 0">
                 0/0
             </span>
         </div>
         <div class="chips">
             <igx-chips-area>
-                <igx-chip (click)="updateSearch()" [displayDensity]="'cosy'" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
                     <span title="Match Case">Aa</span>
                 </igx-chip>
-                <igx-chip (click)="updateExactSearch()" [displayDensity]="'cosy'" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
                     <u title="Match Whole Word">Ab</u>
                 </igx-chip>
             </igx-chips-area>

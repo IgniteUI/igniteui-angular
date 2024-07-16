@@ -9,7 +9,6 @@
     }
 
     @include b(igx-banner) {
-        @include sizable();
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
         @include register-component(
@@ -31,30 +30,12 @@
             @extend %igx-banner__illustration !optional;
         }
 
-        @include e(border-top) {
-            @extend %igx-banner__border-top !optional;
-        }
-
-        @include e(border-bottom) {
-            @extend %igx-banner__border-bottom !optional;
-        }
-
         @include e(text) {
             @extend %igx-banner__text !optional;
         }
 
         @include e(actions) {
             @extend %igx-banner__actions !optional;
-        }
-
-        @include m(cosy) {
-            @extend %igx-banner !optional;
-            @extend %igx-banner--cosy !optional
-        }
-
-        @include m(compact) {
-            @extend %igx-banner !optional;
-            @extend %igx-banner--compact !optional;
         }
     }
 }

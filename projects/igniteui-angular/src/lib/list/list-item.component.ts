@@ -6,7 +6,8 @@ import {
     HostListener,
     Input,
     Renderer2,
-    ViewChild
+    ViewChild,
+    booleanAttribute
 } from '@angular/core';
 
 import {
@@ -71,7 +72,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public isHeader: boolean;
 
     /**
@@ -86,7 +87,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hidden = false;
 
     /**
@@ -131,6 +132,8 @@ export class IgxListItemComponent implements IListChild {
      * @hidden
      */
     private lastPanDir = IgxListPanState.NONE;
+
+    private _role: string = '';
 
     /**
      * Gets the `panState` of a `list item`.
@@ -262,7 +265,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     * Gets the `role` attribute of the `list item`.
+     * Gets/Sets the `role` attribute of the `list item`.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -270,8 +273,13 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.role')
+    @Input()
     public get role() {
-        return this.isHeader ? 'separator' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : 'listitem';
+    }
+
+    public set role(val: string) {
+        this._role = val;
     }
 
     /**
@@ -343,7 +351,7 @@ export class IgxListItemComponent implements IListChild {
     @HostListener('pancancel')
     public panCancel() {
         this.resetPanPosition();
-        this.list.endPan.emit({item: this, direction: this.lastPanDir, keepItem: false});
+        this.list.endPan.emit({ item: this, direction: this.lastPanDir, keepItem: false });
     }
 
     /**
@@ -390,7 +398,7 @@ export class IgxListItemComponent implements IListChild {
         const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
         this.lastPanDir = dir;
 
-        const args = { item: this, direction: dir, keepItem: false};
+        const args = { item: this, direction: dir, keepItem: false };
         this.list.endPan.emit(args);
 
         const oldPanState = this._panState;

@@ -28,8 +28,8 @@ Supporting directives and components:
     </igx-card-content>
 
     <igx-card-actions>
-        <button igxButton (click)="openUrl('https://www.facebook.com/pages/Elon-Musk/108250442531979')">Like</button>
-        <button igxButton (click)="openUrl('https://twitter.com/elonmusk')">Share</button>
+        <button type="button" igxButton (click)="openUrl('https://www.facebook.com/pages/Elon-Musk/108250442531979')">Like</button>
+        <button type="button" igxButton (click)="openUrl('https://twitter.com/elonmusk')">Share</button>
     </igx-card-actions>
 </igx-card>
 ```

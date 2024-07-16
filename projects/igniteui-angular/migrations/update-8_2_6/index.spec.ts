@@ -44,8 +44,7 @@ describe('Update 8.2.6', () => {
                 $item-focus-text-color: null
               );`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-12', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-12', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
             .toEqual(
                 `$my-toolbar-theme: igx-grid-toolbar-theme(
@@ -73,8 +72,7 @@ describe('Update 8.2.6', () => {
             }
             $dark-grid-paginator-schema: extend($_dark-grid-pagination,());`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-12', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-12', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(
             `@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';

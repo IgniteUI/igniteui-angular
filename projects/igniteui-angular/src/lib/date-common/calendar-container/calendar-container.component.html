@@ -1,16 +1,39 @@
 <ng-template #defaultPickerActions>
-    <div *ngIf="this.closeButtonLabel || this.todayButtonLabel" class="igx-date-picker__buttons">
-        <button #closeButton *ngIf="this.closeButtonLabel" igxButton="flat" igxRipple
-            (click)="this.calendarClose.emit({ owner: this })">
-            {{ this.closeButtonLabel }}
+    <div
+        *ngIf="closeButtonLabel || todayButtonLabel"
+        class="igx-date-picker__buttons"
+    >
+        <button
+            #closeButton
+            *ngIf="closeButtonLabel"
+            type="button"
+            igxButton="flat"
+            igxRipple
+            (click)="calendarClose.emit({ owner: this })"
+        >
+            {{ closeButtonLabel }}
         </button>
-        <button #todayButton *ngIf="this.todayButtonLabel" igxButton="flat" igxRipple
-            (click)="this.todaySelection.emit({ owner: this })">
-            {{ this.todayButtonLabel }}
+        <button
+            #todayButton
+            *ngIf="todayButtonLabel"
+            type="button"
+            igxButton="flat"
+            igxRipple
+            (click)="todaySelection.emit({ owner: this })"
+        >
+            {{ todayButtonLabel }}
         </button>
     </div>
 </ng-template>
 
 <igx-calendar></igx-calendar>
-<ng-container *ngTemplateOutlet="this.pickerActions?.template || defaultPickerActions; context: { $implicit: this.calendar }">
-</ng-container>
+<igx-divider *ngIf="pickerActions?.template || (closeButtonLabel || todayButtonLabel)"></igx-divider>
+<div class="igx-date-picker__actions" *ngIf="pickerActions?.template || (closeButtonLabel || todayButtonLabel)">
+    <ng-container
+        *ngTemplateOutlet="
+            pickerActions?.template || defaultPickerActions;
+            context: { $implicit: calendar }
+        "
+    >
+    </ng-container>
+</div>

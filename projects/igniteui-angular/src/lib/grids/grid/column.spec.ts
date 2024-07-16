@@ -1,6 +1,10 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { getLocaleCurrencySymbol, NgFor, registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeJa from '@angular/common/locales/ja';
+
 import { IgxGridComponent } from './grid.component';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -17,7 +21,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { getLocaleCurrencySymbol, NgFor } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -27,6 +30,9 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
+
+    registerLocaleData(localeFr);
+    registerLocaleData(localeJa);
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
@@ -47,7 +53,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedInputColumnsComponent,
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
-                ResizableColumnsComponent
+                ResizableColumnsComponent,
+                DOMAttributesAsSettersComponent
             ]
         });
     }));
@@ -1355,21 +1362,20 @@ describe('IgxGrid - Column properties #grid', () => {
                 { field: 'Phone', width: 'auto' },
                 { field: 'Fax', width: 'auto' }
             ];
-            fix.detectChanges();
-            tick();
             const grid = fix.componentInstance.instance;
             // resize grid so that all columns are in view
             grid.width = '1500px';
             fix.detectChanges();
             tick();
+
             let widths = grid.columns.map(x => x.width);
             expect(widths).toEqual(['80px', '130px', '121px', '114px', '92px', '80px', '86px', '108px', '82px', '80px']);
             fix.componentInstance.data = SampleTestData.contactInfoData();
             fix.detectChanges();
             tick();
-            fix.detectChanges();
+
             widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['95px', '240px', '145px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
         }));
 
         it('should recalculate sizes via the recalculateAutoSizes API ', fakeAsync(() => {
@@ -1401,6 +1407,62 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
     });
 
+
+    describe('DOM attributes as setters', () => {
+        it('successfully renders a grid with DOM attributes as setters', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DOMAttributesAsSettersComponent);
+            fixture.detectChanges();
+            tick();
+
+            const grid = fixture.componentInstance.instance;
+            const column = grid.getColumnByName('id');
+
+            const gridAttributes = `
+                moving
+                hideRowSelectors
+                rowDraggable
+                rowEditable
+                allowFiltering
+                allowAdvancedFiltering
+                showSummaryOnCollapse
+                batchEditing
+                selectRowOnClick
+                groupsExpanded
+                hideGroupedColumns
+                showGroupArea
+            `.split('\n')
+                .map(attr => attr.trim())
+                .filter(attr => Boolean(attr));
+
+            const columnAttributes = `
+                sortable
+                groupable
+                editable
+                filterable
+                resizable
+                autosizeHeader
+                hasSummary
+                hidden
+                disableHiding
+                disablePinning
+                filteringIgnoreCase
+                sortingIgnoreCase
+                searchable
+                pinned
+                visibleWhenCollapsed
+            `.split('\n')
+                .map(attr => attr.trim())
+                .filter(attr => Boolean(attr));
+
+            for (const attr of gridAttributes) {
+                expect(grid[attr]).toBe(true, `Grid attribute: '${attr}' failed`);
+            }
+
+            for (const attr of columnAttributes) {
+                expect(column[attr]).toBe(true, `Column attribute: '${attr}' failed`);
+            }
+        }))
+    });
 });
 
 @Component({
@@ -1429,7 +1491,7 @@ interface IColumnConfig {
     template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
         `
     <ng-template #customTemplate let-value>
-    <button igxButton="raised">{{value}}</button>
+        <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
     standalone: true,
@@ -1568,4 +1630,51 @@ export class ColumnHaederClassesComponent {
     public data = [
         { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" height="500px" width="400px"
+            moving
+            hideRowSelectors
+            rowDraggable
+            rowEditable
+            allowFiltering
+            allowAdvancedFiltering
+            showSummaryOnCollapse
+            batchEditing
+            selectRowOnClick
+            groupsExpanded
+            hideGroupedColumns
+            showGroupArea
+        >
+            <igx-column field="id"
+                sortable
+                groupable
+                editable
+                filterable
+                resizable
+                autosizeHeader
+                hasSummary
+                hidden
+                disableHiding
+                disablePinning
+                filteringIgnoreCase
+                sortingIgnoreCase
+                searchable
+                pinned
+                visibleWhenCollapsed
+            >
+            </igx-column>
+            <igx-column field="value"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class DOMAttributesAsSettersComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public data = [{ id: 1, value: 1 }];
 }

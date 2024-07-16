@@ -2,12 +2,12 @@
   <div class="sample-content">
     <div class="sample-column">
       <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
       </div>
-      <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [displayDensity]="density" [moving]="true"
+      <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [moving]="true"
                 [allowFiltering]="true" [rowSelection]="selectionMode" [filterMode]="'excelStyleFilter'"
                 [uniqueColumnValuesStrategy]="columnValuesStrategy">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar>
           <igx-grid-toolbar-actions>
               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

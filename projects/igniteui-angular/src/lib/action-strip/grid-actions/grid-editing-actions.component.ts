@@ -1,10 +1,15 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, booleanAttribute } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/utils';
-import { addRow, addChild  } from '@igniteui/material-icons-extended';
+import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-editing-actions */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Grid Editing Actions for the Action Strip
  *
@@ -32,7 +37,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     /**
      * An input to enable/disable action strip row adding button
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set addRow(value: boolean) {
         this._addRow = value;
     }
@@ -47,13 +52,13 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     /**
      * An input to enable/disable action strip row editing button
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public editRow = true;
 
     /**
     * An input to enable/disable action strip row deleting button
     */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public deleteRow = true;
 
     /**
@@ -92,7 +97,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     /**
      * An input to enable/disable action strip child row adding button
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public addChild = false;
 
     private isMessageShown = false;
@@ -121,12 +126,12 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
             this.isMessageShown = showMessage(
                 'The grid should be editable in order to use IgxGridEditingActionsComponent',
                 this.isMessageShown);
-                return;
+            return;
         }
         // be sure row is in view
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.gridAPI.crudService.enterEditMode(firstEditable, event);
-            if (!grid.gridAPI.crudService.nonEditable){
+            if (!grid.gridAPI.crudService.nonEditable) {
                 firstEditable.activate(event);
             }
         }
@@ -173,5 +178,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     private registerIcons() {
         this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons', true,);
         this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons', true);
+        this.iconService.addIconRef(addRow.name, 'default', { name: addRow.name, family: 'imx-icons' });
+        this.iconService.addIconRef(addChild.name, 'default', { name: addChild.name, family: 'imx-icons' });
     }
 }

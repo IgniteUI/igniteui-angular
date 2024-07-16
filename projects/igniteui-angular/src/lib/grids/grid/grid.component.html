@@ -7,7 +7,6 @@
         [grid]="this"
         [expressions]="groupingExpressions"
         [sortingExpressions]="sortingExpressions"
-        [density]="displayDensity"
         [dropAreaTemplate]="dropAreaTemplate"
         [dropAreaMessage]="dropAreaMessage"
     >
@@ -18,7 +17,6 @@
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
-    [density]="displayDensity"
     [activeDescendant]="activeDescendant"
     [width]="calcWidth"
     [pinnedColumnCollection]="pinnedColumns"
@@ -114,12 +112,12 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail="true" style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
+            <div detail="true" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
-                <div class="igx-grid__hierarchical-indent" style="display: flex">
+                <div class="igx-grid__hierarchical-indent">
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
@@ -131,7 +129,7 @@
             </div>
         </ng-template>
 
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
@@ -203,7 +201,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
+    <button type="button" igxButton="contained" igxRipple (click)="this.crudService.enterAddRowMode(null, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -216,17 +214,28 @@
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" class="igx-grid__group-expand-btn"
+    <igx-icon
+        family="default"
+        name="unfold_less"
+        role="button"
         [ngClass]="{
-        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-    }">unfold_less</igx-icon>
+            'igx-grid__group-expand-btn': true,
+            'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+        }"
+    >
+    </igx-icon>
 </ng-template>
 
  <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button" class="igx-grid__group-expand-btn"
+    <igx-icon
+        family="default"
+        name="unfold_more"
+        role="button"
         [ngClass]="{
-        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-    }">unfold_more</igx-icon>
+            'igx-grid__group-expand-btn': true,
+            'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+        }"
+    ></igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -265,11 +274,14 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
-<div #sink style="display: none;">
-    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-column-layout,igc-column-layout,igx-action-strip,igc-action-strip"></ng-content>
-</div>
+@if (platform.isElements) {
+    <div #sink style="display: none;">
+        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-column-layout,igc-column-layout,igx-action-strip,igc-action-strip"></ng-content>
+    </div>
+}

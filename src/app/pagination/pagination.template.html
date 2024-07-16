@@ -20,16 +20,16 @@
     <igx-paginator-content>
         <igx-page-size></igx-page-size>
         <span style="margin: 0 20px 0 20px;">{{ (pag.page * pag.perPage) + 1}}-{{(pag.page * pag.perPage) + pag.perPage}} of {{ pag.totalRecords}}</span>
-        <button [disabled]="pag.isFirstPageDisabled" (click)="pag.paginate(0)" igxButton="icon" >
+        <button [disabled]="pag.isFirstPage" (click)="pag.paginate(0)" igxIconButton="flat">
             <igx-icon>first_page</igx-icon>
         </button>
-        <button [disabled]="pag.isFirstPageDisabled" (click)="pag.previousPage()" igxButton="icon" >
+        <button [disabled]="pag.isFirstPage" (click)="pag.previousPage()" igxIconButton="flat">
             <igx-icon>chevron_left</igx-icon>
         </button>
-        <button [disabled]="pag.isLastPageDisabled" (click)="pag.nextPage()" igxButton="icon">
+        <button [disabled]="pag.isLastPage" (click)="pag.nextPage()" igxIconButton="flat">
             <igx-icon>chevron_right</igx-icon>
         </button>
-        <button [disabled]="paginator.isLastPageDisabled" (click)="paginator.paginate(paginator.totalPages - 1)" igxButton="icon">
+        <button [disabled]="paginator.isLastPage" (click)="paginator.paginate(paginator.totalPages - 1)" igxIconButton="flat">
             <igx-icon>last_page</igx-icon>
         </button>
     </igx-paginator-content>

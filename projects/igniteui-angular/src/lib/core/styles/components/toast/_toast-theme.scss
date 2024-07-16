@@ -16,6 +16,7 @@
 ///
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $text-color [null] - The text-color used for the toast.
+/// @param {Color} $border-color [null] - The border-color used for the toast.
 ///
 /// @param {List} $border-radius [null] - The border radius used for the toast component.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
@@ -30,6 +31,7 @@
     $schema: $light-material-schema,
 
     $border-radius: null,
+    $border-color: null,
     $background: null,
     $text-color: null,
     $shadow: null,
@@ -55,15 +57,12 @@
         $text-color: text-contrast($background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
+        border-color: $border-color,
         shadow: $shadow,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -72,6 +71,8 @@
 }
 
 /// Toast Component
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin toast($theme) {
     @include css-vars($theme);
@@ -81,32 +82,34 @@
     $margin: rem(42px) auto;
 
     $padding: map.get((
-        'material': rem(16px) rem(24px),
-        'fluent': rem(16px) rem(24px),
+        'material': rem(10px) rem(16px),
+        'fluent': rem(8px) rem(12px),
         'bootstrap': rem(12px),
-        'indigo-design': rem(14px) rem(24px)
-    ), $variant);
-
-    $border: map.get((
-        'material': none,
-        'fluent': none,
-        'bootstrap': rem(1px) solid color(null, 'gray', 300),
-        'indigo-design': none
+        'indigo-design': rem(10px) rem(16px)
     ), $variant);
 
     %igx-toast-display {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        margin: $margin;
+        // !important is needed to override the typography styles
+        margin: $margin !important;
         padding: $padding;
         min-width: $width;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
-        border: $border;
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
         backdrop-filter: blur(10px);
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+        }
     }
 }
 

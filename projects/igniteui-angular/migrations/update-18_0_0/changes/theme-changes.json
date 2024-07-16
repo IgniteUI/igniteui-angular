@@ -1,0 +1,11 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$active-item-color",
+      "replaceWith": "$icon-selected-color",
+      "owner": "bottom-nav-theme",
+      "type": "property"
+    }
+  ]
+}

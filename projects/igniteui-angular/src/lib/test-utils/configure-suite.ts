@@ -1,5 +1,4 @@
 import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
@@ -20,12 +19,10 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
         document.querySelectorAll('svg').forEach(tag => tag.remove());
     };
 
-    let _resizerSub: jasmine.Spy<OnErrorEventHandlerNonNull>;
-
     beforeAll(() => {
         testBed.resetTestingModule();
         testBed.resetTestingModule = () => testBed;
-        _resizerSub = resizeObserverIgnoreError();
+        jasmine.getEnv().allowRespy(true);
     });
 
     if (configureAction) {
@@ -52,6 +49,5 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     afterAll(() => {
         testBed.resetTestingModule = originReset;
         testBed.resetTestingModule();
-        _resizerSub = null;
     });
 };

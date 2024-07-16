@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
 
-const ROOT = 'dist/igniteui-angular-elements';
+const ROOT = 'dist/igniteui-angular-elements/browser';
 const config = {
     // logLevel: 'verbose',
     entryPoints: [`${ROOT}/index.js`],

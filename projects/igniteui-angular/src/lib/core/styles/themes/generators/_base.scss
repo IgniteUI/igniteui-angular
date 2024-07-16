@@ -1,4 +1,5 @@
 @use 'sass:list';
+@use 'sass:map';
 @use 'sass:meta';
 @use 'sass:string';
 @use '../schemas' as *;
@@ -72,6 +73,8 @@
     // Stores all excluded component styles
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
+    $theme: map.get($schema, '_meta', 'theme');
+    $variant: map.get($schema, '_meta', 'variant');
 
     #{$scope} {
         --ig-size-small: 1;
@@ -108,6 +111,13 @@
     @if $roundness {
         #{$scope} {
             --ig-radius-factor: #{$roundness};
+        }
+    }
+
+    @if $theme {
+        #{$scope} {
+            --ig-theme: #{if($theme == 'indigo-design', 'indigo', #{$theme})};
+            --ig-theme-variant: #{$variant};
         }
     }
 
@@ -459,6 +469,14 @@
         @include icon($icon-theme-map);
     }
 
+    @if is-used('igx-icon-button', $exclude) {
+        $icon-button-theme-map: icon-button-theme(
+            $schema: $schema,
+        );
+        $icon-button-theme-map: meta.call($theme-handler, $icon-button-theme-map);
+        @include icon-button($icon-button-theme-map);
+    }
+
     @if is-used('igx-input-group', $exclude) {
         $input-group-theme-map: input-group-theme(
             $schema: $schema,
@@ -473,6 +491,14 @@
         );
         $list-theme-map: meta.call($theme-handler, $list-theme-map);
         @include list($list-theme-map);
+    }
+
+    @if is-used('igx-label', $exclude) {
+        $label-theme-map: label-theme(
+            $schema: $schema,
+        );
+        $label-theme-map: meta.call($theme-handler, $label-theme-map);
+        @include label($label-theme-map);
     }
 
     @if is-used('igx-navbar', $exclude) {

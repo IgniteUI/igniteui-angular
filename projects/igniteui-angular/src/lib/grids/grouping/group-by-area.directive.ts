@@ -12,7 +12,6 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent } from '../../chips/public_api';
-import { DisplayDensity } from '../../core/density';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -33,21 +32,8 @@ export abstract class IgxGroupByAreaDirective {
     @Input()
     public dropAreaTemplate: TemplateRef<void>;
 
-    @Input()
-    public density: DisplayDensity = DisplayDensity.comfortable;
-
     @HostBinding('class.igx-grid-grouparea')
     public defaultClass = true;
-
-    @HostBinding('class.igx-grid-grouparea--cosy')
-    public get cosyStyle() {
-        return this.density === 'cosy';
-    }
-
-    @HostBinding('class.igx-grid-grouparea--compact')
-    public get compactStyle() {
-        return this.density === 'compact';
-    }
 
     /** The parent grid containing the component. */
     @Input()

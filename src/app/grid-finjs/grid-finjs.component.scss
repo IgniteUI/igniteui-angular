@@ -175,7 +175,7 @@
         font-size: .8125rem;
     }
 
-    .igx-button--icon {
+    .igx-icon-button {
         width: 2rem;
         height: 2rem;
     }
@@ -183,4 +183,5 @@
 
 igx-grid {
     flex: 1 0 0%;
+    --ig-size: var(--ig-size-small);
 }

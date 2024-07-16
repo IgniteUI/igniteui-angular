@@ -57,8 +57,7 @@ describe('Update 7.2.0', () => {
                 </igx-drop-down-item>
             </igx-drop-down>`);
 
-        const tree = await schematicRunner.runSchematicAsync('migration-08', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
                 `<igx-drop-down #myDropDown>
@@ -91,8 +90,7 @@ describe('Update 7.2.0', () => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
         spyOn(addNormalize, 'addResetCss').and.callThrough();
-        const tree = await schematicRunner.runSchematicAsync('migration-08', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
 
         expect(addNormalize.addResetCss).toHaveBeenCalledWith(
             jasmine.objectContaining<workspaces.WorkspaceDefinition>({

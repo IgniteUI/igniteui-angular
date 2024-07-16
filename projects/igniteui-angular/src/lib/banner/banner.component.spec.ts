@@ -475,6 +475,16 @@ describe('igxBanner', () => {
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             expect(banner.collapsed).toBeTruthy();
         }));
+
+        it('Should apply the appropriate attributes on initialization', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
+            fixture.detectChanges();
+
+            const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            expect(panel).not.toBeNull();
+            expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
+            expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
+        }));
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
@@ -488,7 +498,7 @@ describe('igxBanner', () => {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
@@ -502,11 +512,11 @@ export class IgxBannerEmptyComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px;">
+        <div id="wrapper" style="width:900px;">
             <igx-banner>
                 You have lost connection to the internet.
                 <igx-banner-actions>
-                    <button igxButton="raised">TURN ON WIFI</button>
+                    <button igxButton="contained">TURN ON WIFI</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
@@ -522,13 +532,13 @@ export class IgxBannerOneButtonComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner>
                 <igx-icon>error</igx-icon>
                 Unfortunately, the credit card did not go through, please try again.
                 <igx-banner-actions>
-                    <button igxButton="raised" (click)="banner.close()">UPDATE</button>
-                    <button igxButton="raised" (click)="banner.close()">DISMISS</button>
+                    <button igxButton="contained" (click)="banner.close()">UPDATE</button>
+                    <button igxButton="contained" (click)="banner.close()">DISMISS</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
@@ -544,17 +554,15 @@ export class IgxBannerSampleComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner>
                 <igx-card>
                     <igx-card-header class="compact">
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
-                        <div class="igx-card-header__tgroup">
-                            <h3 class="igx-card-header__title--small">Brad Stanley</h3>
-                            <h5 class="igx-card-header__subtitle">Audi AG</h5>
-                        </div>
+                        <h3 class="igx-card-header__title--small">Brad Stanley</h3>
+                        <h5 class="igx-card-header__subtitle">Audi AG</h5>
                     </igx-card-header>
                     <igx-card-content>
                         <p class="igx-card-content__text">Brad Stanley has requested to follow you.</p>
@@ -577,7 +585,7 @@ export class IgxBannerCustomTemplateComponent {
 
 @Component({
     template: `
-        <div id="wrapper" style = "width:900px">
+        <div id="wrapper" style="width:900px">
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,

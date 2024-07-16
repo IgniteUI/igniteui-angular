@@ -7,6 +7,9 @@ import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { NgIf } from '@angular/common';
+import { IgxLayoutModule } from '../directives/layout/layout.module';
+import { IgxNavbarModule } from '../navbar/navbar.module';
+import { IgxNavbarComponent } from '../navbar/navbar.component';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
@@ -19,8 +22,8 @@ describe('Navigation Drawer', () => {
         // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             imports: [
-                TestComponentPin,
-                TestComponentMini,
+                TestComponentPinComponent,
+                TestComponentMiniComponent,
                 TestComponent,
                 TestComponentDIComponent
             ]
@@ -211,25 +214,27 @@ describe('Navigation Drawer', () => {
         spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
             callback(0); return 0;
         });
-        const template = `<igx-nav-drawer>
+        const template = `<igx-nav-drawer [miniWidth]="'56px'">
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentMini, {
+        TestBed.overrideComponent(TestComponentMiniComponent, {
             set: {
                 template
             }
         });
         let fixture;
         let asideElem;
+        let cssProp;
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentMini);
+            fixture = TestBed.createComponent(TestComponentMiniComponent);
             fixture.detectChanges();
-            asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside'));
+            asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside--mini'));
+            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--igx-nav-drawer-size--mini');
 
-            expect(asideElem.styles['width']).toEqual('68px');
+            expect(cssProp).toEqual('56px');
 
             fixture.componentInstance.miniView = false;
             fixture.detectChanges();
@@ -238,14 +243,14 @@ describe('Navigation Drawer', () => {
             fixture.componentInstance.miniView = true;
             fixture.detectChanges();
 
-            expect(asideElem.styles['width']).toEqual(fixture.componentInstance.navDrawer.miniWidth);
+            expect(cssProp).toEqual(fixture.componentInstance.navDrawer.miniWidth);
         }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should set pin, gestures options', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
                             </igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentPin, {
+        TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
                 template
             }
@@ -253,7 +258,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(TestComponentPin);
+            const fixture = TestBed.createComponent(TestComponentPinComponent);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.pin).toBeTruthy();
@@ -262,7 +267,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.navDrawer.enableGestures).toBe(false);
 
-            fixture.componentInstance.enableGestures = 'true';
+            fixture.componentInstance.enableGestures = true;
             fixture.detectChanges();
             expect(fixture.componentInstance.navDrawer.enableGestures).toBeTruthy();
 
@@ -278,11 +283,11 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>
                           </div>`;
 
-        TestBed.overrideComponent(TestComponentPin, { set: { template } });
+        TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
                 document.body.style.overflow = 'hidden';
-                const fixture = TestBed.createComponent(TestComponentPin);
+                const fixture = TestBed.createComponent(TestComponentPinComponent);
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
                 const container = fixture.debugElement.query(By.css('div')).nativeElement;
@@ -309,31 +314,49 @@ describe('Navigation Drawer', () => {
 
     it('should set flex-basis and order when pinned', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentPin, { set: { template } });
+        TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
+        let fixture: ComponentFixture<TestComponentPinComponent>;
         TestBed.compileComponents()
             .then(() => {
-                const fixture = TestBed.createComponent(TestComponentPin);
+                fixture = TestBed.createComponent(TestComponentPinComponent);
                 const drawer = fixture.componentInstance.navDrawer;
                 drawer.isOpen = true;
                 fixture.detectChanges();
                 const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
                 expect(drawer.pin).toBeTruthy();
-                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(flexBasis).toEqual('240px');
                 expect(drawerElem.style.order).toEqual('0');
 
                 drawer.width = '345px';
                 drawer.position = 'right';
                 fixture.detectChanges();
-                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(()=> {
+                const drawer = fixture.componentInstance.navDrawer;
+
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+
+                expect(flexBasis).toEqual('345px');
                 expect(drawerElem.style.order).toEqual('1');
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
                 expect(drawer.pin).toBeFalsy();
-                expect(drawerElem.style.flexBasis).toEqual('0px');
+
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(()=> {
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+
+                expect(flexBasis).toEqual('0px');
                 expect(drawerElem.style.order).toEqual('0');
-            });
+        });
     }));
 
     it('should toggle on edge swipe gesture', (done) => {
@@ -374,6 +397,9 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '280px';
+            navDrawer.miniWidth = '68px';
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
@@ -456,36 +482,58 @@ describe('Navigation Drawer', () => {
         await TestBed.compileComponents();
         const fixture: ComponentFixture<TestComponentDIComponent> = TestBed.createComponent(TestComponentDIComponent);
         fixture.detectChanges();
+
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
+        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
 
-        // defaults:
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('');
+        const computedStyle = window.getComputedStyle(asideElem);
+        let asideWidth = computedStyle.getPropertyValue('width');
+
+        // Default sizes:
+        // Mini default:
+        expect(asideWidth).toBe('56px');
+
         fixture.componentInstance.navDrawer.open();
-        await wait(200);
+        fixture.detectChanges();
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('');
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
 
+        // Standard default:
+        expect(asideWidth).toBe('240px');
+
+        // Change sizes:
         fixture.componentInstance.drawerMiniWidth = '80px';
         fixture.componentInstance.drawerWidth = '250px';
-        fixture.detectChanges();
-        await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('250px');
+        fixture.detectChanges();
+
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
+
+        expect(asideWidth).toBe('250px');
+
         fixture.componentInstance.navDrawer.close();
-        await wait(200);
-
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('80px');
-        fixture.componentInstance.drawerWidth = '350px';
         fixture.detectChanges();
-        fixture.componentInstance.navDrawer.open();
-        await wait(200);
 
-        expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('350px');
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
+
+        expect(asideWidth).toBe('80px');
+
+        fixture.componentInstance.drawerWidth = '350px';
+        fixture.componentInstance.navDrawer.open();
+        fixture.detectChanges();
+
+        await wait(350);
+        asideWidth = computedStyle.getPropertyValue('width');
+
+        expect(asideWidth).toBe('350px');
     });
 
     it('should update pin based on window width (pinThreshold)', async () => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
-        TestBed.overrideComponent(TestComponentPin, {
+        TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
                 template
             }
@@ -493,7 +541,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         await TestBed.compileComponents();
-        const fixture: ComponentFixture<TestComponentPin> = TestBed.createComponent(TestComponentPin);
+        const fixture: ComponentFixture<TestComponentPinComponent> = TestBed.createComponent(TestComponentPinComponent);
 
         // watch for initial pin with 2-way bind expression changed errors
         expect(() => fixture.detectChanges()).not.toThrow();
@@ -539,7 +587,7 @@ describe('Navigation Drawer', () => {
 
     it('should get correct window width', (done) => {
         const originalWidth = window.innerWidth;
-        const platformUtil: PlatformUtil = new PlatformUtil(TestBed.inject(PLATFORM_ID));
+        const platformUtil = TestBed.inject(PlatformUtil);
         const drawer = new IgxNavigationDrawerComponent(null, null, null, null, platformUtil);
 
         // re-enable `getWindowWidth`
@@ -560,6 +608,37 @@ describe('Navigation Drawer', () => {
 
         expect(fix.componentInstance.navDrawer.element.classList.contains('markupClass')).toBeTruthy();
         expect(fix.componentInstance.navDrawer.element.classList.contains('igx-nav-drawer')).toBeTruthy();
+    });
+
+    it('should maintain size when mini pinned has `fixed` position', async () => {
+            const fix = TestBed.createComponent(TestFixedMiniComponent);
+            fix.detectChanges();
+
+            fix.componentInstance.navDrawer.pin = true;
+            fix.detectChanges();
+
+            // Account for transition duration
+            await wait(350);
+
+            const drawerEl = fix.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+            const navbarEl = fix.debugElement.query(By.directive(IgxNavbarComponent)).nativeElement;
+
+            let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
+
+            // Mini variant pinned by default
+            expect(flexBasis).toEqual('56px');;
+            expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
+
+            fix.componentInstance.navDrawer.toggle();
+            fix.detectChanges();
+
+            // Account for transition duration
+            await wait(350);
+
+            flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
+
+            expect(flexBasis).toEqual('240px');;
+            expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 
     const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
@@ -611,7 +690,7 @@ class TestComponent {
 
 @Component({
     providers: [IgxNavigationService],
-    selector: 'igx-test-cmp',
+    selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
@@ -622,12 +701,67 @@ class TestComponentDIComponent {
     public drawerWidth: string | number;
 }
 
-class TestComponentPin extends TestComponentDIComponent {
+@Component({
+    selector: 'igx-test-cmp-pin',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+})
+class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
-    public enableGestures = '';
+    public enableGestures = false;
     public pinThreshold = 1024;
 }
 
-class TestComponentMini extends TestComponentDIComponent {
+@Component({
+    selector: 'igx-test-cmp-mini',
+    providers: [IgxNavigationService],
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+})
+class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;
 }
+
+@Component({
+    selector: 'igx--test-fixed-mini',
+    providers: [IgxNavigationService],
+    standalone: true,
+    imports: [
+        IgxLayoutModule,
+        IgxNavbarModule,
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerTemplateDirective,
+        IgxNavDrawerMiniTemplateDirective,
+        NgIf,
+    ],
+    styles: `
+        .igx-nav-drawer__aside--pinned {
+            position: fixed;
+        }
+    `,
+    template: `
+    <div igxLayout>
+      <igx-nav-drawer #nav>
+        <ng-template igxDrawer>
+          <span igxDrawerItem>Item</span>
+        </ng-template>
+
+        <ng-template igxDrawerMini *ngIf="nav.pin">
+          <nav>
+            <span igxDrawerItem>Item</span>
+          </nav>
+        </ng-template>
+      </igx-nav-drawer>
+
+      <div igxFlex igxLayout igxLayoutDir="columns">
+        <igx-navbar title="Navbar" actionButtonIcon="menu" (action)="nav.toggle()">
+        </igx-navbar>
+        <div class="main"></div>
+      </div>
+    </div>
+    `,
+})
+class TestFixedMiniComponent extends TestComponentDIComponent { }

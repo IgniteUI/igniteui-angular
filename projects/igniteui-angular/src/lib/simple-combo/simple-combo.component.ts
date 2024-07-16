@@ -1,6 +1,6 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -11,7 +11,6 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
 import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -30,8 +29,12 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /** An object which represents the value that is currently selected */
-    oldSelection: any;
+    oldValue: any;
     /** An object which represents the value that will be selected after this event */
+    newValue: any;
+    /** An object which represents the item that is currently selected */
+    oldSelection: any;
+    /** An object which represents the item that will be selected after this event */
     newSelection: any;
     /** The text that will be displayed in the combo text box */
     displayText: string;
@@ -67,7 +70,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
-export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
+export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -89,13 +92,26 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
 
+    public override get value(): any {
+        return this._value[0];
+    }
+
+    /**
+     * Get current selection state
+     *
+     * @returns The selected item, if any
+     * ```typescript
+     * let mySelection = this.combo.selection;
+     * ```
+     */
+    public override get selection(): any {
+        return super.selection[0];
+    }
+
     /** @hidden @internal */
     public composing = false;
 
     private _updateInput = true;
-
-    // stores the last filtered value - move to common?
-    private _internalFilter = '';
 
     private _collapsing = false;
 
@@ -121,17 +137,30 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return this.selectionService.get(this.id).values().next().value;
     }
 
+    protected get hasSelectedItem(): boolean {
+        return !!this.selectionService.get(this.id).size;
+    }
+
     constructor(elementRef: ElementRef,
         cdr: ChangeDetectorRef,
         selectionService: IgxSelectionAPIService,
         comboAPI: IgxComboAPIService,
-        _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) document: any,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, _displayDensityOptions, _inputGroupType, _injector);
+        @Optional() _injector: Injector,
+        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+    ) {
+        super(
+            elementRef,
+            cdr,
+            selectionService,
+            comboAPI,
+            document,
+            _inputGroupType,
+            _injector,
+            _iconService
+        );
         this.comboAPI.register(this);
     }
 
@@ -144,7 +173,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.stopPropagation();
             this.open();
         } else {
-            if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
+            if (this.virtDir.igxForOf.length > 0 && !this.hasSelectedItem) {
                 this.dropdown.navigateNext();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
@@ -182,23 +211,24 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public writeValue(value: any): void {
-        const oldSelection = this.selection;
+        const oldSelection = super.selection;
         this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
-        this._value = this.createDisplayText(this.selection, oldSelection);
-        this.filterValue = this._internalFilter = this._value?.toString();
+        this._displayValue = this.createDisplayText(super.selection, oldSelection);
+        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+        this.filterValue = this._displayValue?.toString() || '';
     }
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.selection.length > 0) {
+            if (super.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
                     let current = e? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
-                    return current === this.selection[0];
+                    return current === super.selection[0];
                 });
                 if (!this.isRemote) {
                     // navigate to item only if we have local data
@@ -218,13 +248,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
             }
-            this.filterValue = this.searchValue = '';
         });
         this.dropdown.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.composing) {
                 this.comboInput.focus();
             }
-            this._internalFilter = this.comboInput.value;
         });
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             if (args.cancel) {
@@ -238,37 +266,53 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this.comboInput.focus();
         });
-        this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.filterValue = this._internalFilter = this.comboInput.value;
-        });
 
         // in reactive form the control is not present initially
         // and sets the selection to an invalid value in writeValue method
         if (!this.isValid(this.selectedItem)) {
             this.selectionService.clear(this.id);
-            this._value = '';
+            this._displayValue = '';
         }
 
         super.ngAfterViewInit();
     }
 
     /** @hidden @internal */
-    public override handleInputChange(event?: any): void {
-        if (event !== undefined) {
-            this.filterValue = this._internalFilter = this.searchValue = typeof event === 'string' ? event : event.target.value;
+    public ngDoCheck(): void {
+        if (this.data?.length && super.selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(super.selection, []);
+            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
         }
-        this._onChangeCallback(this.searchValue);
+    }
+
+    /** @hidden @internal */
+    public override handleInputChange(event?: any): void {
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && this.selection.length) {
+        if (event !== undefined) {
+            this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
+        }
+        if (!this.comboInput.value.trim() && super.selection.length) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
             this.filterValue = '';
         }
-        if (this.selection.length) {
-            this.selectionService.clear(this.id);
+        if (super.selection.length) {
+            const args: ISimpleComboSelectionChangingEventArgs = {
+                newValue: undefined,
+                oldValue: this.selectedItem,
+                newSelection: undefined,
+                oldSelection: this.selection,
+                displayText: typeof event === 'string' ? event : event?.target?.value,
+                owner: this,
+                cancel: false
+            };
+            this.selectionChanging.emit(args);
+            if (!args.cancel) {
+                this.selectionService.select_items(this.id, [], true);
+            }
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
@@ -293,13 +337,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             if (filtered === null || filtered === undefined) {
                 return;
             }
-            this.select(this.dropdown.focusedItem.itemID);
-            event.preventDefault();
-            event.stopPropagation();
-            this.close();
+            if (!this.dropdown.collapsed) {
+                this.select(this.dropdown.focusedItem.itemID);
+                event.preventDefault();
+                event.stopPropagation();
+                this.close();
+            }
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
-            this.filterValue = this.getElementVal(filtered);
             return;
         }
         if (event.key === this.platformUtil.KEYMAP.BACKSPACE
@@ -318,9 +363,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleKeyUp(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ARROW_DOWN) {
-            const firstItem = this.selectionService.first_item(this.id);
-            this.dropdown.focusedItem = firstItem && this.filteredData.length > 0
-                ? this.dropdown.items.find(i => i.itemID === firstItem)
+            this.dropdown.focusedItem = this.hasSelectedItem && this.filteredData.length > 0
+                ? this.dropdown.items.find(i => i.itemID === this.selectedItem)
                 : this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
         }
@@ -355,11 +399,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onFocus(): void {
-        this._internalFilter = this.comboInput.value || '';
-    }
-
-    /** @hidden @internal */
     public getEditElement(): HTMLElement {
         return this.comboInput.nativeElement;
     }
@@ -369,13 +408,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.disabled) {
             return;
         }
+
+        const oldSelection = this.selection;
         this.clearSelection(true);
+
         if(!this.collapsed){
             this.focusSearchInput(true);
         }
         event.stopPropagation();
 
-        this.comboInput.value = this.filterValue = this.searchValue = '';
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this.filterValue = this.searchValue = '';
+        }
+
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
@@ -433,12 +478,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     };
 
     protected setSelection(newSelection: any): void {
-        const newSelectionAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
-        const oldSelectionAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
+        const newValueAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
+        const oldValueAsArray = Array.from(this.selectionService.get(this.id) || []);
+        const newItems = this.convertKeysToItems(newValueAsArray);
+        const oldItems = this.convertKeysToItems(oldValueAsArray);
+        const displayText = this.createDisplayText(this.convertKeysToItems(newValueAsArray), oldValueAsArray);
         const args: ISimpleComboSelectionChangingEventArgs = {
-            newSelection: newSelectionAsArray[0],
-            oldSelection: oldSelectionAsArray[0],
+            newValue: newValueAsArray[0],
+            oldValue: oldValueAsArray[0],
+            newSelection: newItems[0],
+            oldSelection: oldItems[0],
             displayText,
             owner: this,
             cancel: false
@@ -448,32 +497,43 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = this.isValid(args.newSelection)
-                ? args.newSelection
+            let argsSelection = this.isValid(args.newValue)
+                ? args.newValue
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
+            this._value = argsSelection;
             if (this._updateInput) {
-                this.comboInput.value = this._internalFilter = this._value = this.searchValue = displayText !== args.displayText
+                this.comboInput.value = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
-                    : this.createDisplayText(argsSelection, [args.oldSelection]);
+                    : this.createDisplayText(super.selection, [args.oldValue]);
             }
-            this._onChangeCallback(args.newSelection);
+            this._onChangeCallback(args.newValue);
             this._updateInput = true;
         } else if (this.isRemote) {
-            this.registerRemoteEntries(newSelectionAsArray, false);
+            this.registerRemoteEntries(newValueAsArray, false);
+        } else {
+            args.displayText = this.createDisplayText(oldItems, []);
+
+            const oldSelectionArray = args.oldSelection ? [args.oldSelection] : [];
+            this.comboInput.value = this._displayValue = this.searchValue = this.createDisplayText(oldSelectionArray, []);
+
+            if (this.isRemote) {
+                this.registerRemoteEntries(newValueAsArray, false);
+            }
         }
     }
 
     protected createDisplayText(newSelection: any[], oldSelection: any[]): string {
         if (this.isRemote) {
-            return this.getRemoteSelection(newSelection, oldSelection);
+            const selection = this.valueKey ? newSelection.map(item => item[this.valueKey]) : newSelection;
+            return this.getRemoteSelection(selection, oldSelection);
         }
 
         if (this.displayKey !== null
             && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
+            return newSelection.filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
         }
 
         return newSelection[0]?.toString() || '';
@@ -497,7 +557,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (add && selection) {
             this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey].toString();
         } else {
-            delete this._remoteSelection[ids[0]];
+            this._remoteSelection = {};
         }
     }
 
@@ -512,8 +572,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private clearOnBlur(): void {
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
-            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
-            if (remoteValue && searchValue !== remoteValue) {
+            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
+            if (searchValue !== remoteValue) {
                 this.clear();
             }
             return;
@@ -521,7 +581,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         const filtered = this.filteredData.find(this.findMatch);
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
-        if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
+        if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
             this.clear();
         }
     }
@@ -533,7 +593,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this.comboInput.value = this._internalFilter = this._value = this.searchValue = '';
+        const oldSelection = this.selection;
+        if (this.selection !== oldSelection) {
+            this.comboInput.value = this._displayValue = this.searchValue = '';
+        }
     }
 
     private isValid(value: any): boolean {

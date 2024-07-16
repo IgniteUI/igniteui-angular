@@ -12,7 +12,8 @@ import {
     Output,
     Self,
     AfterViewInit,
-    OnInit
+    OnInit,
+    booleanAttribute
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -145,7 +146,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * public disabled = true;
      * ```
      */
-    @Input('igxAutocompleteDisabled')
+    @Input({ alias: 'igxAutocompleteDisabled', transform: booleanAttribute })
     public disabled = false;
 
     /**
@@ -170,8 +171,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     private get settings(): OverlaySettings {
         const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
-        const target = settings.target || settings.positionStrategy.settings.target;
-        if (!target) {
+        if (!settings.target) {
             const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
             settings.target = this.parentElement;
             settings.positionStrategy = positionStrategyClone;
@@ -216,7 +216,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _shouldBeOpen = false;
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
     private defaultSettings: OverlaySettings;
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,

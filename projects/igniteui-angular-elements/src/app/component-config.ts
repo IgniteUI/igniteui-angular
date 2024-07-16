@@ -3,7 +3,7 @@ import { PropertyInfo } from '../analyzer/types';
 
 export interface ContentQueryMeta {
     property: string;
-    childType: Type<any>;
+    childType: Type<any> | AbstractType<any>;
     isQueryList?: boolean;
     descendants?: boolean;
 }

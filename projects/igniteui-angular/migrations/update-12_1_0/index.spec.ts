@@ -49,8 +49,7 @@ export class SimpleComponent implements OnInit {
         this.overlayService.onAnimation.subscribe();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/service/test.component.ts'))
             .toEqual(`
@@ -87,8 +86,7 @@ export class TestComponent implements OnInit {
         this.banner.onClosed.subscribe();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
@@ -118,8 +116,7 @@ export class TestComponent implements OnInit {
 >
     Display something
 </igx-banner>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -152,8 +149,7 @@ export class TestComponent implements OnInit {
         this.header.onInteraction.subscribe();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
@@ -178,8 +174,7 @@ export class TestComponent implements OnInit {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
 <input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (onValueChange)="handleEvent()" />`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -200,8 +195,7 @@ export class TestComponent implements OnInit {
         this.mask.onValueChange.subscribe();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
@@ -226,8 +220,7 @@ export class TestComponent implements OnInit {
         Trigger something
     </igx-expansion-panel-header>
 </igx-expansion-panel>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -238,52 +231,6 @@ export class TestComponent implements OnInit {
 </igx-expansion-panel>`);
     });
 
-it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
-    pending('set up tests for migrations through lang service');
-    appTree.create(
-        '/testSrc/appPrefix/component/expansion-test.component.ts',
-        `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
-export class BannerTestComponent {
-
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-
-public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.banner);
-}
-}`
-    );
-    const tree = await schematicRunner
-        .runSchematicAsync('migration-17', {}, appTree)
-        .toPromise();
-    const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
-
-@Component({
-selector: 'app-banner-test',
-templateUrl: './banner-test.component.html',
-styleUrls: ['./banner-test.component.scss']
-})
-export class BannerTestComponent {
-
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
-
-public onBannerOpened(event: BannerEventArgs) {
-    console.log(event.owner);
-}
-}`;
-    expect(
-            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
-        ).toEqual(expectedContent);
-});
     it('should remove paging property and define a igx-paginator component instead', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -292,8 +239,7 @@ public onBannerOpened(event: BannerEventArgs) {
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
         </igx-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -321,8 +267,7 @@ public onBannerOpened(event: BannerEventArgs) {
     </div>
 </div>
 </ng-template>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
@@ -357,8 +302,7 @@ public onBannerOpened(event: BannerEventArgs) {
         <igx-column></igx-column>
     </igx-row-island>
 </igx-hierarchical-grid>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`
@@ -393,8 +337,7 @@ public onBannerOpened(event: BannerEventArgs) {
         <button (click)="next()">NEXT</button>
     </div>
 </ng-template>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
@@ -445,8 +388,7 @@ public onBannerOpened(event: BannerEventArgs) {
    [selectOptions]="selectOptions" [displayDensity]="grid.displayDensity">
         </igx-paginator>
 </ng-template>`);
-        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
@@ -478,8 +420,7 @@ public onBannerOpened(event: BannerEventArgs) {
         >
             Display something
         </igx-drop-down>`);
-            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-                .toPromise();
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
         <igx-drop-down
@@ -510,8 +451,7 @@ public onBannerOpened(event: BannerEventArgs) {
             >
                 <p>Some content that user would like to make it togglable.</p>
             </div>`);
-                const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-                    .toPromise();
+                const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
                 expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                     .toEqual(`
@@ -545,8 +485,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (onClosed)="eventHandler($event)"
                 >
                 </igx-combo>`);
-            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
@@ -579,8 +518,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (onSelection)="eventHandler($event)"
                 >
                 </igx-select>`);
-            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
@@ -607,8 +545,7 @@ public onBannerOpened(event: BannerEventArgs) {
                 [igxAutocomplete]="townsPanel"
                 (onItemSelected)='selectionChanging($event)'
             />`);
-            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
@@ -636,8 +573,7 @@ public onBannerOpened(event: BannerEventArgs) {
             (onRightButtonSelect)="eventHandler($event)"
         >
         </igx-dialog>`);
-            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
@@ -675,8 +611,7 @@ public onBannerOpened(event: BannerEventArgs) {
                 const cells = grid.selectedCells as IgxGridCellComponent[];
             }
         }`);
-    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+    const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent('/testSrc/appPrefix/component/cells.component.ts'))
                 .toEqual(`
@@ -713,8 +648,7 @@ public onBannerOpened(event: BannerEventArgs) {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public IgxGridTransaction!: IgxGridComponent;
         }`);
-    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+    const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
             .toEqual(`
@@ -746,8 +680,7 @@ public onBannerOpened(event: BannerEventArgs) {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public IgxGridTransaction!: IgxGridComponent;
         }`);
-    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+    const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
             .toEqual(`
@@ -777,8 +710,7 @@ public onBannerOpened(event: BannerEventArgs) {
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
@@ -802,8 +734,7 @@ public onBannerOpened(event: BannerEventArgs) {
         `);
 
         const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+            .runSchematic(migrationName, {}, appTree);
 
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')

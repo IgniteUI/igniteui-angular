@@ -1,6 +1,7 @@
 import { workspaces } from '@angular-devkit/core';
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { Options } from '../interfaces/options';
+import { chain } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
 import { addResetCss } from './add-normalize';

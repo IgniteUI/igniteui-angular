@@ -5,7 +5,7 @@
         [itemsMaxHeight]="250"
         (selectionChanging)="handleChange($event)"
         [data]="dimensions"
-        [displayKey]="'memberName'"
+        [displayKey]="'displayName'"
         [(ngModel)]="selected"
         placeholder="Dimension(s)"
         searchPlaceholder="Search..."
@@ -15,28 +15,28 @@
         <igx-buttongroup>
             <button
                 igxButton
-                [disabled]="gridDensity === 'comfortable'"
-                (click)="setDensity('comfortable')"
+                [disabled]="size === 'large'"
+                (click)="setDensity('large')"
             >
-                Comfortable
+                large
             </button>
             <button
                 igxButton
-                [disabled]="gridDensity === 'cosy'"
-                (click)="setDensity('cosy')"
+                [disabled]="size === 'medium'"
+                (click)="setDensity('medium')"
             >
-                Cosy
+                medium
             </button>
             <button
                 igxButton
-                [disabled]="gridDensity === 'compact'"
-                (click)="setDensity('compact')"
+                [disabled]="size === 'small'"
+                (click)="setDensity('small')"
             >
-                Compact
+                small
             </button>
             <button
                 igxButton
-                [disabled]="gridDensity === 'superCompact'"
+                [disabled]="size === 'superCompact'"
                 (click)="setDensity('superCompact')"
             >
                 SCompact
@@ -63,17 +63,15 @@
         <igx-pivot-grid
             #grid1
             [data]="origData"
-            [width]="'100%'"
+            [width]="'800px'"
             [height]="'100%'"
-            [displayDensity]="density"
-            [superCompactMode]="gridDensity === 'superCompact'"
+            [superCompactMode]="size === 'superCompact'"
             [defaultExpandState]="true"
             [rowSelection]="'single'"
-            [pivotConfiguration]="pivotConfigHierarchy"
-            (dimensionsChange)="dimensionChange()"
+            [autoGenerateConfig]="true"
         >
         <ng-template igxPivotValueChip let-value>
-            {{ value.member }}
+            {{ value.displayName }}
        </ng-template>
     </igx-pivot-grid>
     </div>

@@ -92,26 +92,6 @@ describe('igxActionStrip', () => {
             const asQuery = fixture.debugElement.query(By.css('igx-action-strip'));
             expect(asQuery.nativeElement.style.display).toBe('none');
         });
-
-        it('should change displayDensity runtime correctly', () => {
-            // density with custom class applied
-            actionStripElement.nativeElement.classList.add('custom');
-            fixture.detectChanges();
-
-            expect(actionStripElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['custom', 'igx-action-strip']));
-
-            actionStrip.displayDensity = 'cosy';
-            fixture.detectChanges();
-            expect(actionStripElement.nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--cosy'])
-            );
-
-            actionStrip.displayDensity = 'compact';
-            fixture.detectChanges();
-            expect(actionStripElement.nativeElement.classList).toEqual(
-                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--compact'])
-            );
-        });
     });
 
     describe('render content as menu', () => {

@@ -1,7 +1,6 @@
 <igx-grid #grid1
     igxPreventDocumentScroll
     width="100%" height="800px"
-    displayDensity='compact'
     hiddenColumnsText="Hidden"
     primaryKey='ID'
     [(groupingExpressions)]="groupingExpressions"
@@ -63,7 +62,7 @@
 
     <igx-column [field]="'Chart'" [width]="'auto'" [hidden]="false" [filterable]="false">
         <ng-template igxCell let-cell="cell" class="center-text">
-            <button class="button-icon" igxButton="icon" igxRipple [igxRippleCentered]="true" tabindex="-1">
+            <button class="button-icon" igxIconButton="flat" igxRipple [igxRippleCentered]="true" tabindex="-1">
                 <igx-icon>insert_chart_outlined</igx-icon>
             </button>
         </ng-template>

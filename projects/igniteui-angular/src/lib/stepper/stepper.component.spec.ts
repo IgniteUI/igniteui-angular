@@ -5,7 +5,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
-import { HorizontalAnimationType } from '../carousel/carousel-base';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { Direction } from '../services/direction/directionality';
@@ -21,8 +20,9 @@ import {
     VerticalAnimationType
 } from './stepper.common';
 import { IgxStepperComponent } from './stepper.component';
-import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubTitleDirective, IgxStepTitleDirective } from './stepper.directive';
+import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
+import { HorizontalAnimationType } from '../carousel/enums';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -1249,7 +1249,7 @@ describe('Stepper service unit tests', () => {
         <igx-step #step1  [active]="true">
             <span igxStepIndicator>1</span>
             <span igxStepTitle>Step No 1</span>
-            <span igxStepSubTitle>Step SubTitle</span>
+            <span igxStepSubtitle>Step SubTitle</span>
             <div igxStepContent class="sample-body">
                 <igx-input-group>
                     <input igxInput name="firstName" type="text" />
@@ -1260,7 +1260,7 @@ describe('Stepper service unit tests', () => {
         <igx-step #step2>
             <span igxStepIndicator>2</span>
             <span igxStepTitle>Step No 2</span>
-            <span igxStepSubTitle>Step SubTitle</span>
+            <span igxStepSubtitle>Step SubTitle</span>
             <div igxStepContent class="sample-body">
                <p>Test step 2</p>
             </div>
@@ -1269,7 +1269,7 @@ describe('Stepper service unit tests', () => {
         <igx-step #hiddenStep *ngIf="displayHiddenStep">
             <span igxStepIndicator>*</span>
             <span igxStepTitle>Hidden step</span>
-            <span igxStepSubTitle>Step SubTitle</span>
+            <span igxStepSubtitle>Step SubTitle</span>
             <div igxStepContent class="sample-body">
                <p>Test hidden step</p>
             </div>
@@ -1278,7 +1278,7 @@ describe('Stepper service unit tests', () => {
         <igx-step #step3>
             <span igxStepIndicator>3</span>
             <span igxStepTitle>Step No 3</span>
-            <span igxStepSubTitle>Step SubTitle</span>
+            <span igxStepSubtitle>Step SubTitle</span>
             <div igxStepContent class="sample-body">
                <p>Test step 3</p>
             </div>
@@ -1293,7 +1293,7 @@ describe('Stepper service unit tests', () => {
 
         <igx-step #step5 >
             <span igxStepTitle>Step No 5</span>
-            <span igxStepSubTitle>Step SubTitle</span>
+            <span igxStepSubtitle>Step SubTitle</span>
             <div igxStepContent class="sample-body">
                <p>Test step 5</p>
             </div>
@@ -1307,7 +1307,7 @@ describe('Stepper service unit tests', () => {
         IgxStepComponent,
         IgxStepTitleDirective,
         IgxStepIndicatorDirective,
-        IgxStepSubTitleDirective,
+        IgxStepSubtitleDirective,
         IgxStepContentDirective,
         IgxStepInvalidIndicatorDirective,
         IgxStepCompletedIndicatorDirective,

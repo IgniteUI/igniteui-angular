@@ -1,0 +1,29 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/app",
+    "types": [
+        "node"
+    ],
+    "paths": {
+        "igniteui-angular": [
+          "dist/igniteui-angular"
+        ],
+        "igniteui-angular/*": [
+          "dist/igniteui-angular/*"
+        ],
+        "igniteui-angular-i18n": [
+          "dist/igniteui-angular-i18n"
+        ]
+    }
+  },
+  "files": [
+    "src/main.ts",
+    "src/main.server.ts",
+    "server.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}

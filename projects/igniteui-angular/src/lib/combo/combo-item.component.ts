@@ -3,7 +3,8 @@ import {
     ElementRef,
     HostBinding,
     Inject,
-    Input
+    Input,
+    booleanAttribute
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
@@ -44,7 +45,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     }
 
     /** @hidden @internal */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public singleMode: boolean;
 
     /**

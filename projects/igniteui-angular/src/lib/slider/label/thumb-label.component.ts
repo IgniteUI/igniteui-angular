@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -25,10 +25,10 @@ export class IgxThumbLabelComponent {
     @Input()
     public type: SliderHandle;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public continuous: boolean;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     public deactiveState: boolean;
 
     @Input()

@@ -1,6 +1,6 @@
 <div #headerContainer class="igx-tabs__header">
-    <button #scrollPrevButton igxButton="icon" igxRipple class="igx-tabs__header-button" (click)="scrollPrev()">
-        <igx-icon>navigate_before</igx-icon>
+    <button #scrollPrevButton type="button" igxIconButton="flat" igxRipple class="igx-tabs__header-button" (click)="scrollPrev()">
+        <igx-icon family="default" name="prev"></igx-icon>
     </button>
     <div #viewPort class="igx-tabs__header-content">
         <div #itemsWrapper class="igx-tabs__header-wrapper" role="tablist">
@@ -13,8 +13,8 @@
             </div>
         </div>
     </div>
-    <button #scrollNextButton igxButton="icon" igxRipple class="igx-tabs__header-button" (click)="scrollNext()">
-        <igx-icon>navigate_next</igx-icon>
+    <button #scrollNextButton type="button" igxIconButton="flat" igxRipple class="igx-tabs__header-button" (click)="scrollNext()">
+        <igx-icon family="default" name="next"></igx-icon>
     </button>
 </div>
 <div class="igx-tabs__panels">

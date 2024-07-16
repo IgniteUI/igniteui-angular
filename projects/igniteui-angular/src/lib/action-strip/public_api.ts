@@ -18,7 +18,8 @@ export const IGX_ACTION_STRIP_DIRECTIVES = [
 
 /* Action-strip in grid directives collection for ease-of-use import in standalone components scenario */
 export const IGX_GRID_ACTION_STRIP_DIRECTIVES = [
-    ...IGX_ACTION_STRIP_DIRECTIVES,
+    IgxActionStripComponent,
+    IgxActionStripMenuItemDirective,
     IgxGridPinningActionsComponent,
     IgxGridEditingActionsComponent,
     IgxGridActionsBaseDirective,

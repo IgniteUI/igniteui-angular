@@ -7,13 +7,14 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError, clearGridSubs } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxHierarchicalGridDefaultComponent } from '../../test-utils/hierarchical-grid-components.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
@@ -22,7 +23,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         return TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                IgxHierarchicalGridTestBaseComponent
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridDefaultComponent
             ]
         });
     }));
@@ -203,9 +205,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         // Scroll to bottom
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
-        await wait();
+        await wait(50);
         fixture.detectChanges();
-
         // Expand two rows at the bottom
         (hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0] as HTMLElement).click();
         await wait();
@@ -282,7 +283,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
-        resizeObserverIgnoreError();
         fixture.componentInstance.data = [
             { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },
             { ID: 1, ChildLevels: 3, ProductName: 'Product: A0 ' },
@@ -394,6 +394,43 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(ri.gridScroll.emit).toHaveBeenCalled();
         expect(ri.dataPreLoad.emit).toHaveBeenCalled();
+    });
+
+    it('should recalculate and update content correctly after filter is cleared, ensuring no empty areas post-filtering and scrolling', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const fixture = TestBed.createComponent(IgxHierarchicalGridDefaultComponent);
+        fixture.detectChanges();
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const hierarchicalGrid = fixture.componentInstance.hierarchicalGrid;
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.filter('Artist', 'd', IgxStringFilteringOperand.instance().condition('contains'));
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.expandRow(6);
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.clearFilter();
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
+        fixture.detectChanges();
+        await wait(50);
+
+        const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
+        const lastRowRect = hierarchicalGrid.dataRowList.last.nativeElement.getBoundingClientRect();
+
+        const emptySpace = hierarchicalGridRect.bottom - lastRowRect.bottom;
+
+        expect(emptySpace).toBeLessThan(5);
     });
 });
 

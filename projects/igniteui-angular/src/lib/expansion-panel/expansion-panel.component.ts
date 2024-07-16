@@ -8,7 +8,8 @@ import {
     HostBinding,
     Inject,
     Input,
-    Output
+    Output,
+    booleanAttribute
 } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
@@ -124,7 +125,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * <igx-expansion-panel [(collapsed)]="model.isCollapsed"></igx-expansion-panel>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public collapsed = true;
 
     /**
@@ -144,8 +145,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  </igx-expansion-panel>
      * ```
      */
-     @Output()
-     public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+    @Output()
+    public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes collapsing
@@ -172,8 +173,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  </igx-expansion-panel>
      * ```
      */
-     @Output()
-     public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+    @Output()
+    public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding
@@ -240,7 +241,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.collapse($event)">Collpase Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.collapse($event)">Collpase Panel</button>
      * ```
      */
     public collapse(evt?: Event) {
@@ -272,7 +273,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.expand($event)">Expand Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.expand($event)">Expand Panel</button>
      * ```
      */
     public expand(evt?: Event) {
@@ -303,7 +304,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <igx-expansion-panel #myPanel>
      *      ...
      *  </igx-expansion-panel>
-     *  <button (click)="myPanel.toggle($event)">Expand Panel</button>
+     *  <button type="button" igxButton (click)="myPanel.toggle($event)">Expand Panel</button>
      * ```
      */
     public toggle(evt?: Event) {

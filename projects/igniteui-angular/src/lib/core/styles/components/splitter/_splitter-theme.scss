@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
@@ -53,10 +54,6 @@
         $expander-color: text-contrast($bar-color);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         bar-color: $bar-color,
@@ -71,6 +68,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin splitter($theme) {
     @include css-vars($theme);
@@ -80,6 +79,12 @@
     $hitbox-debug-color: rgba(coral, .24);
 
     $variant: map.get($theme, '_meta', 'variant');
+
+    //splitter-size + borders
+    $splitter-size: unitless(map.get($theme, 'size')) + 2;
+    
+    //calculate the value for the slim(indigo) splitter
+    $slim-splitter: calc( 1 / $splitter-size); 
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {
@@ -95,12 +100,90 @@
         width: 100%;
         height: $hitbox-size;
         background: if($debug-hitbox, $hitbox-debug-color, transparent);
+
+        @if $variant == 'indigo-design' {
+            height: rem($splitter-size * 4px);
+        }
     }
 
     %handle-area--vertical {
         width: $hitbox-size;
         height: 100%;
+
+        @if $variant == 'indigo-design' {
+            width: rem($splitter-size * 4px);
+        }
     }
+
+    %hide-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 0;
+            transition: opacity .25s .5s ease;
+            pointer-events: none;
+        }
+    }
+
+    %show-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 1;
+            transition: opacity .25s ease;
+            pointer-events: auto;
+        }
+    }
+
+    %expand-bars {
+        [aria-orientation='horizontal'] & {
+            transform: scaleX(1);
+        }
+        
+        [aria-orientation='vertical'] & {
+            transform: scaleY(1);
+        }
+        transition-delay: 0s !important;
+    }
+
+    %indigo-splitter-bar {
+        @extend %hide-controls;
+
+        [aria-orientation='horizontal'] & {
+            transform: scaleX($slim-splitter);
+        }
+
+        [aria-orientation='vertical'] & {
+            transform: scaleY($slim-splitter);
+        }
+
+        &.igx-splitter-bar--collapsible {
+            transition: all .25s .5s $in-out-quad !important;
+
+            &::before,
+            &::after {
+                transition-delay: 2s;
+            }
+
+            &:hover {
+                @extend %show-controls;
+                @extend %expand-bars;
+
+                &::before,
+                &::after {
+                    height: $hitbox-size;
+                    width: 100%;
+                    transition-delay: .5s;
+                }
+
+                &.igx-splitter-bar--vertical {
+                    &::before,
+                    &::after {
+                        width: $hitbox-size;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }    
 
     %igx-splitter-bar {
         position: relative;
@@ -113,6 +196,18 @@
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $out-quad !important;
+
+        @if $variant != 'indigo-design' {
+            @extend %hide-controls;
+
+            &.igx-splitter-bar--collapsible {
+                @extend %show-controls;
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            @extend %indigo-splitter-bar;
+        }
 
         &::before {
             @extend %handle-area;
@@ -136,7 +231,17 @@
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
 
         @if $variant == 'indigo-design' {
-            background: var-get($theme, 'focus-color');
+            box-shadow: none;
+            
+            %indigo-splitter-bar {
+                background: var-get($theme, 'focus-color');
+                border-color: var-get($theme, 'focus-color');
+
+                &.igx-splitter-bar--collapsible {
+                    @extend %show-controls;
+                    @extend %expand-bars;
+                }
+            }
         }
     }
 

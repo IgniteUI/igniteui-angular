@@ -21,22 +21,7 @@
         @extend %tree-node !optional;
 
         @include e(wrapper) {
-            @include sizable();
             @extend %node-wrapper !optional;
-
-            &:hover {
-                &::after {
-                    @extend %indigo-opacity !optional;
-                }
-            }
-        }
-
-        @include e(wrapper, $m: cosy) {
-            @extend %node-wrapper--cosy !optional;
-        }
-
-        @include e(wrapper, $m: compact) {
-            @extend %node-wrapper--compact !optional;
         }
 
         // STATES START
@@ -66,7 +51,6 @@
         }
 
         @include e(spacer) {
-            @include sizable();
             @extend %node-spacer !optional;
         }
 

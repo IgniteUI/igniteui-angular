@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -17,7 +18,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { Direction, HorizontalAnimationType, IgxSlideComponentBase } from '../../carousel/carousel-base';
+import { Direction, IgxSlideComponentBase } from '../../carousel/carousel-base';
 import { PlatformUtil } from '../../core/utils';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
@@ -28,6 +29,7 @@ import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.d
 import { IgxStepperService } from '../stepper.service';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
+import { HorizontalAnimationType } from '../../carousel/enums';
 
 let NEXT_ID = 0;
 
@@ -90,7 +92,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].disabled = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set disabled(value: boolean) {
         this._disabled = value;
         if (this.stepper.linear) {
@@ -120,7 +122,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].completed = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-stepper__step--completed')
     public completed = false;
 
@@ -137,7 +139,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * </igx-step>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get isValid(): boolean {
         return this._valid;
     }
@@ -163,7 +165,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * this.stepper.steps[1].optional = true;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public optional = false;
 
     /**
@@ -180,7 +182,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * @param value: boolean
      */
     @HostBinding('attr.aria-selected')
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set active(value: boolean) {
         if (value) {
             this.stepperService.expandThroughApi(this);
@@ -560,7 +562,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         this.stepperService.expand(this);
 
         if (!this.animationSettings.closeAnimation) {
-            this.stepperService.previousActiveStep.openAnimationPlayer?.finish();
+            this.stepperService.previousActiveStep?.openAnimationPlayer?.finish();
         }
 
         if (!this.animationSettings.openAnimation) {

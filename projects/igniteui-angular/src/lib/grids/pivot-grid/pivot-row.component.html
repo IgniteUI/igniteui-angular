@@ -11,9 +11,9 @@
         [ngStyle]="col.cellStyles | igxCellStyles:pivotAggregationData[col.field]:pivotAggregationData:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)" [column]="col"
         [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
-        [style.min-height.px]="cellHeight" [rowData]="data" [columnData]='getColumnData(col)'
-        [style.min-width]="col.width" [style.max-width]="col.width"
-        [style.flex-basis]="col.width" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
+        [rowData]="data" [columnData]='getColumnData(col)'
+        [style.min-width]="col.resolvedWidth" [style.max-width]="col.resolvedWidth"
+        [style.flex-basis]="col.resolvedWidth" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
         [value]="pivotAggregationData[col.field] | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"

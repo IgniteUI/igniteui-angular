@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type" [displayDensity]="displayDensity">
+<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -26,9 +26,7 @@
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate">
-            {{ inputGroup.theme === 'material' ? collapsed ? 'expand_more' : 'expand_less' : collapsed ? 'arrow_drop_down' : 'arrow_drop_up' }}
-        </igx-icon>
+        <igx-icon *ngIf="!toggleIconTemplate" family="combo" [name]="toggleIcon"></igx-icon>
     </igx-suffix>
     <ng-container ngProjectAs="igx-hint, [igxHint]" >
         <ng-content select="igx-hint, [igxHint]"></ng-content>

@@ -2,14 +2,13 @@
     <h4>Sample 1</h4>
 
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <igx-grid
         #grid1
         [data]="data"
         [moving]="true"
-        [displayDensity]="density"
         [allowFiltering]="true"
         [filterStrategy]="filterStrategy"
         [filterMode]="'excelStyleFilter'"
@@ -17,7 +16,7 @@
         [rowSelection]="selectionMode"
         [height]="'600px'"
         [columnSelection]="'single'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -49,15 +48,15 @@
 
     <div class="sample-buttons">
         <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>
-        <igx-buttongroup [multiSelection]="false" [values]="filterModes" (selected)="selectFilterMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="filterModes" (selected)="selectFilterMode($event)"></igx-buttongroup>
     </div>
 
     <div class="sample-buttons">
         <igx-checkbox [(ngModel)]="grid1.allowAdvancedFiltering">Allow Advanced Filtering</igx-checkbox>
-        <button igxButton="raised" (click)="openAdvancedFiltering()">Open Advanced Filtering</button>
-        <button igxButton="raised" (click)="closeAdvancedFiltering()">Close Advanced Filtering</button>
+        <button igxButton="contained" (click)="openAdvancedFiltering()">Open Advanced Filtering</button>
+        <button igxButton="contained" (click)="closeAdvancedFiltering()">Close Advanced Filtering</button>
         <igx-checkbox #applyChangesCheckbox [checked]="true">Apply Changes</igx-checkbox>
-        <button igxButton="raised" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
+        <button igxButton="contained" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
     </div>
 
     <h4>ESF Templates</h4>
@@ -66,14 +65,13 @@
         #grid2
         [data]="data"
         [moving]="true"
-        [displayDensity]="density"
         [allowFiltering]="true"
         [filterMode]="'excelStyleFilter'"
         [allowAdvancedFiltering]="true"
         [rowSelection]="selectionMode"
         [height]="'600px'"
         [columnSelection]="'single'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

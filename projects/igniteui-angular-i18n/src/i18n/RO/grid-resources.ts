@@ -90,6 +90,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Filtru valutar',
     igx_grid_excel_custom_filter: 'Filtru customizat...',
     igx_grid_excel_no_matches: 'Nicio potrivire',
+    igx_grid_excel_matches_count: '{0} potriviri',
     igx_grid_advanced_filter_title: 'Filtrare avansată',
     igx_grid_advanced_filter_and_group: '"Și" Grup',
     igx_grid_advanced_filter_or_group: '"Sau" grup',
@@ -164,8 +165,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Intrarea trebuie să aibă cel puțin {0} caractere',
     igx_grid_max_length_validation_error: 'Intrarea nu trebuie să aibă mai mult de {0} caractere',
     igx_grid_email_validation_error: 'Ar trebui introdusă o adresă de e-mail validă',
-    igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut',
-    igx_grid_pivot_no_aggregator: 'Nu a fost găsit niciun agregator valid pentru {0}. Vă rugăm să setați un „aggregatorName” sau un „aggregator” valid.'
+    igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut'
 };
 
 /**

@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { Component, Input, booleanAttribute } from '@angular/core';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { NgIf } from '@angular/common';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
@@ -11,10 +11,10 @@ import { NgIf } from '@angular/common';
 })
 export class IgxQueryBuilderHeaderComponent {
 
-    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
-     * An @Input property that sets the title of the `IgxQueryBuilderHeaderComponent`.
+     * Sets the title of the `IgxQueryBuilderHeaderComponent`.
      *
      * @example
      * ```html
@@ -25,29 +25,29 @@ export class IgxQueryBuilderHeaderComponent {
     public title: string;
 
     /**
-     * An @Input property to show/hide the legend.
+     * Show/hide the legend.
      *
      * @example
      * ```html
      * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showLegend = true;
 
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
      */
-     @Input()
-     public set resourceStrings(value: IQueryBuilderResourceStrings) {
+    @Input()
+    public set resourceStrings(value: IQueryBuilderResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-     }
+    }
 
-     /**
-      * Returns the resource strings.
-      */
-     public get resourceStrings(): IQueryBuilderResourceStrings {
+    /**
+     * Returns the resource strings.
+     */
+    public get resourceStrings(): IQueryBuilderResourceStrings {
         return this._resourceStrings;
-     }
+    }
 }

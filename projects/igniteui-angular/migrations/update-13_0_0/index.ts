@@ -1,13 +1,14 @@
-import { Element, Text } from '@angular/compiler';
-import {
+import type { Element, Text } from '@angular/compiler';
+import type {
     Rule,
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
-import { Options } from '../../schematics/interfaces/options';
+import type { Options } from '../../schematics/interfaces/options';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
-import { nativeImport } from '../common/import-helper.js';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 
 const version = '13.0.0';
 
@@ -191,7 +192,7 @@ export default (options: Options): Rule =>
             const replaceText = file.content.substring(startTag.start, endTag.end);
             result += '\n' + replaceText;
         });
-        
+
         return result + `\n</igx-grid-toolbar>`;
     };
 

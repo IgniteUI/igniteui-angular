@@ -16,12 +16,12 @@ Basic initialization
 Custom formats for the input field.
 ```html
 <igx-time-picker
-    [inputFormat]="hh:mm:ss tt"
+    [inputFormat]="hh:mm:ss a"
     [displayFormat]="'shortTime'"
     [value]="date" >
 </igx-time-picker>
 ```
-If the `inputFormat` is not set, it will default to `hh:mm tt`. The `displayFormat` accepts all supported formats by Angular's `DatePipe`.
+If the `inputFormat` is not set, it will default to `hh:mm a`. The `displayFormat` accepts all supported formats by Angular's `DatePipe`.
 
 The time picker also supports binding through `ngModel` in case two-way date-binding is needed.
 ```html
@@ -57,7 +57,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 <igx-time-picker #picker>
     <ng-template igxTimePickerActions>
         <div class="action-buttons">
-            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
+            <button type="button" igxButton="flat" (click)="selectToday(picker)">Today</button>
         </div>
     </ng-template>
 </igx-time-picker>

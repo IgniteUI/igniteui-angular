@@ -1116,7 +1116,8 @@ describe('igxExpansionPanel', () => {
 
             const icon = headerBtn.children[1].firstElementChild; // Icon is wrapped in div
             expect(headerBtn.children[1].attributes.getNamedItem('class').nodeValue).toContain('igx-expansion-panel__header-icon--start');
-            expect(icon.attributes.getNamedItem('class').nodeValue).toContain('material-icons igx-icon');
+            expect(icon.classList).toContain('material-icons');
+            expect(icon.classList).toContain('igx-icon');
             // expect(icon.attributes.getNamedItem('ng-reflect-icon-name').nodeValue).toEqual('expand_more');
             expect(icon.attributes.getNamedItem('aria-hidden').nodeValue).toEqual('true');
             expect(icon.childElementCount).toEqual(0);
@@ -1166,7 +1167,8 @@ describe('igxExpansionPanel', () => {
 
             const icon = headerBtn.children[1].firstElementChild; // Icon is wrapped in div
             expect(headerBtn.children[1].attributes.getNamedItem('class').nodeValue).toContain('igx-expansion-panel__header-icon--start');
-            expect(icon.attributes.getNamedItem('class').nodeValue).toContain('material-icons igx-icon');
+            expect(icon.classList).toContain('material-icons');
+            expect(icon.classList).toContain('igx-icon');
             // expect(icon.attributes.getNamedItem('ng-reflect-icon-name').nodeValue).toEqual('expand_more');
             expect(icon.attributes.getNamedItem('aria-hidden').nodeValue).toEqual('true');
             expect(icon.childElementCount).toEqual(0);
@@ -1197,7 +1199,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
             expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
             expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
-            expect(grid.childElementCount).toEqual(7);
+            expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);
@@ -1224,7 +1226,8 @@ describe('igxExpansionPanel', () => {
 
             const icon = headerBtn.children[1].firstElementChild; // Icon is wrapped in div; Icon is the second element
             expect(headerBtn.children[1].attributes.getNamedItem('class').nodeValue).toContain('igx-expansion-panel__header-icon--start');
-            expect(icon.attributes.getNamedItem('class').nodeValue).toContain('material-icons igx-icon');
+            expect(icon.classList).toContain('material-icons');
+            expect(icon.classList).toContain('igx-icon');
             // expect(icon.attributes.getNamedItem('ng-reflect-icon-name').nodeValue).toEqual('expand_more');
             expect(icon.attributes.getNamedItem('aria-hidden').nodeValue).toEqual('true');
             expect(icon.childElementCount).toEqual(0);

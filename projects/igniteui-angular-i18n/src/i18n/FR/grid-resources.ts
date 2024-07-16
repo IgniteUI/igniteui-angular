@@ -88,6 +88,7 @@ const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Filtre devise',
     igx_grid_excel_custom_filter: 'Filtre personnalisé...',
     igx_grid_excel_no_matches: 'Aucune correspondance',
+    igx_grid_excel_matches_count: '{0} correspondance(s)',
     igx_grid_advanced_filter_title: 'Filtrage avancé',
     igx_grid_advanced_filter_and_group: 'Groupe "Et"',
     igx_grid_advanced_filter_or_group: 'Groupe "Ou"',
@@ -164,8 +165,7 @@ const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Veuillez entrer au moins {0} caractères',
     igx_grid_max_length_validation_error: 'Veuillez sélectionner au maximum {0} caractères',
     igx_grid_email_validation_error: 'Une adresse e-mail valide doit être saisie',
-    igx_grid_pattern_validation_error: 'La valeur entrée ne correspond pas au schéma requis',
-    igx_grid_pivot_no_aggregator: 'Aucun agrégateur valide trouvé pour {0}. Veuillez définir un « aggregatorName » ou un « aggregator » valide.'
+    igx_grid_pattern_validation_error: 'La valeur entrée ne correspond pas au schéma requis'
 };
 
 /**

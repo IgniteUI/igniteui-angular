@@ -1,22 +1,21 @@
 <igx-select #dropdownConditions
         type="box"
-        [displayDensity]="displayDensity"
         [placeholder]="conditionsPlaceholder"
         (selectionChanging)="onConditionsChanged($event)"
         [overlaySettings]="dropDownOverlaySettings">
     <igx-prefix>
-        <igx-icon *ngIf="expressionUI.expression.condition" family="imx-icons" [name]="getIconName()"></igx-icon>
-        <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
+        <igx-icon *ngIf="expressionUI.expression.condition" family="default" [name]="getIconName()"></igx-icon>
+        <igx-icon *ngIf="!expressionUI.expression.condition" family="default" name="filter_list"></igx-icon>
     </igx-prefix>
     <igx-select-item *ngFor="let condition of conditions" [value]="condition" [text]="getConditionFriendlyName(condition)" [selected]="isConditionSelected(condition)">
         <div class="igx-grid__filtering-dropdown-items">
-            <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <igx-icon family="default" [name]="getCondition(condition).iconName"></igx-icon>
             <span class="igx-grid__filtering-dropdown-text">{{translateCondition(condition)}}</span>
         </div>
     </igx-select-item>
 </igx-select>
 
-<igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity">
+<igx-input-group #inputGroupValues type="box">
     <input
         #inputValues
         igxInput
@@ -30,14 +29,13 @@
     />
 </igx-input-group>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle">
-    <igx-icon>cancel</igx-icon>
+<button type="button" (click)="onRemoveButtonClick()" igxIconButton="flat" *ngIf="!isSingle">
+    <igx-icon family="default" name="remove"></igx-icon>
 </button>
 
 <igx-buttongroup #logicOperatorButtonGroup
-    *ngIf="!isLast"
-    [multiSelection]="false">
-    <span igxButton [displayDensity]="displayDensity"
+    *ngIf="!isLast">
+    <span igxButton
         tabindex="0"
         #andButton
         (keydown)="onLogicOperatorKeyDown($event, 0)"
@@ -47,7 +45,7 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton [displayDensity]="displayDensity"
+    <span igxButton
         tabindex="0"
         #orButton
         (keydown)="onLogicOperatorKeyDown($event, 1)"

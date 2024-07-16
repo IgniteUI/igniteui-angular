@@ -26,7 +26,7 @@
     </igx-drop-down>
     <igx-dialog #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
 
-    <button igxButton="raised" (click)="onSearch()" [disabled]="!travel.valid">Search</button>
+    <button igxButton="contained" (click)="onSearch()" [disabled]="!travel.valid">Search</button>
 
     <igx-switch (change)="changeDefaultWidth($event)">Attractions Custom Width</igx-switch>
 </form>

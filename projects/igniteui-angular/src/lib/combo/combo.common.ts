@@ -2,11 +2,11 @@ import {
     AfterContentChecked,
     AfterViewChecked,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
     ContentChildren,
     Directive,
-    DoCheck,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -27,9 +27,8 @@ import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
@@ -43,10 +42,13 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
-import { IComboResourceStrings } from '../core/i18n/combo-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { DOCUMENT } from '@angular/common';
+import { Size } from '../grids/common/enums';
+import { isEqual } from 'lodash-es';
 
-export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
+export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
@@ -89,38 +91,23 @@ const itemsInContainer = 10; // TODO: make private readonly
 
 /** @hidden @internal */
 const ItemHeights = {
-    comfortable: 40,
-    cosy: 32,
-    compact: 28,
+    "3": 40,
+    "2": 32,
+    "1": 28
 };
 
 /** @hidden @internal */
-export enum DataTypes {
+export const enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
     PRIMARYKEY = 'valueKey'
 }
 
-export enum IgxComboState {
-    /**
-     * Combo with initial state.
-     */
-    INITIAL = IgxInputState.INITIAL,
-    /**
-     * Combo with valid state.
-     */
-    VALID = IgxInputState.VALID,
-    /**
-     * Combo with invalid state.
-     */
-    INVALID = IgxInputState.INVALID
-}
-
 /** The filtering criteria to be applied on data search */
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
-    caseSensitive: boolean;
+    caseSensitive?: boolean;
     /** Defines whether filtering is allowed */
     filterable: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
@@ -128,7 +115,7 @@ export interface IComboFilteringOptions {
 }
 
 @Directive()
-export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, AfterViewChecked, OnInit, DoCheck,
+export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
@@ -143,14 +130,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
 
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
      * ```html
-     * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
+     * <igx-combo [overlaySettings]="customOverlaySettings"></igx-combo>
      * ```
      *
      * ```typescript
@@ -180,7 +167,27 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-combo-${NEXT_ID++}`;
+    public get id(): string {
+        return this._id;
+    }
+
+    public set id(value: string) {
+        if (!value) {
+            return;
+        }
+        const selection = this.selectionService.get(this._id);
+        this._id = value;
+        if (selection) {
+            this.selectionService.set(this._id, selection);
+        }
+        if (this.dropdown.open) {
+            this.dropdown.close();
+        }
+        if (this.inputGroup?.isFocused) {
+            this.inputGroup.element.nativeElement.blur();
+            this.inputGroup.isFocused = false;
+        }
+    }
 
     /**
      * Sets the style width of the element
@@ -212,7 +219,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <igx-combo [allowCustomValues]='true'></igx-combo>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public allowCustomValues = false;
 
     /**
@@ -246,6 +253,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get comboSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+    }
+
+    /**
      * Configures the drop down list item height
      *
      * ```typescript
@@ -261,7 +276,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     @Input()
     public get itemHeight(): number {
         if (this._itemHeight === null || this._itemHeight === undefined) {
-            return ItemHeights[this.displayDensity];
+            return ItemHeights[this.comboSize];
         }
         return this._itemHeight;
     }
@@ -392,7 +407,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
-     * An @Input property that sets groups sorting order.
+     * Sets groups sorting order.
      *
      * @example
      * ```html
@@ -418,11 +433,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
      * ```
      */
-     @Input()
-     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
+    @Input()
+    public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
-     * An @Input property that set aria-labelledby attribute
+     * Sets aria-labelledby attribute value.
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
      * ```
@@ -435,16 +450,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public cssClass = 'igx-combo'; // Independent of display density for the time being
 
     /**
-     * An @Input property that enabled/disables combo. The default is `false`.
+     * Disables the combo. The default is `false`.
      * ```html
      * <igx-combo [disabled]="'true'">
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
-     * An @Input property that sets how the combo will be styled.
+     * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
      * <igx-combo [type]="'line'">
@@ -467,9 +482,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
-        }
         return this._resourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
@@ -650,7 +662,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboAddItem>
-     *          <button class="combo__add-button">
+     *          <button type="button" igxButton="contained" class="combo__add-button">
      *              Click to add item
      *          </button>
      *      </ng-template>
@@ -794,7 +806,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let valid = this.combo.valid;
      * ```
      */
-    public get valid(): IgxComboState {
+    public get valid(): IgxInputState {
         return this._valid;
     }
 
@@ -803,12 +815,24 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * ```typescript
      * // set
-     * this.combo.valid = IgxComboState.INVALID;
+     * this.combo.valid = IgxInputState.INVALID;
      * ```
      */
-    public set valid(valid: IgxComboState) {
+    public set valid(valid: IgxInputState) {
         this._valid = valid;
-        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
+        this.comboInput.valid = valid;
+    }
+
+    /**
+     * The value of the combo
+     *
+     * ```typescript
+     * // get
+     * let comboValue = this.combo.value;
+     * ```
+     */
+    public get value(): any[] {
+        return this._value;
     }
 
     /**
@@ -816,11 +840,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      *
      * ```typescript
      * // get
-     * let comboValue = this.combo.value;
+     * let comboDisplayValue = this.combo.displayValue;
      * ```
      */
-    public get value(): string {
-        return this._value;
+    public get displayValue(): string {
+        return this._displayValue;
     }
 
     /**
@@ -915,27 +939,31 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
 
-     @Input()
-     public get filteringOptions(): IComboFilteringOptions {
-         return this._filteringOptions || this._defaultFilteringOptions;
-     }
-     public set filteringOptions(value: IComboFilteringOptions) {
-         this._filteringOptions = value;
-     }
+    @Input()
+    public get filteringOptions(): IComboFilteringOptions {
+        return this._filteringOptions || this._defaultFilteringOptions;
+    }
+    public set filteringOptions(value: IComboFilteringOptions) {
+        this._filteringOptions = value;
+    }
     protected _data = [];
-    protected _value = '';
+    protected _value = [];
+    protected _displayValue = '';
     protected _groupKey = '';
     protected _searchValue = '';
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings;
-    protected _valid = IgxComboState.INITIAL;
+    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
-    protected destroy$ = new Subject<any>();
+    protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
+    protected compareCollator = new Intl.Collator();
+    protected computedStyles;
 
+    private _id: string = `igx-combo-${NEXT_ID++}`;
     private _type = null;
     private _dataType = '';
     private _itemHeight = null;
@@ -944,8 +972,66 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
-    public abstract dropdown: IgxComboDropDownComponent;
+    private _icons = [
+        {
+            name: 'expand',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_more',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_down',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'collapse',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'expand_less',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'arrow_drop_up',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'clear',
+            family: 'default',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'cancel',
+                    family: 'material',
+                },
+                'all': {
+                    name: 'clear',
+                    family: 'material'
+                }
+            }))
+        },
+        {
+            name: 'case-sensitive',
+            family: 'combo',
+            ref: new Map(Object.entries({
+                'material': {
+                    name: 'case-sensitive',
+                    family: 'imx-icons'
+                },
+                'all': {
+                    name: 'case-sensitive',
+                    family: 'imx-icons'
+                }
+            }))
+        }
+    ];
 
+    public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
 
     constructor(
@@ -953,12 +1039,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         protected cdr: ChangeDetectorRef,
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT) public document: Document,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
-        super(_displayDensityOptions);
-    }
+        @Optional() protected _injector: Injector,
+        @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
+    ) { }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
@@ -985,17 +1070,35 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngOnInit() {
-        super.ngOnInit();
+    public ngOnInit() {
+
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
-        this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+        this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+
+        for (const icon of this._icons) {
+            switch (this.inputGroup?.theme) {
+                case "material":
+                    this._iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("material"),
+                    );
+                    break;
+                default:
+                    this._iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get("all"),
+                    );
+            }
+        }
     }
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data];
-
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
@@ -1008,37 +1111,29 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public override ngDoCheck(): void {
-        if (this.data?.length && this.selection.length && !this._value) {
-            this._value = this.createDisplayText(this.selection, []);
-        }
-        super.ngDoCheck();
-    }
-
-    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.clear(this.id);
+        this.selectionService.delete(this.id);
     }
 
     /**
      * A method that opens/closes the combo.
      *
      * ```html
-     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
     public toggle(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
-        if (!this.collapsed){
+        if (!this.collapsed) {
             this.setActiveDescendant();
         }
     }
@@ -1047,12 +1142,12 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that opens the combo.
      *
      * ```html
-     * <button (click)="combo.open()">Open Combo</button>
+     * <button type="button" (click)="combo.open()">Open Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
     public open(): void {
-        if (this.collapsed && this._value.length !== 0) {
+        if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
         }
@@ -1065,7 +1160,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * A method that closes the combo.
      *
      * ```html
-     * <button (click)="combo.close()">Close Combo</button>
+     * <button type="button" (click)="combo.close()">Close Combo</button>
      * <igx-combo #combo></igx-combo>
      * ```
      */
@@ -1088,9 +1183,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * let mySelection = this.combo.selection;
      * ```
      */
-    public get selection() {
+    public get selection(): any[] {
         const items = Array.from(this.selectionService.get(this.id));
-        return items;
+        return this.convertKeysToItems(items);
     }
 
     /**
@@ -1105,22 +1200,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        if (this.inputGroup.theme === 'material') {
-            return this.dropdown.collapsed
-                ? 'expand_more'
-                : 'expand_less';
-        }
-
-        return this.dropdown.collapsed
-            ? 'arrow_drop_down'
-            : 'arrow_drop_up';
-    }
-
-    /** @hidden @internal */
-    public get clearIcon(): string {
-        return this.inputGroup.theme === 'material'
-            ? 'cancel'
-            : 'clear';
+        return this.dropdown.collapsed ? 'expand' : 'collapse';
     }
 
     /** @hidden @internal */
@@ -1247,15 +1327,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.collapsed) {
             this._onTouchedCallback();
             if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxComboState.INVALID;
+                this.valid = IgxInputState.INVALID;
             } else {
-                this.valid = IgxComboState.INITIAL;
+                this.valid = IgxInputState.INITIAL;
             }
         }
     }
 
     /** @hidden @internal */
-    public setActiveDescendant() : void  {
+    public setActiveDescendant(): void {
         this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
@@ -1267,13 +1347,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected onStatusChanged = () => {
         if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
             if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-            this.valid = IgxComboState.INITIAL;
+            this.valid = IgxInputState.INITIAL;
         }
         this.manageRequiredAsterisk();
     };
@@ -1288,15 +1368,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
+        if (this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 
-        // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => isNaNvalue(key)
-            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
-            : this.data.find(entry => entry[this.valueKey] === key))
-        .filter(e => e !== undefined);
+        return keys.map(key => {
+            const item = this.data.find(entry => isEqual(entry[this.valueKey], key));
+
+            return item !== undefined ? item : { [this.valueKey]: key };
+        });
     }
 
     protected checkMatch(): void {

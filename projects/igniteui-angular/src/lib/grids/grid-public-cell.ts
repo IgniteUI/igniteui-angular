@@ -21,7 +21,7 @@ export class IgxGridCell implements CellType {
     constructor(
         grid: GridType,
         row: number | RowType,
-        column: string | ColumnType) {
+        column: ColumnType) {
         this.grid = grid;
         if (typeof row === 'number') {
             this._rowIndex = row;
@@ -29,11 +29,7 @@ export class IgxGridCell implements CellType {
             this._row = row;
             this._rowIndex = row.index;
         }
-        if (typeof column === 'string') {
-            this._columnField = column;
-        } else {
-            this._column = column;
-        }
+        this._column = column;
     }
 
     /**
@@ -57,7 +53,7 @@ export class IgxGridCell implements CellType {
      * @memberof IgxGridCell
      */
     public get column(): ColumnType {
-        return this._column || this.grid.getColumnByName(this._columnField);
+        return this._column;
     }
 
     /**

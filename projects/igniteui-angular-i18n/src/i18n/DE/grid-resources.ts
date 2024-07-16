@@ -87,7 +87,8 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Logischer Filter',
     igx_grid_excel_currency_filter: 'Währungs Filter',
     igx_grid_excel_custom_filter: 'Benutzerdefinierter Filter...',
-    igx_grid_excel_no_matches: 'Keine Treffer',
+    igx_grid_excel_no_matches: 'Keine Übereinstimmungen',
+    igx_grid_excel_matches_count: '{0} Übereinstimmungen',
     igx_grid_advanced_filter_title: 'Erweiterte Filterung',
     igx_grid_advanced_filter_and_group: '"Und" Gruppe',
     igx_grid_advanced_filter_or_group: '"Oder" Gruppe',
@@ -164,8 +165,7 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Bitte geben Sie mindestens {0} Zeichen ein',
     igx_grid_max_length_validation_error: 'Bitte geben Sie nicht mehr als {0} Zeichen ein',
     igx_grid_email_validation_error: 'Eine gültige E-Mail-Adresse sollte eingegeben werden',
-    igx_grid_pattern_validation_error: 'Eintrag entspricht nicht dem erforderlichen Muster',
-    igx_grid_pivot_no_aggregator: 'Kein gültiger Aggregator für {0} gefunden. Bitte legen Sie entweder einen gültigen „aggregatorName“ oder „aggregator“ fest.'
+    igx_grid_pattern_validation_error: 'Eintrag entspricht nicht dem erforderlichen Muster'
 };
 
 /**

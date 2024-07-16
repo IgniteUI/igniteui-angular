@@ -1,26 +1,26 @@
 <button
     [title]="paginator.resourceStrings.igx_paginator_first_page_button_text"
-    [disabled]="paginator.isFirstPageDisabled"
-    [attr.aria-disabled]="paginator.isFirstPageDisabled"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.paginate(0)"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"
 >
-    <igx-icon>first_page</igx-icon>
+    <igx-icon family="default" name="first_page"></igx-icon>
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_previous_page_button_text"
-    [disabled]="paginator.isFirstPageDisabled"
-    [attr.aria-disabled]="paginator.isFirstPageDisabled"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.previousPage()"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"
 >
-    <igx-icon>chevron_left</igx-icon>
+    <igx-icon family="default" name="chevron_left"></igx-icon>
 </button>
 <div class="igx-page-nav__text" aria-current="page">
     <span>{{ paginator.page + 1 }}</span>
@@ -33,26 +33,26 @@
 </div>
 <button
     [title]="paginator.resourceStrings.igx_paginator_next_page_button_text"
-    [disabled]="paginator.isLastPageDisabled"
-    [attr.aria-disabled]="paginator.isLastPageDisabled"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.nextPage()"
     igxRipple
     [igxRippleCentered]="true"
-    igxButton="icon"
+    igxIconButton="flat"
     type="button"
 >
-    <igx-icon>chevron_right</igx-icon>
+    <igx-icon family="default" name="chevron_right"></igx-icon>
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_last_page_button_text"
-    [disabled]="paginator.isLastPageDisabled"
-    [attr.aria-disabled]="paginator.isLastPageDisabled"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.paginate(paginator.totalPages - 1)"
-    igxButton="icon"
+    igxIconButton="flat"
     igxRipple
     [igxRippleCentered]="true"
     type="button"
 >
-    <igx-icon>last_page</igx-icon>
+    <igx-icon family="default" name="last_page"></igx-icon>
 </button>
 

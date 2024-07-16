@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -21,14 +21,22 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
 
-
+/* jsonAPIComplexObject */
+/* wcAlternateName: ExporterEventArgs */
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
+    /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;
     grid: GridType;
     cancel: boolean;
 }
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-exporter */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured exporter component for the grid.
  *
@@ -51,13 +59,13 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     /**
      * Show entry for CSV export.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public exportCSV = true;
 
     /**
      * Show entry for Excel export.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public exportExcel = true;
 
     /**
@@ -82,7 +90,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     /**
      * Indicates whether there is an export in progress.
      */
-    public isExporting = false;
+    protected isExporting = false;
 
     constructor(
         @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
@@ -92,11 +100,19 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         super(toolbar);
     }
 
-    public export(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective): void {
+    protected exportClicked(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective) {
+        toggleRef?.close();
+        this.export(type);
+    }
+
+    /* alternateName: exportGrid */
+    /**
+     * Export the grid's data
+     * @param type File type to export
+     */
+    public export(type: 'excel' | 'csv'): void {
         let options: IgxExporterOptions;
         let exporter: IgxBaseExporter;
-
-        toggleRef?.close();
 
         switch (type) {
             case 'csv':

@@ -9,10 +9,6 @@
     }
 
     @include b(igx-chip) {
-        @include sizable();
-
-        --component-size: var(--ig-size, var(--ig-size-large));
-
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -92,39 +88,7 @@
         }
 
         @include e(ghost) {
-            @include sizable();
-
-            --component-size: var(--ig-size, var(--ig-size-large));
-
             @extend %igx-chip__ghost !optional;
-        }
-
-        @include e(ghost, $m: cosy) {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-
-            @extend %igx-chip__ghost--cosy !optional;
-        }
-
-        @include e(ghost, $m: compact) {
-            --component-size: var(--ig-size, var(--ig-size-small));
-
-            @extend %igx-chip__ghost--compact !optional;
-        }
-
-        @include m(cosy) {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-
-            @include e(item) {
-                @extend %igx-chip__item--cosy !optional;
-            }
-        }
-
-        @include m(compact) {
-            --component-size: var(--ig-size, var(--ig-size-small));
-
-            @include e(item) {
-                @extend %igx-chip__item--compact !optional;
-            }
         }
 
         @include m(disabled) {

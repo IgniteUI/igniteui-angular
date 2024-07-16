@@ -19,7 +19,8 @@
 /// @param {Color} $header-icon-color [null] - The panel header icon color.
 /// @param {Color} $body-color [null] - The panel body text color.
 /// @param {Color} $body-background [null] - The panel body background color.
-/// @param {Color} $disabled-color [null] - The panel body disabled text color.
+/// @param {Color} $disabled-text-color [null] - The panel disabled text color.
+/// @param {Color} $disabled-description-color [null] - The panel disabled header description text color.
 /// @param {Number} $expanded-margin [null] - The expansion panel margin in expanded state when positioned inside accordion.
 /// @param {List} $border-radius [null] - The border radius used for expansion-panel component.
 /// @requires $light-material-schema
@@ -38,7 +39,8 @@
     $header-icon-color: null,
     $body-color: null,
     $body-background: null,
-    $disabled-color: null,
+    $disabled-text-color: null,
+    $disabled-description-color: null,
     $expanded-margin: null
 ) {
     $name: 'igx-expansion-panel';
@@ -71,10 +73,6 @@
         $body-color: text-contrast($body-background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         header-background: $header-background,
@@ -85,7 +83,8 @@
         header-icon-color: $header-icon-color,
         body-color: $body-color,
         body-background: $body-background,
-        disabled-color: $disabled-color,
+        disabled-text-color: $disabled-text-color,
+        disabled-description-color: $disabled-description-color,
         expanded-margin: $expanded-margin,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -93,12 +92,16 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'variant');
 
     $panel-padding: rem(16px) rem(24px);
+    $panel-padding-header-indigo: rem(10px) rem(16px);
+    $panel-padding-body-indigo: rem(4px) rem(16px) rem(16px) rem(16px);
 
     %igx-expansion-panel {
         display: flex;
@@ -160,6 +163,10 @@
             background: var-get($theme, 'header-focus-background');
             outline: transparent;
         }
+
+        @if $variant == 'indigo-design' {
+            padding: $panel-padding-header-indigo;
+        }
     }
 
     %igx-expansion-panel__title-wrapper {
@@ -168,16 +175,30 @@
         justify-content: center;
         flex: 1 0 0%;
         overflow: hidden;
+
+        @if $variant == 'indigo-design' {
+            %igx-expansion-panel__header-title {
+                margin-block-end: rem(2px);
+            }
+        }
     }
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
         margin-inline-start: rem(16px, 16px);
+
+        @if $variant == 'indigo-design' {
+            margin-inline-start: rem(8px, 16px);
+        }
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
         margin-inline-end: rem(16px, 16px);
+
+        @if $variant == 'indigo-design' {
+            margin-inline-end: rem(8px, 16px);
+        }
     }
 
     %igx-expansion-panel__header-icon--none {
@@ -194,7 +215,14 @@
         color: var-get($theme, 'header-icon-color');
 
         igx-icon {
+            --component-size: 3;
             color: var-get($theme, 'header-icon-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                --component-size: 1;
+            }
         }
     }
 
@@ -203,20 +231,27 @@
         background: var-get($theme, 'body-background');
         overflow: hidden;
         padding: $panel-padding;
+
+        @if $variant == 'indigo-design' {
+            padding: $panel-padding-body-indigo;
+        }
     }
 
     %igx-expansion-panel--disabled {
         pointer-events: none;
 
-        %igx-expansion-panel__header-title,
+        %igx-expansion-panel__header-title {
+            color: var-get($theme, 'disabled-text-color')
+        }
+
         %igx-expansion-panel__header-description {
-            color: var-get($theme, 'disabled-color')
+            color: var-get($theme, 'disabled-description-color')
         }
 
         %igx-expansion-panel__header-icon--start,
         %igx-expansion-panel__header-icon--end {
             igx-icon {
-                color: var-get($theme, 'disabled-color');
+                color: var-get($theme, 'disabled-text-color');
             }
         }
     }

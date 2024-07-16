@@ -1,43 +1,60 @@
 <div class="calendar-sample-component">
     <div class="sample-content">
         <article class="sample-column">
-            <div>
-                <h4 class="sample-title">Months View</h4>
-                <igx-card>
-                    <igx-months-view [(ngModel)]="date"
-                        [locale]="locale"
-                        (selected)="onSelection($event)">
-                    </igx-months-view>
-                </igx-card>
-            </div>
+            <h4 class="sample-title">Days View</h4>
+            <igx-days-view
+                [(ngModel)]="date"
+                #daysView
+                [showWeekNumbers]="true"
+                [viewDate]="date || selection"
+                [activeDate]="activeDate"
+                [locale]="locale"
+                [selection]="'single'"
+                (selected)="onSelection($event)"
+            >
+            </igx-days-view>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">Months View</h4>
+            <igx-months-view
+                [(ngModel)]="date"
+                [locale]="locale"
+                (selected)="onSelection($event)"
+            >
+            </igx-months-view>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Years View</h4>
-            <igx-card>
-                <igx-years-view [(ngModel)]="date"
-                    [locale]="locale"
-                    (selected)="onSelection($event)">
-                </igx-years-view>
-            </igx-card>
+            <igx-years-view
+                [(ngModel)]="date"
+                [locale]="locale"
+                (selected)="onSelection($event)"
+            >
+            </igx-years-view>
         </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Days View</h4>
-            <igx-card>
-                <igx-days-view [(ngModel)]="date" #daysView
-                    [showWeekNumbers]="true"
-                    [viewDate]="date || selection"
-                    [locale]="locale"
-                    [selection]="'single'"
-                    (selected)="onSelection($event)">
-                </igx-days-view>
-            </igx-card>
-            <div class="calendar-sample-buttons">
-                <button igxButton="raised" igxRipple (click)="selectDV()">Select</button>
-                <button igxButton="flat" igxRipple (click)="deselectDV()">Deselect</button>
+        <div class="sample-actions">
+            <div class="sample-actions__inner">
+                <button
+                    igxButton="contained"
+                    #selectDate
+                    igxRipple
+                    (click)="selectDV()"
+                >
+                    Select
+                </button>
+                <button
+                    igxButton="flat"
+                    [disabled]="isActive"
+                    igxRipple
+                    (click)="deselectDV()"
+                >
+                    Deselect
+                </button>
             </div>
-        </article>
-        {{ date }}
+            {{ date ? date : 'press the select button to print the selected
+            date' }}
+        </div>
     </div>
 </div>

@@ -5,7 +5,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-input-group) {
-        @include sizable();
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -113,8 +112,14 @@
             }
         }
 
+        @include m(suffixed) {
+            @extend %suffixed !optional;
+        }
+
         // Textarea modifier
         @include m(textarea-group) {
+            @extend %textarea-group !optional;
+
             @include e(bundle-main) {
                 @extend  %form-group-textarea-group-bundle-main !optional;
             }
@@ -126,6 +131,14 @@
             @include e(label) {
                 @extend  %form-group-textarea-label !optional;
             }
+        }
+
+        @include mx(textarea-group, border) {
+            @extend %textarea-group--outlined !optional;
+        }
+
+        @include mx(textarea-group, box) {
+            @extend %textarea-group--box !optional;
         }
 
         @include mx(textarea-group, focused) {
@@ -312,14 +325,6 @@
             @include e(file-input) {
                 @extend %form-group-input--disabled !optional;
             }
-        }
-
-        @include m(cosy) {
-            @extend %form-group-display--cosy !optional;
-        }
-
-        @include m(compact) {
-            @extend %form-group-display--compact !optional;
         }
 
         // Type box START
@@ -660,6 +665,18 @@
             }
         }
 
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-start) {
+                @extend %form-group-bundle-textarea-start--fluent !optional;
+            }
+        }
+
+        @include mx(fluent, textarea-group) {
+            @include e(bundle-end) {
+                @extend %form-group-bundle-textarea-end--fluent !optional;
+            }
+        }
+
         @include mx(fluent, required) {
             @include e(bundle) {
                 @extend %form-group-bundle-required--fluent !optional;
@@ -780,6 +797,10 @@
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
             }
+
+            @include e(upload-button) {
+                @extend %indigo-upload-button !optional;
+            }
         }
 
         @include mx(indigo, focused) {
@@ -789,18 +810,6 @@
 
             @include e(label) {
                 @extend %indigo-label--focused !optional;
-            }
-        }
-
-        @include mx(indigo, invalid) {
-            @include e(label) {
-                @extend %indigo-label--invalid !optional;
-            }
-        }
-
-        @include mx(indigo, valid) {
-            @include e(label) {
-                @extend %indigo-label--success !optional;
             }
         }
 
@@ -878,6 +887,10 @@
         }
 
         @include mx(bootstrap, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle--bootstrap-focused !optional;
+            }
+
             @include e(input) {
                 @extend %bootstrap-input--focus !optional;
             }

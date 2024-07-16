@@ -25,7 +25,6 @@ export function first<T>(arr?: T[]) {
  *
  * @export
  * @param {ts.HasDecorators} node  the TS node to check
- * @return {*}  {boolean}
  */
 export function hasDecorators(node: ts.HasDecorators): boolean {
     const decorators = ts.getDecorators(node);
@@ -38,7 +37,6 @@ export function hasDecorators(node: ts.HasDecorators): boolean {
  *
  * @export
  * @param {(ts.ClassDeclaration | ts.PropertyDeclaration)} node the decorated node
- * @return {*}  {readonly}
  */
 export function getDecorators(node: ts.HasDecorators): readonly ts.Decorator[] {
     return hasDecorators(node) ? ts.getDecorators(node)! : [];
@@ -49,7 +47,6 @@ export function getDecorators(node: ts.HasDecorators): readonly ts.Decorator[] {
  *
  * @export
  * @param {ts.Decorator} { expression } the decorator node
- * @return {*}  {string}
  */
 export function getDecoratorName({ expression }: ts.Decorator): string {
     return ts.isCallExpression(expression) ? expression.expression.getText() : '';
@@ -59,8 +56,6 @@ export function getDecoratorName({ expression }: ts.Decorator): string {
  * Returns whether a given symbol node is a property
  *
  * @export
- * @param {ts.Symbol} symbol
- * @return {*}  {boolean}
  */
 export function isProperty(symbol: ts.Symbol): boolean {
     return symbol && (symbol.getFlags() & ts.SymbolFlags.PropertyOrAccessor) !== ts.SymbolFlags.None;
@@ -70,8 +65,6 @@ export function isProperty(symbol: ts.Symbol): boolean {
  * Returns whether a given symbol node is a method.
  *
  * @export
- * @param {ts.Symbol} symbol
- * @return {*}  {boolean}
  */
 export function isMethod(symbol: ts.Symbol): boolean {
     return symbol && (symbol.getFlags() & ts.SymbolFlags.Method) !== ts.SymbolFlags.None;

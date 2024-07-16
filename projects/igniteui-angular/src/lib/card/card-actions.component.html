@@ -1,9 +1,9 @@
 <div #buttons class="igx-card-actions__start">
-    <ng-content select="[igxStart], [igxButton]:not([igxButton='icon']):not([igxEnd])"></ng-content>
+    <ng-content select="[igxStart], [igxButton]:not([igxEnd])"></ng-content>
 </div>
 
 <ng-content></ng-content>
 
 <div class="igx-card-actions__end">
-    <ng-content select="[igxEnd], [igxButton='icon']:not([igxStart]), igx-icon:not([igxStart])"></ng-content>
+    <ng-content select="[igxEnd], [igxIconButton]:not([igxStart]), igx-icon:not([igxStart])"></ng-content>
 </div>

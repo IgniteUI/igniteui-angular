@@ -1,12 +1,12 @@
 <section class="sample-content">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
-        <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+        <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
     </ng-template>
-    <igx-grid [displayDensity]="density" [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
-        <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+    <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data">
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -22,7 +22,7 @@
                 <igx-column [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column" #ind >
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column [hidden]="s" [resizable]="true" field="ID" [editable]="true"></igx-column>
@@ -64,8 +64,8 @@
             <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="PostalCode"></igx-column>
         </igx-column-group>
     </igx-grid>
-    <button igxButton="raised" (click)="log()">Pin first group</button>
-    <button igxButton="raised" (click)="pinGroup()">Toggle visibleWhenCollapsed - Person Details</button>
-    <button igxButton="raised" (click)="hideGroup()">Toggle expand - Address Information</button>
-    <button igxButton="raised" (click)="toggleCollapsible()">Toggle collapsible - General Information</button>
+    <button igxButton="contained" (click)="log()">Pin first group</button>
+    <button igxButton="contained" (click)="pinGroup()">Toggle visibleWhenCollapsed - Person Details</button>
+    <button igxButton="contained" (click)="hideGroup()">Toggle expand - Address Information</button>
+    <button igxButton="contained" (click)="toggleCollapsible()">Toggle collapsible - General Information</button>
 </section>

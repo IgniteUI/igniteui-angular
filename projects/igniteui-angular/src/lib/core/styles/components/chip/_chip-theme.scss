@@ -95,9 +95,10 @@
     $ghost-shadow: null,
     $remove-icon-color: null,
     $remove-icon-color-focus: null,
+    $size: null,
 ) {
     $name: 'igx-chip';
-    $selector: 'igx-chip, .igx-chip__ghost, .igx-chip__ghost--compact, .igx-chip__ghost--cosy';
+    $selector: 'igx-chip, .igx-chip__ghost';
     $chip-schema: ();
 
     @if map.has-key($schema, 'chip') {
@@ -202,10 +203,6 @@
         $ghost-shadow: elevation($ghost-elevation);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -248,9 +245,12 @@
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
+        size: $size,
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin chip($theme) {
     @include css-vars($theme);
@@ -258,12 +258,6 @@
     $chip-max-width: 32ch;
 
     $variant: map.get($theme, '_meta', 'variant');
-
-    $chip-height: (
-        comfortable: rem(32px),
-        cosy: rem(24px),
-        compact: rem(20px)
-    );
 
     $chip-padding: (
         comfortable: rem(12px),
@@ -300,6 +294,10 @@
     }
 
     %igx-chip {
+        @include sizable();
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --chip-size: var(--component-size);
+
         position: relative;
         display: inline-flex;
         flex-shrink: 0;
@@ -374,9 +372,12 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        flex: 1 1 auto;
-        height: sizable(map.get($chip-height, 'compact'), map.get($chip-height, 'cosy'), map.get($chip-height, 'comfortable'));
-        padding-inline: sizable(map.get($chip-padding, 'compact'), map.get($chip-padding, 'cosy'), map.get($chip-padding, 'comfortable'));
+        height: var-get($theme, 'size');
+        padding-inline: sizable(
+            map.get($chip-padding, 'compact'),
+            map.get($chip-padding, 'cosy'),
+            map.get($chip-padding, 'comfortable')
+        );
         gap: sizable(rem(3px), rem(6px), rem(8px));
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
@@ -385,10 +386,10 @@
         user-select: none;
         overflow: hidden;
         cursor: pointer;
-        //hacking overflow hidden with border radius
+        // hacking `overflow: hidden` with border radius
         // not playing nicely together
         filter: opacity(1);
-        transition: all 120ms ease-in;
+        // transition: all 120ms ease-in;
 
         igx-avatar {
             display: flex !important;
@@ -398,21 +399,18 @@
         }
 
         igx-avatar,
-        igx-circular-bar {
-            --component-size: 3;
-
-            $avatar-size: (
-                comfortable: rem(24px),
-                cosy: rem(18),
-                compact: rem(14px)
-            );
-            max-width: 100%;
-            max-height: 100%;
-            width: sizable(rem(14px), rem(18px), rem(24px));
-            height: sizable(rem(14px), rem(18px), rem(24px));
+        igx-circular-bar,
+        igx-icon {
+            --component-size: var(--chip-size);
         }
 
-        @extend  %igx-chip-custom-icon;
+        igx-avatar,
+        igx-circular-bar {
+            max-height: 100%;
+            width: sizable(rem(14px), rem(18px), rem(24px));
+            max-width: sizable(rem(14px), rem(18px), rem(24px));
+            height: sizable(rem(14px), rem(18px), rem(24px));
+        }
 
         igx-prefix,
         [igxPrefix] {
@@ -422,18 +420,6 @@
         igx-suffix,
         [igxSuffix] {
             @extend %igx-chip__suffix;
-        }
-    }
-
-    %igx-chip__item--cosy {
-        igx-avatar {
-            --component-size: 2;
-        }
-    }
-
-    %igx-chip__item--compact {
-        igx-avatar {
-            --component-size: 1;
         }
     }
 
@@ -662,19 +648,39 @@
     }
 
     %igx-chip__start {
-        igx-avatar,
-        igx-circular-bar {
+        > igx-avatar,
+        > igx-circular-bar {
             &:first-child {
                 margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+            }
+        }
+
+        [igxPrefix],
+        igx-prefix {
+            &:first-of-type {
+                igx-avatar,
+                igx-circular-bar {
+                    margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                }
             }
         }
     }
 
     %igx-chip__end {
-        igx-avatar,
-        igx-circular-bar {
+        > igx-avatar,
+        > igx-circular-bar {
             &:last-child {
                 margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+            }
+        }
+
+        [igxPrefix],
+        igx-prefix {
+            &:first-of-type {
+                igx-avatar,
+                igx-circular-bar {
+                    margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                }
             }
         }
     }
@@ -690,19 +696,9 @@
         }
     }
 
-    %igx-chip-custom-icon {
-        igx-icon {
-            width: sizable(rem(16px), rem(20px), rem(20px));
-            height: sizable(rem(16px), rem(20px), rem(20px));
-            font-size: sizable(rem(16px), rem(20px), rem(20px));
-            outline-style: none;
-        }
-    }
-
     %igx-chip__prefix,
     %igx-chip__suffix {
-        @include ellipsis();
-        display: inline-block;
+        display: inline-flex;
         vertical-align: middle;
         max-width: $chip-max-width;
 
@@ -758,23 +754,26 @@
     }
 
     %igx-chip__ghost {
+        @extend %igx-chip;
+
         position: absolute;
         box-shadow: var-get($theme, 'ghost-shadow');
         overflow: hidden;
         color: var-get($theme, 'focus-text-color');
         background: var-get($theme, 'ghost-background');
+        // If z-index is not set,
+        //the chip would hide behind it's parent grid as it has a z-index of 1
+        z-index: 10;
+
+        igx-avatar,
+        igx-circular-bar,
+        igx-icon {
+            --component-size: var(--chip-size);
+        }
 
         &:hover,
         &:focus {
             background: var-get($theme, 'ghost-background');
-        }
-    }
-
-    %igx-chip__ghost--cosy {
-        height: map.get($chip-height, 'cosy');
-
-        %igx-chip__content {
-            padding-inline: map.get($chip-padding, 'cosy');
         }
     }
 
@@ -830,14 +829,6 @@
         color: var-get($theme, 'disabled-text-color');
         background: var-get($theme, 'disabled-background');
         border-color: var-get($theme, 'disabled-border-color');
-    }
-
-    // Remark: If z-index is not set, the chip would
-    // hide behind it's parent grid as it has a z-index of 1
-    %igx-chip__ghost,
-    %igx-chip__ghost--cosy,
-    %igx-chip__ghost--compact {
-        z-index: 10;
     }
 }
 

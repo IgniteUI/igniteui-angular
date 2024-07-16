@@ -1,7 +1,7 @@
 <div class="wrapper">
     <div class="sample-content">
         <div class="sample-column">
-            <igx-grid [data]="data" [locale]="locale" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" displayDensity="comfortable" width="100%" height="600px">
+            <igx-grid [data]="data" [locale]="locale" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" width="100%" height="600px">
                 <igx-column field="ProductName" [pinned]="true" header="Product Name" width="19%" [dataType]="'string'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
                 </igx-column>
                 <igx-column field="UnitsInStock" [pinned]="false"  header="Units In Stock" width="19%" dataType="currency" [pipeArgs]="pipeArgs" [sortable]="true" [hasSummary]="true" [editable]="true" [filterable]="true" [resizable]="true">
@@ -45,7 +45,7 @@
                 <label igxLabel>Locale</label>
                 <igx-select-item *ngFor="let cur of locales" [value]="cur">{{cur}}</igx-select-item>
             </igx-select>
-            <button igxButton="raised" (click)="changePipeArgs()">Apply Changes</button>
+            <button igxButton="contained" (click)="changePipeArgs()">Apply Changes</button>
         </igx-card-content>
     </igx-card>
     <igx-input-group class="sample-column">

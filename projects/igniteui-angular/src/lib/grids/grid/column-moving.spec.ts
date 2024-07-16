@@ -16,7 +16,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxColumnComponent } from '../public_api';
+import { ColumnType, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -417,10 +417,12 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
 
             // step 2 - verify columnMovingStart is fired correctly
-            expect(fixture.componentInstance.countStart).toEqual(1);
-            expect(fixture.componentInstance.source).toEqual(grid.columns[0]);
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait(50);
+
+            expect(fixture.componentInstance.countStart).toEqual(1);
+            expect(fixture.componentInstance.source).toEqual(grid.columns[0]);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
 
@@ -447,12 +449,13 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
 
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait();
+
             if (fixture.componentInstance.source.field === 'ID') {
                 fixture.componentInstance.cancel = true;
             }
 
-            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
@@ -1585,7 +1588,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should not move group column to last position', (async () => {
-            let column = grid.getColumnByName('Missing');
+            let column: ColumnType = grid.getColumnByName('Missing');
             column.move(3);
             await wait();
             fixture.detectChanges();
@@ -1607,8 +1610,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should be able to move group column to position lastIndex - group.children.length', (async () => {
-
-            let column = grid.getColumnByName('Missing');
+            let column: ColumnType = grid.getColumnByName('Missing');
             column.move(3);
             await wait();
             fixture.detectChanges();

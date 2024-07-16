@@ -15,12 +15,15 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/igniteui-dev-demos",
+            "outputPath": {
+              "base": "dist/igniteui-dev-demos"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+                "zone.js"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -31,9 +34,7 @@
               "src/styles/styles.scss"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
@@ -42,7 +43,8 @@
               "includePaths": [
                 "node_modules"
               ]
-            }
+            },
+            "browser": "./src/main.ts"
           },
           "configurations": {
             "production": {
@@ -62,10 +64,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "aot": true
+              "extractLicenses": true
             },
             "hmr": {
               "budgets": [
@@ -86,29 +85,32 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "igniteui-dev-demos:build:production"
+              "buildTarget": "igniteui-dev-demos:build:production"
             },
             "hmr": {
               "hmr": true,
-              "browserTarget": "igniteui-dev-demos:build:hmr"
+              "buildTarget": "igniteui-dev-demos:build:hmr"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "igniteui-dev-demos:build"
+            "buildTarget": "igniteui-dev-demos:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
@@ -163,54 +165,6 @@
         }
       }
     },
-    "igniteui-dev-demos-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "watch": true,
-            "headless": false
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "e2e/**/*.ts",
-              "e2e/**/*.html"
-            ]
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "igniteui-dev-demos-e2e:serve",
-            "configFile": "e2e//cypress.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "igniteui-dev-demos-e2e:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "e2e//cypress.json"
-          }
-        }
-      }
-    },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
       "sourceRoot": "projects/igniteui-angular/src",
@@ -233,7 +187,11 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/igniteui-angular/src/test.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "hammerjs"
+            ],
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js"
           }
@@ -297,12 +255,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/igniteui-angular-elements",
+            "outputPath": {
+              "base": "dist/igniteui-angular-elements"
+            },
             "index": "projects/igniteui-angular-elements/src/index.html",
-            "main": "projects/igniteui-angular-elements/src/main.ts",
-            "polyfills": "projects/igniteui-angular-elements/src/polyfills.ts",
+            "polyfills": [
+              "projects/igniteui-angular-elements/src/polyfills.ts"
+            ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -314,19 +275,27 @@
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
             "scripts": [
-                { "input": "./node_modules/lit-html/lit-html.js", "inject": false }
+                { "input": "./node_modules/lit-html/lit-html.js", "inject": false },
+                { "input": "./node_modules/lit-html/development/directive.js", "inject": false }
             ],
             "stylePreprocessorOptions": {
                 "includePaths": ["node_modules"]
-            }
+            },
+            "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "type": "allScript",
+                  "maximumWarning": "2.1mb",
+                  "maximumError": "2.5mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "styles",
+                  "maximumWarning": "450kb",
+                  "maximumError": "480kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -345,9 +314,7 @@
               "externalDependencies": ["lit-html"]
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -359,10 +326,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "igniteui-angular-elements:build:production"
+              "buildTarget": "igniteui-angular-elements:build:production"
             },
             "development": {
-              "browserTarget": "igniteui-angular-elements:build:development"
+              "buildTarget": "igniteui-angular-elements:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -370,7 +337,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "igniteui-angular-elements:build"
+            "buildTarget": "igniteui-angular-elements:build"
           }
         },
         "test": {
@@ -391,6 +358,104 @@
             "stylePreprocessorOptions": {
                 "includePaths": ["node_modules"]
             },
+            "scripts": []
+          }
+        }
+      }
+    },
+    "bundle-test": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/bundle-test",
+      "sourceRoot": "projects/bundle-test/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/bundle-test",
+            "index": "projects/bundle-test/src/index.html",
+            "browser": "projects/bundle-test/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/bundle-test/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/bundle-test/src/styles.scss"
+            ],
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            },
+            "server": "projects/bundle-test/src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "projects/bundle-test/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "sourceMap": true
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "bundle-test:build:production"
+            },
+            "development": {
+              "buildTarget": "bundle-test:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "bundle-test:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/bundle-test/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "styles": [
+              "projects/bundle-test/src/styles.scss"
+            ],
             "scripts": []
           }
         }

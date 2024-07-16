@@ -1,13 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgFor, JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IChangeRadioEventArgs, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-date-range',
     templateUrl: './date-range.sample.html',
     styleUrls: ['./date-range.sample.scss'],
+    providers: [
+        {
+            provide: IGX_INPUT_GROUP_TYPE,
+            useValue: 'border'
+        }
+    ],
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
 })
@@ -50,7 +56,7 @@ export class DateRangeSampleComponent {
         });
     }
 
-    public updateOnChange(e: IChangeRadioEventArgs) {
+    public updateOnChange(e: IChangeCheckboxEventArgs) {
         Object.keys(this.reactiveForm.controls).forEach(name => {
             const control = this.reactiveForm.controls[name];
             const value = control.value;

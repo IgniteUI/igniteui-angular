@@ -17,7 +17,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <button [igxTooltipTarget]="tooltipRef">Hover me</button>
+ * <button type="button" igxButton [igxTooltipTarget]="tooltipRef">Hover me</button>
  * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
  * ```
  */
@@ -38,7 +38,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-tooltip--desktop')
+    @HostBinding('class.igx-tooltip')
     public override get defaultClass() {
         return !this.collapsed;
     }

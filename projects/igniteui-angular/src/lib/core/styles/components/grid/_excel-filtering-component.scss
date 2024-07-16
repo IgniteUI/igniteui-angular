@@ -10,6 +10,10 @@
             @extend %igx-excel-filter__loading !optional;
         }
 
+        @include e(sizing) {
+            @extend %igx-excel-filter__sizing !optional;
+        }
+
         @include e(tree) {
             @extend %igx-excel-filter__tree !optional;
         }
@@ -106,6 +110,11 @@
             @extend %grid-excel-actions__action !optional;
         }
 
+        @include e(actions-filter, $m: active) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--active !optional;
+        }
+
         @include e(actions-clear) {
             @extend %grid-excel-actions__action !optional;
         }
@@ -163,6 +172,10 @@
 
         @include m(inline) {
             @extend %grid-excel-filter--inline !optional;
+        }
+
+        @include e(filter-results) {
+            @extend %grid-excel-menu__filter-results !optional;
         }
     }
 }

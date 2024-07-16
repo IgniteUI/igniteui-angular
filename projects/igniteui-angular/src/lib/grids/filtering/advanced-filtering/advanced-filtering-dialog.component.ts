@@ -7,14 +7,14 @@ import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
-import { DisplayDensity } from '../../../core/density';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
-import { CurrentResourceStrings } from '../../../core/i18n/resources';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
 import { NgIf, NgClass } from '@angular/common';
+import { getCurrentResourceStrings } from '../../../core/i18n/resources';
+import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -78,14 +78,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     /**
-     * @hidden @internal
-     */
-    public get displayDensity(): DisplayDensity {
-        return this.grid.displayDensity;
-    }
-
-    /**
-     * An @Input property that sets the grid.
+     * Assigns the grid instance corresponding to the advanced filtering dialog instance.
      */
     @Input()
     public set grid(grid: GridType) {
@@ -207,7 +200,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         const gridRS = this.grid.resourceStrings;
 
         if (gridRS !== GridResourceStringsEN) {
-            const queryBuilderRS = CurrentResourceStrings.QueryBuilderResStrings;
+            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
             Object.keys(gridRS).forEach((prop) => {
                 const reg = /^igx_grid_(advanced_)?filter_(row_)?/;
                 if (!reg.test(prop)) {

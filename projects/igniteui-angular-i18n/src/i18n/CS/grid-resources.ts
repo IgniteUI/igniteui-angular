@@ -89,7 +89,8 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_boolean_filter: 'Booleovský filtr',
     igx_grid_excel_currency_filter: 'Filtr měn',
     igx_grid_excel_custom_filter: 'Vlastní filtr ...',
-    igx_grid_excel_no_matches: 'Žádné výsledky',
+    igx_grid_excel_no_matches: 'Žádné shody',
+    igx_grid_excel_matches_count: 'Počet shod: {0}',
     igx_grid_advanced_filter_title: 'Pokročilé filtrování',
     igx_grid_advanced_filter_and_group: '"A" skupina',
     igx_grid_advanced_filter_or_group: '"Nebo" skupina',
@@ -164,8 +165,7 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Záznam by měl mít alespoň {0} znaků',
     igx_grid_max_length_validation_error: 'Záznam by neměl mít více než {0} znaků',
     igx_grid_email_validation_error: 'Je třeba zadat platnou e-mailovou adresu',
-    igx_grid_pattern_validation_error: 'Položka neodpovídá požadovanému vzoru',
-    igx_grid_pivot_no_aggregator: 'Pro {0} nebyl nalezen žádný platný agregátor. Nastavte prosím buď platný aggregatorName nebo aggregator.'
+    igx_grid_pattern_validation_error: 'Položka neodpovídá požadovanému vzoru'
 };
 
 /**

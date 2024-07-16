@@ -1,5 +1,4 @@
-import { Directive, TemplateRef, EventEmitter, QueryList, Optional, Inject } from '@angular/core';
-import { DisplayDensityBase, IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
+import { Directive, TemplateRef, EventEmitter, QueryList, Optional, ElementRef } from '@angular/core';
 
 export interface IListChild {
     index: number;
@@ -10,7 +9,7 @@ export interface IListChild {
     selector: '[igxListBase]',
     standalone: true
 })
-export class IgxListBaseDirective extends DisplayDensityBase {
+export class IgxListBaseDirective {
     public itemClicked: EventEmitter<any>;
     public allowLeftPanning: boolean;
     public allowRightPanning: boolean;
@@ -25,9 +24,7 @@ export class IgxListBaseDirective extends DisplayDensityBase {
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
-    }
+    constructor(@Optional() protected el: ElementRef) {}
 }
 
 export enum IgxListPanState { NONE, LEFT, RIGHT }

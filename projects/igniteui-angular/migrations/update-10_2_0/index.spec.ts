@@ -39,8 +39,7 @@ describe('Update 10.2.0', () => {
         );
 
         const tree = await schematicRunner
-            .runSchematicAsync('migration-17', {}, appTree)
-            .toPromise();
+            .runSchematic('migration-17', {}, appTree);
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         // eslint-disable-next-line max-len
@@ -74,8 +73,7 @@ export class ExpansionTestComponent {
 }`
         );
         const tree = await schematicRunner
-            .runSchematicAsync('migration-17', {}, appTree)
-            .toPromise();
+            .runSchematic('migration-17', {}, appTree);
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
 

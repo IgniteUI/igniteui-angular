@@ -1,12 +1,30 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
+import { PageHeaderComponent } from './pageHeading/pageHeading.component';
+import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerTemplateDirective,
+        IgxNavDrawerItemDirective,
+        NgFor,
+        RouterLinkActive,
+        RouterLink,
+        IgxIconComponent,
+        NgIf,
+        IgxNavDrawerMiniTemplateDirective,
+        PageHeaderComponent,
+        RouterOutlet
+    ]
 })
 export class AppComponent implements OnInit {
     @HostBinding('attr.id')
@@ -109,6 +127,11 @@ export class AppComponent implements OnInit {
             icon: 'date_range',
             name: 'DatePicker'
         },
+		{
+			link: '/divider',
+			icon: 'safety_divider',
+			name: 'Divider'
+		},
         {
             link: '/dialog',
             icon: 'all_out',
@@ -264,6 +287,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Auto Size'
         },
         {
+            link: '/gridDocManager',
+            icon: 'view_column',
+            name: 'Grid in DockManager'
+        },
+        {
             link: '/gridFlex',
             icon: 'view_column',
             name: 'Grid Flex'
@@ -397,6 +425,11 @@ export class AppComponent implements OnInit {
             link: '/listPerformance',
             icon: 'list',
             name: 'List Performance'
+        },
+        {
+            link: '/monthPicker',
+            icon: 'event',
+            name: 'Month Picker',
         },
         {
             link: '/navbar',
@@ -655,8 +688,8 @@ export class AppComponent implements OnInit {
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
-        iconService.registerFamilyAlias('fa-solid', 'fa');
-        iconService.registerFamilyAlias('fa-brands', 'fab');
+        iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});
+        iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             for (const component of this.componentLinks) {

@@ -125,7 +125,7 @@ export class IgxComboHeaderItemDirective { }
  * @example
  * <igx-combo #combo>
  *      <ng-template igxComboAddItem>
- *          <button class="combo__add-button">
+ *          <button type="button" class="combo__add-button">
  *              Click to add item
  *          </button>
  *      </ng-template>

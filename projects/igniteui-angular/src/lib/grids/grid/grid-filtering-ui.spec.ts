@@ -22,12 +22,13 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
-import { DatePipe } from '@angular/common';
+import { igxI18N } from '../../core/i18n/resources';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeFr from '@angular/common/locales/fr';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { DisplayDensity } from '../../core/density';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
     IgxGridFilteringComponent,
@@ -43,12 +44,14 @@ import {
     IgxGridDatesFilteringComponent,
     LoadOnDemandFilterStrategy
 } from '../../test-utils/grid-samples.spec';
-import { GridSelectionMode, FilterMode } from '../common/enums';
+import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate } from '../../core/utils';
+import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -56,6 +59,10 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
+
+    registerLocaleData(localeDe);
+    registerLocaleData(localeFr);
+
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -352,7 +359,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const currentDay = calendar.querySelector('.igx-calendar__date--current');
+            const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
             currentDay.dispatchEvent(new Event('click'));
 
@@ -386,7 +393,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            calendar.querySelector('.igx-calendar__date--current');
+            calendar.querySelector('.igx-days-view__date--current');
             const monthView = calendar.querySelector('.igx-calendar-picker__date');
 
             monthView.dispatchEvent(new Event('click'));
@@ -1080,10 +1087,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = getCurrentResourceStrings();
+            const strings = GridResourceStringsEN;
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
-            changei18n(strings);
+            igxI18N.instance().changei18n(strings);
             fix.detectChanges();
 
             const initialChips = GridFunctions.getFilteringChips(fix);
@@ -1101,7 +1108,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
-            changei18n({
+            igxI18N.instance().changei18n({
                 igx_grid_filter: 'Filter',
                 igx_grid_filter_row_close: 'Close'
             });
@@ -1154,7 +1161,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+            const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
         }));
@@ -1844,7 +1851,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(300);
 
             verifyMultipleChipsVisibility(fix, [true, true, false, false]);
 
@@ -1955,9 +1962,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click the today date.
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
-            todayDayItem.focus();
-            todayDayItem.click();
+            const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
+            todayDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
@@ -1990,20 +1996,26 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // View years
             const yearView: HTMLElement = calendar.querySelectorAll('.igx-calendar-picker__date')[1] as HTMLElement;
-            yearView.click();
+            yearView.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
             // Select the first year
-            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar__year')[0] as HTMLElement;
-            firstYear.click();
+            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar-view__item')[0] as HTMLElement;
+            firstYear.dispatchEvent(new Event('mousedown'));
+            tick(100);
+            fix.detectChanges();
+
+            // Select the first month
+            const firstMonth: HTMLElement = calendar.querySelectorAll('.igx-calendar-view__item')[0] as HTMLElement;
+            firstMonth.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
             // Select the first day
-            const firstDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date');
-            firstDayItem.focus();
-            firstDayItem.click();
+            const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
+
+            firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
             fix.detectChanges();
@@ -2101,9 +2113,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const currentDay = document.querySelector('.igx-calendar__date--current');
+            const currentDay = document.querySelector('.igx-days-view__date--current');
 
-            currentDay.dispatchEvent(new Event('click'));
+            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
             tick();
             fix.detectChanges();
 
@@ -2567,18 +2579,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         // Filtering + Column Groups
-        it('should size correctly the header based on display density.', () => {
-            grid.displayDensity = "comfortable";
+        it('should size correctly the header based on grid size.', async () => {
+            setElementSize(grid.nativeElement, Size.Large);
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
-            grid.displayDensity = "cosy";
+            setElementSize(grid.nativeElement, Size.Medium);
+            fix.detectChanges();
+            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
-            grid.displayDensity = "compact";
+            setElementSize(grid.nativeElement, Size.Small);
+            fix.detectChanges();
+            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
@@ -2735,6 +2751,30 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
+
+        it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
+            const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
+            const input = filterCell.query(By.css('input')).nativeElement;
+ 
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            input.dispatchEvent(mousedownEvent, { bubbles: true });
+            fix.detectChanges();
+ 
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+        }));
+
+        it('Should prevent mousedown event when target is filter cell or its parent elements', fakeAsync(() => {
+            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+            const firstCell = filteringCells[0].nativeElement;
+
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            firstCell.dispatchEvent(mousedownEvent);
+            fix.detectChanges();
+           
+            expect(preventDefaultSpy).toHaveBeenCalled();
+        }));
     });
 
     describe(null, () => {
@@ -2799,9 +2839,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const currentDay = calendar.querySelector('.igx-calendar__date--current');
+            const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
-            currentDay.dispatchEvent(new Event('click'));
+            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
 
             flush();
             fix.detectChanges();
@@ -2811,6 +2851,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(1);
         }));
+
     });
 
     describe('Filtering events', () => {
@@ -3074,94 +3115,102 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        it('Should sort the grid properly, when clicking Ascending button.', fakeAsync(() => {
+        it('Should sort the grid properly, when clicking Ascending button.', async () => {
             grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
 
-            UIInteractions.simulateClickEvent(sortAsc);
-            tick(DEBOUNCETIME);
+            sortAsc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions[0].fieldName).toEqual('Downloads');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
             ControlsFunction.verifyButtonIsSelected(sortAsc);
 
-            UIInteractions.simulateClickEvent(sortAsc);
-            tick(DEBOUNCETIME);
+            sortAsc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(0);
             ControlsFunction.verifyButtonIsSelected(sortAsc, false);
-        }));
+        });
 
-        it('Should sort the grid properly, when clicking Descending button.', fakeAsync(() => {
+        it('Should sort the grid properly, when clicking Descending button.', async () => {
             grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            await wait(100);
+            fix.detectChanges();
 
             const sortDesc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[1];
 
-            UIInteractions.simulateClickEvent(sortDesc);
-            tick(DEBOUNCETIME);
+            sortDesc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions[0].fieldName).toEqual('Downloads');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Desc);
             ControlsFunction.verifyButtonIsSelected(sortDesc);
 
-            UIInteractions.simulateClickEvent(sortDesc);
-            tick(DEBOUNCETIME);
+            sortDesc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(0);
             ControlsFunction.verifyButtonIsSelected(sortDesc, false);
-        }));
+        });
 
-        it('Should (sort ASC)/(sort DESC) when clicking the respective sort button.', fakeAsync(() => {
+        it('Should (sort ASC)/(sort DESC) when clicking the respective sort button.', async () => {
             grid.columnList.get(2).sortable = true;
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            await wait(100);
+            fix.detectChanges();
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
             const sortDesc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[1];
 
-            UIInteractions.simulateClickEvent(sortDesc);
-            tick(DEBOUNCETIME);
+            sortDesc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions[0].fieldName).toEqual('Downloads');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Desc);
             ControlsFunction.verifyButtonIsSelected(sortDesc);
 
-            UIInteractions.simulateClickEvent(sortAsc);
-            tick(DEBOUNCETIME);
+            sortAsc.click();
+            await wait();
             fix.detectChanges();
 
             expect(grid.sortingExpressions[0].fieldName).toEqual('Downloads');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
             ControlsFunction.verifyButtonIsSelected(sortAsc);
             ControlsFunction.verifyButtonIsSelected(sortDesc, false);
-        }));
+        });
 
-        it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
+        it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', async () => {
             grid.columnList.get(2).sortable = true;
             grid.sortingExpressions.push({ dir: SortingDirection.Asc, fieldName: 'Downloads' });
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            await wait(100);
+            fix.detectChanges();
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
             const sortDesc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[1];
 
             ControlsFunction.verifyButtonIsSelected(sortAsc);
             ControlsFunction.verifyButtonIsSelected(sortDesc, false);
-        }));
+        });
 
         it('Should move column left/right when clicking buttons.', fakeAsync(() => {
             grid.moving = true;
@@ -3298,6 +3347,74 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
+        it('Should show the previously entered filter value when reopen esf dialog from the applied filter operand', fakeAsync(() => {
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(1);
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('Angular');
+        }));
+
+        it('Should Not show the previously entered filter value when reopen esf dialog from other filterOperand', fakeAsync(() => {
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(1);
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('');
+        }));
+
         it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
@@ -3311,11 +3428,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(2)');
             expect(grid.filteredData.length).toEqual(2);
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(30);
+            fix.detectChanges();
+
+            const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
+            expect(ddItem).toBeDefined();
+            expect(ddItem.querySelector('.igx-grid__filtering-dropdown-text').textContent).toMatch('Custom filter...');
         }));
 
         it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
@@ -3650,7 +3776,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
             tick(200);
             fix.detectChanges();
 
@@ -3676,7 +3802,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should hide column when clicking hide icon in header', fakeAsync(() => {
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             tick(200);
             fix.detectChanges();
             spyOn(grid.columnVisibilityChanging, 'emit');
@@ -3844,45 +3970,45 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(applyButton);
         });
 
-        it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
+        it('size is properly applied on the excel style filtering component', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
             grid.moving = true;
             fix.detectChanges();
 
-            // Open excel style filtering component and verify its display density
+            // Open excel style filtering component and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
-            verifyExcelStyleFilteringDisplayDensity(fix, DisplayDensity.comfortable);
+            verifyExcelStyleFilteringSize(fix, Size.Large);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style filtering component and verify its display density
+            // Open excel style filtering component and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
-            verifyExcelStyleFilteringDisplayDensity(fix, DisplayDensity.compact);
+            verifyExcelStyleFilteringSize(fix, Size.Small);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style filtering component and verify its display density
+            // Open excel style filtering component and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
-            verifyExcelStyleFilteringDisplayDensity(fix, DisplayDensity.cosy);
+            verifyExcelStyleFilteringSize(fix, Size.Medium);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
         }));
 
-        it('display density is properly applied on the column selection container', fakeAsync(() => {
+        it('size is properly applied on the column selection container', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -3896,106 +4022,106 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(columnSelectionContainer).not.toBeNull();
             expect(headerIcons.length).toEqual(0);
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             fix.detectChanges();
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
             headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
             const columnSelectionIcon = headerIcons.find((bi: any) => bi.innerText === 'done');
 
-            expect(columnSelectionContainer.tagName).toEqual('BUTTON');
+            expect(columnSelectionContainer.tagName).toEqual('DIV');
             expect(columnSelectionIcon).not.toBeNull();
 
         }));
 
-        it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
+        it('size is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
             const column = grid.columnList.find((c) => c.field === 'ProductName');
             column.sortable = true;
             grid.moving = true;
             fix.detectChanges();
 
-            // Open excel style custom filtering dialog and verify its display density
+            // Open excel style custom filtering dialog and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterDisplayDensity(fix, DisplayDensity.comfortable);
+            verifyExcelCustomFilterSize(fix, Size.Large);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style custom filtering dialog and verify its display density
+            // Open excel style custom filtering dialog and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterDisplayDensity(fix, DisplayDensity.cosy);
+            verifyExcelCustomFilterSize(fix, Size.Medium);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style custom filtering dialog and verify its display density
+            // Open excel style custom filtering dialog and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterDisplayDensity(fix, DisplayDensity.compact);
+            verifyExcelCustomFilterSize(fix, Size.Small);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         }));
 
-        it('display density is properly applied on the excel style cascade dropdown', fakeAsync(() => {
+        it('size is properly applied on the excel style cascade dropdown', fakeAsync(() => {
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
-            // Open excel style cascade operators dropdown and verify its display density
+            // Open excel style cascade operators dropdown and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
 
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+            verifyGridSubmenuSize(gridNativeElement, Size.Large);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             tick();
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style cascade operators dropdown and verify its display density
+            // Open excel style cascade operators dropdown and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
 
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+            verifyGridSubmenuSize(gridNativeElement, Size.Medium);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             tick(200);
             fix.detectChanges();
 
-            // Open excel style cascade operators dropdown and verify its display density
+            // Open excel style cascade operators dropdown and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.compact);
+            verifyGridSubmenuSize(gridNativeElement, Size.Small);
         }));
 
-        it('display density is properly applied on the excel custom dialog\'s default expression dropdown',
+        it('size is properly applied on the excel custom dialog\'s default expression dropdown',
             fakeAsync(() => {
                 const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
@@ -4007,19 +4133,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
                 tick(200);
 
-                // Click the left input to open the operators dropdown and verify its display density.
+                // Click the left input to open the operators dropdown and verify its size.
                 let conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+                verifyGridSubmenuSize(gridNativeElement, Size.Large);
                 GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
                 tick(100);
                 fix.detectChanges();
 
-                // Change display density
-                grid.displayDensity = DisplayDensity.cosy;
+                // Change size
+                setElementSize(grid.nativeElement, Size.Medium);
                 tick(200);
                 fix.detectChanges();
 
@@ -4031,16 +4157,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
                 tick(200);
 
-                // Click the left input to open the operators dropdown and verify its display density.
+                // Click the left input to open the operators dropdown and verify its size.
                 conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+                verifyGridSubmenuSize(gridNativeElement, Size.Medium);
             }));
 
-        it('display density is properly applied on the excel custom dialog\'s date expression dropdown',
+        it('size is properly applied on the excel custom dialog\'s date expression dropdown',
             fakeAsync(() => {
                 const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
                 GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseDate');
@@ -4050,20 +4176,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
                 tick(200);
 
-                // Click the left input to open the operators dropdown and verify its display density.
+                // Click the left input to open the operators dropdown and verify its size.
                 let conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0, true);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+                verifyGridSubmenuSize(gridNativeElement, Size.Large);
 
                 GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
                 tick(100);
                 fix.detectChanges();
 
-                // Change display density
-                grid.displayDensity = DisplayDensity.cosy;
+                // Change size
+                setElementSize(grid.nativeElement, Size.Medium);
                 tick(200);
                 fix.detectChanges();
 
@@ -4075,12 +4201,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
                 tick(200);
 
-                // Click the left input to open the operators dropdown and verify its display density.
+                // Click the left input to open the operators dropdown and verify its size.
                 conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0, true);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
-                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+                verifyGridSubmenuSize(gridNativeElement, Size.Medium);
             }));
 
         it('Should include \'false\' value in results when searching.', fakeAsync(() => {
@@ -4116,7 +4242,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             await wait(100);
             fix.detectChanges();
 
@@ -4368,7 +4494,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyFilteringExpression(operands[1], 'ProductName', 'empty', null);
         }));
 
-        it('should not display search scrollbar when not needed for the current display density', (async () => {
+        it('should not display search scrollbar when not needed for the current size', (async () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -4384,7 +4510,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.cosy;
+            setElementSize(grid.nativeElement, Size.Medium);
             await wait(100);
             fix.detectChanges();
 
@@ -4397,7 +4523,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            grid.displayDensity = DisplayDensity.compact;
+            setElementSize(grid.nativeElement, Size.Small);
             await wait(100);
             fix.detectChanges();
 
@@ -4675,14 +4801,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsSelected(orButton, false);
         }));
 
-        it('Should select the button operator in custom expression when pressing \'Enter\' on it.', fakeAsync(() => {
+        it('Should select the button operator in custom expression when pressing \'Enter\' on it.', async () => {
             // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            tick(200);
+            await wait(200);
 
             const andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             const orButton = GridFunctions.getExcelCustomFilteringExpressionOrButton(fix);
@@ -4693,6 +4819,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Press 'Enter' on 'or' button and verify it gets selected.
             UIInteractions.triggerKeyDownEvtUponElem('Enter', orButton, true);
+            await wait();
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsSelected(andButton, false);
@@ -4700,11 +4827,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Press 'Enter' on 'and' button and verify it gets selected.
             UIInteractions.triggerKeyDownEvtUponElem('Enter', andButton, true);
+            await wait();
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsSelected(andButton);
             ControlsFunction.verifyButtonIsSelected(orButton, false);
-        }));
+        });
 
         it('Should open conditions dropdown of custom expression with \'Alt + Arrow Down\'.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
@@ -4785,6 +4913,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
+
+            expect(grid.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).not.toContain('(');
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
@@ -4796,8 +4926,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4846,7 +4976,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Get Calendar component.
             const calendar = document.querySelector('igx-calendar');
 
-            const daysOfWeek = calendar.querySelector('.igx-calendar__body-row');
+            const daysOfWeek = calendar.querySelector('.igx-days-view__row');
             const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
 
             expect(weekStart.innerText).toMatch('Fri');
@@ -4878,8 +5008,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4925,8 +5055,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -4977,8 +5107,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
             flush();
@@ -5030,8 +5160,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
             tick();
             fix.detectChanges();
 
@@ -5430,6 +5560,73 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(applyButton);
+        }));
+
+        it('Should be able to navigate inside the search list items', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+
+            // we expect only the first list item to be active when the list is focused
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on arrow down the second item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeFalse();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
+
+            // on arrow up the first item should be active again
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on home the first item should be active
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
+            UIInteractions.triggerKeyDownEvtUponElem('home', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+
+            // on space key on the first item (select all) all the checkbox should deselect
+            let checkboxes = list.querySelectorAll('igx-checkbox');
+            let checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
+            checkboxesStatus.forEach(status => {
+                expect(status).toBeTrue();
+            });
+            UIInteractions.triggerKeyDownEvtUponElem('space', list, true);
+            fix.detectChanges();
+            checkboxes = list.querySelectorAll('igx-checkbox');
+            checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
+            checkboxesStatus.forEach(status => {
+                expect(status).toBeFalse();
+            });
+        }));
+
+        it('Should not lose focus with arrowUp/arrowDown when navigating inside search list', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+
+            // we expect only the first list item to be active when the list is focused
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+
+            // on arrow up the focus should stay on the first element and not on the search input
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
+            fix.detectChanges();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
@@ -5969,6 +6166,52 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const icon = GridFunctions.getHeaderFilterIcon(header);
             fix.detectChanges();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('search');
+        });
+
+        it('Should reset list scroll position on filtered column change.', async () => {
+            // Add additional rows as prerequisite for the test
+            for (let index = 0; index < 10; index++) {
+                const newRow = {
+                    Downloads: index,
+                    ID: index + 100,
+                    ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(),
+                    Released: false,
+                    AnotherField: 'z'
+                };
+                grid.addRow(newRow);
+            }
+
+            fix.detectChanges();
+
+            // Select column
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            await wait(100);
+            fix.detectChanges();
+
+            // Scroll the search list to the bottom.
+            let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            scrollbar.scrollTop = 3000;
+            await wait(100);
+            fix.detectChanges();
+
+            // Select another column
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            await wait(100);
+            fix.detectChanges();
+
+            // Update scrollbar
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            await wait(100);
+            fix.detectChanges();
+
+            // Get the display container and its parent and verify if the display contaier is at start
+            const displayContainer = searchComponent.querySelector('igx-display-container');
+            const displayContainerRect = displayContainer.getBoundingClientRect();
+            const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
+
+            expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
 
@@ -6607,45 +6850,34 @@ const checkUIForType = (type: string, elem: DebugElement) => {
     }
 };
 
-const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
-    // Verify display density of search input and list.
+    // Verify size of search input and list.
     const excelSearch = excelMenu.querySelector('igx-excel-style-search');
     const inputGroup = excelSearch.querySelector('igx-input-group');
     const list = excelSearch.querySelector('igx-list');
-    expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
-        'incorrect inputGroup density');
-    expect(list.classList.contains(getListDensityClass(expectedDisplayDensity))).toBe(true,
-        'incorrect list density');
+    expect(getComponentSize(inputGroup)).toBe(expectedSize);
+    expect(getComponentSize(list)).toBe(expectedSize);
 
-    // Verify display density of all flat and raised buttons in excel stlye dialog.
+    // Verify size of all flat and contained buttons in excel stlye dialog.
     const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--raised');
-    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained');
+    const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
-        if (expectedDisplayDensity === DisplayDensity.comfortable) {
-            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
-                'incorrect button density');
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
-                'incorrect button density');
-        } else {
-            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
-                'incorrect button density');
-        }
+        expect(getComponentSize(button)).toBe(expectedSize);
     });
 
     // Verify column pinning and column hiding elements in header area and actions area
-    // are shown based on the expected display density.
-    verifyPinningHidingDisplayDensity(fix, expectedDisplayDensity);
+    // are shown based on the expected size.
+    verifyPinningHidingSize(fix, expectedSize);
     // Verify column sorting and column moving buttons are positioned either on right of their
-    // respective header or under it, based on the expected display density.
-    verifySortMoveDisplayDensity(fix, expectedDisplayDensity);
+    // respective header or under it, based on the expected size.
+    verifySortMoveSize(fix, expectedSize);
 };
 
-const verifyPinningHidingDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -6663,7 +6895,7 @@ const verifyPinningHidingDisplayDensity = (fix: ComponentFixture<any>, expectedD
     const actionsPinArea = GridFunctions.getExcelFilteringPinContainer(fix, excelMenu);
     const actionsAreaColumnHidingIcon = GridFunctions.getExcelFilteringHideContainer(fix, excelMenu);
 
-    if (expectedDisplayDensity === DisplayDensity.comfortable) {
+    if (expectedSize === Size.Large) {
         // Verify icons in header are not present.
         expect(headerAreaPinIcon === null || headerAreaPinIcon === undefined).toBe(true,
             'headerArea pin icon is present');
@@ -6694,7 +6926,7 @@ const verifyPinningHidingDisplayDensity = (fix: ComponentFixture<any>, expectedD
     }
 };
 
-const verifySortMoveDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Get excel style dialog.
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -6708,111 +6940,57 @@ const verifySortMoveDisplayDensity = (fix: ComponentFixture<any>, expectedDispla
     const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
     const moveButtons = GridFunctions.getExcelStyleFilteringMoveButtons(fix, excelMenu);
 
-    const isCompact = expectedDisplayDensity === DisplayDensity.compact;
-    // Verify sort buttons are on right of the sort title if density is 'compact'
-    // or that they are under the sort title if density is not 'compact'.
-    expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left).toBe(isCompact,
+    const isSmall = expectedSize === Size.Small;
+    // Verify sort buttons are on right of the sort title if size is 'small'
+    // or that they are under the sort title if size is not 'small'.
+    expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left).toBe(isSmall,
         'incorrect sort button horizontal position based on the sort title');
-    expect(sortHeaderRect.right <= sortButtons[1].getBoundingClientRect().left).toBe(isCompact,
+    expect(sortHeaderRect.right <= sortButtons[1].getBoundingClientRect().left).toBe(isSmall,
         'incorrect sort button horizontal position based on the sort title');
-    expect(sortHeaderRect.bottom <= sortButtons[0].getBoundingClientRect().top).toBe(!isCompact,
+    expect(sortHeaderRect.bottom <= sortButtons[0].getBoundingClientRect().top).toBe(!isSmall,
         'incorrect sort button vertical position based on the sort title');
-    expect(sortHeaderRect.bottom <= sortButtons[1].getBoundingClientRect().top).toBe(!isCompact,
+    expect(sortHeaderRect.bottom <= sortButtons[1].getBoundingClientRect().top).toBe(!isSmall,
         'incorrect sort button vertical position based on the sort title');
-    // Verify move buttons are on right of the move title if density is 'compact'
-    // or that they are under the sort title if density is not 'compact'.
-    expect(moveHeaderRect.right < moveButtons[0].getBoundingClientRect().left).toBe(isCompact,
+    // Verify move buttons are on right of the move title if size is 'small'
+    // or that they are under the sort title if size is not 'small'.
+    expect(moveHeaderRect.right < moveButtons[0].getBoundingClientRect().left).toBe(isSmall,
         'incorrect move button horizontal position based on the sort title');
-    expect(moveHeaderRect.right < moveButtons[1].getBoundingClientRect().left).toBe(isCompact,
+    expect(moveHeaderRect.right < moveButtons[1].getBoundingClientRect().left).toBe(isSmall,
         'incorrect move button horizontal position based on the sort title');
-    expect(moveHeaderRect.bottom <= moveButtons[0].getBoundingClientRect().top).toBe(!isCompact,
+    expect(moveHeaderRect.bottom <= moveButtons[0].getBoundingClientRect().top).toBe(!isSmall,
         'incorrect move button vertical position based on the sort title');
-    expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top).toBe(!isCompact,
+    expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top).toBe(!isSmall,
         'incorrect move button vertical position based on the sort title');
 };
 
-const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
+const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
 
-    // Verify display density of all flat and raised buttons in custom filter dialog.
+    // Verify size of all flat and contained buttons in custom filter dialog.
     const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
-    const raisedButtons = customFilterMenu.querySelectorAll('.igx-button--raised');
-    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    const containedButtons = customFilterMenu.querySelectorAll('.igx-button--contained');
+    const buttons = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
-        if (expectedDisplayDensity === DisplayDensity.comfortable) {
-            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
-                'incorrect button density in custom filter dialog');
-            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
-                'incorrect button density in custom filter dialog');
-        } else {
-            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
-                'incorrect button density in custom filter dialog');
-        }
+        expect(getComponentSize(button)).toBe(expectedSize);
     });
 
-    // Verify display density of all input groups in custom filter dialog.
+    // Verify size of all input groups in custom filter dialog.
     const inputGroups = customFilterMenu.querySelectorAll('igx-input-group');
     inputGroups.forEach((inputGroup) => {
-        expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
-            'incorrect inputGroup density in custom filter dialog');
+        expect(getComponentSize(inputGroup)).toBe(expectedSize, 'incorrect inputGroup size in custom filter dialog');
     });
 };
 
-const verifyGridSubmenuDisplayDensity = (gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) => {
+const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: Size) => {
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
     const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
+
     dropdownItems.forEach((dropdownItem) => {
-        expect(dropdownItem.classList.contains(getDropdownItemDensityClass(expectedDisplayDensity))).toBe(true,
-            'incorrect dropdown item density');
+        expect(getComponentSize(dropdownItem)).toBe(expectedSize, 'incorrect dropdown item size');
     });
-};
-
-const getListDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-list--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-list--cosy'; break;
-        default: densityClass = 'igx-list'; break;
-    }
-    return densityClass;
-};
-
-const getInputGroupDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-input-group--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-input-group--cosy'; break;
-        default: densityClass = 'igx-input-group--comfortable'; break;
-    }
-    return densityClass;
-};
-
-/**
- * Gets the corresponding class that a flat/raised/outlined button
- * has added to it additionally based on displayDensity input.
- */
-const getButtonDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-button--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-button--cosy'; break;
-        default: densityClass = ''; break;
-    }
-    return densityClass;
-};
-
-const getDropdownItemDensityClass = (displayDensity: DisplayDensity) => {
-    let densityClass;
-    switch (displayDensity) {
-        case DisplayDensity.compact: densityClass = 'igx-drop-down__item--compact'; break;
-        case DisplayDensity.cosy: densityClass = 'igx-drop-down__item--cosy'; break;
-        default: densityClass = 'igx-drop-down__item'; break;
-    }
-    return densityClass;
 };
 
 const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {

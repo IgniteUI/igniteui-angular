@@ -4,14 +4,16 @@
         "outDir": "../out-tsc/app",
         "types": [
             "node"
-        ]
+        ],
+        "allowSyntheticDefaultImports": true
     },
-  "files": [
-    "main.ts",
-    "polyfills.ts",
-    "../projects/igniteui-angular-i18n/src/i18n/expand-type.ts"
-  ],
-  "include": [
-    "**/*.d.ts"
-  ]
+    "files": [
+        "main.ts",
+        "main.server.ts",
+        "server.ts",
+        "../projects/igniteui-angular-i18n/src/i18n/expand-type.ts"
+    ],
+    "include": [
+        "**/*.d.ts"
+    ]
 }

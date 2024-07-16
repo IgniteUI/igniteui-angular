@@ -16,10 +16,6 @@
 
         @extend %igx-card-display !optional;
 
-        @include e(tgroup) {
-            @extend %igx-card-tgroup !optional;
-        }
-
         @include e(media) {
             @extend %igx-card-media !optional;
         }
@@ -28,8 +24,8 @@
             @extend %igx-card-media--right !optional;
         }
 
-        @include m(outlined) {
-            @extend %igx-card--outlined !optional;
+        @include m(elevated) {
+            @extend %igx-card--elevated !optional;
         }
 
         @include m(horizontal) {

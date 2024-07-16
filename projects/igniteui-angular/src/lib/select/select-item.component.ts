@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
-    template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>',
+	templateUrl: 'select-item.component.html',
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
@@ -13,7 +13,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     private _text: any;
 
     /**
-     * An @Input property that gets/sets the item's text to be displayed in the select component's input when the item is selected.
+     * Gets/Sets the item's text to be displayed in the select component's input when the item is selected.
      *
      * ```typescript
      *  //get

@@ -1,4 +1,4 @@
-import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, forwardRef } from '@angular/core';
+import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -78,7 +78,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      *  <igx-column-actions [hideFilter]="true"></igx-column-actions>
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public hideFilter = false;
     /**
      * Gets the checkbox components representing column items currently present in the dropdown

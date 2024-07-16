@@ -48,10 +48,6 @@
         $color: text-contrast($link-background);
     }
 
-    @if not($border-radius) {
-        $border-radius: border-radius(map.get($theme, 'border-radius')...);
-    }
-
     @return extend($theme, (
         name: $name,
         selector: 'igc-trial-watermark',
@@ -65,6 +61,8 @@
     ));
 }
 
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin watermark($theme) {
     @include css-vars($theme);

@@ -4,7 +4,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { IgxGridDetailTemplateDirective } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -19,7 +18,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
-import { CellType, IgxColumnComponent } from '../public_api';
+import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -89,7 +88,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const tracedInput: any =
                 document.elementFromPoint(inputElemPos.left + inputElemPos.height / 2, inputElemPos.top + inputElemPos.height / 2);
 
-            checkboxElem.componentInstance.nativeCheckbox.nativeElement.click();
+            checkboxElem.componentInstance.nativeInput.nativeElement.click();
             fix.detectChanges();
 
             expect(checkboxElem.nativeElement.contains(tracedCheckbox)).toBeTruthy();
@@ -591,13 +590,14 @@ describe('IgxGrid Master Detail #grid', () => {
             setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
@@ -1324,7 +1324,7 @@ export class DefaultGridMasterDetailComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1367,7 +1367,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 

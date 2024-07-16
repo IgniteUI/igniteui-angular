@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute } from '@angular/core';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -84,7 +84,7 @@ export class IgxSplitterPaneComponent {
      * @remarks
      * If pane is not resizable its related splitter bar cannot be dragged.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public resizable = true;
 
     /**
@@ -190,9 +190,8 @@ export class IgxSplitterPaneComponent {
      */
     @HostBinding('style.flex')
     public get flex() {
-        const isAuto = this.size === 'auto' && !this.dragSize;
-        const grow = !isAuto ? 0 : 1;
         const size = this.dragSize || this.size;
+        const grow = this.isPercentageSize && !this.dragSize ? 1 : 0;
         return `${grow} ${grow} ${size}`;
     }
 
@@ -204,7 +203,7 @@ export class IgxSplitterPaneComponent {
      * const isCollapsed = pane.collapsed;
      * ```
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     public set collapsed(value) {
         if (this.owner) {
             // reset sibling sizes when pane collapse state changes.

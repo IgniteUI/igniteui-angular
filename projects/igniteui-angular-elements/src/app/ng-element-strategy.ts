@@ -10,11 +10,28 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, NgZone, OnChanges, SimpleChange, SimpleChanges, Type} from '@angular/core';
+import {
+  ApplicationRef,
+  ChangeDetectorRef,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  ComponentRef,
+  EventEmitter,
+  Injector,
+  NgZone,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges,
+  Type,
+} from '@angular/core';
 import {merge, Observable, ReplaySubject} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {NgElementStrategy, NgElementStrategyEvent, NgElementStrategyFactory} from '@angular/elements';
+import {
+  NgElementStrategy,
+  NgElementStrategyEvent,
+  NgElementStrategyFactory,
+} from '@angular/elements';
 // import {extractProjectableNodes} from './extract-projectable-nodes';
 // import {isFunction, scheduler, strictEquals} from './utils';
 
@@ -24,15 +41,14 @@ const DESTROY_DELAY = 10;
 /**
  * Factory that creates new ComponentNgElementStrategy instance. Gets the component factory with the
  * constructor's injector's factory resolver and passes that factory to each strategy.
- *
- * @publicApi
  */
 export class ComponentNgElementStrategyFactory implements NgElementStrategyFactory {
   componentFactory: ComponentFactory<any>;
 
   constructor(component: Type<any>, injector: Injector) {
-    this.componentFactory =
-        injector.get(ComponentFactoryResolver).resolveComponentFactory(component);
+    this.componentFactory = injector
+      .get(ComponentFactoryResolver)
+      .resolveComponentFactory(component);
   }
 
   create(injector: Injector) {
@@ -43,27 +59,25 @@ export class ComponentNgElementStrategyFactory implements NgElementStrategyFacto
 /**
  * Creates and destroys a component ref using a component factory and handles change detection
  * in response to input changes.
- *
- * @publicApi
  */
 export class ComponentNgElementStrategy implements NgElementStrategy {
   // Subject of `NgElementStrategyEvent` observables corresponding to the component's outputs.
   private eventEmitters = new ReplaySubject<Observable<NgElementStrategyEvent>[]>(1);
 
   /** Merged stream of the component's output events. */
-  readonly events = this.eventEmitters.pipe(switchMap(emitters => merge(...emitters)));
+  readonly events = this.eventEmitters.pipe(switchMap((emitters) => merge(...emitters)));
 
   /** Reference to the component that was created on connect. */
-  private componentRef: ComponentRef<any>|null = null;
+  private componentRef: ComponentRef<any> | null = null;
 
   /** Reference to the component view's `ChangeDetectorRef`. */
-  private viewChangeDetectorRef: ChangeDetectorRef|null = null;
+  private viewChangeDetectorRef: ChangeDetectorRef | null = null;
 
   /**
    * Changes that have been made to component inputs since the last change detection run.
    * (NOTE: These are only recorded if the component implements the `OnChanges` interface.)
    */
-  private inputChanges: SimpleChanges|null = null;
+  private inputChanges: SimpleChanges | null = null;
 
   /** Whether changes have been made to component inputs since the last change detection run. */
   private hasInputChanges = false;
@@ -72,10 +86,10 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   private implementsOnChanges = false;
 
   /** Whether a change detection has been scheduled to run on the component. */
-  private scheduledChangeDetectionFn: (() => void)|null = null;
+  private scheduledChangeDetectionFn: (() => void) | null = null;
 
   /** Callback function that when called will cancel a scheduled destruction on the component. */
-  private scheduledDestroyFn: (() => void)|null = null;
+  private scheduledDestroyFn: (() => void) | null = null;
 
   /** Initial input values that were set before the component was created. */
   private readonly initialInputValues = new Map<string, any>();
@@ -85,17 +99,24 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * fired.
    * (This helps detect the first change of an input, even if it is explicitly set to `undefined`.)
    */
-  private readonly unchangedInputs =
-      new Set<string>(this.componentFactory.inputs.map(({propName}) => propName));
+  private readonly unchangedInputs: Set<string>;
 
   /** Service for setting zone context. */
-  private readonly ngZone = this.injector.get<NgZone>(NgZone);
+  private readonly ngZone: NgZone;
 
   /** The zone the element was created in or `null` if Zone.js is not loaded. */
-  private readonly elementZone =
-      (typeof Zone === 'undefined') ? null : this.ngZone.run(() => Zone.current);
+  private readonly elementZone: Zone | null;
 
-  constructor(private componentFactory: ComponentFactory<any>, private injector: Injector) {}
+  constructor(
+    private componentFactory: ComponentFactory<any>,
+    private injector: Injector,
+  ) {
+    this.unchangedInputs = new Set<string>(
+      this.componentFactory.inputs.map(({propName}) => propName),
+    );
+    this.ngZone = this.injector.get<NgZone>(NgZone);
+    this.elementZone = typeof Zone === 'undefined' ? null : this.ngZone.run(() => Zone.current);
+  }
 
   /**
    * Initializes a new component if one has not yet been created and cancels any scheduled
@@ -158,9 +179,13 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * Sets the input value for the property. If the component has not yet been created, the value is
    * cached and set when the component is created.
    */
-  setInputValue(property: string, value: any): void {
+  setInputValue(property: string, value: any, transform?: (value: any) => any): void {
     this.runInZone(() => {
-      if (this.componentRef === null) {
+      if (transform) {
+        value = transform.call(this.componentRef?.instance, value);
+      }
+
+      if (this.componentRef === null || !this.componentRef.instance) {
         this.initialInputValues.set(property, value);
         return;
       }
@@ -168,8 +193,10 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
       // Ignore the value if it is strictly equal to the current value, except if it is `undefined`
       // and this is the first change to the value (because an explicit `undefined` _is_ strictly
       // equal to not having a value set at all, but we still need to record this as a change).
-      if (strictEquals(value, this.getInputValue(property)) &&
-          !((value === undefined) && this.unchangedInputs.has(property))) {
+      if (
+        strictEquals(value, this.getInputValue(property)) &&
+        !(value === undefined && this.unchangedInputs.has(property))
+      ) {
         return;
       }
 
@@ -191,8 +218,10 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    */
   protected initializeComponent(element: HTMLElement) {
     const childInjector = Injector.create({providers: [], parent: this.injector});
-    const projectableNodes =
-        extractProjectableNodes(element, this.componentFactory.ngContentSelectors);
+    const projectableNodes = extractProjectableNodes(
+      element,
+      this.componentFactory.ngContentSelectors,
+    );
     this.componentRef = this.componentFactory.create(childInjector, projectableNodes, element);
     this.viewChangeDetectorRef = this.componentRef.injector.get(ChangeDetectorRef);
 
@@ -209,11 +238,11 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
 
   /** Set any stored initial inputs on the component's properties. */
   protected initializeInputs(): void {
-    this.componentFactory.inputs.forEach(({propName}) => {
+    this.componentFactory.inputs.forEach(({propName, transform}) => {
       if (this.initialInputValues.has(propName)) {
         // Call `setInputValue()` now that the component has been instantiated to update its
         // properties and fire `ngOnChanges()`.
-        this.setInputValue(propName, this.initialInputValues.get(propName));
+        this.setInputValue(propName, this.initialInputValues.get(propName), transform);
       }
     });
 
@@ -222,15 +251,15 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
 
   /** Sets up listeners for the component's outputs so that the events stream emits the events. */
   protected initializeOutputs(componentRef: ComponentRef<any>): void {
-    const eventEmitters: Observable<NgElementStrategyEvent>[] =
-        this.componentFactory.outputs.map(({propName, templateName}) => {
-          const emitter: EventEmitter<any> = componentRef.instance[propName];
-          return emitter.pipe(map(value => ({name: templateName, value})));
-        });
+    const eventEmitters: Observable<NgElementStrategyEvent>[] = this.componentFactory.outputs.map(
+      ({propName, templateName}) => {
+        const emitter: EventEmitter<any> = componentRef.instance[propName];
+        return emitter.pipe(map((value) => ({name: templateName, value})));
+      },
+    );
 
     this.eventEmitters.next(eventEmitters);
   }
-
   /** Calls ngOnChanges with all the inputs that have changed since the last call. */
   protected callNgOnChanges(componentRef: ComponentRef<any>): void {
     if (!this.implementsOnChanges || this.inputChanges === null) {
@@ -309,7 +338,7 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
 
   /** Runs in the angular zone, if present. */
   private runInZone(fn: () => unknown) {
-    return (this.elementZone && Zone.current !== this.elementZone) ? this.ngZone.run(fn) : fn();
+    return this.elementZone && Zone.current !== this.elementZone ? this.ngZone.run(fn) : fn();
   }
 }
 
@@ -318,41 +347,47 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
 // COPIED from @angular/elements util & co:
 // -----------------
 
+/**
+ * Provide methods for scheduling the execution of a callback.
+ */
 const scheduler = {
-    /**
-     * Schedule a callback to be called after some delay.
-     *
-     * Returns a function that when executed will cancel the scheduled function.
-     */
-    schedule(taskFn: () => void, delay: number): () => void {
-      const id = setTimeout(taskFn, delay);
-      return () => clearTimeout(id);
-    },
+  /**
+   * Schedule a callback to be called after some delay.
+   *
+   * Returns a function that when executed will cancel the scheduled function.
+   */
+  schedule(taskFn: () => void, delay: number): () => void {
+    const id = setTimeout(taskFn, delay);
+    return () => clearTimeout(id);
+  },
 
-    /**
-     * Schedule a callback to be called before the next render.
-     * (If `window.requestAnimationFrame()` is not available, use `scheduler.schedule()` instead.)
-     *
-     * Returns a function that when executed will cancel the scheduled function.
-     */
-    scheduleBeforeRender(taskFn: () => void): () => void {
-      // TODO(gkalpak): Implement a better way of accessing `requestAnimationFrame()`
-      //                (e.g. accounting for vendor prefix, SSR-compatibility, etc).
-      if (typeof window === 'undefined') {
-        // For SSR just schedule immediately.
-        return scheduler.schedule(taskFn, 0);
-      }
+  /**
+   * Schedule a callback to be called before the next render.
+   * (If `window.requestAnimationFrame()` is not available, use `scheduler.schedule()` instead.)
+   *
+   * Returns a function that when executed will cancel the scheduled function.
+   */
+  scheduleBeforeRender(taskFn: () => void): () => void {
+    // TODO(gkalpak): Implement a better way of accessing `requestAnimationFrame()`
+    //                (e.g. accounting for vendor prefix, SSR-compatibility, etc).
+    if (typeof window === 'undefined') {
+      // For SSR just schedule immediately.
+      return scheduler.schedule(taskFn, 0);
+    }
 
-      if (typeof window.requestAnimationFrame === 'undefined') {
-        const frameMs = 16;
-        return scheduler.schedule(taskFn, frameMs);
-      }
+    if (typeof window.requestAnimationFrame === 'undefined') {
+      const frameMs = 16;
+      return scheduler.schedule(taskFn, frameMs);
+    }
 
-      const id = window.requestAnimationFrame(taskFn);
-      return () => window.cancelAnimationFrame(id);
-    },
-  };
+    const id = window.requestAnimationFrame(taskFn);
+    return () => window.cancelAnimationFrame(id);
+  },
+};
 
+/**
+ * Check whether the input is a function.
+ */
 export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
@@ -394,7 +429,7 @@ function findMatchingIndex(node: Node, selectors: string[], defaultIndex: number
 
   if (isElement(node)) {
     selectors.some((selector, i) => {
-      if ((selector !== '*') && matchesSelector(node, selector)) {
+      if (selector !== '*' && matchesSelector(node, selector)) {
         matchingIndex = i;
         return true;
       }
@@ -408,16 +443,27 @@ function findMatchingIndex(node: Node, selectors: string[], defaultIndex: number
 /**
  * Check whether the input is an `Element`.
  */
-function isElement(node: Node|null): node is Element {
+function isElement(node: Node | null): node is Element {
   return !!node && node.nodeType === Node.ELEMENT_NODE;
 }
 
 let _matches: (this: any, selector: string) => boolean;
+
+/**
+ * Check whether an `Element` matches a CSS selector.
+ * NOTE: this is duplicated from @angular/upgrade, and can
+ * be consolidated in the future
+ */
 function matchesSelector(el: any, selector: string): boolean {
   if (!_matches) {
     const elProto = <any>Element.prototype;
-    _matches = elProto.matches || elProto.matchesSelector || elProto.mozMatchesSelector ||
-        elProto.msMatchesSelector || elProto.oMatchesSelector || elProto.webkitMatchesSelector;
+    _matches =
+      elProto.matches ||
+      elProto.matchesSelector ||
+      elProto.mozMatchesSelector ||
+      elProto.msMatchesSelector ||
+      elProto.oMatchesSelector ||
+      elProto.webkitMatchesSelector;
   }
   return el.nodeType === Node.ELEMENT_NODE ? _matches.call(el, selector) : false;
 }

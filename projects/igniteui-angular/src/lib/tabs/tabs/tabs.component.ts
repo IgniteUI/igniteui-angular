@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, Optional, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
@@ -8,8 +8,9 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxIconService } from '../../icon/icon.service';
 
-export const IgxTabsAlignment = mkenum({
+export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
     end: 'end',
     center: 'center',
@@ -17,7 +18,7 @@ export const IgxTabsAlignment = mkenum({
 });
 
 /** @hidden */
-enum TabScrollButtonStyle {
+const enum TabScrollButtonStyle {
     Enabled = 'enabled',
     Disabled = 'disabled',
     NotDisplayed = 'not_displayed'
@@ -69,7 +70,7 @@ let NEXT_TAB_ID = 0;
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
 
     /**
-     * An @Input property which determines the tab alignment. Defaults to `start`.
+     * Gets/Sets the tab alignment. Defaults to `start`.
      */
     @Input()
     public get tabAlignment(): string | IgxTabsAlignment {
@@ -129,8 +130,21 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
-        dir: IgxDirectionality) {
+        dir: IgxDirectionality,
+        @Optional() @Inject(IgxIconService)
+        protected iconService?: IgxIconService
+    ) {
         super(animationService, cdr, dir);
+
+        iconService.addIconRef('prev', 'default', {
+            name: 'navigate_before',
+            family: 'material'
+        });
+
+        iconService.addIconRef('next', 'default', {
+            name: 'navigate_next',
+            family: 'material'
+        });
     }
 
 

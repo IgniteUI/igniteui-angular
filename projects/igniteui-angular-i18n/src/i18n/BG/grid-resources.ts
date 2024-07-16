@@ -90,6 +90,7 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_excel_currency_filter: 'Филтър по валута',
     igx_grid_excel_custom_filter: 'Персонализиран филтър...',
     igx_grid_excel_no_matches: 'Няма съвпадения',
+    igx_grid_excel_matches_count: '{0} съвпадения.',
     igx_grid_advanced_filter_title: 'Разширено филтриране',
     igx_grid_advanced_filter_and_group: '"And" група',
     igx_grid_advanced_filter_or_group: '"Or" група',
@@ -164,8 +165,7 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Входните данни трябва да са дълги поне {0} знака.',
     igx_grid_max_length_validation_error: 'Входните данни не трябва да са дълги повече от {0} знака.',
     igx_grid_email_validation_error: 'Трябва да бъде въведен валиден имейл адрес.',
-    igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.',
-    igx_grid_pivot_no_aggregator: 'Няма открит валиден агрегатор за {0}. Задайте валидна стойност на aggregatorName или aggregator.'
+    igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.'
 };
 
 /**

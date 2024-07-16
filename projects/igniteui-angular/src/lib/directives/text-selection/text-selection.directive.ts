@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, booleanAttribute } from '@angular/core';
 
 @Directive({
     exportAs: 'igxTextSelection',
@@ -6,27 +6,6 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
     standalone: true
 })
 export class IgxTextSelectionDirective {
-    private selectionState = true;
-
-    /**
-     * Returns whether the input element is selectable through the directive.
-     *
-     * ```typescript
-     * // get
-     * @ViewChild('firstName',
-     *  {read: IgxTextSelectionDirective})
-     * public firstName: IgxTextSelectionDirective;
-     *
-     * public getFirstNameSelectionStatus() {
-     *  return this.firstName.selected;
-     * }
-     * ```
-     */
-    @Input('igxTextSelection')
-    public get selected(): boolean {
-        return this.selectionState;
-    }
-
     /**
      *  Determines whether the input element could be selected through the directive.
      *
@@ -46,9 +25,8 @@ export class IgxTextSelectionDirective {
      * </input>
      * ```
      */
-    public set selected(val: boolean) {
-        this.selectionState = val;
-    }
+    @Input({ alias: 'igxTextSelection', transform: booleanAttribute })
+    public selected = true;
 
     /**
      * Returns the nativeElement of the element where the directive was applied.

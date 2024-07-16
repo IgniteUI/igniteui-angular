@@ -18,8 +18,16 @@
                 @extend %cbx-ripple--hover !optional;
             }
 
+            @include e(composite) {
+                @extend %cbx-composite--hover !optional;
+            }
+
             @include e(composite-mark) {
                 @extend %cbx-composite-mark--fluent !optional;
+            }
+
+            @include e(label) {
+                @extend %cbx-label--hover !optional;
             }
         }
 
@@ -65,6 +73,10 @@
                 @extend %cbx-composite--invalid !optional;
             }
 
+            @include e(composite-wrapper) {
+                @extend %cbx-composite-wrapper--invalid !optional;
+            }
+
             @include e(label) {
                 @extend %cbx-label--invalid !optional;
             }
@@ -76,7 +88,7 @@
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--invalid--fluent !optional;
+                    @extend %cbx-composite--invalid--hover !optional;
                 }
 
                 @include e(composite-mark) {
@@ -98,7 +110,7 @@
 
             &:hover {
                 @include e(composite) {
-                    @extend %cbx-composite--x--invalid--fluent !optional;
+                    @extend %cbx-composite--x--invalid--hover !optional;
                 }
 
                 @include e(composite-mark) {
@@ -115,6 +127,8 @@
             }
 
             &:hover {
+                @extend %igx-checkbox--focused-hovered !optional;
+                
                 @include e(ripple) {
                     @extend %cbx-ripple--focused !optional;
                 }
@@ -166,6 +180,12 @@
 
         @include mx(invalid, indeterminate) {
             @extend %igx-checkbox--indeterminate--invalid !optional;
+
+            &:hover {
+                @include e(composite) {
+                    @extend %cbx-composite--x--hover !optional;
+                }
+            }
         }
 
         @include mx(focused, indeterminate) {
@@ -181,6 +201,10 @@
                 @extend %cbx-composite-mark--x !optional;
             }
 
+            @include e(composite-wrapper) {
+                @extend %cbx-composite-wrapper--x !optional;
+            }
+
             &:hover {
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;
@@ -188,7 +212,7 @@
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--x--fluent !optional;
+                    @extend %cbx-composite--x--hover !optional;
                 }
 
                 @include e(composite-mark) {

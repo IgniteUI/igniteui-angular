@@ -1,7 +1,8 @@
-﻿<div #chipArea class="igx-chip__item"
+<div #chipArea class="igx-chip__item"
     [igxDrag]="{chip: this}"
     [style.visibility]='hideBaseElement ? "hidden" : "visible"'
-    [ghostClass]="ghostClass"
+    ghostClass="igx-chip__ghost"
+    [ghostStyle]="ghostStyles"
     (dragStart)="onChipDragStart($event)"
     (ghostCreate)="onChipGhostCreate()"
     (ghostDestroy)="onChipGhostDestroy()"
@@ -10,7 +11,7 @@
     (dragClick)="onChipDragClicked($event)"
     igxDrop
     (enter)="onChipDragEnterHandler($event)"
-    (leave)= "onChipDragLeaveHandler($event)"
+    (leave)="onChipDragLeaveHandler($event)"
     (over)="onChipOverHandler($event)"
     (dropped)="onChipDrop($event)">
 
@@ -43,9 +44,17 @@
 </div>
 
 <ng-template #defaultSelectIcon>
-    <igx-icon [attr.aria-label]="resourceStrings.igx_chip_select">done</igx-icon>
+    <igx-icon
+        [attr.aria-label]="resourceStrings.igx_chip_select"
+        family="default"
+        name="selected"
+    ></igx-icon>
 </ng-template>
 
 <ng-template #defaultRemoveIcon>
-    <igx-icon [attr.aria-label]="resourceStrings.igx_chip_remove">cancel</igx-icon>
+    <igx-icon
+        [attr.aria-label]="resourceStrings.igx_chip_remove"
+        family="default"
+        name="remove"
+    ></igx-icon>
 </ng-template>

@@ -23,7 +23,6 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
-import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { ExpressionUI } from './common';
 import { ColumnType } from '../../common/grid.interface';
@@ -58,9 +57,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayComponentId: string;
-
-    @Input()
-    public displayDensity: DisplayDensity;
 
     @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;
@@ -98,7 +94,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     constructor(
         protected overlayService: IgxOverlayService,
         private cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil
+        protected platform: PlatformUtil,
     ) { }
 
     public ngAfterViewInit(): void {
@@ -249,17 +245,20 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     private createInitialExpressionUIElement() {
-        this.expressionsList = [];
-        const firstExprUI = new ExpressionUI();
+        let firstExprUI = new ExpressionUI();
+        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition.name === this.selectedOperator) {
+            firstExprUI = this.expressionsList.pop();
+        } else {
+            this.expressionsList = [];
+            firstExprUI.expression = {
+                condition: this.createCondition(this.selectedOperator),
+                fieldName: this.column.field,
+                ignoreCase: this.column.filteringIgnoreCase,
+                searchVal: null
+            };
+        }
 
-        firstExprUI.expression = {
-            condition: this.createCondition(this.selectedOperator),
-            fieldName: this.column.field,
-            ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: null
-        };
         firstExprUI.afterOperator = FilteringLogic.And;
-
         this.expressionsList.push(firstExprUI);
 
         const secondExprUI = new ExpressionUI();

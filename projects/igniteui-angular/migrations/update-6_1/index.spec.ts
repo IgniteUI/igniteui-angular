@@ -31,8 +31,7 @@ describe('Update 6.1.0', () => {
             `<igx-tab-bar attr igxForRemote="true"></igx-tab-bar>` +
             `<elem igxToggle (onOpen)="handler" (onClose)="handler"></elem>`
         );
-        const tree = await schematicRunner.runSchematicAsync('migration-04', {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic('migration-04', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
                 `<igx-bottom-nav attr></igx-bottom-nav>` +

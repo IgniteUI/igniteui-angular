@@ -2,7 +2,6 @@ import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { GridPagingMode } from '../common/enums';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import {
@@ -34,7 +33,7 @@ export class IgxGridSelectionService {
     /**
      * @hidden @internal
      */
-    public selectedRowsChange = new Subject();
+    public selectedRowsChange = new Subject<void>();
 
     /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
@@ -397,20 +396,17 @@ export class IgxGridSelectionService {
                 return keys.some(k => this.isPivotRowSelected(k));
             });
         }
-        if(this.rowSelection.size && (this.grid as any).totalItemCount || this.grid.pagingMode === GridPagingMode.Remote) {
-            if(!this.grid.primaryKey) {
-                return Array.from(this.rowSelection);
-            }
-            const selection = [];
-            this.rowSelection.forEach(rID =>  {
-                const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
-                const partialRowData = {};
-                partialRowData[this.grid.primaryKey] = rID;
-                selection.push(rData ? rData : partialRowData);
-            });
-            return selection;
+        if (!this.grid.primaryKey) {
+            return Array.from(this.rowSelection);
         }
-        return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(this.getRecordKey(row))) : [];
+        const selection = [];
+        this.rowSelection.forEach(rID => {
+            const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
+            const partialRowData = {};
+            partialRowData[this.grid.primaryKey] = rID;
+            selection.push(rData ? rData : partialRowData);
+        });
+        return selection;
     }
 
     /** Returns array of the selected row id's. */
@@ -689,7 +685,8 @@ export class IgxGridSelectionService {
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
         let allData;
-        if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
+        // V.T. Jan 17th, 2024 #13757 Adding an additional conditional check to take account WITHIN range of groups
+        if (this.isFilteringApplied() || this.grid.sortingExpressions.length || this.grid.groupingExpressions?.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
             allData = this.grid.gridAPI.get_all_data(true);

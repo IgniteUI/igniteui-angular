@@ -1,19 +1,26 @@
-<igx-input-group [displayDensity]="this.displayDensity" [type]="this.type" [suppressInputAutofocus]="true">
-    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon [title]="this.value
-            ? pickerResourceStrings.igx_date_picker_change_date
-            : pickerResourceStrings.igx_date_picker_choose_date">today</igx-icon>
+<igx-input-group [type]="type">
+    <igx-prefix *ngIf="!toggleComponents.length" (click)="toggle()">
+        <igx-icon
+            [title]="
+                value
+                    ? pickerResourceStrings.igx_date_picker_change_date
+                    : pickerResourceStrings.igx_date_picker_choose_date
+            "
+            family="default"
+            name="today"
+            >
+        </igx-icon>
     </igx-prefix>
 
-    <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput
-        [igxDateTimeEditor]="this.inputFormat" [displayFormat]="this.displayFormat"
-        [minValue]="this.minValue" [maxValue]="this.maxValue" [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" 
-        [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown || this.readOnly"
-        [igxTextSelection]="this.isDropdown && !this.readOnly" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"
-        [attr.aria-labelledby]="this.label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
+    <input class="igx-date-picker__input-date" [displayValuePipe]="formatter ? displayValue : null" igxInput
+        [igxDateTimeEditor]="inputFormat" [displayFormat]="displayFormat"
+        [minValue]="minValue" [maxValue]="maxValue" [spinDelta]="spinDelta" [spinLoop]="spinLoop"
+        [disabled]="disabled" [placeholder]="placeholder" [readonly]="!isDropdown || readOnly"
+        [igxTextSelection]="isDropdown && !readOnly" [locale]="locale" [attr.aria-expanded]="!collapsed"
+        [attr.aria-labelledby]="label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
 
-    <igx-suffix *ngIf="!this.clearComponents.length && this.value" (click)="this.clear()">
-        <igx-icon>clear</igx-icon>
+    <igx-suffix *ngIf="!clearComponents.length && value" (click)="clear()">
+        <igx-icon family="default" name="clear"></igx-icon>
     </igx-suffix>
 
     <ng-container ngProjectAs="[igxLabel]">
