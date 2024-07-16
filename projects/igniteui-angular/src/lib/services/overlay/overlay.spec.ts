@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostBinding,
     Inject,
+    Injector,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -1166,6 +1167,18 @@ describe('igxOverlay', () => {
             const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
             expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide injector to attach method', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector  = fixture.componentInstance.injector;
+            fixture.detectChanges();
+
+            const id = overlay.attach(SimpleDynamicComponent, undefined, injector);
+            expect(id).toBeDefined();
 
             overlay.detachAll();
         });
@@ -4391,7 +4404,7 @@ export class SimpleDynamicComponent {
     public hostDisplay = 'block';
     @HostBinding('style.width')
     @HostBinding('style.height')
-    public hostDimenstions = '100px';
+    public hostDimensions = '100px';
 }
 
 @Component({
@@ -4481,7 +4494,8 @@ export class EmptyPageComponent {
 
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public viewContainerRef: ViewContainerRef) { }
+        public viewContainerRef: ViewContainerRef,
+        public injector: Injector) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
