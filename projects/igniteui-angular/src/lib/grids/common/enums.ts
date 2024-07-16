@@ -81,6 +81,7 @@ export const ColumnDisplayOrder = /*@__PURE__*/mkenum({
 });
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning columns.
  * - Start: Columns are pinned to the start of the grid.
@@ -91,6 +92,7 @@ export enum ColumnPinningPosition {
     End
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning rows.
  * - Top: Rows are pinned to the top of the grid.
@@ -101,6 +103,7 @@ export enum RowPinningPosition {
     Bottom
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing different paging modes for the grid.
  * - Local: The grid will use local data to extract pages during paging.

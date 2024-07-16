@@ -222,6 +222,7 @@ export abstract class IgxBaseExporter {
     private pivotGridRowDimensionsMap: Map<string, string>;
     private pivotGridKeyValueMap = new Map<string, string>();
 
+    /* alternateName: exportGrid */
     /**
      * Method for exporting IgxGrid component's data.
      * ```typescript
