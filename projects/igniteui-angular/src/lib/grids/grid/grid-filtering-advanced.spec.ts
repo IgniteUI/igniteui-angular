@@ -2076,8 +2076,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Populate edit inputs
                 selectColumnInEditModeExpression(fixture, 1);
                 selectOperatorInEditModeExpression(fixture, 2);
-                const input = GridFunctions.getAdvancedFilteringValueInput(fixture).querySelector('input');
-                UIInteractions.clickAndSendInputElementValue(input, 'ign', fixture);
+                const input1 = GridFunctions.getAdvancedFilteringValueInput(fixture).querySelector('input');
+                UIInteractions.clickAndSendInputElementValue(input1, 'ign', fixture);
 
                 // Commit the populated expression
                 GridFunctions.clickAdvancedFilteringExpressionCommitButton(fixture);
