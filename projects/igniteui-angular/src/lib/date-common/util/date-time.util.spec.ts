@@ -2,6 +2,7 @@ import { DateTimeUtil } from './date-time.util';
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { registerLocaleData } from '@angular/common';
 import localeBg from '@angular/common/locales/bg';
+import { DataType } from '../../data-operations/data-util';
 
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     obj[x.type] = x;
@@ -233,6 +234,30 @@ describe(`DateTimeUtil Unit tests`, () => {
             result = DateTimeUtil.getDefaultInputFormat(undefined);
         }).not.toThrow();
         expect(result).toEqual('MM/dd/yyyy');
+    });
+
+    it('should properly build input formats based on locale for ‘dateTime’ data type ', () => {
+        spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
+        let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.DateTime);
+        expect(result).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+
+        result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.DateTime);
+        expect(result.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
+
+        result = DateTimeUtil.getDefaultInputFormat('fr-FR', DataType.DateTime);
+        expect(result).toEqual('dd/MM/yyyy HH:mm:ss');
+    });
+
+    it('should properly build input formats based on locale for ‘time’ data type ', () => {
+        spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
+        let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.Time);
+        expect(result).toEqual('hh:mm tt');
+
+        result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.Time);
+        expect(result.normalize('NFKC')).toEqual('HH:mm');
+
+        result = DateTimeUtil.getDefaultInputFormat('fr-FR', DataType.Time);
+        expect(result).toEqual('HH:mm');
     });
 
     it('should correctly distinguish date from time characters', () => {
