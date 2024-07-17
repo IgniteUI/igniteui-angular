@@ -2,27 +2,43 @@
 
 # Current Milestone
 
-## Milestone 30, (Due by Apr, 2024)
+## Milestone 32, (Due by Jul, 2024)
 
-1. Update calendar theme to match material [#10400](https://github.com/IgniteUI/igniteui-angular/issues/10400)
-2. Calendar: Default date formatting in the header [#13811](https://github.com/IgniteUI/igniteui-angular/issues/13811)
-3. Button: States and size improvements request [#1033](https://github.com/IgniteUI/igniteui-angular/issues/1033)
-4. Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
-5. Date/datetime/time editors should accept the same formats that the angular pipes accept [#14011](https://github.com/IgniteUI/igniteui-angular/issues/14011)
+1. Horizontal row dimension expansion for Pivot Grid [#14270](https://github.com/IgniteUI/igniteui-angular/issues/14270)
+2. Headers focus and keyboard navigation for Pivot Grid Row Dimension Headers [#14249](https://github.com/IgniteUI/igniteui-angular/issues/14249)
+3. Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
+4. Translation for "Wk" for week numbers in calendars [#14423](https://github.com/IgniteUI/igniteui-angular/issues/14423)
+5. Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
 
 ## Going down the road
 
-1. Grid: Remove deprecated usage of displayDensity [#14015](https://github.com/IgniteUI/igniteui-angular/issues/14015)
-2. Expose a header template for the chip area of the headers of the rows dimension in the pivot grid [#14016](https://github.com/IgniteUI/igniteui-angular/issues/14016)
+1. 
 
 # Previous Milestone
 
+## Milestone 31, version 18.0 (Released Jun 07th, 2024)
+
+1. Support of Angular 18
+2. **[DONE]** Expose a header template for the chip area of the headers of the rows dimension in the pivot grid [#14016](https://github.com/IgniteUI/igniteui-angular/issues/14016)
+3. **[DONE]** Expose headers for row dimensions to be visible in excel when exporting a pivot grid [#14017](https://github.com/IgniteUI/igniteui-angular/issues/14017)
+4. **[DONE]** igxToggle: setOffset function increments the offset instead of setting a specific value [#14174](https://github.com/IgniteUI/igniteui-angular/issues/14174)
+5. **[DONE]** BREAKING CHANGE: Depricate of displayDensity property [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-172x-to-180x)
+
+## Milestone 30, version 17.2 (Released Apr 29th, 2024)
+
+1. **[DONE]** Update calendar theme to match material [#10400](https://github.com/IgniteUI/igniteui-angular/issues/10400)
+2. **[DONE]** Calendar: Default date formatting in the header [#13811](https://github.com/IgniteUI/igniteui-angular/issues/13811)
+3. **[DONE]** Button: States and size improvements request [#1033](https://github.com/IgniteUI/igniteui-angular/issues/1033)
+4. **[DONE]** Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
+5. **[DONE]** Date/datetime/time editors should accept the same formats that the angular pipes accept [#14011](https://github.com/IgniteUI/igniteui-angular/issues/14011)
+
+
 ## Milestone 29, version 17.1 (Released Feb 26th, 2024)
 
-1. Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
-2. Deprecate rowID and rowData in interfaces [#10617](https://github.com/IgniteUI/igniteui-angular/issues/10617)
-3. Component: Icon Button [#13590](https://github.com/IgniteUI/igniteui-angular/issues/13590)
-4. HammerJS is now an optional dependency
+1. **[DONE]** Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
+2. **[DONE]** Deprecate rowID and rowData in interfaces [#10617](https://github.com/IgniteUI/igniteui-angular/issues/10617)
+3. **[DONE]** Component: Icon Button [#13590](https://github.com/IgniteUI/igniteui-angular/issues/13590)
+4. **[DONE]** HammerJS is now an optional dependency
 
 ## Milestone 28, version 17.0 (Released Nov 9th, 2023) [Release Blog 17.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-17-0-0)
 
