@@ -13,6 +13,11 @@ export class IgxExcelTextDirective { }
 })
 export class IgxCSVTextDirective { }
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-title */
+/* blazorAlternateBaseType: GridToolbarContent */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Provides a way to template the title portion of the toolbar in the grid.
  *
@@ -39,6 +44,11 @@ export class IgxGridToolbarTitleComponent {
     public cssClass = 'igx-grid-toolbar__title';
 }
 
+/* blazorElement */
+/* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarContent */
+/* wcElementTag: igc-grid-toolbar-actions */
+/* singleInstanceIdentifier */
 /**
  * Provides a way to template the action portion of the toolbar in the grid.
  *
