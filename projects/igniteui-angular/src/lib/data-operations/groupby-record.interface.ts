@@ -6,9 +6,11 @@ import { ISortingExpression } from './sorting-strategy';
  */
 export class GroupedRecords extends Array<any> {}
 
+/* jsonAPIComplexObject */
 export interface IGroupByRecord {
     expression: ISortingExpression;
     level: number;
+    /* wcAlternateType: any[] */
     records: GroupedRecords;
     value: any;
     groupParent: IGroupByRecord;
