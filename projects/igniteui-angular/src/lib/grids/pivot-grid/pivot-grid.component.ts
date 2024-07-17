@@ -700,11 +700,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override shouldGenerate: boolean;
-
-    /**
-     * @hidden @internal
-     */
     public override moving = false;
 
     /**
@@ -1172,7 +1167,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit = false): number {
-        if (!ignoreBeforeInit && this.shouldGenerate) {
+        if (!ignoreBeforeInit && !this.autoGenerate) {
             return 0;
         }
 
@@ -1207,12 +1202,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotPinnedWidth() {
-        return !this.shouldGenerate ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
+        return !this.autoGenerate ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
     }
 
     /** @hidden @internal */
     public get pivotUnpinnedWidth() {
-        return !this.shouldGenerate ? this.unpinnedWidth : 0;
+        return !this.autoGenerate ? this.unpinnedWidth : 0;
     }
 
     /** @hidden @internal */
@@ -2041,9 +2036,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
         this.updateColumns(columns);
         this.reflow();
-        if (data && data.length > 0) {
-            this.shouldGenerate = false;
-        }
     }
 
 
