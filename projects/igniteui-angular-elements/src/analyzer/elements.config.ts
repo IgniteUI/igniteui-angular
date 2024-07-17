@@ -250,7 +250,6 @@ export var registerConfig = [
     additionalProperties: [
       { name: "groupsRecords" },
       { name: "selectedCells" },
-      { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "hiddenColumnsCount" },
@@ -534,7 +533,6 @@ export var registerConfig = [
       { name: "foreignKey" },
       { name: "selectedCells" },
       { name: "gridAPI", writable: true },
-      { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "hiddenColumnsCount" },
@@ -841,7 +839,6 @@ export var registerConfig = [
     additionalProperties: [
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
-      { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "transactions" },
@@ -983,7 +980,6 @@ export var registerConfig = [
       { name: "processedRootRecords", writable: true },
       { name: "processedRecords", writable: true },
       { name: "selectedCells" },
-      { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "hiddenColumnsCount" },
