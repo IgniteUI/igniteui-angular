@@ -27,7 +27,7 @@
             autocomplete="off"
             [value]="value"
             (input)="onInput($event)"
-            type="text"
+            [type]="type"
             [readonly]="isUnaryCondition"
             (click)="onInputClick()"
             (compositionstart)="onCompositionStart()"

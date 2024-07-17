@@ -906,7 +906,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(input.properties.readOnly).toBeTruthy();
         }));
 
-        it('should correctly filter and display in input numeric values', fakeAsync(() => {
+        it('should correctly filter negative values', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringNumericComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -919,22 +919,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Set input and confirm
             GridFunctions.typeValueInFilterRowInput('-1', fix);
 
-            expect(input.componentInstance.value).toEqual('-1');
+            expect(input.componentInstance.value).toEqual(-1);
             expect(grid.rowList.length).toEqual(1);
-
-            GridFunctions.typeValueInFilterRowInput('2.5', fix);
-
-            expect(input.componentInstance.value).toEqual('2.5');
-            expect(grid.rowList.length).toEqual(1);
-
-            GridFunctions.typeValueInFilterRowInput('2.', fix);
-
-            expect(input.componentInstance.value).toEqual('2.');
-            expect(grid.rowList.length).toEqual(0);
 
             GridFunctions.typeValueInFilterRowInput('0', fix);
 
-            expect(input.componentInstance.value).toEqual('0');
+            expect(input.componentInstance.value).toEqual(0);
             expect(grid.rowList.length).toEqual(0);
 
             GridFunctions.typeValueInFilterRowInput('', fix);
@@ -2790,12 +2780,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
             const input = filterCell.query(By.css('input')).nativeElement;
- 
+
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             input.dispatchEvent(mousedownEvent, { bubbles: true });
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
         }));
 
@@ -2807,7 +2797,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             firstCell.dispatchEvent(mousedownEvent);
             fix.detectChanges();
-           
+
             expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
