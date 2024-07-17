@@ -781,12 +781,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public setDataInternal(value: any) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRegenerateColumns(oldData, this._data)) {
             this.setupColumns();
             this.reflow();
         }
@@ -1153,6 +1154,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
+    }
+
+    private shouldRegenerateColumns(oldData: any[] | null | undefined, newData: any[] | null | undefined): boolean {
+        if (!oldData || !oldData.length) return true;
+        if (!newData || !newData.length) return false;
+        return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
     }
 }
 
