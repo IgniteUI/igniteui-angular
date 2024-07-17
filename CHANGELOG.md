@@ -18,7 +18,8 @@ All notable changes for each version of this project will be documented in this 
     `filterCell`, `headerCell`, `headerGroup`, `defaultMinWidth`, `gridRowSpan`, `gridColumnSpan` and `cells`.
 - `IgxPaginator`
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
-
+- `Overlay service`
+    - **Breaking Change** The overload of `attach` method of `overlay-service` accepting `Type` and `OverlaySettings` now has second parameter of type `CreateOptions`. This will allow providing of `Injector` when attaching a type and creating dynamic component.
 
 ## 18.0.0
 ### New Features
