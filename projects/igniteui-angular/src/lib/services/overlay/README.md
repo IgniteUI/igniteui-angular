@@ -84,6 +84,11 @@ this.overlay.show(component, overlaySettings);
 |closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
 |minSize             | Size        | The size up to which element may shrink when shown in elastic position strategy |
 
+###### CreateOptions
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+|injector | Injector | An `Injector` instance to add in the created component ref's injectors tree |
 
 ##### Methods
 
@@ -92,7 +97,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters      |
 |-----------------|---------------------------------------------------------------------------------|-----------------|
 |attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |element, overlaySettings? |
-|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |component, overlaySettings?, injector? |
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |component, options, overlaySettings?, |
 |attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |component, viewContainerRef, overlaySettings? |
 |show             | Shows the provided component on the overlay                                     |id, overlaySettings?|
 |hide             | Hides the component with the ID provided as a parameter                         |id               |

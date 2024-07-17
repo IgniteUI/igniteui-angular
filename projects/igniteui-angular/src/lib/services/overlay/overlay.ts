@@ -570,7 +570,7 @@ export class IgxOverlayService implements OnDestroy {
         if (!viewContainerRefOrOptionsOrSettings)
             return undefined;
         const isViewContainerRef = viewContainerRefOrOptionsOrSettings instanceof ViewContainerRef;
-        const isCreateOptions = (viewContainerRefOrOptionsOrSettings as Object).hasOwnProperty('injector');
+        const isCreateOptions = (viewContainerRefOrOptionsOrSettings as Object)?.hasOwnProperty('injector');
         if (isViewContainerRef || isCreateOptions) {
             return undefined;
         }
@@ -590,7 +590,7 @@ export class IgxOverlayService implements OnDestroy {
             } else {
                 const environmentInjector = this._appRef.injector;
                 let elementInjector: Injector;
-                const isCreateOptions = (viewContainerRefOrOptionsOrSettings as Object).hasOwnProperty('injector');
+                const isCreateOptions = (viewContainerRefOrOptionsOrSettings as Object)?.hasOwnProperty('injector');
                 if (isCreateOptions) {
                     const options = viewContainerRefOrOptionsOrSettings as CreateOptions;
                     elementInjector = options.injector;
