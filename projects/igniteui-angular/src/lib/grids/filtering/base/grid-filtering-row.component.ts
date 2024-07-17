@@ -59,9 +59,6 @@ import { IgxIconService } from '../../../icon/icon.service';
     imports: [NgFor, IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
-    public ALLOWED_NUMERIC_SYMBOLS = ['+', '-', ',', '.'];
-    public ALLOWED_NAVIGATION_SYMBOLS = ['Backspace', 'Enter', 'ArrowRight', 'ArrowLeft', 'Tab'];
-
     @Input()
     public get column(): ColumnType {
         return this._column;
@@ -82,16 +79,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private _value;
     @Input()
     public get value(): any {
-        return this._value;
+        return this.expression ? this.expression.searchVal : null;
     }
 
     public set value(val) {
         if (!val && val !== 0 && (this.expression.searchVal || this.expression.searchVal === 0)) {
             this.expression.searchVal = null;
-            this._value = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
@@ -103,18 +98,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 return;
             }
         } else {
+            if (val === '') {
+                return;
+            }
             const oldValue = this.expression.searchVal;
             if (isEqual(oldValue, val)) {
                 return;
             }
 
-            this._value = val;
-            if ((this.column.dataType === GridColumnDataType.Number || this.column.dataType === GridColumnDataType.Currency)
-                && this.ALLOWED_NUMERIC_SYMBOLS.includes(val)) {
-                this.expression.searchVal = val;
-            } else {
-                this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
-            }
+            this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
@@ -300,7 +292,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
-            this._value = this.expression.searchVal;
         }
 
         this.filteringService.grid.localeChange
@@ -327,6 +318,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             return this.defaultDateTimeUI;
         }
         return this.defaultFilterUI;
+    }
+
+    public get type() {
+        switch (this.column.dataType) {
+            case GridColumnDataType.String:
+            case GridColumnDataType.Boolean:
+                return 'text';
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+                return 'number';
+        }
     }
 
     public get conditions(): any {
@@ -371,12 +373,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public onInputKeyDown(event: KeyboardEvent) {
         this.isKeyPressed = true;
         event.stopPropagation();
-        if(this.column.dataType === GridColumnDataType.Number || this.column.dataType === GridColumnDataType.Currency) {
-            const allowedSymbols = [...this.ALLOWED_NUMERIC_SYMBOLS, ...this.ALLOWED_NAVIGATION_SYMBOLS];
-            if (isNaN(Number(event.key)) && !(allowedSymbols.includes(event.key))) {
-                event.preventDefault();
-            }
-        }
         if (this.column.dataType === GridColumnDataType.Boolean) {
             if (this.platform.isActivationKey(event)) {
                 this.inputGroupPrefix.nativeElement.focus();
@@ -416,6 +412,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
+        if ((eventArgs.data === '-' || eventArgs.data === '+') && this.column.dataType === GridColumnDataType.Number) {
+            return;
+        }
         if (this.column.dataType === GridColumnDataType.DateTime) {
             this.value = eventArgs;
             return;
@@ -519,7 +518,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.removeExpression(indexToDeselect, this.expression);
         }
         this.resetExpression();
-        this._value = this.expression.searchVal;
         this.scrollChipsWhenAddingExpression();
     }
 
@@ -693,7 +691,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-            this._value = this.expression.searchVal;
+
             this.focusEditElement();
         }
     }
