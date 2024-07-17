@@ -511,7 +511,6 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
-            fixture.componentInstance.grid.shouldGenerate = true;
             fixture.componentInstance.data = [
                 { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
             ];

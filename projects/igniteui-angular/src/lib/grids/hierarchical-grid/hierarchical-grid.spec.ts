@@ -1197,7 +1197,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
-            grid.shouldGenerate = true;
             fixture.componentInstance.databind();
             fixture.detectChanges();
 
