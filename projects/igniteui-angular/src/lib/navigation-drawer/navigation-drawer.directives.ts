@@ -8,12 +8,24 @@ import { Directive, HostBinding, Input, TemplateRef, booleanAttribute } from '@a
 export class IgxNavDrawerItemDirective {
 
     /**
-     * @hidden
+     * Styles a navigation drawer item as selected.
+     * If not set, `active` will have default value `false`.
+     *
+     * @example
+     * ```html
+     * <span igxDrawerItem [active]="true">Active Item</span>
+     * ```
      */
     @Input({ alias: 'active', transform: booleanAttribute }) public active = false;
 
     /**
-     * @hidden
+     * Styles a navigation drawer item as a group header.
+     * If not set, `isHeader` will have default value `false`.
+     *
+     * @example
+     * ```html
+     * <span igxDrawerItem [isHeader]="true">Header</span>
+     * ```
      */
     @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
 
