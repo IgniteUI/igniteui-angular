@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -21,14 +21,22 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
 
-
+/* jsonAPIComplexObject */
+/* wcAlternateName: ExporterEventArgs */
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
+    /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;
     grid: GridType;
     cancel: boolean;
 }
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-exporter */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured exporter component for the grid.
  *
@@ -47,20 +55,6 @@ export interface IgxExporterEvent {
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, NgIf, IgxToggleDirective, IgxExcelTextDirective, NgTemplateOutlet, IgxCSVTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxExcelTextDirective)
-    public hasExcelAttr: IgxExcelTextDirective;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxCSVTextDirective)
-    public hasCSVAttr: IgxCSVTextDirective;
 
     /**
      * Show entry for CSV export.
@@ -111,6 +105,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         this.export(type);
     }
 
+    /* alternateName: exportGrid */
     /**
      * Export the grid's data
      * @param type File type to export
