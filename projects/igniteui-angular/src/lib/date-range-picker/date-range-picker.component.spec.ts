@@ -927,9 +927,13 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.displayFormat = displayFormat;
                     fixture.detectChanges();
 
-                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    // refactored expectations due to feature #14465:
+                    // dateTimeEditor supports input formats with only numeric parts
+                    expect(startInputEditor.inputFormat).not.toEqual(inputFormat);
+                    expect(startInputEditor.inputFormat).toEqual('MM/dd/yyyy');
                     expect(startInputEditor.displayFormat).toEqual(displayFormat);
-                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.inputFormat).not.toEqual(inputFormat);
+                    expect(endInputEditor.inputFormat).toEqual('MM/dd/yyyy');
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
 
                     inputFormat = 'MMM, yy';
@@ -938,9 +942,9 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.displayFormat = displayFormat;
                     fixture.detectChanges();
 
-                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(startInputEditor.inputFormat).toEqual('MM/dd/yyyy');
                     expect(startInputEditor.displayFormat).toEqual(displayFormat);
-                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.inputFormat).toEqual('MM/dd/yyyy');
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
                 });
 

@@ -190,7 +190,18 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        if (value) {
+            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
+            if (this.hasProjectedInputs) {
+                this.updateInputFormat();
+            }
+        }
+    }
+
+    public override get inputFormat(): string {
+        return this._inputFormat || this._defaultInputFormat;
+    }
 
     /**
      * The minimum value in a valid range.
@@ -328,7 +339,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public get appliedFormat(): string {
         return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
-            || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+            || this._defaultInputFormat;
     }
 
     /** @hidden @internal */
@@ -650,9 +661,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.updateDisplayFormat();
-        }
-        if (changes['inputFormat'] && this.hasProjectedInputs) {
-            this.updateInputFormat();
         }
         if (changes['disabled']) {
             this.updateDisabledState();

@@ -19,6 +19,9 @@ import { Subscription } from 'rxjs';
 import { HammerGesturesManager } from '../core/touch';
 import { NgIf } from '@angular/common';
 import { HammerOptions } from '../core/touch-annotations';
+import { registerLocaleData } from "@angular/common";
+import localeJa from "@angular/common/locales/ja";
+import localeBg from "@angular/common/locales/bg";
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -1227,6 +1230,42 @@ describe('IgxTimePicker', () => {
                 expect(selectedHour).toEqual(hours.toString());
                 expect(selectedMinutes).toEqual(minutes.toString());
                 expect(selectedAMPM).toEqual(seconds.toString());
+            }));
+
+            it('should set default inputFormat, if none, with parts for hour, minutes and day period based on locale', fakeAsync(() => {
+                registerLocaleData(localeBg);
+                registerLocaleData(localeJa);
+                timePicker.locale = 'en-US';
+                fixture.detectChanges();
+
+                expect(timePicker.inputFormat).toEqual('hh:mm tt');
+
+                timePicker.locale = 'bg-BG';
+                fixture.detectChanges();
+                tick();
+
+                expect(timePicker.inputFormat).toEqual('HH:mm');
+
+                timePicker.locale = 'ja-JP';
+                fixture.detectChanges();
+                tick();
+
+                expect(timePicker.inputFormat).toEqual('HH:mm');
+            }));
+
+            it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric time parts', fakeAsync(() => {
+                registerLocaleData(localeBg);
+                timePicker.locale = 'en-US';
+                timePicker.inputFormat = 'h:mm:ss a z';
+                fixture.detectChanges();
+
+                expect(timePicker.inputFormat).toEqual('hh:mm tt');
+
+                timePicker.locale = 'bg-BG';
+                timePicker.inputFormat = 'fullTime';
+                fixture.detectChanges();
+
+                expect(timePicker.inputFormat).toEqual('HH:mm');
             }));
 
            it('should display selected time in dialog header', fakeAsync(() => {

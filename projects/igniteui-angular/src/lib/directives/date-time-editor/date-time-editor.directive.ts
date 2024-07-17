@@ -148,8 +148,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input(`igxDateTimeEditor`)
     public set inputFormat(value: string) {
         if (value) {
-            this.setMask(value);
-            this._inputFormat = value;
+            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
+            this.setMask(this._inputFormat);
         }
     }
 
@@ -533,7 +533,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         const oldFormat = this._inputDateParts?.map(p => p.format).join('');
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
-        const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
+        const mask = (inputFormat || this._defaultInputFormat)
         .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');
         this.mask = mask.replaceAll(/(a{1,2})|tt/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;

@@ -236,7 +236,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(result).toEqual('MM/dd/yyyy');
     });
 
-    it('should properly build input formats based on locale for ‘dateTime’ data type ', () => {
+    it('should properly build input formats based on locale for dateTime data type ', () => {
         spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.DateTime);
         expect(result).toEqual('MM/dd/yyyy, hh:mm:ss tt');
@@ -248,7 +248,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(result).toEqual('dd/MM/yyyy HH:mm:ss');
     });
 
-    it('should properly build input formats based on locale for ‘time’ data type ', () => {
+    it('should properly build input formats based on locale for time data type ', () => {
         spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.Time);
         expect(result).toEqual('hh:mm tt');
