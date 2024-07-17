@@ -5,6 +5,16 @@ import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-editing-actions */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/**
+ * Grid Editing Actions for the Action Strip
+ *
+ * @igxParent IgxActionStripComponent
+ */
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',

@@ -390,7 +390,7 @@ export class IgxGridSelectionService {
     }
 
     public getSelectedRowsData() {
-        if (this.grid.isPivot) {
+        if (this.grid.type === 'pivot') {
             return this.grid.dataView.filter(r => {
                 const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
                 return keys.some(k => this.isPivotRowSelected(k));
@@ -441,11 +441,11 @@ export class IgxGridSelectionService {
 
     /** Select the specified row and emit event. */
     public selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (!(this.grid.isRowSelectable || this.grid.isPivot) || this.isRowDeleted(rowID)) {
+        if (!(this.grid.isRowSelectable || this.grid.type === 'pivot') || this.isRowDeleted(rowID)) {
             return;
         }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
-        if (this.grid.isPivot) {
+        if (this.grid.type === 'pivot') {
             this.selectPivotRowById(rowID, clearPrevSelection, event);
             return;
         }
@@ -469,7 +469,7 @@ export class IgxGridSelectionService {
         if (!this.isRowSelected(rowID)) {
             return;
         }
-        if(this.grid.isPivot) {
+        if(this.grid.type === 'pivot') {
             this.deselectPivotRowByID(rowID, event);
             return;
         }

@@ -62,6 +62,11 @@ const DEFAULT_TIME_FORMAT = 'mediumTime';
 const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
+/* blazorElement */
+/* contentParent: ColumnGroup */
+/* wcElementTag: igc-column */
+/* additionalIdentifier: Field */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)
@@ -69,6 +74,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -591,6 +598,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public headerGroupStyles = null;
 
+    /* treatAsRef */
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,
@@ -613,6 +621,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellClasses: any;
 
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the column cells.
      * Similar to `ngStyle` it accepts an object literal where the keys are
@@ -634,6 +643,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public cellStyles = null;
+
+    /* blazorAlternateType: CellValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
      *
@@ -672,6 +684,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public formatter: (value: any, rowData?: any) => any;
 
+    /* blazorAlternateType: SummaryValueFormatterEventHandler */
+    /* blazorOnlyScript */
+    /* forceCastDelegate */
     /**
      * The summaryFormatter is used to format the display of the column summaries.
      *
@@ -1025,6 +1040,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /* treatAsRef */
     /**
      * Gets the column `summaries`.
      * ```typescript
@@ -1039,6 +1055,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get summaries(): any {
         return this._summaries;
     }
+
+    /* treatAsRef */
     /**
      * Sets the column `summaries`.
      * ```typescript
@@ -1105,6 +1123,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
+
+    /* blazorSuppress */
     /**
      * Gets the function that compares values for grouping.
      * ```typescript
@@ -1117,6 +1137,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get groupingComparer(): (a: any, b: any, currRec?: any, groupRec?: any) => number {
         return this._groupingComparer;
     }
+
+    /* blazorSuppress */
     /**
      * Sets a custom function to compare values for grouping.
      * Subsequent values in the sorted data that the function returns 0 for are grouped.
@@ -1415,6 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return vIndex;
     }
 
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
      * ```typescript
@@ -1426,6 +1449,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get columnGroup() {
         return false;
     }
+
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
      * ```typescript
@@ -1534,6 +1559,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._visibleWhenCollapsed;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * @remarks
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
@@ -1561,6 +1587,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
     }
@@ -1622,6 +1649,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get filteringExpressionsTree(): FilteringExpressionsTree {
         return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
     }
+
+    /* alternateName: parentColumn */
     /**
      * Sets/gets the parent column.
      * ```typescript
@@ -1634,6 +1663,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public parent = null;
+
+    /* blazorSuppress */
     /**
      * Sets/gets the children columns.
      * ```typescript
@@ -1869,7 +1900,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getGridTemplate(isRow: boolean): string {
         if (isRow) {
-            const rowsCount = !this.grid.isPivot ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
+            const rowsCount = this.grid.type !== 'pivot' ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
             return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
