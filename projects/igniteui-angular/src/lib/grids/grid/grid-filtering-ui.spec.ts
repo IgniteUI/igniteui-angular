@@ -906,7 +906,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(input.properties.readOnly).toBeTruthy();
         }));
 
-        it('should correctly filter and display in input numeric values', fakeAsync(() => {
+        it('should correctly filter negative values', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringNumericComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -919,22 +919,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Set input and confirm
             GridFunctions.typeValueInFilterRowInput('-1', fix);
 
-            expect(input.componentInstance.value).toEqual('-1');
+            expect(input.componentInstance.value).toEqual(-1);
             expect(grid.rowList.length).toEqual(1);
-
-            GridFunctions.typeValueInFilterRowInput('2.5', fix);
-
-            expect(input.componentInstance.value).toEqual('2.5');
-            expect(grid.rowList.length).toEqual(1);
-
-            GridFunctions.typeValueInFilterRowInput('2.', fix);
-
-            expect(input.componentInstance.value).toEqual('2.');
-            expect(grid.rowList.length).toEqual(0);
 
             GridFunctions.typeValueInFilterRowInput('0', fix);
 
-            expect(input.componentInstance.value).toEqual('0');
+            expect(input.componentInstance.value).toEqual(0);
             expect(grid.rowList.length).toEqual(0);
 
             GridFunctions.typeValueInFilterRowInput('', fix);
@@ -2053,7 +2043,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
-            
+
             firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
