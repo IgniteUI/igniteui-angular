@@ -41,7 +41,8 @@ export class QueryBuilderComponent implements OnInit {
             { field: 'PostalCode', dataType: 'string' },
             { field: 'Phone', dataType: 'string' },
             { field: 'Fax', dataType: 'string' },
-            { field: 'Contract', dataType: 'boolean' }
+            { field: 'Contract', dataType: 'boolean' },
+            { field: 'DateTimeCreated', dataType: 'dateTime' },
         ];
 
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
