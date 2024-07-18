@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
+import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -16,6 +16,7 @@ import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
+import { IColumnState, IGridState } from './state-base.directive';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {

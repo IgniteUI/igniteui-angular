@@ -1,5 +1,6 @@
 import { OverlaySettings } from '../services/public_api';
 
+/* csSuppress */
 /** @hidden @internal */
 export abstract class IgxActionStripToken {
     public abstract context: any;
