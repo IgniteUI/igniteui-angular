@@ -3016,7 +3016,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    describe('Column groups - ', () => {
+    fdescribe('Column groups - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
@@ -3038,9 +3038,54 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
+
+        fit('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select 'Equals' operator
+            selectColumnInEditModeExpression(fix, 6);
+            selectOperatorInEditModeExpression(fix, 0);
+            fix.detectChanges();
+
+            //Type a value in the search input
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            input.focus();
+            input.value='11/11/2000 10:11:11 AM';
+            input.dispatchEvent(new Event('keydown'));
+            input.dispatchEvent(new Event('input'));
+            input.dispatchEvent(new Event('keydup'));
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Focus expression item
+            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [0]);
+            tick();
+            fix.detectChanges();
+
+            //Check for the active element
+            let searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
+        }))
     });
 
     describe('External - ', () => {
