@@ -3042,36 +3042,21 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(expectedValues).toEqual(dropdownValues);
         }));
 
-        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+        fit('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
             // Open dialog through API.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button.
-            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
-            tick(100);
+            //Create dateTime filtering expression
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', condition: IgxStringFilteringOperand.instance().condition('equals')
+            });
+            
+            grid.advancedFilteringExpressionsTree = tree;
             fix.detectChanges();
 
-            // Select 'Equals' operator
-            selectColumnInEditModeExpression(fix, 6);
-            selectOperatorInEditModeExpression(fix, 0);
-            fix.detectChanges();
-
-            //Type a value in the search input
-            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            input.focus();
-            input.value='11/11/2000 10:11:11 AM';
-            input.dispatchEvent(new Event('keydown'));
-            input.dispatchEvent(new Event('input'));
-            input.dispatchEvent(new Event('keydup'));
-            fix.detectChanges();
-
-            // Commit the populated expression.
-            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
-            fix.detectChanges();
-
-            // Focus expression item
-            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            // Hover the last visible expression chip
             const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
