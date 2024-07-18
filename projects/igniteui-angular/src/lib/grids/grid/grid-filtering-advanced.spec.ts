@@ -3042,7 +3042,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(expectedValues).toEqual(dropdownValues);
         }));
 
-        fit('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
             // Open dialog through API.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
