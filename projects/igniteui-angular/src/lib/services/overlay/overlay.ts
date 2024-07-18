@@ -8,6 +8,7 @@ import {
     EventEmitter,
     Inject,
     Injectable,
+    Injector,
     NgZone,
     OnDestroy,
     Type,
@@ -325,9 +326,9 @@ export class IgxOverlayService implements OnDestroy {
     public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
     public attach(
         componentOrElement: ElementRef | Type<any>,
-        viewContainerRefOrSettingsOrCreate?: ViewContainerRef | OverlaySettings | OverlayCreateSettings,
+        viewContainerRefOrSettings?: ViewContainerRef | OverlayCreateSettings,
         settings?: OverlaySettings): string {
-        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, viewContainerRefOrSettingsOrCreate, settings);
+        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, viewContainerRefOrSettings, settings);
 
         if (!info) {
             console.warn('Overlay was not able to attach provided component!');
@@ -565,34 +566,35 @@ export class IgxOverlayService implements OnDestroy {
      * Creates overlayInfo. Sets the info's `elementRef`, `componentRef`and `settings`. Also
      * initialize info's `ngZone`, `transformX` and `transformY`.
      * @param component ElementRef or Type. If type is provided dynamic component will be created
-     * @param viewContainerRefOrSettingsOrCreate (optional): If ElementRef is provided for `component` this
+     * @param viewContainerRefOrSettings (optional): If ElementRef is provided for `component` this
      * parameter is OverlaySettings. Otherwise it could be ViewContainerRef or OverlayCreateSettings and will be
      * used when dynamic component is created.
-     * @param settings (optional): OverlaySettings when `component` is not ElementRef.
+     * @param settings (optional): OverlaySettings when `ViewContainerRef` is provided.
      * @returns OverlayInfo
      */
     private getOverlayInfo(
         component: ElementRef | Type<any>,
-        viewContainerRefOrSettingsOrCreate?: ViewContainerRef | OverlaySettings | OverlayCreateSettings,
+        viewContainerRefOrSettings?: ViewContainerRef | OverlayCreateSettings,
         settings?: OverlaySettings): OverlayInfo | null {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
+        let overlaySettings = settings;
         if (component instanceof ElementRef) {
             info.elementRef = component;
-            const overlaySettings = viewContainerRefOrSettingsOrCreate as OverlaySettings;
-            info.settings = Object.assign({}, this._defaultSettings, overlaySettings); 
+            overlaySettings = viewContainerRefOrSettings as OverlaySettings;
         } else {
             let dynamicComponent: ComponentRef<any>;
-            if (viewContainerRefOrSettingsOrCreate instanceof ViewContainerRef) {
-                const viewContainerRef = viewContainerRefOrSettingsOrCreate as ViewContainerRef;
+            if (viewContainerRefOrSettings instanceof ViewContainerRef) {
+                const viewContainerRef = viewContainerRefOrSettings as ViewContainerRef;
                 dynamicComponent = viewContainerRef.createComponent(component);
-                info.settings = Object.assign({}, this._defaultSettings, settings); 
             } else {
                 const environmentInjector = this._appRef.injector;
-                const createSettings = viewContainerRefOrSettingsOrCreate as OverlayCreateSettings | undefined;
-                const elementInjector = createSettings?.injector;
+                const createSettings = viewContainerRefOrSettings as OverlayCreateSettings | undefined;
+                let elementInjector: Injector;
+                if (createSettings) {
+                    ({ injector: elementInjector, ...overlaySettings} = createSettings);
+                }
                 dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
                 this._appRef.attachView(dynamicComponent.hostView);
-                info.settings = Object.assign({}, this._defaultSettings, createSettings); 
             }
             if (dynamicComponent.onDestroy) {
                 dynamicComponent.onDestroy(() => {
@@ -607,6 +609,7 @@ export class IgxOverlayService implements OnDestroy {
             info.elementRef = { nativeElement: element };
             info.componentRef = dynamicComponent;
         }
+        info.settings = Object.assign({}, this._defaultSettings, overlaySettings); 
         return info;
     }
 
