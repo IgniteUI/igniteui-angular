@@ -745,6 +745,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * @hidden @internal
+     * @deprecated in version 18.1.0. Use the `autoGenerate` property instead.
+     */
+    public override shouldGenerate: boolean;
+
+    /**
+     * @hidden @internal
      */
     public override moving = false;
 

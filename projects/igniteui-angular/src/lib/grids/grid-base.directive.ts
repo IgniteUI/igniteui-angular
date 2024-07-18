@@ -2190,6 +2190,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
+     *
+     * @remarks
+     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
+     * Note that after generating the columns, this property would be disabled to avoid re-creating
+     * columns each time a new data is assigned.
+     * @example
+     * ```typescript
+     *  this.grid.shouldGenerate = true;
+     * ```
+     * @deprecated in version 18.1.0. Use the `autoGenerate` property instead.
+     */
+    public shouldGenerate: boolean;
+
+    /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
      *
      * @example
