@@ -113,7 +113,6 @@ interface Feature {
 /* blazorIndirectRender */
 @Directive()
 export class IgxGridStateBaseDirective {
-    private static ngAcceptInputType_options: IGridStateOptions | '';
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
