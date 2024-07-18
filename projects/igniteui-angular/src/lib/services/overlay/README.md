@@ -84,7 +84,7 @@ this.overlay.show(component, overlaySettings);
 |closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
 |minSize             | Size        | The size up to which element may shrink when shown in elastic position strategy |
 
-###### CreateOptions
+###### OverlayCreateSettings extends OverlaySettings
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |

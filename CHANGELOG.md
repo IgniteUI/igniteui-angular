@@ -19,7 +19,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxPaginator`
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 - `Overlay service`
-    - **Breaking Change** The overload of `attach` method of `overlay-service` accepting `Type` and `OverlaySettings` now has second parameter of type `CreateOptions`. This will allow providing of `Injector` when attaching a type and creating dynamic component.
+    - The overload of `attach` method of `overlay-service` accepting `Type` and `OverlaySettings` second parameter is now of `OverlayCreateSettings` type. This interface extends `OverlaySettings` with additional property of `Injector` type. If `Injector` is provided it will be used as `elementInjector` when dynamic component is created.
 
 ## 18.0.0
 ### New Features

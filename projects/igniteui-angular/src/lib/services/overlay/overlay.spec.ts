@@ -199,7 +199,7 @@ describe('igxOverlay', () => {
     });
 
     const verifyOverlayMargins = (overlaySettings: OverlaySettings, overlay: IgxOverlayService, fix, expectedMargin) => {
-        overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+        overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         tick();
         fix.detectChanges();
         const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
@@ -393,7 +393,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             fixture.detectChanges();
 
-            let id = overlay.attach(SimpleDynamicComponent, undefined, { outlet: button, modal: false });
+            let id = overlay.attach(SimpleDynamicComponent, { outlet: button, modal: false });
             overlay.show(id);
             tick();
 
@@ -404,7 +404,7 @@ describe('igxOverlay', () => {
             overlay.detach(id);
             tick();
 
-            id = overlay.attach(SimpleDynamicComponent, undefined, { modal: false });
+            id = overlay.attach(SimpleDynamicComponent, { modal: false });
             overlay.show(id);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -417,7 +417,7 @@ describe('igxOverlay', () => {
 
             const outlet = document.createElement('div');
             fixture.debugElement.nativeElement.appendChild(outlet);
-            id = overlay.attach(SimpleDynamicComponent, undefined, { modal: false, outlet: new IgxOverlayOutletDirective(new ElementRef(outlet)) });
+            id = overlay.attach(SimpleDynamicComponent, { modal: false, outlet: new IgxOverlayOutletDirective(new ElementRef(outlet)) });
             overlay.show(id);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -1075,9 +1075,9 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: true
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             fixture.detectChanges();
             tick();
 
@@ -1199,6 +1199,50 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         });
 
+        it('#14364 - Should provide different injectors to attach method to each component', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector1 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'First Value' },
+                ],
+            });
+            const injector2 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'Second Value' },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id1 = overlay.attach(SimpleDynamicComponent, { injector: injector1 });
+            expect(id1).toBeDefined();
+
+            const overlayInfo1 = overlay.getOverlayById(id1);
+            expect(overlayInfo1).toBeDefined();
+
+            const elementInjector1 = overlayInfo1.componentRef.injector;
+            expect(elementInjector1).toBeDefined();
+
+            const result1 = elementInjector1.get('SomeConst');
+            expect(result1).toEqual('First Value');
+
+            const id2 = overlay.attach(SimpleDynamicComponent, { injector: injector2 });
+            expect(id2).toBeDefined();
+
+            const overlayInfo2 = overlay.getOverlayById(id2);
+            expect(overlayInfo2).toBeDefined();
+
+            const elementInjector2 = overlayInfo2.componentRef.injector;
+            expect(elementInjector2).toBeDefined();
+
+            const result2 = elementInjector2.get('SomeConst');
+            expect(result2).toEqual('Second Value');
+
+            overlay.detachAll();
+        });
+
         // it('##6474 - should calculate correctly position', () => {
         //     const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
         //     const targetRect: ClientRect = {
@@ -1252,7 +1296,7 @@ describe('igxOverlay', () => {
 
             overlaySettings.target = new Point(10, 10);
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
 
@@ -1286,7 +1330,7 @@ describe('igxOverlay', () => {
                 outlet
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
 
@@ -1349,7 +1393,7 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'attach').and.callThrough();
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            const overlayId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
 
@@ -1390,7 +1434,7 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'attach').and.callThrough();
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            const id = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
             tick();
 
@@ -1429,7 +1473,7 @@ describe('igxOverlay', () => {
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
             spyOn(overlay, 'reposition');
 
-            const id = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
             tick();
 
@@ -1473,7 +1517,7 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
 
-            const id = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
             tick();
 
@@ -1521,7 +1565,7 @@ describe('igxOverlay', () => {
                 verticalStartPoint: VerticalAlignment.Top
             };
             overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
             const overlayElement = (fixture.nativeElement as HTMLElement)
@@ -1563,7 +1607,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -1604,7 +1648,7 @@ describe('igxOverlay', () => {
                 for (let j = 0; j < verAl.length; j++) {
                     positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                     overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
-                    const id = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+                    const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
                     overlay.show(id);
                     tick();
 
@@ -1714,7 +1758,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
@@ -1745,7 +1789,7 @@ describe('igxOverlay', () => {
                 verticalStartPoint: VerticalAlignment.Top
             };
             overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -1774,7 +1818,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -1796,7 +1840,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -1834,8 +1878,8 @@ describe('igxOverlay', () => {
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new ConnectedPositioningStrategy()
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick(DEBOUNCE_TIME);
                 fixture.detectChanges();
 
@@ -1874,8 +1918,8 @@ describe('igxOverlay', () => {
                     target: new Point(x, y),
                     positionStrategy: new ConnectedPositioningStrategy(positionSettings)
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick(DEBOUNCE_TIME);
                 fixture.detectChanges();
 
@@ -1912,7 +1956,7 @@ describe('igxOverlay', () => {
                     closeOnOutsideClick: false
                 };
                 const overlay = fixture.componentInstance.overlay;
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
 
                 let wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -1956,7 +2000,7 @@ describe('igxOverlay', () => {
             };
             const buttonElement = fixture.componentInstance.buttonElement.nativeElement;
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
 
             expect(document.documentElement.scrollTop).toEqual(0);
@@ -2009,7 +2053,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
 
             // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
@@ -2147,7 +2191,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -2176,7 +2220,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
 
@@ -2206,7 +2250,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
 
             fixture.detectChanges();
@@ -2301,7 +2345,7 @@ describe('igxOverlay', () => {
         //                             closeOnOutsideClick: false
         //                         };
 
-        //                         overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+        //                         overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         //                         tick();
         //                         fixture.detectChanges();
 
@@ -2372,7 +2416,7 @@ describe('igxOverlay', () => {
         //                                 closeOnOutsideClick: false
         //                             };
 
-        //                             overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+        //                             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         //                             tick();
         //                             fixture.detectChanges();
 
@@ -2468,8 +2512,8 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
 
@@ -2514,10 +2558,10 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
                 const buttonRect = button.getBoundingClientRect();
@@ -2561,7 +2605,7 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            const overlayId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
@@ -2598,7 +2642,7 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
@@ -2633,7 +2677,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -2663,7 +2707,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             fixture.detectChanges();
 
@@ -2694,7 +2738,7 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: false
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
 
             fixture.detectChanges();
@@ -2772,7 +2816,7 @@ describe('igxOverlay', () => {
         //                             closeOnOutsideClick: false
         //                         };
 
-        //                         overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+        //                         overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         //                         tick();
         //                         fixture.detectChanges();
 
@@ -2862,7 +2906,7 @@ describe('igxOverlay', () => {
         //                                 closeOnOutsideClick: false
         //                             };
 
-        //                             overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+        //                             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         //                             tick();
         //                             fixture.detectChanges();
 
@@ -2968,8 +3012,8 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
 
@@ -3015,11 +3059,11 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
 
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 fixture.detectChanges();
                 tick();
 
@@ -3062,7 +3106,7 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            const overlayId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
@@ -3099,7 +3143,7 @@ describe('igxOverlay', () => {
 
             const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             expect(scrollStrategy.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
@@ -3133,7 +3177,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ContainerPositionStrategy()
             };
 
-            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
             fixture.componentInstance.overlay.show(id);
             tick();
 
@@ -3165,7 +3209,7 @@ describe('igxOverlay', () => {
                 modal: true,
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick(100);
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3193,7 +3237,7 @@ describe('igxOverlay', () => {
                     closeAnimation: null
                 })
             };
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick(100);
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3240,7 +3284,7 @@ describe('igxOverlay', () => {
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
@@ -3257,7 +3301,7 @@ describe('igxOverlay', () => {
                 closeOnEscape: true,
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick(DEBOUNCE_TIME);
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3281,7 +3325,7 @@ describe('igxOverlay', () => {
                 closeOnEscape: false
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick(DEBOUNCE_TIME);
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3301,9 +3345,9 @@ describe('igxOverlay', () => {
         it('Should close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, { closeOnEscape: true }));
+            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, { closeOnEscape: true }));
+            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
             tick();
 
             const overlayElement = (fixture.nativeElement as HTMLElement)
@@ -3328,11 +3372,11 @@ describe('igxOverlay', () => {
         it('Should not close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, { closeOnEscape: true }));
+            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, { closeOnEscape: false }));
+            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: false }));
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, { closeOnEscape: true }));
+            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
             tick();
 
             const overlayElement = (fixture.nativeElement as HTMLElement)
@@ -3365,7 +3409,7 @@ describe('igxOverlay', () => {
                 closeOnEscape: true,
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick(DEBOUNCE_TIME);
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -3407,7 +3451,7 @@ describe('igxOverlay', () => {
                 modal: false
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             tick();
@@ -3444,7 +3488,7 @@ describe('igxOverlay', () => {
                 key: targetButton
             });
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -3519,7 +3563,7 @@ describe('igxOverlay', () => {
             };
             const overlay = fixture.componentInstance.overlay;
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
 
             tick();
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
@@ -3558,7 +3602,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            const overlayId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
@@ -3958,7 +4002,7 @@ describe('igxOverlay', () => {
                 modal: false,
             };
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
                 .parentElement.getElementsByTagName('component')[0];
@@ -3998,7 +4042,7 @@ describe('igxOverlay', () => {
                 };
                 const overlay = fixture.componentInstance.overlay;
 
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
                 const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
                     .parentElement.getElementsByTagName('component')[0];
@@ -4041,7 +4085,7 @@ describe('igxOverlay', () => {
                     modal: false,
                 };
 
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
 
                 document.documentElement.scrollTop = scrollTolerance;
@@ -4090,7 +4134,7 @@ describe('igxOverlay', () => {
                     modal: false,
                 };
 
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(0);
 
@@ -4129,7 +4173,7 @@ describe('igxOverlay', () => {
                 modal: false,
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
@@ -4177,7 +4221,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new GlobalPositionStrategy()
                 };
 
-                overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
@@ -4220,7 +4264,7 @@ describe('igxOverlay', () => {
                 scrollStrategy
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, undefined, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
@@ -4260,7 +4304,7 @@ describe('igxOverlay', () => {
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay.closing, 'emit');
 
-            const firstCallId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            const firstCallId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(firstCallId);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
@@ -4296,7 +4340,7 @@ describe('igxOverlay', () => {
             spyOn(overlay.closing, 'emit');
             spyOn(overlay.closed, 'emit');
 
-            let callId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            let callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(callId);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
@@ -4322,7 +4366,7 @@ describe('igxOverlay', () => {
 
             overlaySettings.excludeFromOutsideClick = [];
             tick();
-            callId = overlay.attach(SimpleDynamicComponent, undefined, overlaySettings);
+            callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(callId);
             tick();
 
@@ -4565,7 +4609,7 @@ export class DownRightButtonComponent {
 
     public click() {
         this.positionStrategy.settings = this.ButtonPositioningSettings;
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, undefined, {
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, {
             target: this.target,
             positionStrategy: this.positionStrategy,
             scrollStrategy: new NoOpScrollStrategy(),

@@ -189,14 +189,13 @@ export interface ConnectedFit {
     verticalOffset?: number;
 }
 
-/**
- * Options used when creating component in overlay's attach method.
- */
-export interface CreateOptions {
+// TODO: add here also EnvironmentInjector, Element (as hos element) and Nodes[][] (as projectable nodes)
+// and use this parameter when dynamic component is created.
+export interface OverlayCreateSettings extends OverlaySettings {
     /**
      * An `Injector` instance to add in the created component ref's injectors tree.
      */
-    injector: Injector
+    injector?: Injector
 }
 
 /** @hidden @internal */
