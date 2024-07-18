@@ -4,6 +4,11 @@ import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
 
+/* blazorElement */
+/* contentParent: ActionStrip */
+/* wcElementTag: igc-grid-action-base-directive */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
 @Directive({
     selector: '[igxGridActionsBase]',
     standalone: true
@@ -43,7 +48,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      */
     public get isRowContext(): boolean {
-        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
+        return this.isRow(this.strip?.context) && !this.strip.context.inEditMode;
     }
 
     constructor(protected iconService: IgxIconService,

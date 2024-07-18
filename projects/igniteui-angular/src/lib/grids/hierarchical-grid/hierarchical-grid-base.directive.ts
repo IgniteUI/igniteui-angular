@@ -50,6 +50,10 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
@@ -90,6 +94,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'hierarchical';
+    }
+
     /**
      * @hidden
      */
@@ -100,6 +109,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this._maxLevelHeaderDepth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
@@ -110,6 +120,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
+    /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
@@ -140,6 +151,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
+    /* blazorSuppress */
     public abstract expandChildren: boolean;
 
     constructor(

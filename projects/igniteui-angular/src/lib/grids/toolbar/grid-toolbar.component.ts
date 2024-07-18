@@ -18,11 +18,20 @@ import { IgxLinearProgressBarComponent } from '../../progressbar/progressbar.com
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 
-
+/* blazorElement */
+/* mustUseNGParentAnchor */
+/* wcElementTag: igc-grid-toolbar */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent
  *
  */
 @Component({

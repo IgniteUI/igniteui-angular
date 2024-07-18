@@ -889,6 +889,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // go to Done
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row and 1 hidden columns');

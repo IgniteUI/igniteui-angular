@@ -17,6 +17,8 @@ export interface IPivotDateDimensionOptions {
     fullDate?: boolean;
 }
 
+/* blazorAlternateBaseType: PivotDimension */
+/* alternateBaseType: PivotDimension */
 // Equals to pretty much this configuration:
 // {
 //     member: () => 'All Periods',
@@ -53,6 +55,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
      */
     public dataType?: GridColumnDataType;
 
+    /* blazorSuppress */
     /** Default options. */
     public defaultOptions = {
         total: true,
@@ -122,7 +125,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
      * ```
      */
-    constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
+    constructor(inBaseDimension: IPivotDimension = null, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
         this.enabled = inBaseDimension.enabled;

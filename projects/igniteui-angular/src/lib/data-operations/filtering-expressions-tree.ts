@@ -1,6 +1,7 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
 
+/* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
     Regular,
     Advanced
@@ -12,14 +13,18 @@ export declare interface IExpressionTree {
     fieldName?: string;
 }
 
+/* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
+    /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
     findIndex(fieldName: string): number;
 }
 
+/* marshalByValue */
+/* jsonAPIPlainObject */
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
@@ -70,6 +75,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public fieldName?: string;
 
+    /* alternateName: treeType */
     /**
      * Sets/gets the type of the filtering expressions tree.
      * ```typescript

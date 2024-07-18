@@ -7,10 +7,11 @@ import { cloneArray } from '../core/utils';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { IDataCloneStrategy } from './data-clone-strategy';
 
+/* csSuppress */
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
 
-    public static instance() {
+    public static instance(): NoopPivotDimensionsStrategy {
         return this._instance || (this._instance = new NoopPivotDimensionsStrategy());
     }
 

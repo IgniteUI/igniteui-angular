@@ -587,7 +587,7 @@ describe('Navigation Drawer', () => {
 
     it('should get correct window width', (done) => {
         const originalWidth = window.innerWidth;
-        const platformUtil: PlatformUtil = new PlatformUtil(TestBed.inject(PLATFORM_ID));
+        const platformUtil = TestBed.inject(PlatformUtil);
         const drawer = new IgxNavigationDrawerComponent(null, null, null, null, platformUtil);
 
         // re-enable `getWindowWidth`

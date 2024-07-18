@@ -1,6 +1,6 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
-import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
+import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
@@ -705,12 +705,6 @@ export class IgxSummaryRow implements RowType {
      */
     public isSummaryRow: boolean;
 
-
-    /**
-     * Returns the curent grid type
-     */
-    private gridType: GridInstanceType;
-
     /**
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
@@ -723,7 +717,7 @@ export class IgxSummaryRow implements RowType {
      */
     public get viewIndex(): number {
         if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
-            if (this.gridType === GridInstanceType.Grid) {
+            if (this.grid.type === 'flat') {
                 if (this.grid.page) {
                     const precedingDetailRows = [];
                     const precedingGroupRows = [];
@@ -764,7 +758,7 @@ export class IgxSummaryRow implements RowType {
                 } else {
                     return this.index;
                 }
-            } else if (this.gridType === GridInstanceType.TreeGrid) {
+            } else if (this.grid.type === 'tree') {
                 if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                     const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
                     const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
@@ -783,12 +777,11 @@ export class IgxSummaryRow implements RowType {
      */
     constructor(
         grid: GridType,
-        index: number, private _summaries?: Map<string, IgxSummaryResult[]>, type?: GridInstanceType
+        index: number, private _summaries?: Map<string, IgxSummaryResult[]>,
     ) {
         this.grid = grid;
         this.index = index;
         this.isSummaryRow = true;
-        this.gridType = type;
     }
 
     private getRootParent(row: ITreeGridRecord): ITreeGridRecord {

@@ -4,6 +4,7 @@ import { IgxOverlayService } from '../overlay';
  * Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService.
  */
 export interface IScrollStrategy {
+    /* blazorSuppress */
     /**
      * Initializes the strategy. Should be called once
      *

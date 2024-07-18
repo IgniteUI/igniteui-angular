@@ -25,6 +25,7 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    /* blazorSuppress */
     event?: Event;
 }
 

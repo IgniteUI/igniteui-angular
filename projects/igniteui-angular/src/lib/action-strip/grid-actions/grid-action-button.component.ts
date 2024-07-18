@@ -4,18 +4,23 @@ import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { NgIf } from '@angular/common';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
+
+/* blazorElement */
+/* wcElementTag: igc-grid-action-button */
+/* blazorIndirectRender */
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
     standalone: true,
     imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
-
 export class IgxGridActionButtonComponent {
 
+    /* blazorSuppress */
     @ViewChild('container')
     public container: ElementRef;
 
+    /* blazorSuppress */
     /**
      * Event emitted when action button is clicked.
      *
