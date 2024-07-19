@@ -48,28 +48,24 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
             this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
         });
         this.grid?.filteringExpressionsTreeChange.subscribe(() => {
-            setTimeout(() => {
-                if (this.grid.advancedFilteringExpressionsTree) {
-                    const dataKeys = Object.keys(this.grid.data[0]);
-                    const filteringOperands = this.grid.advancedFilteringExpressionsTree.filteringOperands;
+            if (this.grid.advancedFilteringExpressionsTree) {
+                const dataKeys = Object.keys(this.grid.data[0]);
+                const filteringOperands = this.grid.advancedFilteringExpressionsTree.filteringOperands;
 
-                    const allOperandsPresent = filteringOperands.every(operand => {
-                        if (operand instanceof FilteringExpressionsTree) {
-                            // Recursively check nested filtering trees
-                            return this.checkFilteringOperands(operand, dataKeys);
-                        } else {
-                            return dataKeys.includes(operand.fieldName);
-                        }
-                    });
-
-                    if (!allOperandsPresent) {
-                        setTimeout(() => {
-                            this.grid.advancedFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-                            this.numberOfColumns = 0;
-                        });
+                const allOperandsPresent = filteringOperands.every(operand => {
+                    if (operand instanceof FilteringExpressionsTree) {
+                        // Recursively check nested filtering trees
+                        return this.checkFilteringOperands(operand, dataKeys);
+                    } else {
+                        return dataKeys.includes(operand.fieldName);
                     }
+                });
+
+                if (!allOperandsPresent) {
+                    this.grid.advancedFilteringExpressionsTree = this.grid.filteringExpressionsTree;
+                    this.numberOfColumns = 0;
                 }
-            });
+            }
         });
     }
 
