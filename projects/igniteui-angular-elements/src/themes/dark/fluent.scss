@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@use '../../../../igniteui-angular/src/lib/core/styles/themes' as igx;
+@use '../variables' as vars;
+@use '../util' as util;
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+$palette: igx.$dark-fluent-palette;
+
+@include igx.core();
+@include igx.typography($font-family: igx.$fluent-typeface, $type-scale: igx.$fluent-type-scale);
+
+@include util.elements-theme(
+    $palette: $palette,
+    // TODO: adjust dependencies
+    // $exclude: util.include(vars.$allowed, igx.$components),
+    $exclude: vars.$unused-themes,
+    $schema: igx.$dark-fluent-schema,
+);
+

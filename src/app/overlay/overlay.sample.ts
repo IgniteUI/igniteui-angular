@@ -21,7 +21,8 @@ import {
     IgxLabelDirective,
     IgxButtonDirective,
     IgxRippleDirective,
-    IgxDropDownItemComponent
+    IgxDropDownItemComponent,
+    IChangeCheckboxEventArgs
 } from 'igniteui-angular';
 import { IAnimationParams } from 'igniteui-angular/animations';
 
@@ -81,8 +82,8 @@ export class OverlaySampleComponent implements OnInit {
         }
     }
 
-    public onChange(ev) {
-        switch (ev.radio.name) {
+    public onChange(ev: IChangeCheckboxEventArgs) {
+        switch (ev.owner.name) {
             case 'ps':
                 this.removeSelectedClass('direction');
                 this.removeSelectedClass('start-point');
@@ -240,8 +241,8 @@ export class OverlaySampleComponent implements OnInit {
         this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
     }
 
-    public onSwitchChange(ev) {
-        switch (ev.switch.name) {
+    public onSwitchChange(ev: IChangeCheckboxEventArgs) {
+        switch (ev.owner.name) {
             case 'close':
                 this._overlaySettings.closeOnOutsideClick = ev.checked;
                 break;
