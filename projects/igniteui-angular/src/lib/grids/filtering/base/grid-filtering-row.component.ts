@@ -345,9 +345,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
-        if ((eventArgs.data === '-' || eventArgs.data === '+') && this.column.dataType === GridColumnDataType.Number) {
-            return;
-        }
         if (this.column.dataType === GridColumnDataType.DateTime) {
             this.value = eventArgs;
             return;
