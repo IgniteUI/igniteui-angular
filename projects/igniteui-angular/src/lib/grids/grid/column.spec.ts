@@ -913,9 +913,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const prefix = firstCell.nativeElement.querySelector('igx-prefix');
             const suffix = firstCell.nativeElement.querySelector('igx-suffix');
 
-            // Should use the default date format as per the grid locale for the cell editor when
-            // neither pipeArgs.format or editorOptions.dateTimeFormat properties are set on the column
-            expect((input as any).value).toEqual('10/01/2015');
+            expect((input as any).value).toEqual('10/01/2015, 11:37:22 AM');
             expect(prefix).toBeNull();
             expect(suffix).toBeNull();
 
@@ -946,7 +944,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const input = cell.nativeElement.querySelector('.igx-input-group__input');
             const prefix = cell.nativeElement.querySelector('igx-prefix');
             const suffix = cell.nativeElement.querySelector('igx-suffix');
-            expect((input as any).value).toEqual('12:12:02 PM');
+            expect((input as any).value.normalize('NFKD')).toEqual('12:12:02 PM');
             expect(prefix).not.toBeNull();
             expect(suffix).not.toBeNull();
 
@@ -1141,7 +1139,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             // resolve back to the default format for the locale since the pipeArgs.format is not numeric
-            expect((input as any).value).toEqual('10/01/2015');
+            expect((input as any).value).toEqual('10/01/2015, 11:37:22 AM');
         }));
 
         it('Date: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
@@ -1207,7 +1205,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             // resolve back to the default time format since the pipeArgs.format is not numeric
-            expect((input as any).value).toEqual('8:37:11 AM');
+            expect((input as any).value).toEqual('08:37 AM');
         }));
 
         it('Date/Time/DateTime: Use default locale format as inputFormat when editorOptions/pipeArgs formats are null/empty ', fakeAsync(() => {
@@ -1238,14 +1236,14 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
 
             input = orderDateColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value).toEqual('10/01/2015');
+            expect((input as any).value).toEqual('10/01/2015, 11:37:22 AM');
 
             receiveTimeColumn._cells[0].setEditMode(true)
             fix.detectChanges();
             tick();
 
             input = receiveTimeColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value).toEqual('8:37:11 AM');
+            expect((input as any).value).toEqual('08:37 AM');
         }));
 
         it('Sorting dateTime column', () => {

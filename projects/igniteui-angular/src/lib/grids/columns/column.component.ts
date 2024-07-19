@@ -1559,7 +1559,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
-        this.setEditorDateTimeFormat();
+        this.setDateTimeEditorFormat(this._columnPipeArgs.format);
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
@@ -1587,11 +1587,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public set editorOptions(value: IColumnEditorOptions) {
-        this._editorOptions = Object.assign(this._editorOptions, value);
-        // Should we guard against setting non-numeric formats here?
-        if (this._editorOptions.dateTimeFormat) {
-            this._editorOptions.dateTimeFormat = DateTimeUtil.getNumericInputFormat(this.grid.locale, this._editorOptions.dateTimeFormat)
-        }
+        this._editorOptions = value;
         this._editorOptionsSetByUser = true;
         this.grid.pipeTrigger++;
     }
@@ -1849,7 +1845,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
         }
         if (!this.editorOptions.dateTimeFormat) {
-            this.setEditorDateTimeFormat();
+            this.setDateTimeEditorFormat(this._columnPipeArgs.format);
         }
         if (!this.summaries) {
             switch (this.dataType) {
@@ -2566,17 +2562,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
-    private setEditorDateTimeFormat() {
-        if (this.dataType !== GridColumnDataType.Date &&
-            this.dataType !== GridColumnDataType.Time &&
-            this.dataType !== GridColumnDataType.DateTime) {
+    private setDateTimeEditorFormat(format: string) {
+        if (!DateTimeUtil.isDateTimeDataType(this.dataType)){
             return;
         }
         if (!this._editorOptionsSetByUser) {
-            this._editorOptions.dateTimeFormat = DateTimeUtil.getNumericInputFormat(this.grid.locale, this._columnPipeArgs.format);
-            if (this.dataType === GridColumnDataType.Time && !this._editorOptions.dateTimeFormat) {
-                this._editorOptions.dateTimeFormat = DEFAULT_TIME_FORMAT;
-            }
+            this._editorOptions.dateTimeFormat = format;
         }
     }
 }
