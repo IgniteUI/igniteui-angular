@@ -1154,6 +1154,22 @@ describe('igxCombo', () => {
                 caseSensitiveIcon = fixture.debugElement.query(By.css('igx-icon[name=\'case-sensitive\']'));
                 expect(caseSensitiveIcon).toBeNull();
             });
+            it('should render the combo component with the id set and not throw an error', () => {
+                fixture = TestBed.createComponent(ComboWithIdComponent);
+                fixture.detectChanges();
+
+                combo = fixture.componentInstance.combo;
+                fixture.detectChanges();
+
+                expect(combo).toBeTruthy();
+                expect(combo.id).toEqual("id1");
+                fixture.detectChanges();
+
+                const errorSpy = spyOn(console, 'error');
+                fixture.detectChanges();
+
+                expect(errorSpy).not.toHaveBeenCalled();
+            });
         });
         describe('Positioning tests: ', () => {
             let containerElement: any;
@@ -3842,6 +3858,35 @@ export class ComboArrayTypeValueKeyComponent {
             {
                 item: "Item3",
                 value: [7, 8, 9]
+            }
+        ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    standalone: true,
+    imports: [IgxComboComponent]
+})
+export class ComboWithIdComponent {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items: any[] = [];
+
+    constructor() {
+        this.items = [
+            {
+                item: "Item1",
+                value: "Option1"
+            },
+            {
+                item: "Item2",
+                value: "Option2"
+            },
+            {
+                item: "Item3",
+                value: "Option3",
             }
         ];
     }
