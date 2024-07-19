@@ -16,7 +16,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxColumnComponent } from '../public_api';
+import { ColumnType, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -1588,7 +1588,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should not move group column to last position', (async () => {
-            let column = grid.getColumnByName('Missing');
+            let column: ColumnType = grid.getColumnByName('Missing');
             column.move(3);
             await wait();
             fixture.detectChanges();
@@ -1610,8 +1610,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('MCH - should be able to move group column to position lastIndex - group.children.length', (async () => {
-
-            let column = grid.getColumnByName('Missing');
+            let column: ColumnType = grid.getColumnByName('Missing');
             column.move(3);
             await wait();
             fixture.detectChanges();

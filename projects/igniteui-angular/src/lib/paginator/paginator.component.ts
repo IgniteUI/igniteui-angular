@@ -27,6 +27,20 @@ export class IgxPaginatorContentDirective {
     @HostBinding('class.igx-paginator-content')
     public cssClass = 'igx-paginator-content';
 }
+
+/* blazorElement */
+/* mustUseNGParentAnchor */
+/* wcElementTag: igc-paginator */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
+/* jsonAPIManageCollectionInMarkup */
+/**
+ * Paginator component description
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
+ */
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
@@ -234,6 +248,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         this._overlaySettings = Object.assign({}, this._overlaySettings, value);
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -275,6 +290,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the first pager buttons should be disabled
+     * @hidden
+     * @deprecated in version 18.1.0. Use the `isFirstPage` property instead.
      */
     public get isFirstPageDisabled(): boolean {
         return this.isFirstPage;
@@ -282,6 +299,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the last pager buttons should be disabled
+     * @hidden
+     * @deprecated in version 18.1.0. Use the `isLastPage` property instead.
      */
     public get isLastPageDisabled(): boolean {
         return this.isLastPage;

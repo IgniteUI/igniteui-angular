@@ -1019,7 +1019,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -1049,7 +1049,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
             this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
