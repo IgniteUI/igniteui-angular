@@ -6,7 +6,7 @@ import { GridFeatures, IGridState, IGridStateOptions, IgxGridStateBaseDirective 
     standalone: true
 })
 export class IgxGridStateDirective extends IgxGridStateBaseDirective {
-
+    private static ngAcceptInputType_options: IGridStateOptions | '';
 
     /**
      *  An object with options determining if a certain feature state should be saved.
@@ -17,14 +17,14 @@ export class IgxGridStateDirective extends IgxGridStateBaseDirective {
      * public options = {selection: false, advancedFiltering: false};
      * ```
      */
-        @Input('igxGridState')
-        public get stateOptions(): IGridStateOptions {
-           return super.options;
-        }
+    @Input('igxGridState')
+    public override get options(): IGridStateOptions {
+        return super.options;
+    }
 
-        public set stateOptions(value: IGridStateOptions) {
-            super.options = value;
-        }
+    public override set options(value: IGridStateOptions) {
+        super.options = value;
+    }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
