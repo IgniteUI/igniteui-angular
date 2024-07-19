@@ -149,6 +149,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input(`igxDateTimeEditor`)
     public set inputFormat(value: string) {
         if (value) {
+            this._userSetFormat = value;
             this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
             this.setMask(this._inputFormat);
             this.updateMask();
@@ -232,6 +233,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         seconds: 1,
         fractionalSeconds: 1
     };
+    private _userSetFormat: string;
 
     private onChangeCallback: (...args: any[]) => void = noop;
     private _onValidatorChange: (...args: any[]) => void = noop;
@@ -314,6 +316,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale'] && !changes['locale'].firstChange) {
             this.updateDefaultFormat();
+            // reassign the inputFormat in case the original one needs to be localized
+            if (this._userSetFormat) {
+                this.inputFormat = this._userSetFormat;
+            }
             if (!this._inputFormat) {
                 this.setMask(this.inputFormat);
                 this.updateMask();
