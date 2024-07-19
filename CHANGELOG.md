@@ -22,7 +22,8 @@ All notable changes for each version of this project will be documented in this 
     - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
-    
+
+
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
