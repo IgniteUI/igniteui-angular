@@ -1256,7 +1256,7 @@ describe('IgxTimePicker', () => {
             it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric time parts', fakeAsync(() => {
                 registerLocaleData(localeBg);
                 timePicker.locale = 'en-US';
-                timePicker.inputFormat = 'h:mm:ss a z';
+                timePicker.inputFormat = 'longTime';
                 fixture.detectChanges();
 
                 expect(timePicker.inputFormat).toEqual('hh:mm tt');

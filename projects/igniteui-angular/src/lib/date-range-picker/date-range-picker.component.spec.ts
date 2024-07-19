@@ -23,6 +23,9 @@ import { AnimationService } from '../services/animation/animation';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { IgxIconComponent } from '../icon/icon.component';
+import { registerLocaleData } from "@angular/common";
+import localeJa from "@angular/common/locales/ja";
+import localeBg from "@angular/common/locales/bg";
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -943,6 +946,61 @@ describe('IgxDateRangePicker', () => {
                     expect(endInputEditor.inputFormat).toEqual('MM/dd/yyyy');
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
                 });
+
+                it('should set default inputFormat to the start/end editors with parts for day, month and year based on locale ', fakeAsync(() => {
+                    registerLocaleData(localeBg);
+                    registerLocaleData(localeJa);
+
+                    expect(fixture.componentInstance.inputFormat).toEqual(undefined);
+                    expect(dateRange.locale).toEqual('en-US');
+
+                    const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
+                    const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
+                    expect(startInputEditor.inputFormat).toEqual('MM/dd/yyyy');
+                    expect(endInputEditor.inputFormat).toEqual('MM/dd/yyyy');
+
+                    dateRange.locale = 'ja-JP';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.inputFormat).toEqual('yyyy/MM/dd');
+                    expect(startInputEditor.nativeElement.placeholder).toEqual('yyyy/MM/dd');
+                    expect(endInputEditor.inputFormat).toEqual('yyyy/MM/dd');
+
+                    dateRange.locale = 'bg-BG';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                }));
+
+                it('should resolve to the default locale-based inputFormat for the start/end editors in case the one set contains non-numeric time parts', fakeAsync(() => {
+                    registerLocaleData(localeBg);
+                    const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
+                    const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
+
+                    dateRange.locale = 'bg-BG';
+                    fixture.detectChanges();
+                    tick();
+
+                    dateRange.inputFormat = 'full';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+
+                    dateRange.inputFormat = 'MMM-dd-yyyy';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                }));
 
                 it('should display dates according to the applied display format', () => {
                     const today = new Date();
