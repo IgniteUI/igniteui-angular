@@ -339,12 +339,7 @@
         indigo-design: rem(24px)
     ), $variant);
 
-    $step-header-padding: map.get((
-        material: rem(24px),
-        fluent: rem(8px),
-        bootstrap: rem(24px),
-        indigo-design: rem(8px)
-    ), $variant);
+    $step-header-padding: rem(8px);
 
     $step-header-padding-simple: map.get((
         material: rem(8px),
@@ -684,11 +679,16 @@
         }
     }
 
+    [aria-selected='true'] {
+        %igx-stepper__step-content-wrapper {
+            padding-inline-start: $v-line-indent;
+        }
+    }
+
     @if $variant == 'indigo-design' {
         [aria-selected='true'] {
             %igx-stepper__step-content-wrapper {
                 padding-block: rem(16px);
-                padding-inline-start: $v-line-indent;
                 padding-inline-end: rem(16px);
             }
         }

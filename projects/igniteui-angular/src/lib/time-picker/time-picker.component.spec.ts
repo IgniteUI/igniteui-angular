@@ -447,7 +447,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should handle panmove event correctly', () => {
-            const touchManager = new HammerGesturesManager(null, null, new PlatformUtil(1));
+            const touchManager = new HammerGesturesManager(null, null, TestBed.inject(PlatformUtil));
             const itemListDirective = new IgxItemListDirective(timePicker, elementRef, touchManager);
             spyOn(touchManager, 'addEventListener');
 
