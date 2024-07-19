@@ -513,7 +513,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
             // since 'shortTime' is numeric, input format will include its numeric parts
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch('h:mm a');
+            expect(input.getAttribute('ng-reflect-input-format').normalize('NFKD')).toMatch('hh:mm tt');
             expect(input.getAttribute('ng-reflect-display-format')).toMatch('shortTime');
         }));
 
