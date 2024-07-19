@@ -180,7 +180,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (selection) {
             this.selectionService.set(this._id, selection);
         }
-        if (this.dropdown.open) {
+        if (this.dropdown?.open) {
             this.dropdown.close();
         }
         if (this.inputGroup?.isFocused) {
