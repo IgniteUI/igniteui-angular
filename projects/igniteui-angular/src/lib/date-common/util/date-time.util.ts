@@ -32,16 +32,23 @@ const enum DateParts {
     AmPm = 'dayPeriod'
 }
 
-/** A map of the pre-defined date-time format options that resolve to numeric parts only (and period)
+/** Maps of the pre-defined date-time format options supported by the Angular DatePipe
+ * - predefinedNumericFormats resolve to numeric parts only (and period) for the default 'en' culture
+ * - predefinedNonNumericFormats usually contain non-numeric date/time parts, which cannot be
+ *   handled for editing by the date/time editors
  *  Ref: https://angular.dev/api/common/DatePipe?tab=usage-notes
  * @hidden
  */
-const predefinedNumericFormats = new Map<string, string>([
-    ['short', 'M/d/yy, h:mm a'],
-    ['shortDate', 'M/d/yy'],
-    ['shortTime', 'h:mm a'],
-    ['mediumTime', 'h:mm:ss a'],
+const predefinedNumericFormats = new Map<string, DateParts[]>([
+    ['short', [DateParts.Month, DateParts.Day, DateParts.Year, DateParts.Hour, DateParts.Minute]],
+    ['shortDate', [DateParts.Month, DateParts.Day, DateParts.Year]],
+    ['shortTime', [DateParts.Hour, DateParts.Minute]],
+    ['mediumTime', [DateParts.Hour, DateParts.Minute, DateParts.Second]],
 ]);
+
+const predefinedNonNumericFormats = new Set<string>([
+    'medium', 'long', 'full', 'mediumDate', 'longDate', 'fullDate', 'longTime', 'fullTime',
+])
 
 /** @hidden */
 export abstract class DateTimeUtil {
@@ -524,12 +531,15 @@ export abstract class DateTimeUtil {
 
     public static isFormatNumeric(locale: string, inputFormat: string): boolean {
         const dateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+        if (predefinedNonNumericFormats.has(inputFormat) || dateParts.every(p => p.type === DatePart.Literal)) {
+            return false;
+        }
         for (let i = 0; i < dateParts.length; i++) {
-            if (dateParts[i].type === DatePart.AmPm) {
+            if (dateParts[i].type === DatePart.AmPm || dateParts[i].type === DatePart.Literal) {
                 continue;
             }
             const transformedValue = new DatePipe(locale).transform(new Date(), dateParts[i].format);
-            // check for any kind of letter from any language
+            // check if the transformed date/time part contains any kind of letter from any language
             if (/\p{L}+/gu.test(transformedValue)) {
                 return false;
             }
@@ -540,17 +550,35 @@ export abstract class DateTimeUtil {
     /**
      * Returns an input format that can be used by the date-time editors, as
      * - if the input format is already numeric, return it as is
-     * - if it is among the predefined numeric ones, return it as the equivalent numeric date parts
+     * - if it is among the predefined numeric ones, return it as the equivalent locale-based format
+     *   for the corresponding numeric date parts
      * - otherwise, return an empty string
      */
     public static getNumericInputFormat(locale: string, inputFormat: string): string {
         let resultFormat = '';
-        if (DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
+        if (predefinedNumericFormats.has(inputFormat)) {
+            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, predefinedNumericFormats.get(inputFormat));
+
+        } else if (DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
             resultFormat = inputFormat;
-        } else if (predefinedNumericFormats.has(inputFormat)) {
-            resultFormat = predefinedNumericFormats.get(inputFormat);
         }
         return resultFormat;
+    }
+
+    /** Gets the locale-based format from an array of date parts */
+    public static getLocaleInputFormatFromParts(locale: string, dateParts: DateParts[]): string {
+        const options = {};
+        dateParts.forEach(p => {
+            if (p !== DateParts.Year && p !== DateParts.AmPm) {
+                options[p] = FormatDesc.TwoDigits;
+            } else {
+                options[p] = FormatDesc.Numeric;
+            }
+        });
+        const formatter = new Intl.DateTimeFormat(locale, options);
+        const dateStruct = DateTimeUtil.getDateStructFromParts(formatter.formatToParts(new Date()), formatter);
+        DateTimeUtil.fillDatePartsPositions(dateStruct);
+        return DateTimeUtil.getMask(dateStruct);
     }
 
     private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {
@@ -724,11 +752,17 @@ export abstract class DateTimeUtil {
     }
 
     private static getDefaultLocaleMask(locale: string, dataType: DataType = DataType.Date) {
-        const dateStruct = [];
         const options = DateTimeUtil.getFormatOptions(dataType);
         const formatter = new Intl.DateTimeFormat(locale, options);
         const formatToParts = formatter.formatToParts(new Date());
-        for (const part of formatToParts) {
+        const dateStruct = DateTimeUtil.getDateStructFromParts(formatToParts, formatter);
+        DateTimeUtil.fillDatePartsPositions(dateStruct);
+        return dateStruct;
+    }
+
+    private static getDateStructFromParts(parts: Intl.DateTimeFormatPart[], formatter: Intl.DateTimeFormat): any[] {
+        const dateStruct = [];
+        for (const part of parts) {
             if (part.type === DateTimeUtil.SEPARATOR) {
                 dateStruct.push({
                     type: DateTimeUtil.SEPARATOR,
@@ -776,7 +810,6 @@ export abstract class DateTimeUtil {
                 }
             }
         }
-        DateTimeUtil.fillDatePartsPositions(dateStruct);
         return dateStruct;
     }
 

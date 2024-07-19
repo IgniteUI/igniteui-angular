@@ -16,6 +16,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
 import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { DataType } from '../../data-operations/data-util';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -150,6 +151,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         if (value) {
             this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
             this.setMask(this._inputFormat);
+            this.updateMask();
         }
     }
 
@@ -500,8 +502,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /** @hidden */
     protected override setPlaceholder(_value: string): void { }
 
-    private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    private updateDefaultFormat(dataType: DataType = DataType.DateTime): void {
+        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, dataType);
     }
 
     private updateMask(): void {

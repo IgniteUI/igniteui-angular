@@ -662,29 +662,45 @@ describe(`DateTimeUtil Unit tests`, () => {
         const locale = 'bg';
 
         const numericFormats = ['y', 'yy', 'yyy', 'yyyy', 'M', 'MM', 'd', 'dd', 'h', 'hh',
-                                'H', 'HH', 'm', 'mm', 's', 'ss', 'S', 'SS', 'SSS',
-                                'dd-MM-yyyy', 'dd/M/yyyy HH:mm:ss tt', 'dd/M/yyyy HH:mm:ss:SS a'];
+            'H', 'HH', 'm', 'mm', 's', 'ss', 'S', 'SS', 'SSS',
+            'dd-MM-yyyy', 'dd/M/yyyy HH:mm:ss tt', 'dd/M/yyyy HH:mm:ss:SS a',
+            // literals are allowed in the format
+            'dd/MM/yyyy test hh:mm'
+        ];
         numericFormats.forEach(format => {
             expect(DateTimeUtil.isFormatNumeric(locale, format)).withContext(`Format: ${format}`).toBeTrue();
         });
 
-        const nonNumericFormats = [ 'MMM', 'MMMM', 'MMMMM', 'medium', 'long', 'mediumDate', 'longTime',
-                                    'short', 'medium', 'shortDate', 'shortTime', 'mediumTime',
-                                    'dd-MMM-yyyy', 'dd/MM/yyyy test hh:mm'];
+        const nonNumericFormats = ['MMM', 'MMMM', 'MMMMM', 'medium', 'long', 'full', 'mediumDate',
+            'longDate', 'fullDate', 'longTime', 'fullTime', 'dd-MMM-yyyy', 'E', 'EE'];
 
         nonNumericFormats.forEach(format => {
             expect(DateTimeUtil.isFormatNumeric(locale, format)).withContext(`Format: ${format}`).toBeFalse();
         });
     });
 
-    it('should return the equivalent of the predefined formats as date parts that the date-time editors can handle', () => {
-        const locale = 'en-US';
+    it('getNumericInputFormat should return formats with date parts that the date-time editors can handle', () => {
+        let locale = 'en-US';
 
         // returns the equivalent of the predefined numeric formats as date parts
-        expect(DateTimeUtil.getNumericInputFormat(locale, 'short')).toBe('M/d/yy, h:mm a');
-        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortDate')).toBe('M/d/yy');
-        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortTime')).toBe('h:mm a');
-        expect(DateTimeUtil.getNumericInputFormat(locale, 'mediumTime')).toBe('h:mm:ss a');
+        // should be transformed as inputFormats for editing (numeric year, 2-digit parts for the rest)
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'short')).toBe('MM/dd/yyyy, hh:mm tt');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortDate')).toBe('MM/dd/yyyy');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortTime').normalize('NFKD')).toBe('hh:mm tt');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'mediumTime').normalize('NFKD')).toBe('hh:mm:ss tt');
+
+        // handle the predefined formats for different locales
+        locale = 'bg-BG';
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'short').normalize('NFKD')).toBe('dd.MM.yyyy г., HH:mm');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortDate').normalize('NFKD')).toBe('dd.MM.yyyy г.');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortTime').normalize('NFKD')).toBe('HH:mm');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'mediumTime').normalize('NFKD')).toBe('HH:mm:ss');
+
+        locale = 'ja-JP';
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'short')).toBe('yyyy/MM/dd HH:mm');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortDate')).toBe('yyyy/MM/dd');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'shortTime').normalize('NFKD')).toBe('HH:mm');
+        expect(DateTimeUtil.getNumericInputFormat(locale, 'mediumTime').normalize('NFKD')).toBe('HH:mm:ss');
 
         // returns the same format if it is custom and numeric
         expect(DateTimeUtil.getNumericInputFormat(locale, 'dd-MM-yyyy')).toBe('dd-MM-yyyy');
