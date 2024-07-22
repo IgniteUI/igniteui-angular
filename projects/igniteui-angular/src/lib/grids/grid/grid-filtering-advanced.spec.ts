@@ -22,6 +22,8 @@ import { FormattedValuesFilteringStrategy } from '../../data-operations/filterin
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
+import { IgxQueryBuilderComponent } from '../../query-builder/query-builder.component';
+import { By } from '@angular/platform-browser';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -3041,6 +3043,61 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
+
+        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            //Create dateTime filtering expression
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', condition: IgxStringFilteringOperand.instance().condition('equals')
+            });
+
+            tree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains')
+            });
+            
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            const queryBuilderComponent = fix.debugElement.query(By.directive(IgxQueryBuilderComponent)).componentInstance;
+            expect(queryBuilderComponent).toBeTruthy();
+
+            // Hover the first expression chip
+            let expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [0]);
+            tick();
+            fix.detectChanges();
+
+            //Check if the search value input is not undefined
+            let searchValueInputIsNotUndefined = queryBuilderComponent.searchValueInput ? true : false;
+            expect(searchValueInputIsNotUndefined).toBeTruthy("Search value for dateTime input is undefined and cannot be focused");
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            tick();
+            fix.detectChanges();
+
+            //Hover the second expression chip
+            expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[1];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [1]);
+            tick();
+            fix.detectChanges();
+            searchValueInputIsNotUndefined = queryBuilderComponent.searchValueInput ? true : false;
+            expect(searchValueInputIsNotUndefined).toBeTruthy("Search value input is undefined and cannot be focused");
+        }))
     });
 
     describe('External - ', () => {
