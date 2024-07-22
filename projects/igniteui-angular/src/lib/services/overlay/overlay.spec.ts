@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostBinding,
     Inject,
+    Injector,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -626,8 +627,10 @@ describe('igxOverlay', () => {
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
 
-            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({ id: firstCallId, elementRef: jasmine.any(Object),
-                componentRef: jasmine.any(ComponentRef) as any, settings: os })
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({
+                id: firstCallId, elementRef: jasmine.any(Object),
+                componentRef: jasmine.any(ComponentRef) as any, settings: os
+            })
         }));
 
         it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
@@ -1166,6 +1169,76 @@ describe('igxOverlay', () => {
             const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
             expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide injector to attach method', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 100 },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id = overlay.attach(SimpleDynamicComponent, { injector });
+            expect(id).toBeDefined();
+
+            const overlayInfo = overlay.getOverlayById(id);
+            expect(overlayInfo).toBeDefined();
+
+            const elementInjector = overlayInfo.componentRef.injector;
+            expect(elementInjector).toBeDefined();
+
+            const result = elementInjector.get('SomeConst');
+            expect(result).toEqual(100);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide different injectors to attach method to each component', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector1 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'First Value' },
+                ],
+            });
+            const injector2 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'Second Value' },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id1 = overlay.attach(SimpleDynamicComponent, { injector: injector1 });
+            expect(id1).toBeDefined();
+
+            const overlayInfo1 = overlay.getOverlayById(id1);
+            expect(overlayInfo1).toBeDefined();
+
+            const elementInjector1 = overlayInfo1.componentRef.injector;
+            expect(elementInjector1).toBeDefined();
+
+            const result1 = elementInjector1.get('SomeConst');
+            expect(result1).toEqual('First Value');
+
+            const id2 = overlay.attach(SimpleDynamicComponent, { injector: injector2 });
+            expect(id2).toBeDefined();
+
+            const overlayInfo2 = overlay.getOverlayById(id2);
+            expect(overlayInfo2).toBeDefined();
+
+            const elementInjector2 = overlayInfo2.componentRef.injector;
+            expect(elementInjector2).toBeDefined();
+
+            const result2 = elementInjector2.get('SomeConst');
+            expect(result2).toEqual('Second Value');
 
             overlay.detachAll();
         });
@@ -4391,7 +4464,7 @@ export class SimpleDynamicComponent {
     public hostDisplay = 'block';
     @HostBinding('style.width')
     @HostBinding('style.height')
-    public hostDimenstions = '100px';
+    public hostDimensions = '100px';
 }
 
 @Component({
@@ -4481,7 +4554,8 @@ export class EmptyPageComponent {
 
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public viewContainerRef: ViewContainerRef) { }
+        public viewContainerRef: ViewContainerRef,
+        public injector: Injector) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
