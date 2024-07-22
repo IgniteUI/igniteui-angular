@@ -14,6 +14,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxHierarchicalGridDefaultComponent } from '../../test-utils/hierarchical-grid-components.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
@@ -22,7 +23,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         return TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                IgxHierarchicalGridTestBaseComponent
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridDefaultComponent
             ]
         });
     }));
@@ -392,6 +394,45 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(ri.gridScroll.emit).toHaveBeenCalled();
         expect(ri.dataPreLoad.emit).toHaveBeenCalled();
+    });
+
+    it('should recalculate and update content correctly after filter is cleared, ensuring no empty areas post-filtering and scrolling', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const fixture = TestBed.createComponent(IgxHierarchicalGridDefaultComponent);
+        fixture.detectChanges();
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const hierarchicalGrid = fixture.componentInstance.hierarchicalGrid;
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.filter('Artist', 'd', IgxStringFilteringOperand.instance().condition('contains'));
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.expandRow(6);
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.clearFilter();
+        fixture.detectChanges();
+        await wait(50);
+
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
+        fixture.detectChanges();
+        await wait(50);
+        fixture.detectChanges();
+        await wait(50);
+
+        const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
+        const lastRowRect = hierarchicalGrid.dataRowList.last.nativeElement.getBoundingClientRect();
+
+        const emptySpace = hierarchicalGridRect.bottom - lastRowRect.bottom;
+
+        expect(emptySpace).toBeLessThan(5);
     });
 });
 
