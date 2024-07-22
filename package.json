@@ -154,6 +154,6 @@
     "ts-node": "^10.8.1",
     "typedoc": "^0.26.2",
     "typedoc-plugin-localization": "^3.0.5",
-    "typescript": "5.4.5"
+    "typescript": "5.5.3"
   }
 }
