@@ -8,7 +8,7 @@ $type-scale: $material-type-scale;
 $variant: map.get($schema, '_meta', 'variant');
 
 $background-color: var(--ig-gray-900-contrast);
-$foreground-color: hsl(var(--ig-gray-900));
+$foreground-color: var(--ig-gray-900);
 
 // $handmade-palette: (
 //     primary: (

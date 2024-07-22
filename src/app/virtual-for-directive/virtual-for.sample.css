@@ -8,7 +8,7 @@
 }
 
 .even {
-    background-color: hsl(var(--ig-gray-100));
+    background-color: var(--ig-gray-100);
 }
 
 .horizontal-container {
