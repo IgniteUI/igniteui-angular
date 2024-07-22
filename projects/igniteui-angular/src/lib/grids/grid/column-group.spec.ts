@@ -765,12 +765,12 @@ describe('IgxGrid - multi-column headers #grid', () => {
         it('column hiding - child level', () => {
             const addressGroup = fixture.componentInstance.addrInfoColGroup;
 
-            addressGroup.children.first.hidden = true;
+            addressGroup.childColumns[0].hidden = true;
             fixture.detectChanges();
 
             expect(GridFunctions.getColumnGroupHeaders(fixture).length).toEqual(5);
-            expect(addressGroup.children.first.hidden).toBe(true);
-            expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
+            expect(addressGroup.childColumns[0].hidden).toBe(true);
+            expect(addressGroup.childColumns[0].childColumns.every(c => c.hidden === true)).toEqual(true);
         });
 
         it('column hiding - Verify column hiding of Individual column and Child column', () => {
@@ -935,17 +935,17 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
             // Get children of grouped column
-            expect(getColGroup(grid, 'General Information').children.length).toEqual(2);
+            expect(getColGroup(grid, 'General Information').childColumns.length).toEqual(2);
 
             // Get children of hidden group
-            expect(getColGroup(grid, 'Person Details').children.length).toEqual(2);
+            expect(getColGroup(grid, 'Person Details').childColumns.length).toEqual(2);
 
             // Get children of group with one column
-            const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').children;
+            const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').childColumns;
             expect(postCodeGroupedColumnAllChildren.length).toEqual(1);
 
             // Get children of group with more levels
-            const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').children;
+            const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').childColumns;
             expect(addressGroupedColumnAllChildren.length).toEqual(3);
         });
 
@@ -958,7 +958,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
             // Get topLevelParent of column with no group
-            expect(grid.getColumnByName('ID').topLevelParent).toBeNull();
+            expect(grid.getColumnByName('ID').topLevelParent).toBeUndefined();
 
             // Get topLevelParent of column
             const addressGroupedColumn = getColGroup(grid, 'Address Information');
@@ -971,8 +971,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getColumnByName('CompanyName').topLevelParent).toEqual(genInfGroupedColumn);
 
             // Get topLevelParent of top group
-            expect(genInfGroupedColumn.topLevelParent).toBeNull();
-            expect(addressGroupedColumn.topLevelParent).toBeNull();
+            expect(genInfGroupedColumn.topLevelParent).toBeUndefined();
+            expect(addressGroupedColumn.topLevelParent).toBeUndefined();
 
             // Get topLevelParent of group
             expect(getColGroup(grid, 'Person Details').topLevelParent).toEqual(genInfGroupedColumn);

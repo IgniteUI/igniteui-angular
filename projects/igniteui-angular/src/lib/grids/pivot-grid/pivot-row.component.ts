@@ -177,6 +177,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         const node = nav.activeNode;
         return node && Object.keys(node).length !== 0 ?
             !nav.isRowHeaderActive &&
+            !nav.isRowDimensionHeaderActive &&
             super.isCellActive(visibleColumnIndex) :
             false;
     }

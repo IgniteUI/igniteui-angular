@@ -248,6 +248,10 @@
             igx-prefix {
                 display: flex;
             }
+
+            .igx-chip__end {
+                gap: sizable(rem(3px), rem(6px), rem(8px));
+            }
         }
     }
 

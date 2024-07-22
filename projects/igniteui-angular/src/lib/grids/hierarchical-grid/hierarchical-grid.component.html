@@ -1,4 +1,4 @@
-<ng-content select="igx-grid-toolbar"></ng-content>
+<ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 <ng-container #toolbarOutlet></ng-container>
 
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
@@ -141,8 +141,8 @@
 </div>
 
 <div class="igx-grid__footer" #footer>
-    <ng-content select="igx-grid-footer"></ng-content>
-    <ng-content select="igx-paginator"></ng-content>
+    <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
+    <ng-content select="igx-paginator,igc-paginator"></ng-content>
     <ng-container #paginatorOutlet></ng-container>
 </div>
 
@@ -178,11 +178,16 @@
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button">unfold_more</igx-icon>
+    <igx-icon family="default" name="unfold_more" role="button"></igx-icon>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [active]="hasExpandedRecords() && hasExpandableChildren">unfold_less</igx-icon>
+    <igx-icon
+        family="default"
+        name="unfold_less"
+        role="button"
+        [active]="hasExpandedRecords() && hasExpandableChildren">
+    </igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -218,9 +223,16 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+@if (platform.isElements) {
+    <div #sink style="display: none;">
+        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+        <ng-content select="igx-row-island,igc-row-island"></ng-content>
+    </div>
+}
