@@ -69,8 +69,8 @@
                 [ngClass]="child.headerGroupClasses"
                 [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
                 [column]="child"
-                [style.min-width]="child.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
-                [style.flex-basis]="child.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
+                [style.min-width]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
+                [style.flex-basis]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
             </igx-grid-header-group>
         </ng-container>
     </div>
