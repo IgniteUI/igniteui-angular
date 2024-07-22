@@ -305,7 +305,7 @@ Default Component Icons:
 | default     | first_page     | material      | first_page           | Grid, Paginator                                         | All                       |
 | default     | last_page      | material      | last_page            | Grid, Paginator                                         | All                       |
 | default     | chevron_left   | material      | chevron_left         | Grid, Paginator                                         | All                       |
-| default     | chevron_right  | material      | chevron_right        | Grid, Paginator, Excel Style Filtering                  | All                       |
+| default     | chevron_right  | material      | chevron_right        | Grid, Paginator, Excel Style Filtering, TreeNode        | All                       |
 | default     | refresh        | material      | refresh              | Grid, Filtering Row                                     | All                       |
 | default     | visibility     | material      | visibility           | Grid, Excel Style Filtering                             | All                       |
 | default     | visibility_off | material      | visibility_off       | Grid, Excel Style Filtering                             | All                       |
@@ -315,15 +315,13 @@ Default Component Icons:
 | default     | arrow_downward | material      | arrow_downward       | Grid, Excel Style Filtering                             | All                       |
 | default     | today          | material      | today                | Date Picker                                             | All                       |
 | default     | date_range     | material      | date_range           | Date Range Picker                                       | All                       |
-| default     | expand         | material      | arrow_drop_down      | Grid                                                    | All                       |
+| default     | expand         | material      | arrow_drop_down      | Grid, TreeNode                                          | All                       |
 | default     | import_export  | material      | import_export        | Grid                                                    | All                       |
 | default     | table_rows     | material      | table_rows           | Grid                                                    | All                       |
 | default     | view_column    | material      | view_column          | Grid                                                    | All                       |
 | default     | functions      | material      | functions            | Grid, Pivot Data Selector                               | All                       |
-| combo       | expand         | material      | expand_more          | Combo, Simple Combo, Select                             | Material                  |
-| combo       | collapse       | material      | expand_less          | Combo, Simple Combo, Select                             | Material                  |
-| combo       | expand         | material      | arrow_drop_down      | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
-| combo       | collapse       | material      | arrow_drop_up        | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
-| combo       | case-sensitive | imx-icons     | case-sensitive       | Combo, Simple Combo                                     | All                       |
-| tree        | expand         | material      | keyboard_arrow_right | TreeNode                                                | All                       |
-| tree        | collapse       | material      | keyboard_arrow_down  | TreeNode                                                | All                       |
+| default       | input_expand   | material      | expand_more          | Combo, Simple Combo, Select                             | Material                  |
+| default       | input_collapse | material      | expand_less          | Combo, Simple Combo, Select                             | Material                  |
+| default     | input_expand   | material      | arrow_drop_down      | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
+| default     | input_collapse | material      | arrow_drop_up        | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
+| default     | case-sensitive | imx-icons     | case-sensitive       | Combo, Simple Combo                                     | All                       |
