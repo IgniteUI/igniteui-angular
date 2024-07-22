@@ -1,0 +1,4 @@
+<ng-template *ngFor="let templateFunc of templateFunctions" let-context="context">
+    <div #container style="display: contents;"></div>
+    {{ litRender(container, templateFunc, context) }}
+</ng-template>

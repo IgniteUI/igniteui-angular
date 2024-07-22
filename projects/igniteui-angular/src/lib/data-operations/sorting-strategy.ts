@@ -2,20 +2,25 @@ import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
+/* mustCoerceToInt */
 export enum SortingDirection {
     None = 0,
     Asc = 1,
     Desc = 2
 }
 
+/* marshalByValue */
+/* tsPlainInterface */
 export interface ISortingExpression<T = any> extends IBaseEventArgs {
     fieldName: KeyOfOrString<T> & string;
+    /* mustCoerceToInt */
     dir: SortingDirection;
     ignoreCase?: boolean;
     strategy?: ISortingStrategy;
 }
 
 export interface ISortingStrategy {
+    /* blazorSuppress */
     sort: (
         data: any[],
         fieldName: string,
@@ -37,6 +42,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return this._instance || (this._instance = new this());
     }
 
+    /* blazorSuppress */
     public sort(
         data: any[],
         fieldName: string,
