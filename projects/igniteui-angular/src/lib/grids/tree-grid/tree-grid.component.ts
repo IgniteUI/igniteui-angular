@@ -47,7 +47,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridInstanceType, GridSelectionMode } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
@@ -81,9 +81,25 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Tree Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
@@ -168,7 +184,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public childDataKey;
+    public childDataKey: string;
 
     /**
      * Sets the foreign key of the `IgxTreeGridComponent`.
@@ -180,7 +196,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public foreignKey;
+    public foreignKey: string;
 
     /**
      * Sets the key indicating whether a row has children.
@@ -195,7 +211,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public hasChildrenKey;
+    public hasChildrenKey: string;
 
     /**
      * Sets whether child records should be deleted when their parent gets deleted.
@@ -210,6 +226,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
 
+    /* csSuppress */
     /**
      * Sets a callback for loading child rows on demand.
      * ```html
@@ -291,6 +308,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public rootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all `ITreeGridRecord`s.
      * ```typescript
@@ -313,6 +331,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
      * ```typescript
@@ -335,6 +354,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
+     /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -348,6 +368,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
+     /* treatAsRef */
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
@@ -358,6 +379,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.setupColumns();
         }
         this.cdr.markForCheck();
+    }
+
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'tree';
     }
 
     /**
@@ -445,10 +471,32 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
+        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
-            overlayService, summaryService, localeId, platform, _diTransactions);
+        super(
+            validationService,
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            _elementRef,
+            _zone,
+            document,
+            cdr,
+            differs,
+            viewRef,
+            injector,
+            envInjector,
+            navigation,
+            filteringService,
+            textHighlightService,
+            overlayService,
+            summaryService,
+            localeId,
+            platform,
+            _diTransactions,
+            iconService
+        );
     }
 
     /**
@@ -590,7 +638,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-
+    /* blazorCSSuppress */
     /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
@@ -913,7 +961,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries);
         }
 
         if (!row && rec) {

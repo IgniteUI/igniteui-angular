@@ -23,8 +23,9 @@ export interface IGridClipboardEvent {
 export interface IGridCellEventArgs extends IBaseEventArgs {
     /** Represents the grid cell that triggered the event. */
     cell: CellType;
+    /* blazorCSSuppress */
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
@@ -35,7 +36,7 @@ export interface IGridRowEventArgs extends IBaseEventArgs {
     /** Represents the grid row that triggered the event. */
     row: RowType;
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
@@ -76,6 +77,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * When there is no `newValue` and the event has ended, the value of the cell returns to the `oldValue`
      */
     newValue?: any;
+    /* blazorSuppress */
     /**
      * Optional
      * Represents the original event, that has triggered the edit
@@ -183,6 +185,7 @@ export interface IRowDataEventArgs extends IBaseEventArgs {
      */
     primaryKey: any;
     rowKey: any;
+    /* blazorSuppress */
     /** Represents the grid instance that owns the edit event. */
     owner: GridType;
 }
@@ -226,6 +229,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
      * that have been previously selected, but are no longer
      */
     readonly removed: any[];
+    /* blazorSuppress */
     /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
@@ -254,6 +258,7 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
      * Whenever a column has been deselected, the array is "refreshed" with the columns, that have been previously selected, but are no longer
      */
     readonly removed: string[];
+    /* blazorSuppress */
     /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
@@ -266,6 +271,8 @@ export interface ISearchInfo extends IBaseSearchInfo {
     activeMatchIndex: number;
 }
 
+/* jsonAPIPlainObject */
+/*  tsPlainInterface */
 /**
  * Represents the arguments for the grid toolbar export event.
  * It provides information about the grid instance, exporter service, export options,
@@ -345,6 +352,7 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     /** Represents the information and details of the object itself */
     target: any;
+    /* blazorCSSuppress */
     /** Represents the original event, that occurred. */
     event: Event;
     /**
@@ -357,8 +365,10 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
 
 /** The event is triggered when getting the current position of a certain cell */
 export interface ICellPosition {
+    /* doNotStringify */
     /** It returns the position (index) of the row, the cell is in */
     rowIndex: number;
+    /* doNotStringify */
     /**
      * It returns the position (index) of the column, the cell is in
      * Counts only the visible (non hidden) columns
@@ -372,6 +382,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
     /** `animation` returns whether the event is animated */
@@ -387,6 +398,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
 }
@@ -404,6 +416,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
      * Indicating whether the row is being expanded (true) or collapsed (false)
      */
     expanded: boolean;
+    /* blazorSuppress */
     /**
      * Optional
      * Represents the original event, that has triggered the expansion/collapse
@@ -442,6 +455,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The scroll direction - vertical or horizontal. */
     direction: string;
+    /* blazorCSSuppress */
     /** The original browser scroll event. */
     event: Event;
     /** The new scroll position */
@@ -496,6 +510,14 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
      * The expression contains information like the sorting expression and criteria by which the elements will be grouped
      */
     groupingExpressions?: IGroupingExpression | Array<IGroupingExpression>;
+}
+
+/* blazorInclude */
+/** @hidden @internal */
+export interface IColumnsAutoGeneratedEventArgs extends IBaseEventArgs {
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    columns?: ColumnType[]
 }
 
 /**

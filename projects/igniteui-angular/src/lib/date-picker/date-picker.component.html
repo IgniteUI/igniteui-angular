@@ -1,8 +1,15 @@
 <igx-input-group [type]="type">
     <igx-prefix *ngIf="!toggleComponents.length" (click)="toggle()">
-        <igx-icon [title]="value
-            ? pickerResourceStrings.igx_date_picker_change_date
-            : pickerResourceStrings.igx_date_picker_choose_date">calendar_today</igx-icon>
+        <igx-icon
+            [title]="
+                value
+                    ? pickerResourceStrings.igx_date_picker_change_date
+                    : pickerResourceStrings.igx_date_picker_choose_date
+            "
+            family="default"
+            name="today"
+            >
+        </igx-icon>
     </igx-prefix>
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="formatter ? displayValue : null" igxInput
@@ -13,7 +20,7 @@
         [attr.aria-labelledby]="label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
 
     <igx-suffix *ngIf="!clearComponents.length && value" (click)="clear()">
-        <igx-icon>clear</igx-icon>
+        <igx-icon family="default" name="clear"></igx-icon>
     </igx-suffix>
 
     <ng-container ngProjectAs="[igxLabel]">

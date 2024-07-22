@@ -28,7 +28,10 @@
 </ng-template>
 
 <ng-template #defaultCollapseIndicator>
-    <igx-icon>{{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
+    <igx-icon
+        family="default"
+        [name]="column.expanded ? 'expand' : 'chevron_right'">
+    </igx-icon>
 </ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
@@ -64,7 +67,7 @@
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
-    <div class="igx-grid-thead__group" *ngIf='!grid.isPivot'>
+    <div class="igx-grid-thead__group" *ngIf="grid.type !== 'pivot'">
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"

@@ -40,6 +40,7 @@ import { State, Transaction, TransactionService } from '../../services/transacti
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxIconService } from '../../icon/icon.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -48,6 +49,10 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
@@ -88,6 +93,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'hierarchical';
+    }
+
     /**
      * @hidden
      */
@@ -98,6 +108,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this._maxLevelHeaderDepth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
@@ -108,6 +119,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
+    /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
@@ -138,6 +150,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
+    /* blazorSuppress */
     public abstract expandChildren: boolean;
 
     constructor(
@@ -161,7 +174,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
+        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
+        @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
+    ) {
         super(
             validationService,
             selectionService,
@@ -183,7 +198,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             summaryService,
             localeId,
             platform,
-            _diTransactions);
+            _diTransactions,
+            iconService
+        );
     }
 
     /**

@@ -1,10 +1,16 @@
-<div role="row" class="igx-days-view__row">
+<div
+    role="row"
+    class="igx-days-view__row"
+    [title]="weekNumberHeader.long | titlecase"
+>
     <div
         role="columnheader"
         *ngIf="showWeekNumbers"
         class="igx-days-view__label igx-days-view__label--week-number"
     >
-        <span>Wk</span>
+        <span>
+            <i>{{ weekNumberHeader.short | titlecase }}</i>
+        </span>
     </div>
     <span
         role="columnheader"
