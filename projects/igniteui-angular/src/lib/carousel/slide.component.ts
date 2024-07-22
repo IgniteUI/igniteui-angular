@@ -19,7 +19,6 @@ import { Direction, IgxSlideComponentBase } from './carousel-base';
     templateUrl: 'slide.component.html',
     standalone: true
 })
-
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
     /**
      * Gets/sets the `index` of the slide inside the carousel.

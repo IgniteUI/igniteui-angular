@@ -1,9 +1,9 @@
 <section style="height: 800px" class="sample-content">
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
     </div>
-    <igx-grid (gridKeydown)="customNavigation($event)" [rowSelection]="selectionMode" [primaryKey]="'PostalCode'" #grid [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true" >
-        <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+    <igx-grid (gridKeydown)="customNavigation($event)" [rowSelection]="selectionMode" [primaryKey]="'PostalCode'" #grid [data]="data"  [width]="'100%'" [height]="'500px'" [rowEditable]="true" >
+        <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
@@ -29,3 +29,32 @@
         </igx-column-layout>
     </igx-grid>
 </section>
+
+    <ng-template #indicatorTemplate let-column="column">
+        <igx-icon>{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
+    </ng-template>
+
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true">
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column-group header="Person Details" [visibleWhenCollapsed]="false">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+            <ng-template igxCollapsibleIndicator let-column="column">
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+            </ng-template>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column-group header="Region Information" [visibleWhenCollapsed]="true">
+                    <igx-column field="Region"></igx-column>
+                    <igx-column field="PostalCode"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="false">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+        </igx-column-group>
+    </igx-grid>

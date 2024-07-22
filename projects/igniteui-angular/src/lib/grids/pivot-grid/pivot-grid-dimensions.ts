@@ -17,6 +17,8 @@ export interface IPivotDateDimensionOptions {
     fullDate?: boolean;
 }
 
+/* blazorAlternateBaseType: PivotDimension */
+/* alternateBaseType: PivotDimension */
 // Equals to pretty much this configuration:
 // {
 //     member: () => 'All Periods',
@@ -53,6 +55,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
      */
     public dataType?: GridColumnDataType;
 
+    /* blazorSuppress */
     /** Default options. */
     public defaultOptions = {
         total: true,
@@ -100,25 +103,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
     }
 
-    /**
-     * @deprecated since version 15.1.x. Please use the new name `baseDimension` for future versions.
-     *
-     * Gets the base dimension that is used by this class to determine the other dimensions and their values.
-     * Having base dimension set is required in order for the Date Dimensions to show.
-     */
-    public get inBaseDimension(): IPivotDimension {
-        return this._baseDimension;
-    }
-
-    /**
-     * @deprecated since version 15.1.x. Please use the new name `options` for future versions.
-     *
-     * Gets the options for the predefined date dimensions whether to show quarter, years and etc.
-     */
-    public get inOptions(): IPivotDateDimensionOptions {
-        return this._options;
-    }
-
     /** @hidden @internal */
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
@@ -141,9 +125,10 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
      * ```
      */
-    constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
+    constructor(inBaseDimension: IPivotDimension = null, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
+        this.enabled = inBaseDimension.enabled;
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }

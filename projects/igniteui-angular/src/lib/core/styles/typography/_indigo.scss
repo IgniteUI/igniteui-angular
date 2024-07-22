@@ -1,6 +1,8 @@
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
+@use '../components/button-group/button-group-theme' as *;
 @use '../components/calendar/calendar-theme' as *;
 @use '../components/card/card-theme' as *;
 @use '../components/checkbox/checkbox-theme' as *;
@@ -17,6 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -29,47 +32,93 @@
 @use '../components/tree/tree-theme' as *;
 
 @mixin typography() {
+    @include badge-typography($categories: (
+        text: 'button',
+    ));
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
-    @include calendar-typography();
-    @include card-typography();
+    @include button-group-typography($categories: (
+        text: 'body-2',
+    ));
+    @include calendar-typography($categories: (
+        header-year: 'body-2',
+        header-date: 'h5',
+        weekday-label: 'body-2',
+        picker-date: 'subtitle-2',
+    ));
+    @include card-typography($categories: (
+        title: 'h6',
+        title-small: 'body-2',
+        subtitle: 'body-2',
+        content: 'body-2'
+    ));
     @include checkbox-typography($categories: (
-        label: 'body-1',
+        label: 'body-2',
     ));
     @include chip-typography();
+    @include circular-bar-typography($categories: (
+        text: 'subtitle-2'
+    ));
     @include column-actions-typography();
     @include date-range-typography();
-    @include dialog-typography();
+    @include dialog-typography($categories: (
+        title: 'h5',
+        content: 'body-1',
+    ));
     @include dock-manager-typography();
     @include drop-down-typography();
     @include expansion-panel-typography($categories: (
-        title: 'h5',
-        description: 'subtitle-2',
-        body: 'body-1'
+        title: 'body-2',
+        body: 'body-2',
+        description: 'body-2',
     ));
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography($categories: (
         helper-text: 'caption',
-        input-text: 'body-1'
+        input-text: 'body-2'
     ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         header: 'overline',
-        item: 'subtitle-1',
-        title: 'subtitle-1',
+        item: 'body-2',
+        title: 'body-2',
         subtitle: 'body-2'
     ));
-    @include navbar-typography();
-    @include navdrawer-typography();
-    @include radio-typography();
-    @include slider-typography();
+    @include navbar-typography($categories: (
+        title: 'h5',
+    ));
+    @include navdrawer-typography($categories: (
+        item: 'subtitle-2',
+        header: 'overline'
+    ));
+    @include radio-typography($categories: (
+        label: 'body-2'
+    ));
+    @include slider-typography($categories: (
+        ticks-label: 'body-2',
+        thumb-label: 'subtitle-2',
+    ));
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-2'
+    ));
     @include tabs-typography();
-    @include time-picker-typography();
-    @include stepper-typography();
+    @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
+        header-hour: 'h5',
+        selected-time: 'h6'
+    ));
+    @include stepper-typography($categories: (
+        title: 'body-2',
+        subtitle: 'caption',
+        indicator: 'button',
+        body-content: 'body-2'
+    ));
     @include toast-typography();
-    @include tooltip-typography();
+    @include tooltip-typography($categories: (
+        tooltip-text: 'subtitle-2'
+    ));
     @include tree-typography();
 }

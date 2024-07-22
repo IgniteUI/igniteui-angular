@@ -1,20 +1,45 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute } from '@angular/core';
-import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollMonth, IgxCalendarView, CalendarSelection } from './calendar';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, PlatformUtil } from '../core/utils';
+import { isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { KeyboardNavigationService } from './calendar.services';
+import { getYearRange, isDateInRanges } from './common/helpers';
+import { CalendarDay } from './common/model';
+import { IgxIconService } from '../icon/icon.service';
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxCalendarBase]',
-    standalone: true
+    standalone: true,
+    providers: [KeyboardNavigationService]
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
+    /**
+     * Holds month view index we are operating on.
+     */
+    protected activeViewIdx = 0;
+
+    /**
+     * @hidden
+     */
+    private _activeView: IgxCalendarView = IgxCalendarView.Month;
+
+    /**
+     * @hidden
+     */
+    private activeViewSubject = new Subject<IgxCalendarView>();
+
+    /**
+     * @hidden
+     */
+    protected activeView$ = this.activeViewSubject.asObservable();
+
     /**
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
@@ -72,27 +97,27 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public monthScrollDirection = ScrollMonth.NONE;
+    public pageScrollDirection = ScrollDirection.NONE;
 
     /**
      * @hidden
      */
-    public scrollMonth$ = new Subject();
+    public scrollPage$ = new Subject<void>();
 
     /**
      * @hidden
      */
-    public stopMonthScroll$ = new Subject<boolean>();
+    public stopPageScroll$ = new Subject<boolean>();
 
     /**
      * @hidden
      */
-    public startMonthScroll$ = new Subject();
+    public startPageScroll$ = new Subject<void>();
 
     /**
      * @hidden
      */
-    public selectedDates;
+    public selectedDates: Date[];
 
     /**
      * @hidden
@@ -107,32 +132,32 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected formatterWeekday;
+    protected formatterWeekday: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterDay;
+    protected formatterDay: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterMonth;
+    protected formatterMonth: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterYear;
+    protected formatterYear: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected formatterMonthday;
+    protected formatterMonthday: Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected calendarModel: Calendar;
+    protected formatterRangeday: Intl.DateTimeFormat;
 
     /**
      * @hidden
@@ -141,7 +166,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _onChangeCallback: (_: Date) => void = noop;
+    protected _onChangeCallback: (_: Date | Date[]) => void = noop;
 
     /**
       * @hidden
@@ -151,7 +176,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private selectedDatesWithoutFocus;
+    private initialSelection: Date | Date[];
 
     /**
      * @hidden
@@ -181,12 +206,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _disabledDates: DateRangeDescriptor[];
+    private _disabledDates: DateRangeDescriptor[] = [];
 
     /**
      * @hidden
      */
-    private _specialDates: DateRangeDescriptor[];
+    private _specialDates: DateRangeDescriptor[] = [];
 
     /**
      * @hidden
@@ -201,8 +226,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _formatOptions: IFormattingOptions = {
         day: 'numeric',
-        month: 'short',
-        weekday: 'short',
+        month: 'long',
+        weekday: 'narrow',
         year: 'numeric'
     };
 
@@ -214,6 +239,25 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         month: true,
         year: false
     };
+
+    private _icons = [
+        {
+            family: 'default',
+            name: 'arrow_next',
+            ref: {
+                name: 'keyboard_arrow_right',
+                family: 'material',
+            }
+        },
+        {
+            family: 'default',
+            name: 'arrow_prev',
+            ref: {
+                name: 'keyboard_arrow_left',
+                family: 'material',
+            }
+        }
+    ];
 
     /**
      * An accessor that sets the resource strings.
@@ -238,7 +282,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this.calendarModel.firstWeekDay;
+        return this._weekStart;
     }
 
     /**
@@ -247,7 +291,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
-        this.calendarModel.firstWeekDay = value;
     }
 
     /**
@@ -274,15 +317,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
-        if (this._weekStart === undefined) {
-            this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
+        if (!this.weekStart) {
+            this.weekStart = getLocaleFirstDayOfWeek(this._locale);
         }
 
         this.initFormatters();
     }
 
     /**
-     * Gets the date format options of the days view.
+     * Gets the date format options of the views.
      */
     @Input()
     public get formatOptions(): IFormattingOptions {
@@ -290,11 +333,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Sets the date format options of the days view.
+     * Sets the date format options of the views.
      * Default is { day: 'numeric', month: 'short', weekday: 'short', year: 'numeric' }
      */
     public set formatOptions(formatOptions: IFormattingOptions) {
-        this._formatOptions = Object.assign(this._formatOptions, formatOptions);
+        this._formatOptions = {...this._formatOptions, ...formatOptions};
         this.initFormatters();
     }
 
@@ -308,13 +351,147 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Gets whether the `day`, `month` and `year` should be rendered
+     * Sets whether the `day`, `month` and `year` should be rendered
      * according to the locale and formatOptions, if any.
      */
     public set formatViews(formatViews: IFormattingViews) {
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
+    /**
+     * Gets the current active view.
+     * ```typescript
+     * this.activeView = calendar.activeView;
+     * ```
+     */
+    @Input()
+    public get activeView(): IgxCalendarView {
+        return this._activeView;
+    }
+
+    /**
+     * Sets the current active view.
+     * ```html
+     * <igx-calendar [activeView]="year" #calendar></igx-calendar>
+     * ```
+     * ```typescript
+     * calendar.activeView = IgxCalendarView.YEAR;
+     * ```
+     */
+    public set activeView(val: IgxCalendarView) {
+        this._activeView = val;
+        this.activeViewSubject.next(val);
+    }
+
+    /**
+     * @hidden
+     */
+    public get isDefaultView(): boolean {
+        return this._activeView === IgxCalendarView.Month;
+    }
+
+    /**
+     * @hidden
+     */
+    public get isDecadeView(): boolean {
+        return this._activeView === IgxCalendarView.Decade;
+    }
+
+    /**
+     * @hidden
+     */
+    public activeViewDecade(activeViewIdx = 0): void {
+        this.activeView = IgxCalendarView.Decade;
+        this.activeViewIdx = activeViewIdx;
+    }
+
+    /**
+     * @hidden
+     */
+    public activeViewDecadeKB(event: KeyboardEvent, activeViewIdx = 0) {
+        event.stopPropagation();
+
+        if (this.platform.isActivationKey(event)) {
+            event.preventDefault();
+            this.activeViewDecade(activeViewIdx);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @ViewChildren('yearsBtn')
+    public yearsBtns: QueryList<ElementRef>;
+
+    /**
+     * @hidden @internal
+     */
+    public previousViewDate: Date;
+
+    /**
+     * @hidden
+     */
+    public changeYear(date: Date) {
+        this.previousViewDate = this.viewDate;
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
+        this.activeView = IgxCalendarView.Month;
+    }
+
+    /**
+     * Returns the locale representation of the year in the year view if enabled,
+     * otherwise returns the default `Date.getFullYear()` value.
+     *
+     * @hidden
+     */
+    public formattedYear(value: Date | Date[]): string {
+		if (Array.isArray(value)) {
+			return;
+		}
+
+        if (this.formatViews.year) {
+            return this.formatterYear.format(value);
+        }
+
+	    return `${value.getFullYear()}`;
+    }
+
+	public formattedYears(value: Date) {
+		const dates = value as unknown as Date[];
+		return dates.map(date => this.formattedYear(date)).join(' - ');
+	}
+
+    protected prevNavLabel(detail?: string): string {
+        switch (this.activeView) {
+            case 'month':
+                return `${this.resourceStrings.igx_calendar_previous_month}, ${detail}`
+            case 'year':
+                return this.resourceStrings.igx_calendar_previous_year.replace('{0}', '15');
+            case 'decade':
+                return this.resourceStrings.igx_calendar_previous_years.replace('{0}', '15');
+        }
+    }
+
+    protected nextNavLabel(detail?: string): string {
+        switch (this.activeView) {
+            case 'month':
+                return `${this.resourceStrings.igx_calendar_next_month}, ${detail}`
+            case 'year':
+                return this.resourceStrings.igx_calendar_next_year.replace('{0}', '15');
+            case 'decade':
+                return this.resourceStrings.igx_calendar_next_years.replace('{0}', '15');
+        }
+    }
+
+	protected getDecadeRange(): { start: string; end: string } {
+        const range = getYearRange(this.viewDate, 15);
+        const start = CalendarDay.from(this.viewDate).set({ date: 1, year: range.start });
+        const end = CalendarDay.from(this.viewDate).set({ date: 1, year: range.end });
+
+		return {
+			start: this.formatterYear.format(start.native),
+			end: this.formatterYear.format(end.native)
+		}
+	}
     /**
      *
      * Gets the selection type.
@@ -348,41 +525,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Gets the selected date(s).
-     *
-     * When selection is set to `single`, it returns
-     * a single `Date` object.
-     * Otherwise it is an array of `Date` objects.
-     */
-    @Input()
-    public get value(): Date | Date[] {
-        return this.selectedDates;
-    }
-
-    /**
-     * Sets the selected date(s).
-     *
-     * When selection is set to `single`, it accepts
-     * a single `Date` object.
-     * Otherwise it is an array of `Date` objects.
-     */
-    public set value(value: Date | Date[]) {
-        if (!value || !!value && (value as Date[]).length === 0) {
-            this.selectedDatesWithoutFocus = new Date();
-            return;
-        }
-        if (!this.selectedDatesWithoutFocus) {
-            const valueDate = value[0] ? Math.min.apply(null, value) : value;
-            const date = this.getDateOnly(new Date(valueDate)).setDate(1);
-            this.viewDate = new Date(date);
-        }
-        this.selectDate(value);
-        this.selectedDatesWithoutFocus = value;
-    }
-
-    /**
-     * Gets the date that is presented.
-     * By default it is the current date.
+     * Gets the date that is presented. By default it is the current date.
      */
     @Input()
     public get viewDate(): Date {
@@ -392,15 +535,21 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Sets the date that will be presented in the default view when the component renders.
      */
-    public set viewDate(value: Date) {
+    public set viewDate(value: Date | string) {
         if (Array.isArray(value)) {
             return;
         }
 
-        const validDate = this.validateDate(value);
-        if (this._viewDate) {
-            this.selectedDatesWithoutFocus = validDate;
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
         }
+
+        const validDate = this.validateDate(value);
+
+        if (this._viewDate) {
+            this.initialSelection = validDate;
+        }
+
         const date = this.getDateOnly(validDate).setDate(1);
         this._viewDate = new Date(date);
     }
@@ -430,6 +579,23 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Checks whether a date is disabled.
+     *
+     * @hidden
+     */
+    public isDateDisabled(date: Date | string) {
+        if (!this.disabledDates) {
+            return false;
+        }
+
+        if (typeof date === 'string') {
+            date = DateTimeUtil.parseIsoDate(date);
+        }
+
+        return isDateInRanges(date, this.disabledDates);
+    }
+
+    /**
      * Gets the special dates descriptors.
      */
     @Input()
@@ -454,12 +620,70 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Gets the selected date(s).
+     *
+     * When selection is set to `single`, it returns
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     */
+    @Input()
+    public get value(): Date | Date[] {
+        if (this.selection === CalendarSelection.SINGLE) {
+            return this.selectedDates?.at(0);
+        }
+
+        return this.selectedDates;
+    }
+
+    /**
+     * Sets the selected date(s).
+     *
+     * When selection is set to `single`, it accepts
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     */
+    public set value(value: Date | Date[] | string) {
+        // Validate the date if it is of type string and it is IsoDate
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
+        }
+
+        // Check if value is set initially by the user,
+        // if it's not set the initial selection to the current date
+        if (!value || (Array.isArray(value) && value.length === 0)) {
+            this.initialSelection = new Date();
+            return;
+        }
+
+        // Value is provided, but there's no initial selection, set the initial selection to the passed value
+        if (!this.initialSelection) {
+            this.viewDate = Array.isArray(value) ? new Date(Math.min(...value as unknown as number[])) : value;
+        }
+
+        // we then call selectDate with either a single date or an array of dates
+        // we also set the initial selection to the provided value
+        this.selectDate(value);
+        this.initialSelection = value;
+    }
+
+    /**
      * @hidden
      */
-    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: string) {
-        this.calendarModel = new Calendar();
+    constructor(
+        protected platform: PlatformUtil,
+        @Inject(LOCALE_ID)
+        protected _localeId: string,
+        protected keyboardNavigation?: KeyboardNavigationService,
+        protected cdr?: ChangeDetectorRef,
+        protected iconService?: IgxIconService,
+    ) {
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
+
+        for (const icon of this._icons) {
+            this.iconService?.addIconRef(icon.name, icon.family, icon.ref);
+        }
+
         this.initFormatters();
     }
 
@@ -475,37 +699,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Performs deselection of date/dates, when selection is multi
-     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
-     *
      * @hidden
      */
-    public deselectMultipleInMonth(value: Date) {
-        // deselect multiple dates from last clicked to shift clicked date (excluding)
-        if (this.shiftKey) {
-            const [start, end] = this.lastSelectedDate.getTime() < value.getTime()
-                ? [this.lastSelectedDate, value]
-                : [value, this.lastSelectedDate];
-
-            this.selectedDates = this.selectedDates.filter(
-                (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
-            );
-
-            this.selectedDates.push(value);
-
-        } else {
-            // deselect a single date
-            const valueDateOnly = this.getDateOnly(value);
-            this.selectedDates = this.selectedDates.filter(
-                (date: Date) => date.getTime() !== valueDateOnly.getTime()
-            );
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (v: Date) => void) {
+    public registerOnChange(fn: (v: Date | Date[]) => void) {
         this._onChangeCallback = fn;
     }
 
@@ -520,26 +716,17 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
-        this.selectDate(value as Date);
-    }
-
-    /**
-     * Checks whether a date is disabled.
-     *
-     * @hidden
-     */
-    public isDateDisabled(date: Date) {
-        if (this.disabledDates === null) {
-            return false;
-        }
-
-        return isDateInRanges(date, this.disabledDates);
+        this.value = value;
     }
 
     /**
      * Selects date(s) (based on the selection type).
      */
-    public selectDate(value: Date | Date[]) {
+    public selectDate(value: Date | Date[] | string) {
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
+        }
+
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
             return;
         }
@@ -562,9 +749,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Deselects date(s) (based on the selection type).
      */
-    public deselectDate(value?: Date | Date[]) {
+    public deselectDate(value?: Date | Date[] | string) {
         if (!this.selectedDates || this.selectedDates.length === 0) {
             return;
+        }
+
+        if (typeof value === 'string') {
+            value = DateTimeUtil.parseIsoDate(value);
         }
 
         if (value === null || value === undefined) {
@@ -588,69 +779,28 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * @hidden
-     */
-    public selectDateFromClient(value: Date) {
-        switch (this.selection) {
-            case CalendarSelection.SINGLE:
-            case CalendarSelection.MULTI:
-                this.selectDate(value);
-                break;
-            case CalendarSelection.RANGE:
-                this.selectRange(value, true);
-                break;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatters() {
-        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
-        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
-        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
-        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
-        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-    }
-
-    /**
-     * @hidden
-     */
-    protected getDateOnly(date: Date) {
-        const validDate = this.validateDate(date);
-        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
-    }
-
-    /**
-     * @hidden
-     */
-    private getDateOnlyInMs(date: Date) {
-        return this.getDateOnly(date).getTime();
-    }
-
-    /**
-     * @hidden
-     */
-    private generateDateRange(start: Date, end: Date): Date[] {
-        const result = [];
-        start = this.getDateOnly(start);
-        end = this.getDateOnly(end);
-        while (start.getTime() < end.getTime()) {
-            start = this.calendarModel.timedelta(start, 'day', 1);
-            result.push(start);
-        }
-
-        return result;
-    }
-
-    /**
      * Performs a single selection.
      *
      * @hidden
      */
     private selectSingle(value: Date) {
-        this.selectedDates = this.getDateOnly(value);
-        this._onChangeCallback(this.selectedDates);
+        if (!isEqual(this.selectedDates?.at(0), value)) {
+            this.selectedDates = [this.getDateOnly(value)];
+            this._onChangeCallback(this.selectedDates.at(0));
+        }
+    }
+
+    /**
+     * Performs a single deselection.
+     *
+     * @hidden
+     */
+    private deselectSingle(value: Date) {
+        if (this.selectedDates !== null &&
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0))) {
+            this.selectedDates = null;
+            this._onChangeCallback(this.selectedDates);
+        }
     }
 
     /**
@@ -667,7 +817,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 return;
             }
 
-            this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            if (selDates.length === 0 || selDates.length > newDates.length) {
+                // deselect the dates that are part of currently selectedDates and not part of updated new values
+                this.selectedDates = newDates.map(v => new Date(v));
+            } else {
+                this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+            }
         } else {
             let newSelection = [];
 
@@ -724,6 +879,28 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Performs a multiple deselection.
+     *
+     * @hidden
+     */
+    private deselectMultiple(value: Date[]) {
+        value = value.filter(v => v !== null);
+        const selectedDatesCount = this.selectedDates.length;
+        const datesInMsToDeselect: Set<number> = new Set<number>(
+            value.map(v => this.getDateOnlyInMs(v)));
+
+        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
+            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                this.selectedDates.splice(i, 1);
+            }
+        }
+
+        if (this.selectedDates.length !== selectedDatesCount) {
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
      * @hidden
      */
     private selectRange(value: Date | Date[], excludeDisabledDates = false) {
@@ -770,7 +947,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else {
                 this.rangeStarted = false;
 
-                if (this.selectedDates[0].getTime() === value.getTime()) {
+                if (this.selectedDates?.at(0)?.getTime() === value.getTime()) {
                     this.selectedDates = [];
                     this._onChangeCallback(this.selectedDates);
                     return;
@@ -796,56 +973,24 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Performs a single deselection.
-     *
-     * @hidden
-     */
-    private deselectSingle(value: Date) {
-        if (this.selectedDates !== null &&
-            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
-            this.selectedDates = null;
-            this._onChangeCallback(this.selectedDates);
-        }
-    }
-
-    /**
-     * Performs a multiple deselection.
-     *
-     * @hidden
-     */
-    private deselectMultiple(value: Date[]) {
-        value = value.filter(v => v !== null);
-        const selectedDatesCount = this.selectedDates.length;
-        const datesInMsToDeselect: Set<number> = new Set<number>(
-            value.map(v => this.getDateOnlyInMs(v)));
-
-        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
-            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
-                this.selectedDates.splice(i, 1);
-            }
-        }
-
-        if (this.selectedDates.length !== selectedDatesCount) {
-            this._onChangeCallback(this.selectedDates);
-        }
-    }
-
-    /**
      * Performs a range deselection.
      *
      * @hidden
      */
     private deselectRange(value: Date[]) {
         value = value.filter(v => v !== null);
+
         if (value.length < 1) {
             return;
         }
 
         value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+
         const valueStart = this.getDateOnlyInMs(value[0]);
         const valueEnd = this.getDateOnlyInMs(value[value.length - 1]);
 
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+
         const selectedDatesStart = this.getDateOnlyInMs(this.selectedDates[0]);
         const selectedDatesEnd = this.getDateOnlyInMs(this.selectedDates[this.selectedDates.length - 1]);
 
@@ -854,6 +999,49 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected initFormatters() {
+        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
+        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
+        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
+        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
+        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+		this.formatterRangeday = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day, month: 'short' });
+    }
+
+    /**
+     * @hidden
+     */
+    protected getDateOnly(date: Date) {
+        const validDate = this.validateDate(date);
+        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
+    }
+
+    /**
+     * @hidden
+     */
+    private getDateOnlyInMs(date: Date) {
+        return this.getDateOnly(date).getTime();
+    }
+
+    /**
+     * @hidden
+     */
+    private generateDateRange(start: Date, end: Date): Date[] {
+        const result = [];
+        start = this.getDateOnly(start);
+        end = this.getDateOnly(end);
+
+        while (start.getTime() < end.getTime()) {
+            start = CalendarDay.from(start).add('day', 1).native;
+            result.push(start);
+        }
+
+        return result;
     }
 
     private validateDate(value: Date) {

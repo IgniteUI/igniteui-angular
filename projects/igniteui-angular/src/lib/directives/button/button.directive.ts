@@ -6,16 +6,14 @@ import {
     Input,
     Output,
     Renderer2,
-    Optional,
-    Inject,
-    booleanAttribute
+    booleanAttribute,
+    AfterContentInit
 } from '@angular/core';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = mkenum({
+const IgxButtonType = /*@__PURE__*/mkenum({
     ...IgxBaseButtonType,
     FAB: 'fab'
 });
@@ -48,7 +46,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective {
+export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -106,13 +104,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
         if (this._selected !== value) {
-
             this._selected = value;
-
-            this.buttonSelected.emit({
-                button: this
-            });
-
+            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
         }
     }
 
@@ -122,11 +115,17 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     constructor(
         public override element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken)
-        protected override _displayDensityOptions: IDisplayDensityOptions,
         private _renderer: Renderer2,
     ) {
-        super(element, _displayDensityOptions);
+        super(element);
+    }
+
+    public ngAfterContentInit() {
+        this.nativeElement.addEventListener('click', () => {
+            this.buttonSelected.emit({
+                button: this
+            });
+        });
     }
 
     /**
@@ -143,36 +142,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
         if (this._type !== t) {
             this._type = t;
         }
-    }
-
-    /**
-     * @deprecated in version 17.1.0.
-     * Sets the button text color.
-     *
-     * @example
-     * ```html
-     * <button type="button" igxButton igxButtonColor="orange"></button>
-     * ```
-     */
-    @Input('igxButtonColor')
-    public set color(value: string) {
-        this._color = value || this.nativeElement.style.color;
-        this._renderer.setStyle(this.nativeElement, 'color', this._color);
-    }
-
-    /**
-     * @deprecated in version 17.1.0.
-     * Sets the background color of the button.
-     *
-     * @example
-     *  ```html
-     * <button type="button" igxButton igxButtonBackground="red"></button>
-     * ```
-     */
-    @Input('igxButtonBackground')
-    public set background(value: string) {
-        this._backgroundColor = value || this._backgroundColor;
-        this._renderer.setStyle(this.nativeElement, 'background', this._backgroundColor);
     }
 
     /**
@@ -229,15 +198,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * @hidden
      * @internal
      */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public select() {
         this.selected = true;
     }
@@ -247,7 +207,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * @internal
      */
     public deselect() {
-        this._selected = false;
+        this.selected = false;
+        this.focused = false;
     }
 }
 

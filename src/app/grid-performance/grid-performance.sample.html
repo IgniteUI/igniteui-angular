@@ -1,7 +1,7 @@
 <div style="height: 100vh; width: 100wh">
     <h4 class="sample-title"> Fixed Size Rows</h4>
-    <igx-grid #grid1 [rowHeight]="20" displayDensity="compact" [data]="localData" [rowSelection]="selectionMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
-        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+    <igx-grid #grid1 primaryKey="ID" [rowHeight]="20" [data]="localData" [rowSelection]="selectionMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        <igx-grid-toolbar>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

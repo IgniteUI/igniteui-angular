@@ -8,7 +8,6 @@ import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -24,7 +23,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 @Directive()
-export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
+export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
     /**
      * The editor's input mask.
      *
@@ -274,7 +273,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         return this.mode === PickerInteractionMode.DropDown;
     }
 
-    protected _destroy$ = new Subject();
+    protected _destroy$ = new Subject<void>();
 
     // D.P. EventEmitter<string | Date | DateRange | null> throws on strict checks for more restrictive overrides
     // w/ TS2416 Type 'string | Date ...' not assignable to type 'DateRange' due to observer method check
@@ -282,9 +281,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
-        super(_displayDensityOptions || { displayDensity: 'comfortable' }, element);
         this.locale = this.locale || this._localeId;
     }
 

@@ -475,6 +475,16 @@ describe('igxBanner', () => {
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             expect(banner.collapsed).toBeTruthy();
         }));
+
+        it('Should apply the appropriate attributes on initialization', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
+            fixture.detectChanges();
+
+            const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            expect(panel).not.toBeNull();
+            expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
+            expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
+        }));
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
@@ -551,10 +561,8 @@ export class IgxBannerSampleComponent {
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
-                        <div class="igx-card-header__tgroup">
-                            <h3 class="igx-card-header__title--small">Brad Stanley</h3>
-                            <h5 class="igx-card-header__subtitle">Audi AG</h5>
-                        </div>
+                        <h3 class="igx-card-header__title--small">Brad Stanley</h3>
+                        <h5 class="igx-card-header__subtitle">Audi AG</h5>
                     </igx-card-header>
                     <igx-card-content>
                         <p class="igx-card-content__text">Brad Stanley has requested to follow you.</p>

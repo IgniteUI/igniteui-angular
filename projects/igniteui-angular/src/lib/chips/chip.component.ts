@@ -10,21 +10,22 @@ import {
     ViewChild,
     Renderer2,
     TemplateRef,
-    Inject,
-    Optional,
     OnDestroy,
-    booleanAttribute
+    booleanAttribute,
+    OnInit,
+    Inject
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgIf, DOCUMENT } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { Size } from '../grids/common/enums';
+import { IgxIconService } from '../icon/icon.service';
 
-export const IgxChipTypeVariant = mkenum({
+export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',
@@ -86,7 +87,7 @@ let CHIP_ID = 0;
     standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
+export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Sets/gets the variant of the chip.
@@ -103,7 +104,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     @Input()
     public variant: string | typeof IgxChipTypeVariant;
     /**
-     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of `id` attribute. If not provided it will be automatically generated.
      *
      * @example
      * ```html
@@ -126,7 +127,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public role = 'option';
 
     /**
-     * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
+     * Sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
      *
      * @example
      * ```html
@@ -147,7 +148,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
-     * An @Input property that stores data related to the chip.
+     * Stores data related to the chip.
      *
      * @example
      * ```html
@@ -158,7 +159,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public data: any;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
+     * Defines if the `IgxChipComponent` can be dragged in order to change it's position.
      * By default it is set to false.
      *
      * @example
@@ -170,7 +171,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public draggable = false;
 
     /**
-     * An @Input property that enables/disables the draggable element animation when the element is released.
+     * Enables/disables the draggable element animation when the element is released.
      * By default it's set to true.
      *
      * @example
@@ -182,7 +183,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public animateOnRelease = true;
 
     /**
-     * An @Input property that enables/disables the hiding of the base element that has been dragged.
+     * Enables/disables the hiding of the base element that has been dragged.
      * By default it's set to true.
      *
      * @example
@@ -194,7 +195,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public hideBaseOnDrag = true;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
+     * Defines if the `IgxChipComponent` should render remove button and throw remove events.
      * By default it is set to false.
      *
      * @example
@@ -206,7 +207,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public removable = false;
 
     /**
-     * An @Input property that overrides the default icon that the chip applies to the remove button.
+     * Overrides the default icon that the chip applies to the remove button.
      *
      * @example
      * ```html
@@ -218,7 +219,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public removeIcon: TemplateRef<any>;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` can be selected on click or through navigation,
+     * Defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
      *
      * @example
@@ -230,7 +231,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public selectable = false;
 
     /**
-     * An @Input property that overrides the default icon that the chip applies when it is selected.
+     * Overrides the default icon that the chip applies when it is selected.
      *
      * @example
      * ```html
@@ -249,7 +250,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public class = '';
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
+     * Disables the `IgxChipComponent`. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
      *
@@ -305,7 +306,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * An @Input property that sets the `IgxChipComponent` background color.
+     * Sets the `IgxChipComponent` background color.
      * The `color` property supports string, rgb, hex.
      *
      * @example
@@ -516,15 +517,6 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.--component-size')
-    public get componentSize(): string {
-        return this.getComponentSizeStyles();
-    }
-
-    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -584,21 +576,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @internal
      */
     public get ghostStyles() {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-small))',
-                };
-            case DisplayDensity.cosy:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-medium))',
-                };
-            case DisplayDensity.comfortable:
-            default:
-                return {
-                    '--component-size': 'var(--ig-size, var(--ig-size-large))',
-                };
-        }
+        return { '--ig-size': `${this.chipSize}` };
     }
 
     /** @hidden @internal */
@@ -616,17 +594,46 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
      * @hidden
      * @internal
      */
-    public destroy$ = new Subject();
+    public destroy$ = new Subject<void>();
 
+    protected get chipSize(): Size {
+        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
+    }
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
+    protected computedStyles;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
+    private _icons = [
+        {
+            name: "selected",
+            family: "default",
+            ref: {
+                name: "done",
+                family: "material",
+            }
+        },
+        {
+            name: "remove",
+            family: "default",
+            ref: {
+                name: "cancel",
+                family: "material",
+            }
+        }
+    ];
 
-    constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions, ref);
+    constructor(
+        public cdr: ChangeDetectorRef,
+        private ref: ElementRef<HTMLElement>,
+        private renderer: Renderer2,
+        @Inject(DOCUMENT) public document: any,
+        protected iconService: IgxIconService) {
+
+        for (const icon of this._icons) {
+            iconService.addIconRef(icon.name, icon.family, icon.ref);
+        }
     }
 
     /**
@@ -925,6 +932,10 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
                 });
             }
         }
+    }
+
+    public ngOnInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
     }
 
     public ngOnDestroy(): void {

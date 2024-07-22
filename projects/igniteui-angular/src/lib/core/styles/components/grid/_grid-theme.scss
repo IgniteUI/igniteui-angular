@@ -734,6 +734,243 @@
         indigo-design: 600,
     ), $variant);
 
+    $editing-outline-width: rem(2px);
+
+    $filtering-row-height: #{sizable(
+        map.get($grid-header-height, 'compact'),
+        map.get($grid-header-height, 'cosy'),
+        map.get($grid-header-height, 'comfortable')
+    )};
+
+    %cell-input-overrides {
+        // Have a more stable visual editing experience
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            position: relative;
+            height: calc(100% - #{$editing-outline-width * 2});
+            width: calc(100% - #{$editing-outline-width * 2}) !important;
+            inset-inline-start: $editing-outline-width;
+            overflow: hidden;
+        }
+
+        igx-input-group {
+            background: var-get($theme, 'cell-editing-background');
+
+            input {
+                height: 100%;
+                color: var-get($theme, 'cell-editing-foreground');
+            }
+
+            input:focus {
+                color: var-get($theme, 'cell-editing-focus-foreground');
+            }
+        }
+
+        igx-select,
+        igx-combo,
+        igx-simple-combo,
+        igx-time-picker,
+        igx-date-picker {
+            igx-input-group {
+                height: 100%;
+            }
+        }
+
+        .igx-input-group__bundle {
+            background: transparent !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            border: none !important;
+
+            &::before {
+                content: none !important;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+
+        .igx-input-group--indigo .igx-input-group__bundle:hover,
+        .igx-input-group--indigo .igx-input-group__bundle:focus {
+            background: transparent;
+        }
+
+        .igx-input-group__bundle-main,
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            height: auto;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+
+        .igx-input-group__bundle-main {
+            padding: 0;
+        }
+
+        .igx-input-group__line {
+            display: none;
+        }
+
+        igx-prefix,
+        igx-suffix {
+            background: transparent !important;
+            border-radius: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border: none !important;
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        .igx-input-group--indigo {
+            padding-inline: sizable(rem(6px), rem(8px), rem(12px)) !important;
+
+            igx-prefix {
+                padding-inline-start: 0 !important;
+            }
+
+            igx-suffix {
+                padding-inline-end: 0 !important;
+            }
+        }
+
+        .igx-input-group__input {
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        igx-date-range-picker {
+            height: 100%;
+        }
+
+        igx-time-picker [igxLabel] {
+            display: none;
+        }
+
+        input {
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        %form-group-input {
+            // ignore global typography
+            font-size: $grid-cell-fs !important;
+            line-height: $grid-cell-lh !important;
+        }
+
+        .igx-input-group__input,
+        .igx-input-group__file-input,
+        .igx-input-group__textarea {
+            box-shadow: none !important;
+            border: none !important;
+        }
+    }
+
+    %filtering-row-input-overrides {
+        igx-input-group {
+            width: 100%;
+            max-width: rem(200px);
+            min-width: rem(140px);
+            border: rem(1px) solid color($color: 'gray', $variant: 300);
+
+            --size: calc(#{$filtering-row-height} - #{rem(8px)});
+
+            .igx-input-group__bundle,
+            .igx-input-group__bundle-start,
+            .igx-input-group__bundle-end,
+            igx-prefix,
+            igx-suffix {
+                background: transparent;
+                border-radius: 0;
+
+                &:hover,
+                &:focus,
+                &:focus-within {
+                    background: transparent;
+                }
+            }
+
+            igx-prefix,
+            igx-suffix {
+                height: 100% !important;
+                padding: 0 sizable(rem(4px), rem(6px), rem(8px));
+            }
+
+            .igx-input-group__input {
+                font-size: sizable(rem(12px), rem(14px), rem(16px));
+                padding-inline-start: 0;
+                padding-block: 0;
+                height: 100%;
+            }
+
+            .igx-input-group__bundle,
+            .igx-input-group__bundle-start,
+            .igx-input-group__bundle-end,
+            .igx-input-group__input {
+                border: 0;
+
+                &:hover,
+                &:focus,
+                &:focus-within {
+                    border: 0;
+                    box-shadow: none;
+                }
+            }
+
+            .igx-input-group__bundle::after {
+                display: none;
+            }
+
+            .igx-input-group__bundle:focus,
+            .igx-input-group__bundle:focus-within {
+                .igx-input-group__bundle-main,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end {
+                    margin: 0 !important;
+                }
+                border-width: rem(1px);
+            }
+
+            .igx-input-group__bundle-main {
+                padding-inline-start: 0;
+            }
+
+            color: var-get($theme, 'filtering-row-text-color');
+
+            &:hover,
+            &:focus,
+            &:focus-within {
+                color: var-get($theme, 'filtering-row-text-color');
+                border-color: color($color: 'primary', $variant: 500);
+            }
+        }
+
+        .igx-input-group__line {
+            display: none;
+        }
+
+        igx-prefix:focus {
+            color: color(map.get($theme, 'palette'), 'secondary');
+        }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: color($color: 'secondary');
+                }
+
+                + igx-icon {
+                    margin-inline-start: rem(4px);
+                }
+            }
+        }
+    }
+
     igx-grid,
     igx-hierarchical-grid,
     igx-pivot-grid,
@@ -1262,12 +1499,6 @@
                 caret-color: var-get($theme, 'edit-mode-color') !important;
             }
 
-            %form-group-bundle--fluent--focus {
-                &::after {
-                    border: none !important;
-                }
-            }
-
             %form-group-border {
                 background: var-get($theme, 'edit-mode-color') !important;
             }
@@ -1431,6 +1662,11 @@
         color: inherit;
         text-align: start;
         background-clip: border-box !important;
+        min-height: sizable(
+            rem(32px),
+            rem(40px),
+            rem(50px)
+        );
     }
 
     // This is no longer being extended and is left
@@ -1571,93 +1807,20 @@
     }
 
     %igx-grid__td--editing {
-        $editing-outline-width: rem(2px);
         background: var-get($theme, 'cell-editing-background') !important;
         box-shadow: inset 0 0 0 $editing-outline-width var-get($theme, 'edit-mode-color');
         padding: 0 !important;
-
-        // Have a more stable visual editing experience
-        > igx-input-group,
-        igx-combo,
-        igx-select,
-        igx-date-picker,
-        igx-time-picker {
-            position: relative;
-            height: calc(100% - #{$editing-outline-width * 2});
-            width: calc(100% - #{$editing-outline-width * 2});
-            inset-inline-start: $editing-outline-width;
-            overflow: hidden;
-        }
-
-        igx-input-group {
-            height: 100%;
-
-            input {
-                height: 100%;
-                color: var-get($theme, 'cell-editing-foreground');
-            }
-
-            input:focus {
-                color: var-get($theme, 'cell-editing-focus-foreground');
-            }
-
-            --theme: fluent;
-        }
-
-        .igx-input-group__bundle {
-            height: 100% !important;
-            min-height: 100% !important;
-            border: none !important;
-
-            &::before {
-                content: none !important;
-            }
-
-            &::after {
-                display: none;
-            }
-        }
-
-        .igx-input-group__bundle-main,
-        .igx-input-group__bundle-start,
-        .igx-input-group__bundle-end {
-            height: calc(100% - #{$editing-outline-width * 2});
-        }
 
         &.igx-grid__td--invalid {
             box-shadow: inset 0 0 0 rem(2px) color($color: 'error') !important;
             padding-inline-end: rem(4px) !important;
         }
 
-        igx-prefix,
-        igx-suffix {
-            border-radius: 0 !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-        }
-
-        igx-date-range-picker {
-            height: 100%;
-        }
-
-        igx-time-picker [igxLabel] {
-            display: none;
-        }
-
-        input {
-            margin: 0 auto;
-            max-width: 100%;
-        }
-
-        %form-group-input {
-            // ignore global typography
-            font-size: $grid-cell-fs !important;
-            line-height: $grid-cell-lh !important;
-        }
-
         &%grid-cell-number {
             justify-content: flex-start !important;
         }
+
+        @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {
@@ -2447,7 +2610,6 @@
         }
     }
 
-
     %igx-grid__group-expand-btn {
         position: absolute;
         cursor: pointer;
@@ -2598,11 +2760,6 @@
     }
 
     %igx-grid__filtering-row {
-        $filtering-row-height: #{sizable(
-            map.get($grid-header-height, 'compact'),
-            map.get($grid-header-height, 'cosy'),
-            map.get($grid-header-height, 'comfortable')
-        )};
         position: absolute;
         display: flex;
         width: 100%;
@@ -2630,35 +2787,16 @@
             z-index: -1;
         }
 
-        igx-input-group {
-            --theme: fluent;
-            width: 100%;
-            max-width: rem(200px);
-            min-width: rem(140px);
-
-            --size: calc(#{$filtering-row-height} - #{rem(8px)});
-        }
-
-        igx-prefix:focus {
-            color: color(map.get($theme, 'palette'), 'secondary');
-        }
-
-        igx-suffix  {
-            igx-icon {
-                outline-style: none;
-
-                &:focus {
-                    color: color($color: 'secondary');
-                }
-
-                + igx-icon {
-                    margin-inline-start: rem(4px);
-                }
-            }
-        }
+        @extend %filtering-row-input-overrides;
 
         [igxIconButton] {
             --ig-size: 1;
+        }
+
+        @if $variant == 'bootstrap' {
+            [igxButton] {
+                margin: rem(4px);
+            }
         }
     }
 
@@ -2692,7 +2830,7 @@
             igx-icon {
                 position: absolute;
                 inset-inline-start: rem(12px);
-                /* IE fix for vertical alignment*/
+                // IE fix for vertical alignment
                 top: 50%;
                 transform: translateY(-50%);
             }
@@ -2940,6 +3078,7 @@
 
     // Pivot grid
     %igx-grid__pivot--super-compact {
+        --ig-size: 1 !important;
         %grid-cell-display,
         %grid-cell-header {
             padding: 0 rem(4px) !important;
@@ -3043,6 +3182,15 @@
         border-bottom: 0;
     }
 
+    %igx-grid__tr-pivot--small-row-area {
+        height: var(--header-size);
+        align-items: flex-end;
+
+        border-inline-start: 0;
+        border-inline-end: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
     %igx-grid__tr-pivot--filter-container {
         display: flex;
         flex-direction: column;
@@ -3100,6 +3248,40 @@
                 align-items: center;
             }
         }
+
+        igx-pivot-row-header-group {
+            padding-left: pad-inline(
+                map.get($grid-header-padding-inline, 'compact'),
+                map.get($grid-header-padding-inline, 'cosy'),
+                map.get($grid-header-padding-inline, 'comfortable')
+            );
+
+            igx-pivot-row-dimension-header {
+                align-items: center;
+
+                .igx-grid-th__icons {
+                    padding-right: pad-inline(
+                        map.get($grid-header-padding-inline, 'compact'),
+                        map.get($grid-header-padding-inline, 'cosy'),
+                        map.get($grid-header-padding-inline, 'comfortable')
+                    );
+                    align-self: center;
+                }
+            }
+
+            &:last-of-type {
+                igx-pivot-row-dimension-header {
+                    border-inline-end: 0;
+                }
+            }
+        }
     }
+
+    %igx-grid__tbody-pivot-mrl-dimension {
+        .igx-grid-th {
+            border-bottom: none;
+        }
+    }
+
     // Pivot grid END
 }

@@ -1,0 +1,19 @@
+<ng-template ngFor let-cell let-cellIndex="index" [ngForOf]="rowGroup
+    | pivotGridHorizontalRowCellMerging:grid.pivotConfiguration:grid.pipeTrigger">
+    <igx-pivot-row-dimension-content role="row" class="igx-grid-thead"
+        [grid]="grid"
+        [dimension]="cell.rootDimension"
+        [rootDimension]="cell.rootDimension"
+        [rowIndex]="rowIndex"
+        [colIndex]="cellIndex"
+        [rowData]="cell.records[0]"
+        [width]="rowDimensionWidthCombined(cell.dimensions)"
+        [layout]="{
+            rowStart: cell.rowStart,
+            rowEnd: cell.rowStart + cell.rowSpan,
+            colStart: cell.colStart,
+            colEnd: cell.colStart + cell.colSpan,
+            columnVisibleIndex: cellIndex
+        }">
+    </igx-pivot-row-dimension-content>
+</ng-template>

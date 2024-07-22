@@ -1,62 +1,159 @@
-<div
-    *ngIf="isDefaultView"
-    [@animateView]="activeView"
-    (@animateView.done)="viewRendered($event)"
-    class="igx-calendar__body"
-    (swiperight)="previousYear()"
-    (swipeleft)="nextYear()">
+<!-- Previous arrow icon -->
+<ng-template #prevArrow let-obj>
+    <igx-icon aria-hidden="true" family="default" name="arrow_prev"></igx-icon>
+</ng-template>
 
-    <div role="rowheader" class="igx-calendar-picker">
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__prev"
-            (click)="previousYear()"
-            (keydown)="changeYearKB($event, false)"
-            [ngStyle]="{'min-width.%': 25, 'left': 0}"
-            role="button"
-            [attr.aria-label]="'Previous Year ' + getPreviousYear()"
-            data-action="prev">
-            <igx-icon>keyboard_arrow_left</igx-icon>
-        </div>
-        <div [style.width.%]="100">
-            <span
-                tabindex="0"
-                aria-live="polite"
-                #yearsBtn
-                (keydown)="activeViewDecadeKB($event)"
-                (click)="activeViewDecade()"
-                class="igx-calendar-picker__date">
-                {{ formattedYear(viewDate) }}
-            </span>
-        </div>
-        <div
-            tabindex="0"
-            class="igx-calendar-picker__next"
-            (click)="nextYear()"
-            (keydown)="changeYearKB($event)"
-            [ngStyle]="{'min-width.%': 25,'right': 0}"
-            role="button"
-            [attr.aria-label]="'Next Year ' + getNextYear()"
-            data-action="next">
+<!-- Next arrow icon -->
+<ng-template #nextArrow let-obj>
+    <igx-icon aria-hidden="true" family="default" name="arrow_next"></igx-icon>
+</ng-template>
 
-            <igx-icon>keyboard_arrow_right</igx-icon>
-        </div>
+<!-- Previous picker button -->
+<ng-template #prevPageButton let-obj>
+    <div
+        #prevPageBtn
+        tabindex="0"
+        class="igx-calendar-picker__prev"
+        role="button"
+        [attr.aria-label]="prevNavLabel((getPrevYearDate(viewDate) | date: 'YYYY'))"
+        data-action="prev"
+        igxCalendarScrollPage
+        (mousedown)="previousPage()"
+        (keydown)="changePageKB($event, false)"
+    >
+        <ng-container *ngTemplateOutlet="prevArrow"></ng-container>
     </div>
+</ng-template>
 
-    <igx-months-view [@animateChange]="yearAction" #months
-                     (@animateChange.done)="animationDone($event)"
-                     (@animateView.done)="viewRendered($event)"
-                     [date]="viewDate"
-                     [locale]="locale"
-                     [formatView]="formatViews.month"
-                     [monthFormat]="formatOptions.month"
-                     (selected)="selectMonth($event)">
-    </igx-months-view>
-</div>
-<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade (@animateView.done)="viewRendered($event)"
+<!-- Next picker button -->
+<ng-template #nextPageButton let-obj>
+    <div
+        #nextPageBtn
+        tabindex="0"
+        class="igx-calendar-picker__next"
+        role="button"
+        [attr.aria-label]="nextNavLabel((getNextYearDate(viewDate) | date: 'YYYY'))"
+        data-action="next"
+        igxCalendarScrollPage
+        (mousedown)="nextPage()"
+        (keydown)="changePageKB($event)"
+    >
+        <ng-container *ngTemplateOutlet="nextArrow"></ng-container>
+    </div>
+</ng-template>
+
+<!-- Year -->
+<ng-template #defaultYear let-obj>
+    <span *ngIf="activeView === 'year'" class="igx-calendar__aria-off-screen" aria-live="polite">{{ formattedYear(obj.date) }}</span>
+    <span
+        #yearsBtn
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="(obj.date | date: 'yyyy') + ', ' + resourceStrings.igx_calendar_select_year"
+        (keydown)="onActiveViewDecadeKB(obj.date, $event, obj.index)"
+        (mousedown)="onActiveViewDecade($event, obj.date, obj.index)"
+        class="igx-calendar-picker__date">
+        {{ formattedYear(obj.date) }}
+    </span>
+</ng-template>
+
+<!-- Decade -->
+<ng-template #defaultDecade>
+    <span>{{ getDecadeRange().start }} - {{ getDecadeRange().end }}</span>
+</ng-template>
+
+<!-- PICKER IN MONTHS -->
+<ng-template #calendarYearPicker>
+    <section class="igx-calendar-picker">
+        <div class="igx-calendar-picker__dates">
+            <ng-container
+                *ngTemplateOutlet="defaultYear; context: getContext(0)">
+            </ng-container>
+        </div>
+        <div class="igx-calendar-picker__nav">
+            <ng-container *ngTemplateOutlet="prevPageButton"></ng-container>
+            <ng-container *ngTemplateOutlet="nextPageButton"></ng-container>
+        </div>
+    </section>
+</ng-template>
+
+<!-- PICKER IN YEARS -->
+<ng-template #calendarDecadePicker>
+    <section class="igx-calendar-picker">
+        <div class="igx-calendar-picker__dates" aria-live="polite">
+            <ng-container
+                    *ngTemplateOutlet="defaultDecade;">
+            </ng-container>
+        </div>
+        <div class="igx-calendar-picker__nav">
+            <ng-container *ngTemplateOutlet="prevPageButton"></ng-container>
+            <ng-container *ngTemplateOutlet="nextPageButton"></ng-container>
+        </div>
+    </section>
+</ng-template>
+
+<div
+    #wrapper
+    [tabIndex]="0"
+    class="igx-calendar__wrapper"
+    [attr.aria-activedescendant]="activeDescendant"
+    [attr.aria-multiselectable]="selection !== 'single'"
+    aria-labelledby="calendar-desc"
+    role="grid"
+    >
+    <caption id="calendar-desc" tabindex="-1" class="igx-calendar__aria-off-screen">
+        {{ resourceStrings.igx_calendar_singular_single_selection}}
+    </caption>
+
+    <section class="igx-calendar__pickers">
+        <ng-container *ngIf="isDefaultView">
+            <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isDecadeView">
+            <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
+        </ng-container>
+    </section>
+
+    <section class="igx-calendar__body">
+        <ng-container *ngIf="isDefaultView">
+            <igx-months-view
+                #months
+                role="rowgroup"
+                [tabIndex]="-1"
+                [date]="viewDate"
+                [locale]="locale"
+                [formatView]="formatViews.month"
+                [monthFormat]="formatOptions.month"
+                [showActive]="showActiveDay"
+                [standalone]="false"
+                (swiperight)="previousPage()"
+                (swipeleft)="nextPage()"
+                (selected)="selectMonth($event)"
+                (pageChanged)="updateDate($event)"
+                (mousedown)="$event.preventDefault()">
+            >
+            </igx-months-view>
+        </ng-container>
+
+        <ng-container *ngIf="isDecadeView">
+            <igx-years-view
+                #decade
+                role="rowgroup"
+                [tabIndex]="-1"
                 [date]="viewDate"
                 [locale]="locale"
                 [formatView]="formatViews.year"
                 [yearFormat]="formatOptions.year"
-                (selected)="selectYear($event)">
-</igx-years-view>
+                [showActive]="showActiveDay"
+                [standalone]="false"
+                (swiperight)="previousPage()"
+                (swipeleft)="nextPage()"
+                (selected)="selectYear($event)"
+                (pageChanged)="updateDate($event)"
+                (mousedown)="$event.preventDefault()"
+            >
+            </igx-years-view>
+        </ng-container>
+    </section>
+</div>

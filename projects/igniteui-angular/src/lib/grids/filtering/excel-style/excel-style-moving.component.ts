@@ -77,6 +77,11 @@ export class IgxExcelStyleMovingComponent {
         this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
     }
 
+    protected get esfSize(): string {
+        const esf = this.esf as any;
+        return esf.size;
+    }
+
     private findColumn(moveDirection: number, columns: ColumnType[]) {
         let index = columns.indexOf(this.esf.column);
         if (moveDirection === 0) {

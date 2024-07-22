@@ -1,19 +1,16 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
-    AfterViewChecked, ChangeDetectorRef, Component,
+    ChangeDetectorRef,
+    Component,
     ContentChild,
     ContentChildren,
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    OnDestroy, Optional, QueryList, booleanAttribute
+    Optional, QueryList, booleanAttribute
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import {
-    DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
-} from '../core/density';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { mkenum, PlatformUtil } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -27,18 +24,8 @@ import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-
-const IgxInputGroupTheme = mkenum({
-    Material: 'material',
-    Fluent: 'fluent',
-    Bootstrap: 'bootstrap',
-    IndigoDesign: 'indigo-design'
-});
-
-/**
- * Determines the Input Group theme.
- */
-export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInputGroupTheme];
+import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { IgxIconService } from '../icon/icon.service';
 
 @Component({
     selector: 'igx-input-group',
@@ -47,7 +34,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
+export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -134,9 +121,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _theme: IgxInputGroupTheme;
-    private _theme$ = new Subject();
-    private _subscription: Subscription;
+    private _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -157,12 +142,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._filled || (this.input && this.input.value);
     }
 
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
-
     /** @hidden */
     @HostBinding('class.igx-input-group--textarea-group')
     public get textAreaClass(): boolean {
@@ -170,7 +149,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /**
-     * An @Input property that sets how the input will be styled.
+     * Sets how the input will be styled.
      * Allowed values of type IgxInputGroupType.
      * ```html
      * <igx-input-group [type]="'search'">
@@ -207,7 +186,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      */
     @Input()
-    public set theme(value: IgxInputGroupTheme) {
+    public set theme(value: IgxTheme) {
         this._theme = value;
     }
 
@@ -221,28 +200,26 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      *  let inputTheme = this.inputGroup.theme;
      * }
      */
-    public get theme(): IgxInputGroupTheme {
+    public get theme(): IgxTheme {
         return this._theme;
     }
 
     constructor(
         public element: ElementRef<HTMLElement>,
         @Optional()
-        @Inject(DisplayDensityToken)
-        _displayDensityOptions: IDisplayDensityOptions,
-        @Optional()
         @Inject(IGX_INPUT_GROUP_TYPE)
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any,
         private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private themeService: ThemeService,
+        private iconService?: IgxIconService
     ) {
-        super(_displayDensityOptions, element);
-
-        this._subscription = this._theme$.asObservable().subscribe(value => {
-            this._theme = value as IgxInputGroupTheme;
-            this.cdr.detectChanges();
+        this.theme = this.themeService.theme;
+        this.iconService.addIconRef('clear', 'default', {
+            name: 'clear',
+            family: 'material',
         });
     }
 
@@ -431,7 +408,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
-        return this._theme === 'indigo-design';
+        return this._theme === 'indigo';
     }
 
     /**
@@ -457,27 +434,5 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     public set filled(val) {
         this._filled = val;
-    }
-
-    /** @hidden @internal */
-    public ngAfterViewChecked() {
-        if (!this._theme) {
-            const cssProp = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--theme')
-                .trim();
-
-            if (cssProp !== '') {
-                Promise.resolve().then(() => {
-                    this._theme$.next(cssProp);
-                    this.cdr.markForCheck();
-                });
-            }
-        }
-    }
-
-    /** @hidden @internal */
-    public ngOnDestroy() {
-        this._subscription.unsubscribe();
     }
 }

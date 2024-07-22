@@ -168,9 +168,34 @@
             "factory": "./update-17_1_0"
         },
         "migration-34": {
+            "version": "17.1.4",
+            "description": "Updates Ignite UI for Angular from v17.1.x to v17.1.4",
+            "factory": "./update-17_1_4"
+        },
+        "migration-35": {
             "version": "17.2.0",
             "description": "Updates Ignite UI for Angular from v17.1.x to v17.2.0",
             "factory": "./update-17_2_0"
+        },
+        "migration-36": {
+            "version": "17.2.2",
+            "description": "Updates Ignite UI for Angular from v17.2.0 to v17.2.2",
+            "factory": "./update-17_2_2"
+        },
+        "migration-37": {
+            "version": "17.2.3",
+            "description": "Updates Ignite UI for Angular from v17.2.2 to v17.2.3",
+            "factory": "./update-17_2_3"
+        },
+        "migration-38": {
+            "version": "18.0.0",
+            "description": "Updates Ignite UI for Angular from v17.2.x to v18.0.0",
+            "factory": "./update-18_0_0"
+        },
+        "migration-39": {
+            "version": "18.1.0",
+            "description": "Updates Ignite UI for Angular from v18.0.x to v18.1.0",
+            "factory": "./update-18_1_0"
         }
     }
 }

@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
-import { IgxSummaryOperand, IgxSummaryResult, IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, GridSummaryCalculationMode, DisplayDensity, IgxExcelExporterService, IgxCsvExporterService, GridSelectionMode, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxPaginatorComponent } from 'igniteui-angular';
+import { IgxSummaryOperand, IgxSummaryResult, IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, GridSummaryCalculationMode, IgxExcelExporterService, IgxCsvExporterService, GridSelectionMode, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxPaginatorComponent } from 'igniteui-angular';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public override operate(data: any[] = []): IgxSummaryResult[] {
@@ -27,6 +27,10 @@ export class MySummaryOperand extends IgxSummaryOperand {
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, NgFor, NgIf, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule]
 })
 export class TreeGridFlatDataSampleComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;
@@ -34,8 +38,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public summaryMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootLevelOnly;
     public summaryModes = [];
     public selectionMode;
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public paging = false;
 
     private nextRow = 1;
@@ -46,10 +50,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
-        this.displayDensities = [
-            { label: 'compact', selected: this.density === 'compact', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        this.sizes = [
+            { label: 'small', selected: this.size === 'small', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'large', selected: this.size === 'large', togglable: true }
         ];
         this.summaryModes = [
             { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
@@ -129,7 +133,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public selectSummaryMode(event) {

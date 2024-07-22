@@ -10,7 +10,6 @@ import {
     booleanAttribute
 } from "@angular/core";
 import { first } from "rxjs/operators";
-import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
@@ -48,6 +47,7 @@ import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
 import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { Size } from '../common/enums';
 
 interface IDataSelectorPanel {
     name: string;
@@ -61,6 +61,8 @@ interface IDataSelectorPanel {
     dragChannels: string[];
 }
 
+/* blazorIndirectRender 
+   blazorComponent */
 /**
  * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
  *
@@ -193,6 +195,12 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal **/
     @HostBinding("class.igx-pivot-data-selector")
     public cssClass = "igx-pivot-data-selector";
+
+    @HostBinding("style.--ig-size")
+    protected get size(): Size {
+        return this.grid?.gridSize;
+    }
+    
     /** @hidden @internal **/
     public dimensions: IPivotDimension[];
 
@@ -209,6 +217,8 @@ export class IgxPivotDataSelectorComponent {
         ),
         scrollStrategy: new AbsoluteScrollStrategy(),
     };
+
+    /* blazorSuppress */
     public animationSettings = {
         closeAnimation: useAnimation(fadeOut, {
             params: {
@@ -293,21 +303,17 @@ export class IgxPivotDataSelectorComponent {
         },
     ];
 
-    /**
-     * @hidden @internal
-     */
-    public get displayDensity(): DisplayDensity {
-        return this.grid?.displayDensity;
-    }
 
+    /* treatAsRef */
     /**
-     * An @Input property that sets the grid.
+     * Sets the grid.
      */
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
     }
 
+    /* treatAsRef */
     /**
      * Returns the grid.
      */

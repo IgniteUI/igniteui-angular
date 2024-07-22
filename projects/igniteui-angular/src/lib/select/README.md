@@ -132,19 +132,6 @@ Sets Input Group style type. Choose from `line`, `box` or `border`.
     </igx-select>
 ```
 
-### DisplayDensity
-**igx-select** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
-Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
-
-```html
-    <igx-select [(ngModel)]="fruit" [displayDensity]="'comfortable'">
-        <igx-select-item value="Orange">Orange</igx-select-item>
-        <igx-select-item value="Apple">Apple</igx-select-item>
-        <igx-select-item value="Banana">Banana</igx-select-item>
-    </igx-select>
-```
-
 ### Placeholder
 Sets the select placeholder, to be displayed if no selection/value is set. 
 ```html
@@ -290,7 +277,6 @@ myComponent.select.toggleIconTemplate = myCustomTemplate;
    | overlaySettings | Sets optional overlay settings.                   | overlaySettings                     | 
    | disabled        | Sets/Gets if the IgxSelect is disabled.           | boolean                             |
    | type            | Sets Input Group style type.                      | string / `line`, `box` or `border`  |
-   | displayDensity  | Sets Input Group displayDensity.            | string / `compact`, `cosy` or `comfortable`|
    | placeholder     | Sets the Select placeholder.                      | string                              |
 
 

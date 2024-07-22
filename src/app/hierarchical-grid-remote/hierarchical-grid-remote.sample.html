@@ -1,6 +1,6 @@
 <!-- <button (click)='setterBindingChange()'>Set rowSelection via binding</button>
 <button (click)='setterChange()'>Set rowSelection via setter on 1st row island</button> -->
-<igx-hierarchical-grid #grid1 displayDensity="cosy" [data]="remoteData" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
+<igx-hierarchical-grid #grid1 [data]="remoteData" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
     <igx-grid-toolbar>
         <igx-grid-toolbar-title>Parent Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
@@ -14,7 +14,7 @@
     <igx-column field="Country"></igx-column>
     <igx-column field="Phone"></igx-column>
     <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
-        <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
+        <igx-grid-toolbar *igxGridToolbar>
             <igx-grid-toolbar-title>Child Toolbar - Level 2</igx-grid-toolbar-title>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -26,7 +26,7 @@
         <igx-column field="ShipCity"></igx-column>
         <igx-column field="ShipAddress"></igx-column>
         <igx-row-island #rowIsland2 [key]="'Order_Details'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
-            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
+            <igx-grid-toolbar *igxGridToolbar>
                 <igx-grid-toolbar-title>Child Toolbar - Level 3</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>

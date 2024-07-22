@@ -8,9 +8,8 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxComboComponent } from '../../combo/public_api';
-import { IGridEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxColumnComponent } from '../public_api';
+import { IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { FormsModule } from '@angular/forms';
 
@@ -532,8 +531,9 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         const cellArgs: IGridEditEventArgs = {
-            rowID: cell.row.key,
             primaryKey: cell.row.key,
+            rowID: cell.row.key,
+            rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -596,8 +596,9 @@ describe('Edit cell with data of type Array #grid', () => {
         await fixture.whenStable();
 
         const cellArgs: IGridEditEventArgs = {
-            rowID: cell.row.key,
             primaryKey: cell.row.key,
+            rowID: cell.row.key,
+            rowKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -666,8 +667,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
+            primaryKey: row.key,
             rowID: row.key,
-            primaryKey: cell.row.key,
+            rowKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,
@@ -731,8 +733,9 @@ describe('Edit cell with data of type Array #grid', () => {
 
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
+            primaryKey: row.key,
             rowID: row.key,
-            primaryKey: cell.row.key,
+            rowKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,

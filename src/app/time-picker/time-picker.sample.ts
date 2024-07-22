@@ -32,7 +32,7 @@ export class TimePickerSampleComponent {
     public target: IgxInputDirective;
 
     public itemsDelta = { hours: 1, minutes: 15, seconds: 20 };
-    public format = 'hh:mm:ss tt';
+    public format = 'hh:mm:ss:SS a';
     public spinLoop = true;
     public datePart = DatePart.Hours;
 

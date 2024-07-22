@@ -12,7 +12,7 @@ export interface IgxTimePickerBase {
     secondsList: ElementRef;
     ampmList: ElementRef;
     inputFormat: string;
-    itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'>;
+    itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>;
 	spinLoop: boolean;
     selectedDate: Date;
     maxDropdownValue: Date;

@@ -1,10 +1,13 @@
-<button igxButton="outlined" type="button" [displayDensity]="grid.displayDensity" name="btnAdvancedFiltering" igxRipple
+<button igxButton="outlined" type="button" name="btnAdvancedFiltering" igxRipple
     [title]="grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_tooltip"
-    (click)="grid.openAdvancedFilteringDialog()"
-    [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
-    <igx-icon>filter_list</igx-icon>
+    (click)="grid.openAdvancedFilteringDialog(overlaySettings)"
+    class="igx-grid-toolbar__adv-filter">
+    <igx-icon family="default" name="filter_list"></igx-icon>
     <span #ref>
         <ng-content></ng-content>
     </span>
-    <span *ngIf="!ref.childNodes.length">{{ grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_label }}</span>
+    <!-- D.P. fix(elements): Angular trims child nodes, native doesn't leaving white space when other items project
+    textContent (avoids layout trash of innerText) should avoid wiping the default text without user set one -->
+    <span *ngIf="!ref.textContent.trim()">{{ grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_label }}</span>
+    <span class="igx-adv-filter--column-number" *ngIf="grid?.advancedFilteringExpressionsTree"> ({{ numberOfColumns }}) </span>
 </button>

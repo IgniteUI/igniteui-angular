@@ -2,12 +2,9 @@
     <button *ngFor="let button of values; let i = 'index'"
         type="button"
         igxButton="flat"
-        [displayDensity]="displayDensity"
         [selected]="button.selected"
         [attr.data-togglable]="button.togglable"
         [disabled]="disabled || button.disabled"
-        [igxButtonColor]="button.color"
-        [igxButtonBackground]="button.bgcolor"
         [igxLabel]="button.label"
         [igxRipple]="button.ripple"
     >

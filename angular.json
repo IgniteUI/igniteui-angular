@@ -15,14 +15,14 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/igniteui-dev-demos",
-            "main": "./src/main.ts",
+            "outputPath": {
+              "base": "dist/igniteui-dev-demos"
+            },
             "index": "src/index.html",
             "polyfills": [
-                "zone.js",
-                "hammerjs"
+                "zone.js"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
@@ -35,7 +35,6 @@
             ],
             "scripts": [],
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
@@ -44,7 +43,8 @@
               "includePaths": [
                 "node_modules"
               ]
-            }
+            },
+            "browser": "./src/main.ts"
           },
           "configurations": {
             "production": {
@@ -240,6 +240,129 @@
         }
       }
     },
+    "igniteui-angular-elements": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/igniteui-angular-elements",
+      "sourceRoot": "projects/igniteui-angular-elements/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/igniteui-angular-elements"
+            },
+            "index": "projects/igniteui-angular-elements/src/index.html",
+            "polyfills": [
+              "projects/igniteui-angular-elements/src/polyfills.ts"
+            ],
+            "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/igniteui-angular-elements/src/favicon.ico",
+              "projects/igniteui-angular-elements/src/assets",
+              "projects/igniteui-angular-elements/src/index.js"
+            ],
+            "styles": [
+              "projects/igniteui-angular-elements/src/styles.scss"
+            ],
+            "scripts": [
+                { "input": "./node_modules/lit-html/lit-html.js", "inject": false },
+                { "input": "./node_modules/lit-html/development/directive.js", "inject": false }
+            ],
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            },
+            "browser": "projects/igniteui-angular-elements/src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "allScript",
+                  "maximumWarning": "2.1mb",
+                  "maximumError": "2.5mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "styles",
+                  "maximumWarning": "450kb",
+                  "maximumError": "480kb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/igniteui-angular-elements/src/environments/environment.ts",
+                  "with": "projects/igniteui-angular-elements/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "none",
+              "optimization": true,
+              "externalDependencies": ["lit-html"]
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "igniteui-angular-elements:build:production"
+            },
+            "development": {
+              "buildTarget": "igniteui-angular-elements:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "igniteui-angular-elements:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/igniteui-angular-elements/src/test.ts",
+            "polyfills": "projects/igniteui-angular-elements/src/polyfills.ts",
+            "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
+            "karmaConfig": "projects/igniteui-angular-elements/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/igniteui-angular-elements/src/favicon.ico",
+              "projects/igniteui-angular-elements/src/assets"
+            ],
+            "styles": [
+              "projects/igniteui-angular-elements/src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            },
+            "scripts": []
+          }
+        }
+      }
+    },
     "bundle-test": {
       "projectType": "application",
       "schematics": {
@@ -270,6 +393,11 @@
               "includePaths": [
                 "node_modules"
               ]
+            },
+            "server": "projects/bundle-test/src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {

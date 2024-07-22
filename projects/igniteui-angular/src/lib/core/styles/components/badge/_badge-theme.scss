@@ -52,6 +52,7 @@
     }
 
     $theme: digest-schema($badge-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
@@ -74,7 +75,10 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
-        border-width: $border-width
+        border-width: $border-width,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+        )),
     ));
 }
 
@@ -84,8 +88,9 @@
 @mixin badge($theme) {
     @include css-vars($theme);
 
-    $badge-font-weight: normal;
+    $variant: map.get($theme, '_meta', 'variant');
 
+    $badge-font-weight: normal;
     $badge-value-padding: rem(4px);
     $border-type: solid;
 
@@ -98,10 +103,7 @@
         align-items: center;
         min-width: var(--_badge-size);
         min-height: var(--_badge-size);
-        font-size: calc(var(--_badge-size) / 2);
-        font-weight: $badge-font-weight;
         color: var-get($theme, 'text-color');
-        line-height: 1;
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'shadow');
@@ -118,6 +120,15 @@
             align-items: center;
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            igx-icon {
+                $icon-size: rem(12px);
+
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            }
         }
     }
 
@@ -148,5 +159,19 @@
 
     %igx-badge--hidden {
         visibility: hidden;
+    }
+}
+
+/// Adds typography styles for the igx-badge component.
+/// Uses the 'caption' category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(text: 'caption')] - The categories from the typographic scale used for type styles.
+@mixin badge-typography($categories: (text: 'caption')) {
+    $text: map.get($categories, 'text');
+
+    %igx-badge-display {
+        @include type-style($text) {
+            margin: 0;
+        }
     }
 }

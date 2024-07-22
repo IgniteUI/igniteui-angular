@@ -838,18 +838,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
-    @HostListener('contextmenu', ['$event'])
-    public onContextMenu(event: MouseEvent) {
-        this.grid.contextMenu.emit({
-            cell: this.getCellType(),
-            event
-        });
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public ngOnInit() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
@@ -858,7 +846,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: {} /* don't disable user-select, etc */
-            } as HammerOptions);
+            });
         }
 
     }
@@ -1031,7 +1019,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -1061,7 +1049,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
             this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;

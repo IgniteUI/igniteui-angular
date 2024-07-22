@@ -8,6 +8,11 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-hiding */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured column hiding component for the grid.
  *

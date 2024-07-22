@@ -16,15 +16,13 @@
 </ng-template>
 
 <ng-template #defIcon>
-    <igx-icon>
-        date_range
-    </igx-icon>
+    <igx-icon family="material" name="date_range"></igx-icon>
 </ng-template>
 
 <ng-template #defDateSeparatorTemplate>{{ dateSeparator }}</ng-template>
 
 <ng-template #defTemplate>
-    <igx-input-group [type]="type" [displayDensity]="displayDensity" (click)="open()">
+    <igx-input-group [type]="type" (click)="open()">
         <!-- only set mask placeholder when empty, otherwise input group might use it as label if none is set -->
         <input #singleInput igxInput type="text" readonly [disabled]="disabled" [placeholder]="value ? '' : singleInputFormat"
             role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!collapsed" [attr.aria-labelledby]="label?.id"

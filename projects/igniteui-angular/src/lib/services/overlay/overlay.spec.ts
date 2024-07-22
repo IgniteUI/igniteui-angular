@@ -1,15 +1,15 @@
 import {
-    ApplicationRef,
     Component,
     ComponentRef,
     ElementRef,
     HostBinding,
     Inject,
+    Injector,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
@@ -34,6 +34,7 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
+    OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
     OverlaySettings,
@@ -218,9 +219,7 @@ describe('igxOverlay', () => {
         configureTestSuite();
         let mockElement: any;
         let mockElementRef: any;
-        let mockFactoryResolver: any;
         let mockApplicationRef: any;
-        let mockInjector: any;
         let mockAnimationBuilder: any;
         let mockDocument: any;
         let mockNgZone: any;
@@ -258,20 +257,8 @@ describe('igxOverlay', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
             mockElement.parentNode = mockElement;
-            mockElementRef = { nativeElement: mockElement };
-            mockFactoryResolver = {
-                resolveComponentFactory: () => ({
-                    create: () => ({
-                        hostView: '',
-                        location: mockElementRef,
-                        changeDetectorRef: { detectChanges: () => { } },
-                        destroy: () => { },
-                        onDestroy: () => { }
-                    })
-                })
-            };
+            mockElementRef = new ElementRef(mockElement);
             mockApplicationRef = { attachView: () => { }, detachView: () => { } };
-            mockInjector = {};
             mockAnimationBuilder = {};
             mockDocument = {
                 body: mockElement,
@@ -309,7 +296,7 @@ describe('igxOverlay', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
 
             overlay = new IgxOverlayService(
-                mockFactoryResolver, mockApplicationRef, mockInjector, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
 
         it('Should set cursor to pointer on iOS', () => {
@@ -640,8 +627,10 @@ describe('igxOverlay', () => {
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
 
-            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({ id: firstCallId, elementRef: jasmine.any(Object),
-                componentRef: jasmine.any(ComponentRef) as any, settings: os })
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({
+                id: firstCallId, elementRef: jasmine.any(Object),
+                componentRef: jasmine.any(ComponentRef) as any, settings: os
+            })
         }));
 
         it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
@@ -686,8 +675,7 @@ describe('igxOverlay', () => {
 
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                target: mockItem
+                verticalDirection: VerticalAlignment.Bottom
             };
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
@@ -843,6 +831,39 @@ describe('igxOverlay', () => {
             expect(componentElementRectNew.top).not.toEqual(componentElementRect.top);
             expect(componentElementRectNew.left).not.toEqual(componentElementRect.left);
             expect(overlayContentTransform).toEqual(secondTransform);
+
+            overlayInstance.detachAll();
+        }));
+
+        it('Should offset the overlay content correctly using setOffset method and optional offsetMode', fakeAsync(() => {
+            const fixture = TestBed.createComponent(WidthTestOverlayComponent);
+            const overlayInstance = fixture.componentInstance.overlay;
+
+            const id = fixture.componentInstance.overlay.attach(SimpleRefComponent);
+            overlayInstance.show(id);
+            fixture.detectChanges();
+            tick();
+
+            // Set initial offset
+            overlayInstance.setOffset(id, 20, 20);
+            const overlayInfo = overlayInstance.getOverlayById(id);
+            expect(overlayInfo.transformX).toEqual(20);
+            expect(overlayInfo.transformY).toEqual(20);
+
+            // Add offset values to the existing ones (default behavior)
+            overlayInstance.setOffset(id, 10, 10);
+            expect(overlayInfo.transformX).toEqual(30);
+            expect(overlayInfo.transformY).toEqual(30);
+
+            // Add offset values using OffsetMode.Add
+            overlayInstance.setOffset(id, 20, 20, OffsetMode.Add);
+            expect(overlayInfo.transformX).toEqual(50);
+            expect(overlayInfo.transformY).toEqual(50);
+
+            // Set offset values using OffsetMode.Set
+            overlayInstance.setOffset(id, 10, 10, OffsetMode.Set);
+            expect(overlayInfo.transformX).toEqual(10);
+            expect(overlayInfo.transformY).toEqual(10);
 
             overlayInstance.detachAll();
         }));
@@ -1131,36 +1152,6 @@ describe('igxOverlay', () => {
             document.body.removeChild(wrapperElement);
         });
 
-        it('#3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            fixture.detectChanges();
-
-            spyOn(appRef, 'attachView');
-            const mockNativeElement = document.createElement('div');
-            const mockComponent = {
-                hostView: fixture.componentRef.hostView,
-                changeDetectorRef: { detectChanges: () => { } },
-                location: { nativeElement: mockNativeElement },
-                destroy: () => { }
-            };
-            const factoryMock = jasmine.createSpyObj('factoryMock', {
-                create: mockComponent
-            });
-            const injector = 'testInjector';
-            const componentFactoryResolver = jasmine.createSpyObj('componentFactoryResolver', {
-                resolveComponentFactory: factoryMock
-            });
-
-            const id = overlay.attach(SimpleDynamicComponent, {}, { componentFactoryResolver, injector } as any);
-            expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
-            expect(factoryMock.create).toHaveBeenCalledWith(injector);
-            expect(appRef.attachView).toHaveBeenCalledWith(fixture.componentRef.hostView);
-            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
-
-            overlay.detachAll();
-        }));
-
         it('#3988 - Should use viewContainerRef to create component', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
@@ -1178,6 +1169,76 @@ describe('igxOverlay', () => {
             const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
             expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide injector to attach method', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 100 },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id = overlay.attach(SimpleDynamicComponent, { injector });
+            expect(id).toBeDefined();
+
+            const overlayInfo = overlay.getOverlayById(id);
+            expect(overlayInfo).toBeDefined();
+
+            const elementInjector = overlayInfo.componentRef.injector;
+            expect(elementInjector).toBeDefined();
+
+            const result = elementInjector.get('SomeConst');
+            expect(result).toEqual(100);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide different injectors to attach method to each component', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector1 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'First Value' },
+                ],
+            });
+            const injector2 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'Second Value' },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id1 = overlay.attach(SimpleDynamicComponent, { injector: injector1 });
+            expect(id1).toBeDefined();
+
+            const overlayInfo1 = overlay.getOverlayById(id1);
+            expect(overlayInfo1).toBeDefined();
+
+            const elementInjector1 = overlayInfo1.componentRef.injector;
+            expect(elementInjector1).toBeDefined();
+
+            const result1 = elementInjector1.get('SomeConst');
+            expect(result1).toEqual('First Value');
+
+            const id2 = overlay.attach(SimpleDynamicComponent, { injector: injector2 });
+            expect(id2).toBeDefined();
+
+            const overlayInfo2 = overlay.getOverlayById(id2);
+            expect(overlayInfo2).toBeDefined();
+
+            const elementInjector2 = overlayInfo2.componentRef.injector;
+            expect(elementInjector2).toBeDefined();
+
+            const result2 = elementInjector2.get('SomeConst');
+            expect(result2).toEqual('Second Value');
 
             overlay.detachAll();
         });
@@ -4403,7 +4464,7 @@ export class SimpleDynamicComponent {
     public hostDisplay = 'block';
     @HostBinding('style.width')
     @HostBinding('style.height')
-    public hostDimenstions = '100px';
+    public hostDimensions = '100px';
 }
 
 @Component({
@@ -4493,7 +4554,8 @@ export class EmptyPageComponent {
 
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public viewContainerRef: ViewContainerRef) { }
+        public viewContainerRef: ViewContainerRef,
+        public injector: Injector) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
@@ -4643,7 +4705,7 @@ export class WidthTestOverlayComponent {
         this.overlaySettings.closeOnOutsideClick = true;
         this.overlaySettings.modal = false;
 
-        this.overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
+        this.overlaySettings.target = this.buttonElement.nativeElement;
         this.overlay.show(this.overlay.attach(this.customComponent, this.overlaySettings));
     }
 }

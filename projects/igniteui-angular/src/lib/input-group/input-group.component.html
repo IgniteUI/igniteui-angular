@@ -24,7 +24,6 @@
             igxButton="contained"
             type="button"
             (click)="uploadButtonHandler()"
-            [displayDensity]="displayDensity"
             [disabled]="disabled"
             [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
         >
@@ -52,7 +51,7 @@
         title="clear files"
         tabindex="0"
     >
-        <igx-icon>clear</igx-icon>
+        <igx-icon family="default" name="clear"></igx-icon>
     </igx-suffix>
 </ng-template>
 
@@ -142,7 +141,7 @@
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
         </ng-container>
 
-        <ng-container *ngSwitchCase="'indigo-design'">
+        <ng-container *ngSwitchCase="'indigo'">
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
         </ng-container>
 

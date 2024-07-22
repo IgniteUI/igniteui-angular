@@ -9,8 +9,16 @@ const enum FormatDesc {
     TwoDigits = '2-digit'
 }
 
-const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
-const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
+const TIME_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T', 'a'];
+const DATE_CHARS = ['d', 'D', 'M', 'y', 'Y'];
+
+/** @hidden */
+const enum AmPmValues {
+    AM = 'AM',
+    A = 'a',
+    PM = 'PM',
+    P = 'p'
+}
 
 /** @hidden */
 const enum DateParts {
@@ -56,7 +64,8 @@ export abstract class DateTimeUtil {
             return null;
         }
 
-        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59 || parts[DatePart.Seconds] > 59) {
+        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59
+            || parts[DatePart.Seconds] > 59 || parts[DatePart.FractionalSeconds] > 999) {
             return null;
         }
 
@@ -65,8 +74,11 @@ export abstract class DateTimeUtil {
             parts[DatePart.Hours] %= 12;
         }
 
-        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
-            parts[DatePart.Hours] += 12;
+        if (amPm) {
+            const cleanVal = DateTimeUtil.getCleanVal(inputData, amPm, promptChar);
+            if (DateTimeUtil.isPm(cleanVal)) {
+                parts[DatePart.Hours] += 12;
+            }
         }
 
         return new Date(
@@ -75,7 +87,8 @@ export abstract class DateTimeUtil {
             parts[DatePart.Date] || 1,
             parts[DatePart.Hours] || 0,
             parts[DatePart.Minutes] || 0,
-            parts[DatePart.Seconds] || 0
+            parts[DatePart.Seconds] || 0,
+            parts[DatePart.FractionalSeconds] || 0
         );
     }
 
@@ -86,7 +99,7 @@ export abstract class DateTimeUtil {
         const formatArray = Array.from(format);
         let currentPart: DatePartInfo = null;
         let position = 0;
-
+        let lastPartAdded = false;
         for (let i = 0; i < formatArray.length; i++, position++) {
             const type = DateTimeUtil.determineDatePart(formatArray[i]);
             if (currentPart) {
@@ -97,8 +110,15 @@ export abstract class DateTimeUtil {
                     }
                 }
 
+                if (currentPart.type === DatePart.AmPm && currentPart.format.indexOf('a') !== -1) {
+                    currentPart = DateTimeUtil.simplifyAmPmFormat(currentPart);
+                }
                 DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
+                lastPartAdded = true;
                 position = currentPart.end;
+                if(i === formatArray.length - 1 && currentPart.type !== type) {
+                    lastPartAdded = false;
+                }
             }
 
             currentPart = {
@@ -110,7 +130,10 @@ export abstract class DateTimeUtil {
         }
 
         // make sure the last member of a format like H:m:s is not omitted
-        if (!dateTimeParts.filter(p => p.format.includes(currentPart.format)).length) {
+        if (!lastPartAdded) {
+            if (currentPart.type === DatePart.AmPm) {
+                currentPart = DateTimeUtil.simplifyAmPmFormat(currentPart);
+            }
             DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
         }
         // formats like "y" or "yyy" are treated like "yyyy" while editing
@@ -121,6 +144,13 @@ export abstract class DateTimeUtil {
         }
 
         return dateTimeParts;
+    }
+
+    /** Simplifies the AmPm part to as many chars as will be displayed */
+    private static simplifyAmPmFormat(currentPart: DatePartInfo){
+            currentPart.format = currentPart.format.length === 5 ? 'a' : 'aa';
+            currentPart.end = currentPart.start +  currentPart.format.length;
+            return { ...currentPart };
     }
 
     public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
@@ -156,8 +186,11 @@ export abstract class DateTimeUtil {
             case DatePart.Seconds:
                 maskedValue = value.getSeconds();
                 break;
+            case DatePart.FractionalSeconds:
+                maskedValue = value.getMilliseconds();
+                break;
             case DatePart.AmPm:
-                maskedValue = value.getHours() >= 12 ? 'PM' : 'AM';
+                maskedValue = DateTimeUtil.getAmPmValue(partLength, value.getHours() < 12);
                 break;
         }
 
@@ -166,6 +199,29 @@ export abstract class DateTimeUtil {
         }
 
         return maskedValue;
+    }
+
+    /** Returns the AmPm part value depending on the part length and a
+     * conditional expression indicating whether the value is AM or PM.
+     */
+    public static getAmPmValue(partLength: number, isAm: boolean) {
+        if (isAm) {
+            return partLength === 1 ? AmPmValues.A : AmPmValues.AM;
+        } else {
+            return partLength === 1 ? AmPmValues.P : AmPmValues.PM;
+        }
+    }
+
+    /** Returns true if a string value indicates an AM period */
+    public static isAm(value: string) {
+        value = value.toLowerCase();
+        return (value === AmPmValues.AM.toLowerCase() || value === AmPmValues.A.toLowerCase());
+    }
+
+    /** Returns true if a string value indicates a PM period */
+    public static isPm(value: string) {
+        value = value.toLowerCase();
+        return (value === AmPmValues.PM.toLowerCase() || value === AmPmValues.P.toLowerCase());
     }
 
     /** Builds a date-time editor's default input format based on provided locale settings. */
@@ -311,16 +367,28 @@ export abstract class DateTimeUtil {
         newDate.setSeconds(seconds);
     }
 
+     /** Spins the fractional seconds (milliseconds) portion in a date-time editor. */
+    public static spinFractionalSeconds(delta: number, newDate: Date, spinLoop: boolean) {
+        const maxMs = 999;
+        const minMs = 0;
+        let ms = newDate.getMilliseconds() + delta;
+        if (ms > maxMs) {
+            ms = spinLoop ? ms % maxMs - 1 : maxMs;
+        } else if (ms < minMs) {
+            ms = spinLoop ? maxMs + (ms % maxMs) + 1 : minMs;
+        }
+
+        newDate.setMilliseconds(ms);
+    }
+
     /** Spins the AM/PM portion in a date-time editor. */
     public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string): Date {
-        switch (amPmFromMask) {
-            case 'AM':
-                newDate = new Date(newDate.setHours(newDate.getHours() + 12));
-                break;
-            case 'PM':
-                newDate = new Date(newDate.setHours(newDate.getHours() - 12));
-                break;
+        if(DateTimeUtil.isAm(amPmFromMask)) {
+            newDate = new Date(newDate.setHours(newDate.getHours() + 12));
+        } else if(DateTimeUtil.isPm(amPmFromMask)) {
+            newDate = new Date(newDate.setHours(newDate.getHours() - 12));
         }
+
         if (newDate.getDate() !== currentDate.getDate()) {
             return currentDate;
         }
@@ -517,6 +585,9 @@ export abstract class DateTimeUtil {
                     part.format = part.format.repeat(2);
                 }
                 break;
+            case DatePart.FractionalSeconds:
+                part.format = part.format[0].repeat(3);
+                break;
         }
     }
 
@@ -540,8 +611,10 @@ export abstract class DateTimeUtil {
             case 'm':
                 return DatePart.Minutes;
             case 's':
-            case 'S':
                 return DatePart.Seconds;
+            case 'S':
+                return DatePart.FractionalSeconds;
+            case 'a':
             case 't':
             case 'T':
                 return DatePart.AmPm;

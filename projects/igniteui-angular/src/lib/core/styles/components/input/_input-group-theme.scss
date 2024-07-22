@@ -14,6 +14,7 @@
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
+/// @param {Color} $filled-text-hover-color [null] - The input text color in the filled state on hover.
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
 /// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
 /// @param {Color} $helper-text-color [null] - The helper text color.
@@ -30,7 +31,6 @@
 /// @param {Color} $input-suffix-color--focused [null] - The input suffix color in the focused state.
 /// @param {Color} $input-suffix-background--focused [null] - The background color of an input suffix in the focused state.
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
-/// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
 /// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
@@ -59,6 +59,7 @@
 /// @param {List} $border-border-radius [null] - The border radius used for border input.
 /// @param {List} $search-border-radius [null] - The border radius used for search input.
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
+/// @param {Color} hover-placeholder-color [null] - The placeholder color of an input group on hover.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -76,12 +77,12 @@
 
     $idle-text-color: null,
     $filled-text-color: null,
+    $filled-text-hover-color: null,
     $focused-text-color: null,
     $helper-text-color: null,
     $disabled-text-color: null,
 
     $idle-secondary-color: null,
-    $filled-secondary-color: null,
     $focused-secondary-color: null,
 
     $idle-bottom-line-color: null,
@@ -113,6 +114,7 @@
     $error-shadow-color: null,
 
     $placeholder-color: null,
+    $hover-placeholder-color: null,
     $disabled-placeholder-color: null,
 
     $input-prefix-color: null,
@@ -222,6 +224,7 @@
         selector: $selector,
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
+        filled-text-hover-color: $filled-text-hover-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
         helper-text-color: $helper-text-color,
@@ -229,7 +232,6 @@
         border-border-radius: $border-border-radius,
         search-border-radius: $search-border-radius,
         idle-secondary-color: $idle-secondary-color,
-        filled-secondary-color: $filled-secondary-color,
         focused-secondary-color: $focused-secondary-color,
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
@@ -257,6 +259,7 @@
         success-shadow-color: $success-shadow-color,
         error-shadow-color: $error-shadow-color,
         placeholder-color: $placeholder-color,
+        hover-placeholder-color: $hover-placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
         input-prefix-color: $input-prefix-color,
         input-prefix-background: $input-prefix-background,
@@ -339,14 +342,14 @@
         material: rem(5px),
         fluent: rem(5px),
         bootstrap: rem(4px),
-        indigo-design: rem(6px),
+        indigo-design: rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
         material: rem(16px),
         fluent: 0,
         bootstrap: 0,
-        indigo-design: rem(12px),
+        indigo-design: 0,
     ), $variant);
 
     // Base Start
@@ -382,6 +385,8 @@
 
         @if $material-theme {
             padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+        } @else if $indigo-theme {
+            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
         }
@@ -390,7 +395,7 @@
     igx-input-group,
     igx-date-range-start,
     igx-date-range-end {
-        --theme: #{map.get($theme, 'variant')};
+        --theme: #{$variant};
     }
 
     %form-group-display--box {
@@ -403,6 +408,7 @@
         @include sizable();
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
+        --input-icon: #{sizable(rem(14px), rem(16px), rem(18px))};
 
         position: relative;
         display: block;
@@ -454,6 +460,10 @@
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
             --component-size: var(--input-size);
+
+            @if $variant == 'indigo-design' {
+                --size: var(--input-icon) !important;
+            }
         }
     }
 
@@ -577,8 +587,14 @@
 
     %form-group-bundle--focus {
         &::after {
-            border-block-end-width: rem(2px);
+            @if $variant != 'indigo-design' {
+                border-block-end-width: rem(2px);
+            }
             border-block-end-color: var-get($theme, 'focused-bottom-line-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            caret-color: var-get($theme, 'focused-bottom-line-color');
         }
     }
 
@@ -586,12 +602,14 @@
         &::after {
             border-block-end-color: var-get($theme, 'success-secondary-color');
         }
+        caret-color: initial;
     }
 
     %form-group-bundle--error {
         &::after {
             border-block-end-color: var-get($theme, 'error-secondary-color');
         }
+        caret-color: initial;
     }
 
     %form-group-bundle--disabled {
@@ -811,7 +829,9 @@
     %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            padding-inline: rem(4px);
+            @if $variant != 'indigo-design' {
+                padding-inline: rem(4px);
+            }
         }
     }
 
@@ -824,8 +844,10 @@
             overflow: hidden;
         }
 
-        &::after {
-            display: none;
+        @if $variant != 'indigo-design' {
+            &::after {
+                display: none;
+            }
         }
     }
 
@@ -957,6 +979,26 @@
         will-change: font-size, color, transform;
     }
 
+    @if $variant == 'material' {
+        %textarea-group:not(%suffixed) {
+            %form-group-bundle-main {
+                grid-area: 1 / 2 / span 1 / span 3;
+                padding-inline-end: 0;
+            }
+
+            textarea {
+                padding-inline-end: rem(4px);
+                width: calc(100% - #{rem(1px)});
+            }
+        }
+
+        %textarea-group--outlined:not(%suffixed) {
+            textarea {
+                width: calc(100% - #{rem(2px)});
+            }
+        }
+    }
+
     %form-group-textarea-group-bundle {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
         --textarea-size: #{sizable(
@@ -972,11 +1014,24 @@
         }
     }
 
-    %form-group-textarea-label {
-        transition-duration: 0ms;
-    }
-
     @if $material-theme {
+        %form-group-textarea-label {
+            top: calc($input-top-padding - #{rem(1px)});
+            margin-block-end: auto;
+        }
+
+        %textarea-group--outlined {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(3px)});
+            }
+        }
+
+        %textarea-group--box {
+            %form-group-textarea-label {
+                top: calc($input-top-padding - #{rem(2px)});
+            }
+        }
+
         %textarea-group-label--focused {
             transform: translateY(0);
             top: calc(#{$input-top-padding} / 4);
@@ -1050,6 +1105,14 @@
             opacity: 1;
             line-height: normal; /* Fix placeholder position in Safari */
         }
+
+        @if $variant == 'indigo-design' {
+            height: calc(var-get($theme, 'size') - 1px);
+
+            &::placeholder {
+                font-style: italic;
+            }
+        }
     }
 
     %igx-input-group__notch:empty + %form-group-bundle-main {
@@ -1075,6 +1138,11 @@
             max-width: inherit;
             top: 50%;
             transform: translateY(-50%);
+        }
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(12px);
+            line-height: rem(16px);
         }
     }
 
@@ -1116,11 +1184,20 @@
 
     %form-group-input--hover {
         cursor: pointer;
+        color: var-get($theme, 'filled-text-hover-color');
+
+        &::placeholder {
+            color: var-get($theme, 'hover-placeholder-color');
+        }
     }
 
     %form-group-input--focus {
         cursor: text;
         color: var-get($theme, 'focused-text-color');
+
+        &::placeholder {
+            color: var-get($theme, 'hover-placeholder-color');
+        }
     }
 
     %form-group-input--disabled {
@@ -1147,6 +1224,7 @@
 
         @if $material-theme {
             padding: 0;
+            inset-block-start: rem(-3px);
         }
 
         // resets typography styles
@@ -1318,12 +1396,14 @@
         }
     }
 
-    %form-group-helper--success {
-        color: var-get($theme, 'success-secondary-color');
-    }
+    @if $variant != 'indigo-design' {
+        %form-group-helper--success {
+            color: var-get($theme, 'success-secondary-color');
+        }
 
-    %form-group-helper--error {
-        color: var-get($theme, 'error-secondary-color');
+        %form-group-helper--error {
+            color: var-get($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-helper-item {
@@ -1362,17 +1442,28 @@
 
     // INDIGO START
     @if $variant == 'indigo-design' {
-        %form-group-display.igx-input-group--prefixed {
-            input,
-            textarea {
-                padding-inline-start: rem(4px);
+        %form-group-display--search {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
             }
         }
 
-        %form-group-display.igx-input-group--suffixed {
+        %form-group-display.igx-input-group--prefixed,
+        %form-group-display--search.igx-input-group--prefixed {
             input,
             textarea {
-                padding-inline-end: rem(4px);
+                padding-inline-start: 0;
+            }
+        }
+
+        %form-group-display.igx-input-group--suffixed,
+        %form-group-display--search.igx-input-group--suffixed {
+            input,
+            textarea {
+                padding-inline-end: 0;
             }
         }
     }
@@ -1392,17 +1483,15 @@
         color: var-get($theme, 'focused-secondary-color');
     }
 
-    %indigo-label--invalid {
-        color: var-get($theme, 'error-secondary-color');
-    }
-
-    %indigo-label--success {
-        color: var-get($theme, 'success-secondary-color');
-    }
-
     %form-group-input--indigo {
-        padding-block: rem(8px);
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-block: rem(6px);
+        padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+    }
+
+    @if $variant == 'indigo-design' {
+        %form-group-input--search {
+            padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+        }
     }
 
     %indigo--box-focused {
@@ -1419,6 +1508,13 @@
 
         &::after {
             border-bottom-style: solid;
+        }
+    }
+
+    %indigo-upload-button {
+        [igxButton] {
+            min-height: 0;
+            height: calc(100% - #{rem(8px)});
         }
     }
     // INDIGO END
@@ -1606,8 +1702,9 @@
     }
 
     %indigo-textarea {
-        padding-block: rem(8px);
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        padding-block: rem(6px);
+        padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+        inset-block-end: rem(2px);
     }
 
     %fluent-textarea {
@@ -1633,6 +1730,12 @@
 
         [dir='rtl'] & {
             transform-origin: top right;
+        }
+
+        @if $variant == 'indigo-design' {
+            font-size: rem(11px);
+            line-height: rem(15px);
+            font-weight: 400;
         }
     }
 
@@ -1938,7 +2041,7 @@
 }
 
 /// Adds typography styles for the igx-input-group component.
-/// Uses the 'body-1', 'caption'
+/// Uses the 'subtitle-1', 'caption'
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.

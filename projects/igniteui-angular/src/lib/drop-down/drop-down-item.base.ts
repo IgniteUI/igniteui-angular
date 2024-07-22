@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter, booleanAttribute } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, Output, EventEmitter, booleanAttribute, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -95,12 +95,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @HostBinding('class.igx-drop-down__item')
     public get itemStyle(): boolean {
         return !this.isHeader;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('style.--component-size')
-    public get size() {
-        return this.dropDown.getComponentSizeStyles();
     }
 
     /**
@@ -293,11 +287,11 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         if (this._selected) {
             const dropDownSelectedItem = this.dropDown.selectedItem;
             if (!dropDownSelectedItem) {
-                this.dropDown.selectItem(this);
+                this.dropDown.selectItem(this, undefined, false);
             } else if (this.hasIndex
                 ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
                 this !== dropDownSelectedItem) {
-                this.dropDown.selectItem(this);
+                this.dropDown.selectItem(this, undefined, false);
             }
         }
     }

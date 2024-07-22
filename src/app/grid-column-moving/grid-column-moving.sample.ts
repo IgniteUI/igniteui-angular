@@ -1,11 +1,11 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 import { PageHeaderComponent } from '../pageHeading/pageHeading.component';
-import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
+import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -16,6 +16,10 @@ import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxCellHea
     imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, PageHeaderComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
 })
 export class GridColumnMovingSampleComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid', { static: true }) public gridMCH: IgxGridComponent;
 
@@ -23,8 +27,8 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public columns: Array<any>;
     public newIndex = 0;
     public gridMCHNewIndex = 0;
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public pagingEnabled = true;
     public show = true;
 
@@ -64,10 +68,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
 
         this.data = SAMPLE_DATA;
@@ -108,7 +112,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public moveColumn() {

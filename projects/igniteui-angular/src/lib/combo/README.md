@@ -287,11 +287,6 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
-## Display Density
-**igx-combo** supports setting of different display densities.
-Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possible display densities are `compact`, `cosy` and `comfortable` (default).
-Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
-
 ## API
 
 ### Inputs
@@ -309,7 +304,6 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `virtualizationState` | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize` | `IForOfState` |
 | `totalItemCount`      | total count of the virtual data items, when using remote service | number       |
 | `width `              | defines combo width                               | string                      |
-| `displayDensity`      | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
 | `itemsMaxHeight `     | defines drop down maximum height                  | number                      |
 | `itemsWidth `         | defines drop down width                           | string                      |
 | `itemHeight `         | defines drop down item height                     | number                      |

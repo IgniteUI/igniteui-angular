@@ -31,6 +31,8 @@ export enum ExportHeaderType {
     ColumnHeader = 'ColumnHeader',
     MultiRowHeader = 'MultiRowHeader',
     MultiColumnHeader = 'MultiColumnHeader',
+    PivotRowHeader = 'PivotRowHeader',
+    PivotMergedHeader = 'PivotMergedHeader',
 }
 
 export interface IExportRecord {
@@ -220,6 +222,7 @@ export abstract class IgxBaseExporter {
     private pivotGridRowDimensionsMap: Map<string, string>;
     private pivotGridKeyValueMap = new Map<string, string>();
 
+    /* alternateName: exportGrid */
     /**
      * Method for exporting IgxGrid component's data.
      * ```typescript
@@ -242,9 +245,8 @@ export abstract class IgxBaseExporter {
         }
 
         const columnList = this.getColumns(columns);
-        const tagName = grid.nativeElement.tagName.toLowerCase();
 
-        if (tagName === 'igx-hierarchical-grid') {
+        if (grid.type === 'hierarchical') {
             this._ownersMap.set(grid, columnList);
 
             const childLayoutList = grid.childLayoutList;
@@ -252,13 +254,13 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
             }
-        } else if (tagName === 'igx-pivot-grid') {
+        } else if (grid.type === 'pivot') {
             this.pivotGridColumns = [];
             this.isPivotGridExport = true;
             this.pivotGridKeyValueMap = new Map<string, string>();
             this.pivotGridRowDimensionsMap = new Map<string, string>();
 
-            grid.pivotConfiguration.rows.filter(r => r.enabled).forEach(rowDimension => {
+            grid.visibleRowDimensions.filter(r => r.enabled).forEach(rowDimension => {
                 this.addToRowDimensionsMap(rowDimension, rowDimension.memberName);
             });
 
@@ -274,6 +276,7 @@ export abstract class IgxBaseExporter {
         this.prepareData(grid);
         this.addLevelData();
         this.addPivotGridColumns(grid);
+        this.addPivotRowHeaders(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
     }
 
@@ -537,24 +540,23 @@ export abstract class IgxBaseExporter {
 
     private prepareData(grid: GridType) {
         this.flatRecords = [];
-        const tagName = grid.nativeElement.tagName.toLowerCase();
         const hasFiltering = (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands.length > 0) ||
             (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
         const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
         const hasSorting = expressions && expressions.length > 0;
         let setSummaryOwner = false;
 
-        switch (tagName) {
-            case 'igx-pivot-grid': {
+        switch (grid.type) {
+            case 'pivot': {
                 this.preparePivotGridData(grid);
                 break;
             }
-            case 'igx-hierarchical-grid': {
+            case 'hierarchical': {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 setSummaryOwner = true;
                 break;
             }
-            case 'igx-tree-grid': {
+            case 'tree': {
                 this.prepareTreeGridData(grid, hasFiltering, hasSorting);
                 break;
             }
@@ -648,6 +650,7 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 const path: IPathSegment = {
                     rowID: island.primaryKey ? entry[island.primaryKey] : entry,
+                    rowKey: island.primaryKey ? entry[island.primaryKey] : entry,
                     rowIslandKey: island.key
                 };
 
@@ -795,6 +798,7 @@ export abstract class IgxBaseExporter {
                     for (const childIsland of island.children) {
                         const path: IPathSegment = {
                             rowID: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
+                            rowKey: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
                             rowIslandKey: childIsland.key
                         };
 
@@ -1062,7 +1066,7 @@ export abstract class IgxBaseExporter {
             let summaryKey = '';
 
             if (this._setChildSummaries) {
-                currKey = `'${groupExpressionName}': '${recordVal}'`;
+                currKey = `'${record.expression.fieldName}': '${recordVal}'`;
                 summaryKeysArr = summaryKeysArr.filter(a => a !== previousKey);
                 previousKey = currKey;
                 summaryKeysArr.push(currKey);
@@ -1271,12 +1275,35 @@ export abstract class IgxBaseExporter {
         return result;
     }
 
-    public addPivotGridColumns(grid: any) {
-        if (grid.nativeElement.tagName.toLowerCase() !== 'igx-pivot-grid') {
+    private addPivotRowHeaders(grid: any) {
+        if (grid?.pivotUI?.showRowHeaders) {
+            const headersList = this._ownersMap.get(DEFAULT_OWNER);
+            const enabledRows = grid.visibleRowDimensions.filter(r => r.enabled).map((r, index) => ({ name: r.displayName || r.memberName, level: index }));
+            let startIndex = 0;
+            enabledRows.forEach(x => {
+                headersList.columns.unshift({
+                    rowSpan: headersList.maxLevel + 1,
+                    field: x.name,
+                    header: x.name,
+                    startIndex: startIndex,
+                    skip: false,
+                    pinnedIndex: 0,
+                    level: x.level,
+                    dataType: 'string',
+                    headerType: ExportHeaderType.PivotRowHeader
+                });
+                startIndex += 1;
+            });
+            headersList.columnWidths.unshift(...Array(enabledRows.length).fill(200));
+        }
+    }
+
+    private addPivotGridColumns(grid: any) {
+        if (grid.type !== 'pivot') {
             return;
         }
 
-        const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, i) => ({ name: r.memberName, level: i }));
+        const enabledRows = grid.visibleRowDimensions.map((r, i) => ({ name: r.memberName, level: i }));
 
         this.preparePivotGridColumns(enabledRows);
         this.pivotGridFilterFieldsCount = enabledRows.length;
@@ -1298,7 +1325,6 @@ export abstract class IgxBaseExporter {
         const key = keys[0];
         const records = this.flatRecords.map(r => r.data);
         const groupedRecords = {};
-
         records.forEach(obj => {
             const keyValue = obj[key.name];
             if (!groupedRecords[keyValue]) {
@@ -1322,32 +1348,41 @@ export abstract class IgxBaseExporter {
         }
 
         for (const k of Object.keys(groupedRecords)) {
+            let groupKey = k;
             const rowSpan = groupedRecords[k].length;
 
+
             const rowDimensionColumn: IColumnInfo = {
+                columnSpan: 1,
                 rowSpan,
-                field: k,
-                header: k,
+                field: groupKey,
+                header: groupKey,
                 startIndex,
                 skip: false,
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[k].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
+                headerType: groupedRecords[groupKey].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
-
+            if (groupKey === 'undefined') {
+                this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
+                rowDimensionColumn.headerType = ExportHeaderType.PivotMergedHeader;
+                groupKey = columnGroupParent;
+            }
             if (columnGroupParent) {
                 rowDimensionColumn.columnGroupParent = columnGroupParent;
             } else {
-                rowDimensionColumn.columnGroup = k;
+                rowDimensionColumn.columnGroup = groupKey;
             }
 
             this.pivotGridColumns.push(rowDimensionColumn);
 
             if (keys.length > 1) {
-                this.pivotGridKeyValueMap.set(key.name, k);
+                if (groupKey !== columnGroupParent) {
+                    this.pivotGridKeyValueMap.set(key.name, groupKey);
+                }
                 const newKeys = keys.filter(kdd => kdd !== key);
-                this.preparePivotGridColumns(newKeys, k)
+                this.preparePivotGridColumns(newKeys, groupKey)
                 this.pivotGridKeyValueMap.delete(key.name);
             }
 

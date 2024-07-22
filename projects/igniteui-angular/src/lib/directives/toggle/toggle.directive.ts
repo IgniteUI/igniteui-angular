@@ -13,18 +13,19 @@ import {
     Output
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
-import { OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
+import { OffsetMode, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    /* blazorSuppress */
     event?: Event;
 }
 
@@ -48,7 +49,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onOpened)='onToggleOpened($event)'>
+     *   (opened)='onToggleOpened($event)'>
      * </div>
      * ```
      */
@@ -67,7 +68,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onOpening)='onToggleOpening($event)'>
+     *   (opening)='onToggleOpening($event)'>
      * </div>
      * ```
      */
@@ -86,7 +87,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onClosed)='onToggleClosed($event)'>
+     *   (closed)='onToggleClosed($event)'>
      * </div>
      * ```
      */
@@ -124,7 +125,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onAppended)='onToggleAppended()'>
+     *   (appended)='onToggleAppended()'>
      * </div>
      * ```
      */
@@ -164,6 +165,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         return this.collapsed;
     }
 
+    @HostBinding('class.igx-toggle--hidden-webkit')
+    public get hiddenWebkitClass() {
+        const isSafari = this.platform?.isSafari;
+        const browserVersion = this.platform?.browserVersion;
+
+        return this.collapsed && isSafari && !!browserVersion && browserVersion < 17.5;
+    }
+
     /**
      * @hidden
      */
@@ -192,7 +201,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         private elementRef: ElementRef,
         private cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() private navigationService: IgxNavigationService) {
+        @Optional() private navigationService: IgxNavigationService,
+        @Optional() private platform?: PlatformUtil
+    ) {
     }
 
     /**
@@ -308,10 +319,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Offsets the content along the corresponding axis by the provided amount
+     * Offsets the content along the corresponding axis by the provided amount with optional
+     * offsetMode that determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set
      */
-    public setOffset(deltaX: number, deltaY: number) {
-        this.overlayService.setOffset(this._overlayId, deltaX, deltaY);
+    public setOffset(deltaX: number, deltaY: number, offsetMode?: OffsetMode) {
+        this.overlayService.setOffset(this._overlayId, deltaX, deltaY, offsetMode);
     }
 
     /**
@@ -376,7 +388,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
                 //  in case event is not canceled this will close the toggle and we need to unsubscribe.
                 //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
-                //  onClosed was fired we will end with calling onClosing more than once
+                //  closed was fired we will end with calling closing more than once
                 if (!e.cancel) {
                     this.clearSubscription(this._overlayClosingSub);
                 }
