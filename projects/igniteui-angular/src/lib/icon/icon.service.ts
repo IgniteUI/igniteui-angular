@@ -116,7 +116,7 @@ export class IgxIconService {
      * ```typescript
      *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
-     * @deprecated Use `setFamily` instead.
+     * @deprecated in version 18.1.0. Use `setFamily` instead.
      */
     public registerFamilyAlias(
         alias: string,
