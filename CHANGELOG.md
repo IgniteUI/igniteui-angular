@@ -10,6 +10,9 @@ All notable changes for each version of this project will be documented in this 
     - Added `horizontalSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
     - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
     - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
+- `IgxIcon`, `IgxIconService`
+    - You can now register icons by reference via the `IgxIconService`. To learn more check out the [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-service).
+    - All components now use icons by reference internally so that it's easy to replace them without explicitly providing custom templates.
 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
