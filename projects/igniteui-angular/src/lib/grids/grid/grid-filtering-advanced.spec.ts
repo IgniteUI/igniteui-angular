@@ -3040,7 +3040,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
 
