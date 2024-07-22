@@ -250,9 +250,9 @@ export class IgxIconService {
 
             if (!this.isSvgIconCached(name, family)) {
                 this._families.set(family, { className: family, type: "svg" });
+
                 this.fetchSvg(url).subscribe((res) => {
                     this.cacheSvgIcon(name, res, family, stripMeta);
-                    this._iconLoaded.next({ name, value: res, family });
                 });
             }
         } else {
@@ -343,6 +343,7 @@ export class IgxIconService {
 
             if (!this._cachedIcons.has(family)) {
                 this._cachedIcons.set(family, new Map<string, SafeHtml>());
+                this._iconLoaded.next({ name, value, family });
             }
 
             if (svg) {
