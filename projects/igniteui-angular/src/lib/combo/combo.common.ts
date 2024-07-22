@@ -974,8 +974,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
     private _icons = [
         {
-            name: 'expand',
-            family: 'combo',
+            name: 'input_expand',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_more',
@@ -988,8 +988,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'collapse',
-            family: 'combo',
+            name: 'input_collapse',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_less',
@@ -1017,7 +1017,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         },
         {
             name: 'case-sensitive',
-            family: 'combo',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'case-sensitive',
@@ -1200,7 +1200,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        return this.dropdown.collapsed ? 'expand' : 'collapse';
+        return this.dropdown.collapsed ? 'input_expand' : 'input_collapse';
     }
 
     /** @hidden @internal */
