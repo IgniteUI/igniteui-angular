@@ -50,26 +50,6 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
         this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
             this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
         });
-        this.grid?.filteringExpressionsTreeChange.subscribe(() => {
-            if (this.grid.advancedFilteringExpressionsTree) {
-                const dataKeys = Object.keys(this.grid.data[0]);
-                const filteringOperands = this.grid.advancedFilteringExpressionsTree.filteringOperands;
-
-                const allOperandsPresent = filteringOperands.every(operand => {
-                    if (operand instanceof FilteringExpressionsTree) {
-                        // Recursively check nested filtering trees
-                        return this.checkFilteringOperands(operand, dataKeys);
-                    } else {
-                        return dataKeys.includes(operand.fieldName);
-                    }
-                });
-
-                if (!allOperandsPresent) {
-                    this.grid.advancedFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-                    this.numberOfColumns = 0;
-                }
-            }
-        });
     }
 
     /**
@@ -90,16 +70,5 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
             }
         });
         return [...new Set(columnNames)];
-    }
-
-    private checkFilteringOperands(filteringTree: FilteringExpressionsTree, dataKeys: string[]): boolean {
-        return filteringTree.filteringOperands.every(operand => {
-            if (operand instanceof FilteringExpressionsTree) {
-                // Recursively check nested filtering trees
-                return this.checkFilteringOperands(operand, dataKeys);
-            } else {
-                return dataKeys.includes(operand.fieldName);
-            }
-        });
     }
 }
