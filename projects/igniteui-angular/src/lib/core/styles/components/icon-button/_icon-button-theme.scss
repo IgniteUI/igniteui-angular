@@ -193,7 +193,7 @@
             font-size: var(--igx-icon-size, #{$icon-in-button-size});
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             transition: color .15s ease-out, background .15s ease-out;
 
             &::after {
@@ -207,11 +207,11 @@
             }
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             transition: box-shadow .15s ease-out, color .15s ease-out, background .15s ease-out;
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             transition: color .15s ease-in-out, box-shadow .15s ease-in-out, background .15s ease-in-out, border-color .15s ease-in-out;
         }
     }
@@ -230,7 +230,7 @@
             color: var-get($flat-theme, 'hover-foreground');
         }
 
-        @if ($variant == 'material') {
+        @if $variant == 'material' {
             &:active {
                 background: var-get($flat-theme, 'focus-background');
                 color: var-get($flat-theme, 'focus-foreground');
@@ -257,17 +257,17 @@
             color: var-get($flat-theme, 'active-foreground');
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             &::after {
                 box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-border-color');
             }
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             border-color: var-get($flat-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'focus-border-color');
         }
@@ -287,7 +287,7 @@
             color: var-get($contained-theme, 'hover-foreground');
         }
 
-        @if ($variant == 'material') {
+        @if $variant == 'material' {
             &:active {
                 background: var-get($contained-theme, 'focus-background');
                 color: var-get($contained-theme, 'focus-foreground');
@@ -304,7 +304,7 @@
         background: var-get($contained-theme, 'focus-background');
         color: var-get($contained-theme, 'focus-foreground');
 
-        @if ($variant != 'fluent') {
+        @if $variant != 'fluent' {
             border-color: var-get($contained-theme, 'focus-border-color');
         }
 
@@ -318,17 +318,17 @@
             color: var-get($contained-theme, 'active-foreground');
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             &::after {
                 box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-border-color');
             }
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             box-shadow: 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color');
         }
-        
-        @if ($variant == 'indigo-design') {
+
+        @if $variant == 'indigo-design' {
             border-color: var-get($contained-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'focus-border-color');
         }
@@ -343,7 +343,7 @@
         border: rem(1px) solid var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             border-width: rem(2px);
 
             &:hover,
@@ -356,12 +356,12 @@
             background: var-get($outlined-theme, 'hover-background');
             color: var-get($outlined-theme, 'hover-foreground');
 
-            @if ($variant == 'bootstrap') {
+            @if $variant == 'bootstrap' {
                 border-color: var-get($outlined-theme, 'hover-background');
             }
         }
 
-        @if ($variant == 'material') {
+        @if $variant == 'material' {
             border: none;
 
             &::after {
@@ -382,7 +382,7 @@
                 background: var-get($outlined-theme, 'active-background');
                 color: var-get($outlined-theme, 'active-foreground');
 
-                @if ($variant == 'bootstrap') {
+                @if $variant == 'bootstrap' {
                     border-color: var-get($outlined-theme, 'focus-border-color');
                 }
             }
@@ -393,7 +393,7 @@
         background: var-get($outlined-theme, 'focus-background');
         color: var-get($outlined-theme, 'focus-foreground');
 
-        @if ($variant == 'material') {
+        @if $variant == 'material' {
             border: none;
 
             &::after {
@@ -401,15 +401,15 @@
             }
         }
 
-        @if ($variant != 'bootstrap') {
+        @if $variant != 'bootstrap' {
             border-color: var-get($outlined-theme, 'focus-border-color');
         }
-        
+
         &:hover {
             background: var-get($contained-theme, 'focus-hover-background');
             color: var-get($contained-theme, 'focus-hover-foreground');
 
-            @if ($variant == 'bootstrap') {
+            @if $variant == 'bootstrap' {
                 border-color: var-get($outlined-theme, 'focus-hover-background');
             }
         }
@@ -418,12 +418,12 @@
             background: var-get($outlined-theme, 'active-background');
             color: var-get($outlined-theme, 'active-foreground');
 
-            @if ($variant == 'bootstrap') {
+            @if $variant == 'bootstrap' {
                 border-color: var-get($outlined-theme, 'focus-border-color');
             }
         }
 
-        @if ($variant == 'fluent') {
+        @if $variant == 'fluent' {
             border: rem(1px) solid var-get($outlined-theme, 'border-color');
 
             &::after {
@@ -431,11 +431,11 @@
             }
         }
 
-        @if ($variant == 'bootstrap') {
+        @if $variant == 'bootstrap' {
             box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
         }
 
-        @if ($variant == 'indigo-design') {
+        @if $variant == 'indigo-design' {
             border-color: var-get($outlined-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'focus-border-color');
 

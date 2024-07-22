@@ -44,6 +44,7 @@ export interface IPivotConfigurationChangedEventArgs {
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
 export interface IPivotDimensionStrategy {
+    /* blazorCSSuppress */
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],
@@ -57,6 +58,7 @@ export interface IPivotDimensionStrategy {
 */
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
+/* marshalByValue */
 /**
 * Interface describing a IPivotAggregator class.
 * Used for specifying custom aggregator lists.
@@ -71,6 +73,9 @@ export interface IPivotAggregator {
      * If not set will use the specified aggregator function.
      */
     aggregatorName?: PivotAggregationType;
+
+    /* blazorAlternateType: AggregatorEventHandler */
+    /* blazorOnlyScript */
     /**
      * Aggregator function can be a custom implementation of `PivotAggregation`, or
      * use predefined ones from `IgxPivotAggregate` and its variants.
@@ -78,6 +83,8 @@ export interface IPivotAggregator {
     aggregator?: (members: any[], data?: any[]) => any;
 }
 
+/* marshalByValue */
+/* tsPlainInterface */
 /**
 * Configuration of the pivot grid.
 */
@@ -98,6 +105,8 @@ export interface IPivotConfiguration {
     pivotKeys?: IPivotKeys;
 }
 
+/* blazorElement */
+/* marshalByValue */
 /**
 * Configuration of a pivot dimension.
 */
@@ -106,6 +115,9 @@ export interface IPivotDimension {
     childLevel?: IPivotDimension;
     /** Field name to use in order to extract value. */
     memberName: string;
+
+    /* csTreatAsEvent: MemberFunctionHandler */
+    /* blazorOnlyScript */
     /** Function that extracts the value */
     memberFunction?: (data: any) => any;
     /** Display name to show instead of the field name of this value. **/
@@ -130,9 +142,12 @@ export interface IPivotDimension {
     width?: string;
     /** Level of the dimension. */
     level?: number;
-    /** hidden */
+    /** @hidden @internal */
     autoWidth?: number;
+    horizontalSummary? : boolean;
 }
+
+/* marshalByValue */
 /**
 * Configuration of a pivot value aggregation.
 */
@@ -155,6 +170,9 @@ export interface IPivotValue {
     styles?: any;
     /** Enables a data type specific template of the cells */
     dataType?: GridColumnDataType;
+
+    /* csTreatAsEvent: PivotValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /** Applies display format to cell values. */
     formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
 }
@@ -164,6 +182,7 @@ export interface IPivotValue {
 */
 export interface IPivotGridColumn {
         field: string,
+        /* blazorSuppress */
         /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
         dimensionValues: Map<string, string>;
         /** List of dimensions associated with the column.**/
@@ -171,6 +190,7 @@ export interface IPivotGridColumn {
         value: IPivotValue
 }
 
+/* marshalByValue */
 /** Interface describing the Pivot data keys used for data generation.
 *  Can be used for custom remote scenarios where the data is pre-populated.
 */
@@ -189,6 +209,7 @@ export interface IPivotKeys {
     rowDimensionSeparator: string;
 }
 
+/* mustCoerceToInt */
 /** The dimension types - Row, Column or Filter. */
 export enum PivotDimensionType {
     Row,
@@ -196,9 +217,22 @@ export enum PivotDimensionType {
     Filter
 }
 
+
+export enum PivotRowLayoutType {
+    Vertical = "vertical",
+    Horizontal = "horizontal"
+}
+
+export enum PivotSummaryPosition {
+    Top = "top",
+    Bottom = "bottom"
+}
+
 export interface IPivotUISettings {
     showConfiguration?: boolean;
     showRowHeaders?: boolean;
+    rowLayout?: PivotRowLayoutType;
+    horizontalSummariesPosition?: PivotSummaryPosition;
 }
 
 export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
@@ -225,11 +259,19 @@ export interface PivotRowHeaderGroupType {
     grid: any;
 }
 
+export interface DimensionValueType {
+    value: string;
+    children: Map<string, string | DimensionValueType>;
+}
+
 export interface IPivotGridRecord {
+    /* blazorSuppress */
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
+    /* blazorSuppress */
     /** Gets/Sets the aggregation value associated with the value path. Value path depends on configured column dimension hierarchy and values.**/
     aggregationValues: Map<string, any>;
+    /* blazorSuppress */
     /** List of children records in case any row dimension member contain a hierarchy. Each dimension member contains its own hierarchy, which you can get by its memberName. **/
     children?: Map<string, IPivotGridRecord[]>;
     /** List of original data records associated with the current pivoted data. **/
@@ -238,11 +280,26 @@ export interface IPivotGridRecord {
     level?: number;
     /** List of dimensions associated with the record.**/
     dimensions: IPivotDimension[];
+    /** If set, it specifies the name of the dimension, that has total record enabled. */
+    totalRecordDimensionName?: string;
+    /** The index of the record in the total view */
+    dataIndex?: number;
 }
 
 export interface IPivotGridGroupRecord extends IPivotGridRecord {
     height?: number;
     rowSpan?: number;
+}
+
+export interface IPivotGridHorizontalGroup {
+    value?: string;
+    rootDimension?: IPivotDimension;
+    dimensions?: IPivotDimension[];
+    records?: IPivotGridRecord[];
+    rowStart?: number;
+    rowSpan?: number;
+    colStart?: number;
+    colSpan?: number;
 }
 
 export interface IgxPivotGridValueTemplateContext {

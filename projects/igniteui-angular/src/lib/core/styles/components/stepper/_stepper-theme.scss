@@ -11,6 +11,7 @@
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $content-foreground [null] - The foreground of the step content.
 /// @param {Color} $step-background [null] - The background of the step header.
 /// @param {Color} $step-hover-background [null] - The background of the step header on hover.
 /// @param {Color} $step-focus-background [null] - The background of the step header on focus.
@@ -85,6 +86,8 @@
 ///   @include css-vars($my-stepper-theme);
 @function stepper-theme(
     $schema: $light-material-schema,
+
+    $content-foreground: null,
 
     $step-background: null,
     $step-hover-background: null,
@@ -241,6 +244,8 @@
         name: $name,
         selector: $selector,
 
+        content-foreground: $content-foreground,
+
         // Incomplete
         step-background: $step-background,
         step-hover-background: $step-hover-background,
@@ -334,12 +339,7 @@
         indigo-design: rem(24px)
     ), $variant);
 
-    $step-header-padding: map.get((
-        material: rem(24px),
-        fluent: rem(8px),
-        bootstrap: rem(24px),
-        indigo-design: rem(16px)
-    ), $variant);
+    $step-header-padding: rem(8px);
 
     $step-header-padding-simple: map.get((
         material: rem(8px),
@@ -348,7 +348,6 @@
         indigo-design: rem(8px)
     ), $variant);
 
-    $step-body-padding: rem(16px);
     $title-gap: rem(8px);
     $indicator-gap: rem(4px);
     $indicator-padding: rem(2px);
@@ -366,7 +365,7 @@
         material: rem(1px),
         fluent: rem(1px),
         bootstrap: rem(8px),
-        indigo-design: rem(2px)
+        indigo-design: rem(1px)
     ), $variant);
 
     $separator-title-top: calc(100% - ((#{$indicator-size} / 2) + #{$step-header-padding} + (#{$separator-size} / 2)));
@@ -392,6 +391,7 @@
     }
 
     %igx-stepper__body {
+        color: var-get($theme, 'content-foreground');
         position: relative;
         flex-direction: column;
         flex: 1 1 auto;
@@ -525,18 +525,24 @@
         background: var-get($theme, 'indicator-background');
         box-shadow: 0 0 0 $outline-width var-get($theme, 'indicator-outline');
 
-        @if $variant != 'bootstrap' {
+        @if $variant == 'bootstrap' {
+            > igx-icon {
+                width: var(--igx-icon-size, #{rem(18px)});
+                height: var(--igx-icon-size, #{rem(18px)});
+                font-size: var(--igx-icon-size, #{rem(18px)});
+            }
+        } @else if $variant == 'indigo-design' {
+            > igx-icon {
+                width: var(--igx-icon-size, #{rem(14px)});
+                height: var(--igx-icon-size, #{rem(14px)});
+                font-size: var(--igx-icon-size, #{rem(14px)});
+            }
+        } @else {
             > igx-icon {
                 width: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 height: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 font-size: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
-            }
-        } @else if $variant == 'bootstrap' {
-            > igx-icon {
-                width: var(--igx-icon-size, #{rem(18px)});
-                height: var(--igx-icon-size, #{rem(18px)});
-                font-size: var(--igx-icon-size, #{rem(18px)});
             }
         }
 
@@ -559,6 +565,12 @@
         }
 
         %igx-stepper__step-title {
+            @if $variant == 'indigo-design' {
+                /* stylelint-disable scss/at-extend-no-missing-placeholder */
+                @extend .ig-typography__subtitle-2;
+                /* stylelint-enable scss/at-extend-no-missing-placeholder */
+            }
+
             color: var-get($theme, 'current-title-color');
         }
 
@@ -643,7 +655,7 @@
 
     %igx-stepper__step-content-wrapper,
     %igx-stepper__body-content {
-        padding: $step-body-padding;
+        padding: rem(16px);
     }
 
     %igx-stepper__body-content--active {
@@ -654,7 +666,7 @@
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
         position: relative;
-        min-height: rem(32px);
+        min-height: if($variant == 'indigo-design', rem(24px), rem(32px));
 
         &::before {
             content: '';
@@ -663,7 +675,28 @@
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
-            border-inline-start: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+            border-inline-start: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
+        }
+    }
+
+    [aria-selected='true'] {
+        %igx-stepper__step-content-wrapper {
+            padding-inline-start: $v-line-indent;
+        }
+    }
+
+    @if $variant == 'indigo-design' {
+        [aria-selected='true'] {
+            %igx-stepper__step-content-wrapper {
+                padding-block: rem(16px);
+                padding-inline-end: rem(16px);
+            }
+        }
+
+        [aria-selected='false'] {
+            %igx-stepper__step-content-wrapper {
+                padding-block: 0;
+            }
         }
     }
 
@@ -718,7 +751,7 @@
 
             &::after {
                 border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
             }
         }
 
@@ -752,7 +785,7 @@
 
         %igx-stepper__step-content-wrapper {
             &::before {
-                border-inline-start-style: unquote(var-get($theme, 'complete-step-separator-style'));
+                border-inline-start-style: var-get($theme, 'complete-step-separator-style');
                 border-inline-start-color: var-get($theme, 'complete-step-separator-color');
             }
         }
@@ -761,13 +794,13 @@
     %igx-stepper__step--completed + %igx-stepper__step {
         &::before {
             border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-            border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+            border-top-style: var-get($theme, 'complete-step-separator-style') !important;
         }
 
         %igx-stepper__step-header {
             &::before {
                 border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: unquote(var-get($theme, 'complete-step-separator-style')) !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
             }
         }
     }
@@ -802,18 +835,18 @@
             &::before {
                 content: '';
                 width: auto;
-                min-width: rem(10px);
+                min-width: if($variant == 'indigo-design', rem(40px), rem(10px));
                 height: $separator-size;
                 flex: 1;
                 position: relative;
                 z-index: -1;
                 top: $separator-title-bottom;
-                border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
             }
 
             &:first-of-type {
                 flex-grow: 0;
-                min-width: 0;
+                min-width: fit-content;
 
                 &::before {
                     display: none;
@@ -836,7 +869,7 @@
                 width: calc(50% - (#{$indicator-size} - #{$indicator-gap}));
                 top: $separator-title-bottom;
                 flex: 1;
-                border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
             }
 
             &::before {
@@ -885,7 +918,7 @@
 
             &%igx-stepper__step {
                 &::before {
-                    border-top: $separator-size unquote(var-get($theme, 'step-separator-style')) var-get($theme, 'step-separator-color');
+                    border-top: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
                     top: $separator-title-top;
                 }
             }
@@ -968,11 +1001,22 @@
 @mixin stepper-typography(
     $categories: (
         title: 'body-2',
-        subtitle: 'caption'
+        subtitle: 'caption',
+        indicator: 'caption',
+        body-content: 'body-2'
     )
 ) {
     $title: map.get($categories, 'title');
     $subtitle: map.get($categories, 'subtitle');
+    $indicator: map.get($categories, 'indicator');
+    $body-content: map.get($categories, 'body-content');
+
+    %igx-stepper__step-indicator {
+        @include type-style($indicator) {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
 
     %igx-stepper__step-title {
         @include type-style($title) {
@@ -991,6 +1035,14 @@
     %igx-stepper__step-header--current {
         %igx-stepper__step-title {
             font-weight: 600;
+        }
+    }
+
+    %igx-stepper__step-content-wrapper,
+    %igx-stepper__body-content {
+        @include type-style($body-content) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }
