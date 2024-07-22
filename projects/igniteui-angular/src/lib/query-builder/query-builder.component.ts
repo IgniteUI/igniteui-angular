@@ -658,7 +658,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                 this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
-            input.focus();
+            requestAnimationFrame(() => input.focus());
         }
     }
 
