@@ -320,8 +320,8 @@ Default Component Icons:
 | default     | table_rows     | material      | table_rows           | Grid                                                    | All                       |
 | default     | view_column    | material      | view_column          | Grid                                                    | All                       |
 | default     | functions      | material      | functions            | Grid, Pivot Data Selector                               | All                       |
-| default       | input_expand   | material      | expand_more          | Combo, Simple Combo, Select                             | Material                  |
-| default       | input_collapse | material      | expand_less          | Combo, Simple Combo, Select                             | Material                  |
+| default     | input_expand   | material      | expand_more          | Combo, Simple Combo, Select                             | Material                  |
+| default     | input_collapse | material      | expand_less          | Combo, Simple Combo, Select                             | Material                  |
 | default     | input_expand   | material      | arrow_drop_down      | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
 | default     | input_collapse | material      | arrow_drop_up        | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
 | default     | case-sensitive | imx-icons     | case-sensitive       | Combo, Simple Combo                                     | All                       |
