@@ -26,6 +26,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
 import { IgxIconService } from '../icon/icon.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 
 @Component({
     selector: 'igx-input-group',
@@ -216,10 +217,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         private themeService: ThemeService,
         private iconService?: IgxIconService
     ) {
+        const indigoClear = IndigoIcons.get('clear');
+
         this.theme = this.themeService.theme;
+        this.iconService.addSvgIconFromText(indigoClear.name, indigoClear.value, indigoClear.fontSet);
         this.iconService.addIconRef('clear', 'default', {
             name: 'clear',
-            family: 'material',
+            family: this.theme,
         });
     }
 

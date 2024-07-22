@@ -20,6 +20,8 @@ import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { NgIf } from '@angular/common';
 
 export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
@@ -65,7 +67,7 @@ let nextId = 0;
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
     standalone: true,
-    imports: [IgxRippleDirective]
+    imports: [IgxRippleDirective, NgIf]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
 
@@ -428,11 +430,20 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      */
     private _required = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    protected theme: IgxTheme = 'material';
+
     constructor(
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
+        protected themeService: ThemeService,
         @Optional() @Self() public ngControl: NgControl,
     ) {
+        this.theme = this.themeService?.theme;
+
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }

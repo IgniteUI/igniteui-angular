@@ -82,6 +82,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxIconService } from '../../icon/icon.service';
+import { ThemeService } from '../../services/theme/theme.service';
 
 let NEXT_ID = 0;
 
@@ -471,7 +472,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
+        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService,
+        @Optional() @Inject(ThemeService) protected override themeService?: ThemeService
     ) {
         super(
             validationService,
@@ -495,7 +497,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             localeId,
             platform,
             _diTransactions,
-            iconService
+            iconService,
+            themeService
         );
     }
 

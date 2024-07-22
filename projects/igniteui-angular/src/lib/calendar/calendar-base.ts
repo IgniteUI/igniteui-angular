@@ -12,6 +12,8 @@ import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 import { IgxIconService } from '../icon/icon.service';
+import { ThemeService } from '../services/theme/theme.service';
+import { IndigoIcons } from '../icon/icons.indigo';
 
 /** @hidden @internal */
 @Directive({
@@ -244,19 +246,31 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         {
             family: 'default',
             name: 'arrow_next',
-            ref: {
-                name: 'keyboard_arrow_right',
-                family: 'material',
-            }
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_right',
+                    family: 'indigo'
+                },
+                'default': {
+                    name: 'keyboard_arrow_right',
+                    family: 'material',
+                }
+            }))
         },
         {
             family: 'default',
             name: 'arrow_prev',
-            ref: {
-                name: 'keyboard_arrow_left',
-                family: 'material',
-            }
-        }
+            ref: new Map(Object.entries({
+                'indigo': {
+                    name: 'chevron_left',
+                    family: 'indigo'
+                },
+                'default': {
+                    name: 'keyboard_arrow_left',
+                    family: 'material',
+                }
+            }))
+        },
     ];
 
     /**
@@ -676,12 +690,31 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected keyboardNavigation?: KeyboardNavigationService,
         protected cdr?: ChangeDetectorRef,
         protected iconService?: IgxIconService,
+        protected themeService?: ThemeService
     ) {
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
 
+        for (const icon of [IndigoIcons.get('chevron_left'), IndigoIcons.get('chevron_right')]) {
+            this.iconService?.addSvgIconFromText(icon.name, icon.value, icon.fontSet);
+        }
+
         for (const icon of this._icons) {
-            this.iconService?.addIconRef(icon.name, icon.family, icon.ref);
+            switch(this.themeService?.theme) {
+                case 'indigo':
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('indigo'),
+                    );
+                    break;
+                default:
+                    this.iconService?.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('default')
+                    );
+            }
         }
 
         this.initFormatters();

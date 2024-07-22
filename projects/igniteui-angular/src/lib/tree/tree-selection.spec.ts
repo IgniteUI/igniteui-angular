@@ -554,7 +554,7 @@ describe('IgxTree - Selection #treeView', () => {
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const navService = new IgxTreeNavigationService(treeService, selectionService);
-        const tree = new IgxTreeComponent(navService, selectionService, treeService, null);
+        const tree = new IgxTreeComponent(navService, selectionService, treeService, null, null);
 
         beforeEach(() => {
             mockNodes = TreeTestFunctions.createNodeSpies(0, 5);
