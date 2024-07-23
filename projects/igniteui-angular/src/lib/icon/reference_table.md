@@ -274,54 +274,50 @@ Default Component Icons:
   - keyboard_arrow_right
   - keyboard_arrow_down
 
-
-| Icon Family | Icon Name      | Target Family | Target Name          | Used By                                                 | Theme                     |
-|-------------|----------------|---------------|----------------------|---------------------------------------------------------|---------------------------|
-| default     | more_vert      | material      | more_vert            | Action Strip, Grid                                      | All                       |
-| default     | expand         | material      | expand_more          | Grid, Expansion Panel, Filtering Row                    | All                       |
-| default     | collapse       | material      | expand_less          | Grid, Expansion Panel                                   | All                       |
-| default     | arrow_next     | material      | keyboard_arrow_right | Month Picker, Calendar                                  | All                       |
-| default     | arrow_prev     | material      | keyboard_arrow_left  | Month Picker, Calendar                                  | All                       |
-| default     | carousel_next  | material      | keyboard_arrow_right | Carousel                                                | Indigo                    |
-| default     | carousel_prev  | material      | keyboard_arrow_left  | Carousel                                                | Indigo                    |
-| default     | carousel_next  | material      | arrow_forward        | Carousel                                                | Material                  |
-| default     | carousel_prev  | material      | arrow_back           | Carousel                                                | Material                  |
-| default     | next           | material      | navigate_next        | Grid, Tabs                                              | Indigo                    |
-| default     | prev           | material      | navigate_before      | Grid, Tabs                                              | Indigo                    |
-| default     | next           | material      | navigate_next        | Filtering Row                                           | All                       |
-| default     | prev           | material      | navigate_before      | Filtering Row                                           | All                       |
-| default     | selected       | material      | done                 | Grid, Chip, Filtering Row                               | All                       |
-| default     | remove         | material      | cancel               | Grid, Chip                                              | All                       |
-| default     | clear          | material      | cancel               | Combo, Simple Combo, Time Picker, Date Picker           | Material                  |
-| default     | clear          | material      | clear                | Combo, Simple Combo, Time Picker, Date Picker           | Indigo, Fluent, Bootstrap |
-| default     | clear          | material      | clear                | Grid, Input Group, Excel Style Filtering, Filtering Row | All                       |
-| default     | clock          | material      | access_time          | Time Picker                                             | All                       |
-| default     | filter_list    | material      | filter_list          | Grid, Filtering Cell, Excel Style Filtering             | All                       |
-| default     | add            | material      | add                  | Grid, Query Builder, Excel Style Filtering              | All                       |
-| default     | close          | material      | close                | Grid, Query Builder, Filtering Row                      | All                       |
-| default     | check          | material      | check                | Grid, Query Builder                                     | All                       |
-| default     | delete         | material      | delete               | Grid, Query Builder                                     | All                       |
-| default     | edit           | material      | edit                 | Grid, Query Builder                                     | All                       |
-| default     | first_page     | material      | first_page           | Grid, Paginator                                         | All                       |
-| default     | last_page      | material      | last_page            | Grid, Paginator                                         | All                       |
-| default     | chevron_left   | material      | chevron_left         | Grid, Paginator                                         | All                       |
-| default     | chevron_right  | material      | chevron_right        | Grid, Paginator, Excel Style Filtering, TreeNode        | All                       |
-| default     | refresh        | material      | refresh              | Grid, Filtering Row                                     | All                       |
-| default     | visibility     | material      | visibility           | Grid, Excel Style Filtering                             | All                       |
-| default     | visibility_off | material      | visibility_off       | Grid, Excel Style Filtering                             | All                       |
-| default     | arrow_back     | material      | arrow_back           | Grid, Excel Style Filtering                             | All                       |
-| default     | arrow_forward  | material      | arrow_forward        | Grid, Excel Style Filtering                             | All                       |
-| default     | arrow_upward   | material      | arrow_upward         | Grid, Excel Style Filtering                             | All                       |
-| default     | arrow_downward | material      | arrow_downward       | Grid, Excel Style Filtering                             | All                       |
-| default     | today          | material      | today                | Date Picker                                             | All                       |
-| default     | date_range     | material      | date_range           | Date Range Picker                                       | All                       |
-| default     | expand         | material      | arrow_drop_down      | Grid, TreeNode                                          | All                       |
-| default     | import_export  | material      | import_export        | Grid                                                    | All                       |
-| default     | table_rows     | material      | table_rows           | Grid                                                    | All                       |
-| default     | view_column    | material      | view_column          | Grid                                                    | All                       |
-| default     | functions      | material      | functions            | Grid, Pivot Data Selector                               | All                       |
-| default     | input_expand   | material      | expand_more          | Combo, Simple Combo, Select                             | Material                  |
-| default     | input_collapse | material      | expand_less          | Combo, Simple Combo, Select                             | Material                  |
-| default     | input_expand   | material      | arrow_drop_down      | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
-| default     | input_collapse | material      | arrow_drop_up        | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap |
-| default     | case-sensitive | imx-icons     | case-sensitive       | Combo, Simple Combo                                     | All                       |
+| Icon Name      | Target Family | Target Name          | Used By                                                 | Theme                       |
+|----------------|---------------|----------------------|---------------------------------------------------------|-----------------------------|
+| add            | material      | add                  | Grid, Query Builder, Excel Style Filtering              | All                         |
+| arrow_next     | material      | keyboard_arrow_right | Month Picker, Calendar                                  | All                         |
+| arrow_prev     | material      | keyboard_arrow_left  | Month Picker, Calendar                                  | All                         |
+| arrow_back     | material      | arrow_back           | Grid, Excel Style Filtering                             | All                         |
+| arrow_forward  | material      | arrow_forward        | Grid, Excel Style Filtering                             | All                         |
+| arrow_upward   | material      | arrow_upward         | Grid, Excel Style Filtering                             | All                         |
+| arrow_downward | material      | arrow_downward       | Grid, Excel Style Filtering                             | All                         |
+| case_sensitive | imx-icons     | case-sensitive       | Combo, Simple Combo                                     | All                         |
+| carousel_next  | material      | keyboard_arrow_right | Carousel                                                | Indigo                      |
+| carousel_prev  | material      | keyboard_arrow_left  | Carousel                                                | Indigo                      |
+| carousel_next  | material      | arrow_forward        | Carousel                                                | Material, Bootstrap, Fluent |
+| carousel_prev  | material      | arrow_back           | Carousel                                                | Material, Bootstrap, Fluent |
+| chevron_left   | material      | chevron_left         | Grid, Paginator, Excel Style Filtering                  | All                         |
+| chevron_right  | material      | chevron_right        | Grid, Paginator, Excel Style Filtering, TreeNode        | All                         |
+| check          | material      | check                | Grid, Query Builder                                     | All                         |
+| close          | material      | close                | Grid, Query Builder, Filtering Row                      | All                         |
+| clear          | material      | clear                | Grid, Input Group, Excel Style Filtering, Filtering Row | All                         |
+| clock          | material      | access_time          | Time Picker                                             | All                         |
+| collapse       | material      | expand_less          | Grid, Expansion Panel                                   | All                         |
+| date_range     | material      | date_range           | Date Range Picker                                       | All                         |
+| delete         | material      | delete               | Grid, Query Builder                                     | All                         |
+| edit           | material      | edit                 | Grid, Query Builder                                     | All                         |
+| expand         | material      | expand_more          | Grid, Expansion Panel, Filtering Row, TreeNode          | All                         |
+| filter_list    | material      | filter_list          | Grid, Filtering Cell, Excel Style Filtering             | All                         |
+| first_page     | material      | first_page           | Grid, Paginator                                         | All                         |
+| functions      | material      | functions            | Grid, Pivot Data Selector                               | All                         |
+| import_export  | material      | import_export        | Grid                                                    | All                         |
+| input_clear    | material      | cancel               | Combo, Simple Combo, Time Picker, Date Picker           | Material                    |
+| input_clear    | material      | clear                | Combo, Simple Combo, Time Picker, Date Picker           | Indigo, Fluent, Bootstrap   |
+| input_expand   | material      | expand_more          | Combo, Simple Combo, Select                             | Material                    |
+| input_collapse | material      | expand_less          | Combo, Simple Combo, Select                             | Material                    |
+| input_expand   | material      | arrow_drop_down      | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap   |
+| input_collapse | material      | arrow_drop_up        | Combo, Simple Combo, Select                             | Indigo, Fluent, Bootstrap   |
+| last_page      | material      | last_page            | Grid, Paginator                                         | All                         |
+| more_vert      | material      | more_vert            | Action Strip, Grid                                      | All                         |
+| next           | material      | navigate_next        | Grid, Tabs, Filtering Row                               | All                         |
+| prev           | material      | navigate_before      | Grid, Tabs, Filtering Row                               | All                         |
+| remove         | material      | cancel               | Grid, Chip                                              | All                         |
+| refresh        | material      | refresh              | Grid, Filtering Row                                     | All                         |
+| selected       | material      | done                 | Grid, Chip, Filtering Row                               | All                         |
+| table_rows     | material      | table_rows           | Grid                                                    | All                         |
+| today          | material      | today                | Date Picker                                             | All                         |
+| view_column    | material      | view_column          | Grid                                                    | All                         |
+| visibility     | material      | visibility           | Grid, Excel Style Filtering                             | All                         |
+| visibility_off | material      | visibility_off       | Grid, Excel Style Filtering                             | All                         |
