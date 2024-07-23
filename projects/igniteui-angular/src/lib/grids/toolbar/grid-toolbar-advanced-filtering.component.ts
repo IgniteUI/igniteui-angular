@@ -49,7 +49,6 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
         });
     }
 
-
     /**
      * @hidden
      */
