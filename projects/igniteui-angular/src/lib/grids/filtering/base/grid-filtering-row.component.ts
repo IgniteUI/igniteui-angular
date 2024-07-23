@@ -81,12 +81,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public get value(): any {
-        return this.expression ? this.expression.searchVal : null;
+        return this._value;
     }
 
     public set value(val) {
         if (!val && val !== 0 && (this.expression.searchVal || this.expression.searchVal === 0)) {
             this.expression.searchVal = null;
+            this._value = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
@@ -106,6 +107,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 return;
             }
 
+            this._value = val;
             this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
@@ -197,6 +199,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private _value = null;
     private _icons = [
         {
             name: 'clear',
@@ -292,6 +295,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
+            this._value = this.expression.searchVal;
         }
 
         this.filteringService.grid.localeChange
@@ -412,9 +416,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
-        if ((eventArgs.data === '-' || eventArgs.data === '+') && this.column.dataType === GridColumnDataType.Number) {
-            return;
-        }
         if (this.column.dataType === GridColumnDataType.DateTime) {
             this.value = eventArgs;
             return;
@@ -518,6 +519,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.removeExpression(indexToDeselect, this.expression);
         }
         this.resetExpression();
+        this._value = this.expression.searchVal;
         this.scrollChipsWhenAddingExpression();
     }
 
@@ -691,7 +693,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-
+            this._value = this.expression.searchVal;
             this.focusEditElement();
         }
     }
