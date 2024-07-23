@@ -30,7 +30,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         'error-A'
     ];
 
-    const hslaColor = 'hsla\\(var\\(--ig-attr(\\d)00\\)\\)';
+    const hslaColor = 'hsla?\\(var\\(--ig-attr(\\d)00\\)\\)';
 
     for (const entryPath of update.sassFiles) {
         let content = host.read(entryPath).toString();
@@ -38,7 +38,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             let prop = hslaColor.replace('attr', color);
             const regex = new RegExp(prop, 'g');
             if (regex.test(content)) {
-                let newColor = prop.replace(/hsla\\\(var\\\(--ig-/g, 'var\(--ig-');
+                let newColor = prop.replace(/hsla\?\\\(var\\\(--ig-/g, 'var\(--ig-');
                 newColor = newColor.replace('(\\d)', '$1');
                 newColor = newColor.replace('\\)\\)', ')');
                 content = content.replace(regex, newColor);
