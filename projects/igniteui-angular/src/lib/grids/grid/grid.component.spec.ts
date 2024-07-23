@@ -26,7 +26,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 
 
@@ -1896,6 +1896,20 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(calcWidth).not.toBe(80);
         });
+
+        it('should correctly autosize column headers inside column groups.', async () => {
+            const fix = TestBed.createComponent(IgxGridColumnHeaderInGroupAutoSizeComponent);
+            const grid = fix.componentInstance.grid;
+            grid.data = [{field1: "Test"}];
+
+            //waiting for reqeustAnimationFrame to finish
+            fix.detectChanges();
+            await wait(17);
+            fix.detectChanges();
+
+            const calcWidth = parseInt(grid.getColumnByName("field1").calcWidth);
+            expect(calcWidth).toBe(126);
+        });
     });
 
     describe('IgxGrid - API methods', () => {
@@ -2960,6 +2974,36 @@ export class IgxGridColumnHeaderAutoSizeComponent {
 
     public gridContainerHidden = true;
 
+}
+
+@Component({
+    template: `
+    <igx-grid #grid>
+    <igx-column-group>
+      <igx-column
+        field="field1"
+        header="Field 1 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field2"
+        header="Field 2 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field3"
+        header="Field 3 Header"
+        width="auto"
+      ></igx-column>
+      </igx-column-group>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+
+})
+export class IgxGridColumnHeaderInGroupAutoSizeComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
 
 @Component({
