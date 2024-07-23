@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
@@ -458,7 +458,8 @@ describe('IgxSimpleCombo', () => {
                     ReactiveFormsModule,
                     FormsModule,
                     IgxSimpleComboSampleComponent,
-                    IgxSimpleComboEmptyComponent
+                    IgxSimpleComboEmptyComponent,
+                    IgxSimpleComboFormControlComponent
                 ]
             }).compileComponents();
         }));
@@ -655,6 +656,31 @@ describe('IgxSimpleCombo', () => {
             }).not.toThrow();
             expect(fixture.componentInstance.combo).toBeDefined();
         });
+        it('should not show clear icon button when no value is selected initially with FormControl', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormControlComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterSelection).not.toBeNull();
+
+            comboComponent.formControl.setValue(null);
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterClearing = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterClearing).toBeNull();
+        }));
     });
 
     describe('Binding tests: ', () => {
@@ -2897,5 +2923,30 @@ export class IgxBottomPositionSimpleComboComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [data]="items" [valueKey]="'id'" [displayKey]="'text'" [formControl]="formControl"></igx-simple-combo>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
+})
+export class IgxSimpleComboFormControlComponent implements OnInit {
+    public items: any[];
+
+    public formControl: FormControl = new FormControl();
+
+    constructor() { }
+
+    public ngOnInit() {
+        this.items = [
+            { id: 1, text: 'Option 1' },
+            { id: 2, text: 'Option 2' },
+            { id: 3, text: 'Option 3' },
+            { id: 4, text: 'Option 4' },
+            { id: 5, text: 'Option 5' }
+        ];
     }
 }
