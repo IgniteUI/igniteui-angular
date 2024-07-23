@@ -919,13 +919,18 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Set input and confirm
             GridFunctions.typeValueInFilterRowInput('-1', fix);
 
-            expect(input.componentInstance.value).toEqual(-1);
+            expect(input.componentInstance.value).toEqual('-1');
             expect(grid.rowList.length).toEqual(1);
 
             GridFunctions.typeValueInFilterRowInput('0', fix);
 
-            expect(input.componentInstance.value).toEqual(0);
+            expect(input.componentInstance.value).toEqual('0');
             expect(grid.rowList.length).toEqual(0);
+
+            GridFunctions.typeValueInFilterRowInput('-0.5', fix);
+
+            expect(input.componentInstance.value).toEqual('-0.5');
+            expect(grid.rowList.length).toEqual(1);
 
             GridFunctions.typeValueInFilterRowInput('', fix);
 
