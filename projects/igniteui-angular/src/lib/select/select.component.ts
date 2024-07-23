@@ -282,8 +282,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _type = null;
     private _icons = [
         {
-            name: 'expand',
-            family: 'combo',
+            name: 'input_expand',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_more',
@@ -296,8 +296,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             }))
         },
         {
-            name: 'collapse',
-            family: 'combo',
+            name: 'input_collapse',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_less',
@@ -604,7 +604,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        return this.collapsed ? 'expand' : 'collapse';
+        return this.collapsed ? 'input_expand' : 'input_collapse';
     }
 
     /**

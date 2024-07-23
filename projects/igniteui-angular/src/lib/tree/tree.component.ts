@@ -336,13 +336,13 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.treeService.register(this);
         this.navService.register(this);
 
-        iconService?.addIconRef('expand', 'tree', {
-            name: 'keyboard_arrow_right',
+        iconService?.addIconRef('chevron_right', 'default', {
+            name: 'chevron_right',
             family: 'material'
         });
 
-        iconService?.addIconRef('collapse', 'tree', {
-            name: 'keyboard_arrow_down',
+        iconService?.addIconRef('expand', 'default', {
+            name: 'expand_more',
             family: 'material'
         });
     }
