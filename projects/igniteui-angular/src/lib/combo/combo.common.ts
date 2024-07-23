@@ -1002,7 +1002,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'clear',
+            name: 'input_clear',
             family: 'default',
             ref: new Map(Object.entries({
                 'material': {
@@ -1016,7 +1016,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'case-sensitive',
+            name: 'case_sensitive',
             family: 'default',
             ref: new Map(Object.entries({
                 'material': {
