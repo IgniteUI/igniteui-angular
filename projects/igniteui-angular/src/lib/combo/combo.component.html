@@ -28,7 +28,7 @@
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate" family="combo" [name]="toggleIcon"></igx-icon>
+        <igx-icon *ngIf="!toggleIconTemplate" family="default" [name]="toggleIcon"></igx-icon>
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down"
@@ -44,7 +44,7 @@
             <igx-suffix *ngIf="showSearchCaseIcon" (click)="toggleCaseSensitive()">
                 <span [ngClass]="filteringOptions.caseSensitive? 'igx-combo__case-icon--active' : 'igx-combo__case-icon'">
                     <igx-icon
-                        family="combo"
+                        family="default"
                         name="case-sensitive"
                         [active]="filteringOptions.caseSensitive">
                     </igx-icon>
