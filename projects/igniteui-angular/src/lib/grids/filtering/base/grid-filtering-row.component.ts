@@ -80,12 +80,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public get value(): any {
-        return this.expression ? this.expression.searchVal : null;
+        return this._value;
     }
 
     public set value(val) {
         if (!val && val !== 0 && (this.expression.searchVal || this.expression.searchVal === 0)) {
             this.expression.searchVal = null;
+            this._value = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
@@ -105,6 +106,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 return;
             }
 
+            this._value = val;
             this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
@@ -196,6 +198,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private _value = null;
 
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
@@ -225,6 +228,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
+            this._value = this.expression.searchVal;
         }
 
         this.filteringService.grid.localeChange
@@ -448,6 +452,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.removeExpression(indexToDeselect, this.expression);
         }
         this.resetExpression();
+        this._value = this.expression.searchVal;
         this.scrollChipsWhenAddingExpression();
     }
 
@@ -621,7 +626,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-
+            this._value = this.expression.searchVal;
             this.focusEditElement();
         }
     }

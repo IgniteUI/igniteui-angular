@@ -72,7 +72,7 @@ export class SampleTestData {
     public static numericData = () => ([
         { Number: -1 },
         { Number: 2.5 },
-        { Number: 35 }
+        { Number: -0.5 }
     ]);
 
     /* Fields: Name: string, Avatar: string; 3 items. */
