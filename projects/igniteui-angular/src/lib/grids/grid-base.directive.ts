@@ -8002,4 +8002,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._pinnedColumns = pinnedColumns;
         this._unpinnedColumns = unpinnedColumns;
     }
+
+    protected shouldRecreateColumns(oldData: any[] | null | undefined, newData: any[] | null | undefined): boolean {
+        if (!oldData || !oldData.length) return true;
+        if (!newData || !newData.length) return false;
+        return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
+    }
 }

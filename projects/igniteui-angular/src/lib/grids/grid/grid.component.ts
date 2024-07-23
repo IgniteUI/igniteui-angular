@@ -404,7 +404,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.validation.updateAll(this._data);
         }
 
-        if (this.autoGenerate && this._data.length > 0 && this.shouldRegenerateColumns(oldData, this._data)) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
 
@@ -1368,11 +1368,5 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             return undefined;
         }
         return val;
-    }
-
-    private shouldRegenerateColumns(oldData: any[] | null | undefined, newData: any[] | null | undefined): boolean {
-        if (!oldData || !oldData.length) return true;
-        if (!newData || !newData.length) return false;
-        return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
     }
 }
