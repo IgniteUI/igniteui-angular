@@ -10,6 +10,14 @@ All notable changes for each version of this project will be documented in this 
     - Added `horizontalSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
     - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
     - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
+- `IgxIcon`, `IgxIconService`
+    - You can now register icons by reference via the `IgxIconService`. To learn more check out the [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-service).
+    - All components now use icons by reference internally so that it's easy to replace them without explicitly providing custom templates.
+    - `registerFamilyAlias` has been deprecated in favor of `setFamily` to allow adding metadata for `type` and `prefix` when registering custom icon families. To migrate from `registerFamilyAlias`, do the following:
+        ```ts
+            this.iconService.registerFamilyAlias('my-family', 'my-family-class');
+            this.iconService.setFamily('my-family', { className: 'my-family-class' });
+        ```
 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
@@ -97,6 +105,7 @@ All notable changes for each version of this project will be documented in this 
     - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. For this reason the event argument of the event is now of type `IGridContextMenuEventArgs` which contains the row object as well as the cell one. The latter will be `null` if the event didn't originate from a cell. **This is not a breaking change** as the new type extends the old.
 - `IgxSimpleCombo`
     - **Behavioral Change** The `selectionChanging` event will now trigger when typing the first character in the input if there is a previously selected value in the `IgxSimpleCombo`.
+    - **Behavioral Change** Updated behavior to maintain the entered text in the input field upon pressing Enter while the combo input is focused, ensuring uninterrupted focus for continuous filtering. Additionally, the dropdown menu now remains open to display filtered results.
 
 ## 17.1.0
 ### New Features

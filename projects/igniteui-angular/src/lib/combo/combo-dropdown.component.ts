@@ -127,6 +127,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public override navigatePrev() {
         if (this._focusedItem && this._focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
+            this.focusedItem = null;
         } else {
             super.navigatePrev();
         }
