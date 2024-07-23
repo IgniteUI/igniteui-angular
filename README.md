@@ -150,16 +150,16 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |13.2.0|25-May-22|[Milestone #21](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-21-version-132-released-may-25th-2022-release-blog-221)|
 |14.0.0|09-Jun-22|[Milestone #22](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-22-version-140-released-june-09th-2022-release-blog-221)|
 |14.1.0|13-Sep-22|[Milestone #23](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-23-version-141-released-september-13th-2022-release-blog-141)|
-|14.2.0|06-Oct-22|[Milestone #24]()|
-|15.0.0|23-Nov-22|[Milestone #25]()|
-|15.1.0|27-Mar-23|[Milestone #26()|
-|16.0.0|15-May-23|[Milestone #27()|
-|16.1.0|02-Oct-23|[Milestone #28()|
-|17.0.0|09-Nov-23|[Milestone #29()|
-|17.1.0|26-Feb-24|[Milestone #30()|
-|17.2.0|29-Apr-24|[Milestone #31]()|
-|18.0.0|07-Jun-24|[Milestone #32]()|
-|18.1.0|22-Jul-24|[Milestone #33]()|
+|14.2.0|06-Oct-22|[Milestone #24](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-24-version-142-released-october-06th-2022-release-blog-222)|
+|15.0.0|23-Nov-22|[Milestone #25](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-25-version-150-released-november-23rd-2022-release-blog-150)|
+|15.1.0|27-Mar-23|[Milestone #26(https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-26-version-151-releasd-march-28th-2023)|
+|16.0.0|15-May-23|[Milestone #27(https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-27-version-160-released-may-15th-2023-release-blog-160)|
+|16.1.0|02-Oct-23|[Milestone #28(https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-28-version-161-released-oct-5th-2023-release-blog-161)|
+|17.0.0|09-Nov-23|[Milestone #29(https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-29-version-170-released-nov-9th-2023-release-blog-170)|
+|17.1.0|26-Feb-24|[Milestone #30(https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-30-version-171-released-feb-26th-2024)|
+|17.2.0|29-Apr-24|[Milestone #31](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-31-version-172-released-apr-29th-2024)|
+|18.0.0|07-Jun-24|[Milestone #32](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-32-version-180-released-jun-07th-2024)|
+|18.1.0|22-Jul-24|[Milestone #33](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-33-due-by-jul-2024)|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
