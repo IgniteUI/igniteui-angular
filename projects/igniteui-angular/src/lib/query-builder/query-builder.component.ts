@@ -20,8 +20,8 @@ import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FieldType } from '../grids/common/grid.interface';
+import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
@@ -37,6 +37,10 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxDropDownComponent } from "../drop-down/drop-down.component";
+import { IgxDropDownItemComponent } from "../drop-down/drop-down-item.component";
+import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -116,7 +120,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
@@ -130,6 +134,29 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      */
     @HostBinding('style.display')
     public display = 'block';
+
+    /**
+    * Returns the entities.
+    */
+    public get entities(): EntityType[] {
+        return this._entities;
+    }
+
+    /**
+     * Sets the entities.
+     */
+    @Input()
+    public set entities(entities: EntityType[]) {
+        this._entities = entities;
+
+        // if (this._entities) {
+            // this.registerSVGIcons();
+            // this._entities.forEach(field => {
+            //     this.setFilters(field);
+            //     this.setFormat(field);
+            // });
+        // }
+    }
 
     /**
     * Returns the fields.
@@ -220,6 +247,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      */
     @Output()
     public expressionTreeChange = new EventEmitter();
+    
+    // @ViewChildren('entitySelect', { read: IgxSelectComponent })
+    // protected entitySelect: QueryList<IgxSelectComponent>;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -347,6 +377,20 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
+    
+    /**
+     * @hidden @internal
+     */
+    public selectedReturnFields: string | string[];
+
+    // /**
+    //  * @hidden @internal
+    //  */
+    // public entitySelectOverlaySettings: OverlaySettings = {
+    //     scrollStrategy: new AbsoluteScrollStrategy(),
+    //     modal: false,
+    //     closeOnOutsideClick: false
+    // };
 
     /**
      * @hidden @internal
@@ -367,6 +411,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     };
 
     private destroy$ = new Subject<any>();
+    private _selectedEntity: EntityType;
     private _selectedField: FieldType;
     private _clickTimer;
     private _dblClickDelay = 200;
@@ -377,6 +422,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
     private _selectedGroups: ExpressionGroupItem[] = [];
+    private _entities: EntityType[];
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
@@ -394,6 +440,13 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         scrollStrategy: new CloseScrollStrategy()
     };
 
+    // private _entitiesOverlaySettings: OverlaySettings = {
+    //     closeOnOutsideClick: true,
+    //     modal: false,
+    //     scrollStrategy: new AbsoluteScrollStrategy(),
+    //     positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+    // };
+
     constructor(public cdr: ChangeDetectorRef,
         protected iconService: IgxIconService,
         protected platform: PlatformUtil,
@@ -407,6 +460,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit(): void {
         this._overlaySettings.outlet = this.overlayOutlet;
+        // this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
     }
@@ -417,6 +471,33 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public set selectedEntity(value: EntityType) {
+        let oldValue = null;
+        if (this.expressionTree) {
+            oldValue = this.expressionTree.entity;
+        }
+        if (this._selectedEntity !== value) {
+            this._selectedEntity = value;
+            this.fields = value ? value.fields : null;
+            if (oldValue && this._selectedEntity /*&& this._selectedEntity !== oldValue*/) {
+                this.selectedField = null;
+                this.selectedCondition = null;
+                this.searchValue = null;
+                this.cdr.detectChanges();
+            }
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedEntity(): EntityType {
+        return this._selectedEntity;
     }
 
     /**
@@ -529,6 +610,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
+        this.expressionTree.entity = this.selectedEntity.name;
+        this.expressionTree.returnFields = this.selectedReturnFields;
         this.expressionTreeChange.emit();
     }
 
@@ -630,7 +713,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
 
         expressionItem.hovered = false;
-
+        if (this.expressionTree) {
+            this._selectedEntity = this.entities.find(entity => entity.name === this.expressionTree.entity);
+            this.selectedReturnFields = this.expressionTree.returnFields;
+        }
+        this.fields = this.selectedEntity ? this.selectedEntity.fields : null;
         this.selectedField = expressionItem.expression.fieldName ?
             this.fields.find(field => field.field === expressionItem.expression.fieldName) : null;
         this.selectedCondition = expressionItem.expression.condition ?
@@ -642,6 +729,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         this.cdr.detectChanges();
 
+        // this.entitySelectOverlaySettings.target = this.entitySelect.element;
+        // this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
+        // this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
         this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
         this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
@@ -900,6 +990,38 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onExpressionTreeEntityChanged(eventArgs: ISelectionEventArgs) {
+        this.selectedEntity = eventArgs.newSelection.value;
+        this.selectedReturnFields = null;
+
+        const entity = this.entities.find(el => el.name === this.selectedEntity.name);
+        this.fields = entity.fields;
+        
+        if (this.expressionTree) {
+            this.expressionTree.entity = this.selectedEntity.name;
+            this.expressionTree.returnFields = null;
+
+            // TODO: reset conditions on entity change
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onExpressionReturnFieldChanged(eventArgs: ISelectionEventArgs) {
+        this.selectedReturnFields = 
+            typeof eventArgs.newSelection.value === 'string' ?
+            eventArgs.newSelection.value :
+            eventArgs.newSelection.value.field;;
+
+        if (this.expressionTree) {
+            this.expressionTree.returnFields = this.selectedReturnFields;
+        }
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
@@ -1005,6 +1127,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
+                    const entity = this.entities.find(el => el.name === expressionTree.entity);
+                    this.fields = entity.fields;
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
@@ -1096,7 +1220,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         const children = expressionItem.parent.children;
         const index = children.indexOf(expressionItem);
         children.splice(index, 1);
-        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
+        const entity = this.expressionTree ? this.expressionTree.entity : null;
+        const returnFields = this.expressionTree ? this.expressionTree.returnFields : null;
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup); // TODO: don't recreate if not necessary
+        this._expressionTree.entity = entity;
+        this._expressionTree.returnFields = returnFields;
 
         if (!children.length) {
             this.deleteItem(expressionItem.parent);

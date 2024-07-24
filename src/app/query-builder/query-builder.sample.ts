@@ -22,55 +22,58 @@ export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
     public queryBuilder: IgxQueryBuilderComponent;
 
+    public entities: Array<any>;
     public fields: Array<any>;
     public displayDensities;
     public expressionTree: IExpressionTree;
 
     public ngOnInit(): void {
-        this.fields = [
-            { field: 'ID', dataType: 'string' },
-            { field: 'CompanyName', dataType: 'string'},
-            { field: 'ContactName', dataType: 'string' },
-            { field: 'Employees', dataType: 'number' },
-            { field: 'ContactTitle', dataType: 'string' },
-            { field: 'DateCreated', dataType: 'date' },
-            { field: 'TimeCreated', dataType: 'time' },
-            { field: 'Address', dataType: 'string' },
-            { field: 'City', dataType: 'string' },
-            { field: 'Region', dataType: 'string' },
-            { field: 'PostalCode', dataType: 'string' },
-            { field: 'Phone', dataType: 'string' },
-            { field: 'Fax', dataType: 'string' },
-            { field: 'Contract', dataType: 'boolean' }
+        this.entities = [
+            { 
+                name: 'Assays', fields: [
+                    { field: 'Id', dataType: 'number' },
+                    { field: 'CompoundId', dataType: 'number' },
+                    { field: 'Name', dataType: 'string' },
+                    { field: 'EndpointName', dataType: 'string' },
+                    { field: 'EndpointValue', dataType: 'string' }
+                ]
+            },
+            {
+                name: 'Compounds', fields: [
+                    { field: 'Id', dataType: 'number' },
+                    { field: 'Structure', dataType: 'string' }
+                ]
+            }
         ];
 
-        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', '*');
         tree.filteringOperands.push({
-            fieldName: 'ID',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'a',
-            ignoreCase: true
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            searchVal: 'Hepacity',
+            // ignoreCase: true
         });
-        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        orTree.filteringOperands.push({
-            fieldName: 'ID',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'b',
-            ignoreCase: true
-        });
-        orTree.filteringOperands.push({
-            fieldName: 'CompanyName',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'c',
-            ignoreCase: true
-        });
-        tree.filteringOperands.push(orTree);
-        tree.filteringOperands.push({
-            fieldName: 'CompanyName',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'd',
-            ignoreCase: true
-        });
+
+        // const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        // orTree.filteringOperands.push({
+        //     fieldName: 'ID',
+        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //     searchVal: 'b',
+        //     ignoreCase: true
+        // });
+        // orTree.filteringOperands.push({
+        //     fieldName: 'CompanyName',
+        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //     searchVal: 'c',
+        //     ignoreCase: true
+        // });
+        // tree.filteringOperands.push(orTree);
+        // tree.filteringOperands.push({
+        //     fieldName: 'CompanyName',
+        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //     searchVal: 'd',
+        //     ignoreCase: true
+        // });
 
         this.expressionTree = tree;
     }

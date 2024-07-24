@@ -11,6 +11,8 @@ export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
     fieldName?: string;
+    entity?: string;
+    returnFields?: string | string[];
 }
 
 /* marshalByValue */
@@ -89,9 +91,15 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public type?: FilteringExpressionsTreeType;
 
-    constructor(operator: FilteringLogic, fieldName?: string) {
+    public entity?: string;
+
+    public returnFields?: string | string[];
+
+    constructor(operator: FilteringLogic, entity?: string, returnFields?: string | string[]) {
         this.operator = operator;
-        this.fieldName = fieldName;
+        this.entity = entity;
+        this.returnFields = returnFields;
+        // this.fieldName = fieldName;
     }
 
 

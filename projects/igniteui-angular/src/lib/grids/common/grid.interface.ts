@@ -1480,3 +1480,11 @@ export interface IClipboardOptions {
      */
     separator: string;
 }
+
+/**
+ * An interface describing entity
+ */
+export interface EntityType {
+    name: string;
+    fields: FieldType[];
+}

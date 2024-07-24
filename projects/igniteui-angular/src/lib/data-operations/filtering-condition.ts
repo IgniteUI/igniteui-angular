@@ -20,10 +20,10 @@ export class IgxFilteringOperand {
             iconName: 'is-not-null',
             logic: (target: any) => target !== null
         }, {
-            name: 'in',
+            name: 'IN',
             isUnary: false,
-            iconName: 'is-in',
-            hidden: true,
+            iconName: 'starts-with',
+            // hidden: true,
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
         }];
     }
