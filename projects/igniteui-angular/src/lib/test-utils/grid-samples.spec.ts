@@ -1769,7 +1769,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         <igx-grid [data]="data">
             <igx-column [editable]="true" field="fullName">
             </igx-column>
-            <igx-column field="age" [editable]="true" [dataType]="'number'">
+            <igx-column field="age" [editable]="true" [dataType]="'number'">   
             </igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
             <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
