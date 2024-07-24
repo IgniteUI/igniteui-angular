@@ -161,7 +161,7 @@ In order to contribute code to a new feature, you need to follow these guideline
 7. Don't forget to make the necessary status updates, as described in the workflow section.
 
 # Breaking changes and migrations
-If the bug fix or new feature development requires changes to released public API or behavior in a way that'll njo longer be compatible with an existing user code base:
+If the bug fix or new feature development requires changes to released public API or behavior in a way that'll no longer be compatible with an existing user code base:
 
 1. Describe in the appropriate section in the [CHANGELOG.md](https://github.com/IgniteUI/igniteui-angular/blob/master/CHANGELOG.md)
 2. Add a `BREAKING CHANGE:` section to the commit message body or footer. See https://www.conventionalcommits.org
