@@ -513,7 +513,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-        /**
+    /**
      * Handles the `selectionChanging` emit and the drop down toggle when selection changes
      *
      * @hidden
