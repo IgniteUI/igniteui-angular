@@ -58,7 +58,10 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
+    constructor(
+        public esf: BaseFilteringComponent,
+        protected platform: PlatformUtil,
+    ) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;
@@ -119,6 +122,14 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public getCondition(value: string): IFilteringOperation {
         return this.esf.column.filters.condition(value);
+    }
+
+    protected getSelectedCondition(condition: string): boolean {
+        const expressions = this.esf.expressionsList;
+        if (expressions.length < 1) {
+            return false;
+        }
+        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
     }
 
     /**

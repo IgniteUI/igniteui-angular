@@ -91,8 +91,17 @@ describe('igxCombo', () => {
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
+
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
@@ -130,8 +139,17 @@ describe('igxCombo', () => {
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
         it('should properly call dropdown methods on toggle', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
+
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'close', 'toggle']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -154,8 +172,16 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBe(false);
         });
         it(`should not focus search input when property autoFocusSearch=false`, () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdownContainer = { nativeElement: { focus: () => { } } };
             combo['dropdownContainer'] = dropdownContainer;
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -174,8 +200,16 @@ describe('igxCombo', () => {
             expect(combo.focusSearchInput).toHaveBeenCalledTimes(1);
         });
         it('should call dropdown toggle with correct overlaySettings', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['toggle']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -193,8 +227,16 @@ describe('igxCombo', () => {
             expect(combo.dropdown.toggle).toHaveBeenCalledWith(expectedSettings);
         });
         it('should properly get/set displayKey', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.valueKey = 'field';
@@ -204,8 +246,16 @@ describe('igxCombo', () => {
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
         });
         it('should properly call "writeValue" method', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
@@ -224,8 +274,16 @@ describe('igxCombo', () => {
         });
         it('should select items through setSelctedItem method', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -271,8 +329,16 @@ describe('igxCombo', () => {
         });
         it('should set selectedItems correctly on selectItems method call', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -302,8 +368,16 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual([]);
         });
         it('should emit owner on `opening` and `closing`', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             spyOn(combo.opening, 'emit').and.callThrough();
@@ -342,8 +416,16 @@ describe('igxCombo', () => {
         });
         it('should fire selectionChanging event on item selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -435,8 +517,16 @@ describe('igxCombo', () => {
         });
         it('should properly emit added and removed values in change event on single value selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -473,8 +563,16 @@ describe('igxCombo', () => {
         });
         it('should properly emit added and removed values in change event on multiple values selection', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -532,8 +630,16 @@ describe('igxCombo', () => {
         });
         it('should handle select/deselect ALL items', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -553,8 +659,16 @@ describe('igxCombo', () => {
         });
         it('should emit onSelectonChange event on select/deselect ALL items method call', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -599,8 +713,16 @@ describe('igxCombo', () => {
         });
         it('should properly handle selection manipulation through selectionChanging emit', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -616,8 +738,16 @@ describe('igxCombo', () => {
             expect(combo.selection).toEqual([]);
         });
         it('should not throw error when setting data to null', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             let errorMessage = '';
@@ -632,8 +762,16 @@ describe('igxCombo', () => {
             expect(combo.data.length).toBe(0);
         });
         it('should not throw error when setting data to undefined', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             let errorMessage = '';
@@ -648,8 +786,16 @@ describe('igxCombo', () => {
             expect(combo.data.length).toBe(0);
         });
         it('should properly handleInputChange', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
@@ -688,8 +834,16 @@ describe('igxCombo', () => {
             expect(combo.searchInputUpdate.emit).toHaveBeenCalledTimes(2);
         });
         it('should be able to cancel searchInputUpdate', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
@@ -705,8 +859,16 @@ describe('igxCombo', () => {
             expect(matchSpy).toHaveBeenCalledTimes(1);
         });
         it('should not open on click if combo is disabled', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'close', 'toggle']);
             const spyObj = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -720,8 +882,16 @@ describe('igxCombo', () => {
         });
         it('should not clear value when combo is disabled', () => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -739,8 +909,16 @@ describe('igxCombo', () => {
 
         it('should allow canceling and overwriting of item addition', fakeAsync(() => {
             const selectionService = new IgxSelectionAPIService();
-            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                selectionService,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             const mockVirtDir = jasmine.createSpyObj('virtDir', ['scrollTo']);
             const mockInput = jasmine.createSpyObj('mockInput', [], {
@@ -838,8 +1016,16 @@ describe('igxCombo', () => {
         }));
 
         it('should delete the selection on destroy', () => {
-            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
-                mockIconService, mockDocument, null, mockInjector);
+            combo = new IgxComboComponent(
+                elementRef,
+                mockCdr,
+                mockSelection as any,
+                mockComboService,
+                mockDocument,
+                null,
+                mockInjector,
+                mockIconService
+            );
             combo.ngOnDestroy();
             expect(mockComboService.clear).toHaveBeenCalled();
             expect(mockSelection.delete).toHaveBeenCalled();

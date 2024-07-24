@@ -2,6 +2,33 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.1.0
+### New Features
+- `IgxPivotGrid`
+    - Added horizontal layout for row dimensions. Can be configured through the `pivotUI` `rowLayout` property.
+    - Added `horizontalSummary` property for each IPivotDimension, enabling summary row when using horizontal layout.
+    - Added `horizontalSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
+    - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
+    - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
+- `IgxIcon`, `IgxIconService`
+    - You can now register icons by reference via the `IgxIconService`. To learn more check out the [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-service).
+    - All components now use icons by reference internally so that it's easy to replace them without explicitly providing custom templates.
+    - `registerFamilyAlias` has been deprecated in favor of `setFamily` to allow adding metadata for `type` and `prefix` when registering custom icon families. To migrate from `registerFamilyAlias`, do the following:
+        ```ts
+            this.iconService.registerFamilyAlias('my-family', 'my-family-class');
+            this.iconService.setFamily('my-family', { className: 'my-family-class' });
+        ```
+
+### General
+- `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
+    - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+    - Several properties have been hidden from the public API, considered internal and not recommended for use. Those include:
+    `filterCell`, `headerCell`, `headerGroup`, `defaultMinWidth`, `gridRowSpan`, `gridColumnSpan` and `cells`.
+- `IgxPaginator`
+    - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
+- `IgxOverlayService`
+    - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
+
 ## 18.0.0
 ### New Features
 - `IgxCombo`, `IgxSimpleCombo`:
@@ -166,7 +193,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-=======
+
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:

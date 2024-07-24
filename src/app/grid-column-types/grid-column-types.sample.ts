@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
-import { FilterMode, IgxButtonGroupComponent, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+import { FilterMode, IgxButtonGroupComponent, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconService } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -57,6 +57,9 @@ export class GridColumnTypesSampleComponent implements OnInit {
         available: true
     }];
 
+    constructor(private _iconService: IgxIconService) {
+    }
+
     public log(event) {
         console.log(event);
     }
@@ -95,7 +98,13 @@ export class GridColumnTypesSampleComponent implements OnInit {
             { field: 'Phone', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string', pinned: false }
         ];
+
+        this._iconService.setIconRef("contains", "default", {
+            family: "fa-solid",
+            name: "fa-car",
+        });
     }
+
 
     public selectDensity(event) {
         this.filterMode = this.filterModes[event.index].label;

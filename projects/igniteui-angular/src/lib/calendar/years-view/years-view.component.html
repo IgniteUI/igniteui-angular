@@ -1,9 +1,9 @@
-<div class="igx-years-view__grid" role="row">
+<div class="igx-calendar-view__items" role="row">
     <span
         igxCalendarYear
         #item="igxCalendarYear"
         *ngFor="let year of range; trackBy: yearTracker"
-        class="igx-years-view__year"
+        class="igx-calendar-view__item"
         role="gridcell"
         [attr.id]="year.getTime()"
         [attr.aria-label]="formattedYear(year).long"
@@ -14,7 +14,7 @@
         [showActive]="showActive"
         (itemSelection)="selectDate($event)"
     >
-        <span class="igx-years-view__year-inner" aria-hidden="true">
+        <span class="igx-calendar-view__item-inner" aria-hidden="true">
             {{ formattedYear(year).formatted }}
         </span>
     </span>

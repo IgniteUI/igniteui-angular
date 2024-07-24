@@ -31,7 +31,7 @@ import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { DOCUMENT, NgIf } from '@angular/common';
-import { ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy } from '../services/public_api';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -250,8 +250,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
-   * @hidden @internal
-   */
+     * @hidden @internal
+     */
     public getDefaultOverlaySettings(): OverlaySettings {
         return {
             closeOnOutsideClick: true,
@@ -519,6 +519,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden
      * @internal
      * @param newSelection
+     * @param emit
      * @param event
      * @param emit
      */

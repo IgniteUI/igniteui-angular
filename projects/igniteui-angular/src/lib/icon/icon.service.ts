@@ -1,9 +1,30 @@
-import { Injectable, SecurityContext, Inject, Optional } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { PlatformUtil } from '../core/utils';
+import { Injectable, SecurityContext, Inject, Optional } from "@angular/core";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { DOCUMENT } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
+import { PlatformUtil } from "../core/utils";
+
+export type IconType = "svg" | "font" | "liga";
+
+export interface IconMeta {
+    name: string;
+    family: string;
+    type?: IconType;
+}
+
+interface FamilyMeta {
+    className: string;
+    type: IconType;
+    prefix?: string;
+}
+
+export interface IconFamily {
+    name: string;
+    meta: FamilyMeta;
+}
+
+export type IconReference = IconMeta & FamilyMeta;
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -12,8 +33,8 @@ import { PlatformUtil } from '../core/utils';
 export interface IgxIconLoadedEvent {
     /** Name of the icon */
     name: string;
-    /** The actual SVG text */
-    value: string;
+    /** The actual SVG text, if any */
+    value?: string;
     /** The font-family for the icon. Defaults to material. */
     family: string;
 }
@@ -26,12 +47,12 @@ export interface IgxIconLoadedEvent {
  *
  * Example:
  * ```typescript
- * this.iconService.registerFamilyAlias('material', 'material-icons');
+ * this.iconService.setFamily('material', { className: 'material-icons', type: 'font' });
  * this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: "root",
 })
 export class IgxIconService {
     /**
@@ -45,9 +66,13 @@ export class IgxIconService {
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
-    private _family = 'material-icons';
-    private _familyAliases = new Map<string, string>();
-    private _cachedSvgIcons = new Map<string, Map<string, SafeHtml>>();
+    private _defaultFamily: IconFamily = {
+        name: "material",
+        meta: { className: "material-icons", type: "liga" },
+    };
+    private _iconRefs = new Map<string, Map<string, IconMeta>>();
+    private _families = new Map<string, FamilyMeta>();
+    private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
 
@@ -55,11 +80,12 @@ export class IgxIconService {
         @Optional() private _sanitizer: DomSanitizer,
         @Optional() private _httpClient: HttpClient,
         @Optional() private _platformUtil: PlatformUtil,
-        @Optional() @Inject(DOCUMENT) private _document: any,
+        @Optional() @Inject(DOCUMENT) protected document: Document,
     ) {
         this.iconLoaded = this._iconLoaded.asObservable();
+        this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
 
-        if(this._platformUtil?.isBrowser) {
+        if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
         }
     }
@@ -70,8 +96,8 @@ export class IgxIconService {
      *   const defaultFamily = this.iconService.defaultFamily;
      * ```
      */
-    public get defaultFamily(): string {
-        return this._family;
+    public get defaultFamily(): IconFamily {
+        return this._defaultFamily;
     }
 
     /**
@@ -80,8 +106,9 @@ export class IgxIconService {
      *   this.iconService.defaultFamily = 'svg-flags';
      * ```
      */
-    public set defaultFamily(className: string) {
-        this._family = className;
+    public set defaultFamily(family: IconFamily) {
+        this._defaultFamily = family;
+        this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
     }
 
     /**
@@ -89,9 +116,14 @@ export class IgxIconService {
      * ```typescript
      *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
+     * @deprecated in version 18.1.0. Use `setFamily` instead.
      */
-    public registerFamilyAlias(alias: string, className: string = alias): this {
-        this._familyAliases.set(alias, className);
+    public registerFamilyAlias(
+        alias: string,
+        className: string = alias,
+        type: IconType = "font",
+    ): this {
+        this.setFamily(alias, { className, type });
         return this;
     }
 
@@ -102,7 +134,88 @@ export class IgxIconService {
      * ```
      */
     public familyClassName(alias: string): string {
-        return this._familyAliases.get(alias) || alias;
+        return this._families.get(alias)?.className || alias;
+    }
+
+    /** @hidden @internal */
+    private familyType(alias: string): IconType {
+        return this._families.get(alias)?.type;
+    }
+
+    /**
+     *  Creates a family to className relationship that is applied to the IgxIconComponent
+     *   whenever that family name is used.
+     * ```typescript
+     *   this.iconService.setFamily('material', { className: 'material-icons', type: 'liga' });
+     * ```
+     */
+    public setFamily(name: string, meta: FamilyMeta) {
+        this._families.set(name, meta);
+    }
+
+    /**
+     *  Adds an icon reference meta for an icon in a meta family.
+     *  Executes only if no icon reference is found.
+     * ```typescript
+     *   this.iconService.addIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
+     * ```
+     */
+    public addIconRef(name: string, family: string, icon: IconMeta) {
+        const iconRef = this._iconRefs.get(family)?.get(name);
+
+        if (!iconRef) {
+            this.setIconRef(name, family, icon);
+        }
+    }
+
+    /**
+     *  Similar to addIconRef, but always sets the icon reference meta for an icon in a meta family.
+     * ```typescript
+     *   this.iconService.setIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
+     * ```
+     */
+    public setIconRef(name: string, family: string, icon: IconMeta) {
+        let familyRef = this._iconRefs.get(family);
+
+        if (!familyRef) {
+            familyRef = new Map<string, IconMeta>();
+            this._iconRefs.set(family, familyRef);
+        }
+
+        const familyType = this.familyType(icon?.family);
+        familyRef.set(name, { ...icon, type: icon.type ?? familyType });
+
+        this._iconLoaded.next({ name, family });
+    }
+
+    /**
+     *  Returns the icon reference meta for an icon in a given family.
+     * ```typescript
+     *   const iconRef = this.iconService.getIconRef('aruba', 'default');
+     * ```
+     */
+    public getIconRef(name: string, family: string): IconReference {
+        const icon = this._iconRefs.get(family)?.get(name);
+
+        const iconFamily = icon?.family ?? family;
+        const _name = icon?.name ?? name;
+        const type = icon?.type ?? this.familyType(iconFamily);
+        const className = this.familyClassName(iconFamily);
+        const prefix = this._families.get(iconFamily)?.prefix;
+
+        // Handle name prefixes
+        let iconName = _name;
+
+        if (iconName && prefix) {
+            iconName = _name.includes(prefix) ? _name : `${prefix}${_name}`;
+        }
+
+        return {
+            className,
+            type,
+            name: iconName,
+            family: iconFamily,
+        };
     }
 
     /**
@@ -111,26 +224,41 @@ export class IgxIconService {
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
      */
-    public addSvgIcon(name: string, url: string, family = this._family, stripMeta = false) {
+    public addSvgIcon(
+        name: string,
+        url: string,
+        family = this._defaultFamily.name,
+        stripMeta = false,
+    ) {
         if (name && url) {
             const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
             if (!safeUrl) {
-                throw new Error(`The provided URL could not be processed as trusted resource URL by Angular's DomSanitizer: "${url}".`);
+                throw new Error(
+                    `The provided URL could not be processed as trusted resource URL by Angular's DomSanitizer: "${url}".`,
+                );
             }
 
-            const sanitizedUrl = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+            const sanitizedUrl = this._sanitizer.sanitize(
+                SecurityContext.RESOURCE_URL,
+                safeUrl,
+            );
             if (!sanitizedUrl) {
-                throw new Error(`The URL provided was not trusted as a resource URL: "${url}".`);
+                throw new Error(
+                    `The URL provided was not trusted as a resource URL: "${url}".`,
+                );
             }
 
             if (!this.isSvgIconCached(name, family)) {
+                this._families.set(family, { className: family, type: "svg" });
+
                 this.fetchSvg(url).subscribe((res) => {
                     this.cacheSvgIcon(name, res, family, stripMeta);
-                    this._iconLoaded.next({ name, value: res, family });
                 });
             }
         } else {
-            throw new Error('You should provide at least `name` and `url` to register an svg icon.');
+            throw new Error(
+                "You should provide at least `name` and `url` to register an svg icon.",
+            );
         }
     }
 
@@ -141,15 +269,23 @@ export class IgxIconService {
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
      */
-    public addSvgIconFromText(name: string, iconText: string, family = '', stripMeta = false) {
+    public addSvgIconFromText(
+        name: string,
+        iconText: string,
+        family = "",
+        stripMeta = false,
+    ) {
         if (name && iconText) {
             if (this.isSvgIconCached(name, family)) {
                 return;
             }
 
+            this._families.set(family, { className: family, type: "svg" });
             this.cacheSvgIcon(name, iconText, family, stripMeta);
         } else {
-            throw new Error('You should provide at least `name` and `iconText` to register an svg icon.');
+            throw new Error(
+                "You should provide at least `name` and `iconText` to register an svg icon.",
+            );
         }
     }
 
@@ -159,10 +295,12 @@ export class IgxIconService {
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
      */
-    public isSvgIconCached(name: string, family = ''): boolean {
+    public isSvgIconCached(name: string, family = ""): boolean {
         const familyClassName = this.familyClassName(family);
-        if (this._cachedSvgIcons.has(familyClassName)) {
-            const familyRegistry = this._cachedSvgIcons.get(familyClassName) as Map<string, SafeHtml>;
+        if (this._cachedIcons.has(familyClassName)) {
+            const familyRegistry = this._cachedIcons.get(
+                familyClassName,
+            ) as Map<string, SafeHtml>;
             return familyRegistry.has(name);
         }
 
@@ -175,40 +313,46 @@ export class IgxIconService {
      *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
      * ```
      */
-    public getSvgIcon(name: string, family = '') {
+    public getSvgIcon(name: string, family = "") {
         const familyClassName = this.familyClassName(family);
-        return this._cachedSvgIcons.get(familyClassName)?.get(name);
+        return this._cachedIcons.get(familyClassName)?.get(name);
     }
 
     /**
      * @hidden
      */
     private fetchSvg(url: string): Observable<string> {
-        const req = this._httpClient.get(url, { responseType: 'text' });
+        const req = this._httpClient.get(url, { responseType: "text" });
         return req;
     }
 
     /**
      * @hidden
      */
-    private cacheSvgIcon(name: string, value: string, family = this._family, stripMeta: boolean) {
-        family = family ? family : this._family;
+    private cacheSvgIcon(
+        name: string,
+        value: string,
+        family = this._defaultFamily.name,
+        stripMeta: boolean,
+    ) {
+        family = family ? family : this._defaultFamily.name;
 
         if (this._platformUtil?.isBrowser && name && value) {
-            const doc = this._domParser.parseFromString(value, 'image/svg+xml');
-            const svg = doc.querySelector('svg') as SVGElement;
+            const doc = this._domParser.parseFromString(value, "image/svg+xml");
+            const svg = doc.querySelector("svg") as SVGElement;
 
-            if (!this._cachedSvgIcons.has(family)) {
-                this._cachedSvgIcons.set(family, new Map<string, SafeHtml>());
+            if (!this._cachedIcons.has(family)) {
+                this._cachedIcons.set(family, new Map<string, SafeHtml>());
+                this._iconLoaded.next({ name, value, family });
             }
 
             if (svg) {
-                svg.setAttribute('fit', '');
-                svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+                svg.setAttribute("fit", "");
+                svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
                 if (stripMeta) {
-                    const title = svg.querySelector('title');
-                    const desc = svg.querySelector('desc');
+                    const title = svg.querySelector("title");
+                    const desc = svg.querySelector("desc");
 
                     if (title) {
                         svg.removeChild(title);
@@ -219,8 +363,10 @@ export class IgxIconService {
                     }
                 }
 
-                const safeSvg = this._sanitizer.bypassSecurityTrustHtml(svg.outerHTML);
-                this._cachedSvgIcons.get(family).set(name, safeSvg);
+                const safeSvg = this._sanitizer.bypassSecurityTrustHtml(
+                    svg.outerHTML,
+                );
+                this._cachedIcons.get(family).set(name, safeSvg);
             }
         }
     }

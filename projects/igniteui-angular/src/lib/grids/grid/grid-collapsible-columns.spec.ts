@@ -14,7 +14,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
 describe('IgxGrid - multi-column headers #grid', () => {
-
     let contactInf;
     let countryInf;
     let addressInf: IgxColumnGroupComponent;
