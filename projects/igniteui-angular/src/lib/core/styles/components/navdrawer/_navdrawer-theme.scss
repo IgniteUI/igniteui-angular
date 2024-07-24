@@ -377,10 +377,10 @@
         }
 
         @if $variant == 'material' {
-	        $reduce-size: rem(8px);
+            $reduce-size: rem(8px);
 	        
-			// The clip path here fixes a bug: https://github.com/IgniteUI/igniteui-angular/issues/14554
-	        clip-path: inset(calc($reduce-size / 2) 0 round var-get($theme, 'item-border-radius'));
+            // The clip path here fixes a bug: https://github.com/IgniteUI/igniteui-angular/issues/14554
+            clip-path: inset(calc($reduce-size / 2) 0 round var-get($theme, 'item-border-radius'));
 	        
             &::after {
                 content: '';
