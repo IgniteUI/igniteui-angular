@@ -124,14 +124,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         return this.esf.column.filters.condition(value);
     }
 
-    protected getSelectedCondition(condition: string): boolean {
-        const expressions = this.esf.expressionsList;
-        if (expressions.length < 1) {
-            return false;
-        }
-        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
-    }
-
     /**
      * @hidden @internal
      */

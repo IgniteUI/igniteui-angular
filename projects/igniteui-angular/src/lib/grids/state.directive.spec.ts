@@ -726,7 +726,7 @@ describe('IgxGridState - input properties #grid', () => {
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c), "bla" + index);
+            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c));
         });
     }
 
