@@ -7,6 +7,7 @@ import { GridFeatures, IGridState, IGridStateOptions, IgxGridStateBaseDirective 
 })
 export class IgxGridStateDirective extends IgxGridStateBaseDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
+
     /**
      *  An object with options determining if a certain feature state should be saved.
      * ```html
