@@ -180,7 +180,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (selection) {
             this.selectionService.set(this._id, selection);
         }
-        if (this.dropdown.open) {
+        if (this.dropdown?.open) {
             this.dropdown.close();
         }
         if (this.inputGroup?.isFocused) {
@@ -974,8 +974,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
     private _icons = [
         {
-            name: 'expand',
-            family: 'combo',
+            name: 'input_expand',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_more',
@@ -988,8 +988,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'collapse',
-            family: 'combo',
+            name: 'input_collapse',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'expand_less',
@@ -1002,7 +1002,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'clear',
+            name: 'input_clear',
             family: 'default',
             ref: new Map(Object.entries({
                 'material': {
@@ -1016,8 +1016,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             }))
         },
         {
-            name: 'case-sensitive',
-            family: 'combo',
+            name: 'case_sensitive',
+            family: 'default',
             ref: new Map(Object.entries({
                 'material': {
                     name: 'case-sensitive',
@@ -1200,7 +1200,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        return this.dropdown.collapsed ? 'expand' : 'collapse';
+        return this.dropdown.collapsed ? 'input_expand' : 'input_collapse';
     }
 
     /** @hidden @internal */
