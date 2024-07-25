@@ -138,8 +138,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     protected get hasSelectedItem(): boolean {
-        return this.selectionService.get(this.id).size > 0 &&
-        ![...this.selectionService.get(this.id)].every(item => item === null || item === undefined || item === '');
+        if (this.comboInput.value === '') {
+            return this.selectionService.get(this.id).size > 0 &&
+            ![...this.selectionService.get(this.id)].every(item => item === null || item === undefined || item === '');
+        } else {
+            return !!this.selectionService.get(this.id).size;
+        }
     }
 
     constructor(elementRef: ElementRef,
