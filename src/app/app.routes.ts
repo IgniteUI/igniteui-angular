@@ -139,6 +139,7 @@ import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDocManagerSampleComponent } from './docmanager-grid/docmanager-grid.sample';
+import { DotmaticsComponent } from './dotmatics/dotmatics.component';
 
 export const appRoutes: Routes = [
     {
@@ -233,6 +234,10 @@ export const appRoutes: Routes = [
     {
         path: 'drag-drop',
         component: DragDropSampleComponent
+    },
+    {
+        path: 'dotmatics',
+        component: DotmaticsComponent
     },
     {
         path: 'icon',

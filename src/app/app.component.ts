@@ -143,6 +143,11 @@ export class AppComponent implements OnInit {
             name: 'Drag and Drop'
         },
         {
+            link: '/dotmatics',
+            icon: 'horizontal_split',
+            name: 'Dotmatics sample'
+        },
+        {
             link: '/dropDown',
             icon: 'view_list',
             name: 'DropDown'
