@@ -113,7 +113,7 @@
     import { html, nothing } from "/lit-html.js";
     import { Directive, directive } from "/directive.js";
 
-    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent, registerIconFromText  } from "igniteui-webcomponents";
+    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent, registerIconFromText, setIconRef  } from "igniteui-webcomponents";
     // import "igniteui-webcomponents/themes/light/bootstrap.css";
 
     defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent);
@@ -235,9 +235,18 @@
         if (icon !== thumbUpIcon) {
             icon = thumbUpIcon;
             registerIconFromText("filter_list", thumbUpIcon, "customSet");
+            setIconRef('filter_list', 'default', {
+                name: 'filter_list',
+                collection: 'customSet',
+            });
+
         } else {
             icon = buildIcon;
             registerIconFromText("filter_list", buildIcon, "customSet2");
+            setIconRef('filter_list', 'default', {
+                name: 'filter_list',
+                collection: 'customSet2',
+            });
         }
     }
   </script>

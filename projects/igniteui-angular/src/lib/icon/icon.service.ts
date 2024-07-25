@@ -39,23 +39,23 @@ export interface IgxIconLoadedEvent {
     family: string;
 }
 
-interface ParsedIcon {
+interface SvgIcon {
     svg: string;
     title?: string;
   }
 
-export interface IgxIconCollection {
-    [name: string]: ParsedIcon;
-}
+  export type Collection<T, U> = Map<T, U>;
 
-enum ActionType {
-    SyncState,
-    UpdateState
+  enum ActionType {
+    SyncState = 0,
+    RegisterIcon = 1,
+    UpdateIconReference = 2,
   }
 
   interface BroadcastIconsChangeMessage {
-    actionType: ActionType,
-    collections:  Map<string, IgxIconCollection>
+    actionType: ActionType;
+    collections?: Collection<string, Map<string, SvgIcon>>;
+    references?: Collection<string, Map<string, IconMeta>>;
   }
 
 /**
@@ -111,27 +111,45 @@ export class IgxIconService {
             this.iconBroadcastChannel = new BroadcastChannel("ignite-ui-icon-channel");
             this.iconBroadcastChannel.onmessage = (event) => {
                 const message = event.data as BroadcastIconsChangeMessage;
-                if (message.actionType === ActionType.SyncState) {
-                    const collections = message.collections;
-                    const collectionKeys = collections.keys();
-                    for (const collectionKey of collectionKeys) {
-                    const collection = collections.get(collectionKey);
-                        for (const iconKey in collection) {
-                            const value = collection[iconKey];
-                            const iconRef = this._iconRefs.get('default')?.get(iconKey);
-                            if (iconRef) {
-                                this._iconRefs.get('default').delete(iconKey);
-                            }
-                            this.addSvgIconFromText(iconKey, value.svg, collectionKey);
-                            this.addIconRef(iconKey, 'default', { family: collectionKey, name: iconKey });
-                        }
-                    }
+                if (message.actionType === ActionType.SyncState ||
+                     message.actionType === ActionType.RegisterIcon) {
+                    this.updateIconsFromCollection(message.collections);
+                }
+
+                if (message.actionType === ActionType.SyncState ||
+                     message.actionType === ActionType.UpdateIconReference) {
+                    this.updateRefsFromCollection(message.references);
                 }
               };
             // send message to sync state
             this.iconBroadcastChannel.postMessage({
                 actionType: ActionType.SyncState
             });
+        }
+    }
+
+    private updateIconsFromCollection(collections: Collection<string, Map<string, SvgIcon>>){
+        const collectionKeys = collections.keys();
+        for (const collectionKey of collectionKeys) {
+            const collection = collections.get(collectionKey);
+            for (const iconKey of collection.keys()) {
+                const value = collection.get(iconKey).svg;
+                this.addSvgIconFromText(iconKey, value, collectionKey);
+            }
+        }
+    }
+
+    private updateRefsFromCollection(collections: Collection<string, Map<string, any>>){
+        const collectionKeys = collections.keys();
+        for (const collectionKey of collectionKeys) {
+            const collection = collections.get(collectionKey);
+            for (const iconKey of collection.keys()) {
+                const collectionName = collection.get(iconKey).collection;
+                this.setIconRef(iconKey, 'default', {
+                    family: collectionName,
+                    name: iconKey
+                });
+            }
         }
     }
 
