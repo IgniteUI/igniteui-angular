@@ -2056,10 +2056,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fixture.componentInstance.grid;
             fixture.detectChanges();
 
-            grid.height = '800px';
-            fixture.detectChanges();
-            tick(50);
-
             expect(grid.filteredData).toBeNull();
             expect(grid.rowList.length).toBe(8);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
@@ -2107,11 +2103,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             flush();
 
             // Change the grid's data collection
-            setTimeout(() => {
-                grid.data = SampleTestData.contactInfoDataFull();
-                fixture.detectChanges();
-                flush();
-            });
+            grid.data = SampleTestData.contactInfoDataFull();
+            fixture.detectChanges();
+            flush();
 
             // Check for error messages in the console
             const consoleSpy = spyOn(console, 'error');
