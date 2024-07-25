@@ -29,6 +29,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSimpleCombo`
     - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
     - **Behavioral Change** The `selectionChanging` event will now trigger when typing the first character in the input if there is a previously selected value in the `IgxSimpleCombo`.
+    - **Behavioral Change** Updated behavior to maintain the entered text in the input field upon pressing Enter while the combo input is focused, ensuring uninterrupted focus for continuous filtering. Additionally, the dropdown menu now remains open to display filtered results.
     
 
 ## 17.1.0
