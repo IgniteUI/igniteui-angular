@@ -24,16 +24,6 @@
             "definedIn": [
                 "IgxPaginatorComponent"
             ]
-        },
-        {
-            "member": "shouldGenerate",
-            "replaceWith": "autoGenerate",
-            "definedIn": [
-                "IgxGrid",
-                "IgxTreeGrid",
-                "IgxHierarchicalGrid",
-                "IgxPivotGrid"
-            ]
         }
     ]
 }
