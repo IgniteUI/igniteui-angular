@@ -29,11 +29,11 @@
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!clearIconTemplate" family="default" name="clear"></igx-icon>
+        <igx-icon *ngIf="!clearIconTemplate" family="default" name="input_clear"></igx-icon>
     </igx-suffix>
 
     <igx-suffix *ngIf="showSearchCaseIcon">
-        <igx-icon family="default" name="case-sensitive" [active]="filteringOptions.caseSensitive"
+        <igx-icon family="default" name="case_sensitive" [active]="filteringOptions.caseSensitive"
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
