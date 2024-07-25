@@ -1,13 +1,45 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Renderer2, OnDestroy, OnInit, DoCheck, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
-import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxOverlayOutletDirective, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
+import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPane, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
 import { defineCustomElements } from 'igniteui-dockmanager/loader';
+import { Subject } from 'rxjs';
+import { first, takeUntil } from 'rxjs/operators';
 
-import { SignalRService } from './signal-r.service';
 import { CommonModule, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { SignalRService } from './signal-r.service';
+
 defineCustomElements();
+
+@Component({
+    selector: 'app-dock-slot',
+    template: `
+    <div style='width: 100%; height: 100%; overflow-x: hidden;'>
+        <ng-container #host></ng-container>
+    </div>`
+})
+export class DockSlotComponent implements AfterViewInit, OnDestroy {
+    @Output()
+    public viewInit = new EventEmitter();
+
+    @ViewChild('host', { read: ViewContainerRef })
+    public host: ViewContainerRef;
+
+    @Input()
+    @HostBinding('attr.slot')
+    public id;
+
+    public destroy$ = new Subject<any>();
+
+    public ngAfterViewInit() {
+        this.viewInit.emit();
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+}
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -15,13 +47,23 @@ defineCustomElements();
     selector: 'app-grid-docmanager-sample',
     styleUrls: ['docmanager-grid.sample.scss'],
     templateUrl: 'docmanager-grid.sample.html',
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule]
+    imports: [
+        NgFor,
+        CommonModule,
+        FormsModule,
+        IGX_GRID_DIRECTIVES,
+        IGX_BUTTON_GROUP_DIRECTIVES,
+        IgxSelectModule,
+        IgxSwitchModule,
+        IgxIconModule,
+        IgxOverlayOutletDirective
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-
 export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
-    // @ViewChild(GridHostDirective) public host: GridHostDirective;
+    @ViewChild('host', { read: ViewContainerRef }) public host: ViewContainerRef;
     @ViewChild('dock', { read: ElementRef }) public dockManager: ElementRef<HTMLIgcDockmanagerElement>;
     @ViewChild('priceTemplate', { read: TemplateRef })
     public priceTemplate: TemplateRef<any>;
@@ -119,7 +161,7 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
                     type: GridColumnDataType,
                     groupable?: boolean,
                     cellClasses?: string,
-                    bodyTemplate?: string } [] = [
+                    bodyTemplate?: TemplateRef<any> } [] = [
         { field: 'buy', width: '110px', sortable: false, filterable: false, type: 'currency' },
         { field: 'sell', width: '110px', sortable: false, filterable: false, type: 'currency' },
         { field: 'openPrice', width: '120px', sortable: true, filterable: true, type: 'currency'},
@@ -152,7 +194,7 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
 
     private destroy$ = new Subject<any>();
 
-    constructor(public dataService: SignalRService, private cdr: ChangeDetectorRef, private componentFactoryResolver: ComponentFactoryResolver, private elementRef: ElementRef, private renderer:Renderer2) {}
+    constructor(public dataService: SignalRService, private cdr: ChangeDetectorRef, private elementRef: ElementRef, private renderer:Renderer2) {}
 
     public ngOnInit() {
         this.dataService.startConnection(this.frequency, this.dataVolume, true, false);
@@ -250,13 +292,37 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
     };
 
     public createGrid() {
+        const id: string = 'slot-' + this.slotCounter++;
+        const splitPane: IgcSplitPane = {
+            type: IgcDockManagerPaneType.splitPane,
+            orientation: IgcSplitPaneOrientation.horizontal,
+            floatingWidth: 550,
+            floatingHeight: 350,
+            panes: [
+                {
+                    type: IgcDockManagerPaneType.contentPane,
+                    header: id,
+                    contentId: id
+                }
+            ]
+        };
+        this.dockManager.nativeElement.layout.floatingPanes.push(splitPane);
+        this.docLayout = { ...this.dockManager.nativeElement.layout };
+        this.cdr.detectChanges();
+
+        // Create Dock Slot Component
+        const dockSlotComponent = this.host.createComponent(DockSlotComponent);
+        dockSlotComponent.instance.id = id;
+        dockSlotComponent.instance.viewInit.pipe(first()).subscribe(() => {
+            const gridViewContainerRef = dockSlotComponent.instance.host;
+            this.loadGridComponent(gridViewContainerRef, dockSlotComponent.instance.destroy$);
+        });
     }
 
     public loadGridComponent(viewContainerRef: ViewContainerRef, destructor: Subject<any>) {
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(IgxGridComponent);
         viewContainerRef.clear();
 
-        const componentRef = viewContainerRef.createComponent(componentFactory);
+        const componentRef = viewContainerRef.createComponent(IgxGridComponent);
         const grid = (componentRef.instance as IgxGridComponent);
         grid.autoGenerate = true;
         this.dataService.data.pipe(takeUntil(destructor)).subscribe(d => grid.data = d);
