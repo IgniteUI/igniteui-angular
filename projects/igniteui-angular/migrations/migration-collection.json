@@ -196,6 +196,11 @@
             "version": "18.1.0",
             "description": "Updates Ignite UI for Angular from v18.0.x to v18.1.0",
             "factory": "./update-18_1_0"
+        },
+        "migration-40": {
+            "version": "18.1.2",
+            "description": "Updates Ignite UI for Angular from v18.1.x to v18.1.2",
+            "factory": "./update-18_1_2"
         }
     }
 }
