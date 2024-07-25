@@ -32,7 +32,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public position: GridSummaryPosition = GridSummaryPosition.top;
     public sortingOp: ISortingOptions = { mode: 'multiple' };
 
-    private size = 'medium';
+    protected size = 'medium';
 
     constructor() { }
 
