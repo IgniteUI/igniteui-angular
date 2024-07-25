@@ -44,9 +44,9 @@ export class DockSlotComponent implements AfterViewInit, OnDestroy {
 @Component({
     encapsulation: ViewEncapsulation.None,
     providers: [],
-    selector: 'app-grid-docmanager-sample',
-    styleUrls: ['docmanager-grid.sample.scss'],
-    templateUrl: 'docmanager-grid.sample.html',
+    selector: 'app-grid-dockmanager-sample',
+    styleUrls: ['dockmanager-grid.sample.scss'],
+    templateUrl: 'dockmanager-grid.sample.html',
     imports: [
         NgFor,
         CommonModule,
@@ -60,7 +60,7 @@ export class DockSlotComponent implements AfterViewInit, OnDestroy {
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
+export class GridDockManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
     @ViewChild('host', { read: ViewContainerRef }) public host: ViewContainerRef;
