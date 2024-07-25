@@ -708,13 +708,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            var expectedArgs: IFilteringEventArgs = {
+            // Ensure that filtering event was emitted with expected arguments
+            expect(grid.filtering.emit).toHaveBeenCalledWith(jasmine.objectContaining({
                 owner: grid,
                 filteringExpressions: grid.advancedFilteringExpressionsTree,
                 cancel: false
-            };
-            // Ensure that filtering event was emitted with expected arguments
-            expect(grid.filtering.emit).toHaveBeenCalledWith(jasmine.objectContaining(expectedArgs));
+            } as IFilteringEventArgs));
         }));
 
         it('Should cancel filtering if cancel is set to true.', fakeAsync(() => {
