@@ -84,7 +84,6 @@ export interface IPivotAggregator {
 }
 
 /* marshalByValue */
-/* tsPlainInterface */
 /**
 * Configuration of the pivot grid.
 */
