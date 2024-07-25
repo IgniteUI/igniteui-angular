@@ -59,7 +59,7 @@ export class ZipWrapper {
     private createFilesAndFolders(obj: Object, prefix: string) {
         Object.keys(obj).forEach((key) => {
             if (ArrayBuffer.isView(obj[key])) {
-                this._files.set(`${prefix}${key}`, obj[key]);
+                this._files.set(`${prefix}${key}`, obj[key] as Uint8Array);
                 this._filesAndFolders.push(`${prefix}${key}`);
             } else {
                 const newPrefix = `${prefix}${key}/`;
