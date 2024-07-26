@@ -90,6 +90,13 @@
     @include css-vars($theme);
 
     %scrollbar-display {
+        // The @-moz-document rule is specifically for Firefox because it does not support the WebKit pseudo-selectors for scrollbar styling.
+        /* stylelint-disable-next-line at-rule-no-vendor-prefix */
+        @-moz-document url-prefix() {
+            scrollbar-width: var-get($theme, 'sb-size');
+            scrollbar-color: var-get($theme, 'sb-thumb-bg-color') var-get($theme, 'sb-track-bg-color');
+        }
+
         ::-webkit-scrollbar {
             @if type-of(map.get($theme, 'sb-size') == 'string') {
                 width: var-get($theme, 'sb-size');
@@ -118,7 +125,6 @@
             background-color: var-get($theme, 'sb-thumb-bg-color-hover');
         }
 
-
         ::-webkit-scrollbar-corner {
             background: var-get($theme, 'sb-corner-bg');
             border: var-get($theme, 'sb-corner-border-size') solid var-get($theme, 'sb-corner-border-color');
@@ -126,13 +132,6 @@
 
         ::-webkit-scrollbar-track-piece {
             border: var-get($theme, 'sb-track-border-size') solid var-get($theme, 'sb-track-border-color');
-        }
-
-        ::-webkit-scrollbar-button:vertical:start:decrement,
-        ::-webkit-scrollbar-button:vertical:end:increment,
-        ::-webkit-scrollbar-button:horizontal:start:decrement,
-        ::-webkit-scrollbar-button:horizontal:end:increment {
-            display: none;
         }
     }
 
