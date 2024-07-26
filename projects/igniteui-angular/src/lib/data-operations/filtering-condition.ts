@@ -65,6 +65,7 @@ export class IgxFilteringOperand {
     }
 }
 
+/* blazorCSSuppress */
 /**
  * Provides filtering operations for booleans
  *
@@ -102,6 +103,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* blazorCSSuppress */
 /**
  * @internal
  * @hidden
@@ -177,6 +179,8 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         }
     }
 }
+
+/* blazorCSSuppress */
 /**
  * Provides filtering operations for Dates
  *
@@ -389,6 +393,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     }
 }
 
+/* blazorCSSuppress */
 export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
@@ -598,6 +603,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
     }
 }
 
+/* blazorCSSuppress */
 export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
@@ -706,6 +712,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     }
 }
 
+/* blazorCSSuppress */
 /**
  * Provides filtering operations for numbers
  *
@@ -758,6 +765,7 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* blazorCSSuppress */
 /**
  * Provides filtering operations for strings
  *
@@ -845,6 +853,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* tsPlainInterface */
+/* marshalByValue */
 /**
  * Interface describing filtering operations
  *
@@ -855,6 +865,8 @@ export interface IFilteringOperation {
     isUnary: boolean;
     iconName: string;
     hidden?: boolean;
+    /* blazorCSSuppress */
+    /* blazorAlternateType: FilteringOperationLogicHandler */
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 

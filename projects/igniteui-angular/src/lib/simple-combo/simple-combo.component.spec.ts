@@ -8,7 +8,7 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { RemoteDataService } from '../combo/combo.component.spec';
 import { IComboSelectionChangingEventArgs, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from '../combo/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
@@ -77,7 +77,7 @@ describe('IgxSimpleCombo', () => {
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockIconService = new IgxIconService(null, null, null, null);
-        const platformUtil = new PlatformUtil('browser');
+        const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
@@ -1849,6 +1849,36 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.filteredData.length).toEqual(1);
             expect(combo.filteredData[0].field).toEqual('Arizona');
+        }));
+
+        it('should not select the first item when combo is focused there is no focus item and Enter is pressed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('ariz', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.dropdown.collapsed).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            combo.dropdown.focusedItem = undefined;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.comboInput.value).toEqual('ariz');
         }));
     });
 

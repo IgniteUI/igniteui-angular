@@ -15,16 +15,36 @@ import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
 import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
 
-
+/* blazorElement */
+/* omitModule */
+/* wcElementTag: igc-column-group */
+/* additionalIdentifier: Children.Field */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
+/**
+ * **Ignite UI for Angular Column Group**
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: ``,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
+    /* blazorInclude */
+    /* contentChildren */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    /* blazorCollectionItemName: Column */
+    /* alternateType: HTMLCollection */
     /**
      * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
@@ -94,6 +114,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get summaries(): any {
         return this._summaries;
     }
+
+     /* blazorSuppress */
     /**
      * Sets the column group `summaries`.
      * ```typescript
@@ -103,6 +125,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public override set summaries(classRef: any) { }
+
+     /* blazorSuppress */
     /**
      * Sets/gets whether the column group is `searchable`.
      * Default value is `true`.
@@ -129,6 +153,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get filters(): any {
         return this._filters;
     }
+
+     /* blazorSuppress */
     /**
      * Sets the column group `filters`.
      * ```typescript
@@ -186,12 +212,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public override set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
-     * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
-     * ```typescript
-     * let columnCells = this.columnGroup.cells;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
+     * @hidden @internal
      */
     public override get cells(): CellType[] {
         return [];
@@ -208,6 +229,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override get hidden() {
         return this.allChildren.every(c => c.hidden);
     }
+
+    /* blazorSuppress */
     /**
      * Sets the column group hidden property.
      * ```html
@@ -249,6 +272,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
 
+     /* blazorSuppress */
     /**
      * Select/deselect the column group.
      * ```typescript
@@ -366,6 +390,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
+     /* blazorSuppress */
     public override set width(val) { }
 
     /** @hidden @internal **/
