@@ -390,3 +390,171 @@ addIcon('jump_down', {
         family: 'imx-icons',
     },
 });
+addIcon('filter_null', {
+    default: {
+        name: 'is-null',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_not_null', {
+    default: {
+        name: 'is-not-null',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_in', {
+    default: {
+        name: 'is-in',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_all', {
+    default: {
+        name: 'select-all',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_true', {
+    default: {
+        name: 'is-true',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_false', {
+    default: {
+        name: 'is-false',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_empty', {
+    default: {
+        name: 'is-empty',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_not_empty', {
+    default: {
+        name: 'not-empty',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_equal', {
+    default: {
+        name: 'equals',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_not_equal', {
+    default: {
+        name: 'not-equal',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_before', {
+    default: {
+        name: 'is-before',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_after', {
+    default: {
+        name: 'is-after',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_today', {
+    default: {
+        name: 'today',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_yesterday', {
+    default: {
+        name: 'yesterday',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_this_month', {
+    default: {
+        name: 'this-month',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_last_month', {
+    default: {
+        name: 'last-month',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_next_month', {
+    default: {
+        name: 'next-month',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_this_year', {
+    default: {
+        name: 'this-year',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_last_year', {
+    default: {
+        name: 'last-year',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_next_year', {
+    default: {
+        name: 'next-year',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_greater_than', {
+    default: {
+        name: 'greater-than',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_less_than', {
+    default: {
+        name: 'less-than',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_greater_than_or_equal', {
+    default: {
+        name: 'greater-than-or-equal',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_less_than_or_equal', {
+    default: {
+        name: 'less-than-or-equal',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_contains', {
+    default: {
+        name: 'contains',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_does_not_contain', {
+    default: {
+        name: 'does-not-contain',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_starts_with', {
+    default: {
+        name: 'starts-with',
+        family: 'imx-icons',
+    },
+});
+addIcon('filter_ends_with', {
+    default: {
+        name: 'ends-with',
+        family: 'imx-icons',
+    },
+});

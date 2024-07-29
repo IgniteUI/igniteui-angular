@@ -1213,11 +1213,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         editorIcons.forEach((icon) => {
             this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-            // This includes a referece for the the editor icons including the 'ungroup' icon
-            this.iconService.addIconRef(icon.name, 'default', {
-                name: icon.name,
-                family: 'imx-icons'
-            });
         });
     }
 }
