@@ -4,27 +4,10 @@ import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { PlatformUtil } from "../core/utils";
-
-export type IconType = "svg" | "font" | "liga";
-
-export interface IconMeta {
-    name: string;
-    family: string;
-    type?: IconType;
-}
-
-interface FamilyMeta {
-    className: string;
-    type: IconType;
-    prefix?: string;
-}
-
-export interface IconFamily {
-    name: string;
-    meta: FamilyMeta;
-}
-
-export type IconReference = IconMeta & FamilyMeta;
+import { iconReferences } from './icon.references'
+import { Theme } from "igniteui-webcomponents/theming/types";
+import { IconFamily, IconMeta, FamilyMeta } from "./types";
+import type { IconType, IconReference } from './types';
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -75,6 +58,7 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
+    private theme!: Theme;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
@@ -140,6 +124,18 @@ export class IgxIconService {
     /** @hidden @internal */
     private familyType(alias: string): IconType {
         return this._families.get(alias)?.type;
+    }
+
+    /** @hidden @internal */
+    public setRefsByTheme(theme: Theme) {
+        if (this.theme !== theme) {
+            this.theme = theme;
+
+            for (const { alias, target } of iconReferences) {
+                const icon = target.get(theme) ?? target.get('default')!;
+                this.addIconRef(alias.name, alias.family, icon);
+            }
+        }
     }
 
     /**

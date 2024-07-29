@@ -487,7 +487,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             expect(treeItems.length).toBe(2, 'incorrect rendered items count');
 
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
-                .find((icon: any) => icon.innerText === 'clear');
+                .find((icon: any) => icon.innerText === 'cancel');
 
             clearIcon.click();
             fix.detectChanges();

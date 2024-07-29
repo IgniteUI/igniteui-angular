@@ -109,7 +109,7 @@
                             </div>
                             <igx-icon
                                 family="default"
-                                [name]="item.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                [name]="item.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
                                 class="igx-pivot-data-selector__action-sort"
                                 *ngIf="panel.sortable && item.sortDirection"
                             >
@@ -128,7 +128,7 @@
                             </igx-icon>
                             <igx-icon
                                 family="default"
-                                name="functions"
+                                name="sum"
                                 class="igx-pivot-data-selector__action-summary"
                                 *ngIf="panel.type === null"
                                 (click)="onSummaryClick($event, item, dropdown)"
@@ -136,7 +136,7 @@
                             </igx-icon>
                             <igx-icon
                                 family="default"
-                                name="drag_handle"
+                                name="drag_indicator"
                                 igxDragHandle
                                 class="igx-pivot-data-selector__action-move"
                                 *ngIf="panel.dragChannels.length > 0">
@@ -173,9 +173,9 @@
         [class.igx-pivot-data-selector__item-ghost--no-drop]="!dropAllowed"
     >
         <div class="igx-pivot-data-selector__item-ghost-text">
-            <igx-icon family="default" name="unfold_more"></igx-icon>
+            <igx-icon family="default" name="import_export"></igx-icon>
             <span>{{ ghostText }}</span>
         </div>
-        <igx-icon>drag_handle</igx-icon>
+        <igx-icon family="default" name="drag_indicator"></igx-icon>
     </div>
 </ng-template>
