@@ -1131,7 +1131,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public loadingOutlet: IgxOverlayOutletDirective;
 
-    /* contentChildren */
+    /* reactContentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ColumnCollection */
