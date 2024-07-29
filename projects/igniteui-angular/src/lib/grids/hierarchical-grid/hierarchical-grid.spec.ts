@@ -638,6 +638,24 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
+
+        it('should not create columns defined in the template when autoGenerate is true - issue #14260', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridAutogenerateComponent);
+            fix.detectChanges();
+
+            let columns = fix.componentInstance.grid.columns;
+            const properties = Object.keys(fix.componentInstance.data[0]);
+            // one of the data properties is the child data key, so length of cols is -1
+            expect(columns.length).toEqual(properties.length - 1);
+
+            fix.componentInstance.initializeColumnInTemplate = true;
+            fix.detectChanges();
+            tick();
+
+            columns = fix.componentInstance.grid.columns;
+            expect(columns.length).toEqual(properties.length - 1);
+            expect(columns[0].field).not.toEqual('Test');
+        }));
     });
 
     describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
@@ -2371,5 +2389,32 @@ export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGr
 
     public getChildGridRef(grid: IgxHierarchicalGridComponent) {
         this.childGridRef = grid;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hgrid [data]="data"
+     [autoGenerate]="autoGenerate" [height]="'400px'" [width]="'600px'">
+        <igx-column *ngIf="initializeColumnInTemplate" field="Test"></igx-column>
+        <igx-row-island key="CategoryDetails" [autoGenerate]="autoGenerate" #rowIsland></igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
+})
+export class IgxHierarchicalGridAutogenerateComponent {
+    @ViewChild('hgrid', { read: IgxHierarchicalGridComponent, static: true })
+    public grid: IgxHierarchicalGridComponent;
+
+    public data;
+    public initializeColumnInTemplate = false;
+    public autoGenerate = true;
+
+    constructor() {
+        this.data = [
+            { ID: 1, Product: "Chai", CategoryDetails: [{ Name: "Beverages" }] },
+            { ID: 2, Product: "Chang", CategoryDetails: [{ Name: "Food" }] },
+            { ID: 3, Product: "Tofu", CategoryDetails: [{ Name: "Food" }] },
+        ];
     }
 }
