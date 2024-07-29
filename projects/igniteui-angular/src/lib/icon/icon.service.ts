@@ -39,24 +39,6 @@ export interface IgxIconLoadedEvent {
     family: string;
 }
 
-interface SvgIcon {
-    svg: string;
-    title?: string;
-  }
-
-  export type Collection<T, U> = Map<T, U>;
-
-  enum ActionType {
-    SyncState = 0,
-    RegisterIcon = 1,
-    UpdateIconReference = 2,
-  }
-
-  interface BroadcastIconsChangeMessage {
-    actionType: ActionType;
-    collections?: Collection<string, Map<string, SvgIcon>>;
-    references?: Collection<string, Map<string, IconMeta>>;
-  }
 
 /**
  * **Ignite UI for Angular Icon Service** -
@@ -94,7 +76,6 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
-    private iconBroadcastChannel: BroadcastChannel;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
@@ -107,51 +88,9 @@ export class IgxIconService {
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
-            // open broadcast channel for sync with wc icon service.
-            this.iconBroadcastChannel = new BroadcastChannel("ignite-ui-icon-channel");
-            this.iconBroadcastChannel.onmessage = (event) => {
-                const message = event.data as BroadcastIconsChangeMessage;
-                if (message.actionType === ActionType.SyncState ||
-                     message.actionType === ActionType.RegisterIcon) {
-                    this.updateIconsFromCollection(message.collections);
-                }
-
-                if (message.actionType === ActionType.SyncState ||
-                     message.actionType === ActionType.UpdateIconReference) {
-                    this.updateRefsFromCollection(message.references);
-                }
-              };
-            // send message to sync state
-            this.iconBroadcastChannel.postMessage({
-                actionType: ActionType.SyncState
-            });
         }
     }
 
-    private updateIconsFromCollection(collections: Collection<string, Map<string, SvgIcon>>){
-        const collectionKeys = collections.keys();
-        for (const collectionKey of collectionKeys) {
-            const collection = collections.get(collectionKey);
-            for (const iconKey of collection.keys()) {
-                const value = collection.get(iconKey).svg;
-                this.addSvgIconFromText(iconKey, value, collectionKey);
-            }
-        }
-    }
-
-    private updateRefsFromCollection(collections: Collection<string, Map<string, any>>){
-        const collectionKeys = collections.keys();
-        for (const collectionKey of collectionKeys) {
-            const collection = collections.get(collectionKey);
-            for (const iconKey of collection.keys()) {
-                const collectionName = collection.get(iconKey).collection;
-                this.setIconRef(iconKey, 'default', {
-                    family: collectionName,
-                    name: iconKey
-                });
-            }
-        }
-    }
 
     /**
      *  Returns the default font-family.
