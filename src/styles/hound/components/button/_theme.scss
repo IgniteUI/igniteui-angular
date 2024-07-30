@@ -1,0 +1,124 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$flat-foreground: color($color: 'gray', $variant: 900);
+$flat-background: color($color: 'gray', $variant: 200);
+
+$_base-schema: $light-material-schema;
+
+$_flat-button: extend(map.get($_base-schema, button, flat), (
+    name: 'igx-button',
+    foreground: $flat-foreground,
+    hover-foreground: $flat-foreground,
+    hover-background: $flat-background,
+    focus-foreground: $flat-foreground,
+    focus-background: $flat-background,
+    focus-visible-foreground: $flat-foreground,
+    focus-visible-background: $flat-background,
+    active-foreground: $flat-foreground,
+    active-background: $flat-background,
+    disabled-foreground: color($color: 'gray', $variant: 400),
+    border-radius: rem(6px),
+    default-size: 2,
+));
+$_flat-theme: digest-schema($_flat-button);
+
+$_contained-button: extend(map.get($_base-schema, button, contained), (
+    name: 'igx-button',
+    resting-elevation: 0,
+    hover-elevation: 0,
+    focus-elevation: 0,
+    active-elevation: 0,
+    foreground: contrast-color($color: 'primary', $variant: 900),
+    hover-foreground: contrast-color($color: 'primary', $variant: 900),
+    hover-background: color($color: 'primary', $variant: 400),
+    focus-foreground: contrast-color($color: 'primary', $variant: 900),
+    focus-background: color($color: 'primary', $variant: 400),
+    focus-visible-foreground: contrast-color($color: 'primary', $variant: 900),
+    focus-visible-background: color($color: 'primary', $variant: 400),
+    active-foreground: contrast-color($color: 'primary', $variant: 600),
+    active-background: color($color: 'primary', $variant: 600),
+    disabled-background: color($color: 'gray', $variant: 200),
+    disabled-foreground: color($color: 'gray', $variant: 400),
+    disabled-border-color: color($color: 'gray', $variant: 300),
+    border-radius: rem(6px),
+    default-size: 2,
+));
+$_contained-theme: digest-schema($_contained-button);
+
+$_outlined-button: extend(map.get($_base-schema, button, outlined), (
+    name: 'igx-button',
+    foreground: color($color: 'gray', $variant: 900),
+    background: color($color: 'surface', $variant: 500),
+    hover-foreground: color($color: 'primary', $variant: 400),
+    hover-background: color($color: 'surface', $variant: 500),
+    focus-foreground: color($color: 'primary', $variant: 400),
+    focus-background: color($color: 'surface', $variant: 500),
+    focus-visible-foreground: color($color: 'primary', $variant: 400),
+    focus-visible-background: color($color: 'surface', $variant: 500),
+    active-foreground: color($color: 'primary', $variant: 600),
+    active-background: color($color: 'surface', $variant: 500),
+    border-color: color($color: 'gray', $variant: 300),
+    hover-border-color: color($color: 'gray', $variant: 300),
+    focus-border-color: color($color: 'gray', $variant: 300),
+    focus-visible-border-color: color($color: 'gray', $variant: 300),
+    active-border-color: color($color: 'primary', $variant: 600),
+    disabled-foreground: color($color: 'gray', $variant: 400),
+    disabled-background: color($color: 'gray', $variant: 200),
+    disabled-border-color: color($color: 'gray', $variant: 300),
+    border-radius: rem(6px),
+    default-size: 2,
+));
+$_outlined-theme: digest-schema($_outlined-button);
+
+$_fab-button: extend(map.get($_base-schema, button, fab), (
+    name: 'igx-button',
+    foreground: color($color: 'gray', $variant: 900),
+    background: color($color: 'surface', $variant: 500),
+    hover-foreground: color($color: 'gray', $variant: 900),
+    hover-background: color($color: 'gray', $variant: 200),
+    focus-foreground: color($color: 'gray', $variant: 900),
+    focus-background: color($color: 'gray', $variant: 200),
+    focus-visible-foreground: color($color: 'gray', $variant: 900),
+    focus-visible-background: color($color: 'gray', $variant: 200),
+    active-foreground: color($color: 'gray', $variant: 900),
+    active-background: color($color: 'gray', $variant: 200),
+    border-radius: rem(8px),
+    default-size: 2,
+    resting-elevation: 12,
+));
+$_fab-theme: digest-schema($_fab-button);
+
+$_button-schema: extend(map.get($_base-schema, 'button'), (
+    flat: $_flat-button,
+    contained: $_contained-button,
+    outlined: $_outlined-button,
+    fab: $_fab-button,
+));
+
+@mixin component() {
+    .igx-button--flat:not(:has(.igx-button-group__item-content)) {
+        @include css-vars($_flat-theme);
+    }
+
+    .igx-button--contained {
+        @include css-vars($_contained-theme);
+    }
+
+    .igx-button--outlined {
+        @include css-vars($_outlined-theme);
+    }
+
+    .igx-button--fab {
+        @include css-vars($_fab-theme);
+
+        box-shadow: var-get($_fab-theme, 'resting-elevation');
+
+        &:focus,
+        &:hover {
+            box-shadow: var-get($_fab-theme, 'hover-elevation');
+        }
+    }
+}
+
+

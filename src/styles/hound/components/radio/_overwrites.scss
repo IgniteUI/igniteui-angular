@@ -1,0 +1,41 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-radio {
+    --size: #{rem(16px)};
+
+    .igx-radio__composite {
+        width: var(--size);
+        height: var(--size);
+        min-width: var(--size);
+
+        &::after,
+        &::before {
+            width: inherit;
+            height: inherit;
+            background: color(null, 'surface', 500);
+        }
+
+        &::after {
+            border-width: rem(1px);
+        }
+    }
+
+    &:hover {
+        .igx-radio__composite::after {
+            border-width: rem(1px) !important;
+        }
+    }
+
+    &--focused .igx-radio__composite::after {
+        border-color: color(null, 'primary', 500);
+    }
+
+    &--disabled.igx-radio--checked .igx-radio__composite::after {
+        background: color(null, 'gray', 200);
+    }
+
+    &--disabled .igx-radio__composite::after,
+    &--checked .igx-radio__composite::after {
+        border-width: 1px !important;
+    }
+}

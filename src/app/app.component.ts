@@ -143,6 +143,11 @@ export class AppComponent implements OnInit {
             name: 'Drag and Drop'
         },
         {
+            link: '/hound',
+            icon: 'horizontal_split',
+            name: 'Hound sample'
+        },
+        {
             link: '/dropDown',
             icon: 'view_list',
             name: 'DropDown'

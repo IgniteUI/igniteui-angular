@@ -1,0 +1,44 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-switch {
+    --size: #{rem(16px)};
+
+    .igx-switch__composite {
+        width: calc(var(--size) * 1.75);
+        height: var(--size);
+        min-width: var(--size);
+        border-width: rem(1px);
+    }
+
+    .igx-switch__composite-thumb {
+        box-shadow: var(--ig-elevation-1);
+    }
+
+    &--checked .igx-switch__composite-thumb {
+        transform: translateX(12px) !important;
+    }
+
+    &:not(&--checked) .igx-switch__composite-thumb {
+        transform: translateX(2px);
+    }
+
+    &:hover .igx-switch__composite .igx-switch__thumb {
+        background: color(null, 'surface', 500) !important;
+    }
+
+    &--focused .igx-switch__composite {
+        --track-on-color: #{color(null, 'secondary', 300)};
+        --track-off-color: #{color(null, 'gray', 200)};
+
+        &::after {
+            box-shadow: none !important;
+        }
+    }
+}
+
+.igx-switch--disabled.igx-switch--checked {
+    .igx-switch__composite {
+        --track-on-disabled-color: #{color(null, 'secondary', 300)};
+    }
+}
+

@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-fluent-schema;
+$_tabs-schema: extend(
+    map.get($_base-schema, 'tabs'),
+    (
+        item-background: transparent,
+        item-hover-background: transparent,
+        item-active-background: transparent,
+    )
+);
+
+@mixin component() {
+    @include tabs(
+        tabs-theme(
+            extend(
+                $_base-schema,
+                (
+                    tabs: $_tabs-schema,
+                )
+            )
+        )
+    );
+
+    .ig-typography {
+        @include tabs-typography($categories: (label: 'subtitle-2'));
+    }
+}
