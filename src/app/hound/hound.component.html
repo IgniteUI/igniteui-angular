@@ -3,14 +3,13 @@
     <span igxLabel>Disable buttons</span>
 </igx-switch>
 <div class="buttons preview">
-    <button igxButton="raised" [disabled]="isButtonDisabled">Primary</button>
+    <button igxButton="contained" [disabled]="isButtonDisabled">Primary</button>
 
     <button igxButton="outlined" [disabled]="isButtonDisabled">Default</button>
 
     <button igxButton="flat" [disabled]="isButtonDisabled">Text</button>
 
-    <a href="/dotmatics" igxButton="flat" [disabled]="isButtonDisabled">Text</a>
-
+    <a href="/hound" igxButton="flat" [disabled]="isButtonDisabled">Text</a>
 
     <button igxButton="fab">
         <igx-icon>menu</igx-icon>
@@ -20,7 +19,7 @@
 
 <span class="title">Dropdown</span>
 <div class="preview">
-    <button class="dd-button" igxButton="raised" [igxToggleAction]="dropdown">Dropdown</button>
+    <button class="dd-button" igxButton="contained" [igxToggleAction]="dropdown">Dropdown</button>
     <igx-drop-down #dropdown>
         <igx-drop-down-item *ngFor="let item of ddItems">
             <span>{{ item.field }}</span>

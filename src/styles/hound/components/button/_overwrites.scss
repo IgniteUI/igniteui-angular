@@ -1,7 +1,7 @@
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
 .igx-button.igx-button--flat,
-.igx-button.igx-button--raised,
+.igx-button.igx-button--contained,
 .igx-button.igx-button--outlined {
     padding-inline: pad-inline(rem(8px), rem(16px), rem(16px));
     padding-block: 0;
@@ -10,7 +10,7 @@
 
 .ig-typography {
     .igx-button.igx-button--flat,
-    .igx-button.igx-button--raised,
+    .igx-button.igx-button--contained,
     .igx-button.igx-button--outlined {
         font-size: sizable(rem(14px), rem(14px), rem(16px));
     }

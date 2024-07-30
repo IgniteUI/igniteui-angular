@@ -17,10 +17,15 @@
         border-color: color(null, 'secondary', 500);
     }
 
-    &--disabled {
-        &--checked {
+    &.igx-checkbox--disabled .igx-checkbox__composite {
+        background: var(--disabled-indeterminate-color);
+    }
+
+    &.igx-checkbox--checked.igx-checkbox--disabled,
+    &.igx-checkbox--indeterminate.igx-checkbox--disabled {
+        .igx-checkbox__composite {
             border-color: var(--disabled-color);
-            background: red;
+            --tick-color: var(--disabled-color);
         }
     }
 }

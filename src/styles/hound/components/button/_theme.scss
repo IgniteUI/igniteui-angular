@@ -23,12 +23,13 @@ $_flat-button: extend(map.get($_base-schema, button, flat), (
 ));
 $_flat-theme: digest-schema($_flat-button);
 
-$_raised-button: extend(map.get($_base-schema, button, raised), (
+$_contained-button: extend(map.get($_base-schema, button, contained), (
     name: 'igx-button',
     resting-elevation: 0,
     hover-elevation: 0,
     focus-elevation: 0,
     active-elevation: 0,
+    foreground: contrast-color($color: 'primary', $variant: 900),
     hover-foreground: contrast-color($color: 'primary', $variant: 900),
     hover-background: color($color: 'primary', $variant: 400),
     focus-foreground: contrast-color($color: 'primary', $variant: 900),
@@ -43,7 +44,7 @@ $_raised-button: extend(map.get($_base-schema, button, raised), (
     border-radius: rem(6px),
     default-size: 2,
 ));
-$_raised-theme: digest-schema($_raised-button);
+$_contained-theme: digest-schema($_contained-button);
 
 $_outlined-button: extend(map.get($_base-schema, button, outlined), (
     name: 'igx-button',
@@ -63,7 +64,7 @@ $_outlined-button: extend(map.get($_base-schema, button, outlined), (
     focus-visible-border-color: color($color: 'gray', $variant: 300),
     active-border-color: color($color: 'primary', $variant: 600),
     disabled-foreground: color($color: 'gray', $variant: 400),
-    disabled-background: color($color: 'gray', $variant: 300),
+    disabled-background: color($color: 'gray', $variant: 200),
     disabled-border-color: color($color: 'gray', $variant: 300),
     border-radius: rem(6px),
     default-size: 2,
@@ -90,7 +91,7 @@ $_fab-theme: digest-schema($_fab-button);
 
 $_button-schema: extend(map.get($_base-schema, 'button'), (
     flat: $_flat-button,
-    raised: $_raised-button,
+    contained: $_contained-button,
     outlined: $_outlined-button,
     fab: $_fab-button,
 ));
@@ -100,8 +101,8 @@ $_button-schema: extend(map.get($_base-schema, 'button'), (
         @include css-vars($_flat-theme);
     }
 
-    .igx-button--raised {
-        @include css-vars($_raised-theme);
+    .igx-button--contained {
+        @include css-vars($_contained-theme);
     }
 
     .igx-button--outlined {

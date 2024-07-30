@@ -8,8 +8,9 @@
         padding-inline: rem(12px);
 
         .igx-icon {
-            --size: rem(20px);
-            --color: #{color($color: 'primary', $variant: 500)};
+            --size: #{rem(20px)};
+            --item-icon-color: #{color($color: 'primary', $variant: 500)};
+            --hover-item-icon-color: #{color($color: 'primary', $variant: 500)};
         }
     }
 

@@ -143,9 +143,9 @@ export class AppComponent implements OnInit {
             name: 'Drag and Drop'
         },
         {
-            link: '/dotmatics',
+            link: '/hound',
             icon: 'horizontal_split',
-            name: 'Dotmatics sample'
+            name: 'Hound sample'
         },
         {
             link: '/dropDown',

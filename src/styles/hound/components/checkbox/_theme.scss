@@ -5,6 +5,18 @@ $_base-schema: $light-indigo-schema;
 $_checkbox-schema: extend(
     map.get($_base-schema, 'checkbox'),
     (
+        empty-color: (
+            color: (
+                'gray',
+                300,
+            ),
+        ),
+        hover-color: (
+            color: (
+                'primary',
+                500,
+            ),
+        ),
         focus-outline-color: (
             color: (
                 'secondary',

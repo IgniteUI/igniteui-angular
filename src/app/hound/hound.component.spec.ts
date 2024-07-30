@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DotmaticsComponent } from './dotmatics.component';
+import { DotmaticsComponent } from './hound.component';
 
 describe('DotmaticsComponent', () => {
   let component: DotmaticsComponent;

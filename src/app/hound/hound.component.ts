@@ -29,7 +29,7 @@ import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-dotmatics',
+    selector: 'app-hound',
     standalone: true,
     imports: [
         IgxButtonModule,
@@ -61,10 +61,10 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxAvatarComponent,
         IgxTabHeaderComponent,
     ],
-    templateUrl: './dotmatics.component.html',
-    styleUrl: './dotmatics.component.scss'
+    templateUrl: './hound.component.html',
+    styleUrl: './hound.component.scss'
 })
-export class DotmaticsComponent implements OnInit {
+export class HoundComponent implements OnInit {
     public isButtonDisabled = false;
     public isInputDisabled = false;
     public isTabDisabled = false;

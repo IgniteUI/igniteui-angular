@@ -20,8 +20,18 @@
         }
     }
 
-    &--focused .igx-radio__composite {
-        box-shadow: none;
+    &:hover {
+        .igx-radio__composite::after {
+            border-width: rem(1px) !important;
+        }
+    }
+
+    &--focused .igx-radio__composite::after {
+        border-color: color(null, 'primary', 500);
+    }
+
+    &--disabled.igx-radio--checked .igx-radio__composite::after {
+        background: color(null, 'gray', 200);
     }
 
     &--disabled .igx-radio__composite::after,

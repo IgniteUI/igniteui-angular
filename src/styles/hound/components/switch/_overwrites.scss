@@ -22,7 +22,7 @@
         transform: translateX(2px);
     }
 
-    &:hover .igx-switch__composite-thumb {
+    &:hover .igx-switch__composite .igx-switch__thumb {
         background: color(null, 'surface', 500) !important;
     }
 
