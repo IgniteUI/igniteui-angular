@@ -537,8 +537,19 @@
         inset-block-start: 50%;
         inset-inline-start: 50%;
         transform: translate(-50%, -50%);
-        text-align: center;
         color: var-get($theme, 'text-color');
+        font-size: calc($circular-size / 2.35 - $stroke-width);
+        line-height: normal;
+        text-align: center;
+        font-weight: 600;
+
+        @if $variant == 'bootstrap' or $variant == 'fluent' {
+            font-weight: 700;
+        }
+
+        @if $variant == 'indigo-design' or $variant == 'bootstrap' {
+            font-size: calc($circular-size / 3 - $stroke-width);
+        }
     }
 
     %circular-text--hidden {
@@ -561,30 +572,6 @@
 
         to {
             stroke-dashoffset: 120;
-        }
-    }
-}
-
-// Adds typography styles for the igx-circular-bar component.
-/// Uses custom typography
-/// @group typography
-/// @param {Map} $categories [(text: 'h6')] - The categories from the typographic scale used for type styles.
-@mixin circular-bar-typography($categories: (text: 'h6')) {
-    $text: map.get($categories, 'text');
-
-    @if $text {
-        %circular-text {
-            @include type-style($text) {
-                font-size: rem(12px);
-                line-height: rem(16px);
-                margin: 0;
-            }
-        }
-    } @else {
-        %circular-text {
-            font-size: rem(12px);
-            font-weight: 700;
-            line-height: rem(16px);
         }
     }
 }
