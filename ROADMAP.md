@@ -2,23 +2,28 @@
 
 # Current Milestone
 
-## Milestone 33, (Due by Jul, 2024)
+## Milestone 34, (Due by Sep, 2024)
 
-1. Horizontal row dimension expansion for Pivot Grid [#14270](https://github.com/IgniteUI/igniteui-angular/issues/14270)
-2. Headers focus and keyboard navigation for Pivot Grid Row Dimension Headers [#14249](https://github.com/IgniteUI/igniteui-angular/issues/14249)
-3. Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
-4. Translation for "Wk" for week numbers in calendars [#14423](https://github.com/IgniteUI/igniteui-angular/issues/14423)
-5. Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
+1. Indigo Theme Calendar Improvements [#14407](https://github.com/IgniteUI/igniteui-angular/issues/14407)
+2. Provide a set of properties to be settable to default grid CRUD editors without the need for templates [#14009](https://github.com/IgniteUI/igniteui-angular/issues/14009)
 
 ## Going down the road
 
-1. 
+1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
 
 # Previous Milestone
 
+## Milestone 33, (Released Jul 22nd, 2024)
+
+1. **[DONE]** Horizontal row dimension expansion for Pivot Grid [#14270](https://github.com/IgniteUI/igniteui-angular/issues/14270)
+2. **[DONE]** Headers focus and keyboard navigation for Pivot Grid Row Dimension Headers [#14249](https://github.com/IgniteUI/igniteui-angular/issues/14249)
+3. **[DONE]** Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
+4. **[DONE]** Translation for "Wk" for week numbers in calendars [#14423](https://github.com/IgniteUI/igniteui-angular/issues/14423)
+5. **[DONE]** Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
+
 ## Milestone 32, version 18.0 (Released Jun 07th, 2024)
 
-1. Support of Angular 18
+1. **[DONE]** Support of Angular 18
 2. **[DONE]** Expose a header template for the chip area of the headers of the rows dimension in the pivot grid [#14016](https://github.com/IgniteUI/igniteui-angular/issues/14016)
 3. **[DONE]** Expose headers for row dimensions to be visible in excel when exporting a pivot grid [#14017](https://github.com/IgniteUI/igniteui-angular/issues/14017)
 4. **[DONE]** igxToggle: setOffset function increments the offset instead of setting a specific value [#14174](https://github.com/IgniteUI/igniteui-angular/issues/14174)
