@@ -21,7 +21,7 @@
  * Keep in mind that icon aliases and their underlying names are shared between Ignite UI component frameworks
  * and changing an alias name here should be reflected in the other frameworks as well.
  *
- * To get aquainted with which component uses what icon, please make sure to read the
+ * To get acquainted with which component uses what icon, please make sure to read the
  * [docs](https://infragistics.com/products/ignite-ui-angular/Angular/components/icon-service#internal-usage).
  */
 import { IconMeta } from "./types";
