@@ -14,7 +14,7 @@
  * when a user decides to rewire the `expand`/`collapse` icons to some other icons.
  *
  * Likewise, modifying existing references should be handled with caution as many component in the framework already
- * share icons that have equivellent semantic meaning. For example, the `Paginator`, `Grid Filtering Row`,
+ * share icons that have equivalent semantic meaning. For example, the `Paginator`, `Grid Filtering Row`,
  * and `Tabs` components in Ignite UI for Angular all use the `prev` and `next` icons as for navigating between pages
  * or lists of items. Changing the underlying target for those icons should be done in a way that suits all components.
  *
