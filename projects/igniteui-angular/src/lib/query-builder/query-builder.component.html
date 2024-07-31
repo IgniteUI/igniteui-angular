@@ -44,11 +44,7 @@
         </div>
     </ng-container>
 
-    <ng-template
-        #addExpressionsTemplate
-        let-expressionItem
-        let-afterExpression="afterExpression"
-    >
+    <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
         <button type="button"
             #addConditionButton
             igxButton="outlined"
@@ -80,7 +76,7 @@
         </button>
     </ng-template>
 
-    <ng-template #filterOperandTemplate let-expressionItem>
+    <ng-template #operandTemplate let-expressionItem>
         <div
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"
@@ -119,22 +115,24 @@
                     *ngIf="!expressionItem.expression.condition.isUnary"
                 >
                     {{
-                        isDate(expressionItem.expression.searchVal)
-                            ? getFormatter(expressionItem.expression.fieldName)
-                                ? (expressionItem.expression.searchVal
-                                  | fieldFormatter
-                                      : getFormatter(
-                                            expressionItem.expression.fieldName
-                                        )
-                                      : undefined)
-                                : (expressionItem.expression.searchVal
-                                  | date
-                                      : getFormat(
-                                            expressionItem.expression.fieldName
-                                        )
-                                      : undefined
-                                      : this.locale)
-                            : expressionItem.expression.searchVal
+                        expressionItem.expression.searchTree
+                            ? (expressionItem.expression.searchTree.entity + ' / ' + expressionItem.expression.searchTree.returnFields)
+                            : isDate(expressionItem.expression.searchVal)
+                                ? getFormatter(expressionItem.expression.fieldName)
+                                    ? (expressionItem.expression.searchVal
+                                    | fieldFormatter
+                                        : getFormatter(
+                                                expressionItem.expression.fieldName
+                                            )
+                                        : undefined)
+                                    : (expressionItem.expression.searchVal
+                                    | date
+                                        : getFormat(
+                                                expressionItem.expression.fieldName
+                                            )
+                                        : undefined
+                                        : this.locale)
+                                : expressionItem.expression.searchVal
                     }}
                 </span>
             </igx-chip>
@@ -170,6 +168,22 @@
                     "
                 >
                 </igx-icon>
+            </div>
+
+            <div *ngIf="expressionItem.expression.searchTree" style="padding: 10px; background-color: rgba(0, 0, 0, 0.02); border-radius: 10px;">
+                <!-- <ng-container *ngTemplateOutlet="operandTemplate; context: {$implicit: expressionItem.expression.searchTree}"></ng-container> -->
+                <!-- <span>children:"{{expressionItem.expression.searchTree.children}}"</span> -->
+                <ng-container *ngFor="let expr of expressionItem.expression.searchTree?.children">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            isExpressionGroup(expr)
+                                ? expressionGroupTemplate
+                                : operandTemplate;
+                            context: context(expr)
+                        "
+                    >
+                    </ng-container>
+                </ng-container>
             </div>
         </div>
 
@@ -273,6 +287,10 @@
                     [(ngModel)]="searchValue"
                 />
             </igx-input-group>
+            
+            <div *ngIf="expressionItem.expression.searchTree">
+                <ng-container *ngTemplateOutlet="expressionGroupTemplate; context: { $implicit: expressionItem.expression.searchTree }"></ng-container>
+            </div>
 
             <igx-date-picker
                 #picker
@@ -372,7 +390,6 @@
                 </button>
             </div>
 
-            <!-- <ng-container *ngTemplateOutlet="expressionTreeTemplate"></ng-container> -->
         </div>
 
         <div
@@ -396,63 +413,56 @@
         </div>
     </ng-template>
 
-    <ng-template #expressionTreeTemplate let-expressionItem >
-        <div style="padding: 5px; border: 1px solid lightgrey">
-            <span>
-                <button
-                    igxButton
-                    type="button"
-                    [igxToggleAction]="entitiesDropdown">
-                    <!-- <igx-icon family="default" name="expand"></igx-icon> -->
-                    <span>{{this.expressionTree ? this.expressionTree.entity : (this.selectedEntity ? this.selectedEntity.name : 'Select entity')}}</span>
-                </button>
-                <igx-drop-down #entitiesDropdown (selectionChanging)="onExpressionTreeEntityChanged($event)">
-                    <igx-drop-down-item *ngFor="let entity of this.entities" [value]="entity">
-                        {{entity.name}}
-                    </igx-drop-down-item>
-                </igx-drop-down>
-            </span>
-
-            <span *ngIf="this.selectedEntity || this.expressionTree">
-                <span> / </span>
-                <button
-                    igxButton
-                    type="button"
-                    [igxToggleAction]="returnFieldsDropdown">
-                    <!-- <igx-icon family="default" name="expand"></igx-icon> -->
-                    <span>{{
-                        this.expressionTree && this.expressionTree.returnFields ?
-                        this.expressionTree.returnFields :
-                            (this.selectedReturnFields ?? 'Select return field')}}</span>
-                </button>
-                <igx-drop-down #returnFieldsDropdown (selectionChanging)="onExpressionReturnFieldChanged($event)">
-                    <igx-drop-down-item [value]="'*'">*</igx-drop-down-item>
-                    <igx-drop-down-item *ngFor="let field of this.fields" [value]="field">
-                        {{ field.label || field.header || field.field }}
-                    </igx-drop-down-item>
-                </igx-drop-down>
-            </span>
-
+    <ng-template #expressionGroupTemplate let-expressionItem>
+        <div style="padding: 10px; background-color: rgba(0, 0, 0, 0.02); border-radius: 10px;">
             <div class="igx-filter-tree">
                 <div
                     tabindex="0"
                     class="igx-filter-tree__line"
                     [ngClass]="{
-                        'igx-filter-tree__line--and': expressionItem.operator === 0,
-                        'igx-filter-tree__line--or': expressionItem.operator === 1,
-                        'igx-filter-tree__line--selected': expressionItem.selected
+                        'igx-filter-tree__line--and': expressionItem?.operator === 0,
+                        'igx-filter-tree__line--or': expressionItem?.operator === 1,
+                        'igx-filter-tree__line--selected': expressionItem?.selected
                     }"
                     (keydown)="invokeClick($event)"
                     (click)="onGroupClick(expressionItem)"
                 ></div>
 
                 <div class="igx-filter-tree__expression">
-                    <ng-container *ngFor="let expr of expressionItem.children">
+                    <div class="igx-filter-tree__inputs">
+                        <igx-select #entitySelect
+                            type="box"
+                            [overlaySettings]="entitySelectOverlaySettings"
+                            [placeholder]="
+                                'Select entity'
+                            "
+                            [(ngModel)]="selectedEntity"
+                        >
+                            <igx-select-item *ngFor="let entity of entities" [value]="entity">
+                                {{entity.name}}
+                            </igx-select-item>
+                        </igx-select>
+    
+                        <igx-select #returnFieldsSelect
+                            type="box"
+                            [overlaySettings]="returnFieldsSelectOverlaySettings"
+                            [placeholder]="
+                                'Select return fields'
+                            "
+                            [(ngModel)]="selectedReturnFields"
+                        >
+                            <igx-select-item *ngFor="let field of fields" [value]="field">
+                                {{ field.label || field.header || field.field }}
+                            </igx-select-item>
+                        </igx-select>
+                    </div>
+
+                    <ng-container *ngFor="let expr of expressionItem?.children">
                         <ng-container
                             *ngTemplateOutlet="
                                 isExpressionGroup(expr)
-                                    ? expressionTreeTemplate
-                                    : filterOperandTemplate;
+                                    ? expressionGroupTemplate
+                                    : operandTemplate;
                                 context: context(expr)
                             "
                         >
@@ -492,7 +502,7 @@
     <ng-container *ngIf="rootGroup">
         <ng-container
             *ngTemplateOutlet="
-                expressionTreeTemplate;
+                expressionGroupTemplate;
                 context: context(rootGroup)
             "
         ></ng-container>

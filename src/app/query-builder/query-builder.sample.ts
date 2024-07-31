@@ -46,12 +46,29 @@ export class QueryBuilderComponent implements OnInit {
             }
         ];
 
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', '*');
-        tree.filteringOperands.push({
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', 'Id');
+        innerTree.filteringOperands.push({
             fieldName: 'Name',
             condition: IgxStringFilteringOperand.instance().condition('equals'),
             searchVal: 'Hepacity',
             // ignoreCase: true
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'EndpointName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            searchVal: 'IC60',
+            // ignoreCase: true
+        });
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', 'Id');
+        tree.filteringOperands.push({
+                fieldName: 'Id',
+                condition: IgxStringFilteringOperand.instance().condition('IN'),
+                searchTree: innerTree
+            });
+        tree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'xxx'
         });
 
         // const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
