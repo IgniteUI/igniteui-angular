@@ -513,7 +513,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'lastMonth',
             isUnary: true,
-            iconName: 'filtr_last_month',
+            iconName: 'filter_last_month',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
