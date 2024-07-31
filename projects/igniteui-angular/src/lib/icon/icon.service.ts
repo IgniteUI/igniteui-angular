@@ -39,7 +39,6 @@ export interface IgxIconLoadedEvent {
     family: string;
 }
 
-
 /**
  * **Ignite UI for Angular Icon Service** -
  *
@@ -90,7 +89,6 @@ export class IgxIconService {
             this._domParser = new DOMParser();
         }
     }
-
 
     /**
      *  Returns the default font-family.

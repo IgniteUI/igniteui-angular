@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
-import { PlatformUtil } from '../core/utils';
-import { IconMeta, IgxIconService } from './icon.service';
+import { PlatformUtil } from '../../../igniteui-angular/src/lib/core/utils';
+import { IconMeta, IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
 
 
 interface SvgIcon {
@@ -22,6 +22,7 @@ interface SvgIcon {
     references?: Collection<string, Map<string, IconMeta>>;
   }
 
+/** @hidden @internal **/
 @Injectable()
 export class IgxIconBroadcastService {
     private iconBroadcastChannel: BroadcastChannel;

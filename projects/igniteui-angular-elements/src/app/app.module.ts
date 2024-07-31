@@ -31,7 +31,7 @@ import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
 import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
-import { IgxIconBroadcastService } from 'igniteui-angular/src/lib/icon/icon.broadcast.service';
+import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 
 @NgModule({
   imports: [
