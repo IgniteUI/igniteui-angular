@@ -140,7 +140,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
             this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons', true);
-            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons', true);
+            this.iconService.addSvgIconFromText(jumpUp.name, jumpUp.value, 'imx-icons', true);
         }
     }
 }
