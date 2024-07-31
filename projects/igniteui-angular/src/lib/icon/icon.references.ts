@@ -1,6 +1,6 @@
 /** READ BEFORE YOU MODIFY THIS FILE
  *
- * Before you add/modify an icon reference, please think about the sematics of the icon you are adding/modifying.
+ * Before you add/modify an icon reference, please think about the semantics of the icon you are adding/modifying.
  *
  * Icon aliases have sematic meaning depending on the context in which they are used.
  * For instance, if your component handles toggling between expanded and collapsed states,
