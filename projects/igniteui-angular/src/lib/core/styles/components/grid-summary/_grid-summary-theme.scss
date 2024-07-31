@@ -176,11 +176,9 @@
         margin-inline-end: rem(3px);
 
         @if $variant == 'indigo-design' {
-            margin-inline-end: initial;
+            @include type-style('caption');
 
-            /* stylelint-disable scss/at-extend-no-missing-placeholder */
-            @extend .ig-typography__caption;
-            /* stylelint-enable scss/at-extend-no-missing-placeholder */
+            margin-inline-end: initial;
         }
 
         &:hover {
