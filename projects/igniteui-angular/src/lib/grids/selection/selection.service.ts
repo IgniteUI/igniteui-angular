@@ -611,9 +611,8 @@ export class IgxGridSelectionService {
             return this.allRowsSelected;
         }
         const selectedData = new Set(newSelection ? newSelection.map(r => this.getRecordKey(r)) : [...this.rowSelection]);
-        const relevantData = this.isFilteringApplied() ? this.grid.filteredData : this.allData;
-        const unSelectedRows = relevantData.filter(row => !selectedData.has(this.getRecordKey(row)) && !this.isRowDeleted(this.getRecordKey(row)));
-        return this.allRowsSelected = relevantData.length > 0 && unSelectedRows.length === 0;
+        const unSelectedRows = this.allData.filter(row => !selectedData.has(this.getRecordKey(row)) && !this.isRowDeleted(this.getRecordKey(row)));
+        return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
     }
 
     public hasSomeRowSelected(): boolean {
