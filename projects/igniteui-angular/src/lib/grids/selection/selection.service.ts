@@ -432,11 +432,13 @@ export class IgxGridSelectionService {
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const addedRows = this.allData.filter((row) => !this.isRowSelected(this.getRecordKey(row)));
+        const allData = this.allData;
+        const allDataKeys = new Set(allData.map(row => this.getRecordKey(row)));
+        const addedRows = allData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
         const selectedRows = this.getSelectedRowsData();
-        const newSelection = this.rowSelection.size ? selectedRows.concat(addedRows) : addedRows;
+        const newSelection = addedRows;
         this.indeterminateRows.clear();
-        this.emitRowSelectionEvent(newSelection, addedRows, [], event, selectedRows);
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event, selectedRows, allDataKeys);
     }
 
     /** Select the specified row and emit event. */
@@ -610,9 +612,7 @@ export class IgxGridSelectionService {
             return this.allRowsSelected;
         }
         const selectedData = new Set(newSelection ? newSelection : [...this.rowSelection]);
-        const allData = this.getRowIDs(this.allData);
-        const unSelectedRows = allData.filter(row => !selectedData.has(row));
-        return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
+        return this.allRowsSelected = this.allData.length > 0 && selectedData.size === this.allData.length;
     }
 
     public hasSomeRowSelected(): boolean {
@@ -627,7 +627,7 @@ export class IgxGridSelectionService {
             this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
-    public emitRowSelectionEvent(newSelection, added, removed, event?, currSelection?): boolean {
+    public emitRowSelectionEvent(newSelection, added, removed, event?, currSelection?, allDataKeys?): boolean {
         currSelection = currSelection ?? this.getSelectedRowsData();
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
@@ -638,7 +638,9 @@ export class IgxGridSelectionService {
             newSelection,
             added, removed,
             event, cancel: false,
-            allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
+            allRowsSelected: allDataKeys ?
+                newSelection.length === allDataKeys.size :
+                this.areAllRowSelected(newSelection.map(r => this.getRecordKey(r)))
         };
 
         this.grid.rowSelectionChanging.emit(args);
