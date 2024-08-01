@@ -3,20 +3,20 @@ import { PlatformUtil } from '../../../igniteui-angular/src/lib/core/utils';
 import { IconMeta, IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
 
 
-interface SvgIcon {
+export interface SvgIcon {
     svg: string;
     title?: string;
   }
 
   export type Collection<T, U> = Map<T, U>;
 
-  enum ActionType {
+  export enum ActionType {
     SyncState = 0,
     RegisterIcon = 1,
     UpdateIconReference = 2,
   }
 
-  interface BroadcastIconsChangeMessage {
+  export interface BroadcastIconsChangeMessage {
     actionType: ActionType;
     collections?: Collection<string, Map<string, SvgIcon>>;
     references?: Collection<string, Map<string, IconMeta>>;
@@ -52,7 +52,8 @@ export class IgxIconBroadcastService {
         }
     }
 
-    private updateIconsFromCollection(collections: Collection<string, Map<string, SvgIcon>>){
+    private updateIconsFromCollection(collections: Collection<string, Map<string, SvgIcon>>) {
+        if (!collections) return;
         const collectionKeys = collections.keys();
         for (const collectionKey of collectionKeys) {
             const collection = collections.get(collectionKey);
@@ -63,7 +64,8 @@ export class IgxIconBroadcastService {
         }
     }
 
-    private updateRefsFromCollection(collections: Collection<string, Map<string, any>>){
+    private updateRefsFromCollection(collections: Collection<string, Map<string, any>>) {
+        if (!collections) return;
         const collectionKeys = collections.keys();
         for (const collectionKey of collectionKeys) {
             const collection = collections.get(collectionKey);
