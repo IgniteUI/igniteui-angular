@@ -5,9 +5,9 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { PlatformUtil } from "../core/utils";
 import { iconReferences } from './icon.references'
-import { Theme } from "igniteui-webcomponents/theming/types";
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
+import { IgxTheme } from "../services/theme/theme.service";
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -58,7 +58,7 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
-    private theme!: Theme;
+    private theme!: IgxTheme;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
@@ -127,7 +127,7 @@ export class IgxIconService {
     }
 
     /** @hidden @internal */
-    public setRefsByTheme(theme: Theme) {
+    public setRefsByTheme(theme: IgxTheme) {
         if (this.theme !== theme) {
             this.theme = theme;
 

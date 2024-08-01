@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { Theme } from 'igniteui-webcomponents/theming/types.js';
+import { IgxTheme } from "../services/theme/theme.service";
 
 // Exported internal types
-export type IconThemeKey = Theme | 'default';
+export type IconThemeKey = IgxTheme | 'default';
 
 export type IconReferencePair = {
   alias: IconMeta;
@@ -18,6 +18,13 @@ export type MetaReference = {
   target: Map<IconThemeKey, IconMeta>;
 };
 
+// Exported public types
+export interface IconMeta {
+    name: string;
+    family: string;
+    type?: IconType;
+}
+
 export interface FamilyMeta {
     className: string;
     type: IconType;
@@ -27,11 +34,4 @@ export interface FamilyMeta {
 export interface IconFamily {
     name: string;
     meta: FamilyMeta;
-}
-
-// Exported public types
-export interface IconMeta {
-    name: string;
-    family: string;
-    type?: IconType;
 }

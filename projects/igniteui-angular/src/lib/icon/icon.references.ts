@@ -1,4 +1,4 @@
-/** READ BEFORE YOU MODIFY THIS FILE
+/** READ BEFORE YOU MODIFY THIS FILE!
  *
  * Before you add/modify an icon reference, please think about the semantics of the icon you are adding/modifying.
  *
@@ -15,7 +15,7 @@
  *
  * Likewise, modifying existing references should be handled with caution as many component in the framework already
  * share icons that have equivalent semantic meaning. For example, the `Paginator`, `Grid Filtering Row`,
- * and `Tabs` components in Ignite UI for Angular all use the `prev` and `next` icons as for navigating between pages
+ * and `Tabs` components in Ignite UI for Angular all use the `prev` and `next` icons for navigating between pages
  * or lists of items. Changing the underlying target for those icons should be done in a way that suits all components.
  *
  * Keep in mind that icon aliases and their underlying names are shared between Ignite UI component frameworks
@@ -165,7 +165,7 @@ addIcon('input_collapse', {
 });
 addIcon('arrow_drop_down', {
     default: {
-        name: 'arrow_drop_up',
+        name: 'arrow_drop_down',
         family: 'material',
     },
 });
@@ -368,7 +368,7 @@ addIcon('search', {
         family: 'material',
     },
 });
-addIcon('sum', {
+addIcon('functions', {
     default: {
         name: 'functions',
         family: 'material',
@@ -581,6 +581,12 @@ addIcon('filter_starts_with', {
 addIcon('filter_ends_with', {
     default: {
         name: 'ends-with',
+        family: 'imx-icons',
+    },
+});
+addIcon('ungroup', {
+    default: {
+        name: 'ungroup',
         family: 'imx-icons',
     },
 });
