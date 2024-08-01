@@ -432,9 +432,10 @@ export class IgxGridSelectionService {
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const allData = this.allData;
-        const allDataKeys = new Set(allData.map(row => this.getRecordKey(row)));
-        const addedRows = allData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
+        const relevantData = this.isFilteringApplied() ? this.grid.filteredData : this.allData;
+        const nonDeletedData = relevantData.filter(row => !this.isRowDeleted(this.getRecordKey(row)));
+        const allDataKeys = new Set(nonDeletedData.map(row => this.getRecordKey(row)));
+        const addedRows = nonDeletedData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
         const selectedRows = this.getSelectedRowsData();
         const newSelection = addedRows;
         this.indeterminateRows.clear();
@@ -612,7 +613,10 @@ export class IgxGridSelectionService {
             return this.allRowsSelected;
         }
         const selectedData = new Set(newSelection ? newSelection : [...this.rowSelection]);
-        return this.allRowsSelected = this.allData.length > 0 && selectedData.size === this.allData.length;
+        const relevantData = this.isFilteringApplied() ? this.grid.filteredData : this.allData;
+        const nonDeletedData = relevantData.filter(row => !this.isRowDeleted(this.getRecordKey(row)));
+        return this.allRowsSelected = nonDeletedData.length > 0 &&
+               selectedData.size === nonDeletedData.length;
     }
 
     public hasSomeRowSelected(): boolean {
