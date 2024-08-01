@@ -590,3 +590,9 @@ addIcon('ungroup', {
         family: 'imx-icons',
     },
 });
+addIcon('file_download', {
+    default: {
+        name: 'file_download',
+        family: 'material',
+    },
+});
