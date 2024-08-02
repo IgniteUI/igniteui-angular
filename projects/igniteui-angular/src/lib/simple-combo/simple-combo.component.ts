@@ -3,7 +3,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
@@ -212,29 +212,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = super.selection;
-        const isReactiveForm = this.ngControl && this.ngControl.control instanceof FormControl;
-
-        if (isReactiveForm && (value === null || value === '' || value === undefined)) {
-            this.selectionService.clear(this.id);
-            this._displayValue = '';
-            this._value = [];
-            this.filterValue = '';
-        } else if (this.isValid(value)) {
-            this.selectionService.select_items(this.id, [value], true);
-            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
-            this._displayValue = this.createDisplayText(super.selection, oldSelection);
-            this.filterValue = this._displayValue?.toString() || '';
-
-            if (this.isRemote && !this._remoteSelection[value]) {
-                this._displayValue = '';
-            }
-        } else {
-            this.selectionService.clear(this.id);
-            this._displayValue = '';
-            this._value = [];
-            this.filterValue = '';
-        }
+        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
+        this._displayValue = this.createDisplayText(super.selection, oldSelection);
+        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+        this.filterValue = this._displayValue?.toString() || '';
     }
 
     /** @hidden @internal */
@@ -625,8 +607,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private isValid(value: any): boolean {
-        return this.required
-        ? value !== null && value !== '' && value !== undefined
-        : value !== undefined;
+        if (this.ngControl) {
+            return value !== null && value !== '' && value !== undefined;
+        } else {
+            return value !== undefined;
+        }
     }
 }
