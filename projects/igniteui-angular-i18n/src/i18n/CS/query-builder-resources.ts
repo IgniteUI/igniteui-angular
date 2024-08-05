@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Není prázdný',
     igx_query_builder_filter_null: 'Nula',
     igx_query_builder_filter_notNull: 'Nenulový',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Před',
     igx_query_builder_filter_after: 'Po',
     igx_query_builder_filter_at: 'V',

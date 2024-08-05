@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Ikke tom',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Ikke Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Før',
     igx_query_builder_filter_after: 'Efter',
     igx_query_builder_filter_at: 'På',

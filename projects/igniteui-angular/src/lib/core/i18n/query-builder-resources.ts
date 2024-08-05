@@ -13,6 +13,8 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_filter_notEmpty?: string;
     igx_query_builder_filter_null?: string;
     igx_query_builder_filter_notNull?: string;
+    igx_query_builder_filter_in?: string;
+    igx_query_builder_filter_notIn?: string;
     igx_query_builder_filter_before?: string;
     igx_query_builder_filter_after?: string;
     igx_query_builder_filter_at?: string;
@@ -67,6 +69,8 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_filter_notEmpty: 'Not Empty',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Not Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Before',
     igx_query_builder_filter_after: 'After',
     igx_query_builder_filter_at: 'At',

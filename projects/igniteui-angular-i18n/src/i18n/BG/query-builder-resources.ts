@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsBG_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Не е празно',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Не е Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Преди',
     igx_query_builder_filter_after: 'След',
     igx_query_builder_filter_at: 'На',

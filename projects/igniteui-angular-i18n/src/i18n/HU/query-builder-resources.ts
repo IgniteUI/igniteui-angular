@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Nem üres',
     igx_query_builder_filter_null: 'Nullértékű',
     igx_query_builder_filter_notNull: 'Nem nullértékű',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Előtte',
     igx_query_builder_filter_after: 'Utána',
     igx_query_builder_filter_at: 'Ekkor',

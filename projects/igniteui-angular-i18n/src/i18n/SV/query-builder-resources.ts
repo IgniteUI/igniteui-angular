@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Inte tom',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Inte null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Innan',
     igx_query_builder_filter_after: 'Efter',
     igx_query_builder_filter_at: 'Vid',

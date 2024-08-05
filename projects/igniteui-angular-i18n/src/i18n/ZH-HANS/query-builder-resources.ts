@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_filter_notEmpty: '非空',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: '非 Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: '之前',
     igx_query_builder_filter_after: '之后',
     igx_query_builder_filter_at: '在',

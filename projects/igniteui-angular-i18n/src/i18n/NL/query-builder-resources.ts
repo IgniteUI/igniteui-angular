@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Niet leeg',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Niet null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Voor',
     igx_query_builder_filter_after: 'Na',
     igx_query_builder_filter_at: 'Op',

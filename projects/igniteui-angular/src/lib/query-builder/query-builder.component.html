@@ -175,6 +175,7 @@
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
             class="igx-filter-tree__inputs"
+            style = "margin-top: 10px"
         >
             <igx-select
                 #fieldSelect
@@ -374,7 +375,7 @@
         <ng-container *ngIf="expressionItem.expression.searchTree || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
             <igx-query-builder
                 #innerQuery
-                style="margin: 10px 0px 10px 25px"
+                style="margin: 10px 0px 10px 0px"
                 [entities]="entities"
                 [expressionTree]="expressionItem.expression.searchTree"
                 (expressionTreeChange)="onExpressionSearchTreeChange()">
@@ -431,19 +432,16 @@
                         </igx-select-item>
                     </igx-select>
 
-                    <igx-select #returnFieldsSelect
-                        type="box"
-                        [overlaySettings]="returnFieldsSelectOverlaySettings"
-                        [placeholder]="
-                            'Select return fields'
-                        "
+                    <igx-combo
+                        style="margin-left: 10px"
+                        [itemsMaxHeight]="250"
+                        [data]="fields"
+                        [displayKey]="'field'"
+                        [valueKey]="'field'"
                         [(ngModel)]="selectedReturnFields"
-                    >
-                        <igx-select-item [value]="'All'">All</igx-select-item>
-                        <igx-select-item *ngFor="let field of fields" [value]="field.field">
-                            {{ field.label || field.header || field.field }}
-                        </igx-select-item>
-                    </igx-select>
+                        placeholder="Select return fields"
+                        searchPlaceholder="Search...">
+                    </igx-combo>
                 </div>
 
                 <ng-container *ngFor="let expr of expressionItem?.children">

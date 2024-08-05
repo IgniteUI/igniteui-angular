@@ -37,7 +37,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxComboComponent } from "../combo/combo.component";
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -117,7 +117,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent]
 })
 export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
@@ -227,9 +227,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     
     @ViewChildren('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
-
-    @ViewChild('returnFieldsSelect', { read: IgxSelectComponent })
-    protected returnFieldsSelect: IgxSelectComponent;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -369,15 +366,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         modal: false,
         closeOnOutsideClick: false
     };
-    
-    /**
-     * @hidden @internal
-     */
-    public returnFieldsSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
 
     /**
      * @hidden @internal
@@ -441,7 +429,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     public ngAfterViewInit(): void {
         this._overlaySettings.outlet = this.overlayOutlet;
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
-        this.returnFieldsSelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
     }
@@ -498,10 +485,14 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     public set selectedReturnFields(value: string | string[]) {
         const oldValue = this._selectedReturnFields;
         
+        // if (!value || value.length === 0) {
+        //     value = this.fields.map(f => f.field);
+        // }
+        
         if (this._selectedReturnFields !== value && oldValue !== value) {
             this._selectedReturnFields = value;
             if (this.expressionTree) {
-                this.expressionTree.returnFields = value;
+                this.expressionTree.returnFields = value.length === 0 ? '*' : value;
                 this.expressionTreeChange.emit();
             }
         }
@@ -756,9 +747,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.target = this.entitySelect.element;
         this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.returnFieldsSelectOverlaySettings.target = this.returnFieldsSelect.element;
-        this.returnFieldsSelectOverlaySettings.excludeFromOutsideClick = [this.returnFieldsSelect.element as HTMLElement];
-        this.returnFieldsSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
         this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
         this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
@@ -1136,10 +1124,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
                     this._selectedEntity = this.entities.find(el => el.name === expressionTree.entity);
-                    this.selectedReturnFields =
-                        !expressionTree.returnFields || expressionTree.returnFields === "*" || expressionTree.returnFields === "All"
-                            ? 'All'
-                            : this.fields.find(f => f.field === expressionTree.returnFields).field;
+                    console.log('stop')
+                    this._selectedReturnFields =
+                        !expressionTree.returnFields || expressionTree.returnFields === '*' || expressionTree.returnFields === 'All'
+                            ? this.fields.map(f => f.field)
+                            : this.fields.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
                 }
             }
         }

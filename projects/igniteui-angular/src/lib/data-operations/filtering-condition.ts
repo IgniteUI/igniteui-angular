@@ -22,14 +22,12 @@ export class IgxFilteringOperand {
         }, {
             name: 'in',
             isUnary: false,
-            iconName: 'starts-with',
-            // hidden: true,
+            iconName: 'is-empty',
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
         }, {
             name: 'notIn',
             isUnary: false,
-            iconName: 'starts-with',
-            // hidden: true,
+            iconName: 'not-empty',
             logic: (target: any, searchVal: Set<any>) => !this.findValueInSet(target, searchVal)
         }];
     }

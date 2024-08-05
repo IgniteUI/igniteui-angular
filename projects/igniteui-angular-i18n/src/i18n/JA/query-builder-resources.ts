@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: '空以外',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Null 以外',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: '前',
     igx_query_builder_filter_after: '後',
     igx_query_builder_filter_at: '特定の時間',

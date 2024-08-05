@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: '비우지 않음',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Not Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: '전에',
     igx_query_builder_filter_after: '후에',
     igx_query_builder_filter_at: 'At',

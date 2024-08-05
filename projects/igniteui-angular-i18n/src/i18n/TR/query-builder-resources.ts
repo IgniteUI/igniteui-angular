@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Boş değil',
     igx_query_builder_filter_null: 'Geçersiz',
     igx_query_builder_filter_notNull: 'Geçersiz değil',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Önce',
     igx_query_builder_filter_after: 'Sonra',
     igx_query_builder_filter_at: 'Şu zaman',

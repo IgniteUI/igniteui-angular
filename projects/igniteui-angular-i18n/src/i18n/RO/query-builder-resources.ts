@@ -15,6 +15,8 @@ const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Nu gol',
     igx_query_builder_filter_null: 'Nul',
     igx_query_builder_filter_notNull: 'Nu nul',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Înainte de',
     igx_query_builder_filter_after: 'După',
     igx_query_builder_filter_at: 'La',
