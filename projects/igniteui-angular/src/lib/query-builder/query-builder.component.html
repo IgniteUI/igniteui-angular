@@ -6,13 +6,13 @@
     <igx-icon family="default" name="close"></igx-icon>
 </ng-template>
 
-<igx-query-builder-header
+<!-- <igx-query-builder-header
     *ngIf="!headerContent"
     [title]="this.resourceStrings.igx_query_builder_title"
 >
 </igx-query-builder-header>
 
-<ng-content select="igx-query-builder-header"></ng-content>
+<ng-content select="igx-query-builder-header"></ng-content> -->
 
 <div
     #expressionsContainer
@@ -169,22 +169,6 @@
                 >
                 </igx-icon>
             </div>
-
-            <div *ngIf="expressionItem.expression.searchTree" style="padding: 10px; background-color: rgba(0, 0, 0, 0.02); border-radius: 10px;">
-                <!-- <ng-container *ngTemplateOutlet="operandTemplate; context: {$implicit: expressionItem.expression.searchTree}"></ng-container> -->
-                <!-- <span>children:"{{expressionItem.expression.searchTree.children}}"</span> -->
-                <ng-container *ngFor="let expr of expressionItem.expression.searchTree?.children">
-                    <ng-container
-                        *ngTemplateOutlet="
-                            isExpressionGroup(expr)
-                                ? expressionGroupTemplate
-                                : operandTemplate;
-                            context: context(expr)
-                        "
-                    >
-                    </ng-container>
-                </ng-container>
-            </div>
         </div>
 
         <div
@@ -274,7 +258,7 @@
                         (selectedField &&
                             selectedField.filters.condition(selectedCondition)
                                 .isUnary) ||
-                        selectedCondition.toLowerCase() === 'in'
+                        selectedCondition === 'in'
                     "
                     [type]="
                         selectedField && selectedField.dataType === 'number'
@@ -287,10 +271,6 @@
                     [(ngModel)]="searchValue"
                 />
             </igx-input-group>
-            
-            <div *ngIf="expressionItem.expression.searchTree">
-                <ng-container *ngTemplateOutlet="expressionGroupTemplate; context: { $implicit: expressionItem.expression.searchTree }"></ng-container>
-            </div>
 
             <igx-date-picker
                 #picker
@@ -389,8 +369,17 @@
                     <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
                 </button>
             </div>
-
         </div>
+
+        <ng-container *ngIf="expressionItem.expression.searchTree || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
+            <igx-query-builder
+                #innerQuery
+                style="margin: 10px 0px 10px 25px"
+                [entities]="entities"
+                [expressionTree]="expressionItem.expression.searchTree"
+                (expressionTreeChange)="onExpressionSearchTreeChange()">
+            </igx-query-builder>
+        </ng-container>
 
         <div
             *ngIf="expressionItem.inAddMode"
@@ -414,86 +403,85 @@
     </ng-template>
 
     <ng-template #expressionGroupTemplate let-expressionItem>
-        <div style="padding: 10px; background-color: rgba(0, 0, 0, 0.02); border-radius: 10px;">
-            <div class="igx-filter-tree">
-                <div
-                    tabindex="0"
-                    class="igx-filter-tree__line"
-                    [ngClass]="{
-                        'igx-filter-tree__line--and': expressionItem?.operator === 0,
-                        'igx-filter-tree__line--or': expressionItem?.operator === 1,
-                        'igx-filter-tree__line--selected': expressionItem?.selected
-                    }"
-                    (keydown)="invokeClick($event)"
-                    (click)="onGroupClick(expressionItem)"
-                ></div>
+        <div class="igx-filter-tree">
+            <div
+                tabindex="0"
+                class="igx-filter-tree__line"
+                [ngClass]="{
+                    'igx-filter-tree__line--and': expressionItem?.operator === 0,
+                    'igx-filter-tree__line--or': expressionItem?.operator === 1,
+                    'igx-filter-tree__line--selected': expressionItem?.selected
+                }"
+                (keydown)="invokeClick($event)"
+                (click)="onGroupClick(expressionItem)"
+            ></div>
 
-                <div class="igx-filter-tree__expression">
-                    <div class="igx-filter-tree__inputs">
-                        <igx-select #entitySelect
-                            type="box"
-                            [overlaySettings]="entitySelectOverlaySettings"
-                            [placeholder]="
-                                'Select entity'
-                            "
-                            [(ngModel)]="selectedEntity"
-                        >
-                            <igx-select-item *ngFor="let entity of entities" [value]="entity">
-                                {{entity.name}}
-                            </igx-select-item>
-                        </igx-select>
-    
-                        <igx-select #returnFieldsSelect
-                            type="box"
-                            [overlaySettings]="returnFieldsSelectOverlaySettings"
-                            [placeholder]="
-                                'Select return fields'
-                            "
-                            [(ngModel)]="selectedReturnFields"
-                        >
-                            <igx-select-item *ngFor="let field of fields" [value]="field">
-                                {{ field.label || field.header || field.field }}
-                            </igx-select-item>
-                        </igx-select>
-                    </div>
-
-                    <ng-container *ngFor="let expr of expressionItem?.children">
-                        <ng-container
-                            *ngTemplateOutlet="
-                                isExpressionGroup(expr)
-                                    ? expressionGroupTemplate
-                                    : operandTemplate;
-                                context: context(expr)
-                            "
-                        >
-                        </ng-container>
-                    </ng-container>
-                    <div
-                        *ngIf="currentGroup === expressionItem"
-                        #currentGroupButtonsContainer
-                        class="igx-filter-tree__buttons"
+            <div class="igx-filter-tree__expression">
+                <div class="igx-filter-tree__inputs">
+                    <igx-select #entitySelect
+                        type="box"
+                        [overlaySettings]="entitySelectOverlaySettings"
+                        [placeholder]="
+                            'Select entity'
+                        "
+                        [(ngModel)]="selectedEntity"
                     >
-                        <ng-container
-                            *ngTemplateOutlet="
-                                addExpressionsTemplate;
-                                context: context(expressionItem)
-                            "
-                        >
-                        </ng-container>
-                        <button type="button"
-                            igxButton="outlined"
-                            *ngIf="expressionItem !== rootGroup"
-                            [disabled]="
-                                hasEditedExpression ||
-                                expressionItem.children.length < 2
-                            "
-                            (click)="endGroup(expressionItem)"
-                        >
-                            <span>{{
-                                this.resourceStrings.igx_query_builder_end_group
-                            }}</span>
-                        </button>
-                    </div>
+                        <igx-select-item *ngFor="let entity of entities" [value]="entity">
+                            {{entity.name}}
+                        </igx-select-item>
+                    </igx-select>
+
+                    <igx-select #returnFieldsSelect
+                        type="box"
+                        [overlaySettings]="returnFieldsSelectOverlaySettings"
+                        [placeholder]="
+                            'Select return fields'
+                        "
+                        [(ngModel)]="selectedReturnFields"
+                    >
+                        <igx-select-item [value]="'All'">All</igx-select-item>
+                        <igx-select-item *ngFor="let field of fields" [value]="field.field">
+                            {{ field.label || field.header || field.field }}
+                        </igx-select-item>
+                    </igx-select>
+                </div>
+
+                <ng-container *ngFor="let expr of expressionItem?.children">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            isExpressionGroup(expr)
+                                ? expressionGroupTemplate
+                                : operandTemplate;
+                            context: context(expr)
+                        "
+                    >
+                    </ng-container>
+                </ng-container>
+                <div
+                    *ngIf="currentGroup === expressionItem"
+                    #currentGroupButtonsContainer
+                    class="igx-filter-tree__buttons"
+                >
+                    <ng-container
+                        *ngTemplateOutlet="
+                            addExpressionsTemplate;
+                            context: context(expressionItem)
+                        "
+                    >
+                    </ng-container>
+                    <button type="button"
+                        igxButton="outlined"
+                        *ngIf="expressionItem !== rootGroup"
+                        [disabled]="
+                            hasEditedExpression ||
+                            expressionItem.children.length < 2
+                        "
+                        (click)="endGroup(expressionItem)"
+                    >
+                        <span>{{
+                            this.resourceStrings.igx_query_builder_end_group
+                        }}</span>
+                    </button>
                 </div>
             </div>
         </div>

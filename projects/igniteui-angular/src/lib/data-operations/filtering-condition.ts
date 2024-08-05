@@ -20,11 +20,17 @@ export class IgxFilteringOperand {
             iconName: 'is-not-null',
             logic: (target: any) => target !== null
         }, {
-            name: 'IN',
+            name: 'in',
             isUnary: false,
             iconName: 'starts-with',
             // hidden: true,
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
+        }, {
+            name: 'notIn',
+            isUnary: false,
+            iconName: 'starts-with',
+            // hidden: true,
+            logic: (target: any, searchVal: Set<any>) => !this.findValueInSet(target, searchVal)
         }];
     }
 

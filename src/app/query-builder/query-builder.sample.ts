@@ -59,16 +59,16 @@ export class QueryBuilderComponent implements OnInit {
             searchVal: 'IC60',
             // ignoreCase: true
         });
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', 'Id');
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', '*');
         tree.filteringOperands.push({
                 fieldName: 'Id',
-                condition: IgxStringFilteringOperand.instance().condition('IN'),
+                condition: IgxStringFilteringOperand.instance().condition('in'),
                 searchTree: innerTree
             });
         tree.filteringOperands.push({
-            fieldName: 'Id',
+            fieldName: 'Structure',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'xxx'
+            searchVal: 'abc'
         });
 
         // const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
@@ -100,5 +100,9 @@ export class QueryBuilderComponent implements OnInit {
             changei18n(IgxResourceStringsFR);
         }
         this.queryBuilder.locale = locale;
+    }
+
+    public printExpressionTree(tree: IExpressionTree) {
+        return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
     }
 }

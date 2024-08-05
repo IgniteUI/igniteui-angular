@@ -132,28 +132,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     @HostBinding('style.display')
     public display = 'block';
 
-    /**
-    * Returns the entities.
-    */
-    public get entities(): EntityType[] {
-        return this._entities;
-    }
-
-    /**
-     * Sets the entities.
-     */
     @Input()
-    public set entities(entities: EntityType[]) {
-        this._entities = entities;
-
-        // if (this._entities) {
-            // this.registerSVGIcons();
-            // this._entities.forEach(field => {
-            //     this.setFilters(field);
-            //     this.setFormat(field);
-            // });
-        // }
-    }
+    public entities: EntityType[];
 
     /**
     * Returns the fields.
@@ -338,6 +318,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     private overlayOutlet: IgxOverlayOutletDirective;
 
+    @ViewChild(IgxQueryBuilderComponent)
+    private innerQuery: IgxQueryBuilderComponent;
+
     /**
      * @hidden @internal
      */
@@ -377,11 +360,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
-    
-    /**
-     * @hidden @internal
-     */
-    public selectedReturnFields: string | string[];
 
     /**
      * @hidden @internal
@@ -421,6 +399,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
     private destroy$ = new Subject<any>();
     private _selectedEntity: EntityType;
+    private _selectedReturnFields: string | string[];
     private _selectedField: FieldType;
     private _clickTimer;
     private _dblClickDelay = 200;
@@ -431,7 +410,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
     private _selectedGroups: ExpressionGroupItem[] = [];
-    private _entities: EntityType[];
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
@@ -496,8 +474,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
             }
         }
 
-        this.selectedReturnFields = null;
-
         const entity = this.entities.find(el => el.name === this.selectedEntity.name);
         this.fields = entity.fields;
         
@@ -514,6 +490,28 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      */
     public get selectedEntity(): EntityType {
         return this._selectedEntity;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public set selectedReturnFields(value: string | string[]) {
+        const oldValue = this._selectedReturnFields;
+        
+        if (this._selectedReturnFields !== value && oldValue !== value) {
+            this._selectedReturnFields = value;
+            if (this.expressionTree) {
+                this.expressionTree.returnFields = value;
+                this.expressionTreeChange.emit();
+            }
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedReturnFields(): string | string[] {
+        return this._selectedReturnFields;
     }
 
     /**
@@ -612,10 +610,14 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
+        console.log('commitOperandEdit');
         if (this._editedExpression) {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            if (this.innerQuery) {
+                this._editedExpression.expression.searchTree = this.innerQuery.expressionTree;
+            }
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
@@ -660,6 +662,10 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public operandCanBeCommitted(): boolean {
+        return true; // TODO: enable for search tree
+
+        console.log(this._editedExpression.fieldLabel);
+        console.log(this._editedExpression.expression);
         return this.selectedField && this.selectedCondition &&
             (!!this.searchValue || this.selectedField.filters.condition(this.selectedCondition).isUnary);
     }
@@ -720,6 +726,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
+        console.log('enterExpressionEdit');
+        // console.log(this.expressionTree);
         this.clearSelection();
         this.exitOperandEdit();
         this.cancelOperandAdd();
@@ -1009,37 +1017,12 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public onExpressionTreeEntityChanged(eventArgs: ISelectionEventArgs) {
-    //     this.selectedEntity = eventArgs.newSelection.value;
-    //     this.selectedReturnFields = null;
-
-    //     const entity = this.entities.find(el => el.name === this.selectedEntity.name);
-    //     this.fields = entity.fields;
-        
-    //     if (this.expressionTree) {
-    //         this.expressionTree.entity = this.selectedEntity.name;
-    //         this.expressionTree.returnFields = null;
-
-    //         // TODO: reset conditions on entity change
-    //     }
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public onExpressionReturnFieldChanged(eventArgs: ISelectionEventArgs) {
-    //     this.selectedReturnFields = 
-    //         typeof eventArgs.newSelection.value === 'string' ?
-    //         eventArgs.newSelection.value :
-    //         eventArgs.newSelection.value.field;;
-
-    //     if (this.expressionTree) {
-    //         this.expressionTree.returnFields = this.selectedReturnFields;
-    //     }
-    // }
+    public onExpressionSearchTreeChange() {
+        console.log('onExpressionSearchTreeChange');
+        console.log(this.expressionTree);
+        this.expressionTreeChange.emit();
+        // this.cdr.detectChanges();
+    }
 
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
@@ -1143,7 +1126,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
                         searchVal: filteringExpr.searchVal,
-                        searchTree: this.createExpressionGroupItem(filteringExpr.searchTree, groupItem),
+                        searchTree: filteringExpr.searchTree, // this.createExpressionGroupItem(filteringExpr.searchTree, groupItem),
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
@@ -1152,6 +1135,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
+                    this._selectedEntity = this.entities.find(el => el.name === expressionTree.entity);
+                    this.selectedReturnFields =
+                        !expressionTree.returnFields || expressionTree.returnFields === "*" || expressionTree.returnFields === "All"
+                            ? 'All'
+                            : this.fields.find(f => f.field === expressionTree.returnFields).field;
                 }
             }
         }
