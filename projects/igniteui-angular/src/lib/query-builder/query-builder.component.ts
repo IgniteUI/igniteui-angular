@@ -601,12 +601,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
-        console.log('commitOperandEdit');
         if (this._editedExpression) {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
-            if (this.innerQuery) {
+            if (this.innerQuery && (this._editedExpression.expression.condition.name === 'in' || this._editedExpression.expression.condition.name === 'notIn')) {
                 this._editedExpression.expression.searchTree = this.innerQuery.expressionTree;
             }
             this._editedExpression.fieldLabel = this.selectedField.label
