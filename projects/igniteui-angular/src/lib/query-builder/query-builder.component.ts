@@ -468,7 +468,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
             this.expressionTree.entity = this.selectedEntity.name;
             this.expressionTree.returnFields = null;
 
-            // TODO: reset conditions on entity change
+            // TODO: show dialog alert
         }
     }
 
@@ -653,12 +653,10 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public operandCanBeCommitted(): boolean {
-        return true; // TODO: enable for search tree
+        // TODO: fix when creating inner query
 
-        console.log(this._editedExpression.fieldLabel);
-        console.log(this._editedExpression.expression);
         return this.selectedField && this.selectedCondition &&
-            (!!this.searchValue || this.selectedField.filters.condition(this.selectedCondition).isUnary);
+            (!!this.searchValue || !!this._editedExpression.expression.searchTree || this.selectedField.filters.condition(this.selectedCondition).isUnary);
     }
 
     /**
@@ -1339,6 +1337,20 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                 name: icon.name,
                 family: 'imx-icons'
             });
+        });
+
+        const inIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm560 200v-120H640v-80h120v-120h80v120h120v80H840v120h-80Z"/></svg>';
+        this.iconService.addSvgIconFromText('in', inIcon, 'imx-icons');
+        this.iconService.addIconRef('in', 'default', {
+            name: 'in',
+            family: 'imx-icons'
+        });
+
+        const notInIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm440 104 84-84-84-84 56-56 84 84 84-84 56 56-83 84 83 84-56 56-84-83-84 83-56-56Z"/></svg>';
+        this.iconService.addSvgIconFromText('not-in', notInIcon, 'imx-icons');
+        this.iconService.addIconRef('not-in', 'default', {
+            name: 'not-in',
+            family: 'imx-icons'
         });
 
         this.iconService.addIconRef('add', 'default', {
