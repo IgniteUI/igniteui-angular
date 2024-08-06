@@ -125,5 +125,6 @@ declare global {
       'igc-grid': NgElement & WithProperties<GridType>;
       'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
       'igc-paginator': NgElement & WithProperties<IgxPaginatorComponent>;
+      'igc-grid-state':  NgElement & WithProperties<IgxGridStateComponent>;
     }
   }
