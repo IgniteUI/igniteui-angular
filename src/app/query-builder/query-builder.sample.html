@@ -3,6 +3,7 @@
         <!-- <size-selector #sizeSelector></size-selector> -->
 
         <igx-query-builder #queryBuilder
+            (expressionTreeChange)="this.onChange()"
             [entities]="this.entities"
             [expressionTree]="this.expressionTree">
             <!-- Custom header -->
@@ -12,6 +13,10 @@
         <!-- <div class="sample-buttons">
             <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
         </div> -->
+
+        <div *ngIf="this.queryResult" style="margin-top: 1em">
+            {{ this.queryResult }}
+        </div>
 
         <div class="output-area">
             <pre>{{ printExpressionTree(queryBuilder.expressionTree) }}</pre>
