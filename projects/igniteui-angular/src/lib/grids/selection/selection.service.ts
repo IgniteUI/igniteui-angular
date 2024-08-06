@@ -432,7 +432,8 @@ export class IgxGridSelectionService {
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const addedRows = this.allData.filter((row) => !this.isRowSelected(this.getRecordKey(row)));
+        const allDataKeys = this.allData.map(row => this.getRecordKey(row));
+        const addedRows = this.allData.filter((row, index) => !this.isRowSelected(allDataKeys[index]));
         const selectedRows = this.getSelectedRowsData();
         const newSelection = this.rowSelection.size ? selectedRows.concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
@@ -609,9 +610,8 @@ export class IgxGridSelectionService {
         if (this.allRowsSelected !== undefined && !newSelection) {
             return this.allRowsSelected;
         }
-        const selectedData = new Set(newSelection ? newSelection : [...this.rowSelection]);
-        const allData = this.getRowIDs(this.allData);
-        const unSelectedRows = allData.filter(row => !selectedData.has(row));
+        const selectedData = new Set(newSelection ? newSelection.map(r => this.getRecordKey(r)) : [...this.rowSelection]);
+        const unSelectedRows = this.allData.filter(row => !selectedData.has(this.getRecordKey(row)) && !this.isRowDeleted(this.getRecordKey(row)));
         return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
     }
 
@@ -636,9 +636,11 @@ export class IgxGridSelectionService {
             owner: this.grid,
             oldSelection: currSelection,
             newSelection,
-            added, removed,
-            event, cancel: false,
-            allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
+            added,
+            removed,
+            event,
+            cancel: false,
+            allRowsSelected: this.areAllRowSelected(newSelection)
         };
 
         this.grid.rowSelectionChanging.emit(args);
