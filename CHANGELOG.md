@@ -18,6 +18,8 @@ All notable changes for each version of this project will be documented in this 
             this.iconService.registerFamilyAlias('my-family', 'my-family-class');
             this.iconService.setFamily('my-family', { className: 'my-family-class' });
         ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`

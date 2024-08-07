@@ -1,14 +1,15 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent } from '../../test-utils/grid-samples.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { CellType } from '../common/grid.interface';
 import { NoopSortingStrategy } from '../common/strategy';
+import { By } from '@angular/platform-browser';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
@@ -21,7 +22,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
                 GridWithPrimaryKeyComponent,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                IgxGridFormattedValuesSortingComponent
             ]
         });
     }));
@@ -405,6 +407,58 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByKey(6, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(7, 'LastName').row.index);
             expect(grid.getCellByKey(4, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
         });
+
+        it('Should sort grid by formatted values using FormattedValuesSortingStrategy', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxGridFormattedValuesSortingComponent);
+            tick();
+            fixture.detectChanges();
+
+            grid = fixture.componentInstance.grid;
+            tick();
+            fixture.detectChanges();
+
+            const productNameColumn = grid.getColumnByName("ProductName");
+            const quantityColumn = grid.getColumnByName("QuantityPerUnit");
+
+            expect(productNameColumn.sortStrategy instanceof FormattedValuesSortingStrategy).toBeTruthy();
+            expect(quantityColumn.sortStrategy instanceof FormattedValuesSortingStrategy).toBeTruthy();
+
+            const productNameHeaderCell = GridFunctions.getColumnHeader('ProductName', fixture);
+
+            GridFunctions.clickHeaderSortIcon(productNameHeaderCell);
+            tick(30);
+            fixture.detectChanges();
+
+            const firstProductNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[1];
+            expect(firstProductNameCell.nativeElement.textContent.trim()).toBe("a-Alice Mutton");
+
+            GridFunctions.clickHeaderSortIcon(productNameHeaderCell);
+            tick(30);
+            fixture.detectChanges();
+
+            const lastProductNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[1];
+            expect(lastProductNameCell.nativeElement.textContent.trim()).toBe("b-Tofu");
+
+            grid.clearSort();
+            tick();
+            fixture.detectChanges();
+
+            const quantityPerUnitHeaderCell = GridFunctions.getColumnHeader('QuantityPerUnit', fixture);
+
+            GridFunctions.clickHeaderSortIcon(quantityPerUnitHeaderCell);
+            tick(30);
+            fixture.detectChanges();
+
+            const firstQuantityCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
+            expect(firstQuantityCell.nativeElement.textContent.trim()).toBe("c");
+
+            GridFunctions.clickHeaderSortIcon(quantityPerUnitHeaderCell);
+            tick(30);
+            fixture.detectChanges();
+
+            const lastQuantityCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
+            expect(lastQuantityCell.nativeElement.textContent.trim()).toBe("d-36 boxes");
+        }));
     });
 
     describe('UI tests', () => {

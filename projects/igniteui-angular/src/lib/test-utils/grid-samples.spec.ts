@@ -18,7 +18,7 @@ import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvanc
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
+import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
@@ -2221,6 +2221,42 @@ export class SortOnInitComponent extends GridDeclaredColumnsComponent implements
    public sortingOptions: ISortingOptions = { mode: 'single' };
    public ngOnInit(): void {
         this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px">
+        <igx-column field="ProductID" header="Product ID" [sortable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatProductName" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="QuantityPerUnit" header="Quantity Per Unit" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatQuantity" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="UnitPrice" header="Unit Price" [dataType]="'number'" [sortable]="true"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true"></igx-column>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
+    public override data = SampleTestData.gridProductData();
+    public sortStrategy = new FormattedValuesSortingStrategy();
+
+    public formatProductName = (value: string) => {
+        if (!value) {
+            return 'a';
+        }
+        const prefix = value.length > 10 ? 'a' : 'b';
+        return `${prefix}-${value}`;
+    }
+
+    public formatQuantity = (value: string) => {
+        if (!value) {
+            return 'c';
+        }
+        const prefix = value.length > 10 ? 'c' : 'd';
+        return `${prefix}-${value}`;
     }
 }
 
