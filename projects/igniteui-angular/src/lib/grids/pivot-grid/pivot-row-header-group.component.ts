@@ -27,11 +27,8 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 })
 export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
 
-    /**
-     * @hidden
-     */
     @HostBinding('style.user-select')
-    public userSelect = 'none';
+    protected userSelect = 'none';
 
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
@@ -78,17 +75,13 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
         return this.rootDimension.displayName;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public get visibleIndex(): number {
+    protected get visibleIndex(): number {
         const rows = this.grid.visibleRowDimensions;
         return rows.indexOf(this.rootDimension);
     }
 
     @HostBinding('class.igx-grid-th--active')
-    public override get active() {
+    protected override get active() {
         const nav = this.grid.navigation;
         const node = nav.activeNode;
         return node && !this.column.columnGroup ?
@@ -99,22 +92,22 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     }
 
     @HostBinding('class.asc')
-    public get sortAscendingStyle() {
+    protected get sortAscendingStyle() {
         return this.rootDimension.sortDirection === SortingDirection.Asc;
     }
 
     @HostBinding('class.desc')
-    public get sortDescendingStyle() {
+    protected get sortDescendingStyle() {
         return this.rootDimension.sortDirection === SortingDirection.Desc;
     }
 
     @HostBinding('class.igx-grid-th--sortable')
-    public get sortableStyle() {
+    protected get sortableStyle() {
         return true;
     }
 
     @HostBinding('class.igx-grid-th--sorted')
-    public get sortedStyle() {
+    protected get sortedStyle() {
         return this.rootDimension.sortDirection !== undefined && this.rootDimension.sortDirection !== SortingDirection.None;
     }
 
@@ -125,31 +118,21 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
             row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: {
                 level: 0,
-                visibleIndex:  this.visibleIndex
+                visibleIndex: this.visibleIndex
             },
             layout: null
         };
     }
 
-    public override activate() {
+    protected override activate() {
         this.grid.navigation.setActiveNode(this.activeNode);
     }
 
-    /**
-     * @hidden @internal
-     */
-    public override pointerdown(_event: PointerEvent): void {
+    protected override pointerdown(_: PointerEvent): void {
         this.activate();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public override onMouseDown(_event: MouseEvent): void {
-        this.activate();
-    }
-
-    public override get selectable(): boolean {
+    protected override get selectable(): boolean {
         return false;
     }
 }

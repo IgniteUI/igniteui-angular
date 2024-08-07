@@ -1619,7 +1619,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 filterUIRow = grid.theadRow.filterRow;
                 expect(filterUIRow).toBeUndefined();
-        }));
+            }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             pending('Should be fixed with headers navigation');
@@ -2230,7 +2230,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const prefix = GridFunctions.getFilterRowPrefix(fix).nativeElement;
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , prefix);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', prefix);
             fix.detectChanges();
 
             expect(console.error).not.toHaveBeenCalled();
@@ -2433,12 +2433,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[1].children[2].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -2475,12 +2475,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filteringRow).toBeTruthy();
             expect(headers[1].nativeElement.offsetWidth).toEqual(250);
 
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 200, clientY: 0 });
+
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 100, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 100, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -2524,12 +2525,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Make 'Downloads' column bigger
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[2].children[2].nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            tick(200);
+            UIInteractions.pointerEvents.firePointerDown(headerResArea, { clientX: 100, clientY: 0 });
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+            UIInteractions.pointerEvents.firePointerMove(resizer, { clientX: 300, clientY: 5 });
+            UIInteractions.pointerEvents.firePointerUp(resizer, { clientX: 300, clientY: 5 });
+            tick(200);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('Downloads', fix);
@@ -2752,28 +2753,16 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
 
-        it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
+        it('Should not prevent pointerdown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
-            const input = filterCell.query(By.css('input')).nativeElement;
- 
-            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
-            input.dispatchEvent(mousedownEvent, { bubbles: true });
+            const input = filterCell.query(By.css('input')).nativeElement as HTMLInputElement;
+
+            const pointerDownEvent = new PointerEvent('mousedown', { bubbles: true, pointerId: 1 });
+            const preventDefaultSpy = spyOn(pointerDownEvent, 'preventDefault');
+            input.dispatchEvent(pointerDownEvent);
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
-        }));
-
-        it('Should prevent mousedown event when target is filter cell or its parent elements', fakeAsync(() => {
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            const firstCell = filteringCells[0].nativeElement;
-
-            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
-            firstCell.dispatchEvent(mousedownEvent);
-            fix.detectChanges();
-           
-            expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
 

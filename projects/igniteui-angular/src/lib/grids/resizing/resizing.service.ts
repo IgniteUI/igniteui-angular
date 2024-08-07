@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ColumnType } from '../common/grid.interface';
+import type { ColumnType } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -23,7 +23,7 @@ export class IgxColumnResizingService {
     /**
      * @hidden
      */
-     public showResizer = false;
+    public showResizer = false;
     /**
      * The column being resized.
      */
