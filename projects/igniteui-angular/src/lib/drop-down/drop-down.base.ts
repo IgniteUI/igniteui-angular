@@ -74,6 +74,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
      * ```
      */
+    @HostBinding('attr.id')
     @Input()
     public get id(): string {
         return this._id;

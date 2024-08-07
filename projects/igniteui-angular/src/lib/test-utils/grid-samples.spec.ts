@@ -766,6 +766,17 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+        <igx-column width="100px" [field]="'Number'" [header]="'Number'" [filterable]="true" dataType="number"></igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFilteringNumericComponent extends BasicGridComponent {
+    public override data = SampleTestData.numericData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
@@ -1171,6 +1182,37 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
+        <igx-column *ngFor="let c of columns"
+            [field]="c.field"
+            [header]="c.header"
+            [width]="c.width"
+            [filterable]="true"
+            [dataType]="c.type">
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
+})
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent {
+    public override data = [];
+    public columns = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string'},
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
+            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+        ];
+        this.data = SampleTestData.excelFilteringData();
     }
 }
 

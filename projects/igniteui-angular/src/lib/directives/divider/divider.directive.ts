@@ -83,6 +83,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('style.--inset')
+    @Input()
     public set inset(value: string) {
         this._inset = value;
     }
@@ -105,7 +106,6 @@ export class IgxDividerDirective {
      * <igx-divider inset="16px"></igx-divider>
      * ```
      */
-    @Input('inset')
     private _inset = '0';
 
     /**
