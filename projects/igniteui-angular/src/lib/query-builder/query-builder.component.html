@@ -373,7 +373,7 @@
                 style="margin: 10px 0px 10px 0px"
                 [entities]="entities"
                 [expressionTree]="expressionItem.expression.searchTree"
-                (expressionTreeChange)="onInnerQueryExpressionSearchTreeChange()">
+                (expressionTreeChange)="onInnerQueryExpressionSearchTreeChange(expressionItem.expression)">
             </igx-query-builder>
         </ng-container>
 
@@ -414,7 +414,7 @@
 
             <div class="igx-filter-tree__expression">
                 <div class="igx-filter-tree__inputs">
-                    <ng-container *ngIf="rootGroup">
+                    <ng-container *ngIf="!expressionItem.parent">
                         <igx-select #entitySelect
                             type="box"
                             [(ngModel)]="selectedEntity"

@@ -999,11 +999,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onInnerQueryExpressionSearchTreeChange() {
-        if (this._editedExpression && this._editedExpression.expression) {
-            this._editedExpression.expression.searchTree = this.innerQuery.expressionTree;
-        }
-        // this.expressionTreeChange.emit();
+    public onInnerQueryExpressionSearchTreeChange(expression: any) {
+        expression.searchTree = this.innerQuery.expressionTree;
+        this.expressionTreeChange.emit();
     }
 
     public formatReturnFields(returnFields: string | string[]) {
@@ -1084,6 +1082,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     }
 
     private addGroup(operator: FilteringLogic, parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+        console.log('createGroup');
         this.cancelOperandAdd();
 
         const groupItem = new ExpressionGroupItem(operator, parent);
