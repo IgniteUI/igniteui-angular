@@ -115,7 +115,7 @@
                     *ngIf="!expressionItem.expression.condition.isUnary"
                 >
                     <ng-container *ngIf="expressionItem.expression.searchTree">
-                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{expressionItem.expression.searchTree.returnFields}}
+                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree.returnFields)}}
                     </ng-container>
 
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
@@ -414,27 +414,28 @@
 
             <div class="igx-filter-tree__expression">
                 <div class="igx-filter-tree__inputs">
-                    <igx-select #entitySelect
-                        type="box"
-                        [overlaySettings]="entitySelectOverlaySettings"
-                        [(ngModel)]="selectedEntity"
-                    >
-                        <label igxLabel>Select entity</label>
-                        <igx-select-item *ngFor="let entity of entities" [value]="entity">
-                            {{entity.name}}
-                        </igx-select-item>
-                    </igx-select>
+                    <ng-container *ngIf="rootGroup">
+                        <igx-select #entitySelect
+                            type="box"
+                            [(ngModel)]="selectedEntity"
+                        >
+                            <label igxLabel>Select entity</label>
+                            <igx-select-item *ngFor="let entity of entities" [value]="entity">
+                                {{entity.name}}
+                            </igx-select-item>
+                        </igx-select>
 
-                    <igx-combo
-                        style="margin-left: 10px"
-                        [itemsMaxHeight]="250"
-                        [data]="fields"
-                        [displayKey]="'field'"
-                        [valueKey]="'field'"
-                        [(ngModel)]="selectedReturnFields"
-                        searchPlaceholder="Search...">
-                    <label igxLabel>Select return fields</label>
-                    </igx-combo>
+                        <igx-combo
+                            style="margin-left: 10px"
+                            [itemsMaxHeight]="250"
+                            [data]="fields"
+                            [displayKey]="'field'"
+                            [valueKey]="'field'"
+                            [(ngModel)]="selectedReturnFields"
+                            searchPlaceholder="Search...">
+                        <label igxLabel>Select return fields</label>
+                        </igx-combo>
+                    </ng-container>
                 </div>
 
                 <ng-container *ngFor="let expr of expressionItem?.children">

@@ -1006,6 +1006,15 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         // this.expressionTreeChange.emit();
     }
 
+    public formatReturnFields(returnFields: string | string[]) {
+        let text = returnFields;
+        if (Array.isArray(returnFields)) {
+            text = returnFields.join(', ');
+            text = text.length > 25 ? text.substring(0, 25) + ' ...' : text;
+        }
+        return text;
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
