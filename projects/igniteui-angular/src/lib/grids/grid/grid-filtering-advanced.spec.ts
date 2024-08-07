@@ -3076,9 +3076,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick();
             fix.detectChanges();
 
-            //Check if the search value input is not undefined
-            let searchValueInputIsNotUndefined = queryBuilderComponent.searchValueInput ? true : false;
-            expect(searchValueInputIsNotUndefined).toBeTruthy("Search value for dateTime input is undefined and cannot be focused");
+            //The search value input should not be undefined
+            expect(queryBuilderComponent.searchValueInput).toBeTruthy("Search value for dateTime input is undefined and cannot be focused");
 
             // Click the edit icon to enter edit mode of the expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -3095,8 +3094,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [1]);
             tick();
             fix.detectChanges();
-            searchValueInputIsNotUndefined = queryBuilderComponent.searchValueInput ? true : false;
-            expect(searchValueInputIsNotUndefined).toBeTruthy("Search value input is undefined and cannot be focused");
+
+            //The search value input should not be undefined
+            expect(queryBuilderComponent.searchValueInput).toBeTruthy("Search value input is undefined and cannot be focused");
         }))
     });
 
