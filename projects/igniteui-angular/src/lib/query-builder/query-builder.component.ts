@@ -606,11 +606,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
-            if (this.innerQuery && (this._editedExpression.expression.condition.name === 'in' || this._editedExpression.expression.condition.name === 'notIn')) {
-                this._editedExpression.expression.searchTree = this.innerQuery.expressionTree;
-            } else {
-                this._editedExpression.expression.searchTree = null;
-            }
+            // if (this.innerQuery && (this._editedExpression.expression.condition.name === 'in' || this._editedExpression.expression.condition.name === 'notIn')) {
+            //     this._editedExpression.expression.searchTree = this.innerQuery.expressionTree;
+            // } else {
+            //     this._editedExpression.expression.searchTree = null;
+            // }
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
@@ -999,8 +999,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onInnerQueryExpressionSearchTreeChange(expression: any) {
-        expression.searchTree = this.innerQuery.expressionTree;
+    public onInnerQueryExpressionSearchTreeChange(expression: any, innerQuery: any) {
+        expression.searchTree = innerQuery.expressionTree;
         this.expressionTreeChange.emit();
     }
 
@@ -1121,7 +1121,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const entity = this.entities.find(el => el.name === expressionTree.entity);
-                    this.fields = entity.fields;
+                    if (entity) {
+                        this.fields = entity.fields;
+                    }
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
