@@ -1,17 +1,14 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import {
-    FilteringExpressionsTree, IgxStringFilteringOperand,
+import { FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic,
     IgxQueryBuilderComponent,
     changei18n,
     IExpressionTree,
     IgxButtonDirective,
     IgxButtonGroupComponent,
-    IgxRippleDirective
-} from 'igniteui-angular';
+    IgxRippleDirective} from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
     providers: [],
@@ -19,7 +16,7 @@ import { CommonModule } from '@angular/common';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule]
+    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
@@ -29,12 +26,10 @@ export class QueryBuilderComponent implements OnInit {
     public fields: Array<any>;
     public displayDensities;
     public expressionTree: IExpressionTree;
-    public queryResult: string;
-    private backendUrl = "http://localhost:3333/";
 
     public ngOnInit(): void {
         this.entities = [
-            {
+            { 
                 name: 'Assays', fields: [
                     { field: 'Id', dataType: 'number' },
                     { field: 'CompoundId', dataType: 'number' },
@@ -66,10 +61,10 @@ export class QueryBuilderComponent implements OnInit {
         });
         const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', '*');
         tree.filteringOperands.push({
-            fieldName: 'Id',
-            condition: IgxStringFilteringOperand.instance().condition('in'),
-            searchTree: innerTree
-        });
+                fieldName: 'Id',
+                condition: IgxStringFilteringOperand.instance().condition('in'),
+                searchTree: innerTree
+            });
         tree.filteringOperands.push({
             fieldName: 'Structure',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
@@ -98,21 +93,6 @@ export class QueryBuilderComponent implements OnInit {
         // });
 
         this.expressionTree = tree;
-        this.onChange();
-    }
-
-    public async onChange() {
-        const tree = JSON.stringify(this.expressionTree);
-        const resp = await fetch(this.backendUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: tree
-        })
-        if (resp.status == 200) {
-            this.queryResult = await resp.text();
-        }
     }
 
     public changeLocale(locale: string) {
@@ -123,10 +103,6 @@ export class QueryBuilderComponent implements OnInit {
     }
 
     public printExpressionTree(tree: IExpressionTree) {
-        if (JSON.stringify(tree) !== JSON.stringify(this.expressionTree)) {
-            this.expressionTree = tree;
-            this.onChange();
-        }
         return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
     }
 }
