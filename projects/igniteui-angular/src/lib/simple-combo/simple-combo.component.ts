@@ -331,10 +331,17 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 return;
             }
             if (!this.dropdown.collapsed) {
-                this.select(this.dropdown.focusedItem.itemID);
-                event.preventDefault();
-                event.stopPropagation();
-                this.close();
+                const focusedItem = this.dropdown.focusedItem;
+                if (focusedItem && !focusedItem.isHeader) {
+                    this.select(focusedItem.itemID);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.close();
+                } else {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.comboInput.focus();
+                }
             }
             // manually trigger text selection as it will not be triggered during editing
             this.textSelection.trigger();
