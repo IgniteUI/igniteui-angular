@@ -94,15 +94,15 @@
                 (selectedChanged)="onChipSelectionEnd()"
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
-                    {{this.expressionTree.entity}} / {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
+                    {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
-                <igx-prefix>
+                <!-- <igx-prefix>
                     <igx-icon
                         family="default"
                         [name]="expressionItem.expression.condition.iconName"
                     >
                     </igx-icon>
-                </igx-prefix>
+                </igx-prefix> -->
                 <span class="igx-filter-tree__expression-condition">
                     {{
                         getConditionFriendlyName(
@@ -114,26 +114,30 @@
                     igxSuffix
                     *ngIf="!expressionItem.expression.condition.isUnary"
                 >
+                    <ng-container *ngIf="expressionItem.expression.searchTree">
+                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{expressionItem.expression.searchTree.returnFields}}
+                    </ng-container>
+
+                    <ng-container *ngIf="!expressionItem.expression.searchTree">
                     {{
-                        expressionItem.expression.searchTree
-                            ? (expressionItem.expression.searchTree.entity + ' / ' + expressionItem.expression.searchTree.returnFields)
-                            : isDate(expressionItem.expression.searchVal)
-                                ? getFormatter(expressionItem.expression.fieldName)
-                                    ? (expressionItem.expression.searchVal
-                                    | fieldFormatter
-                                        : getFormatter(
-                                                expressionItem.expression.fieldName
-                                            )
-                                        : undefined)
-                                    : (expressionItem.expression.searchVal
-                                    | date
-                                        : getFormat(
-                                                expressionItem.expression.fieldName
-                                            )
-                                        : undefined
-                                        : this.locale)
-                                : expressionItem.expression.searchVal
+                        isDate(expressionItem.expression.searchVal)
+                            ? getFormatter(expressionItem.expression.fieldName)
+                                ? (expressionItem.expression.searchVal
+                                | fieldFormatter
+                                    : getFormatter(
+                                            expressionItem.expression.fieldName
+                                        )
+                                    : undefined)
+                                : (expressionItem.expression.searchVal
+                                | date
+                                    : getFormat(
+                                            expressionItem.expression.fieldName
+                                        )
+                                    : undefined
+                                    : this.locale)
+                            : expressionItem.expression.searchVal
                     }}
+                    </ng-container>
                 </span>
             </igx-chip>
             <div
@@ -181,12 +185,10 @@
                 #fieldSelect
                 type="box"
                 [overlaySettings]="fieldSelectOverlaySettings"
-                [placeholder]="
-                    this.resourceStrings.igx_query_builder_column_placeholder
-                "
                 [(ngModel)]="selectedField"
                 [disabled]="!fields"
             >
+                <label igxLabel>{{this.resourceStrings.igx_query_builder_column_placeholder}}</label>
                 <igx-select-item *ngFor="let field of fields" [value]="field">
                     {{ field.label || field.header || field.field }}
                 </igx-select-item>
@@ -196,12 +198,10 @@
                 #conditionSelect
                 type="box"
                 [overlaySettings]="conditionSelectOverlaySettings"
-                [placeholder]="
-                    this.resourceStrings.igx_query_builder_condition_placeholder
-                "
                 [(ngModel)]="selectedCondition"
                 [disabled]="!selectedField"
             >
+                <label igxLabel>{{this.resourceStrings.igx_query_builder_condition_placeholder}}</label>
                 <igx-prefix
                     *ngIf="
                         selectedField &&
@@ -250,6 +250,7 @@
                 "
                 type="box"
             >
+                <label igxLabel>{{this.resourceStrings.igx_query_builder_value_placeholder}}</label>
                 <input
                     #searchValueInput
                     igxInput
@@ -259,15 +260,13 @@
                         (selectedField &&
                             selectedField.filters.condition(selectedCondition)
                                 .isUnary) ||
-                        selectedCondition === 'in'
+                        selectedCondition === 'in' ||
+                        selectedCondition === 'notIn'
                     "
                     [type]="
                         selectedField && selectedField.dataType === 'number'
                             ? 'number'
                             : 'text'
-                    "
-                    [placeholder]="
-                        this.resourceStrings.igx_query_builder_value_placeholder
                     "
                     [(ngModel)]="searchValue"
                 />
@@ -308,9 +307,6 @@
                 [(value)]="searchValue"
                 (click)="picker.open()"
                 (keydown)="openPicker($event)"
-                [placeholder]="
-                    this.resourceStrings.igx_query_builder_time_placeholder
-                "
                 type="box"
                 [readOnly]="true"
                 [disabled]="
@@ -326,6 +322,7 @@
                 [inputFormat]="selectedField.defaultTimeFormat"
             >
                 <!-- disable default icons -->
+                <label igxLabel>{{this.resourceStrings.igx_query_builder_time_placeholder}}</label>
                 <igx-picker-toggle></igx-picker-toggle>
                 <igx-picker-clear></igx-picker-clear>
             </igx-time-picker>
@@ -336,13 +333,11 @@
                 *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                 type="box"
             >
+                <label igxLabel>{{this.resourceStrings.igx_query_builder_date_placeholder}}</label>
                 <input
                     #input
                     igxInput
                     tabindex="0"
-                    [placeholder]="
-                        this.resourceStrings.igx_query_builder_date_placeholder
-                    "
                     [(ngModel)]="searchValue"
                     [disabled]="
                         !selectedField ||
@@ -372,13 +367,13 @@
             </div>
         </div>
 
-        <ng-container *ngIf="expressionItem.expression.searchTree || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
+        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
             <igx-query-builder
                 #innerQuery
                 style="margin: 10px 0px 10px 0px"
                 [entities]="entities"
                 [expressionTree]="expressionItem.expression.searchTree"
-                (expressionTreeChange)="onExpressionSearchTreeChange()">
+                (expressionTreeChange)="onInnerQueryExpressionSearchTreeChange()">
             </igx-query-builder>
         </ng-container>
 
@@ -422,11 +417,9 @@
                     <igx-select #entitySelect
                         type="box"
                         [overlaySettings]="entitySelectOverlaySettings"
-                        [placeholder]="
-                            'Select entity'
-                        "
                         [(ngModel)]="selectedEntity"
                     >
+                        <label igxLabel>Select entity</label>
                         <igx-select-item *ngFor="let entity of entities" [value]="entity">
                             {{entity.name}}
                         </igx-select-item>
@@ -439,8 +432,8 @@
                         [displayKey]="'field'"
                         [valueKey]="'field'"
                         [(ngModel)]="selectedReturnFields"
-                        placeholder="Select return fields"
                         searchPlaceholder="Search...">
+                    <label igxLabel>Select return fields</label>
                     </igx-combo>
                 </div>
 
