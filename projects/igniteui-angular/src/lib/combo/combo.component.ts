@@ -265,6 +265,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
+        if (this.filteringOptions.filterable && this.searchPlaceholder === 'Add Item') {
+            this.searchPlaceholder = 'Enter a Search Term';
+        } else if (!this.filteringOptions.filterable && this.searchPlaceholder === 'Enter a Search Term') {
+            this.searchPlaceholder = 'Add Item';
+        }
     }
 
     /**

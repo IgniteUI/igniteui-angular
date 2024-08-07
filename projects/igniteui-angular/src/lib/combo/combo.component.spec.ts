@@ -3126,6 +3126,7 @@ describe('igxCombo', () => {
                 tick();
                 fixture.detectChanges();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+                expect(combo.searchPlaceholder).toEqual('Add Item'); // Placeholder is changed to 'Add Item' since filtering is disabled
 
                 combo.searchValue = 'Not-available item';
                 combo.handleInputChange();
@@ -3151,6 +3152,7 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
+                expect(combo.searchPlaceholder).toEqual('Add Item');
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
                 UIInteractions.triggerInputEvent(searchInput, combo.data[2].field);
                 fixture.detectChanges();
