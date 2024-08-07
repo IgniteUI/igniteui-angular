@@ -69,7 +69,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -514,20 +513,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType,
-        @Optional() @Inject(IgxIconService) iconService?: IgxIconService) {
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
-
-        iconService?.addIconRef('clear', 'default', {
-            name: 'clear',
-            family: 'material',
-        });
-
-        iconService?.addIconRef('today', 'default', {
-            name: 'calendar_today',
-            family: 'material',
-        });
     }
 
     /** @hidden @internal */

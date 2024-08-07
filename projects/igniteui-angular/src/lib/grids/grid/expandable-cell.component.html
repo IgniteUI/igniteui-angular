@@ -28,7 +28,7 @@
 
     <igx-icon
         family="default"
-        [name]="value ? 'check' : 'close'"
+        [name]="value ? 'confirm' : 'close'"
         *ngIf="column.dataType === 'boolean' && !this.formatter"
         [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">
     </igx-icon>
@@ -186,10 +186,10 @@
 </ng-container>
 
 <ng-template #defaultExpandedTemplate>
-        <igx-icon family="default" name="expand"></igx-icon>
+        <igx-icon family="default" name="tree_collapse"></igx-icon>
 </ng-template>
 <ng-template #defaultCollapsedTemplate>
-        <igx-icon family="default" name="chevron_right"></igx-icon>
+        <igx-icon family="default" name="tree_expand"></igx-icon>
 </ng-template>
 
 <ng-template #defaultError>

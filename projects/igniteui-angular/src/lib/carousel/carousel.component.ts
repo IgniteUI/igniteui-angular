@@ -36,9 +36,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
-import { ThemeService } from '../services/theme/theme.service';
-import type { IgxTheme } from '../services/theme/theme.service';
-import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -143,11 +140,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
-
-    /**
-     * @hidden @internal
-     */
-    protected theme: IgxTheme;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -397,36 +389,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
-    private _icons = [
-        {
-            name: 'carousel_prev',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'arrow_back',
-                    family: 'material'
-                },
-                'indigo': {
-                    name: 'keyboard_arrow_left',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'carousel_next',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'arrow_forward',
-                    family: 'material'
-                },
-                'indigo': {
-                    name: 'keyboard_arrow_right',
-                    family: 'material'
-                }
-            }))
-        }
-    ]
 
     /**
      * An accessor that sets the resource strings.
@@ -582,31 +544,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private themeService: ThemeService,
-        private iconService: IgxIconService
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
-        this.theme = this.theme ?? this.themeService.theme;
-
-        for (const icon of this._icons) {
-            switch(this.theme) {
-                case 'indigo':
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('indigo'),
-                    );
-                    break;
-                case 'material':
-                default:
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('material'),
-                    );
-            }
-        }
     }
 
 

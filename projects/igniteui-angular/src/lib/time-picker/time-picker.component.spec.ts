@@ -37,7 +37,7 @@ const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
 const CSS_CLASS_OVERLAY = 'igx-overlay';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
-const TIME_PICKER_CLEAR_ICON = 'clear';
+const TIME_PICKER_CLEAR_ICON = 'cancel';
 
 describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;

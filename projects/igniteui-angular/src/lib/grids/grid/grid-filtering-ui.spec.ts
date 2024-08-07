@@ -2755,12 +2755,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
             const input = filterCell.query(By.css('input')).nativeElement;
- 
+
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             input.dispatchEvent(mousedownEvent, { bubbles: true });
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
         }));
 
@@ -2772,7 +2772,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             firstCell.dispatchEvent(mousedownEvent);
             fix.detectChanges();
-           
+
             expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
@@ -3917,7 +3917,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
-                .find((icon: any) => icon.innerText === 'clear');
+                .find((icon: any) => icon.innerText === 'cancel');
             clearIcon.click();
             fix.detectChanges();
 
@@ -6031,7 +6031,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
-                .find((icon: any) => icon.innerText === 'clear');
+                .find((icon: any) => icon.innerText === 'cancel');
             clearIcon.click();
             fix.detectChanges();
 
@@ -6885,9 +6885,9 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     const headerTitle = excelMenu.querySelector('h4');
     const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
     const headerAreaColumnHidingIcon: HTMLElement =
         headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
 

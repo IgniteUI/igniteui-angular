@@ -14,8 +14,6 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-    Optional,
-    Inject
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -32,7 +30,6 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { resizeObservable } from '../core/utils';
-import { IgxIconService } from '../icon/icon.service';
 
 /**
  * @hidden @internal
@@ -330,21 +327,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
-        @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
     ) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
-
-        iconService?.addIconRef('chevron_right', 'default', {
-            name: 'chevron_right',
-            family: 'material'
-        });
-
-        iconService?.addIconRef('expand', 'default', {
-            name: 'expand_more',
-            family: 'material'
-        });
     }
 
     /** @hidden @internal */

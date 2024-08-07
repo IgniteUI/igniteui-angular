@@ -29,7 +29,6 @@ import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
-import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -202,13 +201,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         protected el: ElementRef,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
-        protected _iconService: IgxIconService,
-    ) {
-        this._iconService.addIconRef('more_vert', 'default', {
-            name: 'more_vert',
-            family: 'material',
-        });
-    }
+    ) { }
 
     /**
      * Menu Items list.
@@ -336,4 +329,3 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         }
     }
 }
-

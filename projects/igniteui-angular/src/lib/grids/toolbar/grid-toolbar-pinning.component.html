@@ -7,7 +7,7 @@
         name="btnColumnPinning" (click)="toggle(btn, ref, actions)">
         <igx-icon
             family="default"
-            [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'">
+            [name]="!grid.pinnedColumnsCount ? 'unpin' : 'pin'">
         </igx-icon>
         <span>{{ grid.pinnedColumnsCount }}</span>
         <span>{{ buttonText }}</span>

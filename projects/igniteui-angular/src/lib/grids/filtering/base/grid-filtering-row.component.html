@@ -40,14 +40,14 @@
                 (click)="onCommitClick()"
                 tabindex="0"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 (keydown)="onClearKeyDown($event)"
                 (click)="onClearClick()"
                 tabindex="0"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
     </igx-input-group>
@@ -81,14 +81,14 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 tabindex="0"
                 (keydown)="onClearKeyDown($event)"
                 (click)="clearInput($event)"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
@@ -125,14 +125,14 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 tabindex="0"
                 (keydown)="onClearKeyDown($event)"
                 (click)="clearInput($event)"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
@@ -168,14 +168,14 @@
                     (click)="onCommitClick()"
                     tabindex="0"
                     family="default"
-                    name="selected">
+                    name="confirm">
                 </igx-icon>
                 <igx-icon
                     (keydown)="onClearKeyDown($event)"
                     (click)="onClearClick()"
                     tabindex="0"
                     family="default"
-                    name="clear">
+                    name="input_clear">
                 </igx-icon>
             </igx-suffix>
     </igx-input-group>
@@ -215,7 +215,7 @@
                         (click)="toggleOperatorsDropDown($event, i)"
                         [igxDropDownItemNavigation]="operators"
                         [style.--ig-size]="filteringElementsSize">
-                        <igx-icon family="default" name="expand"></igx-icon>
+                        <igx-icon family="default" name="expand_more"></igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down #operators (selectionChanging)="onLogicOperatorChanged($event, item)">
