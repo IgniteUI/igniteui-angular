@@ -1278,8 +1278,8 @@ export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponen
             <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
             <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
         </igx-column-group>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
-        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter"></igx-column>
+        <igx-column width="100px" [field]="'DateTimeCreated'" dataType="dateTime"></igx-column>
     </igx-grid>`,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
