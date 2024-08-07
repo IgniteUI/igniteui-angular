@@ -3,7 +3,7 @@
         <igx-radio-group #group="igxRadioGroup" [(ngModel)]="initial">
             <div igxLayout>
                 <igx-card class="promotion" layout="justify" *ngFor="let opt of options"
-                    [type]="group.value !== opt ? 'outlined' : 'default'"
+                    [elevated]="group.value === opt"
                     [class.promotion-selected]="group.value === opt">
                     <igx-card-header>
                         <h6 igxCardHeaderTitle>Reserve your dream vacation at {{ opt }}</h6>
