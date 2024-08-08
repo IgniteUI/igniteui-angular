@@ -52,6 +52,7 @@
     }
 
     $theme: digest-schema($grid-summary-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
@@ -80,7 +81,10 @@
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
-        label-hover-color: $label-hover-color
+        label-hover-color: $label-hover-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -89,6 +93,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-summary($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
 
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),
@@ -125,6 +131,10 @@
 
         &:focus::after {
             background: var-get($theme, 'focus-background-color');
+        }
+
+        @if $variant == 'indigo-design' {
+            border-top: rem(1px) solid var-get($theme, 'border-color');
         }
     }
 
@@ -164,6 +174,12 @@
         color: var-get($theme, 'label-color');
         min-width: rem(30px);
         margin-inline-end: rem(3px);
+
+        @if $variant == 'indigo-design' {
+            @include type-style('caption');
+
+            margin-inline-end: initial;
+        }
 
         &:hover {
             color: var-get($theme, 'label-hover-color');

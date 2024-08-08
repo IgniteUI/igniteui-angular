@@ -529,6 +529,10 @@
             border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
         }
 
+        @if $variant == 'indigo-design' {
+            padding: rem(16px);
+        }
+
         %grid-excel-filter__apply,
         %grid-excel-filter__cancel {
             flex-grow: 0;
