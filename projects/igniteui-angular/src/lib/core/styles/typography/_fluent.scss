@@ -58,9 +58,6 @@
     @include chip-typography($categories: (
         text: 'subtitle-2'
     ));
-    @include circular-bar-typography($categories: (
-        text: null
-    ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography();

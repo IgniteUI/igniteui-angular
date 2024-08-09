@@ -57,9 +57,6 @@
         label: 'body-2',
     ));
     @include chip-typography();
-    @include circular-bar-typography($categories: (
-        text: 'subtitle-2'
-    ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
