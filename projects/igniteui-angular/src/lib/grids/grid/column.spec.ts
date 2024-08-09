@@ -1082,9 +1082,9 @@ describe('IgxGrid - Column properties #grid', () => {
             const orderDateColumn = grid.getColumnByName('OrderDate');
             const receiveTimeColumn = grid.getColumnByName('ReceiveTime');
 
-            producedDateColumn.editorOptions.dateTimeFormat = 'yyyy-MM-dd';
-            orderDateColumn.editorOptions.dateTimeFormat = 'yyyy--MM--dd';
-            receiveTimeColumn.editorOptions.dateTimeFormat = 'h-mm-ss aaaaa';
+            producedDateColumn.editorOptions = { dateTimeFormat: 'yyyy-MM-dd' };
+            orderDateColumn.editorOptions = { dateTimeFormat: 'yyyy--MM--dd' };
+            receiveTimeColumn.editorOptions = { dateTimeFormat: 'h-mm-ss aaaaa' };
             fix.detectChanges();
 
             producedDateColumn._cells[0].setEditMode(true)

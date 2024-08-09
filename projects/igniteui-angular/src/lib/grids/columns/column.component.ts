@@ -1585,7 +1585,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
-        this.setDateTimeEditorFormat(this._columnPipeArgs.format);
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
@@ -1615,10 +1614,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public set editorOptions(value: IColumnEditorOptions) {
         this._editorOptions = value;
-        this._editorOptionsSetByUser = true;
         this.grid.pipeTrigger++;
     }
     public get editorOptions(): IColumnEditorOptions {
+        if (!this._editorOptions?.dateTimeFormat) {
+            return { ...this._editorOptions, dateTimeFormat: this.pipeArgs.format };
+        }
         return this._editorOptions;
     }
 
@@ -1818,7 +1819,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
     private _editorOptions: IColumnEditorOptions = { };
-    private _editorOptionsSetByUser = false;
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
@@ -1874,9 +1874,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this._columnPipeArgs.format = this.dataType === GridColumnDataType.Time ?
                 DEFAULT_TIME_FORMAT : this.dataType === GridColumnDataType.DateTime ?
                     DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
-        }
-        if (!this.editorOptions.dateTimeFormat) {
-            this.setDateTimeEditorFormat(this._columnPipeArgs.format);
         }
         if (!this.summaries) {
             switch (this.dataType) {
@@ -2590,15 +2587,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set applySelectableClass(value: boolean) {
         if (this.selectable) {
             this._applySelectableClass = value;
-        }
-    }
-
-    private setDateTimeEditorFormat(format: string) {
-        if (!DateTimeUtil.isDateTimeDataType(this.dataType)){
-            return;
-        }
-        if (!this._editorOptionsSetByUser) {
-            this._editorOptions.dateTimeFormat = format;
         }
     }
 }
