@@ -56,7 +56,6 @@ import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Size } from '../common/enums';
-import { DateTimeUtil } from '../../date-common/util/date-time.util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
