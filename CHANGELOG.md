@@ -2,6 +2,29 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.1.3
+### New
+#### Scrollbar: New customizable css variables
+
+We have introduced new CSS variables to allow for more customizable scrollbar styling. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
+
+###### List of Available CSS Variables for `-webkit-` browsers:
+- `--sb-size`: Adjusts the scrollbar size (width and height).
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+- `--sb-track-bg-color-hover`: Sets the background color of the scrollbar track on hover.
+- `--sb-thumb-min-height`: Sets the minimum height of the scrollbar thumb.
+- `--sb-thumb-border-radius`: Sets the border radius of the scrollbar thumb.
+- `--sb-thumb-border-size`: Sets the border size of the scrollbar thumb.
+- `--sb-thumb-border-color`: Sets the border color of the scrollbar thumb.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-thumb-bg-color-hover`: Sets the background color of the scrollbar thumb on hover.
+
+For Firefox users, we provide limited scrollbar styling options through the following CSS variables:
+
+- `--sb-size`: Adjusts the scrollbar size.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
