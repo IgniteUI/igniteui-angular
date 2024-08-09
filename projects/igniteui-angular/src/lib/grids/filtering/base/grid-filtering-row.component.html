@@ -100,7 +100,8 @@
 <ng-template #defaultTimeUI>
     <igx-time-picker #picker
         [(value)]="value"
-        [inputFormat]="column.defaultTimeFormat"
+        [inputFormat]="column.editorOptions?.dateTimeFormat"
+        [displayFormat]="column.pipeArgs.format"
         [locale]="filteringService.grid.locale"
         [formatter]="column.formatter"
         [outlet]="filteringService.grid.outlet"
@@ -155,7 +156,9 @@
             igxInput
             tabindex="0"
             [placeholder]="placeholder"
-            [igxDateTimeEditor]="column.defaultDateTimeFormat"
+            [locale]="filteringService.grid.locale"
+            [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+            [displayFormat]="column.pipeArgs.format"
             [value]="value"
             (valueChange)="onInput($event)"
             [readonly]="isUnaryCondition"

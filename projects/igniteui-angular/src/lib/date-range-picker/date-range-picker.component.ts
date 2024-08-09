@@ -36,6 +36,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { IgxIconService } from '../icon/icon.service';
+import { DataType } from '../data-operations/data-util';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -181,16 +182,24 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /**
      * The expected user input format and placeholder.
      *
-     * @remarks
-     * Default is `"'MM/dd/yyyy'"`
-     *
      * @example
      * ```html
      * <igx-date-range-picker inputFormat="dd/MM/yy"></igx-date-range-picker>
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        if (value) {
+            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
+            if (this.hasProjectedInputs) {
+                this.updateInputFormat();
+            }
+        }
+    }
+
+    public override get inputFormat(): string {
+        return this._inputFormat || this._defaultInputFormat;
+    }
 
     /**
      * The minimum value in a valid range.
@@ -328,7 +337,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public get appliedFormat(): string {
         return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
-            || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+            || this._defaultInputFormat;
     }
 
     /** @hidden @internal */
@@ -650,9 +659,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.updateDisplayFormat();
-        }
-        if (changes['inputFormat'] && this.hasProjectedInputs) {
-            this.updateInputFormat();
         }
         if (changes['disabled']) {
             this.updateDisabledState();
@@ -1041,6 +1047,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
     }
 
+    protected updateInputLocale(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            input.dateTimeEditor.locale = this.locale;
+        });
+    }
+
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
         this.calendar.hasHeader = false;
@@ -1056,5 +1069,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+    }
+
+    protected override updateDefaultFormat(): void {
+        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
+        if (this.hasProjectedInputs) {
+            this.updateInputLocale();
+            this.updateInputFormat();
+        }
     }
 }

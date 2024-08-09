@@ -23,6 +23,7 @@ import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-commo
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
+import localeBg from "@angular/common/locales/bg";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
@@ -713,6 +714,7 @@ describe('IgxDatePicker', () => {
         });
         describe('API tests', () => {
             registerLocaleData(localeES);
+            registerLocaleData(localeBg);
             it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
@@ -727,7 +729,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.formatViews).toEqual(undefined);
                 expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Horizontal);
                 expect(datePicker.hideOutsideDays).toEqual(undefined);
-                expect(datePicker.inputFormat).toEqual(undefined);
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
                 expect(datePicker.mode).toEqual(PickerInteractionMode.DropDown);
                 expect(datePicker.isDropdown).toEqual(true);
                 expect(datePicker.minValue).toEqual(undefined);
@@ -1315,6 +1317,37 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ]);
             });
+            //#endregion
+
+            //#region inputFormat
+            it('should set default inputFormat, if none, with parts for day, month and year based on locale', () => {
+                datePicker.ngAfterViewInit();
+
+                datePicker.locale = 'en-US';
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+
+                datePicker.locale = 'bg-BG';
+                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+
+                datePicker.locale = 'es-ES';
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+            });
+
+            it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric date parts', fakeAsync(() => {
+                datePicker.ngAfterViewInit();
+
+                datePicker.locale = 'en-US';
+                datePicker.inputFormat = 'MMM d, y, h:mm:ss a';
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+
+                datePicker.locale = 'bg-BG';
+                datePicker.inputFormat = 'full';
+                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+
+                datePicker.locale = 'es-ES';
+                datePicker.inputFormat = 'MMM d, y';
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+            }));
             //#endregion
         });
 

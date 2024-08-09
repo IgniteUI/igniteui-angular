@@ -1157,6 +1157,7 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
         <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        <igx-column width="100px" [field]="'ReleaseTime'" dataType="time"></igx-column>
         </igx-column>
     </igx-grid>`,
     standalone: true,
@@ -1618,8 +1619,9 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
     [primaryKey]="'ProductID'" width="900px" height="900px">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'dateTime'" width="250px"></igx-column>
-        <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'dateTime'" width="250px" [editable]="true"></igx-column>
+        <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px" [editable]="true"></igx-column>
+        <igx-column field="ProducedDate" header="Produced Date" [dataType]="'date'" width="250px" [editable]="true"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
         <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>

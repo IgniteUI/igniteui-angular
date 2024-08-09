@@ -16,6 +16,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
 import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { DataType } from '../../data-operations/data-util';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -148,8 +149,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input(`igxDateTimeEditor`)
     public set inputFormat(value: string) {
         if (value) {
-            this.setMask(value);
-            this._inputFormat = value;
+            this._userSetFormat = value;
+            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
+            this.setMask(this._inputFormat);
+            this.updateMask();
         }
     }
 
@@ -230,6 +233,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         seconds: 1,
         fractionalSeconds: 1
     };
+    private _userSetFormat: string;
 
     private onChangeCallback: (...args: any[]) => void = noop;
     private _onValidatorChange: (...args: any[]) => void = noop;
@@ -312,6 +316,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale'] && !changes['locale'].firstChange) {
             this.updateDefaultFormat();
+            // reassign the inputFormat in case the original one needs to be localized
+            if (this._userSetFormat) {
+                this.inputFormat = this._userSetFormat;
+            }
             if (!this._inputFormat) {
                 this.setMask(this.inputFormat);
                 this.updateMask();
@@ -500,8 +508,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /** @hidden */
     protected override setPlaceholder(_value: string): void { }
 
-    private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    private updateDefaultFormat(dataType: DataType = DataType.DateTime): void {
+        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, dataType);
     }
 
     private updateMask(): void {
@@ -533,7 +541,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         const oldFormat = this._inputDateParts?.map(p => p.format).join('');
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
-        const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
+        const mask = (inputFormat || this._defaultInputFormat)
         .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');
         this.mask = mask.replaceAll(/(a{1,2})|tt/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;

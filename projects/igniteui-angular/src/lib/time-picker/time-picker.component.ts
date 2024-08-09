@@ -61,6 +61,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
 import { IgxIconService } from '../icon/icon.service';
+import { DataType } from '../data-operations/data-util';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -128,19 +129,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public override displayFormat: string;
 
-    /**
-     * The expected user input format and placeholder.
-     *
-     * @remarks
-     * Default is `hh:mm tt`
-     *
-     * @example
-     * ```html
-     * <igx-time-picker inputFormat="HH:mm"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public override inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -1136,6 +1124,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    protected override updateDefaultFormat(): void {
+        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Time);
     }
 
     private get isTouchedOrDirty(): boolean {

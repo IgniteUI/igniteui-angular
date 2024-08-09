@@ -1118,7 +1118,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
-            expect(dropdownItems.length).toBe(3);
+            expect(dropdownItems.length).toBe(4);
             expect(dropdownItems[0].innerText).toBe('HeaderID');
             expect(dropdownItems[1].innerText).toBe('ProductName');
             expect(dropdownItems[2].innerText).toBe('Another Field');
@@ -2046,6 +2046,109 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(1, 'Wrong filtered rows count');
+        }));
+
+        it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+            expect(dropdownItems[4].innerText).toBe('ReleaseDate');
+
+            selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
+            expect(input.getAttribute('ng-reflect-display-format')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(input.getAttribute('ng-reflect-locale')).toMatch(grid.locale);
+        }));
+
+        it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.pipeArgs = {
+                format: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 4);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(input.getAttribute('ng-reflect-display-format')).toMatch(releaseDateColumn.pipeArgs.format);
+        }));
+
+        it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.editorOptions = {
+                dateTimeFormat: 'hh:mm'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 6);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
+        }));
+
+        it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.pipeArgs = {
+                format: 'hh:mm'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 6);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.pipeArgs.format);
         }));
 
         describe('Context Menu - ', () => {
