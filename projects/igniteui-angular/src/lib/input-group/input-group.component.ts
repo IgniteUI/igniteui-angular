@@ -1,5 +1,6 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -34,7 +35,7 @@ import { IgxIconService } from '../icon/icon.service';
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -216,11 +217,14 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         private themeService: ThemeService,
         private iconService?: IgxIconService
     ) {
-        this.theme = this.themeService.theme;
         this.iconService.addIconRef('clear', 'default', {
             name: 'clear',
             family: 'material',
         });
+    }
+
+    public ngAfterViewInit(): void {
+        this.theme = this.themeService.getTheme(this.element);
     }
 
     /** @hidden */

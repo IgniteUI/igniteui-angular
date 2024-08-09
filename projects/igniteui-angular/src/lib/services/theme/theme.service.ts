@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { ElementRef, Inject, Injectable } from "@angular/core";
 import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
@@ -46,5 +46,9 @@ export class ThemeService {
         if (theme !== "") {
             this.theme$.next(theme as IgxTheme);
         }
+    }
+
+    public getTheme(el: ElementRef) {
+        return globalThis.window.getComputedStyle(el.nativeElement).getPropertyValue('--theme') as IgxTheme;
     }
 }

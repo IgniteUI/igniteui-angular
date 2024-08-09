@@ -273,6 +273,7 @@
         input-suffix-background--filled: $input-suffix-background--filled,
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
+        theme: map.get($schema, '_meta', 'theme'),
         variant: map.get($schema, '_meta', 'theme'),
         size: $size,
     ));
@@ -390,12 +391,6 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
         }
-    }
-
-    igx-input-group,
-    igx-date-range-start,
-    igx-date-range-end {
-        --theme: #{$variant};
     }
 
     %form-group-display--box {
